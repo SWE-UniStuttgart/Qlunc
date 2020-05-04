@@ -1,2 +1,3 @@
-# GitHub_LiUQ
- Calculate hardware and data processing uncertainties of a lidar device
+# LiUQ
+
+#Toolbox to quantify uncertaintes in hardware and data processing in a lidar device.
