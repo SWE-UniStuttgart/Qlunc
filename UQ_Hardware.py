@@ -5,6 +5,8 @@ Created on Tue Apr 28 17:54:19 2020
 @author: fcosta
 """
 #%%Header
+#04272020 - Francisco Costa
+#SWE - Stuttgart
 # Here we create the functions to calculate the uncertainties related with hardware
 # Amplifier
 #Telescope

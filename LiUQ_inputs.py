@@ -28,8 +28,8 @@ flag_unc_telescope     = True # if True I include telescope uncertainty
 flag_exec_LiUQ         = True
 
 # Modules and methods we want to assess:
-modules          = ['amplifier','telescope','photodetector'] # modules we want to assess uncertainty
-data_processing  = [] # data processing methods we want to assess
+modules = ['amplifier','telescope','photodetector'] # modules we want to assess uncertainty
+DP      = [] # data processing methods we want to assess
 
 # Atmospheric scenario (this will depend on the specific chosen scenarios):
 temperature = 25 # in °C (this could be an interval)
@@ -41,6 +41,7 @@ fog         = False  #for rain and fog intensity intervals might be introduced [
 
 o_c_amp   = 0.005  # other changes in dB
 noise_amp = 5 # Noise figure in dB. Given by the manufacture.
+Amplifier={'noise_amp':noise_amp,'OtherChanges_amp':o_c_amp}
 
 #%% Photodetector module values
 noise_photo = 0.01 # in dB. Given by manufacture
@@ -60,7 +61,7 @@ flag_plot_signal_noise=False
 
 
 #%% Execute the UQ code:
-if flag_exec_LiUQ:
-    UQ=open('LiUQ_Hardware3.py') # Open the code
-    read_file=UQ.read()          # read the code
-    exec(read_file)              # execute the code
+#if flag_exec_LiUQ:
+#    UQ=open('LiUQ_Hardware3.py') # Open the code
+#    read_file=UQ.read()          # read the code
+#    exec(read_file)              # execute the code

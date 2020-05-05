@@ -4,7 +4,11 @@ Created on Tue Apr 28 18:25:12 2020
 
 @author: fcosta
 """
+#%% Header
+#04272020 - Francisco Costa
+#SWE - Stuttgart
 
+#%% DataProcessing Uncertainties
 def UQ_LOS():
     UQ_LineOfSight=40
     return UQ_LineOfSight
