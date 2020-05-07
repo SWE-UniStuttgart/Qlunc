@@ -52,9 +52,9 @@ class Hardware_U():  # creating a function to call each different module. HAve t
     Res={}# Dictionary outcome stored in Res
     if 'amplifier' in modules:
             class amplifier(): # Create class amplifier
-                def Amp_noise(self,temperature,humidity,noise_amp,o_c_amp): # Calculation of losses in amplifier
-                    self.UQ_Amp= UQ_Hardware.UQ_Amplifier(temperature,humidity,noise_amp,o_c_amp) #function calculating amplifier uncertainties ((UQ_Amplifier.py))
-                    return self.UQ_Amp
+                def Amp_noise(self,Atmospheric_inputs,Amplifier_uncertainty_inputs): # Calculation of losses in amplifier
+                    UQ_Amp=UQ_Hardware.UQ_Amplifier(Atmospheric_inputs,Amplifier_uncertainty_inputs)
+                    return UQ_Amp
                 def Amp_losses(self): # Calculation of losses in amplifier
                     self.amp_losses=0
                     return self.amp_losses
@@ -62,31 +62,31 @@ class Hardware_U():  # creating a function to call each different module. HAve t
                     self.amp_others=99
                     return self.amp_others
             Obj=amplifier()#Create instance of object amplifier
-            Res['amplifier']=({'noise':Obj.Amp_noise(temperature,humidity,noise_amp,o_c_amp),'losses':Obj.Amp_losses(),'others':Obj.Amp_others()})# Creating a nested dictionary
+            Res['amplifier']=({'noise':Obj.Amp_noise(Atmospheric_inputs,Amplifier_uncertainty_inputs),'losses':Obj.Amp_losses(),'DELTA':Obj.Amp_others()})# Creating a nested dictionary
     if 'photodetector' in modules:
             class photodetector():
-                def Photo_noise(self,temperature,humidity,noise_photo,o_c_photo):
-                    UQ_Photo=UQ_Hardware.UQ_Photodetector(temperature,humidity,noise_photo,o_c_photo)#function calculating amplifier uncertainties ((UQ_Photodetector.py))
+                def Photo_noise(self,Atmospheric_inputs,Photodetector_uncertainty_inputs):
+                    UQ_Photo=UQ_Hardware.UQ_Photodetector(Atmospheric_inputs,Photodetector_uncertainty_inputs)#function calculating amplifier uncertainties ((UQ_Photodetector.py))
                     return UQ_Photo   
                 def Photo_losses(self):
-                    self.photo_losses=0
+                    self.photo_losses=13
                     return self.photo_losses
             Obj=photodetector()
-            Res['photodetector']=({'noise':Obj.Photo_noise(temperature,humidity,noise_photo,o_c_photo),'losses':Obj.Photo_losses()})
+            Res['photodetector']=({'noise':Obj.Photo_noise(Atmospheric_inputs,Photodetector_uncertainty_inputs),'losses':Obj.Photo_losses()})
                                          
     if 'telescope' in modules:
             class telescope():
-                def Tele_noise(self,temperature,humidity,curvature_lens,aberration,o_c_tele):
-                    UQ_Tele=UQ_Hardware.UQ_Telescope(temperature,humidity,curvature_lens,aberration,o_c_tele)#function calculating amplifier uncertainties ((UQ_Telescope.py))
+                def Tele_noise(self,Atmospheric_inputs,Telescope_uncertainty_inputs):
+                    UQ_Tele=UQ_Hardware.UQ_Telescope(Atmospheric_inputs,Telescope_uncertainty_inputs)#function calculating amplifier uncertainties ((UQ_Telescope.py))
                     return UQ_Tele
                 def Tele_losses(self):
-                    self.tele_losses=0
+                    self.tele_losses=1
                     return self.tele_losses
                 def Tele_others(self):
-                    self.tele_others=0
+                    self.tele_others=33
                     return self.tele_others
             Obj=telescope()
-            Res['telescope']=({'noise':Obj.Tele_noise(temperature,humidity,curvature_lens,aberration,o_c_tele),'losses':Obj.Tele_losses(),'others':Obj.Tele_others()})
+            Res['telescope']=({'noise':Obj.Tele_noise(Atmospheric_inputs,Telescope_uncertainty_inputs),'losses':Obj.Tele_losses(),'DELTA':Obj.Tele_others()})
 
 #Create H_UQ dictionary of values: 
 
@@ -130,7 +130,7 @@ for key in Keys_modules:
 
 in_dB=0
 #Sum af decibels:
-for valrows in range(df_UQ.shape[0]):
+for valrows in range(0,df_UQ.shape[0]):
     in_dB+=(10**(df_UQ.iloc[valrows,0]/10))
 Sum_decibels=10*np.log10(in_dB)
 
