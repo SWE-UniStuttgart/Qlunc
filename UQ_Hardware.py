@@ -5,6 +5,8 @@ Created on Tue Apr 28 17:54:19 2020
 @author: fcosta
 """
 #%%Header
+#04272020 - Francisco Costa
+#SWE - Stuttgart
 # Here we create the functions to calculate the uncertainties related with hardware
 # Amplifier
 #Telescope
@@ -14,7 +16,6 @@ Created on Tue Apr 28 17:54:19 2020
 #28.04.2020
 
 # code to quantify amplifier uncertainty taken into account all possible methods
-
 def UQ_Amplifier(temperature,humidity,noise_amp,o_c_amp):
     UQ_amplifier=temperature*0.005+humidity*0.0007+noise_amp+o_c_amp
     return UQ_amplifier
