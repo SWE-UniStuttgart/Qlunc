@@ -28,7 +28,7 @@ flag_unc_telescope     = True # if True I include telescope uncertainty
 flag_exec_LiUQ         = True
 
 # Modules and methods we want to assess:
-modules = ['amplifier','telescope','photodetector'] # modules we want to assess uncertainty
+modules = ['amplifier','telescope','photodetector']#,'telescope','photodetector'] # modules we want to assess uncertainty
 DP      = [] # data processing methods we want to assess
 
 # Atmospheric scenario (this will depend on the specific chosen scenarios):
@@ -41,7 +41,7 @@ fog         = False  #for rain and fog intensity intervals might be introduced [
 
 o_c_amp   = 0.005  # other changes in dB
 noise_amp = 5 # Noise figure in dB. Given by the manufacture.
-Amplifier={'noise_amp':noise_amp,'OtherChanges_amp':o_c_amp}
+#Amplifier={'noise_amp':noise_amp,'OtherChanges_amp':o_c_amp}
 
 #%% Photodetector module values
 noise_photo = 0.01 # in dB. Given by manufacture
