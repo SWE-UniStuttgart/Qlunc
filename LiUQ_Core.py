@@ -49,7 +49,7 @@ DP_UQ=[]
 #%% Hardware:
 
 class Hardware_U():  # creating a function to call each different module. HAve to add an if for a new module
-    Res={}
+    Res={}# Dictionary outcome stored in Res
     if 'amplifier' in modules:
             class amplifier(): # Create class amplifier
                 def Amp_noise(self,temperature,humidity,noise_amp,o_c_amp): # Calculation of losses in amplifier
@@ -58,8 +58,11 @@ class Hardware_U():  # creating a function to call each different module. HAve t
                 def Amp_losses(self): # Calculation of losses in amplifier
                     self.amp_losses=0
                     return self.amp_losses
+                def Amp_others(self):
+                    self.amp_others=99
+                    return self.amp_others
             Obj=amplifier()#Create instance of object amplifier
-            Res['amplifier']=({'noise':Obj.Amp_noise(temperature,humidity,noise_amp,o_c_amp),'losses':Obj.Amp_losses()})# Creating a nested dictionary
+            Res['amplifier']=({'noise':Obj.Amp_noise(temperature,humidity,noise_amp,o_c_amp),'losses':Obj.Amp_losses(),'others':Obj.Amp_others()})# Creating a nested dictionary
     if 'photodetector' in modules:
             class photodetector():
                 def Photo_noise(self,temperature,humidity,noise_photo,o_c_photo):
@@ -87,7 +90,7 @@ class Hardware_U():  # creating a function to call each different module. HAve t
 
 #Create H_UQ dictionary of values: 
 
-H_Obj=Hardware_U()
+H_Obj=Hardware_U()# HArdware instance
 for i in modules:       
     H_UQ[i]=(H_Obj.Res[i])
 #    count_index+=1
