@@ -8,7 +8,7 @@ Created on Mon Apr 27 09:14:00 2020
 #04272020 - Francisco Costa
 #SWE - Stuttgart
 #LiUQ inputs for different modules:
-#Here the user can introduce parameters to calculate the uncertainty of the different modules
+#Here the user can introduce parameters to calculate the uncertainty of the different modules. Must be note units of the uncertainties: either dB or watts
 
 # Inputs:
 #    Modules can be: 'amplifier', 'telescope', 'photodetector'
@@ -21,39 +21,27 @@ Created on Mon Apr 27 09:14:00 2020
 #%% Inputs:
 
 # Which modules introduce incertainties?:
-flag_unc_amplifier     = True # if True I include amplifier uncertainty
-flag_unc_photodetector = True # if True I include photodetector uncertainty
-flag_unc_telescope     = True # if True I include telescope uncertainty
+#flag_unc_amplifier     = True # if True I include amplifier uncertainty
+#flag_unc_photodetector = True # if True I include photodetector uncertainty
+#flag_unc_telescope     = True # if True I include telescope uncertainty
 # Want to execute LiUQ?
-flag_exec_LiUQ         = True
+#flag_exec_LiUQ         = True
 
 # Modules and methods we want to assess:
-modules = ['amplifier','telescope','photodetector']#,'telescope','photodetector'] # modules we want to assess uncertainty
+modules = ['amplifier']#,'telescope','photodetector'] # modules we want to assess uncertainty
 DP      = [] # data processing methods we want to assess
+ 
+# Atmospheric inputs:
+Atmospheric_inputs={'temperature':[25,20,15],'humidity':[20],'rain':[True],'fog':[False]}#for rain and fog intensity intervals might be introduced [none,low, medium high]
 
-# Atmospheric scenario (this will depend on the specific chosen scenarios):
-temperature = 25 # in °C (this could be an interval)
-humidity    = 20 # in %  (this could be an interval)
-rain        = False
-fog         = False  #for rain and fog intensity intervals might be introduced [none,low, medium high]
+# Amplifier module uncertainty values:
+Amplifier_uncertainty_inputs={'noise_amp':[5],'OtherChanges_amp':[.005]}
 
-#%% Amplifier module uncertainty values:
+# Photodetector module uncertainty values:
+Photodetector_uncertainty_inputs={'noise_photo':[5],'OtherChanges_photo':[.005]}
 
-o_c_amp   = 0.005  # other changes in dB
-noise_amp = 5 # Noise figure in dB. Given by the manufacture.
-#Amplifier={'noise_amp':noise_amp,'OtherChanges_amp':o_c_amp}
-
-#%% Photodetector module values
-noise_photo = 0.01 # in dB. Given by manufacture
-o_c_photo   = 0.5 # other changes
-
-#%%Telescope
-curvature_lens = 0.01 # in meters
-o_c_tele       = 0.006   # other changes
-aberration     = 0.0004
-
-
-parameters=[temperature,humidity,rain,fog,o_c_amp,noise_amp,noise_photo,o_c_photo,curvature_lens,o_c_tele,aberration]
+# Telescope module uncertainty values:
+Telescope_uncertainty_inputs={'curvature_lens':[.01],'OtherChanges_tele':[.006],'aberration':[.0004]}
 #%%PLotting Section:
 
 flag_plot_signal_noise=False
