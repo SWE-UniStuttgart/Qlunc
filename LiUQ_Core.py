@@ -126,10 +126,6 @@ subindices=[]
 subcolumns=[]
 #Generate indexes of the data frame:
 subindices=list((itertools.chain(*Keys_errors)))
-# Generating columns of the data frame:combining all results
-#subcolumns0=str(list(itertools.product(*Atmospheric_inputs.values(),Hardware_U().amplifier().Amp_losses(),Hardware_U().amplifier().Amp_others(),
-#                                   Hardware_U().photodetector().Photo_losses(), Hardware_U().photodetector().Paco_wind(),Hardware_U().telescope().Tele_losses(),
-#                                   Hardware_U().telescope().Tele_others()))).split('),')
 
 subcolumns0=list(itertools.product(*Atmospheric_inputs.values(),Hardware_U().amplifier().Amp_losses(),Hardware_U().amplifier().Amp_others(),Hardware_U().amplifier().Amp_Failures(),
                                    Hardware_U().photodetector().Photo_losses(), Hardware_U().photodetector().Photo_Failures(),Hardware_U().telescope().Tele_losses(),Hardware_U().telescope().Tele_Failures(),
@@ -154,32 +150,6 @@ for indIter in range(len(ListFinalScen)):
     Final_Scenarios.append(list(itertools.chain(*(i if isinstance(i, tuple) else (i,) for i in list(itertools.chain(*(i if isinstance(i, tuple) else (i,) for i in ListFinalScen[indIter])))))))
 
 df_UQ=pd.DataFrame(np.transpose(Final_Scenarios),index=subindices,columns=subcolumns)    
-
-
-
-
-
-
-#
-#funcScenarios=lambda x:[x[i1][i2] for i1 in range(len(x))] 
-#atmospheric_scenarios=[]
-#for i2 in range(len(Values_errors_noise[0])):
-#    atmospheric_scenarios.append(funcScenarios(Values_errors_noise))
-#FinalScenarios0=list((itertools.product(atmospheric_scenarios,fl2_Values_errors_removed))) # Different scenarios for the different inputs (atmospheric-)
-#FinalScenarios=[list(itertools.chain(*FinalScenarios0[ind_Scenario])) for ind_Scenario in range(len(FinalScenarios0)) ] # final list of all different scenarios considering all input possible combinations
-#ListFinalScen=[]
-#for indScen in range(len(FinalScenarios)):
-#    ArrayFinalScen=np.array(FinalScenarios[indScen])
-#    idx=[0,3,4,1,5,6,2,7,8]
-#    Arrax=list(ArrayFinalScen[idx])
-#    ListFinalScen.append(Arrax)
-
-#finalScenariostotal=list(itertools.chain(finalScenarios))
-
-#df_UQ=pd.DataFrame(np.transpose(Final_Scenarios),index=subindices,columns=subcolumns)    
-
-
-
 
 
 
