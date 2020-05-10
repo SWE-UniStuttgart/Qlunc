@@ -56,47 +56,47 @@ class Hardware_U():  # creating a function to call each different module. HAve t
                 def Amp_noise(self,Atmospheric_inputs,Amplifier_uncertainty_inputs): # Calculation of losses in amplifier
                     UQ_Amp=UQ_Hardware.UQ_Amplifier(Atmospheric_inputs,Amplifier_uncertainty_inputs)
                     return UQ_Amp
-                def Amp_losses(self): # Calculation of losses in amplifier
-                    global amp_losses
-                    self.amp_losses=[5,6]
+                def Amp_losses(self): # Calculation of losses in amplifier                   
+                    self.amp_losses=[5,95]
                     return self.amp_losses
-                def Amp_others(self):
-                    global amp_others
-                    self.amp_others=[7,8]
+                def Amp_others(self):                    
+                    self.amp_others=[6]
                     return self.amp_others
+                def Amp_Failures(self):
+                    self.ampli_failures=[23]
+                    return self.ampli_failures    
             Obj=amplifier()#Create instance of object amplifier
-            Res['amplifier']=({'amplifier_noise':Obj.Amp_noise(Atmospheric_inputs,Amplifier_uncertainty_inputs),'amplifier_losses':Obj.Amp_losses(),'amplifier_DELTA':Obj.Amp_others()})# Creating a nested dictionary
+            # Every calculation method ("def whatever...") included in "class amplifier()" should be added also in "RES['amplifier']" as a new dictionary key:value pair
+            Res['amplifier']=({'Ampli_noise':Obj.Amp_noise(Atmospheric_inputs,Amplifier_uncertainty_inputs),'Ampli_losses':Obj.Amp_losses(),'Ampli_DELTA':Obj.Amp_others(),'Ampli_Failures':Obj.Amp_Failures()})# Creating a nested dictionary
     if 'photodetector' in modules:
             class photodetector():
                 def Photo_noise(self,Atmospheric_inputs,Photodetector_uncertainty_inputs):
                     UQ_Photo=UQ_Hardware.UQ_Photodetector(Atmospheric_inputs,Photodetector_uncertainty_inputs)#function calculating amplifier uncertainties ((UQ_Photodetector.py))
                     return UQ_Photo   
-                def Photo_losses(self):
-                    global photo_losses
-                    self.photo_losses=[9]
+                def Photo_losses(self):                   
+                    self.photo_losses=[7]
                     return self.photo_losses
-                def Photo_PACOEffects(self):
-                    global photo_PacoEffects
-                    self.photo_PacoEffects=[10]
-                    return self.photo_PacoEffects                
+                def Photo_Failures(self):
+                    self.photo_failures=[3]
+                    return self.photo_failures               
             Obj=photodetector()
-            Res['photodetector']=({'photodetector_noise':Obj.Photo_noise(Atmospheric_inputs,Photodetector_uncertainty_inputs),'photodetector_losses':Obj.Photo_losses(),'photodetector_PAcoEffects':Obj.Photo_PACOEffects()})
-                                         
+            Res['photodetector']=({'Photo_noise':Obj.Photo_noise(Atmospheric_inputs,Photodetector_uncertainty_inputs),'Photo_losses':Obj.Photo_losses(),'Photo_Failures':Obj.Photo_Failures()})                                         
     if 'telescope' in modules:
             class telescope():
                 def Tele_noise(self,Atmospheric_inputs,Telescope_uncertainty_inputs):
                     UQ_Tele=UQ_Hardware.UQ_Telescope(Atmospheric_inputs,Telescope_uncertainty_inputs)#function calculating amplifier uncertainties ((UQ_Telescope.py))
                     return UQ_Tele
-                def Tele_losses(self):
-                    global tele_losses
-                    self.tele_losses=[1]
+                def Tele_losses(self):                   
+                    self.tele_losses=[31]
                     return self.tele_losses
-                def Tele_others(self):
-                    global tele_others
+                def Tele_others(self):                    
                     self.tele_others=[33]
                     return self.tele_others
+                def Tele_Failures(self):                    
+                    self.tele_failures=[234,2677]
+                    return self.tele_failures   
             Obj=telescope()
-            Res['telescope']=({'telescope_noise':Obj.Tele_noise(Atmospheric_inputs,Telescope_uncertainty_inputs),'telescope_losses':Obj.Tele_losses(),'telescope_DELTA':Obj.Tele_others()})
+            Res['telescope']=({'Tele_noise':Obj.Tele_noise(Atmospheric_inputs,Telescope_uncertainty_inputs),'Tele_losses':Obj.Tele_losses(),'Tele_DELTA':Obj.Tele_others(),'Tele_Failures':Obj.Tele_Failures()})
 
 #Create H_UQ dictionary of values: 
 
@@ -120,107 +120,69 @@ for method in DP:
 #%% Create a complete data frame (Hardware+data processing uncertainties): 
 
 #Generate list of keys and values to loop over
-Values_errors = [list(itertools.chain((H_UQ[i].values()))) for i in H_UQ.keys()]
-Keys_errors   = [list(itertools.chain((H_UQ[i].keys()))) for i in H_UQ.keys()]
+Values_errors = [list(itertools.chain((H_UQ[ind_error_val].values()))) for ind_error_val in H_UQ.keys()]
+Keys_errors   = [list(itertools.chain((H_UQ[ind_error_key].keys()))) for ind_error_key in H_UQ.keys()]
 subindices=[]
 subcolumns=[]
 #Generate indexes of the data frame:
 subindices=list((itertools.chain(*Keys_errors)))
-# Generating columns of the data frame:
-subcolumns=[('T='+str(temp)+'; H='+str(hum)+'; Rain:'+str(rain)+'; Fog:'+str(fog) +'; error1='+str(error1)+'; error2='+ str(error2)+'; error3='+ str(error3)) for temp in Atmospheric_inputs['temperature'] for hum in Atmospheric_inputs['humidity'] for rain in Atmospheric_inputs['rain'] for fog in Atmospheric_inputs['fog'] for error1 in H_UQ['amplifier']['amplifier_losses'] for error2 in H_UQ['amplifier']['amplifier_DELTA'] for error3 in H_UQ['photodetector']['photodetector_losses'] ]
+# Generating columns of the data frame:combining all results
+#subcolumns0=str(list(itertools.product(*Atmospheric_inputs.values(),Hardware_U().amplifier().Amp_losses(),Hardware_U().amplifier().Amp_others(),
+#                                   Hardware_U().photodetector().Photo_losses(), Hardware_U().photodetector().Paco_wind(),Hardware_U().telescope().Tele_losses(),
+#                                   Hardware_U().telescope().Tele_others()))).split('),')
 
+subcolumns0=list(itertools.product(*Atmospheric_inputs.values(),Hardware_U().amplifier().Amp_losses(),Hardware_U().amplifier().Amp_others(),Hardware_U().amplifier().Amp_Failures(),
+                                   Hardware_U().photodetector().Photo_losses(), Hardware_U().photodetector().Photo_Failures(),Hardware_U().telescope().Tele_losses(),Hardware_U().telescope().Tele_Failures(),
+                                   Hardware_U().telescope().Tele_others()))
+subcolumns=[str(subcolumns0[ind_str]) for ind_str in range(len(subcolumns0))]
+
+#Flattening the error values not including noise errors because noise errors are not repeated for all the scenarios
 Values_errors_removed=[list(itertools.product(*Values_errors[i][1:])) for i in range (len (Values_errors))] # values of the rest of errors (not related with atmospheric conditions) 
 fl_Values_errors_removed=list(itertools.product(*Values_errors_removed))
 fl2_Values_errors_removed=[list(itertools.chain(*fl_Values_errors_removed[Flat_ind])) for Flat_ind in range(len(fl_Values_errors_removed))]
+
+#extract noise errors. Is [0] hardcoded because noise errors are always the first position of "Values_errors" list
 Values_errors_noise=[Values_errors[i][0] for i in range (len (Values_errors))]
-funcScenarios=lambda x:[x[i1][i2] for i1 in range(len(x))] 
-atmospheric_scenarios=[]
-for i2 in range(len(Values_errors_noise[0])):
-    atmospheric_scenarios.append(funcScenarios(Values_errors_noise))
-FinalScenarios0=list((itertools.product(atmospheric_scenarios,fl2_Values_errors_removed))) # Different scenarios for the different inputs (atmospheric-)
-FinalScenarios=[list(itertools.chain(*FinalScenarios0[ind_Scenario])) for ind_Scenario in range(len(FinalScenarios0)) ]
+Values_errors_noise_DEF=list(map(list,list(zip(*Values_errors_noise))))
+fl_Values_errors_removed=list(map(list,fl_Values_errors_removed))
+ListFinalScen=[]
+Final_Scenarios=[]
+for indc in range(len(Values_errors_noise_DEF)):
+    ListFinalScen.append(([list(zip(Values_errors_noise_DEF[indc],fl_Values_errors_removed[indc2])) for indc2 in range(len(fl_Values_errors_removed))]))
+ListFinalScen=list(itertools.chain.from_iterable(ListFinalScen))
+for indIter in range(len(ListFinalScen)):
+    Final_Scenarios.append(list(itertools.chain(*(i if isinstance(i, tuple) else (i,) for i in list(itertools.chain(*(i if isinstance(i, tuple) else (i,) for i in ListFinalScen[indIter])))))))
+
+df_UQ=pd.DataFrame(np.transpose(Final_Scenarios),index=subindices,columns=subcolumns)    
 
 
 
+
+
+
+#
+#funcScenarios=lambda x:[x[i1][i2] for i1 in range(len(x))] 
+#atmospheric_scenarios=[]
+#for i2 in range(len(Values_errors_noise[0])):
+#    atmospheric_scenarios.append(funcScenarios(Values_errors_noise))
+#FinalScenarios0=list((itertools.product(atmospheric_scenarios,fl2_Values_errors_removed))) # Different scenarios for the different inputs (atmospheric-)
+#FinalScenarios=[list(itertools.chain(*FinalScenarios0[ind_Scenario])) for ind_Scenario in range(len(FinalScenarios0)) ] # final list of all different scenarios considering all input possible combinations
+#ListFinalScen=[]
+#for indScen in range(len(FinalScenarios)):
+#    ArrayFinalScen=np.array(FinalScenarios[indScen])
+#    idx=[0,3,4,1,5,6,2,7,8]
+#    Arrax=list(ArrayFinalScen[idx])
+#    ListFinalScen.append(Arrax)
 
 #finalScenariostotal=list(itertools.chain(finalScenarios))
 
-df_UQ=pd.DataFrame(np.transpose(FinalScenarios),index=subindices,columns=subcolumns)    
+#df_UQ=pd.DataFrame(np.transpose(Final_Scenarios),index=subindices,columns=subcolumns)    
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#Split_Val_err_mod=[]
-#for ind_val_err in range(len(Values_errors)):
-#    Val_err_mod=Values_errors[ind_val_err]
-#    Split_Val_err_mod.append(list(itertools.product(*Val_err_mod))) # Split the module errors of the atmospheric scenarios
-#    
-#df_UQ=pd.DataFrame(index=subindices,columns=subcolumns)    
-#
-#datacount=0
-#count2=0
-#
-#t=[len(H_UQ[i]) for i in H_UQ.keys()] # numer of key elements for the different modules (info about how many noise elements do we have per lidar module)
-#
-#
-#for ind3 in range(t[count2]):
-#    for ind2 in range(len(Split_Val_err_mod[ind3][0])):
-#        for ind1 in range(len(Split_Val_err_mod[ind3])):
-#            df_UQ.iloc[datacount,ind1]=(Split_Val_err_mod[ind3][ind1][ind2]) #allocate each value
-#        datacount+=1
-#    count2+=1
-
-
-
-
-
-
-
-#Generate the Data frame appending data frames from each module:
-#countt=0
-#for ind in range(len(subindices)):
-#    for ind2 in range(len(subcols)):
-#        df_UQ.iloc[ind, ind2]=Values_errors[0][0][0]
-#        countt+=1
-#
-#
-#
 #in_dB=0
 ##Sum af decibels:
 #for valrows in range(0,df_UQ.shape[0]):
