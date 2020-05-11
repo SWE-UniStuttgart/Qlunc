@@ -57,13 +57,13 @@ class Hardware_U():  # creating a function to call each different module. HAve t
                     UQ_Amp=UQ_Hardware.UQ_Amplifier(Atmospheric_inputs,Amplifier_uncertainty_inputs)
                     return UQ_Amp
                 def Amp_losses(self): # Calculation of losses in amplifier                   
-                    self.amp_losses=[5,95]
+                    self.amp_losses=[0.6]
                     return self.amp_losses
                 def Amp_others(self):                    
-                    self.amp_others=[6]
+                    self.amp_others=[0]
                     return self.amp_others
                 def Amp_Failures(self):
-                    self.ampli_failures=[23]
+                    self.ampli_failures=[0.01]
                     return self.ampli_failures    
             Obj=amplifier()#Create instance of object amplifier
             # Every calculation method ("def whatever...") included in "class amplifier()" should be added also in "RES['amplifier']" as a new dictionary key:value pair
@@ -74,10 +74,10 @@ class Hardware_U():  # creating a function to call each different module. HAve t
                     UQ_Photo=UQ_Hardware.UQ_Photodetector(Atmospheric_inputs,Photodetector_uncertainty_inputs)#function calculating amplifier uncertainties ((UQ_Photodetector.py))
                     return UQ_Photo   
                 def Photo_losses(self):                   
-                    self.photo_losses=[7]
+                    self.photo_losses=[1.1]
                     return self.photo_losses
                 def Photo_Failures(self):
-                    self.photo_failures=[3]
+                    self.photo_failures=[1]
                     return self.photo_failures               
             Obj=photodetector()
             Res['photodetector']=({'Photo_noise':Obj.Photo_noise(Atmospheric_inputs,Photodetector_uncertainty_inputs),'Photo_losses':Obj.Photo_losses(),'Photo_Failures':Obj.Photo_Failures()})                                         
@@ -87,13 +87,13 @@ class Hardware_U():  # creating a function to call each different module. HAve t
                     UQ_Tele=UQ_Hardware.UQ_Telescope(Atmospheric_inputs,Telescope_uncertainty_inputs)#function calculating amplifier uncertainties ((UQ_Telescope.py))
                     return UQ_Tele
                 def Tele_losses(self):                   
-                    self.tele_losses=[31]
+                    self.tele_losses=[0.8,1]
                     return self.tele_losses
                 def Tele_others(self):                    
-                    self.tele_others=[33]
+                    self.tele_others=[0]
                     return self.tele_others
                 def Tele_Failures(self):                    
-                    self.tele_failures=[234,2677]
+                    self.tele_failures=[1.2,0.7]
                     return self.tele_failures   
             Obj=telescope()
             Res['telescope']=({'Tele_noise':Obj.Tele_noise(Atmospheric_inputs,Telescope_uncertainty_inputs),'Tele_losses':Obj.Tele_losses(),'Tele_DELTA':Obj.Tele_others(),'Tele_Failures':Obj.Tele_Failures()})
@@ -124,76 +124,43 @@ Values_errors = [list(itertools.chain((H_UQ[ind_error_val].values()))) for ind_e
 Keys_errors   = [list(itertools.chain((H_UQ[ind_error_key].keys()))) for ind_error_key in H_UQ.keys()]
 subindices=[]
 subcolumns=[]
-#Generate indexes of the data frame:
+#Generate indexes and columns of the data frame:
 subindices=list((itertools.chain(*Keys_errors)))
-# Generating columns of the data frame:combining all results
-#subcolumns0=str(list(itertools.product(*Atmospheric_inputs.values(),Hardware_U().amplifier().Amp_losses(),Hardware_U().amplifier().Amp_others(),
-#                                   Hardware_U().photodetector().Photo_losses(), Hardware_U().photodetector().Paco_wind(),Hardware_U().telescope().Tele_losses(),
-#                                   Hardware_U().telescope().Tele_others()))).split('),')
-
-subcolumns0=list(itertools.product(*Atmospheric_inputs.values(),Hardware_U().amplifier().Amp_losses(),Hardware_U().amplifier().Amp_others(),Hardware_U().amplifier().Amp_Failures(),
+subcolumns=[','.join(map(str,item)) for item in (list(itertools.product(*Atmospheric_inputs.values(),Hardware_U().amplifier().Amp_losses(),Hardware_U().amplifier().Amp_others(),Hardware_U().amplifier().Amp_Failures(),
                                    Hardware_U().photodetector().Photo_losses(), Hardware_U().photodetector().Photo_Failures(),Hardware_U().telescope().Tele_losses(),Hardware_U().telescope().Tele_Failures(),
-                                   Hardware_U().telescope().Tele_others()))
-subcolumns=[str(subcolumns0[ind_str]) for ind_str in range(len(subcolumns0))]
+                                   Hardware_U().telescope().Tele_others())))]
 
 #Flattening the error values not including noise errors because noise errors are not repeated for all the scenarios
 Values_errors_removed=[list(itertools.product(*Values_errors[i][1:])) for i in range (len (Values_errors))] # values of the rest of errors (not related with atmospheric conditions) 
 fl_Values_errors_removed=list(itertools.product(*Values_errors_removed))
-fl2_Values_errors_removed=[list(itertools.chain(*fl_Values_errors_removed[Flat_ind])) for Flat_ind in range(len(fl_Values_errors_removed))]
 
 #extract noise errors. Is [0] hardcoded because noise errors are always the first position of "Values_errors" list
 Values_errors_noise=[Values_errors[i][0] for i in range (len (Values_errors))]
 Values_errors_noise_DEF=list(map(list,list(zip(*Values_errors_noise))))
 fl_Values_errors_removed=list(map(list,fl_Values_errors_removed))
-ListFinalScen=[]
+List_Scenarios=[]
 Final_Scenarios=[]
 for indc in range(len(Values_errors_noise_DEF)):
-    ListFinalScen.append(([list(zip(Values_errors_noise_DEF[indc],fl_Values_errors_removed[indc2])) for indc2 in range(len(fl_Values_errors_removed))]))
-ListFinalScen=list(itertools.chain.from_iterable(ListFinalScen))
-for indIter in range(len(ListFinalScen)):
-    Final_Scenarios.append(list(itertools.chain(*(i if isinstance(i, tuple) else (i,) for i in list(itertools.chain(*(i if isinstance(i, tuple) else (i,) for i in ListFinalScen[indIter])))))))
+    List_Scenarios.append(([list(zip(Values_errors_noise_DEF[indc],fl_Values_errors_removed[indc2])) for indc2 in range(len(fl_Values_errors_removed))]))
+List_Scenarios=list(itertools.chain.from_iterable(List_Scenarios))
+for indIter in range(len(List_Scenarios)):
+    Final_Scenarios.append(list(itertools.chain(*(i if isinstance(i, tuple) else (i,) for i in list(itertools.chain(*(i if isinstance(i, tuple) else (i,) for i in List_Scenarios[indIter])))))))
 
 df_UQ=pd.DataFrame(np.transpose(Final_Scenarios),index=subindices,columns=subcolumns)    
 
+#Sum af decibels:
+in_dB=0
+Sum_decibels= []
+for valcols in range(0,df_UQ.shape[1]):
+    in_dB=[(10**(df_UQ.iloc[valrows,valcols]/10)) for valrows in range(0,df_UQ.shape[0])]
+    Sum_in_dB=sum(in_dB)
+    Sum_decibels.append(10*np.log10(Sum_in_dB) )
 
 
+df_UQ.loc['Total UQ']= Sum_decibels# for now sum the uncertainties. Here have to apply Uncertainty expansion.
 
-
-
-#
-#funcScenarios=lambda x:[x[i1][i2] for i1 in range(len(x))] 
-#atmospheric_scenarios=[]
-#for i2 in range(len(Values_errors_noise[0])):
-#    atmospheric_scenarios.append(funcScenarios(Values_errors_noise))
-#FinalScenarios0=list((itertools.product(atmospheric_scenarios,fl2_Values_errors_removed))) # Different scenarios for the different inputs (atmospheric-)
-#FinalScenarios=[list(itertools.chain(*FinalScenarios0[ind_Scenario])) for ind_Scenario in range(len(FinalScenarios0)) ] # final list of all different scenarios considering all input possible combinations
-#ListFinalScen=[]
-#for indScen in range(len(FinalScenarios)):
-#    ArrayFinalScen=np.array(FinalScenarios[indScen])
-#    idx=[0,3,4,1,5,6,2,7,8]
-#    Arrax=list(ArrayFinalScen[idx])
-#    ListFinalScen.append(Arrax)
-
-#finalScenariostotal=list(itertools.chain(finalScenarios))
-
-#df_UQ=pd.DataFrame(np.transpose(Final_Scenarios),index=subindices,columns=subcolumns)    
-
-
-
-
-
-
-#in_dB=0
-##Sum af decibels:
-#for valrows in range(0,df_UQ.shape[0]):
-#    in_dB+=(10**(df_UQ.iloc[valrows,0]/10))
-#Sum_decibels=10*np.log10(in_dB)
-#
-##Transforming into watts
-#df_UQ.loc['Total UQ','Hardware (dB)']= Sum_decibels# for now sum the uncertainties. Here have to apply Uncertainty expansion.
-#
-##transform in watts. We supose that raw data is in dB:
-#df_UQ['Hardware (w)']=(10**(df_UQ['Hardware (dB)']/10))
+#transform in watts. We supose that raw data is in dB:
+df_UQ['Hardware (w)']=(10**(df_UQ['Hardware (dB)']/10))
 
 
 
