@@ -20,22 +20,27 @@ Created on Mon Apr 27 09:14:00 2020
 #    Values of uncertainties will be introduced in dB (for now)
 #%% Inputs:.
 
+#import Data:
+
+directory='../GitHub_LiUQ/'
 # Which modules introduce incertainties?:
 #flag_unc_amplifier     = True # if True I include amplifier uncertainty
 #flag_unc_photodetector = True # if True I include photodetector uncertainty
 #flag_unc_telescope     = True # if True I include telescope uncertainty
 # Want to execute LiUQ?
 #flag_exec_LiUQ         = True
-
+flag_plot_signal_noise  = True
 # Modules and methods we want to assess:
 modules = ['amplifier','telescope','photodetector'] # modules we want to assess uncertainty
 DP      = [] # data processing methods we want to assess
  
 # Atmospheric inputs:
-Atmospheric_inputs={'temperature':[9],'humidity':[4,5],'rain':[True],'fog':[False]}#for rain and fog intensity intervals might be introduced [none,low, medium high]
+Atmospheric_inputs={'temperature':[.5],'humidity':[5],'rain':[True],'fog':[False]}#for rain and fog intensity intervals might be introduced [none,low, medium high]
 
 # Amplifier module uncertainty values:
 Amplifier_uncertainty_inputs={'noise_amp':[0.2],'OtherChanges_amp':[.005]}
+Wavelength=[1522.5,1545,1572] #in nm
+NoiseFigure_FILE='NoiseFigure.xlsx'
 
 # Photodetector module uncertainty values:
 Photodetector_uncertainty_inputs={'noise_photo':[0.2],'OtherChanges_photo':[.005]}

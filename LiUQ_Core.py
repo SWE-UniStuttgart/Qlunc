@@ -15,12 +15,14 @@ Created on Tue Apr 28 13:44:25 2020
 #Amplifier: figure noise.
 
 #%% Modules to import: 
-from ImportModules import *
+#from ImportModules import *
 #from LiUQ_inputs import flag_plot_signal_noise
+import numpy as np
+import scipy.interpolate as itp
 import pandas as pd
 import UQ_Hardware  # script with all calculations of hardware unc are done
 import UQ_Data_processing # script with all calculations of data processing methods unc are done
-import numpy as np
+
 import pdb
 #import pickle
 import itertools
@@ -49,28 +51,35 @@ DP      = [each_string.lower() for each_string in DP] #lower case
 H_UQ={}
 DP_UQ=[] # To work on in the future
 subcolumns=[]# columns of the dataframe
+subcolumnsComb=[]
+subcolumns_NoneComb=[]
 #%% Hardware:
 
 class Hardware_U():  # creating a function to call each different module. HAve to add an if for a new module
     Res={}# Dictionary outcome stored in Res
     if 'amplifier' in modules:
             class amplifier(): # Create class amplifier
-                def Amp_noise(self,Atmospheric_inputs,Amplifier_uncertainty_inputs): # Calculation of losses in amplifier
-                    UQ_Amp=UQ_Hardware.UQ_Amplifier(Atmospheric_inputs,Amplifier_uncertainty_inputs)
-                    return UQ_Amp
+                def Amp_Noise(self,Atmospheric_inputs,Amplifier_uncertainty_inputs,Wavelength): # Run noise in amplifier device calculations
+                    self.NoiseFigure_VALUE=UQ_Hardware.FigNoise(Wavelength)
+                    self.UQ_Amp=UQ_Hardware.UQ_Amplifier(Atmospheric_inputs,Amplifier_uncertainty_inputs)
+                    return self.NoiseFigure_VALUE,self.UQ_Amp                                                                            
                 def Amp_losses(self): # Calculation of losses in amplifier                   
                     self.amp_losses=[0.6]
                     return self.amp_losses
                 def Amp_others(self):                    
-                    self.amp_others=[0,99]
+                    self.amp_others=[0]
                     return self.amp_others
                 def Amp_Failures(self):
                     self.ampli_failures=[0.01]
                     return self.ampli_failures 
             Obj=amplifier()#Create instance of object amplifier
             # Every calculation method ("def whatever...") included in "class amplifier()" should be added also in "RES['amplifier']" as a new dictionary key:value pair
-            Res['amplifier']=({'Ampli_noise':Obj.Amp_noise(Atmospheric_inputs,Amplifier_uncertainty_inputs),'Ampli_losses':Obj.Amp_losses(),'Ampli_DELTA':Obj.Amp_others(),'Ampli_Failures':Obj.Amp_Failures()})# Creating a nested dictionary
-            subcolumns.append([Obj.Amp_losses(),Obj.Amp_others(),Obj.Amp_Failures()])
+            # If the function (e.g. "Amp_Noise") contains different outcomes (e.g. "NoiseFigure_VALUE" and "UQ_Amp") we should classify them as combinatory or none combinatory elements.
+            # Atmosphere variations of different modules for different T, H, ... cannot be combined so should exist a none combinatory subcolumn
+            CombStuff,NoneCombStuff=Obj.Amp_Noise(Atmospheric_inputs,Amplifier_uncertainty_inputs,Wavelength) # Whether in a function there are combinatory and none combinatory elements
+            Res['amplifier']=({'Ampli_FN':CombStuff,'Ampli_noise':NoneCombStuff,'Ampli_losses':Obj.Amp_losses(),'Ampli_DELTA':Obj.Amp_others(),'Ampli_Failures':Obj.Amp_Failures()})# Creating a nested dictionary
+            subcolumnsComb.append([CombStuff, Res['amplifier']['Ampli_losses'],Res['amplifier']['Ampli_DELTA'],Res['amplifier']['Ampli_Failures']])
+            subcolumns_NoneComb.append([NoneCombStuff]) #variables can combine
     if 'photodetector' in modules:
             class photodetector():
                 def Photo_noise(self,Atmospheric_inputs,Photodetector_uncertainty_inputs):
@@ -80,11 +89,12 @@ class Hardware_U():  # creating a function to call each different module. HAve t
                     self.photo_losses=[1.1]
                     return self.photo_losses
                 def Photo_Failures(self):
-                    self.photo_failures=[1,0]
+                    self.photo_failures=[0]
                     return self.photo_failures               
             Obj=photodetector()
             Res['photodetector']=({'Photo_noise':Obj.Photo_noise(Atmospheric_inputs,Photodetector_uncertainty_inputs),'Photo_losses':Obj.Photo_losses(),'Photo_Failures':Obj.Photo_Failures()})                                         
-            subcolumns.append([Obj.Photo_losses(), Obj.Photo_Failures()])
+            subcolumnsComb.append([Res['photodetector']['Photo_losses'], Res['photodetector']['Photo_Failures']])
+            subcolumns_NoneComb.append([Res['photodetector']['Photo_noise']])
     if 'telescope' in modules:
             class telescope():
                 def Tele_noise(self,Atmospheric_inputs,Telescope_uncertainty_inputs):
@@ -97,12 +107,12 @@ class Hardware_U():  # creating a function to call each different module. HAve t
                     self.tele_others=[0.3]
                     return self.tele_others
                 def Tele_Failures(self):                    
-                    self.tele_failures=[1.2,0.7]
+                    self.tele_failures=[1.2]
                     return self.tele_failures   
             Obj=telescope()
             Res['telescope']=({'Tele_noise':Obj.Tele_noise(Atmospheric_inputs,Telescope_uncertainty_inputs),'Tele_losses':Obj.Tele_losses(),'Tele_DELTA':Obj.Tele_others(),'Tele_Failures':Obj.Tele_Failures()})
-            subcolumns.append([Obj.Tele_losses(),Obj.Tele_Failures(),Obj.Tele_others()])
-
+            subcolumnsComb.append([Res['telescope']['Tele_losses'],Res['telescope']['Tele_Failures'],Res['telescope']['Tele_DELTA']])
+            subcolumns_NoneComb.append([Res['telescope']['Tele_noise']])
 #Create H_UQ dictionary of values: 
 H_Obj=Hardware_U()# HArdware instance
 for i in modules:       
@@ -129,30 +139,41 @@ Keys_errors   = [list(itertools.chain((H_UQ[ind_error_key].keys()))) for ind_err
 
 #Generate indexes and columns of the data frame:
 subindices = list((itertools.chain(*Keys_errors)))
-# These three rows explain step by step how subcolumns is achieved:
-#Errors_inputVal       = list(itertools.product(*list(itertools.chain(*subcolumns))))
-#Atmospheric_inputsVal = list(itertools.product(*list(itertools.chain(*list([Atmospheric_inputs.values()])))))
-#subcolumns            = list(itertools.chain(itertools.product(Atmospheric_inputsVal,Errors_inputVal)))
-subcolumns = list(itertools.chain(itertools.product(list(itertools.product(*list(itertools.chain(*list([Atmospheric_inputs.values()]))))),list(itertools.product(*list(itertools.chain(*subcolumns)))))))
-subcolumns = [str(list(itertools.chain(*subcolumns [indSub]))) for indSub in range(len(subcolumns))]
+subcolumns_NoneComb=list(zip(*list(itertools.chain(*subcolumns_NoneComb))))
+subcolumnsComb=list(itertools.product(*list(itertools.chain(*subcolumnsComb))))
+
+
+Scenarios=[subcolumns_NoneComb]+[subcolumnsComb]
+FinalScenarios=list(itertools.product(*Scenarios))
+FinalScenarios=[list(itertools.chain(*FinalScenarios[i])) for i in range(len(FinalScenarios))]
+#Columns=[str(list(itertools.chain(*subcolumns[i]))) for i in range(len(subcolumns))]
+
+
+
+
+df_UQ=pd.DataFrame(np.transpose(FinalScenarios), index=subindices)
+
+
+#subcolumns = list(itertools.chain(itertools.product(list(itertools.product(*list(itertools.chain(*list([Atmospheric_inputs.values()]))))),list(itertools.product(*list(itertools.chain(*subcolumns)))))))
+#subcolumns = [str(list(itertools.chain(*subcolumns [indSub]))) for indSub in range(len(subcolumns))]
 
 #Flattening the error values not including noise errors because noise errors are not repeated for all the scenarios
-Values_errors_removed    = [list(itertools.product(*Values_errors[i][1:])) for i in range (len (Values_errors))] # values of the rest of errors (not related with atmospheric conditions) 
-fl_Values_errors_removed = list(itertools.product(*Values_errors_removed)) #Flatted values errors removed
-
-#extract noise errors. Is [0] hardcoded because noise errors are always the first position of "Values_errors" list
-Values_errors_noise      = [Values_errors[i][0] for i in range (len (Values_errors))]
-Values_errors_noise_DEF  = list(map(list,list(zip(*Values_errors_noise))))
-fl_Values_errors_removed = list(map(list,fl_Values_errors_removed))
-List_Scenarios           = []
-Final_Scenarios          = []
-for indc in range(len(Values_errors_noise_DEF)):
-    List_Scenarios.append(([list(zip(Values_errors_noise_DEF[indc],fl_Values_errors_removed[indc2])) for indc2 in range(len(fl_Values_errors_removed))]))
-List_Scenarios = list(itertools.chain.from_iterable(List_Scenarios))
-for indIter in range(len(List_Scenarios)):
-    Final_Scenarios.append(list(itertools.chain(*(i if isinstance(i, tuple) else (i,) for i in list(itertools.chain(*(i if isinstance(i, tuple) else (i,) for i in List_Scenarios[indIter])))))))
-
-df_UQ=pd.DataFrame(np.transpose(Final_Scenarios),index=subindices,columns=subcolumns)    
+#Values_errors_removed    = [list(itertools.product(*Values_errors[i][1:])) for i in range (len (Values_errors))] # values of the rest of errors (not related with atmospheric conditions) 
+#fl_Values_errors_removed = list(itertools.product(*Values_errors_removed)) #Flatted values errors removed
+#
+##extract noise errors. Is [0] hardcoded because noise errors are always the first position of "Values_errors" list
+#Values_errors_noise      = [Values_errors[i][0:1] for i in range (len (Values_errors))]
+#Values_errors_noise_DEF  = list(map(list,list(zip(*Values_errors_noise))))
+#fl_Values_errors_removed = list(map(list,fl_Values_errors_removed))
+#List_Scenarios           = []
+#Final_Scenarios          = []
+#for indc in range(len(Values_errors_noise_DEF)):
+#    List_Scenarios.append(([list(zip(Values_errors_noise_DEF[indc],fl_Values_errors_removed[indc2])) for indc2 in range(len(fl_Values_errors_removed))]))
+#List_Scenarios = list(itertools.chain.from_iterable(List_Scenarios))
+#for indIter in range(len(List_Scenarios)):
+#    Final_Scenarios.append(list(itertools.chain(*(i if isinstance(i, tuple) else (i,) for i in list(itertools.chain(*(i if isinstance(i, tuple) else (i,) for i in List_Scenarios[indIter])))))))
+#
+#df_UQ=pd.DataFrame(np.transpose(Final_Scenarios),index=subindices,columns=subcolumns)    
 
 #Sum af decibels:
 in_dB=0
@@ -178,54 +199,58 @@ df_UQ.loc['Total UQ']= Sum_decibels# for now sum the uncertainties. Here have to
 #%% Plotting:
 flag_plot_signal_noise=True
 if flag_plot_signal_noise==True: #Introduce this flag in the gui    
-    #Create original received power signal in watts (for now this is necessary):
+    #Create original received power signal in watts (for now this is necessary as far as we dont have outgoing signal from lidar):
     t           = np.linspace(0,100,1000)
     O_signal_W  = (6*np.sin(t/(2*np.pi)))**2 #original in w (**2 because is supoused original signal are volts)
     O_signal_dB = 10*np.log10(O_signal_W) # original in dB
-    #Plotting:
-    # Plotting original signal in (w)
-    #plt.subplot(1,2,1)
     
     
-
-    
-    #adding Hardware noise in a loop over all error for all different scenarios
-    #np.shape(df_UQ)[1]):
-    noise_H_dB=[df_UQ.iloc[ind_Scen,0] for ind_Scen in range(np.shape(df_UQ)[0])] # in dB
+    #adding Hardware noise for all different scenarios
+    ind_Scen=1 # Chooosing scenario (arranged as columns in the dataframe)
+    noise_H_dB=[df_UQ.iloc[ind_Param,ind_Scen] for ind_Param in range(np.shape(df_UQ)[0]-1)] # in dB. Here we can change scenario changing the index 'ind_Scen'. This goes throw the columns of the df_UQ
     noise_H_W=[10**(noise_H_dB[i]/10)  for i in range (len(noise_H_dB)) ]#convert into watts    
     mean_noise=0
     stdv=np.sqrt(noise_H_W)
-    noise_W=[np.random.normal(mean_noise,stdv[ind_stdv],len(O_signal_W)) for ind_stdv in range(len(stdv)) ]#add normal noise centered in 0 and stdv
-    Noisy_signal_W=[O_signal_W+noise_W[ind_fociflama] for ind_fociflama in range(len(noise_W))]
-    Noisy_signal_dB=[10*np.log10(Noisy_signal_W[in_noise]) for in_noise in range(len(Noisy_signal_W))]#Summmm od DB
+    noise_W=[np.random.normal(mean_noise,stdv[ind_stdv],len(O_signal_W)) for ind_stdv in range(len(stdv)) ]#create normal noise signal centered in 0 and stdv
+    Noisy_signal_W=[O_signal_W+noise_W[ind_fociflama] for ind_fociflama in range(len(noise_W))] # Add noise to the original signal [w]
+    Noisy_signal_dB=[10*np.log10(Noisy_signal_W[in_noise]) for in_noise in range(len(Noisy_signal_W))]# Converting noise in watts to dB
+    
+    # Total noise: 
+    stdvTotal=np.sqrt(noise_H_W)
+    noise_W_Total=np.random.normal(mean_noise,df_UQ.iloc[-1,ind_Scen],len(O_signal_W))#create normal noise signal centered in 0 and stdv
+    Total_Noise_signal_W=O_signal_W+noise_W_Total# Add noise to the original signal [w]
+    Total_Noise_signal_dB=10*np.log10(Total_Noise_signal_W)# Converting noise in watts to dB
+    
     
     #Plotting:
     plt.figure()
     plt.plot(t,O_signal_W)
-    plt.plot(t,Noisy_signal_W[-1],'g') 
-    plt.title('Signal + noise [watts]')
+    plt.plot(t,Total_Noise_signal_W,'g') 
+    plt.title('Signal + noise')
+    plt.gcf().canvas.set_window_title('Signal_Watts')
     plt.xlabel('time [s]')
-    plt.ylabel('power intensity [dB]')
+    plt.ylabel('power intensity [w]')
     
     plt.show() #original + noise (w) 
-    for ind_plot_W in [0,2,4]:
+    for ind_plot_W in [3]:
         plt.plot(t,Noisy_signal_W[ind_plot_W],'--') 
-        plt.legend(['original','Total Noise'+str(),'Ampli_noise','Ampli_losses','Ampli_DELTA','Ampli_Failures','Tele_Noise'])#,'Total error [w]'])
+        plt.legend(['original','Total Noise','Figure_noise'])#,'Total error [w]'])
     
     plt.show() 
         
     #Plotting original signal in  (dB)
     plt.figure()
     plt.plot(t,O_signal_dB)
-    plt.title('Signal + noise [dB]')
+    plt.title('Signal + noise')
+    plt.gcf().canvas.set_window_title('Signal_dB')
     plt.ylabel('power intensity [dB]')
     plt.xlabel('time [s]')
-    plt.plot(t,Noisy_signal_dB[-1],'go-') 
+    plt.plot(t,Total_Noise_signal_dB,'go-') 
 
     # original + noise (dB)        
-    for ind_plot_dB in [0,2,4]:
+    for ind_plot_dB in [3]:
         plt.plot(t,Noisy_signal_dB[ind_plot_dB],'--')        
         
-        plt.legend(['original','Total Noise'+str(),'Ampli_noise','Ampli_losses','Ampli_DELTA','Ampli_Failures','Tele_Noise'])#,'Total error [w]'])
+        plt.legend(['original','Total Noise','Figure_noise'])#,'Total error [w]'])
     
     plt.show()  

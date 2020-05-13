@@ -13,7 +13,9 @@ Created on Tue Apr 28 17:54:19 2020
 #Photodetector
 
 #%%
-
+import pandas as pd
+from LiUQ_inputs import directory, NoiseFigure_FILE 
+import scipy.interpolate as itp
 # code to quantify amplifier uncertainty taken into account all possible methods:
 
 # Calcuate differents uncertainties depending on atmospheric scenarios:
@@ -28,3 +30,10 @@ def UQ_Telescope(Atmospheric_inputs,Telescope_uncertainty_inputs):
 def UQ_Photodetector(Atmospheric_inputs,Photodetector_uncertainty_inputs):
     UQ_photodetector=[temp*0.4+hum*0.1+noise_photo+o_c_photo for temp in Atmospheric_inputs['temperature'] for hum in Atmospheric_inputs['humidity'] for noise_photo in Photodetector_uncertainty_inputs['noise_photo'] for o_c_photo in Photodetector_uncertainty_inputs['OtherChanges_photo']]
     return UQ_photodetector
+
+def FigNoise(wave):
+    NoiseFigure_DATA=pd.read_excel(directory+NoiseFigure_FILE) #read from an excel file variation of dB with wavelength(for now just with wavelegth)
+    figure_noise_INT=itp.interp1d(NoiseFigure_DATA.iloc[:,0],NoiseFigure_DATA.iloc[:,1],kind='cubic',fill_value="extrapolate")# First column wavelength,second column Noise in dB
+    NoiseFigure_VALUE=figure_noise_INT(wave) # in dB
+    FigureNoise=NoiseFigure_VALUE.tolist()
+    return FigureNoise
