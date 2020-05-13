@@ -11,4 +11,4 @@ DF.pickle
 untitled2.py
 
 # Dont keep pycache
-__pycache__/
+__pycache__\
