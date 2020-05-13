@@ -1,5 +1,7 @@
 # Don't keep this files:
 *.csv
+*.xlsx
+
 # Ignore specific files:
 LiUQ_Hardware.py
 LiUQ_Hardware2.py
@@ -7,4 +9,6 @@ LiUQ_Hardware3.py
 I_D.pickle
 DF.pickle
 untitled2.py
-*.xlsx
+
+# Dont keep pycache
+__pycache__/
