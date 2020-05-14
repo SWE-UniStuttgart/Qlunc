@@ -1,3 +1,3 @@
 # LiUQ
 
-#Toolbox to quantify uncertaintes in hardware and data processing in a lidar device.
+#Toolbox to quantify uncertaintes in hardware and data processing methods in a lidar device.
