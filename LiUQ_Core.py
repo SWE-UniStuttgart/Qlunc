@@ -50,7 +50,7 @@ DP      = [each_string.lower() for each_string in DP] #lower case
 #Definig the lists we fill later on within the process;
 H_UQ={}
 DP_UQ=[] # To work on in the future
-subcolumns=[]# columns of the dataframe
+#subcolumns=[]# columns of the dataframe
 subcolumnsComb=[]
 subcolumns_NoneComb=[]
 #%% Hardware:
@@ -64,7 +64,7 @@ class Hardware_U():  # creating a function to call each different module. HAve t
                     self.UQ_Amp=UQ_Hardware.UQ_Amplifier(Atmospheric_inputs,Amplifier_uncertainty_inputs)
                     return self.NoiseFigure_VALUE,self.UQ_Amp                                                                            
                 def Amp_losses(self): # Calculation of losses in amplifier                   
-                    self.amp_losses=[0.6]
+                    self.amp_losses=[0.6,0.8]
                     return self.amp_losses
                 def Amp_others(self):                    
                     self.amp_others=[0]
@@ -77,7 +77,11 @@ class Hardware_U():  # creating a function to call each different module. HAve t
             # If the function (e.g. "Amp_Noise") contains different outcomes (e.g. "NoiseFigure_VALUE" and "UQ_Amp") we should classify them as combinatory or none combinatory elements.
             # Atmosphere variations of different modules for different T, H, ... cannot be combined so should exist a none combinatory subcolumn
             CombStuff,NoneCombStuff=Obj.Amp_Noise(Atmospheric_inputs,Amplifier_uncertainty_inputs,Wavelength) # Whether in a function there are combinatory and none combinatory elements
-            Res['amplifier']=({'Ampli_FN':CombStuff,'Ampli_noise':NoneCombStuff,'Ampli_losses':Obj.Amp_losses(),'Ampli_DELTA':Obj.Amp_others(),'Ampli_Failures':Obj.Amp_Failures()})# Creating a nested dictionary
+            Res['amplifier']=({'Ampli_FN':CombStuff,
+                               'Ampli_noise':NoneCombStuff,
+                               'Ampli_losses':Obj.Amp_losses(),
+                               'Ampli_DELTA':Obj.Amp_others(),
+                               'Ampli_Failures':Obj.Amp_Failures()})# Creating a nested dictionary
             subcolumnsComb.append([CombStuff, Res['amplifier']['Ampli_losses'],Res['amplifier']['Ampli_DELTA'],Res['amplifier']['Ampli_Failures']])
             subcolumns_NoneComb.append([NoneCombStuff]) #variables can combine
     if 'photodetector' in modules:
@@ -92,8 +96,11 @@ class Hardware_U():  # creating a function to call each different module. HAve t
                     self.photo_failures=[0]
                     return self.photo_failures               
             Obj=photodetector()
-            Res['photodetector']=({'Photo_noise':Obj.Photo_noise(Atmospheric_inputs,Photodetector_uncertainty_inputs),'Photo_losses':Obj.Photo_losses(),'Photo_Failures':Obj.Photo_Failures()})                                         
-            subcolumnsComb.append([Res['photodetector']['Photo_losses'], Res['photodetector']['Photo_Failures']])
+            Res['photodetector']=({'Photo_noise':Obj.Photo_noise(Atmospheric_inputs,Photodetector_uncertainty_inputs),
+                                   'Photo_losses':Obj.Photo_losses(),
+                                   'Photo_Failures':Obj.Photo_Failures()})                                         
+            subcolumnsComb.append([Res['photodetector']['Photo_losses'], 
+                                   Res['photodetector']['Photo_Failures']])
             subcolumns_NoneComb.append([Res['photodetector']['Photo_noise']])
     if 'telescope' in modules:
             class telescope():
@@ -110,8 +117,13 @@ class Hardware_U():  # creating a function to call each different module. HAve t
                     self.tele_failures=[1.2]
                     return self.tele_failures   
             Obj=telescope()
-            Res['telescope']=({'Tele_noise':Obj.Tele_noise(Atmospheric_inputs,Telescope_uncertainty_inputs),'Tele_losses':Obj.Tele_losses(),'Tele_DELTA':Obj.Tele_others(),'Tele_Failures':Obj.Tele_Failures()})
-            subcolumnsComb.append([Res['telescope']['Tele_losses'],Res['telescope']['Tele_Failures'],Res['telescope']['Tele_DELTA']])
+            Res['telescope']=({'Tele_noise':Obj.Tele_noise(Atmospheric_inputs,Telescope_uncertainty_inputs),
+                               'Tele_losses':Obj.Tele_losses(),
+                               'Tele_DELTA':Obj.Tele_others(),
+                               'Tele_Failures':Obj.Tele_Failures()})
+            subcolumnsComb.append([Res['telescope']['Tele_losses'],
+                                   Res['telescope']['Tele_Failures'],
+                                   Res['telescope']['Tele_DELTA']])
             subcolumns_NoneComb.append([Res['telescope']['Tele_noise']])
 #Create H_UQ dictionary of values: 
 H_Obj=Hardware_U()# HArdware instance
@@ -206,7 +218,7 @@ if flag_plot_signal_noise==True: #Introduce this flag in the gui
     
     
     #adding Hardware noise for all different scenarios
-    ind_Scen=1 # Chooosing scenario (arranged as columns in the dataframe)
+    ind_Scen=2 # Chooosing scenario (arranged as columns in the dataframe)
     noise_H_dB=[df_UQ.iloc[ind_Param,ind_Scen] for ind_Param in range(np.shape(df_UQ)[0]-1)] # in dB. Here we can change scenario changing the index 'ind_Scen'. This goes throw the columns of the df_UQ
     noise_H_W=[10**(noise_H_dB[i]/10)  for i in range (len(noise_H_dB)) ]#convert into watts    
     mean_noise=0
@@ -225,7 +237,7 @@ if flag_plot_signal_noise==True: #Introduce this flag in the gui
     #Plotting:
     plt.figure()
     plt.plot(t,O_signal_W)
-    plt.plot(t,Total_Noise_signal_W,'g') 
+    plt.plot(t,Total_Noise_signal_W,'r-') 
     plt.title('Signal + noise')
     plt.gcf().canvas.set_window_title('Signal_Watts')
     plt.xlabel('time [s]')
@@ -233,7 +245,7 @@ if flag_plot_signal_noise==True: #Introduce this flag in the gui
     
     plt.show() #original + noise (w) 
     for ind_plot_W in [3]:
-        plt.plot(t,Noisy_signal_W[ind_plot_W],'--') 
+        plt.plot(t,Noisy_signal_W[ind_plot_W],'g--') 
         plt.legend(['original','Total Noise','Figure_noise'])#,'Total error [w]'])
     
     plt.show() 
@@ -245,11 +257,11 @@ if flag_plot_signal_noise==True: #Introduce this flag in the gui
     plt.gcf().canvas.set_window_title('Signal_dB')
     plt.ylabel('power intensity [dB]')
     plt.xlabel('time [s]')
-    plt.plot(t,Total_Noise_signal_dB,'go-') 
+    plt.plot(t,Total_Noise_signal_dB,'r-') 
 
     # original + noise (dB)        
     for ind_plot_dB in [3]:
-        plt.plot(t,Noisy_signal_dB[ind_plot_dB],'--')        
+        plt.plot(t,Noisy_signal_dB[ind_plot_dB],'g--')        
         
         plt.legend(['original','Total Noise','Figure_noise'])#,'Total error [w]'])
     

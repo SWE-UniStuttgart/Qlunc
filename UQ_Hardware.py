@@ -37,3 +37,13 @@ def FigNoise(wave):
     NoiseFigure_VALUE=figure_noise_INT(wave) # in dB
     FigureNoise=NoiseFigure_VALUE.tolist()
     return FigureNoise
+
+def PhotoNoise(freq):
+    Photodetector_noise_DATA=pd.read_excel(directory+Photodetector_Noise_FILE) #read from an excel file variation of dB with wavelength(for now just with wavelegth)
+    Photodetector_noise_INT=itp.interp1d(Photodetector_noise_DATA.iloc[:,0],Photodetector_noise_DATA.iloc[:,1],kind='cubic',fill_value="extrapolate")# First column wavelength,second column Noise in dB
+#    NEP_Lambda=NEP_min*(RespMAX/RespLambda) #NoiseEquivalentPower
+    Pmin=NEP_Lambda+np.sqrt(BW)#Minimum detectable signal power BW is teh band width
+    Photodetector_noise_VALUE=Photodetector_noise_INT(freq) # in dB
+    Photodetector_Noise=Photodetector_noise_VALUE.tolist()
+    return Photodetector_Noise
+    

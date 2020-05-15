@@ -31,22 +31,33 @@ directory='../GitHub_LiUQ/'
 #flag_exec_LiUQ         = True
 flag_plot_signal_noise  = True
 # Modules and methods we want to assess:
+modules = {'power'     : ['power_source','converter'],
+           'photonics' : ['laser_source','photodetector'],
+           'optics'    : ['telescope']}
 modules = ['amplifier','telescope','photodetector'] # modules we want to assess uncertainty
-DP      = [] # data processing methods we want to assess
+DP      = ['los'] # data processing methods we want to assess
  
 # Atmospheric inputs:
-Atmospheric_inputs={'temperature':[.5],'humidity':[5],'rain':[True],'fog':[False]}#for rain and fog intensity intervals might be introduced [none,low, medium high]
+Atmospheric_inputs={'temperature' :[.5,5],
+                    'humidity'    :[5,16],
+                    'rain'        :[True],
+                    'fog'         :[False]}#for rain and fog intensity intervals might be introduced [none,low, medium high]
 
 # Amplifier module uncertainty values:
-Amplifier_uncertainty_inputs={'noise_amp':[0.2],'OtherChanges_amp':[.005]}
+Amplifier_uncertainty_inputs={'noise_amp'        :[0.2],
+                              'OtherChanges_amp' :[.005]}
 Wavelength=[1522.5,1545,1572] #in nm
 NoiseFigure_FILE='NoiseFigure.xlsx'
 
 # Photodetector module uncertainty values:
-Photodetector_uncertainty_inputs={'noise_photo':[0.2],'OtherChanges_photo':[.005]}
+Photodetector_uncertainty_inputs={'noise_photo'        :[0.2],
+                                  'OtherChanges_photo' :[.005]}
+Photodetector_Noise_FILE='Noise_Photodetector.xlsx'
 
 # Telescope module uncertainty values:
-Telescope_uncertainty_inputs={'curvature_lens':[.01],'OtherChanges_tele':[.006],'aberration':[.0004]}
+Telescope_uncertainty_inputs={'curvature_lens'    :[.01],
+                              'OtherChanges_tele' :[.006],
+                              'aberration'        :[.0004]}
 #%%PLotting Section:
 
 flag_plot_signal_noise=False
