@@ -22,7 +22,6 @@ Created on Mon Apr 27 09:14:00 2020
 
 #import Data:
 
-directory='../GitHub_LiUQ/'
 # Which modules introduce incertainties?:
 #flag_unc_amplifier     = True # if True I include amplifier uncertainty
 #flag_unc_photodetector = True # if True I include photodetector uncertainty
@@ -31,36 +30,50 @@ directory='../GitHub_LiUQ/'
 #flag_exec_LiUQ         = True
 flag_plot_signal_noise  = True
 # Modules and methods we want to assess:
-modules = {'power'     : ['power_source','converter'],
-           'photonics' : ['laser_source','photodetector'],
-           'optics'    : ['telescope']}
-modules = ['amplifier','telescope','photodetector'] # modules we want to assess uncertainty
-DP      = ['los'] # data processing methods we want to assess
- 
-# Atmospheric inputs:
-Atmospheric_inputs={'temperature' :[.5,5],
-                    'humidity'    :[5,16],
-                    'rain'        :[True],
-                    'fog'         :[False]}#for rain and fog intensity intervals might be introduced [none,low, medium high]
+class inputs():
+    directory='../GitHub_LiUQ/'
+    
+    # Modules is a dictionary containing the lidar modules as a key and  components (or functions) as values
+    modules = {'power'     : ['power_source','converter'],
+               'photonics' : ['laser_source','photodetector','amplifier']}#,
 
-# Amplifier module uncertainty values:
-Amplifier_uncertainty_inputs={'noise_amp'        :[0.2],
-                              'OtherChanges_amp' :[.005]}
-Wavelength=[1522.5,1545,1572] #in nm
-NoiseFigure_FILE='NoiseFigure.xlsx'
-
-# Photodetector module uncertainty values:
-Photodetector_uncertainty_inputs={'noise_photo'        :[0.2],
-                                  'OtherChanges_photo' :[.005]}
-Photodetector_Noise_FILE='Noise_Photodetector.xlsx'
-
-# Telescope module uncertainty values:
-Telescope_uncertainty_inputs={'curvature_lens'    :[.01],
-                              'OtherChanges_tele' :[.006],
-                              'aberration'        :[.0004]}
-#%%PLotting Section:
-
-flag_plot_signal_noise=False
+    DP      = ['los'] # data processing methods we want to assess
+     
+    # Atmospheric inputs:
+    class atm_inp():
+        Atmospheric_inputs={'temperature' : [.5],
+                            'humidity'    : [5],
+                            'rain'        : [True],
+                            'fog'         : [False]}#for rain and fog intensity intervals might be introduced [none,low, medium high]
+#    LIDAR
+    class lidar_inp():
+        Lidar_inputs = {'Wavelength' : [1522,1570]}
+    
+    # Converter
+    class power_inp():
+        Converter_uncertainty_inputs   = {'noise_conv'        : [0.2],
+                                          'OtherChanges_conv' : [.005]}
+        PowerSource_uncertainty_inputs = {'noise_powersource':[.8],
+                                          'OtherChanges_PowerSource':[.09]}
+    
+    
+    # Photonics module uncertainty values:
+    class photonics_inp():
+        Amplifier_uncertainty_inputs      = {'noise_amp'        : [0.2],
+                                             'OtherChanges_amp' : [.005],
+                                             'NoiseFigure_FILE' : 'NoiseFigure.xlsx'}
+        LaserSource_uncertainty_inputs    = {'noise_lasersource':[.8],
+                                             'OtherChanges_LaserSource':[.09]}
+        Photodetector_uncertainty_inputs  = {'noise_photo'              :[0.2],
+                                            'OtherChanges_photo'       :[.005],
+                                            'Photodetector_Noise_FILE' :'Noise_Photodetector.xlsx'}
+    class optics_inp():
+        Telescope_uncertainty_inputs      = {'curvature_lens'    :[.01],
+                                             'OtherChanges_tele' :[.006],
+                                             'aberration'        :[.0004]}
+    #%%PLotting Section:
+    
+    flag_plot_signal_noise=False
 
 
 
