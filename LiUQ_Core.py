@@ -11,22 +11,10 @@ Created on Tue Apr 28 13:44:25 2020
 #Calculation Hardware uncertainties:
 #This code calculates uncertainties related with hardware in lidar devices, classifying them in different classes which are the different hardware modules the lidar is divided in.
 
-#Definition of classes:
-#Amplifier: figure noise.
 
 #%% Modules to import: 
-#from ImportModules import *
-#from LiUQ_inputs import flag_plot_signal_noise
-import numpy as np
-import scipy.interpolate as itp
-import pandas as pd
-import UQ_Hardware  # script with all calculations of hardware unc are done
-import UQ_Data_processing # script with all calculations of data processing methods unc are done
+from ImportModules import *
 
-import pdb
-#import pickle
-import itertools
-import matplotlib.pyplot as plt
 #%% Read data from the GUI script:#######################
 #with open('I_D.pickle', 'rb') as c_data:
 #    ImpDATA = pickle.load(c_data)
@@ -43,105 +31,150 @@ import matplotlib.pyplot as plt
 #    aberration=ImpDATA[10]
 #########################################################
 
-modules = [each_string.lower() for each_string in modules] #lower case
-DP      = [each_string.lower() for each_string in DP] #lower case
+#inputs.modules() = [each_string.lower() for each_string in modules] #lower case
+#DP      = [each_string.lower() for each_string in DP] #lower case
 
 
 #Definig the lists we fill later on within the process;
 H_UQ={}
 DP_UQ=[] # To work on in the future
+
 #subcolumns=[]# columns of the dataframe
 subcolumnsComb=[]
 subcolumns_NoneComb=[]
 #%% Hardware:
 
+Mod_Comp_Meth = {'power'     : {'power_source':UQ_Power_func.UQ_PowerSource,'converter':UQ_Power_func.UQ_Converter},
+                 'photonics' : {'laser_source':UQ_Photonics_func.UQ_LaserSource,'photodetector':UQ_Photonics_func.UQ_Photodetector,
+                                'amplifier'   :{'Amp_Noise':UQ_Photonics_func.UQ_Amplifier, 'FigNoise':UQ_Photonics_func.FigNoise}},
+                 'optics'    : {'telescope':UQ_Optics_func.UQ_Telescope}}
+MOD=list(Mod_Comp_Meth.keys())
 class Hardware_U():  # creating a function to call each different module. HAve to add an if for a new module
-    Res={}# Dictionary outcome stored in Res
-    if 'amplifier' in modules:
-            class amplifier(): # Create class amplifier
-                def Amp_Noise(self,Atmospheric_inputs,Amplifier_uncertainty_inputs,Wavelength): # Run noise in amplifier device calculations
-                    self.NoiseFigure_VALUE=UQ_Hardware.FigNoise(Wavelength)
-                    self.UQ_Amp=UQ_Hardware.UQ_Amplifier(Atmospheric_inputs,Amplifier_uncertainty_inputs)
-                    return self.NoiseFigure_VALUE,self.UQ_Amp                                                                            
-                def Amp_losses(self): # Calculation of losses in amplifier                   
-                    self.amp_losses=[0.6,0.8]
-                    return self.amp_losses
-                def Amp_others(self):                    
-                    self.amp_others=[0]
-                    return self.amp_others
-                def Amp_Failures(self):
-                    self.ampli_failures=[0.01]
-                    return self.ampli_failures 
-            Obj=amplifier()#Create instance of object amplifier
-            # Every calculation method ("def whatever...") included in "class amplifier()" should be added also in "RES['amplifier']" as a new dictionary key:value pair
-            # If the function (e.g. "Amp_Noise") contains different outcomes (e.g. "NoiseFigure_VALUE" and "UQ_Amp") we should classify them as combinatory or none combinatory elements.
-            # Atmosphere variations of different modules for different T, H, ... cannot be combined so should exist a none combinatory subcolumn
-            CombStuff,NoneCombStuff=Obj.Amp_Noise(Atmospheric_inputs,Amplifier_uncertainty_inputs,Wavelength) # Whether in a function there are combinatory and none combinatory elements
-            Res['amplifier']=({'Ampli_FN':CombStuff,
-                               'Ampli_noise':NoneCombStuff,
-                               'Ampli_losses':Obj.Amp_losses(),
-                               'Ampli_DELTA':Obj.Amp_others(),
-                               'Ampli_Failures':Obj.Amp_Failures()})# Creating a nested dictionary
-            subcolumnsComb.append([CombStuff, Res['amplifier']['Ampli_losses'],Res['amplifier']['Ampli_DELTA'],Res['amplifier']['Ampli_Failures']])
-            subcolumns_NoneComb.append([NoneCombStuff]) #variables can combine
-    if 'photodetector' in modules:
-            class photodetector():
-                def Photo_noise(self,Atmospheric_inputs,Photodetector_uncertainty_inputs):
-                    UQ_Photo=UQ_Hardware.UQ_Photodetector(Atmospheric_inputs,Photodetector_uncertainty_inputs)#function calculating amplifier uncertainties ((UQ_Photodetector.py))
-                    return UQ_Photo   
-                def Photo_losses(self):                   
-                    self.photo_losses=[1.1]
-                    return self.photo_losses
-                def Photo_Failures(self):
-                    self.photo_failures=[0]
-                    return self.photo_failures               
-            Obj=photodetector()
-            Res['photodetector']=({'Photo_noise':Obj.Photo_noise(Atmospheric_inputs,Photodetector_uncertainty_inputs),
-                                   'Photo_losses':Obj.Photo_losses(),
-                                   'Photo_Failures':Obj.Photo_Failures()})                                         
-            subcolumnsComb.append([Res['photodetector']['Photo_losses'], 
-                                   Res['photodetector']['Photo_Failures']])
-            subcolumns_NoneComb.append([Res['photodetector']['Photo_noise']])
-    if 'telescope' in modules:
-            class telescope():
-                def Tele_noise(self,Atmospheric_inputs,Telescope_uncertainty_inputs):
-                    UQ_Tele=UQ_Hardware.UQ_Telescope(Atmospheric_inputs,Telescope_uncertainty_inputs)#function calculating amplifier uncertainties ((UQ_Telescope.py))
-                    return UQ_Tele
-                def Tele_losses(self):                   
-                    self.tele_losses=[0.8]
-                    return self.tele_losses
-                def Tele_others(self):                    
-                    self.tele_others=[0.3]
-                    return self.tele_others
-                def Tele_Failures(self):                    
-                    self.tele_failures=[1.2]
-                    return self.tele_failures   
-            Obj=telescope()
-            Res['telescope']=({'Tele_noise':Obj.Tele_noise(Atmospheric_inputs,Telescope_uncertainty_inputs),
-                               'Tele_losses':Obj.Tele_losses(),
-                               'Tele_DELTA':Obj.Tele_others(),
-                               'Tele_Failures':Obj.Tele_Failures()})
-            subcolumnsComb.append([Res['telescope']['Tele_losses'],
-                                   Res['telescope']['Tele_Failures'],
-                                   Res['telescope']['Tele_DELTA']])
-            subcolumns_NoneComb.append([Res['telescope']['Tele_noise']])
+    H_UQ={}# Dictionary outcome stored in Res
+             
+    if 'power' in MOD:
+        class Power(): # Create class amplifier                   
+            power_dic={k:v for k,v in Mod_Comp_Meth['power'].items()}                     
+#            for i in range(len(MOD)):
+            PowerMod_Methods = type('power',(),power_dic)    
+        power        = Power.PowerMod_Methods
+        H_UQ['power'] = {'power_source':power.power_source(inputs),
+                        'converter'   :power.converter(inputs)}
+    if 'photonics' in MOD:
+        class Photonics(): # Create class amplifier
+            photonics_dic={k:v for k,v in Mod_Comp_Meth['photonics'].items()}                     
+#            for i in range(len(MOD)):
+            PhotonicsMod_Methods = type('photonics',(),photonics_dic)   
+        photonics = Photonics.PhotonicsMod_Methods
+        H_UQ['photonics'] = {'laser_source'      : photonics.laser_source(inputs),
+                            'photodetector'      : photonics.photodetector(inputs),
+                            'amplifier_noise'    : photonics.amplifier['Amp_Noise'](inputs),
+                            'amplifier_fignoise' : photonics.amplifier['FigNoise'](inputs)}
+    if 'optics' in MOD:
+        class Optics(): # Create class amplifier
+            optics_dic={k:v for k,v in Mod_Comp_Meth['optics'].items()}                     
+#            for i in range(len(MOD)):
+            OpticsMod_Methods = type('optics',(),optics_dic)   
+        optics = Optics.OpticsMod_Methods
+        H_UQ['optics'] = {'telescope'      : optics.telescope(inputs)}
+        
+
+
+                    
+#                    
+#                    
+#                    
+#                    
+#                    
+#                    
+#                    
+#                    
+#                    
+#                
+#                    
+#                    
+#                    def Amp_Noise(self,Atmospheric_inputs,Amplifier_uncertainty_inputs,Wavelength): # Run noise in amplifier device calculations
+#                        self.NoiseFigure_VALUE=UQ_Hardware.FigNoise(Wavelength)
+#                        self.UQ_Amp=UQ_Hardware.UQ_Amplifier(Atmospheric_inputs,Amplifier_uncertainty_inputs)
+#                        return self.NoiseFigure_VALUE,self.UQ_Amp                                                                            
+#                    def Amp_losses(self): # Calculation of losses in amplifier                   
+#                        self.amp_losses=[0.6,0.8]
+#                        return self.amp_losses
+#                    def Amp_others(self):                    
+#                        self.amp_others=[0]
+#                        return self.amp_others
+#                    def Amp_Failures(self):
+#                        self.ampli_failures=[0.01]
+#                        return self.ampli_failures 
+#                Obj=amplifier()#Create instance of object amplifier
+#                # Every calculation method ("def whatever...") included in "class amplifier()" should be added also in "RES['amplifier']" as a new dictionary key:value pair
+#                # If the function (e.g. "Amp_Noise") contains different outcomes (e.g. "NoiseFigure_VALUE" and "UQ_Amp") we should classify them as combinatory or none combinatory elements.
+#                # Atmosphere variations of different modules for different T, H, ... cannot be combined so should exist a none combinatory subcolumn
+#                CombStuff,NoneCombStuff=Obj.Amp_Noise(Atmospheric_inputs,Amplifier_uncertainty_inputs,Wavelength) # Whether in a function there are combinatory and none combinatory elements
+#                Res['amplifier']=({'Ampli_FN':CombStuff,
+#                                   'Ampli_noise':NoneCombStuff,
+#                                   'Ampli_losses':Obj.Amp_losses(),
+#                                   'Ampli_DELTA':Obj.Amp_others(),
+#                                   'Ampli_Failures':Obj.Amp_Failures()})# Creating a nested dictionary
+#                subcolumnsComb.append([CombStuff, Res['amplifier']['Ampli_losses'],Res['amplifier']['Ampli_DELTA'],Res['amplifier']['Ampli_Failures']])
+#                subcolumns_NoneComb.append([NoneCombStuff]) #variables can combine
+#        if 'photodetector' in modules:
+#                class photodetector():
+#                    def Photo_noise(self,Atmospheric_inputs,Photodetector_uncertainty_inputs):
+#                        UQ_Photo=UQ_Hardware.UQ_Photodetector(Atmospheric_inputs,Photodetector_uncertainty_inputs)#function calculating amplifier uncertainties ((UQ_Photodetector.py))
+#                        return UQ_Photo   
+#                    def Photo_losses(self):                   
+#                        self.photo_losses=[1.1]
+#                        return self.photo_losses
+#                    def Photo_Failures(self):
+#                        self.photo_failures=[0]
+#                        return self.photo_failures               
+#                Obj=photodetector()
+#                Res['photodetector']=({'Photo_noise':Obj.Photo_noise(Atmospheric_inputs,Photodetector_uncertainty_inputs),
+#                                       'Photo_losses':Obj.Photo_losses(),
+#                                       'Photo_Failures':Obj.Photo_Failures()})                                         
+#                subcolumnsComb.append([Res['photodetector']['Photo_losses'], 
+#                                       Res['photodetector']['Photo_Failures']])
+#                subcolumns_NoneComb.append([Res['photodetector']['Photo_noise']])
+#        if 'telescope' in modules:
+#                class telescope():
+#                    def Tele_noise(self,Atmospheric_inputs,Telescope_uncertainty_inputs):
+#                        UQ_Tele=UQ_Hardware.UQ_Telescope(Atmospheric_inputs,Telescope_uncertainty_inputs)#function calculating amplifier uncertainties ((UQ_Telescope.py))
+#                        return UQ_Tele
+#                    def Tele_losses(self):                   
+#                        self.tele_losses=[0.8]
+#                        return self.tele_losses
+#                    def Tele_others(self):                    
+#                        self.tele_others=[0.3]
+#                        return self.tele_others
+#                    def Tele_Failures(self):                    
+#                        self.tele_failures=[1.2]
+#                        return self.tele_failures   
+#                Obj=telescope()
+#                Res['telescope']=({'Tele_noise':Obj.Tele_noise(Atmospheric_inputs,Telescope_uncertainty_inputs),
+#                                   'Tele_losses':Obj.Tele_losses(),
+#                                   'Tele_DELTA':Obj.Tele_others(),
+#                                   'Tele_Failures':Obj.Tele_Failures()})
+#                subcolumnsComb.append([Res['telescope']['Tele_losses'],
+#                                       Res['telescope']['Tele_Failures'],
+#                                       Res['telescope']['Tele_DELTA']])
+#                subcolumns_NoneComb.append([Res['telescope']['Tele_noise']])
 #Create H_UQ dictionary of values: 
-H_Obj=Hardware_U()# HArdware instance
-for i in modules:       
-    H_UQ[i]=(H_Obj.Res[i])
-#    count_index+=1
+H_UQ=Hardware_U.H_UQ# HArdware instance
+
+
 #If want to make fast calculations can apply: Hardware_U().amplifier().Amp_noise(25,20,5,.005)
     
 #%% Data processing:
-for method in DP:
-    def Data_Processing_U(method=method):
-        if method=='los': 
-            UQ_LineOfSight= UQ_Data_processing.UQ_LOS() #function calculating amplifier uncertainties ((UQ_Amplifier.py))
-            return UQ_LineOfSight
-        elif method=='filtering_methods': 
-            UQ_Filtering= UQ_Data_processing.UQ_FilterMethods() #function calculating amplifier uncertainties ((UQ_Amplifier.py))
-            return UQ_Filtering
-    DP_UQ.append(Data_Processing_U(method=method))
+#for method in DP:
+#    def Data_Processing_U(method=method):
+#        if method=='los': 
+#            UQ_LineOfSight= UQ_Data_processing.UQ_LOS() #function calculating amplifier uncertainties ((UQ_Amplifier.py))
+#            return UQ_LineOfSight
+#        elif method=='filtering_methods': 
+#            UQ_Filtering= UQ_Data_processing.UQ_FilterMethods() #function calculating amplifier uncertainties ((UQ_Amplifier.py))
+#            return UQ_Filtering
+#    DP_UQ.append(Data_Processing_U(method=method))
 
 #%% Create a complete data frame (Hardware+data processing uncertainties): 
 
