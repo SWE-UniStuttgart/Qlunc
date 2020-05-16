@@ -6,11 +6,15 @@ Created on Tue May 12 02:09:57 2020
 """
 
 #%% Modules to import: 
-import pandas as pd
-import UQ_Hardware  # script with all calculations of hardware unc are done
-import UQ_Data_processing # script with all calculations of data processing methods unc are done
 import numpy as np
+import scipy.interpolate as itp
+import pandas as pd
+import UQ_Power_func       # script with all calculations of Power module unc are done
+import UQ_Photonics_func   # script with all calculations of Photonics module unc are done
+import UQ_Optics_func      # script with all calculations of Optics module unc are done
+import UQ_Data_processing  # script with all calculations of data processing methods unc are done
+import LiUQ_inputs
 import pdb
-#import pickle
+#import pickle # for GUI
 import itertools
 import matplotlib.pyplot as plt
