@@ -14,7 +14,7 @@ Created on Tue Apr 28 13:44:25 2020
 
 #%% Modules to import: 
 from ImportModules import *
-
+import Help_standAlone as SA
 #%% Read data from the GUI script:#######################
 #with open('I_D.pickle', 'rb') as c_data:
 #    ImpDATA = pickle.load(c_data)
@@ -43,40 +43,62 @@ DP_UQ=[] # To work on in the future
 subcolumnsComb=[]
 subcolumns_NoneComb=[]
 #%% Hardware:
+#Definig methods:
+power_comp     = {'power_source' :UQ_Power_func.UQ_PowerSource(inputs),
+                  'converter'    :UQ_Power_func.UQ_Converter(inputs)}
+photonics_comp = {'laser_source' :UQ_Photonics_func.UQ_LaserSource(inputs),
+                  'photodetector':UQ_Photonics_func.UQ_Photodetector(inputs),
+                  'amplifier'    :{'amplifier_noise':UQ_Photonics_func.UQ_Amplifier(inputs), 
+                                   'amplifier_fignoise' :UQ_Photonics_func.FigNoise(inputs)}}
 
-Mod_Comp_Meth = {'power'     : {'power_source':UQ_Power_func.UQ_PowerSource,'converter':UQ_Power_func.UQ_Converter},
-                 'photonics' : {'laser_source':UQ_Photonics_func.UQ_LaserSource,'photodetector':UQ_Photonics_func.UQ_Photodetector,
-                                'amplifier'   :{'Amp_Noise':UQ_Photonics_func.UQ_Amplifier, 'FigNoise':UQ_Photonics_func.FigNoise}},
-                 'optics'    : {'telescope':UQ_Optics_func.UQ_Telescope}}
-MOD=list(Mod_Comp_Meth.keys())
+optics_comp    = {'telescope'    :UQ_Optics_func.UQ_Telescope(inputs)}  
+
+#Defining classes:
+
 class Hardware_U():  # creating a function to call each different module. HAve to add an if for a new module
-    H_UQ={}# Dictionary outcome stored in Res
-             
-    if 'power' in MOD:
-        class Power(): # Create class amplifier                   
-            power_dic={k:v for k,v in Mod_Comp_Meth['power'].items()}                     
-#            for i in range(len(MOD)):
+    H_UQ={} # outcome dictionary
+            
+    if 'power' in inputs.modules:              
+        class Power(): # Create class amplifier                    
+            power_dic={k:v for k,v in power_comp.items()} # creating dictionary to pass to type                     
             PowerMod_Methods = type('power',(),power_dic)    
-        power        = Power.PowerMod_Methods
-        H_UQ['power'] = {'power_source':power.power_source(inputs),
-                        'converter'   :power.converter(inputs)}
-    if 'photonics' in MOD:
-        class Photonics(): # Create class amplifier
-            photonics_dic={k:v for k,v in Mod_Comp_Meth['photonics'].items()}                     
-#            for i in range(len(MOD)):
+        power = Power.PowerMod_Methods
+#        H_UQ['power']={}  
+        SA.ext_comp('power',power_comp,H_UQ)
+        
+        
+#        if 'power_source' in inputs.modules['power']:            
+#            H_UQ['power']['power_source']= power.power_source(inputs)
+#        if  'converter' in inputs.modules['power'] :
+#            H_UQ['power']['converter']=power.converter(inputs)
+
+    
+    if 'photonics' in inputs.modules:
+        class Photonics(): # Create class Photonics 
+            photonics_dic={k:v for k,v in photonics_comp.items()}                     
             PhotonicsMod_Methods = type('photonics',(),photonics_dic)   
-        photonics = Photonics.PhotonicsMod_Methods
-        H_UQ['photonics'] = {'laser_source'      : photonics.laser_source(inputs),
-                            'photodetector'      : photonics.photodetector(inputs),
-                            'amplifier_noise'    : photonics.amplifier['Amp_Noise'](inputs),
-                            'amplifier_fignoise' : photonics.amplifier['FigNoise'](inputs)}
-    if 'optics' in MOD:
-        class Optics(): # Create class amplifier
-            optics_dic={k:v for k,v in Mod_Comp_Meth['optics'].items()}                     
-#            for i in range(len(MOD)):
+        photonics         = Photonics.PhotonicsMod_Methods
+        SA.ext_comp('photonics',photonics_comp,H_UQ)
+        
+#        if 'laser_source'  in inputs.modules['photonics']:
+#            H_UQ['photonics']['laser_source']       = photonics.laser_source(inputs)
+#        if 'photodetector'  in inputs.modules['photonics']:
+#            H_UQ['photonics']['photodetector']      = photonics.photodetector(inputs)
+#        if 'amplifier_noise'  in inputs.modules['photonics']['amplifier']:
+#            H_UQ['photonics']['amplifier_noise']    = photonics.amplifier['amplifier_noise'](inputs)
+#        if 'amplifier_fignoise'  in inputs.modules['photonics']['amplifier']:
+#            H_UQ['photonics']['amplifier_fignoise'] = photonics.amplifier['amplifier_fignoise'](inputs)
+        
+    if 'optics' in inputs.modules:
+        class Optics(): # Create class Optics           
+            optics_dic={k:v for k,v in optics_comp.items()}                     
             OpticsMod_Methods = type('optics',(),optics_dic)   
-        optics = Optics.OpticsMod_Methods
-        H_UQ['optics'] = {'telescope'      : optics.telescope(inputs)}
+        optics         = Optics.OpticsMod_Methods
+        SA.ext_comp('optics',optics_comp,H_UQ)        
+#        H_UQ['optics'].update = {'telescope_losses':inputs.optics_inp.Telescope_uncertainty_inputs['losses']}
+
+
+H_UQ=Hardware_U.H_UQ# HArdware instance
         
 
 
@@ -159,11 +181,6 @@ class Hardware_U():  # creating a function to call each different module. HAve t
 #                                       Res['telescope']['Tele_Failures'],
 #                                       Res['telescope']['Tele_DELTA']])
 #                subcolumns_NoneComb.append([Res['telescope']['Tele_noise']])
-#Create H_UQ dictionary of values: 
-H_UQ=Hardware_U.H_UQ# HArdware instance
-
-
-#If want to make fast calculations can apply: Hardware_U().amplifier().Amp_noise(25,20,5,.005)
     
 #%% Data processing:
 #for method in DP:
