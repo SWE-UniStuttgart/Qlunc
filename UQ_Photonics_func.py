@@ -17,7 +17,7 @@ def UQ_Photodetector(inputs):
                       for hum         in inputs.atm_inp.Atmospheric_inputs['humidity'] \
                       for noise_photo in inputs.photonics_inp.Photodetector_uncertainty_inputs['noise_photo'] \
                       for o_c_photo   in inputs.photonics_inp.Photodetector_uncertainty_inputs['OtherChanges_photo']]
-#    UQ_photodetector=[format(UQ_photodetector[i_dec],'.3f') for i_dec in range(len(UQ_photodetector))] # 3 decimals
+    UQ_photodetector=[round(UQ_photodetector[i_dec],3) for i_dec in range(len(UQ_photodetector))] # 3 decimals
     return UQ_photodetector
 
 def UQ_Amplifier(inputs):
@@ -26,7 +26,7 @@ def UQ_Amplifier(inputs):
                   for hum       in inputs.atm_inp.Atmospheric_inputs['humidity']\
                   for noise_amp in inputs.photonics_inp.Amplifier_uncertainty_inputs['noise_amp'] \
                   for o_c_amp   in inputs.photonics_inp.Amplifier_uncertainty_inputs['OtherChanges_amp']]
-#    UQ_amplifier=[format(UQ_amplifier[i_dec],'.3f') for i_dec in range(len(UQ_amplifier))]
+    UQ_amplifier=[round(UQ_amplifier[i_dec],3) for i_dec in range(len(UQ_amplifier))]
     return UQ_amplifier
 
 def UQ_LaserSource(inputs):
@@ -36,7 +36,7 @@ def UQ_LaserSource(inputs):
                      for hum        in inputs.atm_inp.Atmospheric_inputs['humidity']\
                      for noise_ls   in inputs.photonics_inp.LaserSource_uncertainty_inputs['noise_lasersource']\
                      for o_c_ls     in inputs.photonics_inp.LaserSource_uncertainty_inputs['OtherChanges_LaserSource']]
-#    UQ_laser_source=[format(UQ_laser_source[i_dec],'.3f') for i_dec in range(len(UQ_laser_source))]
+    UQ_laser_source=[round(UQ_laser_source[i_dec],3) for i_dec in range(len(UQ_laser_source))]
     return UQ_laser_source
 
 
@@ -45,7 +45,7 @@ def FigNoise(inputs):
     figure_noise_INT=itp.interp1d(NoiseFigure_DATA.iloc[:,0],NoiseFigure_DATA.iloc[:,1],kind='cubic',fill_value="extrapolate")# First column wavelength,second column Noise in dB
     NoiseFigure_VALUE=figure_noise_INT(inputs.lidar_inp.Lidar_inputs['Wavelength']) # in dB
     FigureNoise=NoiseFigure_VALUE.tolist()
-#    FigureNoise=[format(FigureNoise[i_dec],'.3f') for i_dec in range(len(FigureNoise))]
+    FigureNoise=[round(FigureNoise[i_dec],3) for i_dec in range(len(FigureNoise))]
     return FigureNoise
 
 

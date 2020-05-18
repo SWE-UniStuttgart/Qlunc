@@ -19,7 +19,7 @@ def UQ_Telescope(inputs):
                   for o_c_tele       in inputs.optics_inp.Telescope_uncertainty_inputs['OtherChanges_tele']]
     Telescope_Losses =inputs.optics_inp.Telescope_uncertainty_inputs['losses']
 
-#    UQ_telescope=[format(UQ_telescope[i_dec],'.3f') for i_dec in range(len(UQ_telescope))]
+    UQ_telescope=[round(UQ_telescope[i_dec],3) for i_dec in range(len(UQ_telescope))]
 #    toreturn['telescope_atm_unc']=UQ_telescope
 #    toreturn['telescope_losses']=Telescope_Losses
     return UQ_telescope
