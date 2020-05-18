@@ -1,5 +1,7 @@
 # Don't keep this files:
 *.csv
+*.xlsx
+
 # Ignore specific files:
 LiUQ_Hardware.py
 LiUQ_Hardware2.py
