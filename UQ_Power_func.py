@@ -5,9 +5,7 @@ Created on Sat May 16 14:50:18 2020
 @author: fcosta
 """
 
-import LiUQ_inputs
-
-
+from ImportModules import *
 
 
 def UQ_PowerSource(inputs):
@@ -17,6 +15,7 @@ def UQ_PowerSource(inputs):
                      for hum      in inputs.atm_inp.Atmospheric_inputs['humidity']\
                      for noise_ps in inputs.power_inp.PowerSource_uncertainty_inputs['noise_powersource'] \
                      for o_c_ps   in inputs.power_inp.PowerSource_uncertainty_inputs['OtherChanges_PowerSource']]
+#    UQ_power_source=[format(UQ_power_source[i_dec],'.3f') for i_dec in range(len(UQ_power_source))]
     return UQ_power_source
 
 def UQ_Converter(inputs):
@@ -26,4 +25,5 @@ def UQ_Converter(inputs):
                   for hum in inputs.atm_inp.Atmospheric_inputs['humidity']\
                   for noise_conv in inputs.power_inp.Converter_uncertainty_inputs['noise_conv'] \
                   for o_c_conv in inputs.power_inp.Converter_uncertainty_inputs['OtherChanges_conv']]
+#    UQ_converter=[format(UQ_converter[i_dec],'.3f') for i_dec in range(len(UQ_converter))]
     return UQ_converter

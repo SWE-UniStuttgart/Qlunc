@@ -8,7 +8,7 @@ Created on Mon Apr 27 09:14:00 2020
 #04272020 - Francisco Costa
 #SWE - Stuttgart
 #LiUQ inputs for different modules:
-#Here the user can introduce parameters to calculate the uncertainty of the different modules. Must be note units of the uncertainties: either dB or watts
+#Here the user can introduce parameters to calculate the uncertainty of the different modules and components.. Must be note units of the uncertainties: either dB or watts
 
 # Inputs:
 #    Modules can be: 'amplifier', 'telescope', 'photodetector'
@@ -33,24 +33,20 @@ flag_plot_signal_noise  = True
 class inputs():
     directory='../GitHub_LiUQ/'
     
-    # Modules is a dictionary containing the lidar modules as a key and  components (or functions) as values
+    # Modules is a dictionary containing the lidar modules as a key. As values there is a nested dictionary containing components as keys and type of uncertainty as values.
+    # Each of this values is related with a function which calculates this specific uncertainty. The relation between type of unc. and function calculating it is in LiUQ_core when defining methods.
     modules = {
-               'power'     : {'power_source' :[],
-                              'converter'    :[]},
+               'power'     : {'power_source' :['power_source_noise'],                    # for now: power_source_noise
+                              'converter'    :['converter_noise']},                      # for now:converter_noise
     
-               'photonics' : {'photodetector':[], 
-                              'amplifier'    :['amplifier_fignoise'],
-                              'laser_source' :[]},
+               'photonics' : {'photodetector':['photodetector_noise'],                   # for now:photodetector_noise
+                              'amplifier'    :['amplifier_noise','amplifier_fignoise'],  #for now: amplifier_fignoise and amplifier_noise
+                              'laser_source' :['laser_source_noise']},                   # for now:laser_source_noise
                               
-               'optics'    : {'telescope'    :[]}
+               'optics'    : {'telescope'    :['telescope_noise']}                       # for now:telescope_noise
                }
-    DP      = ['los'] # data processing methods we want to assess
+#    DP      = ['los'] # data processing methods we want to assess
 
-    # Which uncertainties want to include in calculations when calling methods:
-    # Ampli ('ampli_atm_unc'       includes uncertainties related with atmosphere conditions
-    #        'ampli_figure_noise'  includes figure noise  )
-    ampliU=['ampli_atm_unc','ampli_figure_noise']
-    
      
     # Atmospheric inputs:
     class atm_inp():

@@ -5,9 +5,10 @@ Created on Sat May 16 14:51:36 2020
 @author: fcosta
 """
 
-import LiUQ_inputs
-import pandas as pd
-import scipy.interpolate as itp
+#import LiUQ_inputs
+#import pandas as pd
+#import scipy.interpolate as itp
+from ImportModules import *
 
 
 def UQ_Photodetector(inputs):
@@ -16,23 +17,16 @@ def UQ_Photodetector(inputs):
                       for hum         in inputs.atm_inp.Atmospheric_inputs['humidity'] \
                       for noise_photo in inputs.photonics_inp.Photodetector_uncertainty_inputs['noise_photo'] \
                       for o_c_photo   in inputs.photonics_inp.Photodetector_uncertainty_inputs['OtherChanges_photo']]
+#    UQ_photodetector=[format(UQ_photodetector[i_dec],'.3f') for i_dec in range(len(UQ_photodetector))] # 3 decimals
     return UQ_photodetector
 
 def UQ_Amplifier(inputs):
-    toreturn={}
-    if 'ampli_atm_unc' in inputs.ampliU:
-        UQ_amplifier=[(temp*0.5+hum*0.7+noise_amp+o_c_amp)\
-                      for temp      in inputs.atm_inp.Atmospheric_inputs['temperature']\
-                      for hum       in inputs.atm_inp.Atmospheric_inputs['humidity']\
-                      for noise_amp in inputs.photonics_inp.Amplifier_uncertainty_inputs['noise_amp'] \
-                      for o_c_amp   in inputs.photonics_inp.Amplifier_uncertainty_inputs['OtherChanges_amp']]
-        toreturn['atmospheric_variations']=UQ_amplifier
-#    if 'ampli_figure_noise' in inputs.ampliU:  
-#        NoiseFigure_DATA=pd.read_excel(inputs.directory+inputs.photonics_inp.Amplifier_uncertainty_inputs['NoiseFigure_FILE']) #read from an excel file variation of dB with wavelength(for now just with wavelegth)
-#        figure_noise_INT=itp.interp1d(NoiseFigure_DATA.iloc[:,0],NoiseFigure_DATA.iloc[:,1],kind='cubic',fill_value="extrapolate")# First column wavelength,second column Noise in dB
-#        NoiseFigure_VALUE=figure_noise_INT(inputs.lidar_inp.Lidar_inputs['Wavelength']) # in dB
-#        FigureNoise=NoiseFigure_VALUE.tolist()
-#        toreturn['Figure_noise']=FigureNoise
+    UQ_amplifier=[(temp*0.5+hum*0.7+noise_amp+o_c_amp)\
+                  for temp      in inputs.atm_inp.Atmospheric_inputs['temperature']\
+                  for hum       in inputs.atm_inp.Atmospheric_inputs['humidity']\
+                  for noise_amp in inputs.photonics_inp.Amplifier_uncertainty_inputs['noise_amp'] \
+                  for o_c_amp   in inputs.photonics_inp.Amplifier_uncertainty_inputs['OtherChanges_amp']]
+#    UQ_amplifier=[format(UQ_amplifier[i_dec],'.3f') for i_dec in range(len(UQ_amplifier))]
     return UQ_amplifier
 
 def UQ_LaserSource(inputs):
@@ -42,12 +36,16 @@ def UQ_LaserSource(inputs):
                      for hum        in inputs.atm_inp.Atmospheric_inputs['humidity']\
                      for noise_ls   in inputs.photonics_inp.LaserSource_uncertainty_inputs['noise_lasersource']\
                      for o_c_ls     in inputs.photonics_inp.LaserSource_uncertainty_inputs['OtherChanges_LaserSource']]
+#    UQ_laser_source=[format(UQ_laser_source[i_dec],'.3f') for i_dec in range(len(UQ_laser_source))]
     return UQ_laser_source
+
+
 def FigNoise(inputs):
     NoiseFigure_DATA=pd.read_excel(inputs.directory+inputs.photonics_inp.Amplifier_uncertainty_inputs['NoiseFigure_FILE']) #read from an excel file variation of dB with wavelength(for now just with wavelegth)
     figure_noise_INT=itp.interp1d(NoiseFigure_DATA.iloc[:,0],NoiseFigure_DATA.iloc[:,1],kind='cubic',fill_value="extrapolate")# First column wavelength,second column Noise in dB
     NoiseFigure_VALUE=figure_noise_INT(inputs.lidar_inp.Lidar_inputs['Wavelength']) # in dB
     FigureNoise=NoiseFigure_VALUE.tolist()
+#    FigureNoise=[format(FigureNoise[i_dec],'.3f') for i_dec in range(len(FigureNoise))]
     return FigureNoise
 
 
