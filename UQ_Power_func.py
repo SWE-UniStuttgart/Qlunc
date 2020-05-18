@@ -9,7 +9,7 @@ from ImportModules import *
 
 
 def UQ_PowerSource(inputs):
-    UQ_power_source=[(temp*1+hum*0.1+wave/1000+noise_ps+o_c_ps) \
+    UQ_power_source=[(temp*1+hum*1+wave/1000+noise_ps+o_c_ps) \
                      for wave     in inputs.lidar_inp.Lidar_inputs['Wavelength']\
                      for temp     in inputs.atm_inp.Atmospheric_inputs['temperature']\
                      for hum      in inputs.atm_inp.Atmospheric_inputs['humidity']\
@@ -19,7 +19,7 @@ def UQ_PowerSource(inputs):
     return UQ_power_source
 
 def UQ_Converter(inputs):
-    UQ_converter=[(temp*1+hum*0.1+wave/1100+noise_conv+o_c_conv)\
+    UQ_converter=[(temp*1+hum*1+wave/1100+noise_conv+o_c_conv)\
                   for wave in inputs.lidar_inp.Lidar_inputs['Wavelength']\
                   for temp in inputs.atm_inp.Atmospheric_inputs['temperature']\
                   for hum in inputs.atm_inp.Atmospheric_inputs['humidity']\

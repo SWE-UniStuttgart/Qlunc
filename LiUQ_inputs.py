@@ -36,31 +36,31 @@ class inputs():
     # Modules is a dictionary containing the lidar modules as a key. As values there is a nested dictionary containing components as keys and type of uncertainty as values.
     # Each of this values is related with a function which calculates this specific uncertainty. The relation between type of unc. and function calculating it is in LiUQ_core when defining methods.
     modules = {
-               'power'     : {'power_source' :['power_source_noise'],                    # for now: power_source_noise
-                              'converter'    :['converter_noise']},                      # for now:converter_noise
+               'power'     : {'power_source' :['power_source_noise'],                    # for now: power_source_noise,...
+                              'converter'    :['converter_noise']},                      # for now:converter_noise,...
     
-               'photonics' : {'photodetector':['photodetector_noise'],                   # for now:photodetector_noise
-                              'amplifier'    :['amplifier_noise','amplifier_fignoise'],  #for now: amplifier_fignoise and amplifier_noise
-                              'laser_source' :['laser_source_noise']},                   # for now:laser_source_noise
+               'photonics' : {'photodetector':['photodetector_noise'],                   # for now:photodetector_noise,....
+                              'amplifier'    :['amplifier_noise','amplifier_fignoise'],  #for now: amplifier_fignoise and amplifier_noise,...
+                              'laser_source' :['laser_source_noise']},                   # for now:laser_source_noise,...
                               
-               'optics'    : {'telescope'    :['telescope_noise']}                       # for now:telescope_noise
+               'optics'    : {'telescope'    :['telescope_noise']}                       # for now:telescope_noise,...
                }
 #    DP      = ['los'] # data processing methods we want to assess
 
      
     # Atmospheric inputs:
     class atm_inp():
-        Atmospheric_inputs={'temperature' : [.5,10000],
-                            'humidity'    : [5],
+        Atmospheric_inputs={'temperature' : [.5,1000],
+                            'humidity'    : [5,12000],
                             'rain'        : [True],
                             'fog'         : [False]}#for rain and fog intensity intervals might be introduced [none,low, medium high]
-    # LIDAR
+    # LIDAR layout inputs:
     class lidar_inp():
         Lidar_inputs = {'Wavelength' : [1522]}
     
-    # Converter
+    # Converter input characteristics
     class power_inp():
-        Converter_uncertainty_inputs   = {'noise_conv'        : [0.2],
+        Converter_uncertainty_inputs   = {'noise_conv'        : [.2,.4],
                                           'OtherChanges_conv' : [.005]}
         PowerSource_uncertainty_inputs = {'noise_powersource'       : [.8],
                                           'OtherChanges_PowerSource': [.09]}
