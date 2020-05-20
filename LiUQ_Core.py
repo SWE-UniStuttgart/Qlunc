@@ -194,11 +194,11 @@ if inputs.atm_inp.TimeSeries==True:
                 indexesDF.append(meth)
     columnsDF=['T= {}'.format(inputs.atm_inp.Atmospheric_inputs['temperature'][i]) for i in range(len(inputs.atm_inp.Atmospheric_inputs['temperature']))]
         
-    DF_Hard={}
-    for module in H_UQ.keys():
-        for components in H_UQ[module].keys(): #for components        
-            DF_Hard[components]=list(zip(*(itertools.product(*(list(H_UQ[module][components].values()))))))
-    DF_Hard=SA.fill_values(DF_Hard)
+#    DF_Hard={}
+#    for module in H_UQ.keys():
+#        for components in H_UQ[module].keys(): #for components        
+#            DF_Hard[components]=list(zip(*(itertools.product(*(list(H_UQ[module][components].values()))))))
+    DF_Hard=SA.fill_values(H_UQ)
 #    df_UQ=pd.DataFrame(DF_Hard,columns=columnsDF, index=indexesDF)
     df_UQ=pd.DataFrame(DF_Hard,columns=columnsDF, index=indexesDF)# Data frame for hardware uncertainties for each scenario
 else:
