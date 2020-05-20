@@ -14,7 +14,6 @@ Created on Tue Apr 28 13:44:25 2020
 
 #%% Modules to import: 
 from ImportModules import *
-#import Help_standAlone as SA
 #%% Read data from the GUI script:#######################
 #with open('I_D.pickle', 'rb') as c_data:
 #    ImpDATA = pickle.load(c_data)
@@ -43,16 +42,18 @@ DP_UQ={} # To work on in the future
 subcolumnsComb=[]
 subcolumns_NoneComb=[]
 #%% Hardware:
-#Definig methods:
+#Definig methods: nested dictionary to define which methods do we use for each component. Name of components must coincide with those in 'inputs.modules'
 power_comp     = {'power_source' :{'power_source_noise'  :UQ_Power_func.UQ_PowerSource(inputs)},
-                  'converter'    :{'converter_noise'     :UQ_Power_func.UQ_Converter(inputs)}}
+                  'converter'    :{'converter_noise'     :UQ_Power_func.UQ_Converter(inputs),
+                                   'converter_losses'    :UQ_Power_func.Losses_Converter(inputs.power_inp.Converter_uncertainty_inputs['losses'])}}
 
 photonics_comp = {'laser_source' :{'laser_source_noise'  :UQ_Photonics_func.UQ_LaserSource(inputs)},
                   'photodetector':{'photodetector_noise' :UQ_Photonics_func.UQ_Photodetector(inputs)},
                   'amplifier'    :{'amplifier_noise'     :UQ_Photonics_func.UQ_Amplifier(inputs), 
-                                   'amplifier_fignoise'  :UQ_Photonics_func.FigNoise(inputs)}}
+                                   'amplifier_fignoise'  :UQ_Photonics_func.FigNoise(inputs,direct)}}
 
-optics_comp    = {'telescope'    :{'telescope_noise'     :UQ_Optics_func.UQ_Telescope(inputs)}  }
+optics_comp    = {'telescope'    :{'telescope_noise'     :UQ_Optics_func.UQ_Telescope(inputs),
+                                   'telescope_losses'    :UQ_Optics_func.Losses_Telescope(inputs.optics_inp.Telescope_uncertainty_inputs['losses'])}}
 
 #Defining classes:
 class Hardware_U():  # creating a function to call each different module. HAve to add an if for a new module
@@ -77,7 +78,7 @@ class Hardware_U():  # creating a function to call each different module. HAve t
         optics         = Optics.OpticsMod_Methods
         SA.ext_comp('optics',optics_comp,H_UQ)        
         
-H_UQ=Hardware_U.H_UQ# HArdware instance
+H_UQ=Hardware_U.H_UQ# Hardware instance
         
 #Hardware_U().power().power_source['power_source_noise']
                 
@@ -169,25 +170,40 @@ H_UQ=Hardware_U.H_UQ# HArdware instance
 
 #%% Create a complete data frame (Hardware+data processing uncertainties): 
 
-#Generate list of keys and values to loop over
-Values_errors = [list(itertools.chain((H_UQ[ind_error_val].values()))) for ind_error_val in H_UQ.keys()]
-Keys_errors   = [list(itertools.chain((H_UQ[ind_error_key].keys()))) for ind_error_key in H_UQ.keys()]
-
-#Generate indexes and columns of the data frame:
-subindices = list((itertools.chain(*Keys_errors)))
-subcolumns_NoneComb=list(zip(*list(itertools.chain(*subcolumns_NoneComb))))
-subcolumnsComb=list(itertools.product(*list(itertools.chain(*subcolumnsComb))))
-
-
-Scenarios=[subcolumns_NoneComb]+[subcolumnsComb]
-FinalScenarios=list(itertools.product(*Scenarios))
-FinalScenarios=[list(itertools.chain(*FinalScenarios[i])) for i in range(len(FinalScenarios))]
-#Columns=[str(list(itertools.chain(*subcolumns[i]))) for i in range(len(subcolumns))]
-
-
+##Generate list of keys and values to loop over
+#Values_errors = [list(itertools.chain((H_UQ[ind_error_val].values()))) for ind_error_val in H_UQ.keys()]
+#Keys_errors   = [list(itertools.chain((H_UQ[ind_error_key].keys()))) for ind_error_key in H_UQ.keys()]
+#
+##Generate indexes and columns of the data frame:
+#subindices = list((itertools.chain(*Keys_errors)))
+#subcolumns_NoneComb=list(zip(*list(itertools.chain(*subcolumns_NoneComb))))
+#subcolumnsComb=list(itertools.product(*list(itertools.chain(*subcolumnsComb))))
+#
+#
+#Scenarios=[subcolumns_NoneComb]+[subcolumnsComb]
+#FinalScenarios=list(itertools.product(*Scenarios))
+#FinalScenarios=[list(itertools.chain(*FinalScenarios[i])) for i in range(len(FinalScenarios))]
+##Columns=[str(list(itertools.chain(*subcolumns[i]))) for i in range(len(subcolumns))]
 
 
-df_UQ=pd.DataFrame(np.transpose(FinalScenarios), index=subindices)
+if inputs.atm_inp.TimeSeries==True:
+    indexesDF=[]
+    for module in inputs.modules.keys():
+        for comp in inputs.modules[module].keys():
+            for meth in inputs.modules[module][comp]:
+                indexesDF.append(meth)
+    columnsDF=['T= {}'.format(inputs.atm_inp.Atmospheric_inputs['temperature'][i]) for i in range(len(inputs.atm_inp.Atmospheric_inputs['temperature']))]
+        
+    DF_Hard={}
+    for module in H_UQ.keys():
+        for components in H_UQ[module].keys(): #for components        
+            DF_Hard[components]=list(zip(*(itertools.product(*(list(H_UQ[module][components].values()))))))
+    DF_Hard=SA.fill_values(DF_Hard)
+#    df_UQ=pd.DataFrame(DF_Hard,columns=columnsDF, index=indexesDF)
+    df_UQ=pd.DataFrame(DF_Hard,columns=columnsDF, index=indexesDF)# Data frame for hardware uncertainties for each scenario
+else:
+
+    df_UQ=pd.DataFrame(np.transpose(FinalScenarios), index=subindices)
 
 
 #subcolumns = list(itertools.chain(itertools.product(list(itertools.product(*list(itertools.chain(*list([Atmospheric_inputs.values()]))))),list(itertools.product(*list(itertools.chain(*subcolumns)))))))
@@ -233,7 +249,7 @@ df_UQ.loc['Total UQ']= Sum_decibels# for now sum the uncertainties. Here have to
 #######################################################
 
 #%% Plotting:
-flag_plot_signal_noise=True
+flag_plot_signal_noise=False
 if flag_plot_signal_noise==True: #Introduce this flag in the gui    
     #Create original received power signal in watts (for now this is necessary as far as we dont have outgoing signal from lidar):
     t           = np.linspace(0,100,1000)
