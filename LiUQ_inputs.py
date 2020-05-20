@@ -63,7 +63,8 @@ class inputs():
             Atmospheric_inputs={'temperature' : list(AtmosphericScenarios_TS.loc[:,'T']),
                                 'humidity'    : list(AtmosphericScenarios_TS.loc[:,'H']),
                                 'rain'        : list(AtmosphericScenarios_TS.loc[:,'rain']),
-                                'fog'         : list(AtmosphericScenarios_TS.loc[:,'fog'])}#for rain and fog intensity intervals might be introduced [none,low, medium high]
+                                'fog'         : list(AtmosphericScenarios_TS.loc[:,'fog']),
+                                'time'        : list(AtmosphericScenarios_TS.loc[:,'t'])}#for rain and fog intensity intervals might be introduced [none,low, medium high]
         else:    
             Atmospheric_inputs={'temperature' : [.5],
                             'humidity'    : [5],

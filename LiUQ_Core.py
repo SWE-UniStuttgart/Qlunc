@@ -305,4 +305,12 @@ if flag_plot_signal_noise==True: #Introduce this flag in the gui
         
         plt.legend(['original','Total Noise','Figure_noise'])#,'Total error [w]'])
     
+#    'Plotting time series'
+    plt.figure()
+    plt.plot(inputs.atm_inp.Atmospheric_inputs['time'],df_UQ.loc['Total UQ',:])
+    plt.plot(inputs.atm_inp.Atmospheric_inputs['time'],inputs.atm_inp.Atmospheric_inputs['temperature'])
+    plt.plot(inputs.atm_inp.Atmospheric_inputs['time'],inputs.atm_inp.Atmospheric_inputs['humidity'])
+    
+    
+    
     plt.show()  
