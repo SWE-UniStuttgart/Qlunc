@@ -42,14 +42,14 @@ class inputs():
     # Modules is a dictionary containing the lidar modules as a key. As values there is a nested dictionary containing components as keys and type of uncertainty as values.
     # Each of this values is related with a function which calculates this specific uncertainty. The relation between type of unc. and function calculating it is in LiUQ_core when defining methods.
     modules = {
-               'power'     : {'power_source' :['power_source_noise'],                    # for now: 'power_source_noise',...
-                              'converter'    :[]},                      # for now:'converter_noise', 'converter_losses'...
+               'power'     : {'power_source' :[],                    # for now: 'power_source_noise',...
+                              'converter'    :['converter_losses']},                      # for now:'converter_noise', 'converter_losses'...
     
                'photonics' : {'photodetector':['photodetector_noise'],                   # for now:'photodetector_noise',....
-                              'amplifier'    :['amplifier_fignoise','amplifier_noise'],  #for now: 'amplifier_fignoise', 'amplifier_noise',...
-                              'laser_source' :['laser_source_noise']},                   # for now:'laser_source_noise',...
+                              'amplifier'    :['amplifier_fignoise'],  #for now: 'amplifier_fignoise', 'amplifier_noise',...
+                              'laser_source' :[]},                   # for now:'laser_source_noise',...
                               
-               'optics'    : {'telescope'    :[]}                       # for now:'telescope_noise', 'telescope_losses'...
+               'optics'    : {'telescope'    :['telescope_noise']}                       # for now:'telescope_noise', 'telescope_losses'...
                }
 #    DP      = ['los'] # data processing methods we want to assess
 
@@ -59,12 +59,13 @@ class inputs():
         TimeSeries=True # This defines whether we are using a time series to describe the atmosphere (T, H, rain and fog). 
                         # If so we obtain a time series describing the noise implemented in the measurement.
         if TimeSeries:
-            AtmosphericScenarios_TS=pd.read_csv(direct.Main_directory+'AtmosphericScenarios.csv',delimiter=';',decimal=',')
+            Atmos_TS_FILE='AtmosphericScenarios.csv'
+            AtmosphericScenarios_TS=pd.read_csv(direct.Main_directory+Atmos_TS_FILE,delimiter=';',decimal=',')
             Atmospheric_inputs={'temperature' : list(AtmosphericScenarios_TS.loc[:,'T']),
                                 'humidity'    : list(AtmosphericScenarios_TS.loc[:,'H']),
                                 'rain'        : list(AtmosphericScenarios_TS.loc[:,'rain']),
                                 'fog'         : list(AtmosphericScenarios_TS.loc[:,'fog']),
-                                'time'        : list(AtmosphericScenarios_TS.loc[:,'t'])}#for rain and fog intensity intervals might be introduced [none,low, medium high]
+                                'time'        : list(AtmosphericScenarios_TS.loc[:,'t'])} #for rain and fog intensity intervals might be introduced [none,low, medium high]
         else:    
             Atmospheric_inputs={'temperature' : [.5],
                             'humidity'    : [5],
@@ -72,7 +73,7 @@ class inputs():
                             'fog'         : [False]}#for rain and fog intensity intervals might be introduced [none,low, medium high]
     # LIDAR layout inputs:
     class lidar_inp():
-        Lidar_inputs = {'Wavelength' : [1522]}
+        Lidar_inputs = {'Wavelength' : [1532]}
     
     # Converter input characteristics
     class power_inp():
