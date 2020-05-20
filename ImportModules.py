@@ -18,5 +18,6 @@ from LiUQ_inputs import inputs
 import pdb
 #import pickle # for GUI
 import itertools
+import functools
 import matplotlib.pyplot as plt
 import Help_standAlone as SA
