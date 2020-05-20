@@ -9,7 +9,7 @@ Created on Sat May 16 14:51:36 2020
 #import pandas as pd
 #import scipy.interpolate as itp
 from ImportModules import *
-import LiUQ_inputs
+#import LiUQ_inputs
 
 def UQ_Photodetector(inputs):
     if inputs.atm_inp.TimeSeries==True:
@@ -74,11 +74,11 @@ def FigNoise(inputs,direct):
 
 
 
-#def PhotoNoise(inputs):
+#def Photodetector_Noise(inputs):
 #    Photodetector_noise_DATA=pd.read_excel(direct.Main_directory+Photodetector_Noise_FILE) #read from an excel file variation of dB with Wavelength(for now just with wavelegth)
 #    Photodetector_noise_INT=itp.interp1d(Photodetector_noise_DATA.iloc[:,0],Photodetector_noise_DATA.iloc[:,1],kind='cubic',fill_value="extrapolate")# First column wavelength,second column Noise in dB
 ##    NEP_Lambda=NEP_min*(RespMAX/RespLambda) #NoiseEquivalentPower
 #    Pmin=NEP_Lambda+np.sqrt(BW)#Minimum detectable signal power BW is teh band width
 #    Photodetector_noise_VALUE=Photodetector_noise_INT(freq) # in dB
-#    Photodetector_Noise=Photodetector_noise_VALUE.tolist()
-#    return Photodetector_Noise
+#    Photodetector_N=Photodetector_noise_VALUE.tolist()
+#    return Photodetector_N

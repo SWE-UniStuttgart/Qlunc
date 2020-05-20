@@ -30,9 +30,6 @@ from ImportModules import *
 #    aberration=ImpDATA[10]
 #########################################################
 
-#inputs.modules() = [each_string.lower() for each_string in modules] #lower case
-#DP      = [each_string.lower() for each_string in DP] #lower case
-
 
 #Definig the lists we fill later on within the process;
 H_UQ={}
@@ -73,7 +70,7 @@ class Hardware_U():  # creating a function to call each different module. HAve t
         SA.ext_comp('photonics',photonics_comp,H_UQ)
     if 'optics' in inputs.modules:
         class Optics(): # Create class Optics           
-            optics_dic={k:v for k,v in optics_comp.items()}                     
+            optics_dic={k:v for k,v in optics_comp.items()}
             OpticsMod_Methods = type('optics',(),optics_dic)   
         optics         = Optics.OpticsMod_Methods
         SA.ext_comp('optics',optics_comp,H_UQ)        
@@ -81,15 +78,7 @@ class Hardware_U():  # creating a function to call each different module. HAve t
 H_UQ=Hardware_U.H_UQ# Hardware instance
         
 #Hardware_U().power().power_source['power_source_noise']
-                
-#                    
-#                    
-#                    
-#                    
-#                    
-#                
-#                    
-#                    
+               
 #                    def Amp_Noise(self,Atmospheric_inputs,Amplifier_uncertainty_inputs,Wavelength): # Run noise in amplifier device calculations
 #                        self.NoiseFigure_VALUE=UQ_Hardware.FigNoise(Wavelength)
 #                        self.UQ_Amp=UQ_Hardware.UQ_Amplifier(Atmospheric_inputs,Amplifier_uncertainty_inputs)
@@ -187,22 +176,14 @@ H_UQ=Hardware_U.H_UQ# Hardware instance
 
 
 if inputs.atm_inp.TimeSeries==True:
-    indexesDF=[]
-    for module in inputs.modules.keys():
-        for comp in inputs.modules[module].keys():
-            for meth in inputs.modules[module][comp]:
-                indexesDF.append(meth)
-    columnsDF=['T= {}'.format(inputs.atm_inp.Atmospheric_inputs['temperature'][i]) for i in range(len(inputs.atm_inp.Atmospheric_inputs['temperature']))]
-        
-#    DF_Hard={}
-#    for module in H_UQ.keys():
-#        for components in H_UQ[module].keys(): #for components        
-#            DF_Hard[components]=list(zip(*(itertools.product(*(list(H_UQ[module][components].values()))))))
+    indexesDF={}
+    for fromModkeys in list(inputs.modules.keys()):
+        indexesDF.update(reduce(getitem,[fromModkeys],inputs.modules))# Getting data frame indexes
+    indexesDF=list(itertools.chain(*indexesDF.values()))# Getting data frame indexes
+    columnsDF=['T= {}'.format(inputs.atm_inp.Atmospheric_inputs['temperature'][i]) for i in range(len(inputs.atm_inp.Atmospheric_inputs['temperature']))] # Getting data frame columns          
     DF_Hard=SA.fill_values(H_UQ)
-#    df_UQ=pd.DataFrame(DF_Hard,columns=columnsDF, index=indexesDF)
-    df_UQ=pd.DataFrame(DF_Hard,columns=columnsDF, index=indexesDF)# Data frame for hardware uncertainties for each scenario
+    df_UQ=pd.DataFrame(DF_Hard,columns=columnsDF, index=indexesDF)# Data frame for hardware uncertainties for each scenario when time series is selected
 else:
-
     df_UQ=pd.DataFrame(np.transpose(FinalScenarios), index=subindices)
 
 
