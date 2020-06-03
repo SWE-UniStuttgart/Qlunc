@@ -49,7 +49,7 @@ class Hardware_U():  # creating a function to call each different module. HAve t
      # outcome dictionary
     H_UQ=pd.DataFrame()            
     if 'power' in inputs.modules:             
-        class Power(): # Create class amplifier
+        class Power(): # Create class optical_amplifier
             if 'Scenarios' not in globals():  # This 'if' decreases drastically computational time              
                 Scenarios,DF_columns = QW.Get_Scenarios()# Temperature is calculated once and it is to get columns of dataframe
                 H_UQ_Power           = QW.Get_Noise('power',Scenarios)

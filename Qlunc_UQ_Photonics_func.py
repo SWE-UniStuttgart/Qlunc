@@ -18,12 +18,12 @@ def UQ_Photodetector(**Scenarios):
 #    UQ_photodetector=[round(UQ_photodetector[i_dec],3) for i_dec in range(len(UQ_photodetector))] # 3 decimals
     return UQ_photodetector
 
-def UQ_Amplifier(**Scenarios):
-    UQ_amplifier=[]
+def UQ_Optical_amplifier(**Scenarios):
+    UQ_Optical_amplifier=[]
     for i in range(len(Scenarios.get('VAL_T'))):
-        UQ_amplifier.append(Scenarios.get('VAL_T')[i]*0.5+Scenarios.get('VAL_H')[i]*0.7+Scenarios.get('VAL_NOISE_AMPLI')[i]+Scenarios.get('VAL_OC_AMPLI')[i])
-#    UQ_amplifier=[round(UQ_amplifier[i_dec],3) for i_dec in range(len(UQ_amplifier))]
-    return UQ_amplifier
+        UQ_Optical_amplifier.append(Scenarios.get('VAL_T')[i]*0.5+Scenarios.get('VAL_H')[i]*0.7+Scenarios.get('VAL_NOISE_AMPLI')[i]+Scenarios.get('VAL_OC_AMPLI')[i])
+#    UQ_Optical_amplifier=[round(UQ_Optical_amplifier[i_dec],3) for i_dec in range(len(UQ_Optical_amplifier))]
+    return UQ_Optical_amplifier
 
 def UQ_LaserSource(**Scenarios):
     UQ_laser_source=[]
@@ -34,10 +34,10 @@ def UQ_LaserSource(**Scenarios):
 
 
 def FigNoise(inputs,direct,**Scenarios):
-    if inputs.photonics_inp.Amplifier_uncertainty_inputs['amplifier_fignoise'][0]==0:
+    if inputs.photonics_inp.Optical_amplifier_uncertainty_inputs['Optical_amplifier_fignoise'][0]==0:
         FigureNoise=0
     else:
-        NoiseFigure_DATA = pd.read_csv(direct.Main_directory+inputs.photonics_inp.Amplifier_uncertainty_inputs['amplifier_fignoise'],delimiter=';',decimal=',') #read from an excel file variation of dB with wavelength(for now just with wavelegth)
+        NoiseFigure_DATA = pd.read_csv(direct.Main_directory+inputs.photonics_inp.Optical_amplifier_uncertainty_inputs['Optical_amplifier_fignoise'],delimiter=';',decimal=',') #read from an excel file variation of dB with wavelength(for now just with wavelegth)
         FigureNoise = []
         for i in range(len(Scenarios.get('VAL_T'))):
             figure_noise_INT  = itp.interp1d(NoiseFigure_DATA.iloc[:,0],NoiseFigure_DATA.iloc[:,1],kind='cubic',fill_value="extrapolate")# First column wavelength,second column Noise in dB
