@@ -53,14 +53,14 @@ class inputs():
     # Modules is a dictionary containing the lidar modules as a key. As values there is a nested dictionary containing components as keys and type of uncertainty as values.
     # Each of this values is related with a function which calculates this specific uncertainty. The relation between type of unc. and function calculating it is in LiUQ_core when defining methods.
     modules = {
-               'power'     : {'power_source' :['power_source_noise'],                    # for now: 'power_source_noise',...
-                              'converter'    :['converter_losses','converter_noise']},                     # for now:'converter_noise', 'converter_losses'...
+               'power'     : {'power_source' :[],                    # for now: 'power_source_noise',...
+                              'converter'    :[]},                     # for now:'converter_noise', 'converter_losses'...
     
                'photonics' : {'photodetector':['photodetector_noise'],                   # for now:'photodetector_noise',....
                               'Optical_amplifier'    :[],                       #for now:  'Optical_amplifier_noise',... If user includes Optical_amplifier component in dictionary 'modules', figure noise is automatically included in calculations(if don't want to include it have to put 0 in 'Optical_amplifier_uncertainty_inputs')
-                              'laser_source' :['laser_source_noise']} ,                  # for now:'laser_source_noise',...
+                              'laser_source' :[]} ,                  # for now:'laser_source_noise',...
                               
-               'optics'    : {'telescope'    :['telescope_noise']}                       # for now:'telescope_noise', 'telescope_losses'...
+               'optics'    : {'telescope'    :[]}                       # for now:'telescope_noise', 'telescope_losses'...
                }
 #    DP      = ['los'] # data processing methods we want to assess
 
@@ -77,15 +77,15 @@ class inputs():
                                 'fog'         : list(AtmosphericScenarios_TS.loc[:,'fog']),
                                 'time'        : list(AtmosphericScenarios_TS.loc[:,'t'])} #for rain and fog intensity intervals might be introduced [none,low, medium high]
         else:    
-            Atmospheric_inputs={'temperature' : [25,30],
-                                'humidity'    : [35,27],
+            Atmospheric_inputs={'temperature' : [300,400], # [K]
+                                'humidity'    : [12,12],      # [%]
                                 'rain'        : [True],
                                 'fog'         : [False]}#for rain and fog intensity intervals might be introduced [none,low, medium high]
 #%% General lidar layout inputs:
     class lidar_inp():
-        Lidar_inputs = {'Wavelength' : [1532]} # [nm]
+        Lidar_inputs = {'Wavelength' : [1532*1e-9,1562*1e-9],'Laser_power':[2]} # (wave:[m],Laser_power: [mW])
 #        BW=  #Band width (MHz)
-#        laser_input_power =  #[W]
+#        laser_input_power =  .001 #[W]
         
 #%% Power Modules inputs:
     class power_inp():
@@ -112,7 +112,7 @@ class inputs():
         Id              = 5*10**(-9) #[A] Dark current intensity
         Sig_Power_photo = 0.001 #[mW] input power in the photodetector
         #if take into account the TIA:
-        Z_TIA           = 5*10^3  #[ohms] transimpedance gain
+        Z_TIA           = 5*10^3       #[ohms] transimpedance gain
         V_noise_TIA     = 160*10**(-6) #[V] Voltage noise 
 #%% Optics module inputs    
     class optics_inp():
