@@ -17,28 +17,33 @@ def UQ_Photodetector(inputs,cts,**Scenarios):
     UQ_Photodetector=[]
     Photodetector_SNR_thermal_noise=[]
     Photodetector_Thermal_noise=[]
-    R = inputs.photodetector.n*cts.e*inputs.lidar_inp.Lidar_inputs['Wavelength'][0]/(cts.h*cts.c)  #[W/A]  Responsivity
-
-    for i in range(len(Scenarios.get('VAL_T'))):
+    Photodetector_Shot_noise=[]
+    Photodetector_SNR_Shot_noise=[]
+    Photodetector_Dark_current_noise=[]
+    Photodetector_SNR_DarkCurrent=[]
+    Photodetector_TIA_noise=[]
+    Photodetector_SNR_TIA=[]
+    for i in range(len(Scenarios.get('VAL_T'))): # To loop over all Scenarios
 #        UQ_photodetector.append(Scenarios.get('VAL_T')[i]*0.4+Scenarios.get('VAL_H')[i]*0.1+Scenarios.get('VAL_NOISE_PHOTO')[i]+Scenarios.get('VAL_OC_PHOTO')[i]+Scenarios.get('VAL_WAVE')[i]/1000)
+        R = Scenarios.get('VAL_PHOTO_n')[i]*cts.e*inputs.lidar_inp.Lidar_inputs['Wavelength'][0]/(cts.h*cts.c)  #[W/A]  Responsivity
 
         # Photodetector Thermal noise
-        Photodetector_Thermal_noise.append((10*np.log10(4*cts.k*Scenarios.get('VAL_T')[i]/inputs.photodetector.RL)*inputs.photodetector.BW)) #[dBm]
-        Photodetector_SNR_thermal_noise.append(10*np.log10(((R**2)/(4*cts.k*Scenarios.get('VAL_T')[i]*inputs.photodetector.BW/inputs.photodetector.RL))*(inputs.lidar_inp.Lidar_inputs['Laser_power'][0]/1000)**2))
+        Photodetector_Thermal_noise.append((10*np.log10(4*cts.k*Scenarios.get('VAL_T')[i]/Scenarios.get('VAL_PHOTO_RL')[i])*Scenarios.get('VAL_PHOTO_BW')[i])) #[dBm]
+        Photodetector_SNR_thermal_noise.append(10*np.log10(((R**2)/(4*cts.k*Scenarios.get('VAL_T')[i]*Scenarios.get('VAL_PHOTO_BW')[i]/Scenarios.get('VAL_PHOTO_RL')[i]))*(Scenarios.get('VAL_PHOTO_SP')[i]/1000)**2))
     
-    #Photodetector shot noise:
-    Photodetector_Shot_noise     = 10*np.log10(2*cts.e*R*inputs.photodetector.BW*inputs.lidar_inp.Lidar_inputs['Laser_power'][0])
-    Photodetector_SNR_Shot_noise = 10*np.log10(((R**2)/(2*cts.e*R*inputs.photodetector.BW))*(inputs.lidar_inp.Lidar_inputs['Laser_power'][0])/1000)
-    #Photodetector dark current noise
-    Photodetector_Dark_current_noise = 10*np.log10(2*cts.e*inputs.photodetector.Id*inputs.photodetector.BW*inputs.lidar_inp.Lidar_inputs['Laser_power'][0])
-    Photodetector_SNR_DarkCurrent    = 10*np.log10(((R**2)/(2*cts.e*inputs.photodetector.Id*inputs.photodetector.BW))*((inputs.lidar_inp.Lidar_inputs['Laser_power'][0]/1000)**2) )
-    # Photodetector TIA noise
-    Photodetector_TIA_noise = 10*np.log10(inputs.photodetector.V_noise_TIA**2/inputs.photodetector.Z_TIA**2)
-    Photodetector_SNR_TIA   = 10*np.log10(((R**2)/(inputs.photodetector.V_noise_TIA**2/inputs.photodetector.Z_TIA**2))*(inputs.lidar_inp.Lidar_inputs['Laser_power'][0]/1000)**2)
-
+        #Photodetector shot noise:
+        Photodetector_Shot_noise.append(10*np.log10(2*cts.e*R*Scenarios.get('VAL_PHOTO_BW')[i]*Scenarios.get('VAL_PHOTO_SP')[i]))
+        Photodetector_SNR_Shot_noise.append(10*np.log10(((R**2)/(2*cts.e*R*Scenarios.get('VAL_PHOTO_BW')[i]))*(Scenarios.get('VAL_PHOTO_SP')[i])/1000))
+        #Photodetector dark current noise
+        Photodetector_Dark_current_noise.append(10*np.log10(2*cts.e*Scenarios.get('VAL_PHOTO_Id')[i]*Scenarios.get('VAL_PHOTO_BW')[i]*Scenarios.get('VAL_PHOTO_SP')[i]))
+        Photodetector_SNR_DarkCurrent.append(10*np.log10(((R**2)/(2*cts.e*Scenarios.get('VAL_PHOTO_Id')[i]*Scenarios.get('VAL_PHOTO_BW')[i]))*((Scenarios.get('VAL_PHOTO_SP')[i]/1000)**2) ))
+        # Photodetector TIA noise
+        Photodetector_TIA_noise.append( 10*np.log10(Scenarios.get('VAL_V_NOISE_TIA')[i]**2/Scenarios.get('VAL_GAIN_TIA')[i]**2))
+        Photodetector_SNR_TIA.append(10*np.log10(((R**2)/(Scenarios.get('VAL_V_NOISE_TIA')[i]**2/Scenarios.get('VAL_GAIN_TIA')[i]**2))*(Scenarios.get('VAL_PHOTO_SP')[i]/1000)**2))
+    pdb.set_trace()
     
     for nT in range(len(Photodetector_Thermal_noise)):
-        UQ_Photodetector.append(SA.Sum_dB([Photodetector_Thermal_noise[nT],Photodetector_Shot_noise,Photodetector_Dark_current_noise,Photodetector_TIA_noise]))
+        UQ_Photodetector.append(SA.Sum_dB([Photodetector_Thermal_noise[nT],Photodetector_Shot_noise[nT],Photodetector_Dark_current_noise[nT],Photodetector_TIA_noise[nT]]))
 #    UQ_photodetector=[round(UQ_photodetector[i_dec],3) for i_dec in range(len(UQ_photodetector))] # 3 decimals
     return UQ_Photodetector
 

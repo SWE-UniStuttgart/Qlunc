@@ -40,10 +40,10 @@ class direct():
 
 #%% Constants:
 class cts():
-    k = 1.38064852 *10**(-23) # Boltzman constant:[m^2 kg s^-2 K^-1]
-    h = 6.6207004  *10**(-34) # Plank constant [m^2 kg s^-1]
-    e = 1.60217662 *10**(-19) # electron charge [C]
-    c = 2.99792    *10**8 #speed of light [m s^-1]
+    k = 1.38064852e-23 # Boltzman constant:[m^2 kg s^-2 K^-1]
+    h = 6.6207004e-34 # Plank constant [m^2 kg s^-1]
+    e = 1.60217662e-19 # electron charge [C]
+    c = 2.99792e8 #speed of light [m s^-1]
 
 
 #%% Inputs class where are stored all inputs:
@@ -56,7 +56,7 @@ class inputs():
                'power'     : {'power_source' :[],                    # for now: 'power_source_noise',...
                               'converter'    :[]},                     # for now:'converter_noise', 'converter_losses'...
     
-               'photonics' : {'photodetector':['photodetector_noise'],                   # for now:'photodetector_noise',....
+               'photonics' : {'photodetector':['photodetector_noise','TIA_noise'],                   # for now:'photodetector_noise','TIA_noise' if there is a transimpedance amplifier....
                               'Optical_amplifier'    :[],                       #for now:  'Optical_amplifier_noise',... If user includes Optical_amplifier component in dictionary 'modules', figure noise is automatically included in calculations(if don't want to include it have to put 0 in 'Optical_amplifier_uncertainty_inputs')
                               'laser_source' :[]} ,                  # for now:'laser_source_noise',...
                               
@@ -83,7 +83,7 @@ class inputs():
                                 'fog'         : [False]}#for rain and fog intensity intervals might be introduced [none,low, medium high]
 #%% General lidar layout inputs:
     class lidar_inp():
-        Lidar_inputs = {'Wavelength' : [1532*1e-9,1562*1e-9],'Laser_power':[2]} # (wave:[m],Laser_power: [mW])
+        Lidar_inputs = {'Wavelength' : [1532e-9,1562e-9],'Laser_power':[2]} # (wave:[m],Laser_power: [mW])
 #        BW=  #Band width (MHz)
 #        laser_input_power =  .001 #[W]
         
@@ -102,18 +102,22 @@ class inputs():
                                              'Optical_amplifier_fignoise'         : 'NoiseFigure.csv'}##
         LaserSource_uncertainty_inputs    = {'laser_source_noise'         : [.855],
                                              'laser_source_OtherChanges'  : [.07709]}
-        Photodetector_uncertainty_inputs  = {'photodetector_noise'        : [0.2],
-                                             'photodetector_OtherChanges' : [.105]}
-#                                             'photodetector_Noise_FILE'   :'Noise_Photodetector.csv'}
-    class photodetector():
-        BW              = 380*10**6 #1*10**(9) #[Hz] Band width
-        RL              = 50 #[ohms] Load resistor
-        n               = 0.85 #efficiency of the photodiode:
-        Id              = 5*10**(-9) #[A] Dark current intensity
-        Sig_Power_photo = 0.001 #[mW] input power in the photodetector
-        #if take into account the TIA:
-        Z_TIA           = 5*10^3       #[ohms] transimpedance gain
-        V_noise_TIA     = 160*10**(-6) #[V] Voltage noise 
+#        Photodetector_uncertainty_inputs  = {'photodetector_noise'        : [0.2],
+#                                             'photodetector_OtherChanges' : [.105]}
+##                                             'photodetector_Noise_FILE'   :'Noise_Photodetector.csv'}
+        
+        Photodetector_inputs  = {'Photodetector_Bandwidth'        : [380e6],  #[Hz] Band width
+                                 'Photodetector_RL' : [50],#[ohms] Load resistor
+                                 'Photodetector_Efficiency':[0.85],#efficiency of the photodiode:
+                                 'Photodetector_DarkCurrent':[5e-9],#[A] Dark current intensity
+                                 'Photodetector_Signal_power':[0.001],#[mW] input power in the photodetector
+#                                 'photodetector_Noise_FILE'   :'Noise_Photodetector.csv'}
+                                 }
+#                                             
+        TIA_inputs            = {'Gain_TIA': [5e3], #[ohms] transimpedance gain
+                                 'V_noise_TIA':[160e-6]#[V] Voltage noise 
+
+
 #%% Optics module inputs    
     class optics_inp():
         Telescope_uncertainty_inputs      = {'telescope_curvature_lens' : [.01],
@@ -129,8 +133,8 @@ class inputs():
              VAL_NOISE_POWER_SOURCE,VAL_OC_POWER_SOURCE,
              VAL_NOISE_AMPLI,VAL_OC_AMPLI,VAL_NOISE_FIG,
              VAL_NOISE_LASER_SOURCE,VAL_OC_LASER_SOURCE,
-             VAL_NOISE_PHOTO,VAL_OC_PHOTO,
-             VAL_CURVE_LENS_TELESCOPE,VAL_OC_TELESCOPE,VAL_ABERRATION_TELESCOPE,VAL_LOSSES_TELESCOPE]=[None]*19
+             VAL_PHOTO_BW,VAL_PHOTO_RL,VAL_PHOTO_n,VAL_PHOTO_Id,VAL_PHOTO_SP,VAL_GAIN_TIA,VAL_V_NOISE_TIA,
+             VAL_CURVE_LENS_TELESCOPE,VAL_OC_TELESCOPE,VAL_ABERRATION_TELESCOPE,VAL_LOSSES_TELESCOPE]=[None]*24
 
 class user_inputs():
     user_imodules=list(inputs.modules.keys())
