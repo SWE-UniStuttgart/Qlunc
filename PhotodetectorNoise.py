@@ -6,11 +6,12 @@ Created on Fri May 29 19:56:11 2020
 """
 import numpy as np
 import matplotlib.pyplot as plt
+from Qlunc_ImportModules import *
 #This is a calculation for a amplified photodetector with fixed gain
-#Lets calculate the different photodetector contributions: thermal, dark current, shot noise and transimpedance amplifier noise (TIA)
+#The different photodetector contributions are here calculated, namely: thermal, dark current, shot noise and transimpedance amplifier noise (TIA)
 
 
-#first lets define inputs and constants
+#first lets define some inputs and constants
 
 #Constants:
 k = 1.38064852 *10**(-23) # Boltzman constant:[m^2 kg s^-2 K^-1]
@@ -25,7 +26,7 @@ wavelength  = 1550 *10**(-9) #[m]
 RL          = 50 #[ohms] Load resistor
 n           = 0.85 #efficiency of the photodiode:
 Id          = 5*10**(-9) #[A] Dark current intensity
-R           = n*e*wavelength/(h*c)  #[W/A]  Responsivity
+R           = inputs.photodetector.n*cts.e*inputs.lidar_inp.Lidar_inputs['Wavelength'][0]/(cts.h*cts.c)  #[W/A]  Responsivity
 
 # Amplifier inputs:
 G           = 10 # Vin/Vout[V] Amplifier Gain:
@@ -41,22 +42,22 @@ Psax=10*np.log10(Ps)
 #%% PHOTODETECTOR:
 
 # thermal noise;
-Thermal_noise = (4*k*T/RL)*BW #[W]
-SNR_Thermal   = 10*np.log10(((R**2)/(4*k*T*BW/RL))*(Ps/1000)**2)
+Thermal_noise = (4*cts.k*T/inputs.photodetector.RL)*inputs.photodetector.BW #[W]
+SNR_Thermal   = 10*np.log10(((R**2)/(4*cts.k*T*inputs.photodetector.BW/inputs.photodetector.RL))*(Ps/1000)**2)
 
 
 # Shot noise:
-Shot_noise        = 10*np.log10(2*e*R*BW*Ps)
-Photo_SNR_Shot_noise    = 10*np.log10(((R**2)/(2*e*R*BW))*Ps/1000)
+Shot_noise        = 10*np.log10(2*cts.e*R*inputs.photodetector.BW*Ps)
+Photo_SNR_Shot_noise    = 10*np.log10(((R**2)/(2*cts.e*R*inputs.photodetector.BW))*Ps/1000)
 #0
 ## Dark current noise
-Dark_current_noise  = 10*np.log10(2*e*Id*BW*Ps)
-SNR_DarkCurrent     = 10*np.log10(((R**2)/(2*e*Id*BW))*((Ps/1000)**2) )
+Dark_current_noise  = 10*np.log10(2*cts.e*inputs.photodetector.Id*inputs.photodetector.BW*Ps)
+SNR_DarkCurrent     = 10*np.log10(((R**2)/(2*cts.e*inputs.photodetector.Id*inputs.photodetector.BW))*((Ps/1000)**2) )
 
 
 #%% AMPLIFIER: TIA noise 'input-referred noise':
 
-TIA_noise= (V_noise_TIA**2/Z_TIA**2)
+TIA_noise= (inputs.photodetector.V_noise_TIA**2/inputs.photodetector.Z_TIA**2)
 SNR_TIA=10*np.log10(((R**2)/(TIA_noise))*(Ps/1000)**2)
 
 

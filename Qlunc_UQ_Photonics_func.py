@@ -5,39 +5,59 @@ Created on Sat May 16 14:51:36 2020
 @author: fcosta
 """
 
-#import LiUQ_inputs
+import Qlunc_inputs
 #import pandas as pd
 #import scipy.interpolate as itp
 from Qlunc_ImportModules import *
 #import LiUQ_inputs
+import pdb
+import Qlunc_Help_standAlone as SA
+#%% PHOTODETECTOR
+def UQ_Photodetector(inputs,cts,**Scenarios):
+    UQ_Photodetector=[]
+    Photodetector_SNR_thermal_noise=[]
+    Photodetector_Thermal_noise=[]
+    R = inputs.photodetector.n*cts.e*inputs.lidar_inp.Lidar_inputs['Wavelength'][0]/(cts.h*cts.c)  #[W/A]  Responsivity
 
-def UQ_Photodetector(**Scenarios):
-    UQ_photodetector=[]
     for i in range(len(Scenarios.get('VAL_T'))):
-        UQ_photodetector.append(Scenarios.get('VAL_T')[i]*0.4+Scenarios.get('VAL_H')[i]*0.1+Scenarios.get('VAL_NOISE_PHOTO')[i]+Scenarios.get('VAL_OC_PHOTO')[i]+Scenarios.get('VAL_WAVE')[i]/1000)
+#        UQ_photodetector.append(Scenarios.get('VAL_T')[i]*0.4+Scenarios.get('VAL_H')[i]*0.1+Scenarios.get('VAL_NOISE_PHOTO')[i]+Scenarios.get('VAL_OC_PHOTO')[i]+Scenarios.get('VAL_WAVE')[i]/1000)
+
+        # Photodetector Thermal noise
+        Photodetector_Thermal_noise.append((10*np.log10(4*cts.k*Scenarios.get('VAL_T')[i]/inputs.photodetector.RL)*inputs.photodetector.BW)) #[dBm]
+        Photodetector_SNR_thermal_noise.append(10*np.log10(((R**2)/(4*cts.k*Scenarios.get('VAL_T')[i]*inputs.photodetector.BW/inputs.photodetector.RL))*(inputs.lidar_inp.Lidar_inputs['Laser_power'][0]/1000)**2))
+    
+    #Photodetector shot noise:
+    Photodetector_Shot_noise     = 10*np.log10(2*cts.e*R*inputs.photodetector.BW*inputs.lidar_inp.Lidar_inputs['Laser_power'][0])
+    Photodetector_SNR_Shot_noise = 10*np.log10(((R**2)/(2*cts.e*R*inputs.photodetector.BW))*(inputs.lidar_inp.Lidar_inputs['Laser_power'][0])/1000)
+    #Photodetector dark current noise
+    Photodetector_Dark_current_noise = 10*np.log10(2*cts.e*inputs.photodetector.Id*inputs.photodetector.BW*inputs.lidar_inp.Lidar_inputs['Laser_power'][0])
+    Photodetector_SNR_DarkCurrent    = 10*np.log10(((R**2)/(2*cts.e*inputs.photodetector.Id*inputs.photodetector.BW))*((inputs.lidar_inp.Lidar_inputs['Laser_power'][0]/1000)**2) )
+    # Photodetector TIA noise
+    Photodetector_TIA_noise = 10*np.log10(inputs.photodetector.V_noise_TIA**2/inputs.photodetector.Z_TIA**2)
+    Photodetector_SNR_TIA   = 10*np.log10(((R**2)/(inputs.photodetector.V_noise_TIA**2/inputs.photodetector.Z_TIA**2))*(inputs.lidar_inp.Lidar_inputs['Laser_power'][0]/1000)**2)
+
+    
+    for nT in range(len(Photodetector_Thermal_noise)):
+        UQ_Photodetector.append(SA.Sum_dB([Photodetector_Thermal_noise[nT],Photodetector_Shot_noise,Photodetector_Dark_current_noise,Photodetector_TIA_noise]))
 #    UQ_photodetector=[round(UQ_photodetector[i_dec],3) for i_dec in range(len(UQ_photodetector))] # 3 decimals
-    return UQ_photodetector
+    return UQ_Photodetector
 
-def UQ_Amplifier(**Scenarios):
-    UQ_amplifier=[]
+
+
+#%% OPTICAL AMPLIFIER
+def UQ_Optical_amplifier(**Scenarios):
+    UQ_Optical_amplifier=[]
     for i in range(len(Scenarios.get('VAL_T'))):
-        UQ_amplifier.append(Scenarios.get('VAL_T')[i]*0.5+Scenarios.get('VAL_H')[i]*0.7+Scenarios.get('VAL_NOISE_AMPLI')[i]+Scenarios.get('VAL_OC_AMPLI')[i])
-#    UQ_amplifier=[round(UQ_amplifier[i_dec],3) for i_dec in range(len(UQ_amplifier))]
-    return UQ_amplifier
-
-def UQ_LaserSource(**Scenarios):
-    UQ_laser_source=[]
-    for i in range(len(Scenarios.get('VAL_T'))):
-        UQ_laser_source.append(Scenarios.get('VAL_T')[i]*1+Scenarios.get('VAL_H')[i]*0.1+Scenarios.get('VAL_WAVE')[i]/1200+Scenarios.get('VAL_NOISE_LASER_SOURCE')[i]+Scenarios.get('VAL_OC_LASER_SOURCE')[i])
-#    UQ_laser_source=[round(UQ_laser_source[i_dec],3) for i_dec in range(len(UQ_laser_source))]
-    return UQ_laser_source
+        UQ_Optical_amplifier.append(Scenarios.get('VAL_T')[i]*0.5+Scenarios.get('VAL_H')[i]*0.7+Scenarios.get('VAL_NOISE_AMPLI')[i]+Scenarios.get('VAL_OC_AMPLI')[i])
+#    UQ_Optical_amplifier=[round(UQ_Optical_amplifier[i_dec],3) for i_dec in range(len(UQ_Optical_amplifier))]
+    return UQ_Optical_amplifier
 
 
-def FigNoise(inputs,direct,**Scenarios):
-    if inputs.photonics_inp.Amplifier_uncertainty_inputs['amplifier_fignoise'][0]==0:
+def FigNoise(inputs,direct,**Scenarios): # This is the error of the optical amplifier
+    if inputs.photonics_inp.Optical_amplifier_uncertainty_inputs['Optical_amplifier_fignoise'][0]==0:
         FigureNoise=0
     else:
-        NoiseFigure_DATA = pd.read_csv(direct.Main_directory+inputs.photonics_inp.Amplifier_uncertainty_inputs['amplifier_fignoise'],delimiter=';',decimal=',') #read from an excel file variation of dB with wavelength(for now just with wavelegth)
+        NoiseFigure_DATA = pd.read_csv(direct.Main_directory+inputs.photonics_inp.Optical_amplifier_uncertainty_inputs['Optical_amplifier_fignoise'],delimiter=';',decimal=',') #read from an excel file variation of dB with wavelength(for now just with wavelegth)
         FigureNoise = []
         for i in range(len(Scenarios.get('VAL_T'))):
             figure_noise_INT  = itp.interp1d(NoiseFigure_DATA.iloc[:,0],NoiseFigure_DATA.iloc[:,1],kind='cubic',fill_value="extrapolate")# First column wavelength,second column Noise in dB
@@ -45,6 +65,16 @@ def FigNoise(inputs,direct,**Scenarios):
             FigureNoise.append(NoiseFigure_VALUE.tolist())
 #    FigureNoise=[round(FigureNoise[i_dec],3) for i_dec in range(len(FigureNoise))]
     return FigureNoise
+
+
+#%% LASER SOURCE
+def UQ_LaserSource(**Scenarios):
+    UQ_laser_source=[]
+    for i in range(len(Scenarios.get('VAL_T'))):
+        UQ_laser_source.append(Scenarios.get('VAL_T')[i]*1+Scenarios.get('VAL_H')[i]*0.1+Scenarios.get('VAL_WAVE')[i]/1200+Scenarios.get('VAL_NOISE_LASER_SOURCE')[i]+Scenarios.get('VAL_OC_LASER_SOURCE')[i])
+#    UQ_laser_source=[round(UQ_laser_source[i_dec],3) for i_dec in range(len(UQ_laser_source))]
+    return UQ_laser_source
+
 
 
 

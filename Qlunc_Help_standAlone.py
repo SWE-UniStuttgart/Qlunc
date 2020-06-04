@@ -23,7 +23,19 @@ def Get_Components(module,CLASS,METHODS):
     return CLASS
 
 
-
+#%% Sum of dB:
+def Sum_dB(W_data):
+   #Sum af decibels:
+    in_dB=0
+    Sumat= []
+    Sum_decibels=[]
+    for ii in W_data:
+        gg=((10**(ii/10)))    
+        Sumat.append (gg)
+    Sum_in_dB = sum(Sumat)
+    Sum_decibels.append(10*np.log10(Sum_in_dB) )
+#    pdb.set_trace()
+    return Sum_decibels
 # %% Getting data frame:
     
 def Get_DataFrame(H_UQ,Temperature):  
