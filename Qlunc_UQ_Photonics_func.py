@@ -13,7 +13,7 @@ from Qlunc_ImportModules import *
 import pdb
 import Qlunc_Help_standAlone as SA
 #%% PHOTODETECTOR
-def UQ_Photodetector(inputs,cts,**Scenarios):
+def UQ_Photodetector(user_inputs,inputs,cts,**Scenarios):
     UQ_Photodetector=[]
     Photodetector_SNR_thermal_noise=[]
     Photodetector_Thermal_noise=[]
@@ -34,16 +34,22 @@ def UQ_Photodetector(inputs,cts,**Scenarios):
         #Photodetector shot noise:
         Photodetector_Shot_noise.append(10*np.log10(2*cts.e*R*Scenarios.get('VAL_PHOTO_BW')[i]*Scenarios.get('VAL_PHOTO_SP')[i]))
         Photodetector_SNR_Shot_noise.append(10*np.log10(((R**2)/(2*cts.e*R*Scenarios.get('VAL_PHOTO_BW')[i]))*(Scenarios.get('VAL_PHOTO_SP')[i])/1000))
+
         #Photodetector dark current noise
         Photodetector_Dark_current_noise.append(10*np.log10(2*cts.e*Scenarios.get('VAL_PHOTO_Id')[i]*Scenarios.get('VAL_PHOTO_BW')[i]*Scenarios.get('VAL_PHOTO_SP')[i]))
         Photodetector_SNR_DarkCurrent.append(10*np.log10(((R**2)/(2*cts.e*Scenarios.get('VAL_PHOTO_Id')[i]*Scenarios.get('VAL_PHOTO_BW')[i]))*((Scenarios.get('VAL_PHOTO_SP')[i]/1000)**2) ))
-        # Photodetector TIA noise
-        Photodetector_TIA_noise.append( 10*np.log10(Scenarios.get('VAL_V_NOISE_TIA')[i]**2/Scenarios.get('VAL_GAIN_TIA')[i]**2))
-        Photodetector_SNR_TIA.append(10*np.log10(((R**2)/(Scenarios.get('VAL_V_NOISE_TIA')[i]**2/Scenarios.get('VAL_GAIN_TIA')[i]**2))*(Scenarios.get('VAL_PHOTO_SP')[i]/1000)**2))
-    pdb.set_trace()
+
+        if 'TIA_noise' in list(SA.flatten(user_inputs.user_itype_noise)):     # If TIA is included in the components:
+            # Photodetector TIA noise
+            Photodetector_TIA_noise.append( 10*np.log10(Scenarios.get('VAL_V_NOISE_TIA')[i]**2/Scenarios.get('VAL_GAIN_TIA')[i]**2))
+            Photodetector_SNR_TIA.append(10*np.log10(((R**2)/(Scenarios.get('VAL_V_NOISE_TIA')[i]**2/Scenarios.get('VAL_GAIN_TIA')[i]**2))*(Scenarios.get('VAL_PHOTO_SP')[i]/1000)**2))
+            UQ_Photodetector.append(SA.Sum_dB([Photodetector_Thermal_noise[i],Photodetector_Shot_noise[i],Photodetector_Dark_current_noise[i],Photodetector_TIA_noise[i]]))
+        else:
+             UQ_Photodetector.append(SA.Sum_dB([Photodetector_Thermal_noise[i],Photodetector_Shot_noise[i],Photodetector_Dark_current_noise[i]]))
+#        pdb.set_trace()
     
-    for nT in range(len(Photodetector_Thermal_noise)):
-        UQ_Photodetector.append(SA.Sum_dB([Photodetector_Thermal_noise[nT],Photodetector_Shot_noise[nT],Photodetector_Dark_current_noise[nT],Photodetector_TIA_noise[nT]]))
+#    for nT in range(len(Photodetector_Thermal_noise)):
+#        UQ_Photodetector.append(SA.Sum_dB([Photodetector_Thermal_noise[nT],Photodetector_Shot_noise[nT],Photodetector_Dark_current_noise[nT],Photodetector_TIA_noise[nT]]))
 #    UQ_photodetector=[round(UQ_photodetector[i_dec],3) for i_dec in range(len(UQ_photodetector))] # 3 decimals
     return UQ_Photodetector
 
