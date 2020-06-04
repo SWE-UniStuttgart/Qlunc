@@ -111,7 +111,7 @@ def Get_Noise(module,Scenarios):
         if 'laser_source_noise' in list(SA.flatten(user_inputs.user_itype_noise)):        
             METHODS.setdefault('laser_source_noise',Qlunc_UQ_Photonics_func.UQ_LaserSource(**Scenarios))        
         if 'photodetector_noise' in list(SA.flatten(user_inputs.user_itype_noise)):        
-            METHODS.setdefault('photodetector_noise',Qlunc_UQ_Photonics_func.UQ_Photodetector(**Scenarios))               
+            METHODS.setdefault('photodetector_noise',Qlunc_UQ_Photonics_func.UQ_Photodetector(inputs,cts,**Scenarios))               
         if 'Optical_amplifier_noise' in list(SA.flatten(user_inputs.user_itype_noise)):        
             METHODS.setdefault('Optical_amplifier_noise',Qlunc_UQ_Photonics_func.UQ_Optical_amplifier(**Scenarios))              
         if 'Optical_amplifier' in list(SA.flatten(user_inputs.user_icomponents)):        
