@@ -56,8 +56,8 @@ class inputs():
                'power'     : {'power_source' :[],                    # for now: 'power_source_noise',...
                               'converter'    :[]},                     # for now:'converter_noise', 'converter_losses'...
     
-               'photonics' : {'photodetector':['photodetector_noise'],                   # for now:'photodetector_noise'; May be include 'TIA_noise' if there is a transimpedance amplifier...
-#                              'Optical_amplifier'    :[],                       #for now:  'Optical_amplifier_noise',... If user includes Optical_amplifier component in dictionary 'modules', figure noise is automatically included in calculations(if don't want to include it have to put 0 in 'Optical_amplifier_uncertainty_inputs')
+               'photonics' : {'photodetector':['photodetector_noise','TIA_noise'],                   # for now:'photodetector_noise'; May be include 'TIA_noise' if there is a transimpedance amplifier...
+                              'Optical_amplifier'    :[],                       #for now:  'Optical_amplifier_noise',... If user includes Optical_amplifier component in dictionary 'modules', figure noise is automatically included in calculations(if don't want to include it have to put 0 in 'Optical_amplifier_uncertainty_inputs')
                               'laser_source' :[]} ,                  # for now:'laser_source_noise',...
                               
                'optics'    : {'telescope'    :['telescope_losses']}                       # for now:'telescope_noise', 'telescope_losses'...
@@ -77,8 +77,8 @@ class inputs():
                                 'fog'         : list(AtmosphericScenarios_TS.loc[:,'fog']),
                                 'time'        : list(AtmosphericScenarios_TS.loc[:,'t'])} #for rain and fog intensity intervals might be introduced [none,low, medium high]
         else:    
-            Atmospheric_inputs={'temperature' : [300,400], # [K]
-                                'humidity'    : [12,12],      # [%]
+            Atmospheric_inputs={'temperature' : [300], # [K] HAve to put the same number of elements for temperature and humidity. Always in paired values [T,H]
+                                'humidity'    : [12],      # [%]
                                 'rain'        : [True],
                                 'fog'         : [False]}#for rain and fog intensity intervals might be introduced [none,low, medium high]
 #%% General lidar layout inputs:
@@ -104,7 +104,7 @@ class inputs():
                                              'laser_source_OtherChanges'  : [.07709]}
 
         
-        Photodetector_inputs  = {'Photodetector_Bandwidth'    : [380e6,450],  #[Hz] Band width
+        Photodetector_inputs  = {'Photodetector_Bandwidth'    : [380e6],  #[Hz] Band width
                                  'Photodetector_RL'           : [50],#[ohms] Load resistor
                                  'Photodetector_Efficiency'   : [0.85],#efficiency of the photodiode:
                                  'Photodetector_DarkCurrent'  : [5e-9],#[A] Dark current intensity
