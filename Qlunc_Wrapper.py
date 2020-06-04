@@ -10,24 +10,38 @@ import Qlunc_Help_standAlone as SA
 import Qlunc_inputs
 
 #%%Naming data to make it easier:
+
 #Atmosphere:
 temp        = inputs.atm_inp.Atmospheric_inputs['temperature']
 hum         = inputs.atm_inp.Atmospheric_inputs['humidity']
 wave        = inputs.lidar_inp.Lidar_inputs['Wavelength']
+
 #Power
 conv_noise  = inputs.power_inp.Converter_uncertainty_inputs['converter_noise']
 conv_oc     = inputs.power_inp.Converter_uncertainty_inputs['converter_OtherChanges']
 conv_losses = inputs.power_inp.Converter_uncertainty_inputs['converter_losses']
 ps_noise    = inputs.power_inp.PowerSource_uncertainty_inputs['power_source_noise']
 ps_oc       = inputs.power_inp.PowerSource_uncertainty_inputs['power_source_OtherChanges']
+
 #photonics
 amp_noise   = inputs.photonics_inp.Optical_amplifier_uncertainty_inputs['Optical_amplifier_noise']
 amp_oc      = inputs.photonics_inp.Optical_amplifier_uncertainty_inputs['Optical_amplifier_OtherChanges']
 #amp_noise_figure = Qlunc_UQ_Photonics_func.FigNoise(inputs,direct)
 ls_noise    = inputs.photonics_inp.LaserSource_uncertainty_inputs['laser_source_noise']
 ls_oc       = inputs.photonics_inp.LaserSource_uncertainty_inputs['laser_source_OtherChanges']
-photo_noise = inputs.photonics_inp.Photodetector_uncertainty_inputs['photodetector_noise']
-photo_oc    = inputs.photonics_inp.Photodetector_uncertainty_inputs['photodetector_OtherChanges']
+#photo_noise = inputs.photonics_inp.Photodetector_uncertainty_inputs['photodetector_noise']
+#photo_oc    = inputs.photonics_inp.Photodetector_uncertainty_inputs['photodetector_OtherChanges']
+PHOTO_BW=inputs.photonics_inp.Photodetector_inputs['Photodetector_Bandwidth']
+PHOTO_RL=inputs.photonics_inp.Photodetector_inputs['Photodetector_RL']
+PHOTO_n=inputs.photonics_inp.Photodetector_inputs['Photodetector_Efficiency']
+PHOTO_Id=inputs.photonics_inp.Photodetector_inputs['Photodetector_DarkCurrent']
+PHOTO_SP=inputs.photonics_inp.Photodetector_inputs['Photodetector_Signal_power']
+TIA_G=inputs.photonics_inp.TIA_inputs['Gain_TIA']
+TIA_V_noise=inputs.photonics_inp.TIA_inputs['V_noise_TIA']
+
+
+
+
 #telescope
 tele_cl     = inputs.optics_inp.Telescope_uncertainty_inputs['telescope_curvature_lens']
 tele_oc     = inputs.optics_inp.Telescope_uncertainty_inputs['telescope_OtherChanges']
@@ -53,8 +67,11 @@ def Get_Scenarios():
                'converter_losses'    :[[[conv_losses],'VAL_CONVERTER_LOSSES',[inputs.VAL.VAL_CONVERTER_LOSSES] ] ] ,           
                'converter_noise'     :[[[conv_noise],'VAL_NOISE_CONVERTER',[inputs.VAL.VAL_NOISE_CONVERTER]],[[conv_oc],'VAL_OC_CONVERTER',[inputs.VAL.VAL_OC_CONVERTER]]],
                                                                    
-               'photodetector_noise' :[[[photo_noise],'VAL_NOISE_PHOTO',[inputs.VAL.VAL_NOISE_PHOTO]],[[photo_oc], 'VAL_OC_PHOTO',[inputs.VAL.VAL_OC_PHOTO]  ] ],
-                                                                   
+               'photodetector_noise' :[[[PHOTO_BW],'VAL_PHOTO_BW',[inputs.VAL.VAL_PHOTO_BW]],[[PHOTO_RL], 'VAL_PHOTO_RL',[inputs.VAL.VAL_PHOTO_RL]],
+                                       [[PHOTO_n], 'VAL_PHOTO_n',[inputs.VAL.VAL_PHOTO_n]  ] ,[[PHOTO_Id], 'VAL_PHOTO_Id',[inputs.VAL.VAL_PHOTO_Id]],
+                                       [[PHOTO_SP], 'VAL_PHOTO_SP',[inputs.VAL.VAL_PHOTO_SP]]],
+                                       
+               'TIA_noise'             :[[[TIA_G],'VAL_GAIN_TIA',[inputs.VAL.VAL_GAIN_TIA]],[[TIA_V_noise],'VAL_V_NOISE_TIA',[inputs.VAL.VAL_V_NOISE_TIA]]] ,                                     
 #               'Optical_amplifier_fignoise'  :[[[amp_noise_figure], 'VAL_NOISE_FIG',[inputs.VAL.VAL_NOISE_FIG]  ]  ],
                'Optical_amplifier_noise'     :[[[amp_oc],  'VAL_OC_AMPLI',[inputs.VAL.VAL_OC_AMPLI]],   [[amp_noise],'VAL_NOISE_AMPLI',[inputs.VAL.VAL_NOISE_AMPLI]] ],  
                                                                    
