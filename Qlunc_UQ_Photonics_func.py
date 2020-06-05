@@ -65,8 +65,8 @@ def UQ_Optical_amplifier(**Scenarios):
 
 
 def FigNoise(inputs,direct,**Scenarios): # This is the error of the optical amplifier
-    if inputs.photonics_inp.Optical_amplifier_uncertainty_inputs['Optical_amplifier_fignoise'][0]==0:
-        FigureNoise=0
+    if isinstance (inputs.photonics_inp.Optical_amplifier_uncertainty_inputs['Optical_amplifier_fignoise'][0], numbers.Number): #If user introduces a number or a table of values
+        FigureNoise=inputs.photonics_inp.Optical_amplifier_uncertainty_inputs['Optical_amplifier_fignoise'][0]
     else:
         NoiseFigure_DATA = pd.read_csv(direct.Main_directory+inputs.photonics_inp.Optical_amplifier_uncertainty_inputs['Optical_amplifier_fignoise'],delimiter=';',decimal=',') #read from an excel file variation of dB with wavelength(for now just with wavelegth)
         FigureNoise = []
@@ -82,7 +82,8 @@ def FigNoise(inputs,direct,**Scenarios): # This is the error of the optical ampl
 def UQ_LaserSource(**Scenarios):
     UQ_laser_source=[]
     for i in range(len(Scenarios.get('VAL_T'))):
-        UQ_laser_source.append(Scenarios.get('VAL_T')[i]*1+Scenarios.get('VAL_H')[i]*0.1+Scenarios.get('VAL_WAVE')[i]/1200+Scenarios.get('VAL_NOISE_LASER_SOURCE')[i]+Scenarios.get('VAL_OC_LASER_SOURCE')[i])
+        UQ_laser_source.append(Scenarios.get('VAL_T')[i]*1+Scenarios.get('VAL_H')[i]*0.1+Scenarios.get('VAL_WAVE')[i]/1200+Scenarios.get('VAL_NOISE_LASER_SOURCE')[i]+
+                               Scenarios.get('VAL_OC_LASER_SOURCE')[i])
 #    UQ_laser_source=[round(UQ_laser_source[i_dec],3) for i_dec in range(len(UQ_laser_source))]
     return UQ_laser_source
 

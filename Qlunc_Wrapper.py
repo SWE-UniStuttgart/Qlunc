@@ -100,13 +100,13 @@ def Get_Scenarios():
     for i in list(SA.flatten('VAL_T','VAL_H',Names_Val)):
         Scenarios[i]=[]
     
-    for VAL_T,VAL_H in zip (temp, hum):
-            for Val in itertools.product(*list(itertools.chain(*type_noise))):
+    for VAL_T,VAL_H in zip (temp, hum): # This for lop is apart of the others because of the zip, since T and H shouldn´t be mixed to obtain different scenarions --> T and H are paired for each scenario
+            for Val in itertools.product(*list(itertools.chain(*type_noise))): # This makes all possible combinations among user inputs
                 for k,v in zip (Scenarios.keys(), (VAL_T,)+(VAL_H,)+Val): # for loop to build up the dictionary 'Scenarios'. If user includes some variability (dependency on wavelength e.g. of any variable)              
                     Scenarios[k].append(v)
 #                Scenarios.append(list(flatten(inputs.VAL.VAL_T,inputs.VAL.VAL_H,inputs.VAL.VAL_WAVE,inputs.VAL.VAL_NOISE_FIG,Val))) #
                 Temperature.append([VAL_T])
-#    pdb.set_trace()
+    pdb.set_trace()
     return Scenarios,Temperature
 #%% Running the different cases. If user has included it, the case is evaluated: Can I do this in a loop??????
    
