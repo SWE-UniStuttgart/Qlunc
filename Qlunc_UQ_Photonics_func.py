@@ -46,7 +46,7 @@ def UQ_Photodetector(user_inputs,inputs,cts,**Scenarios):
             UQ_Photodetector.append(SA.Sum_dB([Photodetector_Thermal_noise[i],Photodetector_Shot_noise[i],Photodetector_Dark_current_noise[i],Photodetector_TIA_noise[i]]))
         else:
              UQ_Photodetector.append(SA.Sum_dB([Photodetector_Thermal_noise[i],Photodetector_Shot_noise[i],Photodetector_Dark_current_noise[i]]))
-        pdb.set_trace()
+#        pdb.set_trace()
     
 #    for nT in range(len(Photodetector_Thermal_noise)):
 #        UQ_Photodetector.append(SA.Sum_dB([Photodetector_Thermal_noise[nT],Photodetector_Shot_noise[nT],Photodetector_Dark_current_noise[nT],Photodetector_TIA_noise[nT]]))
@@ -56,7 +56,7 @@ def UQ_Photodetector(user_inputs,inputs,cts,**Scenarios):
 
 
 #%% OPTICAL AMPLIFIER
-def UQ_Optical_amplifier(**Scenarios):
+def UQ_Optical_amplifier(user_inputs,inputs,cts,**Scenarios):
     UQ_Optical_amplifier=[]
     for i in range(len(Scenarios.get('VAL_T'))):
         UQ_Optical_amplifier.append(Scenarios.get('VAL_T')[i]*0.5+Scenarios.get('VAL_H')[i]*0.7+Scenarios.get('VAL_NOISE_AMPLI')[i]+Scenarios.get('VAL_OC_AMPLI')[i])
@@ -64,7 +64,7 @@ def UQ_Optical_amplifier(**Scenarios):
     return UQ_Optical_amplifier
 
 
-def FigNoise(inputs,direct,**Scenarios): # This is the error of the optical amplifier
+def FigNoise(user_inputs,inputs,direct,**Scenarios): # This is the error of the optical amplifier
     if inputs.photonics_inp.Optical_amplifier_uncertainty_inputs['Optical_amplifier_fignoise'][0]==0:
         FigureNoise=0
     else:
@@ -79,7 +79,7 @@ def FigNoise(inputs,direct,**Scenarios): # This is the error of the optical ampl
 
 
 #%% LASER SOURCE
-def UQ_LaserSource(**Scenarios):
+def UQ_LaserSource(user_inputs,inputs,cts,**Scenarios):
     UQ_laser_source=[]
     for i in range(len(Scenarios.get('VAL_T'))):
         UQ_laser_source.append(Scenarios.get('VAL_T')[i]*1+Scenarios.get('VAL_H')[i]*0.1+Scenarios.get('VAL_WAVE')[i]/1200+Scenarios.get('VAL_NOISE_LASER_SOURCE')[i]+Scenarios.get('VAL_OC_LASER_SOURCE')[i])

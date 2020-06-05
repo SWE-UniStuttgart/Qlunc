@@ -6,7 +6,7 @@ Created on Thu May 21 00:11:03 2020
 """
 
 from Qlunc_ImportModules import *
-import Qlunc_Help_standAlone as SA
+import Qlunc_Help_standAlone as Salone
 import Qlunc_inputs
 
 #%%Naming data to make it easier:
@@ -26,7 +26,7 @@ ps_oc       = inputs.power_inp.PowerSource_uncertainty_inputs['power_source_Othe
 #photonics
 amp_noise   = inputs.photonics_inp.Optical_amplifier_uncertainty_inputs['Optical_amplifier_noise']
 amp_oc      = inputs.photonics_inp.Optical_amplifier_uncertainty_inputs['Optical_amplifier_OtherChanges']
-#amp_noise_figure = Qlunc_UQ_Photonics_func.FigNoise(inputs,direct)
+#amp_noise_figure = Qlunc_UQ_Photonics_func.FigNoise(user_inputs,inputs,cts)
 ls_noise    = inputs.photonics_inp.LaserSource_uncertainty_inputs['laser_source_noise']
 ls_oc       = inputs.photonics_inp.LaserSource_uncertainty_inputs['laser_source_OtherChanges']
 PHOTO_BW=inputs.photonics_inp.Photodetector_inputs['Photodetector_Bandwidth']
@@ -106,34 +106,36 @@ def Get_Scenarios():
                     Scenarios[k].append(v)
 #                Scenarios.append(list(flatten(inputs.VAL.VAL_T,inputs.VAL.VAL_H,inputs.VAL.VAL_WAVE,inputs.VAL.VAL_NOISE_FIG,Val))) #
                 Temperature.append([VAL_T])
-#    pdb.set_trace()
+
     return Scenarios,Temperature
 #%% Running the different cases. If user has included it, the case is evaluated: Can I do this in a loop??????
-   
 def Get_Noise(module,Scenarios):    
     METHODS={}
-    if module=='power':
-        if 'power_source_noise' in list(SA.flatten(user_inputs.user_itype_noise)):
-            METHODS.setdefault('power_source_noise',Qlunc_UQ_Power_func.UQ_PowerSource(**Scenarios))   # 'Setdefault' is just like append but it's used when no element is yet included in the dictionary     
-        if 'converter_noise' in list(SA.flatten(user_inputs.user_itype_noise)):     
-            METHODS.setdefault('converter_noise',Qlunc_UQ_Power_func.UQ_Converter(**Scenarios))        
-        if 'converter_losses' in list(SA.flatten(user_inputs.user_itype_noise)):        
-            METHODS.setdefault('converter_losses',Qlunc_UQ_Power_func.Losses_Converter(**Scenarios))  
+    if module == 'power':
+        Func = {'power_source_noise'  : Qlunc_UQ_Power_func.UQ_PowerSource,
+                'converter_noise'     : Qlunc_UQ_Power_func.UQ_Converter,
+                'converter_losses'    : Qlunc_UQ_Power_func.Losses_Converter,
+                }
+    elif module== 'photonics':
+        Func = {'laser_source_noise'  : Qlunc_UQ_Photonics_func.UQ_LaserSource,
+                'photodetector_noise' : Qlunc_UQ_Photonics_func.UQ_Photodetector,
+                'Optical_amplifier_noise'     : Qlunc_UQ_Photonics_func.UQ_Optical_amplifier, 
+                }
+        if 'Optical_amplifier' in user_inputs.user_icomponents:         
             
-    if module=='photonics':
-        if 'laser_source_noise' in list(SA.flatten(user_inputs.user_itype_noise)):        
-            METHODS.setdefault('laser_source_noise',Qlunc_UQ_Photonics_func.UQ_LaserSource(**Scenarios))        
-        if 'photodetector_noise' in list(SA.flatten(user_inputs.user_itype_noise)):        
-            METHODS.setdefault('photodetector_noise',Qlunc_UQ_Photonics_func.UQ_Photodetector(user_inputs,inputs,cts,**Scenarios))               
-        if 'Optical_amplifier_noise' in list(SA.flatten(user_inputs.user_itype_noise)):        
-            METHODS.setdefault('Optical_amplifier_noise',Qlunc_UQ_Photonics_func.UQ_Optical_amplifier(**Scenarios))              
-        if 'Optical_amplifier' in list(SA.flatten(user_inputs.user_icomponents)):        
-            METHODS.setdefault('Optical_amplifier_fignoise',Qlunc_UQ_Photonics_func.FigNoise(inputs,direct,**Scenarios))
-    
-    if module=='optics':          
-        if 'telescope_noise' in list(SA.flatten(user_inputs.user_itype_noise)):        
-            METHODS.setdefault('telescope_noise',Qlunc_UQ_Optics_func.UQ_Telescope(**Scenarios))               
-        if 'telescope_losses' in list(SA.flatten(user_inputs.user_itype_noise)):        
-            METHODS.setdefault('telescope_losses',Qlunc_UQ_Optics_func.Losses_Telescope(**Scenarios))        
-
+            # For methods that we want them to appear in estimations although they´re not in the 'user_inputs.user_itype_noise' list like the optical amplifier noise figure
+            # wich appears automatically when introducing the optical amplifier and is not involved in any calculation:
+            METHODS.setdefault('Optical_amplifier_fignoise',Qlunc_UQ_Photonics_func.FigNoise(user_inputs,inputs,direct,**Scenarios)) 
+    elif module=='optics':
+        Func = {'telescope_noise'     : Qlunc_UQ_Optics_func.UQ_Telescope,
+                'telescope_losses'    : Qlunc_UQ_Optics_func.Losses_Telescope
+                }
+           
+    for k,v in Func.items():
+        if k in list(Salone.flatten(user_inputs.user_itype_noise)):  
+            METHODS.setdefault(k,list(Salone.flatten(Func[k](user_inputs,inputs,cts,**Scenarios))))
+    pdb.set_trace()
     return METHODS
+
+
+

@@ -21,6 +21,8 @@ Created on Mon Apr 27 09:14:00 2020
 #%% Inputs:.
 
 #import Data:
+from Qlunc_ImportModules import *
+
 import pandas as pd
 import sys,inspect
 from functools import reduce
@@ -53,14 +55,14 @@ class inputs():
     # Modules is a dictionary containing the lidar modules as a key. As values there is a nested dictionary containing components as keys and type of uncertainty as values.
     # Each of this values is related with a function which calculates this specific uncertainty. The relation between type of unc. and function calculating it is in LiUQ_core when defining methods.
     modules = {
-               'power'     : {'power_source' :[],                    # for now: 'power_source_noise',...
-                              'converter'    :[]},                     # for now:'converter_noise', 'converter_losses'...
+               'power'     : {'power_source' :['power_source_noise'],                    # for now: 'power_source_noise',...
+                              'converter'    :['converter_noise', 'converter_losses']},                     # for now:'converter_noise', 'converter_losses'...
     
                'photonics' : {'photodetector':['photodetector_noise','TIA_noise'],                   # for now:'photodetector_noise'; May be include 'TIA_noise' if there is a transimpedance amplifier...
-                              'Optical_amplifier'    :[],                       #for now:  'Optical_amplifier_noise',... If user includes Optical_amplifier component in dictionary 'modules', figure noise is automatically included in calculations(if don't want to include it have to put 0 in 'Optical_amplifier_uncertainty_inputs')
-                              'laser_source' :[]} ,                  # for now:'laser_source_noise',...
+                              'Optical_amplifier'    :['Optical_amplifier_noise'],                       #for now:  'Optical_amplifier_noise',... If user includes Optical_amplifier component in dictionary 'modules', figure noise is automatically included in calculations(if don't want to include it have to put 0 in 'Optical_amplifier_uncertainty_inputs')
+                              'laser_source' :['laser_source_noise']} ,                  # for now:'laser_source_noise',...
                               
-               'optics'    : {'telescope'    :['telescope_losses']}                       # for now:'telescope_noise', 'telescope_losses'...
+               'optics'    : {'telescope'    :['telescope_losses','telescope_noise']}                       # for now:'telescope_noise', 'telescope_losses'...
                }
 #    DP      = ['los'] # data processing methods we want to assess
 
@@ -124,7 +126,18 @@ class inputs():
                                              'telescope_losses'         : [.099]}
 
 
-#%%
+#%% This define the functions used to estimate the uncertaintes: USER HAVE TO INCLUDE HERE THE FUNCTIONS8 ('Func.values()') USED TO ESTIMATE THE UNCERTAINTY VALUES WITH THE NAME OF THE UNCERTAINTY ('Func.keys()')
+            
+#    class functions_unc():    
+#        Func     = {'power_source_noise'  : Qlunc_UQ_Power_func.UQ_PowerSource,
+#                    'converter_noise'     : Qlunc_UQ_Power_func.UQ_Converter,
+#                    'converter_losses'    : Qlunc_UQ_Power_func.Losses_Converter,
+#                    'laser_source_noise'  : Qlunc_UQ_Photonics_func.UQ_LaserSource,
+#                    'photodetector_noise' : Qlunc_UQ_Photonics_func.UQ_Photodetector,
+#                    'amplifier_noise'     : Qlunc_UQ_Photonics_func.UQ_Optical_amplifier, 
+#                    'amplifier_fignoise'  : Qlunc_UQ_Photonics_func.FigNoise,
+#                    'telescope_noise'     : Qlunc_UQ_Optics_func.UQ_Telescope,
+#                    'telescope_losses'    : Qlunc_UQ_Optics_func.Losses_Telescope}
 #    class VAL(): These was created to pass None values to the loop when getting Scenarios. Probably not needed any more!!! I keep it just in case
 #            [VAL_T,VAL_H,VAL_WAVE]=[None]*3
 #             VAL_NOISE_CONVERTER,VAL_OC_CONVERTER,VAL_CONVERTER_LOSSES,
