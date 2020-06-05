@@ -12,6 +12,7 @@ from Qlunc_ImportModules import *
 #import LiUQ_inputs
 import pdb
 import Qlunc_Help_standAlone as SA
+import numbers
 #%% PHOTODETECTOR
 def UQ_Photodetector(user_inputs,inputs,cts,**Scenarios):
     UQ_Photodetector=[]
@@ -30,7 +31,7 @@ def UQ_Photodetector(user_inputs,inputs,cts,**Scenarios):
         # Photodetector Thermal noise
         Photodetector_Thermal_noise.append((10*np.log10(4*cts.k*Scenarios.get('VAL_T')[i]/Scenarios.get('VAL_PHOTO_RL')[i])*Scenarios.get('VAL_PHOTO_BW')[i])) #[dBm]
         Photodetector_SNR_thermal_noise.append(10*np.log10(((R**2)/(4*cts.k*Scenarios.get('VAL_T')[i]*Scenarios.get('VAL_PHOTO_BW')[i]/Scenarios.get('VAL_PHOTO_RL')[i]))*(Scenarios.get('VAL_PHOTO_SP')[i]/1000)**2))
-    
+#        pdb.set_trace()
         #Photodetector shot noise:
         Photodetector_Shot_noise.append(10*np.log10(2*cts.e*R*Scenarios.get('VAL_PHOTO_BW')[i]*Scenarios.get('VAL_PHOTO_SP')[i]))
         Photodetector_SNR_Shot_noise.append(10*np.log10(((R**2)/(2*cts.e*R*Scenarios.get('VAL_PHOTO_BW')[i]))*(Scenarios.get('VAL_PHOTO_SP')[i])/1000))
@@ -38,7 +39,7 @@ def UQ_Photodetector(user_inputs,inputs,cts,**Scenarios):
         #Photodetector dark current noise
         Photodetector_Dark_current_noise.append(10*np.log10(2*cts.e*Scenarios.get('VAL_PHOTO_Id')[i]*Scenarios.get('VAL_PHOTO_BW')[i]*Scenarios.get('VAL_PHOTO_SP')[i]))
         Photodetector_SNR_DarkCurrent.append(10*np.log10(((R**2)/(2*cts.e*Scenarios.get('VAL_PHOTO_Id')[i]*Scenarios.get('VAL_PHOTO_BW')[i]))*((Scenarios.get('VAL_PHOTO_SP')[i]/1000)**2) ))
-
+        
         if 'TIA_noise' in list(SA.flatten(user_inputs.user_itype_noise)):     # If TIA is included in the components:
             # Photodetector TIA noise
             Photodetector_TIA_noise.append( 10*np.log10(Scenarios.get('VAL_V_NOISE_TIA')[i]**2/Scenarios.get('VAL_GAIN_TIA')[i]**2))
@@ -46,8 +47,8 @@ def UQ_Photodetector(user_inputs,inputs,cts,**Scenarios):
             UQ_Photodetector.append(SA.Sum_dB([Photodetector_Thermal_noise[i],Photodetector_Shot_noise[i],Photodetector_Dark_current_noise[i],Photodetector_TIA_noise[i]]))
         else:
              UQ_Photodetector.append(SA.Sum_dB([Photodetector_Thermal_noise[i],Photodetector_Shot_noise[i],Photodetector_Dark_current_noise[i]]))
-#        pdb.set_trace()
-    
+#        
+             
 #    for nT in range(len(Photodetector_Thermal_noise)):
 #        UQ_Photodetector.append(SA.Sum_dB([Photodetector_Thermal_noise[nT],Photodetector_Shot_noise[nT],Photodetector_Dark_current_noise[nT],Photodetector_TIA_noise[nT]]))
 #    UQ_photodetector=[round(UQ_photodetector[i_dec],3) for i_dec in range(len(UQ_photodetector))] # 3 decimals
@@ -63,10 +64,9 @@ def UQ_Optical_amplifier(user_inputs,inputs,cts,**Scenarios):
 #    UQ_Optical_amplifier=[round(UQ_Optical_amplifier[i_dec],3) for i_dec in range(len(UQ_Optical_amplifier))]
     return UQ_Optical_amplifier
 
-
 def FigNoise(user_inputs,inputs,direct,**Scenarios): # This is the error of the optical amplifier
-    if inputs.photonics_inp.Optical_amplifier_uncertainty_inputs['Optical_amplifier_fignoise'][0]==0:
-        FigureNoise=0
+    if isinstance (inputs.photonics_inp.Optical_amplifier_uncertainty_inputs['Optical_amplifier_fignoise'][0], numbers.Number): #If user introduces a number or a table of values
+        FigureNoise=inputs.photonics_inp.Optical_amplifier_uncertainty_inputs['Optical_amplifier_fignoise'][0]
     else:
         NoiseFigure_DATA = pd.read_csv(direct.Main_directory+inputs.photonics_inp.Optical_amplifier_uncertainty_inputs['Optical_amplifier_fignoise'],delimiter=';',decimal=',') #read from an excel file variation of dB with wavelength(for now just with wavelegth)
         FigureNoise = []

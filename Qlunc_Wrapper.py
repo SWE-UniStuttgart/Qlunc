@@ -6,7 +6,7 @@ Created on Thu May 21 00:11:03 2020
 """
 
 from Qlunc_ImportModules import *
-import Qlunc_Help_standAlone as Salone
+#import Qlunc_Help_standAlone as Salone
 import Qlunc_inputs
 
 #%%Naming data to make it easier:
@@ -17,18 +17,18 @@ hum         = inputs.atm_inp.Atmospheric_inputs['humidity']
 wave        = inputs.lidar_inp.Lidar_inputs['Wavelength']
 
 #Power
-conv_noise  = inputs.power_inp.Converter_uncertainty_inputs['converter_noise']
-conv_oc     = inputs.power_inp.Converter_uncertainty_inputs['converter_OtherChanges']
-conv_losses = inputs.power_inp.Converter_uncertainty_inputs['converter_losses']
-ps_noise    = inputs.power_inp.PowerSource_uncertainty_inputs['power_source_noise']
-ps_oc       = inputs.power_inp.PowerSource_uncertainty_inputs['power_source_OtherChanges']
+conv_noise  = inputs.power_inp.Converter_uncertainty_inputs['Converter_noise']
+conv_oc     = inputs.power_inp.Converter_uncertainty_inputs['Converter_OtherChanges']
+conv_losses = inputs.power_inp.Converter_uncertainty_inputs['Converter_losses']
+ps_noise    = inputs.power_inp.PowerSource_uncertainty_inputs['Power_source_noise']
+ps_oc       = inputs.power_inp.PowerSource_uncertainty_inputs['Power_source_OtherChanges']
 
 #photonics
 amp_noise   = inputs.photonics_inp.Optical_amplifier_uncertainty_inputs['Optical_amplifier_noise']
 amp_oc      = inputs.photonics_inp.Optical_amplifier_uncertainty_inputs['Optical_amplifier_OtherChanges']
 #amp_noise_figure = Qlunc_UQ_Photonics_func.FigNoise(user_inputs,inputs,cts)
-ls_noise    = inputs.photonics_inp.LaserSource_uncertainty_inputs['laser_source_noise']
-ls_oc       = inputs.photonics_inp.LaserSource_uncertainty_inputs['laser_source_OtherChanges']
+ls_noise    = inputs.photonics_inp.LaserSource_uncertainty_inputs['Laser_source_noise']
+ls_oc       = inputs.photonics_inp.LaserSource_uncertainty_inputs['Laser_source_OtherChanges']
 PHOTO_BW=inputs.photonics_inp.Photodetector_inputs['Photodetector_Bandwidth']
 PHOTO_RL=inputs.photonics_inp.Photodetector_inputs['Photodetector_RL']
 PHOTO_n=inputs.photonics_inp.Photodetector_inputs['Photodetector_Efficiency']
@@ -38,10 +38,10 @@ TIA_G=inputs.photonics_inp.TIA_inputs['Gain_TIA']
 TIA_V_noise=inputs.photonics_inp.TIA_inputs['V_noise_TIA']
 
 #telescope
-tele_cl     = inputs.optics_inp.Telescope_uncertainty_inputs['telescope_curvature_lens']
-tele_oc     = inputs.optics_inp.Telescope_uncertainty_inputs['telescope_OtherChanges']
-tele_aberr  = inputs.optics_inp.Telescope_uncertainty_inputs['telescope_aberration']
-tele_losses = inputs.optics_inp.Telescope_uncertainty_inputs['telescope_losses']
+tele_cl     = inputs.optics_inp.Telescope_uncertainty_inputs['Telescope_curvature_lens']
+tele_oc     = inputs.optics_inp.Telescope_uncertainty_inputs['Telescope_OtherChanges']
+tele_aberr  = inputs.optics_inp.Telescope_uncertainty_inputs['Telescope_aberration']
+tele_losses = inputs.optics_inp.Telescope_uncertainty_inputs['Telescope_losses']
 
 
 # %%Getting scenarios:
@@ -58,12 +58,12 @@ def Get_Scenarios():
     # We need to create the cases we want to loop over. For that are the next steps to create 'type_noise' and 'Val'.
     # First create a dictionary (add_typeN) to identify type of noise with variables we want to use to loop over.
     
-    add_typeN={'power_source_noise'  :[[[ps_noise],'VAL_NOISE_POWER_SOURCE',[None]],   [[ps_oc],'VAL_OC_POWER_SOURCE',[None] ]]  ,
+    add_typeN={'Power_source_noise'  :[[[ps_noise],'VAL_NOISE_POWER_SOURCE',[None]],   [[ps_oc],'VAL_OC_POWER_SOURCE',[None] ]]  ,
                                                                      
-               'converter_losses'    :[[[conv_losses],'VAL_CONVERTER_LOSSES',[None] ] ] ,           
-               'converter_noise'     :[[[conv_noise],'VAL_NOISE_CONVERTER',[None]],[[conv_oc],'VAL_OC_CONVERTER',[None]]],
+               'Converter_losses'    :[[[conv_losses],'VAL_CONVERTER_LOSSES',[None] ] ] ,           
+               'Converter_noise'     :[[[conv_noise],'VAL_NOISE_CONVERTER',[None]],[[conv_oc],'VAL_OC_CONVERTER',[None]]],
                                                                    
-               'photodetector_noise' :[[[PHOTO_BW],'VAL_PHOTO_BW',[None]],[[PHOTO_RL], 'VAL_PHOTO_RL',[None]],
+               'Photodetector_noise' :[[[PHOTO_BW],'VAL_PHOTO_BW',[None]],[[PHOTO_RL], 'VAL_PHOTO_RL',[None]],
                                        [[PHOTO_n], 'VAL_PHOTO_n',[None]  ] ,[[PHOTO_Id], 'VAL_PHOTO_Id',[None]],
                                        [[PHOTO_SP], 'VAL_PHOTO_SP',[None]]],
                                        
@@ -71,13 +71,13 @@ def Get_Scenarios():
 #               'Optical_amplifier_fignoise'  :[[[amp_noise_figure], 'VAL_NOISE_FIG',[inputs.VAL.VAL_NOISE_FIG]  ]  ],
                'Optical_amplifier_noise'     :[[[amp_oc],  'VAL_OC_AMPLI',[None]],   [[amp_noise],'VAL_NOISE_AMPLI',[None]] ],  
                                                                    
-               'laser_source_noise'  :[[[ls_noise],'VAL_NOISE_LASER_SOURCE',[None]], [[ls_oc],'VAL_OC_LASER_SOURCE',[None] ]      ],
+               'Laser_source_noise'  :[[[ls_noise],'VAL_NOISE_LASER_SOURCE',[None]], [[ls_oc],'VAL_OC_LASER_SOURCE',[None] ]      ],
                                                                     
-               'telescope_noise'     :[[[tele_aberr],'VAL_ABERRATION_TELESCOPE',[None]],[[tele_oc],'VAL_OC_TELESCOPE',[None]],
+               'Telescope_noise'     :[[[tele_aberr],'VAL_ABERRATION_TELESCOPE',[None]],[[tele_oc],'VAL_OC_TELESCOPE',[None]],
                                        [[tele_cl], 'VAL_CURVE_LENS_TELESCOPE',[None]]],
                                                                      
                                                                     
-               'telescope_losses'    :[[[tele_losses],'VAL_LOSSES_TELESCOPE',[None]]]}              
+               'Telescope_losses'    :[[[tele_losses],'VAL_LOSSES_TELESCOPE',[None]]]}              
 
     
  
@@ -111,30 +111,31 @@ def Get_Scenarios():
 #%% Running the different cases. If user has included it, the case is evaluated: Can I do this in a loop??????
 def Get_Noise(module,Scenarios):    
     METHODS={}
-    if module == 'power':
-        Func = {'power_source_noise'  : Qlunc_UQ_Power_func.UQ_PowerSource,
-                'converter_noise'     : Qlunc_UQ_Power_func.UQ_Converter,
-                'converter_losses'    : Qlunc_UQ_Power_func.Losses_Converter,
+    if module == 'Power':
+        Func = {'Power_source_noise'  : Qlunc_UQ_Power_func.UQ_PowerSource,
+                'Converter_noise'     : Qlunc_UQ_Power_func.UQ_Converter,
+                'Converter_losses'    : Qlunc_UQ_Power_func.Losses_Converter,
                 }
-    elif module== 'photonics':
-        Func = {'laser_source_noise'  : Qlunc_UQ_Photonics_func.UQ_LaserSource,
-                'photodetector_noise' : Qlunc_UQ_Photonics_func.UQ_Photodetector,
-                'Optical_amplifier_noise'     : Qlunc_UQ_Photonics_func.UQ_Optical_amplifier, 
+    
+    elif module== 'Photonics':
+        Func = {'Laser_source_noise'      : Qlunc_UQ_Photonics_func.UQ_LaserSource,
+                'Photodetector_noise'     : Qlunc_UQ_Photonics_func.UQ_Photodetector,
+                'Optical_amplifier_noise' : Qlunc_UQ_Photonics_func.UQ_Optical_amplifier, 
                 }
-        if 'Optical_amplifier' in user_inputs.user_icomponents:         
-            
-            # For methods that we want them to appear in estimations although they´re not in the 'user_inputs.user_itype_noise' list like the optical amplifier noise figure
-            # wich appears automatically when introducing the optical amplifier and is not involved in any calculation:
+        if 'Optical_amplifier' in list(SA.flatten(user_inputs.user_icomponents)): 
+            # For methods that we want them to appear in estimations although they´re not in the 'user_inputs.user_itype_noise'(user options) list like the optical amplifier noise figure
+            # wich is estimated automatically when introducing the optical amplifier as a component and is not involved in any calculations:
             METHODS.setdefault('Optical_amplifier_fignoise',Qlunc_UQ_Photonics_func.FigNoise(user_inputs,inputs,direct,**Scenarios)) 
-    elif module=='optics':
-        Func = {'telescope_noise'     : Qlunc_UQ_Optics_func.UQ_Telescope,
-                'telescope_losses'    : Qlunc_UQ_Optics_func.Losses_Telescope
+    
+    elif module=='Optics':
+        Func = {'Telescope_noise'     : Qlunc_UQ_Optics_func.UQ_Telescope,
+                'Telescope_losses'    : Qlunc_UQ_Optics_func.Losses_Telescope
                 }
            
     for k,v in Func.items():
-        if k in list(Salone.flatten(user_inputs.user_itype_noise)):  
-            METHODS.setdefault(k,list(Salone.flatten(Func[k](user_inputs,inputs,cts,**Scenarios))))
-    pdb.set_trace()
+        if k in list(SA.flatten(user_inputs.user_itype_noise)):  
+            METHODS.setdefault(k,list(SA.flatten(Func[k](user_inputs,inputs,cts,**Scenarios))))
+#    pdb.set_trace()
     return METHODS
 
 

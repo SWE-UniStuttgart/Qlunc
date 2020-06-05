@@ -39,43 +39,40 @@ H_UQ_Photonics={}
 H_UQ_Optics={}
 DP_UQ={} # To work on in the future
 
-#subcolumns=[]# columns of the dataframe
-subcolumnsComb=[]
-subcolumns_NoneComb=[]
 #%% Hardware:
 
 #Defining classes:
 class Hardware_U():  # creating a function to call each different module. HAve to add an if for a new module    
      # outcome dictionary
     H_UQ=pd.DataFrame()            
-    if 'power' in inputs.modules:             
+    if 'Power' in inputs.modules:             
         class Power(): # Create class optical_amplifier
             if 'Scenarios' not in globals():  # This 'if' decreases drastically computational time              
                 Scenarios,DF_columns = QW.Get_Scenarios()# Temperature is calculated once and it is to get columns of dataframe
-                H_UQ_Power           = QW.Get_Noise('power',Scenarios)
+                H_UQ_Power           = QW.Get_Noise('Power',Scenarios)
             else:
-                 H_UQ_Power          = QW.Get_Noise('power',Scenarios)
+                 H_UQ_Power          = QW.Get_Noise('Power',Scenarios)
         H_UQ_POWER     = SA.Get_DataFrame(Power.H_UQ_Power,Power.DF_columns).T
         H_UQ=H_UQ.append(H_UQ_POWER)
     
-    if 'photonics' in inputs.modules:
+    if 'Photonics' in inputs.modules:
         class Photonics(): # Create class Photonics 
             
             if 'Scenarios' not in globals():                    
                 Scenarios,DF_columns     = QW.Get_Scenarios()# Temperature is calculated once and it is to get columns of dataframe
-                H_UQ_Photonics           = QW.Get_Noise('photonics',Scenarios)
+                H_UQ_Photonics           = QW.Get_Noise('Photonics',Scenarios)
             else:
-                 H_UQ_Photonics          = QW.Get_Noise('photonics',Scenarios)
+                 H_UQ_Photonics          = QW.Get_Noise('Photonics',Scenarios)
         H_UQ_PHOTONICS = SA.Get_DataFrame(Photonics.H_UQ_Photonics,Photonics.DF_columns).T
         H_UQ=H_UQ.append(H_UQ_PHOTONICS)
-    
-    if 'optics' in inputs.modules:
+#    pdb.set_trace()
+    if 'Optics' in inputs.modules:
        class Optics(): # Create class Optics            
             if 'Scenarios' not in globals():                    
                 Scenarios,DF_columns  = QW.Get_Scenarios()# Temperature is calculated once and it is to get columns of dataframe
-                H_UQ_Optics           = QW.Get_Noise('optics',Scenarios)
+                H_UQ_Optics           = QW.Get_Noise('Optics',Scenarios)
             else:
-                 H_UQ_Optics          = QW.Get_Noise('optics',Scenarios)
+                 H_UQ_Optics          = QW.Get_Noise('Optics',Scenarios)
        H_UQ_OPTICS    = SA.Get_DataFrame(Optics.H_UQ_Optics,Optics.DF_columns).T
        H_UQ=H_UQ.append(H_UQ_OPTICS)
 
