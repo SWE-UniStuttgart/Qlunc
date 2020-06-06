@@ -53,14 +53,14 @@ class inputs():
     # Modules is a dictionary containing the lidar modules as a key. As values there is a nested dictionary containing components as keys and type of uncertainty as values.
     # Each of this values is related with a function which calculates this specific uncertainty. The relation between type of unc. and function calculating it is in LiUQ_core when defining methods.
     modules = {
-               'power'     : {'power_source'      :['power_source_noise'],                    # for now: 'power_source_noise',...
-                              'converter'         :['converter_noise', 'converter_losses']},                     # for now:'converter_noise', 'converter_losses'...
+               'Power'     : {'Power_source'      :['Power_source_noise'],                    # for now: 'power_source_noise',...
+                              'Converter'         :['Converter_noise', 'Converter_losses']},                     # for now:'converter_noise', 'converter_losses'...
     
-               'photonics' : {'photodetector'     :['photodetector_noise','TIA_noise'],                   # for now:'photodetector_noise'; May be include 'TIA_noise' if there is a transimpedance amplifier...
+               'Photonics' : {'Photodetector'     :['Photodetector_noise','TIA_noise'],                   # for now:'photodetector_noise'; May be include 'TIA_noise' if there is a transimpedance amplifier...
                               'Optical_amplifier' :['Optical_amplifier_noise'],                       #for now:  'Optical_amplifier_noise',... If user includes Optical_amplifier component in dictionary 'modules', figure noise is automatically included in calculations(if don't want to include it have to put 0 in 'Optical_amplifier_uncertainty_inputs')
-                              'laser_source'      :['laser_source_noise']} ,                  # for now:'laser_source_noise',...
+                              'Laser_source'      :['Laser_source_noise']} ,                  # for now:'laser_source_noise',...
                               
-               'optics'    : {'telescope'         :['telescope_losses']}                       # for now:'telescope_noise', 'telescope_losses'...
+               'Optics'    : {'Telescope'         :['Telescope_losses']}                       # for now:'telescope_noise', 'telescope_losses'...
                }
 #    DP      = ['los'] # data processing methods we want to assess
 
@@ -89,19 +89,19 @@ class inputs():
         
 #%% Power Modules inputs:
     class power_inp():
-        PowerSource_uncertainty_inputs = {'power_source_noise'       : [.8],
-                                          'power_source_OtherChanges': [.09]}
-        Converter_uncertainty_inputs   = {'converter_noise'          : [4],
-                                          'converter_OtherChanges'   : [.005885],
-                                          'converter_losses'         :[0.056]}    
+        PowerSource_uncertainty_inputs = {'Power_source_noise'       : [.8],
+                                          'Power_source_OtherChanges': [.09]}
+        Converter_uncertainty_inputs   = {'Converter_noise'          : [4],
+                                          'Converter_OtherChanges'   : [.005885],
+                                          'Converter_losses'         :[0.056]}    
     
 #%% Photonics module inputs:
     class photonics_inp():
         Optical_amplifier_uncertainty_inputs      = {'Optical_amplifier_noise'            : [0.7777],
                                              'Optical_amplifier_OtherChanges'     : [.005],
                                              'Optical_amplifier_fignoise'         : [5]}#'NoiseFigure.csv'}##
-        LaserSource_uncertainty_inputs    = {'laser_source_noise'         : [.855],
-                                             'laser_source_OtherChanges'  : [.07709]}
+        LaserSource_uncertainty_inputs    = {'Laser_source_noise'         : [.855],
+                                             'Laser_source_OtherChanges'  : [.07709]}
 
         
         Photodetector_inputs  = {'Photodetector_Bandwidth'    : [380e6],  #[Hz] Band width
@@ -118,10 +118,10 @@ class inputs():
 
 #%% Optics module inputs    
     class optics_inp():
-        Telescope_uncertainty_inputs      = {'telescope_curvature_lens' : [.01],
-                                             'telescope_OtherChanges'   : [.006],
-                                             'telescope_aberration'     : [.0004],
-                                             'telescope_losses'         : [.099]}
+        Telescope_uncertainty_inputs      = {'Telescope_curvature_lens' : [.01],
+                                             'Telescope_OtherChanges'   : [.006],
+                                             'Telescope_aberration'     : [.0004],
+                                             'Telescope_losses'         : [.099]}
 
 
 #%%
