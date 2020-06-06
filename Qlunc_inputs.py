@@ -53,22 +53,22 @@ class inputs():
     
     
     # Modules is a dictionary containing the lidar modules as a key. As values there is a nested dictionary containing components as keys and type of uncertainty as values.
-    # Each of this values is related with a function which calculates this specific uncertainty. The relation between type of unc. and function calculating it is in LiUQ_core when defining methods.
+    # Each of this values is related with a function which calculates this specific uncertainty. The relation between type of unc. and function calculating it is in Qlunc_Wrapper in 'Get_Noise.Func'.
     modules = {
                'Power'     : {'Power_source' :['Power_source_noise'],                    # for now: 'Power_source_noise',...
                               'Converter'    :['Converter_noise', 'Converter_losses']},                     # for now:'Converter_noise', 'Converter_losses'...
     
-               'Photonics' : {'Photodetector':['Photodetector_noise'],                   # for now:'Photodetector_noise'; May be include 'TIA_noise' if there is a transimpedance amplifier...
-#                              'Optical_amplifier'    :['Optical_amplifier_noise'],                       #for now:  'Optical_amplifier_noise',... If user includes Optical_amplifier component in dictionary 'modules', figure noise is automatically included in calculations(if don't want to include it have to put 0 in 'Optical_amplifier_uncertainty_inputs')
+               'Photonics' : {'Photodetector':['Photodetector_noise','TIA_noise'],                   # for now:'Photodetector_noise'; Could be included 'TIA_noise' if there is a transimpedance amplifier...
+                              'Optical_amplifier'    :['Optical_amplifier_noise'],                       #for now:  'Optical_amplifier_noise',... If user includes Optical_amplifier component in dictionary 'modules', figure noise is automatically included in calculations(if don't want to include it have to put 0 in 'Optical_amplifier_uncertainty_inputs')
                               'Laser_source' :['Laser_source_noise']} ,                  # for now:'Laser_source_noise',...
                               
-               'Optics'    : {'Telescope'    :['Telescope_losses']}                       # for now:'Telescope_noise', 'Telescope_losses'...
+               'Optics'    : {'Telescope'    :['Telescope_noise','Telescope_losses']}                       # for now:'Telescope_noise', 'Telescope_losses'...
                }
 #    DP      = ['los'] # data processing methods we want to assess
 
 #%% Atmospheric inputs:
     class atm_inp():
-        TimeSeries=True  # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere (T, H, rain and fog) 
+        TimeSeries=False  # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere (T, H, rain and fog) 
                           # If so we obtain a time series describing the noise implemented in the measurement.
         if TimeSeries:
             Atmos_TS_FILE           = 'AtmosphericScenarios.csv'
@@ -85,7 +85,7 @@ class inputs():
                                 'fog'         : [False]}#for rain and fog intensity intervals might be introduced [none,low, medium high]
 #%% General lidar layout inputs:
     class lidar_inp():
-        Lidar_inputs = {'Wavelength' : [1532e-9],'Laser_power':[2]} # (wave:[m],Laser_power: [mW])
+        Lidar_inputs = {'Wavelength' : [1532e-9,1559.5e-9],'Laser_power':[2]} # (wave:[m],Laser_power: [mW])
 #        BW=  #Band width (MHz)
 #        laser_output_power =  .001 #[W]
         

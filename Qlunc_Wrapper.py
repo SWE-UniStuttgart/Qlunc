@@ -109,6 +109,8 @@ def Get_Scenarios():
 
     return Scenarios,Temperature
 #%% Running the different cases. If user has included it, the case is evaluated: Can I do this in a loop??????
+#This define the functions used to estimate the uncertaintes: 
+#USER HAVE TO INCLUDE HERE THE FUNCTIONS ('Func.values()') USED TO ESTIMATE THE UNCERTAINTY VALUES WITH THE NAME OF THE UNCERTAINTY ('Func.keys()') IN THE SUITABLE MODULE
 def Get_Noise(module,Scenarios):    
     METHODS={}
     if module == 'Power':
@@ -123,8 +125,8 @@ def Get_Noise(module,Scenarios):
                 'Optical_amplifier_noise' : Qlunc_UQ_Photonics_func.UQ_Optical_amplifier, 
                 }
         if 'Optical_amplifier' in list(SA.flatten(user_inputs.user_icomponents)): 
-            # For methods that we want them to appear in estimations although they´re not in the 'user_inputs.user_itype_noise'(user options) list like the optical amplifier noise figure
-            # wich is estimated automatically when introducing the optical amplifier as a component and is not involved in any calculations:
+            # For methods that we want them to appear in estimations although they´re not in the 'user_inputs.user_itype_noise'(user options) list, like the optical amplifier noise figure
+            # wich is estimated automatically when introducing the optical amplifier as a component and it is not involved in any calculations:
             METHODS.setdefault('Optical_amplifier_fignoise',Qlunc_UQ_Photonics_func.FigNoise(user_inputs,inputs,direct,**Scenarios)) 
     
     elif module=='Optics':
