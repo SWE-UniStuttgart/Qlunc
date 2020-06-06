@@ -46,7 +46,7 @@ def UQ_Photodetector(user_inputs,inputs,cts,**Scenarios):
             UQ_Photodetector.append(SA.Sum_dB([Photodetector_Thermal_noise[i],Photodetector_Shot_noise[i],Photodetector_Dark_current_noise[i],Photodetector_TIA_noise[i]]))
         else:
              UQ_Photodetector.append(SA.Sum_dB([Photodetector_Thermal_noise[i],Photodetector_Shot_noise[i],Photodetector_Dark_current_noise[i]]))
-        pdb.set_trace()
+#        pdb.set_trace()
     
 #    for nT in range(len(Photodetector_Thermal_noise)):
 #        UQ_Photodetector.append(SA.Sum_dB([Photodetector_Thermal_noise[nT],Photodetector_Shot_noise[nT],Photodetector_Dark_current_noise[nT],Photodetector_TIA_noise[nT]]))
