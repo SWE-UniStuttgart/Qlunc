@@ -55,12 +55,12 @@ class inputs():
     modules = {
                'Power'     : {'Power_source'      :['Power_source_noise'],                    # for now: 'power_source_noise',...
                               'Converter'         :['Converter_noise', 'Converter_losses']},                     # for now:'converter_noise', 'converter_losses'...
-    
-               'Photonics' : {'Photodetector'     :['Photodetector_noise','TIA_noise'],                   # for now:'photodetector_noise'; May be include 'TIA_noise' if there is a transimpedance amplifier...
-                              'Optical_amplifier' :['Optical_amplifier_noise'],                       #for now:  'Optical_amplifier_noise',... If user includes Optical_amplifier component in dictionary 'modules', figure noise is automatically included in calculations(if don't want to include it have to put 0 in 'Optical_amplifier_uncertainty_inputs')
+#    
+               'Photonics' : {'Photodetector'     :['Photodetector_noise'],                   # for now:'photodetector_noise'; May be include 'TIA_noise' if there is a transimpedance amplifier...
+                              'Optical_amplifier' :['Optical_amplifier_noise', 'TIA_noise'],                       #for now:  'Optical_amplifier_noise',... If user includes Optical_amplifier component in dictionary 'modules', figure noise is automatically included in calculations(if don't want to include it have to put 0 in 'Optical_amplifier_uncertainty_inputs')
                               'Laser_source'      :['Laser_source_noise']} ,                  # for now:'laser_source_noise',...
                               
-               'Optics'    : {'Telescope'         :['Telescope_losses']}                       # for now:'telescope_noise', 'telescope_losses'...
+               'Optics'    : {'Telescope'         :['Telescope_losses','Telescope_noise']}                       # for now:'telescope_noise', 'telescope_losses'...
                }
 #    DP      = ['los'] # data processing methods we want to assess
 
@@ -83,13 +83,13 @@ class inputs():
                                 'fog'         : [False]}#for rain and fog intensity intervals might be introduced [none,low, medium high]
 #%% General lidar layout inputs:
     class lidar_inp():
-        Lidar_inputs = {'Wavelength' : [1532e-9,1562e-9],'Laser_power':[2]} # (wave:[m],Laser_power: [mW])
+        Lidar_inputs = {'Wavelength' : [1532e-9],'Laser_power':[2]} # (wave:[m],Laser_power: [mW])
 #        BW=  #Band width (MHz)
 #        laser_input_power =  .001 #[W]
         
 #%% Power Modules inputs:
     class power_inp():
-        PowerSource_uncertainty_inputs = {'Power_source_noise'       : [.8],
+        PowerSource_uncertainty_inputs = {'Power_source_noise'       : [.8,100],
                                           'Power_source_OtherChanges': [.09]}
         Converter_uncertainty_inputs   = {'Converter_noise'          : [4],
                                           'Converter_OtherChanges'   : [.005885],
