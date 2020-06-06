@@ -9,7 +9,7 @@ Created on Sat May 16 14:58:24 2020
 
 from Qlunc_ImportModules import *
 
-def UQ_Telescope(**Scenarios):
+def UQ_Telescope(user_inputs,inputs,cts,**Scenarios):
     UQ_telescope=[]
     for i in range(len(Scenarios.get('VAL_T'))):
         UQ_telescope.append(Scenarios.get('VAL_T')[i]*0.5+Scenarios.get('VAL_H')[i]*0.1+Scenarios.get('VAL_CURVE_LENS_TELESCOPE')[i]*0.1+Scenarios.get('VAL_ABERRATION_TELESCOPE')[i]+Scenarios.get('VAL_OC_TELESCOPE')[i])
@@ -19,7 +19,7 @@ def UQ_Telescope(**Scenarios):
 #    toreturn['telescope_losses']=Telescope_Losses
     return UQ_telescope
 
-def Losses_Telescope(**Scenarios):
+def Losses_Telescope(user_inputs,inputs,cts,**Scenarios):
     Losses_telescope=[]
     for i in range(len(Scenarios.get('VAL_T'))):
         Losses_telescope.append(Scenarios.get('VAL_LOSSES_TELESCOPE')[i])
