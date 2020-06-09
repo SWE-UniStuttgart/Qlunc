@@ -10,7 +10,7 @@ import numpy as np
 import scipy.interpolate as itp
 import pandas as pd
 import numbers
-
+import sys,inspect
 import Qlunc_UQ_Power_func       # script with all calculations of Power module unc are done
 import Qlunc_UQ_Photonics_func   # script with all calculations of Photonics module unc are done
 import Qlunc_UQ_Optics_func      # script with all calculations of Optics module unc are done

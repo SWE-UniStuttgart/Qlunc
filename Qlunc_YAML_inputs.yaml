@@ -1,4 +1,6 @@
 # DIRECTORIES:------------------------------------------------------
+# Template for Qlunc inputs. Here we include a list of the inputs to run Qlunc (Quantification lidar uncertainties).
+
 Main_directory: '../GitHub_Qlunc/'
 
 # MODULES-----------------------------------------------------------
@@ -8,7 +10,8 @@ Main_directory: '../GitHub_Qlunc/'
 # The relation between type of unc. and function calculating it is in LiUQ_core when defining methods.
 
 modules:
-  
+# In modules (modules as defined in OpenLidar architecture) user can include wich modules want to include in the estimations. In each module user will include the 
+# name of the component and  the name of the uncertainty (eg "Power" - "Power_source": - "Power_source_noise")  
   Power:
     
     Power_source:
@@ -52,20 +55,20 @@ Atmospheric_inputs:
   humidity: # [%]
   - 12
   
-  rain:
+  rain: # for rain and fog intensity intervals might be introduced [none,low, medium high]
   - true
   
   fog:
-  - false
+  - false 
 ---
 # GENERAL LIDAR MODULE----------------------------------------------
 # Lidar general inputs:
-Lidar_inputs: # (wave:[m],Laser_power: [mW])
+Lidar_inputs: 
   
-  Wavelength:
+  Wavelength: # [m]
   - 1.532e-06
   
-  Laser_power:
+  Laser_power: # [mW]
   - 2
 ---
 # POWER MODULE.-----------------------------------------------------

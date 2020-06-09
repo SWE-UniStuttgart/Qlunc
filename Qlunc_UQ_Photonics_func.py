@@ -6,14 +6,13 @@ Created on Sat May 16 14:51:36 2020
 """
 
 import Qlunc_inputs
-#import pandas as pd
-#import scipy.interpolate as itp
+import pandas as pd
+import scipy.interpolate as itp
 from Qlunc_ImportModules import *
-#import LiUQ_inputs
 import pdb
 import Qlunc_Help_standAlone as SA
 #%% PHOTODETECTOR
-def UQ_Photodetector(user_inputs,inputs,cts,**Scenarios):
+def UQ_Photodetector(user_inputs,inputs,cts,direct,**Scenarios):
     UQ_Photodetector=[]
     Photodetector_SNR_thermal_noise=[]
     Photodetector_Thermal_noise=[]
@@ -23,30 +22,29 @@ def UQ_Photodetector(user_inputs,inputs,cts,**Scenarios):
     Photodetector_SNR_DarkCurrent=[]
     Photodetector_TIA_noise=[]
     Photodetector_SNR_TIA=[]
-    for i in range(len(Scenarios.get('VAL_T'))): # To loop over all Scenarios
+    for ind_UQ_PHOTO in range(len(Scenarios.get('Temperature'))): # To loop over all Scenarios
 #        UQ_photodetector.append(Scenarios.get('VAL_T')[i]*0.4+Scenarios.get('VAL_H')[i]*0.1+Scenarios.get('VAL_NOISE_PHOTO')[i]+Scenarios.get('VAL_OC_PHOTO')[i]+Scenarios.get('VAL_WAVE')[i]/1000)
-        R = Scenarios.get('VAL_PHOTO_n')[i]*cts.e*Scenarios.get('VAL_WAVE')[i]/(cts.h*cts.c)  #[W/A]  Responsivity
-
+        R = Scenarios.get('Photodetector_Efficiency')[ind_UQ_PHOTO]*cts.e*inputs.lidar_inp.Lidar_inputs['Wavelength'][ind_UQ_PHOTO]/(cts.h*cts.c)  #[W/A]  Responsivity
         # Photodetector Thermal noise
-        Photodetector_Thermal_noise.append((10*np.log10(4*cts.k*Scenarios.get('VAL_T')[i]/Scenarios.get('VAL_PHOTO_RL')[i])*Scenarios.get('VAL_PHOTO_BW')[i])) #[dBm]
-        Photodetector_SNR_thermal_noise.append(10*np.log10(((R**2)/(4*cts.k*Scenarios.get('VAL_T')[i]*Scenarios.get('VAL_PHOTO_BW')[i]/Scenarios.get('VAL_PHOTO_RL')[i]))*(Scenarios.get('VAL_PHOTO_SP')[i]/1000)**2))
+        Photodetector_Thermal_noise.append((10*np.log10(4*cts.k*Scenarios.get('Temperature')[ind_UQ_PHOTO]/Scenarios.get('Photodetector_RL')[ind_UQ_PHOTO])*Scenarios.get('Photodetector_Bandwidth')[ind_UQ_PHOTO])) #[dBm]
+        Photodetector_SNR_thermal_noise.append(10*np.log10(((R**2)/(4*cts.k*Scenarios.get('Temperature')[ind_UQ_PHOTO]*Scenarios.get('Photodetector_Bandwidth')[ind_UQ_PHOTO]/Scenarios.get('Photodetector_RL')[ind_UQ_PHOTO]))*(Scenarios.get('Photodetector_Signal_power')[ind_UQ_PHOTO]/1000)**2))
     
         #Photodetector shot noise:
-        Photodetector_Shot_noise.append(10*np.log10(2*cts.e*R*Scenarios.get('VAL_PHOTO_BW')[i]*Scenarios.get('VAL_PHOTO_SP')[i]))
-        Photodetector_SNR_Shot_noise.append(10*np.log10(((R**2)/(2*cts.e*R*Scenarios.get('VAL_PHOTO_BW')[i]))*(Scenarios.get('VAL_PHOTO_SP')[i])/1000))
+        Photodetector_Shot_noise.append(10*np.log10(2*cts.e*R*Scenarios.get('Photodetector_Bandwidth')[ind_UQ_PHOTO]*Scenarios.get('Photodetector_Signal_power')[ind_UQ_PHOTO]))
+        Photodetector_SNR_Shot_noise.append(10*np.log10(((R**2)/(2*cts.e*R*Scenarios.get('Photodetector_Bandwidth')[ind_UQ_PHOTO]))*(Scenarios.get('Photodetector_Signal_power')[ind_UQ_PHOTO])/1000))
 
         #Photodetector dark current noise
-        Photodetector_Dark_current_noise.append(10*np.log10(2*cts.e*Scenarios.get('VAL_PHOTO_Id')[i]*Scenarios.get('VAL_PHOTO_BW')[i]*Scenarios.get('VAL_PHOTO_SP')[i]))
-        Photodetector_SNR_DarkCurrent.append(10*np.log10(((R**2)/(2*cts.e*Scenarios.get('VAL_PHOTO_Id')[i]*Scenarios.get('VAL_PHOTO_BW')[i]))*((Scenarios.get('VAL_PHOTO_SP')[i]/1000)**2) ))
+        Photodetector_Dark_current_noise.append(10*np.log10(2*cts.e*Scenarios.get('Photodetector_DarkCurrent')[ind_UQ_PHOTO]*Scenarios.get('Photodetector_Bandwidth')[ind_UQ_PHOTO]*Scenarios.get('Photodetector_Signal_power')[ind_UQ_PHOTO]))
+        Photodetector_SNR_DarkCurrent.append(10*np.log10(((R**2)/(2*cts.e*Scenarios.get('Photodetector_DarkCurrent')[ind_UQ_PHOTO]*Scenarios.get('Photodetector_Bandwidth')[ind_UQ_PHOTO]))*((Scenarios.get('Photodetector_Signal_power')[ind_UQ_PHOTO]/1000)**2) ))
 
-        if 'TIA_noise' in list(SA.flatten(user_inputs.user_itype_noise)):     # If TIA is included in the components:
+        if 'TIA_noise' in list(SA.flatten(user_inputs.user_itype_noise)):     # If TIA is included in the components have to include in the noise calculations:
             # Photodetector TIA noise
-            Photodetector_TIA_noise.append( 10*np.log10(Scenarios.get('VAL_V_NOISE_TIA')[i]**2/Scenarios.get('VAL_GAIN_TIA')[i]**2))
-            Photodetector_SNR_TIA.append(10*np.log10(((R**2)/(Scenarios.get('VAL_V_NOISE_TIA')[i]**2/Scenarios.get('VAL_GAIN_TIA')[i]**2))*(Scenarios.get('VAL_PHOTO_SP')[i]/1000)**2))
-            UQ_Photodetector.append(SA.Sum_dB([Photodetector_Thermal_noise[i],Photodetector_Shot_noise[i],Photodetector_Dark_current_noise[i],Photodetector_TIA_noise[i]]))
+            Photodetector_TIA_noise.append( 10*np.log10(Scenarios.get('V_noise_TIA')[ind_UQ_PHOTO]**2/Scenarios.get('Gain_TIA')[ind_UQ_PHOTO]**2))
+            Photodetector_SNR_TIA.append(10*np.log10(((R**2)/(Scenarios.get('V_noise_TIA')[ind_UQ_PHOTO]**2/Scenarios.get('Gain_TIA')[ind_UQ_PHOTO]**2))*(Scenarios.get('Photodetector_Signal_power')[ind_UQ_PHOTO]/1000)**2))
+            UQ_Photodetector.append(SA.Sum_dB([Photodetector_Thermal_noise[ind_UQ_PHOTO],Photodetector_Shot_noise[ind_UQ_PHOTO],Photodetector_Dark_current_noise[ind_UQ_PHOTO],Photodetector_TIA_noise[ind_UQ_PHOTO]]))
         else:
-             UQ_Photodetector.append(SA.Sum_dB([Photodetector_Thermal_noise[i],Photodetector_Shot_noise[i],Photodetector_Dark_current_noise[i]]))
-#        pdb.set_trace()
+             UQ_Photodetector.append(SA.Sum_dB([Photodetector_Thermal_noise[ind_UQ_PHOTO],Photodetector_Shot_noise[ind_UQ_PHOTO],Photodetector_Dark_current_noise[ind_UQ_PHOTO]]))
+        pdb.set_trace()
     
 #    for nT in range(len(Photodetector_Thermal_noise)):
 #        UQ_Photodetector.append(SA.Sum_dB([Photodetector_Thermal_noise[nT],Photodetector_Shot_noise[nT],Photodetector_Dark_current_noise[nT],Photodetector_TIA_noise[nT]]))
@@ -56,34 +54,34 @@ def UQ_Photodetector(user_inputs,inputs,cts,**Scenarios):
 
 
 #%% OPTICAL AMPLIFIER
-def UQ_Optical_amplifier(user_inputs,inputs,cts,**Scenarios):
+def UQ_Optical_amplifier(inputs,cts,direct,**Scenarios): # Calculating ASE - Amplified Spontaneous Emission definition ((**Optics and Photonics) Bishnu P. Pal - Guided Wave Optical Components and Devices_ Basics, Technology, and Applications -Academic Press (2005))
     UQ_Optical_amplifier=[]
-    for i in range(len(Scenarios.get('VAL_T'))):
-        UQ_Optical_amplifier.append(Scenarios.get('VAL_T')[i]*0.5+Scenarios.get('VAL_H')[i]*0.7+Scenarios.get('VAL_NOISE_AMPLI')[i]+Scenarios.get('VAL_OC_AMPLI')[i])
-#    UQ_Optical_amplifier=[round(UQ_Optical_amplifier[i_dec],3) for i_dec in range(len(UQ_Optical_amplifier))]
-    return UQ_Optical_amplifier
+    for i_UQ_OA in range(len(Scenarios.get('Temperature'))):
+            FigureNoise=Scenarios['Optical_amplifier_NF'][i_UQ_OA]
+            UQ_Optical_amplifier.append((10**(FigureNoise/10))*cts.h*10**(Scenarios['Optical_amplifier_Gain'][i_UQ_OA]/10)*(cts.c/inputs.lidar_inp.Lidar_inputs['Wavelength'][i_UQ_OA])) # ASE
+    return 10*np.log10(UQ_Optical_amplifier) # convert to dB
 
 
-def FigNoise(user_inputs,inputs,direct,**Scenarios): # This is the error of the optical amplifier
-    if isinstance (inputs.photonics_inp.Optical_amplifier_uncertainty_inputs['Optical_amplifier_fignoise'][0], numbers.Number): #If user introduces a number or a table of values
-        FigureNoise=inputs.photonics_inp.Optical_amplifier_uncertainty_inputs['Optical_amplifier_fignoise'][0]
+def FigNoise(inputs,direct): # This is the Figure noise of the optical amplifier. We use it to calculate the UQ_Optical_amplifier
+    if isinstance (inputs.photonics_inp.Optical_amplifier_inputs['Optical_amplifier_noise']['Optical_amplifier_NF'], numbers.Number): #If user introduces a number or a table of values
+        FigureNoise=inputs.photonics_inp.Optical_amplifier_inputs['Optical_amplifier_noise']['Optical_amplifier_NF']
     else:
-        NoiseFigure_DATA = pd.read_csv(direct.Main_directory+inputs.photonics_inp.Optical_amplifier_uncertainty_inputs['Optical_amplifier_fignoise'],delimiter=';',decimal=',') #read from an excel file variation of dB with wavelength(for now just with wavelegth)
+        NoiseFigure_DATA = pd.read_csv(direct.Main_directory+inputs.photonics_inp.Optical_amplifier_inputs['Optical_amplifier_noise']['Optical_amplifier_NF'],delimiter=';',decimal=',') #read from an excel file variation of dB with wavelength(for now just with wavelegth)
         FigureNoise = []
-        for i in range(len(Scenarios.get('VAL_T'))):
+        for i_FN in range(len(inputs.lidar_inp.Lidar_inputs['Wavelength'])):
             figure_noise_INT  = itp.interp1d(NoiseFigure_DATA.iloc[:,0],NoiseFigure_DATA.iloc[:,1],kind='cubic',fill_value="extrapolate")# First column wavelength,second column Noise in dB
-            NoiseFigure_VALUE = figure_noise_INT(Scenarios.get('VAL_WAVE')[i]) # in dB
+            NoiseFigure_VALUE = figure_noise_INT(inputs.lidar_inp.Lidar_inputs['Wavelength'][i_FN]) # in dB
             FigureNoise.append(NoiseFigure_VALUE.tolist())
 #    FigureNoise=[round(FigureNoise[i_dec],3) for i_dec in range(len(FigureNoise))]
     return FigureNoise
 
 
 #%% LASER SOURCE
-def UQ_LaserSource(user_inputs,inputs,cts,**Scenarios):
+def UQ_LaserSource(user_inputs,inputs,cts,direct,**Scenarios):
     UQ_laser_source=[]
-    for i in range(len(Scenarios.get('VAL_T'))):
-        UQ_laser_source.append(Scenarios.get('VAL_T')[i]*1+Scenarios.get('VAL_H')[i]*0.1+Scenarios.get('VAL_WAVE')[i]/1200+Scenarios.get('VAL_NOISE_LASER_SOURCE')[i]+
-                               Scenarios.get('VAL_OC_LASER_SOURCE')[i])
+    for i_UQ_LaserSource in range(len(Scenarios.get('Temperature'))):
+        UQ_laser_source.append(Scenarios.get('Temperature')[i_UQ_LaserSource]*1+Scenarios.get('VAL_H')[i_UQ_LaserSource]*0.1+Scenarios.get('VAL_WAVE')[i_UQ_LaserSource]/1200+Scenarios.get('VAL_NOISE_LASER_SOURCE')[i_UQ_LaserSource]+
+                               Scenarios.get('VAL_OC_LASER_SOURCE')[i_UQ_LaserSource])
 #    UQ_laser_source=[round(UQ_laser_source[i_dec],3) for i_dec in range(len(UQ_laser_source))]
     return UQ_laser_source
 

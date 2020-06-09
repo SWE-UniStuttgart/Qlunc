@@ -6,42 +6,61 @@ Created on Thu May 21 00:11:03 2020
 """
 
 from Qlunc_ImportModules import *
-import Qlunc_Help_standAlone as SA
+from  Qlunc_Help_standAlone import flatten
 import Qlunc_inputs
 
 #%%Naming data to make it easier:
 
+
+class user_inputs():
+
+
+    user_imodules=list(inputs.modules.keys())
+    user_icomponents=[list(reduce(getitem,[i],inputs.modules).keys()) for i in inputs.modules.keys()]
+    user_itype_noise= [list(inputs.modules[module].get(components,{})) for module in inputs.modules.keys() for components in inputs.modules[module].keys()]
+
+input_values_LOOP=[]
+input_values_LOOP2={}
+# Find the data want to loop over inside classes and nested classes:  
+#This if is because have to calculate the figure noise to pass it as a int parameter instead a string
+if 'Optical_amplifier_noise' in list(flatten(user_inputs.user_itype_noise)):
+    inputs.photonics_inp.Optical_amplifier_inputs['Optical_amplifier_noise']['Optical_amplifier_NF']=Qlunc_UQ_Photonics_func.FigNoise(inputs,direct)
+    
+    
+inputs_attributes=[atr for atr in dir(inputs) if inspect.getmembers(getattr(inputs,atr))]
+inputs_attributes=list([a for a in inputs_attributes if not(a.startswith('__') and a.endswith('__'))]) # obtaining attributes from the class inputs 
+inputs_attributes=inputs_attributes[3:] # Only take component values, not modules, atmospheric or general values
+res2={}
+for ind_ATR in inputs_attributes:
+    fd=eval('inputs.'+ind_ATR)
+    res=inspect.getmembers(fd,lambda a:not(inspect.isroutine(a)))
+    res2.setdefault(ind_ATR,list([a for a in res if not(a[0].startswith('__') and a[0].endswith('__')) ]))
+input_values=list(flatten(list(res2.values())))
+
+# Extract from input classes the info we need to loop over (values of the components and names included by the user)
+LOOP_inputs_dict=[]
+Values2loop=[]
+Names2loop=[]
+Val=()
+for index_dict in range(len(input_values)):  
+    if isinstance (input_values[index_dict],dict) :
+        LOOP_inputs_dict.append(input_values[index_dict]) # Just to keep the dictionary objects inside the different classes disregarding atmospheric and genetal lidar inputs
+for index_loop0 in range(len(LOOP_inputs_dict)):
+    for index_loop1 in LOOP_inputs_dict[index_loop0].keys():
+        if index_loop1 in list(flatten(user_inputs.user_itype_noise)):
+            Values2loop.append(list(LOOP_inputs_dict[index_loop0][index_loop1].values()))
+            Names2loop.append(list(LOOP_inputs_dict[index_loop0][index_loop1].keys()))
+Val=[None]*len(list(flatten(Names2loop))) # We need this to loop over without having to put all variables in the loop
+Names2loop=list(flatten(Names2loop))
+
+#print(Values2loop)
+#print(Names2loop)
+#print(Val)
+
 #Atmosphere:
-temp        = inputs.atm_inp.Atmospheric_inputs['temperature']
-hum         = inputs.atm_inp.Atmospheric_inputs['humidity']
-wave        = inputs.lidar_inp.Lidar_inputs['Wavelength']
+Temp        = inputs.atm_inp.Atmospheric_inputs['temperature']
+Hum         = inputs.atm_inp.Atmospheric_inputs['humidity']
 
-#Power
-conv_noise  = inputs.power_inp.Converter_uncertainty_inputs['Converter_noise']
-conv_oc     = inputs.power_inp.Converter_uncertainty_inputs['Converter_OtherChanges']
-conv_losses = inputs.power_inp.Converter_uncertainty_inputs['Converter_losses']
-ps_noise    = inputs.power_inp.PowerSource_uncertainty_inputs['Power_source_noise']
-ps_oc       = inputs.power_inp.PowerSource_uncertainty_inputs['Power_source_OtherChanges']
-
-#photonics
-amp_noise   = inputs.photonics_inp.Optical_amplifier_uncertainty_inputs['Optical_amplifier_noise']
-amp_oc      = inputs.photonics_inp.Optical_amplifier_uncertainty_inputs['Optical_amplifier_OtherChanges']
-#amp_noise_figure = Qlunc_UQ_Photonics_func.FigNoise(inputs,direct)
-ls_noise    = inputs.photonics_inp.LaserSource_uncertainty_inputs['Laser_source_noise']
-ls_oc       = inputs.photonics_inp.LaserSource_uncertainty_inputs['Laser_source_OtherChanges']
-PHOTO_BW=inputs.photonics_inp.Photodetector_inputs['Photodetector_Bandwidth']
-PHOTO_RL=inputs.photonics_inp.Photodetector_inputs['Photodetector_RL']
-PHOTO_n=inputs.photonics_inp.Photodetector_inputs['Photodetector_Efficiency']
-PHOTO_Id=inputs.photonics_inp.Photodetector_inputs['Photodetector_DarkCurrent']
-PHOTO_SP=inputs.photonics_inp.Photodetector_inputs['Photodetector_Signal_power']
-TIA_G=inputs.photonics_inp.TIA_inputs['Gain_TIA']
-TIA_V_noise=inputs.photonics_inp.TIA_inputs['V_noise_TIA']
-
-#telescope
-tele_cl     = inputs.optics_inp.Telescope_uncertainty_inputs['Telescope_curvature_lens']
-tele_oc     = inputs.optics_inp.Telescope_uncertainty_inputs['Telescope_OtherChanges']
-tele_aberr  = inputs.optics_inp.Telescope_uncertainty_inputs['Telescope_aberration']
-tele_losses = inputs.optics_inp.Telescope_uncertainty_inputs['Telescope_losses']
 
 
 # %%Getting scenarios:
@@ -49,66 +68,35 @@ def Get_Scenarios():
     # Initialazing variables:
     global Scenarios
     Scenarios=dict()
-    Temperature=[]       
-    type_noise = [[wave]]
-    Val        = ()
-    Names_Val=['VAL_WAVE'] # initialize with wave because is a variable common to many component noises.
-    VAL_T=None # initialize this values in None, as well as the values in 'add_typeN' to pass it as empty values to fill them in the loop when getting Scenarios!!!!!
-    VAL_H=None
-    # We need to create the cases we want to loop over. For that are the next steps to create 'type_noise' and 'Val'.
-    # First create a dictionary (add_typeN) to identify type of noise with variables we want to use to loop over.
-    
-    add_typeN={'Power_source_noise'  :[[[ps_noise],'VAL_NOISE_POWER_SOURCE',[None]],   [[ps_oc],'VAL_OC_POWER_SOURCE',[None] ]]  ,
-                                                                     
-               'Converter_losses'    :[[[conv_losses],'VAL_CONVERTER_LOSSES',[None] ] ] ,           
-               'Converter_noise'     :[[[conv_noise],'VAL_NOISE_CONVERTER',[None]],[[conv_oc],'VAL_OC_CONVERTER',[None]]],
-                                                                   
-               'Photodetector_noise' :[[[PHOTO_BW],'VAL_PHOTO_BW',[None]],[[PHOTO_RL], 'VAL_PHOTO_RL',[None]],
-                                       [[PHOTO_n], 'VAL_PHOTO_n',[None]  ] ,[[PHOTO_Id], 'VAL_PHOTO_Id',[None]],
-                                       [[PHOTO_SP], 'VAL_PHOTO_SP',[None]]],
-                                       
-               'TIA_noise'             :[[[TIA_G],'VAL_GAIN_TIA',[None]],[[TIA_V_noise],'VAL_V_NOISE_TIA',[None]]] ,                                     
-#               'Optical_amplifier_fignoise'  :[[[amp_noise_figure], 'VAL_NOISE_FIG',[inputs.VAL.VAL_NOISE_FIG]  ]  ],
-               'Optical_amplifier_noise'     :[[[amp_oc],  'VAL_OC_AMPLI',[None]],   [[amp_noise],'VAL_NOISE_AMPLI',[None]] ],  
-                                                                   
-               'Laser_source_noise'  :[[[ls_noise],'VAL_NOISE_LASER_SOURCE',[None]], [[ls_oc],'VAL_OC_LASER_SOURCE',[None] ]      ],
-                                                                    
-               'Telescope_noise'     :[[[tele_aberr],'VAL_ABERRATION_TELESCOPE',[None]],[[tele_oc],'VAL_OC_TELESCOPE',[None]],
-                                       [[tele_cl], 'VAL_CURVE_LENS_TELESCOPE',[None]]],
-                                                                     
-                                                                    
-               'Telescope_losses'    :[[[tele_losses],'VAL_LOSSES_TELESCOPE',[None]]]}              
+    TempCol=[]       
 
-    
- 
-#    type_noise = [wave,conv_noise,conv_oc,conv_losses,ps_noise,ps_oc,amp_noise,amp_oc,amp_noise_figure,ls_noise,ls_oc,photo_noise,photo_oc,
-#                  tele_cl,tele_oc,tele_aberr,tele_losses]
+#    Temperature=None # initialize this values in None, as well as the values in 'add_typeN' to pass it as empty values to fill them in the loop when getting Scenarios!!!!!
+#    Humidity=None
+
     #%%Loop to create typeN and Val depending on the user modules/components inputs):
-
-    for user_typeN in list(itertools.chain(*user_inputs.user_itype_noise)): # For user selection noises
-        for i in range(len(add_typeN[user_typeN])):
-            type_noise.append(((add_typeN[user_typeN][i][0]))) # obtaining the values we want to loop over
-            Names_Val.append(((add_typeN[user_typeN][i][1])))  # obtaining the names to create the dictionary Scenarios, to pass as **Scenarios (in this way we can dinamically vary the variables of the functions)
-            Val=Val+((tuple(add_typeN[user_typeN][i][2])))     # obtaining the number of none´s we need to run the loop
-            
 
     # Main loop to go over all variables to create the cases:############### 
     # FIGURE NOISE IS NOT INCLUDED IN THE SCENARIOS BECAUSE IS NOT NEEDED FOR ANY CALCULATION. IT IS JUST A 'NOISE' MORE TO ADD AT THE END, 
     # WHEN BUILDING THE DATA FRAME  
 #    pdb.set_trace()
     
-    for i in list(SA.flatten('VAL_T','VAL_H',Names_Val)):
+    for i in list(flatten('Temperature','Humidity',Names2loop)):
         Scenarios[i]=[]
     
-    for VAL_T,VAL_H in zip (temp, hum): # This for lop is apart of the others because of the zip, since T and H shouldn´t be mixed to obtain different scenarions --> T and H are paired for each scenario
-            for Val in itertools.product(*list(itertools.chain(*type_noise))): # This makes all possible combinations among user inputs
-                for k,v in zip (Scenarios.keys(), (VAL_T,)+(VAL_H,)+Val): # for loop to build up the dictionary 'Scenarios'. If user includes some variability (dependency on wavelength e.g. of any variable)              
-                    Scenarios[k].append(v)
+    for VAL_Temp,VAL_Hum in zip (Temp, Hum): # This for lop is apart of the others because of the zip, since T and H shouldn´t be mixed to obtain different scenarions --> T and H are paired for each scenario
+#      for VAL_WAVE,VAL_NOISE_FIG in zip(wave,amp_noise_figure):
+        for Val in list(itertools.product(*list(itertools.chain(*Values2loop)))): # This makes all possible combinations among user inputs
+                
+            
+            
+            for k,v in zip (Scenarios.keys(), (VAL_Temp,)+(VAL_Hum,)+Val): # for loop to build up the dictionary 'Scenarios'. If user includes some variability (dependency on wavelength e.g. of any variable)              
+                Scenarios[k].append(v)
 #                Scenarios.append(list(flatten(inputs.VAL.VAL_T,inputs.VAL.VAL_H,inputs.VAL.VAL_WAVE,inputs.VAL.VAL_NOISE_FIG,Val))) #
-                Temperature.append([VAL_T])
+            TempCol.append(Temp)
 #    pdb.set_trace()
-    return Scenarios,Temperature
+    return Scenarios,TempCol
 #%% Running the different cases. If user has included it, the case is evaluated: Can I do this in a loop??????
+    # User have to include here the module, component and estimation method
    
 #def Get_Noise(module,Scenarios):    
 #    METHODS={}
@@ -148,13 +136,13 @@ def Get_Noise(module,Scenarios):
     elif module== 'Photonics':
         Func = {'Laser_source_noise'      : Qlunc_UQ_Photonics_func.UQ_LaserSource,
                 'Photodetector_noise'     : Qlunc_UQ_Photonics_func.UQ_Photodetector,
-                'Optical_amplifier_noise' : Qlunc_UQ_Photonics_func.UQ_Optical_amplifier, 
+                'Optical_amplifier_noise' : Qlunc_UQ_Photonics_func.UQ_Optical_amplifier 
                 }
-        if 'Optical_amplifier' in list(SA.flatten(user_inputs.user_icomponents)): 
-            # For methods that we want them to appear in estimations although they´re not in the 'user_inputs.user_itype_noise'(user options) list, like the optical amplifier noise figure
-            # wich is estimated automatically when introducing the optical amplifier as a component and it is not involved in any calculations:
-            METHODS.setdefault('Optical_amplifier_fignoise',Qlunc_UQ_Photonics_func.FigNoise(user_inputs,inputs,direct,**Scenarios)) 
-    
+#        if 'Optical_amplifier' in list(SA.flatten(user_inputs.user_icomponents)): 
+#            # For methods that we want them to appear in estimations although they´re not in the 'user_inputs.user_itype_noise'(user options) list, like the optical amplifier noise figure
+#            # wich is estimated automatically when introducing the optical amplifier as a component and it is not involved in any calculations:
+#            METHODS.setdefault('Optical_amplifier_fignoise',Qlunc_UQ_Photonics_func.FigNoise(user_inputs,inputs,direct,**Scenarios)) 
+#    
     elif module=='Optics':
         Func = {'Telescope_noise'     : Qlunc_UQ_Optics_func.UQ_Telescope,
                 'Telescope_losses'    : Qlunc_UQ_Optics_func.Losses_Telescope
@@ -162,6 +150,6 @@ def Get_Noise(module,Scenarios):
            
     for k,v in Func.items():
         if k in list(SA.flatten(user_inputs.user_itype_noise)):  
-            METHODS.setdefault(k,list(SA.flatten(Func[k](user_inputs,inputs,cts,**Scenarios))))
+            METHODS.setdefault(k,list(SA.flatten(Func[k](user_inputs,inputs,cts,direct,**Scenarios))))
 #    pdb.set_trace()
     return METHODS
