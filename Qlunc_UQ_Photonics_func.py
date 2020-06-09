@@ -12,7 +12,7 @@ from Qlunc_ImportModules import *
 import pdb
 import Qlunc_Help_standAlone as SA
 #%% PHOTODETECTOR
-def UQ_Photodetector(user_inputs,inputs,cts,direct,**Scenarios):
+def UQ_Photodetector(user_inputs,inputs,cts,direct,Wavelength,**Scenarios):
     UQ_Photodetector=[]
     Photodetector_SNR_thermal_noise=[]
     Photodetector_Thermal_noise=[]
@@ -24,7 +24,7 @@ def UQ_Photodetector(user_inputs,inputs,cts,direct,**Scenarios):
     Photodetector_SNR_TIA=[]
     for ind_UQ_PHOTO in range(len(Scenarios.get('Temperature'))): # To loop over all Scenarios
 #        UQ_photodetector.append(Scenarios.get('VAL_T')[i]*0.4+Scenarios.get('VAL_H')[i]*0.1+Scenarios.get('VAL_NOISE_PHOTO')[i]+Scenarios.get('VAL_OC_PHOTO')[i]+Scenarios.get('VAL_WAVE')[i]/1000)
-        R = Scenarios.get('Photodetector_Efficiency')[ind_UQ_PHOTO]*cts.e*inputs.lidar_inp.Lidar_inputs['Wavelength'][ind_UQ_PHOTO]/(cts.h*cts.c)  #[W/A]  Responsivity
+        R = Scenarios.get('Photodetector_Efficiency')[ind_UQ_PHOTO]*cts.e*Wavelength[ind_UQ_PHOTO]/(cts.h*cts.c)  #[W/A]  Responsivity
         # Photodetector Thermal noise
         Photodetector_Thermal_noise.append((10*np.log10(4*cts.k*Scenarios.get('Temperature')[ind_UQ_PHOTO]/Scenarios.get('Photodetector_RL')[ind_UQ_PHOTO])*Scenarios.get('Photodetector_Bandwidth')[ind_UQ_PHOTO])) #[dBm]
         Photodetector_SNR_thermal_noise.append(10*np.log10(((R**2)/(4*cts.k*Scenarios.get('Temperature')[ind_UQ_PHOTO]*Scenarios.get('Photodetector_Bandwidth')[ind_UQ_PHOTO]/Scenarios.get('Photodetector_RL')[ind_UQ_PHOTO]))*(Scenarios.get('Photodetector_Signal_power')[ind_UQ_PHOTO]/1000)**2))
@@ -54,11 +54,11 @@ def UQ_Photodetector(user_inputs,inputs,cts,direct,**Scenarios):
 
 
 #%% OPTICAL AMPLIFIER
-def UQ_Optical_amplifier(inputs,cts,direct,**Scenarios): # Calculating ASE - Amplified Spontaneous Emission definition ((**Optics and Photonics) Bishnu P. Pal - Guided Wave Optical Components and Devices_ Basics, Technology, and Applications -Academic Press (2005))
+def UQ_Optical_amplifier(user_inputs,inputs,cts,direct,Wavelength,**Scenarios): # Calculating ASE - Amplified Spontaneous Emission definition ((**Optics and Photonics) Bishnu P. Pal - Guided Wave Optical Components and Devices_ Basics, Technology, and Applications -Academic Press (2005))
     UQ_Optical_amplifier=[]
     for i_UQ_OA in range(len(Scenarios.get('Temperature'))):
             FigureNoise=Scenarios['Optical_amplifier_NF'][i_UQ_OA]
-            UQ_Optical_amplifier.append((10**(FigureNoise/10))*cts.h*10**(Scenarios['Optical_amplifier_Gain'][i_UQ_OA]/10)*(cts.c/inputs.lidar_inp.Lidar_inputs['Wavelength'][i_UQ_OA])) # ASE
+            UQ_Optical_amplifier.append((10**(FigureNoise/10))*cts.h*10**(Scenarios['Optical_amplifier_Gain'][i_UQ_OA]/10)*(cts.c/Wavelength[i_UQ_OA])) # ASE
     return 10*np.log10(UQ_Optical_amplifier) # convert to dB
 
 
@@ -77,7 +77,7 @@ def FigNoise(inputs,direct): # This is the Figure noise of the optical amplifier
 
 
 #%% LASER SOURCE
-def UQ_LaserSource(user_inputs,inputs,cts,direct,**Scenarios):
+def UQ_LaserSource(user_inputs,inputs,cts,direct,Wavelength,**Scenarios):
     UQ_laser_source=[]
     for i_UQ_LaserSource in range(len(Scenarios.get('Temperature'))):
         UQ_laser_source.append(Scenarios.get('Temperature')[i_UQ_LaserSource]*1+Scenarios.get('VAL_H')[i_UQ_LaserSource]*0.1+Scenarios.get('VAL_WAVE')[i_UQ_LaserSource]/1200+Scenarios.get('VAL_NOISE_LASER_SOURCE')[i_UQ_LaserSource]+

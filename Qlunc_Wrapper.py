@@ -60,7 +60,7 @@ Names2loop=list(flatten(Names2loop))
 #Atmosphere:
 Temp        = inputs.atm_inp.Atmospheric_inputs['temperature']
 Hum         = inputs.atm_inp.Atmospheric_inputs['humidity']
-
+Wave        = inputs.lidar_inp.Lidar_inputs['Wavelength']
 
 
 # %%Getting scenarios:
@@ -69,7 +69,7 @@ def Get_Scenarios():
     global Scenarios
     Scenarios=dict()
     TempCol=[]       
-
+    Wavelength=[]
 #    Temperature=None # initialize this values in None, as well as the values in 'add_typeN' to pass it as empty values to fill them in the loop when getting Scenarios!!!!!
 #    Humidity=None
 
@@ -85,16 +85,19 @@ def Get_Scenarios():
     
     for VAL_Temp,VAL_Hum in zip (Temp, Hum): # This for lop is apart of the others because of the zip, since T and H shouldn´t be mixed to obtain different scenarions --> T and H are paired for each scenario
 #      for VAL_WAVE,VAL_NOISE_FIG in zip(wave,amp_noise_figure):
+        countt=0
         for Val in list(itertools.product(*list(itertools.chain(*Values2loop)))): # This makes all possible combinations among user inputs
                 
             
-            
+           
             for k,v in zip (Scenarios.keys(), (VAL_Temp,)+(VAL_Hum,)+Val): # for loop to build up the dictionary 'Scenarios'. If user includes some variability (dependency on wavelength e.g. of any variable)              
                 Scenarios[k].append(v)
+            Wavelength.append(Wave[countt])
+            countt+=1
 #                Scenarios.append(list(flatten(inputs.VAL.VAL_T,inputs.VAL.VAL_H,inputs.VAL.VAL_WAVE,inputs.VAL.VAL_NOISE_FIG,Val))) #
             TempCol.append(Temp)
 #    pdb.set_trace()
-    return Scenarios,TempCol
+    return Scenarios,TempCol,Wavelength
 #%% Running the different cases. If user has included it, the case is evaluated: Can I do this in a loop??????
     # User have to include here the module, component and estimation method
    
@@ -125,7 +128,7 @@ def Get_Scenarios():
 #            METHODS.setdefault('telescope_losses',Qlunc_UQ_Optics_func.Losses_Telescope(**Scenarios))        
 #
 #    return METHODS
-def Get_Noise(module,Scenarios):    
+def Get_Noise(module,Wavelength,Scenarios):    
     METHODS={}
     if module == 'Power':
         Func = {'Power_source_noise'  : Qlunc_UQ_Power_func.UQ_PowerSource,
@@ -150,6 +153,6 @@ def Get_Noise(module,Scenarios):
            
     for k,v in Func.items():
         if k in list(SA.flatten(user_inputs.user_itype_noise)):  
-            METHODS.setdefault(k,list(SA.flatten(Func[k](user_inputs,inputs,cts,direct,**Scenarios))))
+            METHODS.setdefault(k,list(SA.flatten(Func[k](user_inputs,inputs,cts,direct,Wavelength,**Scenarios))))
 #    pdb.set_trace()
     return METHODS
