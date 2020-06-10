@@ -95,7 +95,7 @@ def Get_Scenarios():
             Wavelength.append(Wave[countt])
             countt+=1
 #                Scenarios.append(list(flatten(inputs.VAL.VAL_T,inputs.VAL.VAL_H,inputs.VAL.VAL_WAVE,inputs.VAL.VAL_NOISE_FIG,Val))) #
-            TempCol.append(Temp)
+            TempCol.append(VAL_Temp)
 #    pdb.set_trace()
     return Scenarios,TempCol,Wavelength
 #%% Running the different cases. If user has included it, the case is evaluated: Can I do this in a loop??????
@@ -131,9 +131,9 @@ def Get_Scenarios():
 def Get_Noise(module,Wavelength,Scenarios):    
     METHODS={}
     if module == 'Power':
-        Func = {'Power_source_noise'  : Qlunc_UQ_Power_func.UQ_PowerSource,
-                'Converter_noise'     : Qlunc_UQ_Power_func.UQ_Converter,
-                'Converter_losses'    : Qlunc_UQ_Power_func.Losses_Converter,
+        Func = {'Power_source_noise' : Qlunc_UQ_Power_func.UQ_PowerSource,
+                'Converter_noise'    : Qlunc_UQ_Power_func.UQ_Converter,
+                'Converter_losses'   : Qlunc_UQ_Power_func.Losses_Converter,
                 }
     
     elif module== 'Photonics':
@@ -147,8 +147,8 @@ def Get_Noise(module,Wavelength,Scenarios):
 #            METHODS.setdefault('Optical_amplifier_fignoise',Qlunc_UQ_Photonics_func.FigNoise(user_inputs,inputs,direct,**Scenarios)) 
 #    
     elif module=='Optics':
-        Func = {'Telescope_noise'     : Qlunc_UQ_Optics_func.UQ_Telescope,
-                'Telescope_losses'    : Qlunc_UQ_Optics_func.Losses_Telescope
+        Func = {'Telescope_noise'  : Qlunc_UQ_Optics_func.UQ_Telescope,
+                'Telescope_losses' : Qlunc_UQ_Optics_func.Losses_Telescope
                 }
            
     for k,v in Func.items():

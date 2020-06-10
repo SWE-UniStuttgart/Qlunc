@@ -44,7 +44,7 @@ def UQ_Photodetector(user_inputs,inputs,cts,direct,Wavelength,**Scenarios):
             UQ_Photodetector.append(SA.Sum_dB([Photodetector_Thermal_noise[ind_UQ_PHOTO],Photodetector_Shot_noise[ind_UQ_PHOTO],Photodetector_Dark_current_noise[ind_UQ_PHOTO],Photodetector_TIA_noise[ind_UQ_PHOTO]]))
         else:
              UQ_Photodetector.append(SA.Sum_dB([Photodetector_Thermal_noise[ind_UQ_PHOTO],Photodetector_Shot_noise[ind_UQ_PHOTO],Photodetector_Dark_current_noise[ind_UQ_PHOTO]]))
-        pdb.set_trace()
+#        pdb.set_trace()
     
 #    for nT in range(len(Photodetector_Thermal_noise)):
 #        UQ_Photodetector.append(SA.Sum_dB([Photodetector_Thermal_noise[nT],Photodetector_Shot_noise[nT],Photodetector_Dark_current_noise[nT],Photodetector_TIA_noise[nT]]))
@@ -56,10 +56,14 @@ def UQ_Photodetector(user_inputs,inputs,cts,direct,Wavelength,**Scenarios):
 #%% OPTICAL AMPLIFIER
 def UQ_Optical_amplifier(user_inputs,inputs,cts,direct,Wavelength,**Scenarios): # Calculating ASE - Amplified Spontaneous Emission definition ((**Optics and Photonics) Bishnu P. Pal - Guided Wave Optical Components and Devices_ Basics, Technology, and Applications -Academic Press (2005))
     UQ_Optical_amplifier=[]
+    
     for i_UQ_OA in range(len(Scenarios.get('Temperature'))):
             FigureNoise=Scenarios['Optical_amplifier_NF'][i_UQ_OA]
-            UQ_Optical_amplifier.append((10**(FigureNoise/10))*cts.h*10**(Scenarios['Optical_amplifier_Gain'][i_UQ_OA]/10)*(cts.c/Wavelength[i_UQ_OA])) # ASE
-    return 10*np.log10(UQ_Optical_amplifier) # convert to dB
+            pdb.set_trace()
+
+            UQ_Optical_amplifier.append([10*np.log10((10**(FigureNoise/10))*cts.h*10**(Scenarios['Optical_amplifier_Gain'][i_UQ_OA]/10)*(cts.c/Wavelength[i_UQ_OA]))]) # ASE
+    pdb.set_trace()
+    return (UQ_Optical_amplifier) # convert to dB
 
 
 def FigNoise(inputs,direct): # This is the Figure noise of the optical amplifier. We use it to calculate the UQ_Optical_amplifier
