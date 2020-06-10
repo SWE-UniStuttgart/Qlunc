@@ -73,7 +73,7 @@ def Get_Scenarios():
     # Main loop to go over all variables to create the cases:############### 
     # FIGURE NOISE IS NOT INCLUDED IN THE SCENARIOS BECAUSE IS NOT NEEDED FOR ANY CALCULATION. IT IS JUST A 'NOISE' MORE TO ADD AT THE END, 
     # WHEN BUILDING THE DATA FRAME  
-#    pdb.set_trace()
+
     
     for i in list(flatten('Temperature','Humidity',Names2loop)):
         Scenarios[i]=[]
@@ -119,7 +119,7 @@ def Get_Noise(module,Wavelength,Scenarios):
                 'Telescope_losses' : Qlunc_UQ_Optics_func.Losses_Telescope
                 }
            
-    for k,v in Func.items():
+    for k,v in Func.items(): # Loop to call functions whose module and method is included in user inputs
         if k in list(SA.flatten(user_inputs.user_itype_noise)):  
             METHODS.setdefault(k,list(SA.flatten(Func[k](user_inputs,inputs,cts,direct,Wavelength,**Scenarios)))) # 'Setdefault' is just like append but it's used when no element is yet included in the dictionary     
 #    pdb.set_trace()

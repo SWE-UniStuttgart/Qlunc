@@ -41,9 +41,12 @@ Shot_noise_dB2=10*np.log10(Shot_noise2)
 
 SUM_noise_dB2=SA.Sum_dB([Photodetector_Thermal_noise_dB2,Photodetector_Dark_current_noise_dB2,Shot_noise_dB2])
 
-def tre(x,r):
+def tre(q,r):
+    
     global g
-    g=x+r
-
-rr=tre(1,2)
-rr.g
+    g=q+r
+    f=q-r
+    return g
+def tri():
+    x=tre(1,2)    
+    return x
