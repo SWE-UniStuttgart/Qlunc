@@ -83,14 +83,14 @@ class inputs():
                                 'time'        : list(AtmosphericScenarios_TS.loc[:,'t'])#for rain and fog intensity intervals might be introduced [none,low, medium high]
                                 } 
         else:    
-            Atmospheric_inputs={'temperature' : [300,1222,34], # [K] HAve to put the same number of elements for temperature and humidity. Always in paired values [T,H]
-                                'humidity'    : [12,52,5234],      # [%]
+            Atmospheric_inputs={'temperature' : [300], # [K] HAve to put the same number of elements for temperature and humidity. Always in paired values [T,H]
+                                'humidity'    : [12],      # [%]
 #                                'rain'        : [True],
 #                                'fog'         : [False]
                                 }#for rain and fog intensity intervals might be introduced [none,low, medium high]
 #%% General lidar layout inputs:
     class lidar_inp():
-        Lidar_inputs = {'Wavelength' : [1532e-9,1550e-9],'Laser_power':[2]} # (wave:[m],Laser_power: [mW])
+        Lidar_inputs = {'Wavelength' : [1550e-9],'Laser_power':[2]} # (wave:[m],Laser_power: [mW])
 #        BW=  #Band width (MHz)
 #        laser_input_power =  .001 #[W]
         
@@ -109,8 +109,8 @@ class inputs():
         Optical_amplifier_inputs      = {'Optical_amplifier_noise':{
                             #                                         'Optical_amplifier_noise'            : [0.7777],
                             #                                         'Optical_amplifier_OtherChanges'     : [.005],
-                                                                     'Optical_amplifier_NF'         : 'NoiseFigure.csv',# [5,7],#
-                                                                     'Optical_amplifier_Gain'             : [3]
+                                                                     'Optical_amplifier_NF'         : 'NoiseFigure.csv',# [5,7],# 
+                                                                     'Optical_amplifier_Gain'             : [30]
                                                                      } # dB
                                          }
 #        LaserSource_inputs    = {'Laser_source_noise'         : [.855,70000],
@@ -119,7 +119,7 @@ class inputs():
 
         
         Photodetector_inputs          = {'Photodetector_noise':{
-                                                                 'Photodetector_Bandwidth'    : [380e6],  #[Hz] Band width
+                                                                 'Photodetector_Bandwidth'    : [1e9],  #[Hz] Band width
                                                                  'Photodetector_RL'           : [50],#[ohms] Load resistor
                                                                  'Photodetector_Efficiency'   : [0.85],#efficiency of the photodiode:
                                                                  'Photodetector_DarkCurrent'  : [5e-9],#[A] Dark current intensity

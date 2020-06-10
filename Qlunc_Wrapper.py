@@ -9,12 +9,10 @@ from Qlunc_ImportModules import *
 from  Qlunc_Help_standAlone import flatten
 import Qlunc_inputs
 
-#%%Naming data to make it easier:
+#%% From the initial classes want to take the dictionaries and their content to loop over the input method names and their values
 
 
-class user_inputs():
-
-
+class user_inputs(): # this class gathers modules, components and methods introduced by the user
     user_imodules=list(inputs.modules.keys())
     user_icomponents=[list(reduce(getitem,[i],inputs.modules).keys()) for i in inputs.modules.keys()]
     user_itype_noise= [list(inputs.modules[module].get(components,{})) for module in inputs.modules.keys() for components in inputs.modules[module].keys()]
@@ -22,16 +20,16 @@ class user_inputs():
 input_values_LOOP=[]
 input_values_LOOP2={}
 # Find the data want to loop over inside classes and nested classes:  
-#This if is because have to calculate the figure noise to pass it as a int parameter instead a string
-if 'Optical_amplifier_noise' in list(flatten(user_inputs.user_itype_noise)):
+#This if is because have to calculate the figure noise befeore passing it as a int parameter instead a string ()
+if 'Optical_amplifier_noise' in list(flatten(user_inputs.user_itype_noise)) and isinstance(inputs.photonics_inp.Optical_amplifier_inputs['Optical_amplifier_noise']['Optical_amplifier_NF'],str):
     inputs.photonics_inp.Optical_amplifier_inputs['Optical_amplifier_noise']['Optical_amplifier_NF']=Qlunc_UQ_Photonics_func.FigNoise(inputs,direct)
-    
+#pdb.set_trace()  
     
 inputs_attributes=[atr for atr in dir(inputs) if inspect.getmembers(getattr(inputs,atr))]
 inputs_attributes=list([a for a in inputs_attributes if not(a.startswith('__') and a.endswith('__'))]) # obtaining attributes from the class inputs 
-inputs_attributes=inputs_attributes[3:] # Only take component values, not modules, atmospheric or general values
+inputs_attributes=inputs_attributes[3:] # Only take component values, not modules, atmospheric nor general values
 res2={}
-for ind_ATR in inputs_attributes:
+for ind_ATR in inputs_attributes: 
     fd=eval('inputs.'+ind_ATR)
     res=inspect.getmembers(fd,lambda a:not(inspect.isroutine(a)))
     res2.setdefault(ind_ATR,list([a for a in res if not(a[0].startswith('__') and a[0].endswith('__')) ]))
@@ -48,16 +46,13 @@ for index_dict in range(len(input_values)):
 for index_loop0 in range(len(LOOP_inputs_dict)):
     for index_loop1 in LOOP_inputs_dict[index_loop0].keys():
         if index_loop1 in list(flatten(user_inputs.user_itype_noise)):
-            Values2loop.append(list(LOOP_inputs_dict[index_loop0][index_loop1].values()))
-            Names2loop.append(list(LOOP_inputs_dict[index_loop0][index_loop1].keys()))
+            Values2loop.append(list(LOOP_inputs_dict[index_loop0][index_loop1].values())) # Values names we want to loop over
+            Names2loop.append(list(LOOP_inputs_dict[index_loop0][index_loop1].keys())) # Method names we want to loop over
 Val=[None]*len(list(flatten(Names2loop))) # We need this to loop over without having to put all variables in the loop
 Names2loop=list(flatten(Names2loop))
 
-#print(Values2loop)
-#print(Names2loop)
-#print(Val)
 
-#Atmosphere:
+#Atmosphere and general data needed inputs we have to include in calculations but either dont want to loop over or the loop needs to be done on parallel (temperature and humidity)
 Temp        = inputs.atm_inp.Atmospheric_inputs['temperature']
 Hum         = inputs.atm_inp.Atmospheric_inputs['humidity']
 Wave        = inputs.lidar_inp.Lidar_inputs['Wavelength']
@@ -101,33 +96,6 @@ def Get_Scenarios():
 #%% Running the different cases. If user has included it, the case is evaluated: Can I do this in a loop??????
     # User have to include here the module, component and estimation method
    
-#def Get_Noise(module,Scenarios):    
-#    METHODS={}
-#    if module=='power':
-#        if 'power_source_noise' in list(SA.flatten(user_inputs.user_itype_noise)):
-#            METHODS.setdefault('power_source_noise',Qlunc_UQ_Power_func.UQ_PowerSource(**Scenarios))   # 'Setdefault' is just like append but it's used when no element is yet included in the dictionary     
-#        if 'converter_noise' in list(SA.flatten(user_inputs.user_itype_noise)):     
-#            METHODS.setdefault('converter_noise',Qlunc_UQ_Power_func.UQ_Converter(**Scenarios))        
-#        if 'converter_losses' in list(SA.flatten(user_inputs.user_itype_noise)):        
-#            METHODS.setdefault('converter_losses',Qlunc_UQ_Power_func.Losses_Converter(**Scenarios))  
-#            
-#    if module=='photonics':
-#        if 'laser_source_noise' in list(SA.flatten(user_inputs.user_itype_noise)):        
-#            METHODS.setdefault('laser_source_noise',Qlunc_UQ_Photonics_func.UQ_LaserSource(**Scenarios))        
-#        if 'photodetector_noise' in list(SA.flatten(user_inputs.user_itype_noise)):        
-#            METHODS.setdefault('photodetector_noise',Qlunc_UQ_Photonics_func.UQ_Photodetector(user_inputs,inputs,cts,**Scenarios))               
-#        if 'Optical_amplifier_noise' in list(SA.flatten(user_inputs.user_itype_noise)):        
-#            METHODS.setdefault('Optical_amplifier_noise',Qlunc_UQ_Photonics_func.UQ_Optical_amplifier(**Scenarios))              
-#        if 'Optical_amplifier' in list(SA.flatten(user_inputs.user_icomponents)):        
-#            METHODS.setdefault('Optical_amplifier_fignoise',Qlunc_UQ_Photonics_func.FigNoise(inputs,direct,**Scenarios))
-#    
-#    if module=='optics':          
-#        if 'telescope_noise' in list(SA.flatten(user_inputs.user_itype_noise)):        
-#            METHODS.setdefault('telescope_noise',Qlunc_UQ_Optics_func.UQ_Telescope(**Scenarios))               
-#        if 'telescope_losses' in list(SA.flatten(user_inputs.user_itype_noise)):        
-#            METHODS.setdefault('telescope_losses',Qlunc_UQ_Optics_func.Losses_Telescope(**Scenarios))        
-#
-#    return METHODS
 def Get_Noise(module,Wavelength,Scenarios):    
     METHODS={}
     if module == 'Power':
@@ -153,6 +121,6 @@ def Get_Noise(module,Wavelength,Scenarios):
            
     for k,v in Func.items():
         if k in list(SA.flatten(user_inputs.user_itype_noise)):  
-            METHODS.setdefault(k,list(SA.flatten(Func[k](user_inputs,inputs,cts,direct,Wavelength,**Scenarios))))
+            METHODS.setdefault(k,list(SA.flatten(Func[k](user_inputs,inputs,cts,direct,Wavelength,**Scenarios)))) # 'Setdefault' is just like append but it's used when no element is yet included in the dictionary     
 #    pdb.set_trace()
     return METHODS
