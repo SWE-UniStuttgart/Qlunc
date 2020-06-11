@@ -16,6 +16,7 @@ Created on Tue Apr 28 13:44:25 2020
 from Qlunc_ImportModules import *
 import Qlunc_Wrapper as QW
 import time
+import numpy as np
 #%% Read data from the GUI script:#######################
 #with open('I_D.pickle', 'rb') as c_data:
 #    ImpDATA = pickle.load(c_data)
@@ -95,6 +96,9 @@ print('Elapsed time =', elapsed_time, 's...')
 #######################################################
 
 #%% Plotting:
+
+# SIGNAL and NOISE
+
 flag_plot_signal_noise=False
 if flag_plot_signal_noise==True: #Introduce this flag in the gui    
     #Create original received power signal in watts (for now this is necessary as far as we dont have outgoing signal from lidar):
@@ -156,7 +160,25 @@ if flag_plot_signal_noise==True: #Introduce this flag in the gui
     plt.plot(inputs.atm_inp.Atmospheric_inputs['time'],df_UQ.loc['Total UQ',:])
     plt.plot(inputs.atm_inp.Atmospheric_inputs['time'],inputs.atm_inp.Atmospheric_inputs['temperature'])
     plt.plot(inputs.atm_inp.Atmospheric_inputs['time'],inputs.atm_inp.Atmospheric_inputs['humidity'])
-    
-    
-    
+   
     plt.show()  
+
+# Comparison NOISE different components:------------------------------------------------------------------------------------
+
+# AMPLIFIER: TIA noise 'input-referred noise':
+Ps=np.arange(0,1000,.001)
+Psax=10*np.log10(Ps)
+#TIA_noise= ((inputs.photonics_inp.Photodetector_inputs['TIA_noise']['V_noise_TIA'][0])**2/(inputs.photonics_inp.Photodetector_inputs['TIA_noise']['Gain_TIA'][0])**2)
+#SNR_TIA=10*np.log10(((Qlunc_UQ_Photonics_func.UQ_Photodetector.Responsivity**2)/(TIA_noise))*(Ps/1000)**2)
+
+
+plt.figure()
+#plt.xscale('log',basex=10)
+#plt.yscale('log',basey=10)
+
+plt.plot(Psax,Qlunc_UQ_Photonics_func.UQ_Photodetector.Photodetector_SNR_Shot_noise,Psax,Qlunc_UQ_Photonics_func.UQ_Photodetector.Photodetector_SNR_thermal_noise,Psax,Qlunc_UQ_Photonics_func.UQ_Photodetector.Photodetector_SNR_DarkCurrent,Psax,Qlunc_UQ_Photonics_func.UQ_Photodetector.Photodetector_SNR_TIA)
+plt.xlabel('Input Signal optical power (dBm)',fontsize=29)
+plt.ylabel('SNR (dB)',fontsize=29)
+plt.legend(['Shot Noise','Thermal Noise','Dark current Noise','TIA Noise'],fontsize=16)#,'Total error [w]'])
+plt.title('SNR Photodetector',fontsize=35)
+plt.grid(axis='both')

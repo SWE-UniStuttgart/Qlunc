@@ -15,14 +15,14 @@ import Qlunc_Help_standAlone as SA
 def UQ_Photodetector(user_inputs,inputs,cts,direct,Wavelength,**Scenarios):
     UQ_Photo=[]
     global Photodetector_SNR_thermal_noise,Photodetector_Thermal_noise,Photodetector_Shot_noise,Photodetector_SNR_Shot_noise,Photodetector_Dark_current_noise,Photodetector_SNR_DarkCurrent,Photodetector_TIA_noise,Photodetector_SNR_TIA
-    Photodetector_SNR_thermal_noise=[]
+    UQ_Photodetector.Photodetector_SNR_thermal_noise=[]
     Photodetector_Thermal_noise=[]
     Photodetector_Shot_noise=[]
-    Photodetector_SNR_Shot_noise=[]
+    UQ_Photodetector.Photodetector_SNR_Shot_noise=[]
     Photodetector_Dark_current_noise=[]
-    Photodetector_SNR_DarkCurrent=[]
+    UQ_Photodetector.Photodetector_SNR_DarkCurrent=[]
     Photodetector_TIA_noise=[]
-    Photodetector_SNR_TIA=[]
+    UQ_Photodetector.Photodetector_SNR_TIA=[]
     UQ_Photodetector.Responsivity=[]
     for ind_UQ_PHOTO in range(len(Scenarios.get('Temperature'))): # To loop over all Scenarios
 #        UQ_photodetector.append(Scenarios.get('VAL_T')[i]*0.4+Scenarios.get('VAL_H')[i]*0.1+Scenarios.get('VAL_NOISE_PHOTO')[i]+Scenarios.get('VAL_OC_PHOTO')[i]+Scenarios.get('VAL_WAVE')[i]/1000)
@@ -30,20 +30,20 @@ def UQ_Photodetector(user_inputs,inputs,cts,direct,Wavelength,**Scenarios):
         UQ_Photodetector.Responsivity.append(R) # this notation allows me to get Responsivity from outside of the function 
         # Photodetector Thermal noise
         Photodetector_Thermal_noise.append((10*np.log10(4*cts.k*Scenarios.get('Temperature')[ind_UQ_PHOTO]/Scenarios.get('Photodetector_RL')[ind_UQ_PHOTO]*Scenarios.get('Photodetector_Bandwidth')[ind_UQ_PHOTO]))) #[dBm]
-        Photodetector_SNR_thermal_noise.append(10*np.log10(((R**2)/(4*cts.k*Scenarios.get('Temperature')[ind_UQ_PHOTO]*Scenarios.get('Photodetector_Bandwidth')[ind_UQ_PHOTO]/Scenarios.get('Photodetector_RL')[ind_UQ_PHOTO]))*(Scenarios.get('Photodetector_Signal_power')[ind_UQ_PHOTO]/1000)**2))
+        UQ_Photodetector.Photodetector_SNR_thermal_noise.append(10*np.log10(((R**2)/(4*cts.k*Scenarios.get('Temperature')[ind_UQ_PHOTO]*Scenarios.get('Photodetector_Bandwidth')[ind_UQ_PHOTO]/Scenarios.get('Photodetector_RL')[ind_UQ_PHOTO]))*(Scenarios.get('Photodetector_Signal_power')[ind_UQ_PHOTO]/1000)**2))
     
         #Photodetector shot noise:
         Photodetector_Shot_noise.append(10*np.log10(2*cts.e*R*Scenarios.get('Photodetector_Bandwidth')[ind_UQ_PHOTO]*Scenarios.get('Photodetector_Signal_power')[ind_UQ_PHOTO]))
-        Photodetector_SNR_Shot_noise.append(10*np.log10(((R**2)/(2*cts.e*R*Scenarios.get('Photodetector_Bandwidth')[ind_UQ_PHOTO]))*(Scenarios.get('Photodetector_Signal_power')[ind_UQ_PHOTO])/1000))
+        UQ_Photodetector.Photodetector_SNR_Shot_noise.append(10*np.log10(((R**2)/(2*cts.e*R*Scenarios.get('Photodetector_Bandwidth')[ind_UQ_PHOTO]))*(Scenarios.get('Photodetector_Signal_power')[ind_UQ_PHOTO])/1000))
 
         #Photodetector dark current noise
         Photodetector_Dark_current_noise.append(10*np.log10(2*cts.e*Scenarios.get('Photodetector_DarkCurrent')[ind_UQ_PHOTO]*Scenarios.get('Photodetector_Bandwidth')[ind_UQ_PHOTO]*Scenarios.get('Photodetector_Signal_power')[ind_UQ_PHOTO]))
-        Photodetector_SNR_DarkCurrent.append(10*np.log10(((R**2)/(2*cts.e*Scenarios.get('Photodetector_DarkCurrent')[ind_UQ_PHOTO]*Scenarios.get('Photodetector_Bandwidth')[ind_UQ_PHOTO]))*((Scenarios.get('Photodetector_Signal_power')[ind_UQ_PHOTO]/1000)**2) ))
+        UQ_Photodetector.Photodetector_SNR_DarkCurrent.append(10*np.log10(((R**2)/(2*cts.e*Scenarios.get('Photodetector_DarkCurrent')[ind_UQ_PHOTO]*Scenarios.get('Photodetector_Bandwidth')[ind_UQ_PHOTO]))*((Scenarios.get('Photodetector_Signal_power')[ind_UQ_PHOTO]/1000)**2) ))
 
         if 'TIA_noise' in list(SA.flatten(user_inputs.user_itype_noise)):     # If TIA is included in the components have to include in the noise calculations:
             # Photodetector TIA noise
             Photodetector_TIA_noise.append( 10*np.log10(Scenarios.get('V_noise_TIA')[ind_UQ_PHOTO]**2/Scenarios.get('Gain_TIA')[ind_UQ_PHOTO]**2))
-            Photodetector_SNR_TIA.append(10*np.log10(((R**2)/(Scenarios.get('V_noise_TIA')[ind_UQ_PHOTO]**2/Scenarios.get('Gain_TIA')[ind_UQ_PHOTO]**2))*(Scenarios.get('Photodetector_Signal_power')[ind_UQ_PHOTO]/1000)**2))
+            UQ_Photodetector.Photodetector_SNR_TIA.append(10*np.log10(((R**2)/(Scenarios.get('V_noise_TIA')[ind_UQ_PHOTO]**2/Scenarios.get('Gain_TIA')[ind_UQ_PHOTO]**2))*(Scenarios.get('Photodetector_Signal_power')[ind_UQ_PHOTO]/1000)**2))
             UQ_Photo.append(SA.Sum_dB([Photodetector_Thermal_noise[ind_UQ_PHOTO],Photodetector_Shot_noise[ind_UQ_PHOTO],Photodetector_Dark_current_noise[ind_UQ_PHOTO],Photodetector_TIA_noise[ind_UQ_PHOTO]]))
         else:
              UQ_Photo.append(SA.Sum_dB([Photodetector_Thermal_noise[ind_UQ_PHOTO],Photodetector_Shot_noise[ind_UQ_PHOTO],Photodetector_Dark_current_noise[ind_UQ_PHOTO]]))
