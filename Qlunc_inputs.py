@@ -90,7 +90,7 @@ class inputs():
                                 }#for rain and fog intensity intervals might be introduced [none,low, medium high]
 #%% General lidar layout inputs:
     class lidar_inp():
-        Lidar_inputs = {'Wavelength' : [1550e-9,1538e-9],'Laser_power':[2]} # (wave:[m],Laser_power: [mW])
+        Lidar_inputs = {'Wavelength' : [1550e-9],'Laser_power':[2]} # (wave:[m],Laser_power: [mW])
 #        BW=  #Band width (MHz)
 #        laser_input_power =  .001 #[W]
         
@@ -131,11 +131,6 @@ class inputs():
                                                                  'V_noise_TIA':[160e-6]
                                                                  }
                                      }
-#                                             
-#        TIA_inputs            = {'Gain_TIA': [5e3], #[ohms] transimpedance gain
-#                                 'V_noise_TIA':[160e-6] #[V] Voltage noise
-#                                 } 
-
 
 #%% Optics module inputs    
 #    class optics_inp():

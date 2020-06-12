@@ -165,20 +165,35 @@ if flag_plot_signal_noise==True: #Introduce this flag in the gui
 
 # Comparison NOISE different components:------------------------------------------------------------------------------------
 
-# AMPLIFIER: TIA noise 'input-referred noise':
-Ps=np.arange(0,1000,.001)
-Psax=10*np.log10(Ps)
-#TIA_noise= ((inputs.photonics_inp.Photodetector_inputs['TIA_noise']['V_noise_TIA'][0])**2/(inputs.photonics_inp.Photodetector_inputs['TIA_noise']['Gain_TIA'][0])**2)
-#SNR_TIA=10*np.log10(((Qlunc_UQ_Photonics_func.UQ_Photodetector.Responsivity**2)/(TIA_noise))*(Ps/1000)**2)
-
-
-plt.figure()
-#plt.xscale('log',basex=10)
-#plt.yscale('log',basey=10)
-
-plt.plot(Psax,Qlunc_UQ_Photonics_func.UQ_Photodetector.Photodetector_SNR_Shot_noise,Psax,Qlunc_UQ_Photonics_func.UQ_Photodetector.Photodetector_SNR_thermal_noise,Psax,Qlunc_UQ_Photonics_func.UQ_Photodetector.Photodetector_SNR_DarkCurrent,Psax,Qlunc_UQ_Photonics_func.UQ_Photodetector.Photodetector_SNR_TIA)
-plt.xlabel('Input Signal optical power (dBm)',fontsize=29)
-plt.ylabel('SNR (dB)',fontsize=29)
-plt.legend(['Shot Noise','Thermal Noise','Dark current Noise','TIA Noise'],fontsize=16)#,'Total error [w]'])
-plt.title('SNR Photodetector',fontsize=35)
-plt.grid(axis='both')
+for ind_plot in range(len(inputs.atm_inp.Atmospheric_inputs['temperature'])):
+    Ps=np.arange(0,1000,.001)
+    Psax=10*np.log10(Ps)
+    pdb.set_trace()
+    #%% PHOTODETECTOR:
+    
+    # thermal noise;    
+    SNR_Thermal   = 10*np.log10(((Qlunc_UQ_Photonics_func.UQ_Photodetector.Responsivity[ind_plot]**2)/(4*cts.k*inputs.atm_inp.Atmospheric_inputs['temperature'][ind_plot]*inputs.photonics_inp.Photodetector_inputs['Photodetector_noise']['Photodetector_Bandwidth'][ind_plot]/inputs.photonics_inp.Photodetector_inputs['Photodetector_noise']['Photodetector_RL'][ind_plot]))*(Ps/1000)**2)
+    
+    # Shot noise:
+    Photo_SNR_Shot_noise    = 10*np.log10(((Qlunc_UQ_Photonics_func.UQ_Photodetector.Responsivity[ind_plot]**2)/(2*cts.e*Qlunc_UQ_Photonics_func.UQ_Photodetector.Responsivity[ind_plot]*inputs.photonics_inp.Photodetector_inputs['Photodetector_noise']['Photodetector_Bandwidth'][ind_plot]))*Ps/1000)
+    
+    ## Dark current noise
+    SNR_DarkCurrent     = 10*np.log10(((Qlunc_UQ_Photonics_func.UQ_Photodetector.Responsivity[ind_plot]**2)/(2*cts.e*inputs.photonics_inp.Photodetector_inputs['Photodetector_noise']['Photodetector_DarkCurrent'][ind_plot]*inputs.photonics_inp.Photodetector_inputs['Photodetector_noise']['Photodetector_Bandwidth'][ind_plot]))*((Ps/1000)**2) )
+    
+    
+    #%% AMPLIFIER: TIA noise 'input-referred noise':
+    
+    TIA_noise= (inputs.photonics_inp.Photodetector_inputs['TIA_noise']['V_noise_TIA'][ind_plot]**2/inputs.photonics_inp.Photodetector_inputs['TIA_noise']['Gain_TIA'][ind_plot]**2)
+    SNR_TIA=10*np.log10(((Qlunc_UQ_Photonics_func.UQ_Photodetector.Responsivity[ind_plot]**2)/(TIA_noise))*(Ps/1000)**2)
+    
+    
+    plt.figure()
+    #plt.xscale('log',basex=10)
+    #plt.yscale('log',basey=10)
+    
+    plt.plot(Psax,Photo_SNR_Shot_noise,Psax,SNR_Thermal,Psax,SNR_DarkCurrent,Psax,SNR_TIA)
+    plt.xlabel('Input Signal optical power (dBm)',fontsize=29)
+    plt.ylabel('SNR (dB)',fontsize=29)
+    plt.legend(['Shot Noise','Thermal Noise','Dark current Noise','TIA Noise'],fontsize=16)#,'Total error [w]'])
+    plt.title('SNR Photodetector',fontsize=35)
+    plt.grid(axis='both')
