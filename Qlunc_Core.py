@@ -16,6 +16,7 @@ Created on Tue Apr 28 13:44:25 2020
 from Qlunc_ImportModules import *
 import Qlunc_Wrapper as QW
 import time
+import numpy as np
 #%% Read data from the GUI script:#######################
 #with open('I_D.pickle', 'rb') as c_data:
 #    ImpDATA = pickle.load(c_data)
@@ -50,22 +51,24 @@ class Hardware_U():  # creating a function to call each different module. HAve t
     H_UQ=pd.DataFrame()            
     if 'Power' in inputs.modules:             
         class Power(): # Create class optical_amplifier
-            if 'Scenarios' not in globals():  # This 'if' decreases drastically computational time              
+            if 'Scenarios' not in globals():           
                 Scenarios,DF_columns,Wavelength = QW.Get_Scenarios()# Temperature is calculated once and it is to get columns of dataframe
-                H_UQ_Power           = QW.Get_Noise('Power',Wavelength,Scenarios)
+                H_UQ_Power                      = QW.Get_Noise('Power',Wavelength,Scenarios)
             else:
                  H_UQ_Power          = QW.Get_Noise('Power',Wavelength,Scenarios)
-        H_UQ_POWER     = SA.Get_DataFrame(Power.H_UQ_Power,Power.DF_columns).T
+        
+        H_UQ_POWER     = SA.Get_DataFrame(Power.H_UQ_Power,Power.DF_columns).T # Build up data frame using 'Get_DataFrame' function
         H_UQ=H_UQ.append(H_UQ_POWER)
     
     if 'Photonics' in inputs.modules:
         class Photonics(): # Create class Photonics 
             
             if 'Scenarios' not in globals():                    
-                Scenarios,DF_columns ,Wavelength    = QW.Get_Scenarios()# Temperature is calculated once and it is to get columns of dataframe
-                H_UQ_Photonics           = QW.Get_Noise('Photonics',Wavelength,Scenarios)
+                Scenarios,DF_columns ,Wavelength = QW.Get_Scenarios()# Temperature is calculated once and it is to get columns of dataframe
+                H_UQ_Photonics                   = QW.Get_Noise('Photonics',Wavelength,Scenarios)
             else:
                  H_UQ_Photonics          = QW.Get_Noise('Photonics',Wavelength,Scenarios)
+        
         H_UQ_PHOTONICS = SA.Get_DataFrame(Photonics.H_UQ_Photonics,Photonics.DF_columns).T
         H_UQ=H_UQ.append(H_UQ_PHOTONICS)
     
@@ -73,11 +76,12 @@ class Hardware_U():  # creating a function to call each different module. HAve t
        class Optics(): # Create class Optics            
             if 'Scenarios' not in globals():                    
                 Scenarios,DF_columns,Wavelength  = QW.Get_Scenarios()# Temperature is calculated once and it is to get columns of dataframe
-                H_UQ_Optics           = QW.Get_Noise('Optics',Wavelength,Scenarios)
+                H_UQ_Optics                      = QW.Get_Noise('Optics',Wavelength,Scenarios)
             else:
                  H_UQ_Optics          = QW.Get_Noise('Optics',Wavelength,Scenarios)
-       H_UQ_OPTICS    = SA.Get_DataFrame(Optics.H_UQ_Optics,Optics.DF_columns).T
-       H_UQ=H_UQ.append(H_UQ_OPTICS)
+       
+       H_UQ_OPTICS = SA.Get_DataFrame(Optics.H_UQ_Optics,Optics.DF_columns).T
+       H_UQ        =H_UQ.append(H_UQ_OPTICS)
 
 # Creating th dataframe  
 H_UQ=Hardware_U.H_UQ                        
@@ -92,6 +96,9 @@ print('Elapsed time =', elapsed_time, 's...')
 #######################################################
 
 #%% Plotting:
+
+# SIGNAL and NOISE
+
 flag_plot_signal_noise=False
 if flag_plot_signal_noise==True: #Introduce this flag in the gui    
     #Create original received power signal in watts (for now this is necessary as far as we dont have outgoing signal from lidar):
@@ -153,7 +160,40 @@ if flag_plot_signal_noise==True: #Introduce this flag in the gui
     plt.plot(inputs.atm_inp.Atmospheric_inputs['time'],df_UQ.loc['Total UQ',:])
     plt.plot(inputs.atm_inp.Atmospheric_inputs['time'],inputs.atm_inp.Atmospheric_inputs['temperature'])
     plt.plot(inputs.atm_inp.Atmospheric_inputs['time'],inputs.atm_inp.Atmospheric_inputs['humidity'])
-    
-    
-    
+   
     plt.show()  
+
+# Comparison NOISE different components:------------------------------------------------------------------------------------
+
+for ind_plot in range(len(inputs.atm_inp.Atmospheric_inputs['temperature'])):
+    Ps=np.arange(0,1000,.001)
+    Psax=10*np.log10(Ps)
+    pdb.set_trace()
+    #%% PHOTODETECTOR:
+    
+    # thermal noise;    
+    SNR_Thermal   = 10*np.log10(((Qlunc_UQ_Photonics_func.UQ_Photodetector.Responsivity[ind_plot]**2)/(4*cts.k*inputs.atm_inp.Atmospheric_inputs['temperature'][ind_plot]*inputs.photonics_inp.Photodetector_inputs['Photodetector_noise']['Photodetector_Bandwidth'][ind_plot]/inputs.photonics_inp.Photodetector_inputs['Photodetector_noise']['Photodetector_RL'][ind_plot]))*(Ps/1000)**2)
+    
+    # Shot noise:
+    Photo_SNR_Shot_noise    = 10*np.log10(((Qlunc_UQ_Photonics_func.UQ_Photodetector.Responsivity[ind_plot]**2)/(2*cts.e*Qlunc_UQ_Photonics_func.UQ_Photodetector.Responsivity[ind_plot]*inputs.photonics_inp.Photodetector_inputs['Photodetector_noise']['Photodetector_Bandwidth'][ind_plot]))*Ps/1000)
+    
+    ## Dark current noise
+    SNR_DarkCurrent     = 10*np.log10(((Qlunc_UQ_Photonics_func.UQ_Photodetector.Responsivity[ind_plot]**2)/(2*cts.e*inputs.photonics_inp.Photodetector_inputs['Photodetector_noise']['Photodetector_DarkCurrent'][ind_plot]*inputs.photonics_inp.Photodetector_inputs['Photodetector_noise']['Photodetector_Bandwidth'][ind_plot]))*((Ps/1000)**2) )
+    
+    
+    #%% AMPLIFIER: TIA noise 'input-referred noise':
+    
+    TIA_noise= (inputs.photonics_inp.Photodetector_inputs['TIA_noise']['V_noise_TIA'][ind_plot]**2/inputs.photonics_inp.Photodetector_inputs['TIA_noise']['Gain_TIA'][ind_plot]**2)
+    SNR_TIA=10*np.log10(((Qlunc_UQ_Photonics_func.UQ_Photodetector.Responsivity[ind_plot]**2)/(TIA_noise))*(Ps/1000)**2)
+    
+    
+    plt.figure()
+    #plt.xscale('log',basex=10)
+    #plt.yscale('log',basey=10)
+    
+    plt.plot(Psax,Photo_SNR_Shot_noise,Psax,SNR_Thermal,Psax,SNR_DarkCurrent,Psax,SNR_TIA)
+    plt.xlabel('Input Signal optical power (dBm)',fontsize=29)
+    plt.ylabel('SNR (dB)',fontsize=29)
+    plt.legend(['Shot Noise','Thermal Noise','Dark current Noise','TIA Noise'],fontsize=16)#,'Total error [w]'])
+    plt.title('SNR Photodetector',fontsize=35)
+    plt.grid(axis='both')

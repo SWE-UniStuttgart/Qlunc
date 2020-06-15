@@ -131,11 +131,6 @@ class inputs():
                                                                  'V_noise_TIA':[160e-6]
                                                                  }
                                      }
-#                                             
-#        TIA_inputs            = {'Gain_TIA': [5e3], #[ohms] transimpedance gain
-#                                 'V_noise_TIA':[160e-6] #[V] Voltage noise
-#                                 } 
-
 
 #%% Optics module inputs    
 #    class optics_inp():
