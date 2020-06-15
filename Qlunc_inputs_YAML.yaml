@@ -21,17 +21,17 @@ modules:
 #    - Converter_noise
  #   - Converter_losses
   
-  Photonics: # for now:'photodetector_noise'; May be include 'TIA_noise' if there is a transimpedance amplifier...
+    Photonics: # for now:'photodetector_noise'; May be include 'TIA_noise' if there is a transimpedance amplifier...
     
-    Photodetector:
-    - Photodetector_noise
-    
-    Optical_amplifier:
-    - Optical_amplifier_noise #for now:  'Optical_amplifier_noise',... If user includes Optical_amplifier component in dictionary 'modules', figure noise is automatically included in calculations(if don't want to include it have to put 0 in 'Optical_amplifier_uncertainty_inputs')
-    - TIA_noise
-    
-    Laser_source:  # for now:'laser_source_noise',...
-    - Laser_source_noise
+        Photodetector:
+        - Photodetector_noise
+        
+        Optical_amplifier:
+        - Optical_amplifier_noise #for now:  'Optical_amplifier_noise',... If user includes Optical_amplifier component in dictionary 'modules', figure noise is automatically included in calculations(if don't want to include it have to put 0 in 'Optical_amplifier_uncertainty_inputs')
+        - TIA_noise
+        
+        Laser_source:  # for now:'laser_source_noise',...
+        - Laser_source_noise
   
 #  Optics: # for now:'telescope_noise', 'telescope_losses'...
     
@@ -55,11 +55,11 @@ Atmospheric_inputs:
   - 12
   
   rain: # for rain and fog intensity intervals might be introduced [none,low, medium high]
-  - true
+  - True
   
   fog:
-  - false 
----
+  - False 
+# ---
 # GENERAL LIDAR MODULE----------------------------------------------
 # Lidar general inputs:
 Lidar_inputs: 
@@ -69,33 +69,35 @@ Lidar_inputs:
   
   Laser_power: # [mW]
   - 2
----
+# ---
 # PHOTONICS MODULE:-------------------------------------------------
 # Amplifier:
 Optical_amplifier_inputs:
   
     Optical_amplifier_noise:
-        Optical_amplifier_NF: 'NoiseFigure.csv'
+        Optical_amplifier_NF: 
+        - 'NoiseFigure.csv'
         Optical_amplifier_Gain: 
-        -30
+        - 30
+
 Photodetector_inputs:
     Photodetector_noise:
         Photodetector_Bandwidth:
-        -1e9
+        - 1e9
         Photodetector_RL:
-        -50
+        - 50
         Photodetector_Efficiency:
-        -.85
+        - 0.85
         Photodetector_DarkCurrent:
-        -5e-9
+        - 5e-9
         Photodetector_Signal_power:
-        -.001
+        - 0.001
     TIA_noise:
         Gain_TIA:
-        -5e3
+        - 5e3
         V_noise_TIA:
-        -160e-6
----
+        - 160e-6
+# ---
 
 # Laser_source inputs:
 # LaserSource_uncertainty_inputs:

@@ -36,13 +36,11 @@ import yaml
 flag_plot_signal_noise  = True
 
 #%% Reading from YAML file:
-with open (r'../GitHub_Qlunc/Qlunc_YAML_inputs.yaml','r') as file:
+with open (r'../GitHub_Qlunc/Qlunc_inputs_YAML.yaml','r') as file:
     Qlunc_yaml_inputs={}
     docs = yaml.load_all(file, Loader=yaml.FullLoader)
-    
     for doc in docs:      
-        for k, v in doc.items():
-           
+        for k, v in doc.items():     
             Qlunc_yaml_inputs.setdefault(k,v)
 
 #%%Directories Class:
@@ -82,23 +80,23 @@ class inputs():
 #        laser_input_power =  .001 #[W]
         
 #%% Power Modules inputs:
-    class power_inp():
-        PowerSource_uncertainty_inputs = Qlunc_yaml_inputs['PowerSource_uncertainty_inputs']
-        Converter_uncertainty_inputs   = Qlunc_yaml_inputs['Converter_uncertainty_inputs']
+#    class power_inp():
+#        PowerSource_uncertainty_inputs = Qlunc_yaml_inputs['PowerSource_uncertainty_inputs']
+#        Converter_uncertainty_inputs   = Qlunc_yaml_inputs['Converter_uncertainty_inputs']
 #%% Photonics module inputs:
     class photonics_inp():
-        Optical_amplifier_uncertainty_inputs = Qlunc_yaml_inputs['Optical_amplifier_uncertainty_inputs']
-        LaserSource_uncertainty_inputs       = Qlunc_yaml_inputs['LaserSource_uncertainty_inputs']
+        Optical_amplifier_inputs = Qlunc_yaml_inputs['Optical_amplifier_inputs']
+#        LaserSource_inputs       = Qlunc_yaml_inputs['LaserSource_uncertainty_inputs']
 
         
-        Photodetector_inputs  = Qlunc_yaml_inputs['Photodetector_inputs']
+        Photodetector_inputs  = Qlunc_yaml_inputs['Photodetector_inputs']['Photodetector_noise']
 #                                 'photodetector_Noise_FILE'   :'Noise_Photodetector.csv'}                                        
-        TIA_inputs            = Qlunc_yaml_inputs['TIA_inputs']
+        TIA_inputs            = Qlunc_yaml_inputs['Photodetector_inputs']['TIA_noise']
 
 
 #%% Optics module inputs    
-    class optics_inp():
-        Telescope_uncertainty_inputs      = Qlunc_yaml_inputs['Telescope_uncertainty_inputs']
+#    class optics_inp():
+#        Telescope_uncertainty_inputs      = Qlunc_yaml_inputs['Telescope_uncertainty_inputs']
 
 
 #%%
