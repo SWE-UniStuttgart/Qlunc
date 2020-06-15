@@ -2,9 +2,9 @@
 *.csv
 *.xlsx
 *.png
-# Ignore specific files:
 
+# Ignore specific files:
 I_D.pickle
 DF.pickle
-untitled0.py
+untitle0.py
 Noise_Photodetector_TEST.py
