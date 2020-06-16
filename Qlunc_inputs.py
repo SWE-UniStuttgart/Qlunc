@@ -83,14 +83,14 @@ class inputs():
                                 'time'        : list(AtmosphericScenarios_TS.loc[:,'t'])#for rain and fog intensity intervals might be introduced [none,low, medium high]
                                 } 
         else:    
-            Atmospheric_inputs={'temperature' : [300], # [K] HAve to put the same number of elements for temperature and humidity. Always in paired values [T,H]
-                                'humidity'    : [12],      # [%]
+            Atmospheric_inputs={'temperature' : [300,325], # [K] HAve to put the same number of elements for temperature and humidity. Always in paired values [T,H]
+                                'humidity'    : [12,12],      # [%]
 #                                'rain'        : [True],
 #                                'fog'         : [False]
                                 }#for rain and fog intensity intervals might be introduced [none,low, medium high]
 #%% General lidar layout inputs:
     class lidar_inp():
-        Lidar_inputs = {'Wavelength' : [1550e-9],'Laser_power':[2]} # (wave:[m],Laser_power: [mW])
+        Lidar_inputs = {'Wavelength' : [1550e-9,1565e-9],'Laser_power':[2]} # (wave:[m],Laser_power: [mW])
 #        BW=  #Band width (MHz)
 #        laser_input_power =  .001 #[W]
         
@@ -123,7 +123,7 @@ class inputs():
                                                                  'Photodetector_RL'           : [50],#[ohms] Load resistor
                                                                  'Photodetector_Efficiency'   : [0.85],#efficiency of the photodiode:
                                                                  'Photodetector_DarkCurrent'  : [5e-9],#[A] Dark current intensity
-                                                                 'Photodetector_Signal_power' : [0.001]#[mW] input power in the photodetector
+                                                                 'Photodetector_Signal_power' : [1e-3]#[mW] input power in the photodetector
                                 #                                 'photodetector_Noise_FILE'   :'Noise_Photodetector.csv'}
                                                                  },
                                          'TIA_noise'          :{
