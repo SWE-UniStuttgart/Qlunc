@@ -10,3 +10,5 @@ untitled0.py
 Noise_Photodetector_TEST.py
 Qlunc_NoteBook-checkpoint.ipynb
 
+# Ignore specific folders:
+Figures/
