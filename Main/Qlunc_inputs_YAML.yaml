@@ -2,7 +2,7 @@
 # Template for Qlunc inputs. Here we include a list of the inputs to run Qlunc (Quantification lidar uncertainties).
 
 Main_directory: '../GitHub_Qlunc/'
-
+Outputs: Main_directory+'Outputs/'
 # MODULES-----------------------------------------------------------
 # Modules to include in estimations: Modules is a dictionary containing the lidar modules as a key. 
 # As values there is a nested dictionary containing components as keys and type of uncertainty as values.

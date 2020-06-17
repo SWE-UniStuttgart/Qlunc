@@ -40,8 +40,9 @@ flag_plot_signal_noise  = True
 
 #%%Directories Class:
 class direct():
-    Main_directory='../GitHub_Qlunc/' # For now all data is stored here
-
+    Main_directory = '../../GitHub_Qlunc/' # For now all data is stored here
+    Inputs         = Main_directory+'metadata/'
+    Outputs        = Main_directory+'Outputs/'
 #%% Constants:
 class cts():
     k = 1.38064852e-23 # Boltzman constant:[m^2 kg s^-2 K^-1]
@@ -74,7 +75,7 @@ class inputs():
                           # If so we obtain a time series describing the noise implemented in the measurement.
         if TimeSeries:
             Atmos_TS_FILE           = 'AtmosphericScenarios.csv'
-            AtmosphericScenarios_TS = pd.read_csv(direct.Main_directory+Atmos_TS_FILE,delimiter=';',decimal=',')
+            AtmosphericScenarios_TS = pd.read_csv(direct.Inputs+Atmos_TS_FILE,delimiter=';',decimal=',')
             Atmospheric_inputs={
                                 'temperature' : list(AtmosphericScenarios_TS.loc[:,'T']),# [K]
                                 'humidity'    : list(AtmosphericScenarios_TS.loc[:,'H']),# [%]

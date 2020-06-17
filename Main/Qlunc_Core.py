@@ -13,8 +13,8 @@ Created on Tue Apr 28 13:44:25 2020
 
 
 #%% Modules to import: 
-from Qlunc_ImportModules import *
-import Qlunc_Wrapper as QW
+from   Utils.Qlunc_ImportModules import *
+import Main.Qlunc_Wrapper as QW
 import time
 import numpy as np
 #%% Read data from the GUI script:#######################
@@ -85,7 +85,7 @@ class Hardware_U():  # creating a function to call each different module. HAve t
 
 # Creating the dataframe and save it as csv file
 H_UQ=Hardware_U.H_UQ            
-H_UQ.to_csv(direct.Main_directory+'H_UQ.csv',sep=',',decimal='.')            
+H_UQ.to_csv(direct.Outputs+'H_UQ.csv',sep=',',decimal='.')            
 #H_UQ=   H_UQ_POWER.append([H_UQ_PHOTONICS,H_UQ_OPTICS])# Total DataFrame                       
 
 elapsed_time=time.time()-t

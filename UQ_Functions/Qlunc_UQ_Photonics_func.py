@@ -5,12 +5,12 @@ Created on Sat May 16 14:51:36 2020
 @author: fcosta
 """
 
-import Qlunc_inputs
+import Main.Qlunc_inputs
 import pandas as pd
 import scipy.interpolate as itp
-from Qlunc_ImportModules import *
+from   Utils.Qlunc_ImportModules import *
 import pdb
-import Qlunc_Help_standAlone as SA
+import Utils.Qlunc_Help_standAlone as SA
 #%% PHOTODETECTOR
 def UQ_Photodetector(user_inputs,inputs,cts,direct,Wavelength,**Scenarios):
     UQ_Photo=[]

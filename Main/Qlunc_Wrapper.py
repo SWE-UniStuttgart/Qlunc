@@ -5,9 +5,9 @@ Created on Thu May 21 00:11:03 2020
 @author: fcosta
 """
 
-from Qlunc_ImportModules import *
-from  Qlunc_Help_standAlone import flatten
-import Qlunc_inputs
+from   Utils.Qlunc_ImportModules import *
+from   Utils.Qlunc_Help_standAlone import flatten
+import Main.Qlunc_inputs
 
 #%% From the initial classes want to take the dictionaries and their content to loop over the input method names and their values
 
