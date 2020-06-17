@@ -12,10 +12,6 @@ import Qlunc_inputs
 #%% From the initial classes want to take the dictionaries and their content to loop over the input method names and their values
 
 
-class user_inputs(): # this class gathers modules, components and methods introduced by the user
-    user_imodules=list(inputs.modules.keys())
-    user_icomponents=[list(reduce(getitem,[i],inputs.modules).keys()) for i in inputs.modules.keys()]
-    user_itype_noise= [list(inputs.modules[module].get(components,{})) for module in inputs.modules.keys() for components in inputs.modules[module].keys()]
 
 input_values_LOOP=[]
 input_values_LOOP2={}

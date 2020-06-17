@@ -46,13 +46,15 @@ TimeSeries    : True # This defines whether we are using a time series (True) or
                      # If so we obtain a time series describing the noise implemented in the measurement.
 Atmos_TS_FILE : 'AtmosphericScenarios.csv'
 
-Atmospheric_inputs:
+Atmosph_inputs:
   
   temperature: # [K] HAve to put the same number of elements for temperature and humidity. Always in paired values 
   - 300
+  - 325
   
   humidity: # [%]
-  - 12
+  - 25
+  - 25
   
   rain: # for rain and fog intensity intervals might be introduced [none,low, medium high]
   - True
