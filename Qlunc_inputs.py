@@ -70,7 +70,7 @@ class inputs():
 
 #%% Atmospheric inputs:
     class atm_inp():
-        TimeSeries=False  # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere (T, H, rain and fog) 
+        TimeSeries=True  # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere (T, H, rain and fog) 
                           # If so we obtain a time series describing the noise implemented in the measurement.
         if TimeSeries:
             Atmos_TS_FILE           = 'AtmosphericScenarios.csv'
@@ -83,14 +83,14 @@ class inputs():
                                 'time'        : list(AtmosphericScenarios_TS.loc[:,'t'])#for rain and fog intensity intervals might be introduced [none,low, medium high]
                                 } 
         else:    
-            Atmospheric_inputs={'temperature' : [300], # [K] HAve to put the same number of elements for temperature and humidity. Always in paired values [T,H]
-                                'humidity'    : [12],      # [%]
+            Atmospheric_inputs={'temperature' : [300,325], # [K] HAve to put the same number of elements for temperature and humidity. Always in paired values [T,H]
+                                'humidity'    : [12,12],      # [%]
 #                                'rain'        : [True],
 #                                'fog'         : [False]
                                 }#for rain and fog intensity intervals might be introduced [none,low, medium high]
 #%% General lidar layout inputs:
     class lidar_inp():
-        Lidar_inputs = {'Wavelength' : [1550e-9],'Laser_power':[2]} # (wave:[m],Laser_power: [mW])
+        Lidar_inputs = {'Wavelength' : [1550e-9,1565e-9],'Laser_power':[2]} # (wave:[m],Laser_power: [mW])
 #        BW=  #Band width (MHz)
 #        laser_input_power =  .001 #[W]
         
@@ -123,7 +123,7 @@ class inputs():
                                                                  'Photodetector_RL'           : [50],#[ohms] Load resistor
                                                                  'Photodetector_Efficiency'   : [0.85],#efficiency of the photodiode:
                                                                  'Photodetector_DarkCurrent'  : [5e-9],#[A] Dark current intensity
-                                                                 'Photodetector_Signal_power' : [0.001]#[mW] input power in the photodetector
+                                                                 'Photodetector_Signal_power' : [1e-3]#[mW] input power in the photodetector
                                 #                                 'photodetector_Noise_FILE'   :'Noise_Photodetector.csv'}
                                                                  },
                                          'TIA_noise'          :{
@@ -142,50 +142,13 @@ class inputs():
 #                                }}
 
 
-#%%
 
 
-#class user_inputs():
-                    
-#input_values_LOOP=[]
-#input_values_LOOP2={}
-#user_imodules=list(inputs.modules.keys())
-#user_icomponents=[list(reduce(getitem,[i],inputs.modules).keys()) for i in inputs.modules.keys()]
-#user_itype_noise= [list(inputs.modules[module].get(components,{})) for module in inputs.modules.keys() for components in inputs.modules[module].keys()]
-#
-#
-## Find the data want to loop over inside classes and nested classes:   
-#inputs_attributes=[atr for atr in dir(inputs) if inspect.getmembers(getattr(inputs,atr))]
-#inputs_attributes=list([a for a in inputs_attributes if not(a.startswith('__') and a.endswith('__'))]) # obtaining attributes from the class inputs 
-#inputs_attributes=inputs_attributes[3:] # Only take component values, not modules, atmospheric or general values
-#res2={}
-#for ind_ATR in inputs_attributes:
-#    fd=eval('inputs.'+ind_ATR)
-#    res=inspect.getmembers(fd,lambda a:not(inspect.isroutine(a)))
-#    res2.setdefault(ind_ATR,list([a for a in res if not(a[0].startswith('__') and a[0].endswith('__')) ]))
-#input_values=list(flatten(list(res2.values())))
-#
-#
-#LOOP_inputs_dict=[]
-#Values2loop=[]
-#Names2loop=[]
-#Val=()
-#for index_dict in range(len(input_values)):  
-#    if isinstance (input_values[index_dict],dict) :
-#        LOOP_inputs_dict.append(input_values[index_dict]) # Just to keep the dictionary objects inside the different classes disregarding atmospheric and genetal lidar inputs
-#for index_loop0 in range(len(LOOP_inputs_dict)):
-#    for index_loop1 in LOOP_inputs_dict[index_loop0].keys():
-#        if index_loop1 in list(flatten(user_itype_noise)):
-#            Values2loop.append(list(LOOP_inputs_dict[index_loop0][index_loop1].values()))
-#            Names2loop.append(list(LOOP_inputs_dict[index_loop0][index_loop1].keys()))
-#Val=[None]*len(list(flatten(Names2loop)))
-#Names2loop=list(flatten(Names2loop))
-#
-#print(Values2loop)
-#print(Names2loop)
-#print(Val)
 
-
+class user_inputs(): # this class gathers modules, components and methods introduced by the user
+    user_imodules=list(inputs.modules.keys())
+    user_icomponents=[list(reduce(getitem,[i],inputs.modules).keys()) for i in inputs.modules.keys()]
+    user_itype_noise= [list(inputs.modules[module].get(components,{})) for module in inputs.modules.keys() for components in inputs.modules[module].keys()]
 
 
 

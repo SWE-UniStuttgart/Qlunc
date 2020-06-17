@@ -26,7 +26,7 @@ import sys,inspect
 from functools import reduce
 from operator import getitem
 import yaml
-
+import pdb
 # Which modules introduce incertalistinties?:
 #flag_unc_Optical_amplifier     = True # if True I include Optical_amplifier uncertainty
 #flag_unc_photodetector = True # if True I include photodetector uncertainty
@@ -66,13 +66,15 @@ class inputs():
     class atm_inp():
         if Qlunc_yaml_inputs['TimeSeries']:
             AtmosphericScenarios_TS = pd.read_csv(direct.Main_directory+Qlunc_yaml_inputs['Atmos_TS_FILE'],delimiter=';',decimal=',')
+            pdb.set_trace()
             Atmospheric_inputs={'temperature' : list(AtmosphericScenarios_TS.loc[:,'T']),
                                 'humidity'    : list(AtmosphericScenarios_TS.loc[:,'H']),
                                 'rain'        : list(AtmosphericScenarios_TS.loc[:,'rain']),
-                                'fog'         : list(AtmosphericScenarios_TS.loc[:,'fog']),
-                                'time'        : list(AtmosphericScenarios_TS.loc[:,'t'])} #for rain and fog intensity intervals might be introduced [none,low, medium high]
+                                'fog'         : list(AtmosphericScenarios_TS.loc[:,'fog']),#for rain and fog intensity intervals might be introduced [none,low, medium high]
+                                'time'        : list(AtmosphericScenarios_TS.loc[:,'t'])} 
         else:    
-            Atmospheric_inputs=Qlunc_yaml_inputs['Atmospheric_inputs']
+            Atmospheric_inputs=Qlunc_yaml_inputs['Atmosph_inputs']
+    
 #%% General lidar layout inputs:
     class lidar_inp():
         Lidar_inputs = Qlunc_yaml_inputs['Lidar_inputs']# (wave:[m],Laser_power: [mW])
