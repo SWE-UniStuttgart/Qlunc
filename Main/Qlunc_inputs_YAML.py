@@ -21,12 +21,9 @@ Created on Mon Apr 27 09:14:00 2020
 #%% Inputs:.
 
 #import Data:
-import pandas as pd
-import sys,inspect
-from functools import reduce
-from operator import getitem
-import yaml
-import pdb
+import sys
+sys.path.insert(0, '../')
+from Utils.Qlunc_ImportModules import *
 # Which modules introduce incertalistinties?:
 #flag_unc_Optical_amplifier     = True # if True I include Optical_amplifier uncertainty
 #flag_unc_photodetector = True # if True I include photodetector uncertainty
@@ -36,7 +33,7 @@ import pdb
 flag_plot_signal_noise  = True
 
 #%% Reading from YAML file:
-with open (r'../GitHub_Qlunc/Qlunc_inputs_YAML.yaml','r') as file:
+with open (r'../GitHub_Qlunc/Main/Qlunc_inputs_YAML.yaml','r') as file:
     Qlunc_yaml_inputs={}
     docs = yaml.load_all(file, Loader=yaml.FullLoader)
     for doc in docs:      

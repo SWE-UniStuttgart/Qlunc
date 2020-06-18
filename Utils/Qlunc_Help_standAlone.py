@@ -4,14 +4,13 @@ Created on Mon May 18 00:03:43 2020
 
 @author: fcosta
 """
-from Qlunc_ImportModules import *
-from functools import reduce
-from operator import getitem
-from Qlunc_inputs import inputs
-import pdb
+
+from Utils.Qlunc_ImportModules import *
+from Main.Qlunc_inputs import inputs
 
 #%%# used to flatt in som points along the code:
 flatten = lambda *n: (e for a in n for e in (flatten(*a) if isinstance(a, (list,tuple)) else (a,))) 
+
 #%%# Get_Components is a function that extracts, for each module inside the class Hardware_U, in order to include 
 #    in calculations, the components and the uncertainties (noise_type)
 def Get_Components(module,CLASS,METHODS):

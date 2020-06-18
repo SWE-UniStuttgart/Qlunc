@@ -13,10 +13,9 @@ Created on Tue Apr 28 13:44:25 2020
 
 
 #%% Modules to import: 
-from   Utils.Qlunc_ImportModules import *
+
 import Main.Qlunc_Wrapper as QW
-import time
-import numpy as np
+import Utils.Qlunc_Help_standAlone as SA
 #%% Read data from the GUI script:#######################
 #with open('I_D.pickle', 'rb') as c_data:
 #    ImpDATA = pickle.load(c_data)

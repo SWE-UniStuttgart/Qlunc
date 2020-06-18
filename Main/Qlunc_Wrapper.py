@@ -5,20 +5,22 @@ Created on Thu May 21 00:11:03 2020
 @author: fcosta
 """
 
+
 from   Utils.Qlunc_ImportModules import *
 from   Utils.Qlunc_Help_standAlone import flatten
-import Main.Qlunc_inputs
-
+from   Main.Qlunc_inputs import *
+import UQ_Functions.Qlunc_UQ_Photonics_func
+import UQ_Functions.Qlunc_UQ_Power_func
+import UQ_Functions.Qlunc_UQ_Optics_func
+import Utils.Qlunc_Help_standAlone as SA
 #%% From the initial classes want to take the dictionaries and their content to loop over the input method names and their values
-
-
 
 input_values_LOOP=[]
 input_values_LOOP2={}
 # Find the data want to loop over inside classes and nested classes:  
 #This if is because have to calculate the figure noise befeore passing it as a int parameter instead a string ()
 if 'Optical_amplifier_noise' in list(flatten(user_inputs.user_itype_noise)) and isinstance(inputs.photonics_inp.Optical_amplifier_inputs['Optical_amplifier_noise']['Optical_amplifier_NF'],str):
-    inputs.photonics_inp.Optical_amplifier_inputs['Optical_amplifier_noise']['Optical_amplifier_NF']=Qlunc_UQ_Photonics_func.FigNoise(inputs,direct)
+    inputs.photonics_inp.Optical_amplifier_inputs['Optical_amplifier_noise']['Optical_amplifier_NF']=UQ_Functions.Qlunc_UQ_Photonics_func.FigNoise(inputs,direct)
 #pdb.set_trace()  
     
 inputs_attributes=[atr for atr in dir(inputs) if inspect.getmembers(getattr(inputs,atr))]
@@ -101,9 +103,9 @@ def Get_Noise(module,Wavelength,Scenarios):
                 }
     
     elif module== 'Photonics':
-        Func = {'Laser_source_noise'      : Qlunc_UQ_Photonics_func.UQ_LaserSource,
-                'Photodetector_noise'     : Qlunc_UQ_Photonics_func.UQ_Photodetector,
-                'Optical_amplifier_noise' : Qlunc_UQ_Photonics_func.UQ_Optical_amplifier 
+        Func = {'Laser_source_noise'      : UQ_Functions.Qlunc_UQ_Photonics_func.UQ_LaserSource,
+                'Photodetector_noise'     : UQ_Functions.Qlunc_UQ_Photonics_func.UQ_Photodetector,
+                'Optical_amplifier_noise' : UQ_Functions.Qlunc_UQ_Photonics_func.UQ_Optical_amplifier 
                 }
 #        if 'Optical_amplifier' in list(SA.flatten(user_inputs.user_icomponents)): 
 #            # For methods that we want them to appear in estimations although they´re not in the 'user_inputs.user_itype_noise'(user options) list, like the optical amplifier noise figure

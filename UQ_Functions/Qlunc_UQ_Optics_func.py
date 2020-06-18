@@ -5,9 +5,11 @@ Created on Sat May 16 14:58:24 2020
 @author: fcosta
 """
 
-#import LiUQ_inputs
 
-from Qlunc_ImportModules import *
+#import sys
+#sys.path.insert(0, direct.Main_directory)
+#from Qlunc_ImportModules import *
+#from Utils.Qlunc_ImportModules import *
 
 def UQ_Telescope(inputs,cts,direct,**Scenarios):
     UQ_telescope=[]

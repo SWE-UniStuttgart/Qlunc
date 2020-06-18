@@ -21,15 +21,17 @@ Created on Mon Apr 27 09:14:00 2020
 #%% Inputs:.
 
 #import Data:
-import pandas as pd
-import sys,inspect
-from functools import reduce
-from operator import getitem
-#import Qlunc_ImportModules
-#import Qlunc_Help_standAlone as SA
-flatten = lambda *n: (e for a in n for e in (flatten(*a) if isinstance(a, (list,tuple)) else (a,))) 
-import pdb
-# Which modules introduce incertalistinties?:
+import sys
+sys.path.insert(0, '../')
+from Utils.Qlunc_ImportModules import *
+#sys.path.insert(0, '../')
+#
+#import pandas as pd
+#
+#from functools import reduce
+#from operator import getitem
+#import pdb
+# Which modules introduce incertainties?:
 #flag_unc_Optical_amplifier     = True # if True I include Optical_amplifier uncertainty
 #flag_unc_photodetector = True # if True I include photodetector uncertainty
 #flag_unc_telescope     = True # if True I include telescope uncertainty
@@ -40,7 +42,7 @@ flag_plot_signal_noise  = True
 
 #%%Directories Class:
 class direct():
-    Main_directory = '../../GitHub_Qlunc/' # For now all data is stored here
+    Main_directory = '../' # For now all data is stored here
     Inputs         = Main_directory+'metadata/'
     Outputs        = Main_directory+'Outputs/'
 #%% Constants:

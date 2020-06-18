@@ -5,11 +5,8 @@ Created on Sat May 16 14:51:36 2020
 @author: fcosta
 """
 
+from Utils.Qlunc_ImportModules import *
 import Main.Qlunc_inputs
-import pandas as pd
-import scipy.interpolate as itp
-from   Utils.Qlunc_ImportModules import *
-import pdb
 import Utils.Qlunc_Help_standAlone as SA
 #%% PHOTODETECTOR
 def UQ_Photodetector(user_inputs,inputs,cts,direct,Wavelength,**Scenarios):
@@ -63,7 +60,7 @@ def UQ_Optical_amplifier(user_inputs,inputs,cts,direct,Wavelength,**Scenarios): 
             FigureNoise=Scenarios['Optical_amplifier_NF'][i_UQ_OA] #dB
 #            pdb.set_trace()
 
-            UQ_Optical_amplifier.append([10*np.log10((10**(FigureNoise/10))*cts.h*10**(Scenarios['Optical_amplifier_Gain'][i_UQ_OA]/10)*(cts.c/Wavelength[i_UQ_OA]))]) # ASE
+            UQ_Optical_amplifier.append([10*np.log10((10**(FigureNoise/10))*cts.h*(cts.c/Wavelength[i_UQ_OA])*10**(Scenarios['Optical_amplifier_Gain'][i_UQ_OA]/10))]) # ASE
 #    pdb.set_trace()
     return (UQ_Optical_amplifier) # convert to dB
 
@@ -72,7 +69,7 @@ def FigNoise(inputs,direct): # This is the Figure noise of the optical amplifier
     if isinstance (inputs.photonics_inp.Optical_amplifier_inputs['Optical_amplifier_noise']['Optical_amplifier_NF'], numbers.Number): #If user introduces a number or a table of values
         FigureNoise=inputs.photonics_inp.Optical_amplifier_inputs['Optical_amplifier_noise']['Optical_amplifier_NF']
     else:
-        NoiseFigure_DATA = pd.read_csv(direct.Main_directory+inputs.photonics_inp.Optical_amplifier_inputs['Optical_amplifier_noise']['Optical_amplifier_NF'],delimiter=';',decimal=',') #read from an excel file variation of dB with wavelength(for now just with wavelegth)
+        NoiseFigure_DATA = pd.read_csv(direct.Inputs+inputs.photonics_inp.Optical_amplifier_inputs['Optical_amplifier_noise']['Optical_amplifier_NF'],delimiter=';',decimal=',') #read from an excel file variation of dB with wavelength(for now just with wavelegth)
         FigureNoise = []
         for i_FN in range(len(inputs.lidar_inp.Lidar_inputs['Wavelength'])):
             figure_noise_INT  = itp.interp1d(NoiseFigure_DATA.iloc[:,0],NoiseFigure_DATA.iloc[:,1],kind='cubic',fill_value="extrapolate")# First column wavelength,second column Noise in dB
