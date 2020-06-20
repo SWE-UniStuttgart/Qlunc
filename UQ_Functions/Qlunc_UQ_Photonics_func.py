@@ -69,7 +69,7 @@ def FigNoise(inputs,direct): # This is the Figure noise of the optical amplifier
     if isinstance (inputs.photonics_inp.Optical_amplifier_inputs['Optical_amplifier_noise']['Optical_amplifier_NF'], numbers.Number): #If user introduces a number or a table of values
         FigureNoise=inputs.photonics_inp.Optical_amplifier_inputs['Optical_amplifier_noise']['Optical_amplifier_NF']
     else:
-        NoiseFigure_DATA = pd.read_csv(direct.Inputs+inputs.photonics_inp.Optical_amplifier_inputs['Optical_amplifier_noise']['Optical_amplifier_NF'],delimiter=';',decimal=',') #read from an excel file variation of dB with wavelength(for now just with wavelegth)
+        NoiseFigure_DATA = pd.read_csv(direct.Inputs_dir+inputs.photonics_inp.Optical_amplifier_inputs['Optical_amplifier_noise']['Optical_amplifier_NF'],delimiter=';',decimal=',') #read from an excel file variation of dB with wavelength(for now just with wavelegth)
         FigureNoise = []
         for i_FN in range(len(inputs.lidar_inp.Lidar_inputs['Wavelength'])):
             figure_noise_INT  = itp.interp1d(NoiseFigure_DATA.iloc[:,0],NoiseFigure_DATA.iloc[:,1],kind='cubic',fill_value="extrapolate")# First column wavelength,second column Noise in dB

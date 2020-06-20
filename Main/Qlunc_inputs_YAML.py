@@ -7,7 +7,7 @@ Created on Mon Apr 27 09:14:00 2020
 #%% Header:
 #04272020 - Francisco Costa
 #SWE - Stuttgart
-#LiUQ inputs for different modules:
+#Qlunc inputs for different modules:
 #Here the user can introduce parameters to calculate the uncertainty of the different modules and components.. Must be note units of the uncertainties: either dB or watts
 
 # Inputs:
@@ -33,7 +33,7 @@ from Utils.Qlunc_ImportModules import *
 flag_plot_signal_noise  = True
 
 #%% Reading from YAML file:
-with open (r'../GitHub_Qlunc/Main/Qlunc_inputs_YAML.yaml','r') as file:
+with open (r'Qlunc_inputs_YAML.yaml','r') as file:
     Qlunc_yaml_inputs={}
     docs = yaml.load_all(file, Loader=yaml.FullLoader)
     for doc in docs:      
@@ -42,8 +42,11 @@ with open (r'../GitHub_Qlunc/Main/Qlunc_inputs_YAML.yaml','r') as file:
 
 #%%Directories Class:
 class direct():
-    Main_directory=Qlunc_yaml_inputs['Main_directory'] # For now all data is stored here
-
+    Main_directory = Qlunc_yaml_inputs['Main_directory'] # For now all data is stored here
+    Inputs_dir         = Qlunc_yaml_inputs['Main_directory']+Qlunc_yaml_inputs['Inputs']
+    Outputs_dir         = Qlunc_yaml_inputs['Main_directory']+Qlunc_yaml_inputs['Outputs']
+class outputs():
+    HardwareU_DF_name= Qlunc_yaml_inputs['HardwareU_DF_name']
 #%% Constants:
 class cts():
     k = 1.38064852e-23 # Boltzman constant:[m^2 kg s^-2 K^-1]
@@ -54,16 +57,14 @@ class cts():
 
 #%% Inputs class where are stored all inputs:
 class inputs():
-    
-    
     modules = Qlunc_yaml_inputs['modules']
 #    DP      = ['los'] # data processing methods we want to assess
 
 #%% Atmospheric inputs:
     class atm_inp():
         if Qlunc_yaml_inputs['TimeSeries']:
-            AtmosphericScenarios_TS = pd.read_csv(direct.Main_directory+Qlunc_yaml_inputs['Atmos_TS_FILE'],delimiter=';',decimal=',')
-            pdb.set_trace()
+            AtmosphericScenarios_TS = pd.read_csv(direct.Main_directory+direct.Inputs+Qlunc_yaml_inputs['Atmos_TS_FILE'],delimiter=';',decimal=',')
+#            pdb.set_trace()
             Atmospheric_inputs={'temperature' : list(AtmosphericScenarios_TS.loc[:,'T']),
                                 'humidity'    : list(AtmosphericScenarios_TS.loc[:,'H']),
                                 'rain'        : list(AtmosphericScenarios_TS.loc[:,'rain']),

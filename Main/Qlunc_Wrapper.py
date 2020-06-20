@@ -15,8 +15,8 @@ import UQ_Functions.Qlunc_UQ_Optics_func
 import Utils.Qlunc_Help_standAlone as SA
 #%% From the initial classes want to take the dictionaries and their content to loop over the input method names and their values
 
-input_values_LOOP=[]
-input_values_LOOP2={}
+#input_values_LOOP=[]
+#input_values_LOOP2={}
 # Find the data want to loop over inside classes and nested classes:  
 #This if is because have to calculate the figure noise befeore passing it as a int parameter instead a string ()
 if 'Optical_amplifier_noise' in list(flatten(user_inputs.user_itype_noise)) and isinstance(inputs.photonics_inp.Optical_amplifier_inputs['Optical_amplifier_noise']['Optical_amplifier_NF'],str):
@@ -25,7 +25,7 @@ if 'Optical_amplifier_noise' in list(flatten(user_inputs.user_itype_noise)) and 
     
 inputs_attributes=[atr for atr in dir(inputs) if inspect.getmembers(getattr(inputs,atr))]
 inputs_attributes=list([a for a in inputs_attributes if not(a.startswith('__') and a.endswith('__'))]) # obtaining attributes from the class inputs 
-inputs_attributes=inputs_attributes[3:] # Only take component values, not modules, atmospheric nor general values
+inputs_attributes=inputs_attributes[3:] # Only take component values, not modules, atmospheric nor lidar general values
 res2={}
 for ind_ATR in inputs_attributes: 
     fd=eval('inputs.'+ind_ATR)

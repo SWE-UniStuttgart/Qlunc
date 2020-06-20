@@ -1,8 +1,11 @@
 # DIRECTORIES:------------------------------------------------------
 # Template for Qlunc inputs. Here we include a list of the inputs to run Qlunc (Quantification lidar uncertainties).
 
-Main_directory: '../GitHub_Qlunc/'
-Outputs: Main_directory+'Outputs/'
+Main_directory: ../
+Inputs: metadata/
+Outputs: Outputs/
+
+
 # MODULES-----------------------------------------------------------
 # Modules to include in estimations: Modules is a dictionary containing the lidar modules as a key. 
 # As values there is a nested dictionary containing components as keys and type of uncertainty as values.
@@ -42,7 +45,7 @@ modules:
 # ATMOSPHERIC INPUTS:-----------------------------------------------
 # Atmospheric_inputs to create the atmospheric scenarios
 
-TimeSeries    : True # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere (T, H, rain and fog) 
+TimeSeries    : False # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere (T, H, rain and fog) 
                      # If so we obtain a time series describing the noise implemented in the measurement.
 Atmos_TS_FILE : 'AtmosphericScenarios.csv'
 
@@ -85,20 +88,20 @@ Optical_amplifier_inputs:
 Photodetector_inputs:
     Photodetector_noise:
         Photodetector_Bandwidth:
-        - 1e9
+        - 1.0e9
         Photodetector_RL:
         - 50
         Photodetector_Efficiency:
         - 0.85
         Photodetector_DarkCurrent:
-        - 5e-9
+        - 5.0e-9
         Photodetector_Signal_power:
         - 0.001
     TIA_noise:
         Gain_TIA:
-        - 5e3
+        - 5.0e3
         V_noise_TIA:
-        - 160e-6
+        - 160.0e-6
 # ---
 
 # Laser_source inputs:
@@ -126,3 +129,7 @@ Photodetector_inputs:
     
     # Telescope_losses:
     # - 0.099
+---
+# Outputs:
+# NAme of the hardware uncerainties data frame:
+HardwareU_DF_name: 'Hardware_Uncertainties_DF_YAML'

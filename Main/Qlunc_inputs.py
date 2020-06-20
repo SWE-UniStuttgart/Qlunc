@@ -43,8 +43,10 @@ flag_plot_signal_noise  = True
 #%%Directories Class:
 class direct():
     Main_directory = '../' # For now all data is stored here
-    Inputs         = Main_directory+'metadata/'
-    Outputs        = Main_directory+'Outputs/'
+    Inputs_dir         = Main_directory+'metadata/'
+    Outputs_dir        = Main_directory+'Outputs/'
+class outputs():
+    HardwareU_DF_name= 'Hardware_Uncertainties_DF'
 #%% Constants:
 class cts():
     k = 1.38064852e-23 # Boltzman constant:[m^2 kg s^-2 K^-1]
@@ -60,11 +62,11 @@ class inputs():
     # Modules is a dictionary containing the lidar modules as a key. As values there is a nested dictionary containing components as keys and type of uncertainty as values.
     # Each of this values is related with a function which calculates this specific uncertainty. The relation between type of unc. and function calculating it is in LiUQ_core when defining methods.
     modules = {
-#               'Power'     : {'Power_source'      :['Power_source_noise'],                    # for now: 'power_source_noise',...
-#                              'Converter'         :['Converter_noise']},                     # for now:'converter_noise', 'converter_losses'...
-##    
-               'Photonics' : {'Photodetector'     :['Photodetector_noise'],                   # for now:'photodetector_noise'; May be include 'TIA_noise' if there is a transimpedance amplifier...
-                              'Optical_amplifier' :['Optical_amplifier_noise','TIA_noise']},#,                       #for now:  'Optical_amplifier_noise',... If user includes Optical_amplifier component in dictionary 'modules', figure noise is automatically included in calculations(if don't want to include it have to put 0 in 'Optical_amplifier_uncertainty_inputs')
+               'Power'     : {'Power_source'      :['Power_source_noise'],                    # for now: 'power_source_noise',...
+                              'Converter'         :['Converter_noise']},                     # for now:'converter_noise', 'converter_losses'...
+#    
+               'Photonics' : {'Photodetector'     :['Photodetector_noise','TIA_noise'],                   # for now:'photodetector_noise'; May be include 'TIA_noise' if there is a transimpedance amplifier...
+                              'Optical_amplifier' :['Optical_amplifier_noise']},#,                       #for now:  'Optical_amplifier_noise',... If user includes Optical_amplifier component in dictionary 'modules', figure noise is automatically included in calculations(if don't want to include it have to put 0 in 'Optical_amplifier_uncertainty_inputs')
 #                              'Laser_source'      :['Laser_source_noise']} ,                  # for now:'laser_source_noise',...
                               
 #               'Optics'    : {'Telescope'         :['Telescope_noise']   }                  # for now:'telescope_noise', 'telescope_losses'...
@@ -77,7 +79,7 @@ class inputs():
                           # If so we obtain a time series describing the noise implemented in the measurement.
         if TimeSeries:
             Atmos_TS_FILE           = 'AtmosphericScenarios.csv'
-            AtmosphericScenarios_TS = pd.read_csv(direct.Inputs+Atmos_TS_FILE,delimiter=';',decimal=',')
+            AtmosphericScenarios_TS = pd.read_csv(direct.Inputs_dir+Atmos_TS_FILE,delimiter=';',decimal=',')
             Atmospheric_inputs={
                                 'temperature' : list(AtmosphericScenarios_TS.loc[:,'T']),# [K]
                                 'humidity'    : list(AtmosphericScenarios_TS.loc[:,'H']),# [%]
@@ -98,14 +100,14 @@ class inputs():
 #        laser_input_power =  .001 #[W]
         
 #%% Power Modules inputs:
-#    class power_inp():
-#        PowerSource_inputs = {'Power_source_noise':{'Power_source_noise'       : [.8],
-#                                          'Power_source_OtherChanges': [.09]
-#                                          }}
-#        Converter_inputs   = {'Converter_noise':{'Converter_noise'          : [4],
-#                                          'Converter_OtherChanges'   : [.005885]},
-#                              'Converter_losses':{     'Converter_losses'    :[0.056]
-#                                          }}    
+    class power_inp():
+        PowerSource_inputs = {'Power_source_noise':{'Power_source_noise'       : [.8],
+                                          'Power_source_OtherChanges': [.09]
+                                          }}
+        Converter_inputs   = {'Converter_noise':{'Converter_noise'          : [4],
+                                          'Converter_OtherChanges'   : [.005885]},
+                              'Converter_losses':{     'Converter_losses'    :[0.056]
+                                          }}    
     
 #%% Photonics module inputs:
     class photonics_inp():
