@@ -97,9 +97,9 @@ def Get_Scenarios():
 def Get_Noise(module,Wavelength,Scenarios):    
     METHODS={}
     if module == 'Power':
-        Func = {'Power_source_noise' : Qlunc_UQ_Power_func.UQ_PowerSource,
-                'Converter_noise'    : Qlunc_UQ_Power_func.UQ_Converter,
-                'Converter_losses'   : Qlunc_UQ_Power_func.Losses_Converter,
+        Func = {'Power_source_noise' : UQ_Functions.Qlunc_UQ_Power_func.UQ_PowerSource,
+                'Converter_noise'    : UQ_Functions.Qlunc_UQ_Power_func.UQ_Converter,
+                'Converter_losses'   : UQ_Functions.Qlunc_UQ_Power_func.Losses_Converter,
                 }
     
     elif module== 'Photonics':

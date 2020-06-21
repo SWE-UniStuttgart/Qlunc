@@ -62,10 +62,10 @@ class inputs():
     # Modules is a dictionary containing the lidar modules as a key. As values there is a nested dictionary containing components as keys and type of uncertainty as values.
     # Each of this values is related with a function which calculates this specific uncertainty. The relation between type of unc. and function calculating it is in LiUQ_core when defining methods.
     modules = {
-               'Power'     : {'Power_source'      :['Power_source_noise'],                    # for now: 'power_source_noise',...
-                              'Converter'         :['Converter_noise']},                     # for now:'converter_noise', 'converter_losses'...
-#    
-               'Photonics' : {'Photodetector'     :['Photodetector_noise','TIA_noise'],                   # for now:'photodetector_noise'; May be include 'TIA_noise' if there is a transimpedance amplifier...
+#               'Power'     : {'Power_source'      :['Power_source_noise'],                    # for now: 'power_source_noise',...
+#                              'Converter'         :['Converter_noise']},                     # for now:'converter_noise', 'converter_losses'...
+##    
+               'Photonics' : {'Photodetector'     :['Photodetector_noise','TIA_noise'],                   # for now:'Photodetector_noise'; May be include 'TIA_noise' if there is a transimpedance amplifier...
                               'Optical_amplifier' :['Optical_amplifier_noise']},#,                       #for now:  'Optical_amplifier_noise',... If user includes Optical_amplifier component in dictionary 'modules', figure noise is automatically included in calculations(if don't want to include it have to put 0 in 'Optical_amplifier_uncertainty_inputs')
 #                              'Laser_source'      :['Laser_source_noise']} ,                  # for now:'laser_source_noise',...
                               
@@ -75,7 +75,7 @@ class inputs():
 
 #%% Atmospheric inputs:
     class atm_inp():
-        TimeSeries=True  # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere (T, H, rain and fog) 
+        TimeSeries=False  # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere (T, H, rain and fog) 
                           # If so we obtain a time series describing the noise implemented in the measurement.
         if TimeSeries:
             Atmos_TS_FILE           = 'AtmosphericScenarios.csv'
@@ -88,14 +88,14 @@ class inputs():
                                 'time'        : list(AtmosphericScenarios_TS.loc[:,'t'])#for rain and fog intensity intervals might be introduced [none,low, medium high]
                                 } 
         else:    
-            Atmospheric_inputs={'temperature' : [300,325], # [K] HAve to put the same number of elements for temperature and humidity. Always in paired values [T,H]
-                                'humidity'    : [12,12],      # [%]
+            Atmospheric_inputs={'temperature' : [300], # [K] HAve to put the same number of elements for temperature and humidity. Always in paired values [T,H]
+                                'humidity'    : [12],      # [%]
 #                                'rain'        : [True],
 #                                'fog'         : [False]
                                 }#for rain and fog intensity intervals might be introduced [none,low, medium high]
 #%% General lidar layout inputs:
     class lidar_inp():
-        Lidar_inputs = {'Wavelength' : [1550e-9,1565e-9],'Laser_power':[2]} # (wave:[m],Laser_power: [mW])
+        Lidar_inputs = {'Wavelength' : [1550e-9],'Laser_power':[2]} # (wave:[m],Laser_power: [mW])
 #        BW=  #Band width (MHz)
 #        laser_input_power =  .001 #[W]
         
