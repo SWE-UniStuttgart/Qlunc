@@ -1,7 +1,8 @@
 # Don't keep this files:
-*.csv
+
 *.xlsx
 *.png
+*.txt
 
 # Ignore specific files:
 I_D.pickle
@@ -10,3 +11,6 @@ untitled0.py
 Noise_Photodetector_TEST.py
 Qlunc_NoteBook-checkpoint.ipynb
 
+# Ignore specific folders:
+Figures/
+OldVersion_Qlunc/
