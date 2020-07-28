@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Jun 20 14:15:24 2020
-
+Francisco Costa - SWE
+Here we calculate the uncertainties related with components in the photonics module
 @author: fcosta
 """
 from Qlunc_ImportModules import *
@@ -22,7 +23,7 @@ def UQ_Photodetector(Lidar, Atmospheric_Scenario,cts):
     UQ_Photodetector.TIA_noise=[]
     R = Lidar.photonics.photodetector.Efficiency*cts.e*Lidar.lidar_inputs.Wavelength/(cts.h*cts.c)  #[W/A]  Responsivity
     UQ_Photodetector.Responsivity = (R) # this notation allows me to get Responsivity from outside of the function 
-
+    '''#Where are these noise definintions coming from (reference in literature)?'''
     for i in range(len(Atmospheric_Scenario.temperature)):
         # Photodetector Thermal noise
         UQ_Photodetector.Thermal_noise.append(4*cts.k*Atmospheric_Scenario.temperature[i]/Lidar.photonics.photodetector.RL*Lidar.photonics.photodetector.BandWidth) #[dBm]
@@ -55,7 +56,7 @@ def UQ_Optical_amplifier(Lidar,Atmospheric_Scenario,cts): # Calculating ASE - Am
     try:
     # obtain SNR from figure noise or pass directly numerical value:
         if isinstance (Lidar.photonics.optical_amp.NoiseFig, numbers.Number): #If user introduces a number or a table of values
-            FigureNoise=[Lidar.photonics.optical_amp.NoiseFig]*len(Atmospheric_Scenario.temperature)
+            FigureNoise=[Lidar.photonics.optical_amp.NoiseFig]*len(Atmospheric_Scenario.temperature) #Figure noise vector
         else:
             NoiseFigure_DATA = pd.read_csv(Lidar.photonics.optical_amp.NoiseFig,delimiter=';',decimal=',') #read from a .csv file variation of dB with wavelength (for now just with wavelength)    
             figure_noise_INT  = itp.interp1d(NoiseFigure_DATA.iloc[:,0],NoiseFigure_DATA.iloc[:,1],kind='cubic',fill_value="extrapolate")# First column wavelength,second column SNR in dB
@@ -67,9 +68,9 @@ def UQ_Optical_amplifier(Lidar,Atmospheric_Scenario,cts): # Calculating ASE - Am
         print('No Optical Amplifier implemented')
     return UQ_Optical_amplifier
 
-#%% Sum of components in photonics module
+#%% Sum of uncertainty components in photonics module: 
 def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts): 
-    try: # ecah try/except evaluates wether the component is included
+    try: # ecah try/except evaluates wether the component is included in the module, therefore in the calculations
 #        if Photodetector_Uncertainty not in locals():
         Photodetector_Uncertainty=Lidar.photonics.photodetector.Uncertainty(Lidar,Atmospheric_Scenario,cts)
     except:

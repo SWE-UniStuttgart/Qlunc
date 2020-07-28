@@ -31,7 +31,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts):
     vec_stdv_phis   = Lidar.optics.scanner.focus_dist*Lidar.optics.scanner.stdv_phi/np.max(Lidar.optics.scanner.focus_dist)    
     
     # Pointing accuracy:
-    # Jacobian Method:
+    # Jacobian Method:#######################
     dxdrho   = np.cos(np.deg2rad(Lidar.optics.scanner.phi))*np.sin(np.deg2rad(Lidar.optics.scanner.theta))
     dxdtheta = rho*np.cos(np.deg2rad(Lidar.optics.scanner.phi))*np.cos(np.deg2rad(Lidar.optics.scanner.theta))
     dxdphi   = -(rho*np.sin(np.deg2rad(Lidar.optics.scanner.phi))*np.sin(np.deg2rad(Lidar.optics.scanner.theta)))
@@ -48,7 +48,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts):
                 [dydrho[0][0],dydtheta[0][0],dydphi[0][0]],
                 [dzdrho[0],dzdtheta[0],float(dzdphi)]])
 #    deJ=np.linalg.det(J)
-    pdb.set_trace()
+#    pdb.set_trace()
+    #########################
+    
     varianceSph = np.array([Lidar.optics.scanner.stdv_focus_dist,vec_stdv_thetas,vec_stdv_phis])**2
     
     Cart_errorPoints=np.sqrt(np.diag((J.dot(varianceSph)).dot(J.T)))  # Error in transformation
@@ -60,7 +62,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts):
     
     x,y,z = SA.sph2cart(Lidar,rho,Lidar.optics.scanner.theta,Lidar.optics.scanner.phi)
 
-    # Variance:
+    # Variance: (REFERENCE here!!)
     var_x = (x*(np.sqrt((Lidar.optics.scanner.stdv_focus_dist/rho)**2+(Lidar.optics.scanner.stdv_theta/Lidar.optics.scanner.theta)**2+(Lidar.optics.scanner.stdv_phi/Lidar.optics.scanner.phi)**2)))**2# Formula from QUAM_2012
     var_y = (y*(np.sqrt((Lidar.optics.scanner.stdv_focus_dist/rho)**2+(Lidar.optics.scanner.stdv_theta/Lidar.optics.scanner.theta)**2+(Lidar.optics.scanner.stdv_phi/Lidar.optics.scanner.phi)**2)))**2
     var_z = (z*(np.sqrt((Lidar.optics.scanner.stdv_focus_dist/rho)**2+(Lidar.optics.scanner.stdv_theta/Lidar.optics.scanner.theta)**2+(Lidar.optics.scanner.stdv_phi/Lidar.optics.scanner.phi)**2)))**2
@@ -68,8 +70,8 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts):
     mean_stdv_x = np.sqrt(np.mean(var_x[0,1:])) ## FIX here
     mean_stdv_y = np.sqrt(np.mean(var_y[0,1:]))
     mean_stdv_z = np.sqrt(np.mean(var_z[0,1:]))
-#    stdv_total=np.sqrt((var_x)+(var_y)+(var_z))
-
+    stdv_total=np.sqrt((var_x)+(var_y)+(var_z))
+    stdv_p_accuracy=np.mean(np.sqrt(mean_stdv_x**2+mean_stdv_y**2+mean_stdv_z**2))
     # White Noise:
     del_x = np.array(np.random.normal(0,mean_stdv_x,len(Lidar.optics.scanner.phi[0])))
     del_y = np.array(np.random.normal(0,mean_stdv_y,len(Lidar.optics.scanner.phi[0])))
@@ -77,9 +79,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts):
     X     = x + del_x
     Y     = y + del_y
     Z     = z + del_z
-    stdv_p_accuracy=np.mean(np.sqrt(mean_stdv_x**2+mean_stdv_y**2+mean_stdv_z**2))
-#    pdb.set_trace()
-
+    
+    pdb.set_trace()
+    Pointing_accuracy=np.sqrt((Lidar.optics.scanner.stdv_focus_dist)**2+(Lidar.optics.scanner.stdv_theta)**2+(Lidar.optics.scanner.stdv_phi)**2)
     return X,Y,Z,stdv_p_accuracy
 
 

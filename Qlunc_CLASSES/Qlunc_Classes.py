@@ -56,7 +56,7 @@ class photodetector():
         self.Gain_TIA         = G_TIA
         self.V_Noise_TIA      = V_noise_TIA
         self.Uncertainty      = unc_func
-
+        print(' Created: {}'.format(self.PhotodetectorID))
 class optical_amplifier():
     def __init__(self,name,OA_NF,OA_Gain,unc_func):
         self.Optical_AmplifierID = name
@@ -317,55 +317,57 @@ class lidar():
 #Lidar_XR=xr.DataArray.from_dict(Lidar, ('name','modules','Lidar_inputs','Photodetector_inputs','Optical_amplifier_inputs')) #  transform in xarray
     
 #%% Plotting:
-
+flag_plot=0
 # Plot parameters:
-plot_param={'axes_label_fontsize' : 13,
-            'title_fontsize'      : 23,
-            'legend_fontsize'     : 12,
-            'xlim'                : [-10,10],
-            'ylim'                : [-10,10],
-            'zlim'                : [0,100],
-            'markersize'          : 5,
-            'marker'              : 'o',
-            'tick_labelrotation'  : 45}
-# Scanner pointing accuracy uncertainty:
-Unc1=Lidar1.optics.scanner.Uncertainty(Lidar1,Atmospheric_Scenario,cts)
-Unc2=Lidar2.optics.scanner.Uncertainty(Lidar2,Atmospheric_Scenario,cts) 
-Unc3=Lidar3.optics.scanner.Uncertainty(Lidar3,Atmospheric_Scenario,cts)     
-
-
-
-ax=plt.axes(projection='3d')
-ax.plot((Unc1[0][0]),(Unc1[1][0]),(Unc1[2]),plot_param['marker'],markersize=6.5,label='Theoretic measuring point')
-ax.plot3D((Unc2[0][0]),(Unc2[1][0]),(Unc2[2]),plot_param['marker'],markersize=plot_param['markersize'],label='Low uncertainty ($stdv [m]$ = {})'.format(round(Unc2[3],2)))
-ax.plot((Unc3[0][0]),(Unc3[1][0]),(Unc3[2]),plot_param['marker'],markersize=plot_param['markersize'],label='High uncertainty($stdv$ [m]= {})'.format(round(Unc3[3],2)))
-
-ax.plot3D([0],[0],[0],'ob',label='{}'.format('Lidar'),markersize=9)
-
-ax.set_xlabel('x [m]',fontsize=plot_param['axes_label_fontsize'])#,orientation=plot_param['tick_labelrotation'])
-ax.set_ylabel('y [m]',fontsize=plot_param['axes_label_fontsize'])#,orientation=plot_param['tick_labelrotation'])
-ax.set_zlabel('z [m]',fontsize=plot_param['axes_label_fontsize'])
-
-ax.set_title('Qlunc Scanner UQ',fontsize=plot_param['title_fontsize'])
-
-ax.set_xlim3d(plot_param['xlim'][0],plot_param['xlim'][1])
-ax.set_ylim3d(plot_param['ylim'][0],plot_param['ylim'][1])
-ax.set_zlim3d(plot_param['zlim'][0],plot_param['zlim'][1])
-plt.rcParams['legend.fontsize'] = plot_param['legend_fontsize']
-
-ax.legend('stdv focus distance  {}'.format(stdv_focus_dist))
-
-
-
-
-#
-#params = {'legend.fontsize': 'x-large',
-#          'figure.figsize': (15, 5),
-#         'axes.labelsize': 'x-large',
-#         'axes.titlesize':'x-large',
-#         'xtick.labelsize':'x-large',
-#         'ytick.labelsize':'x-large'}
-#pylab.rcParams.update(params)
-#ax.set_legend('stdv_rho  {}'.format(stdv_rho))
-#ax.quiver(*origin,xcart,ycart,zcart)
-#    
+if flag_plot==1:
+    
+    plot_param={'axes_label_fontsize' : 13,
+                'title_fontsize'      : 23,
+                'legend_fontsize'     : 12,
+                'xlim'                : [-10,10],
+                'ylim'                : [-10,10],
+                'zlim'                : [0,100],
+                'markersize'          : 5,
+                'marker'              : 'o',
+                'tick_labelrotation'  : 45}
+    # Scanner pointing accuracy uncertainty:
+    Unc1=Lidar1.optics.scanner.Uncertainty(Lidar1,Atmospheric_Scenario,cts)
+    Unc2=Lidar2.optics.scanner.Uncertainty(Lidar2,Atmospheric_Scenario,cts) 
+    Unc3=Lidar3.optics.scanner.Uncertainty(Lidar3,Atmospheric_Scenario,cts)     
+    
+    
+    
+    ax=plt.axes(projection='3d')
+    ax.plot((Unc1[0][0]),(Unc1[1][0]),(Unc1[2]),plot_param['marker'],markersize=6.5,label='Theoretic measuring point')
+    ax.plot3D((Unc2[0][0]),(Unc2[1][0]),(Unc2[2]),plot_param['marker'],markersize=plot_param['markersize'],label='Low uncertainty ($stdv [m]$ = {})'.format(round(Unc2[3],2)))
+    ax.plot((Unc3[0][0]),(Unc3[1][0]),(Unc3[2]),plot_param['marker'],markersize=plot_param['markersize'],label='High uncertainty($stdv$ [m]= {})'.format(round(Unc3[3],2)))
+    
+    ax.plot3D([0],[0],[0],'ob',label='{}'.format('Lidar'),markersize=9)
+    
+    ax.set_xlabel('x [m]',fontsize=plot_param['axes_label_fontsize'])#,orientation=plot_param['tick_labelrotation'])
+    ax.set_ylabel('y [m]',fontsize=plot_param['axes_label_fontsize'])#,orientation=plot_param['tick_labelrotation'])
+    ax.set_zlabel('z [m]',fontsize=plot_param['axes_label_fontsize'])
+    
+    ax.set_title('Qlunc Scanner UQ',fontsize=plot_param['title_fontsize'])
+    
+    ax.set_xlim3d(plot_param['xlim'][0],plot_param['xlim'][1])
+    ax.set_ylim3d(plot_param['ylim'][0],plot_param['ylim'][1])
+    ax.set_zlim3d(plot_param['zlim'][0],plot_param['zlim'][1])
+    plt.rcParams['legend.fontsize'] = plot_param['legend_fontsize']
+    
+    ax.legend('stdv focus distance  {}'.format(stdv_focus_dist))
+    
+    
+    
+    
+    #
+    #params = {'legend.fontsize': 'x-large',
+    #          'figure.figsize': (15, 5),
+    #         'axes.labelsize': 'x-large',
+    #         'axes.titlesize':'x-large',
+    #         'xtick.labelsize':'x-large',
+    #         'ytick.labelsize':'x-large'}
+    #pylab.rcParams.update(params)
+    #ax.set_legend('stdv_rho  {}'.format(stdv_rho))
+    #ax.quiver(*origin,xcart,ycart,zcart)
+    #    

@@ -119,8 +119,8 @@ Power_Module     = power(name         = 'PowerMod1',
 
 ########## Lidar general inputs #########################:
 Lidar_inputs     = lidar_gral_inp(name        = 'Gral_inp1', 
-                                  wave        = 1550e-9,
-                                  sample_rate = 2)
+                                  wave        = 1550e-9, 
+                                  sample_rate = 2) # Hz
 
 
 ##########  LIDAR  #####################################
