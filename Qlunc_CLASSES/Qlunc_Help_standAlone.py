@@ -86,15 +86,16 @@ def Get_DataFrame(H_UQ,Temperature):
 
 
 #%% Spherical into cartesian  coordinate transformation
-def sph2cart(Lidar,rho, theta,phi): 
+def sph2cart(Lidar): 
 #    pdb.set_trace()
     x=[]
     y=[]
     z=[]
-    for i in range(len(rho)):
-        x=rho[i]*np.cos(np.deg2rad(Lidar.optics.scanner.phi))*np.sin(np.deg2rad(Lidar.optics.scanner.theta))
-        y=rho[i]*np.sin(np.deg2rad(Lidar.optics.scanner.phi))*np.sin(np.deg2rad(Lidar.optics.scanner.theta)) 
-        z=rho[i]*np.cos(np.deg2rad(Lidar.optics.scanner.theta)) 
+    
+    for i in range(len(Lidar.optics.scanner.focus_dist)):
+        x=Lidar.optics.scanner.focus_dist[i]*np.cos(np.deg2rad(Lidar.optics.scanner.phi))*np.sin(np.deg2rad(Lidar.optics.scanner.theta))
+        y=Lidar.optics.scanner.focus_dist[i]*np.sin(np.deg2rad(Lidar.optics.scanner.phi))*np.sin(np.deg2rad(Lidar.optics.scanner.theta)) 
+        z=Lidar.optics.scanner.focus_dist[i]*np.cos(np.deg2rad(Lidar.optics.scanner.theta)) 
     return(x,y,z)
 
     # POLARS:

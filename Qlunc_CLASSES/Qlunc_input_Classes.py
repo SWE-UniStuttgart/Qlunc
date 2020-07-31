@@ -23,35 +23,35 @@ Example: ....
 
 Scanner1          = scanner(name           = 'Scan1',
                            origin          = [0,0,0], #Origin
-                           focus_dist      = 80,
+                           focus_dist      = np.array([80]),
                            sample_rate     = 10,
-                           theta           = np.array([5]),
+                           theta           = np.array([7]),
                            phi             = np.array([np.arange(0,360,10)]) ,
                            stdv_focus_dist = 0.0,
                            stdv_theta      = 0.0,
                            stdv_phi        = 0.0,
                            unc_func        = uopc.UQ_Scanner)       
 
-Scanner2          = scanner(name            = 'Scan2',
+Scanner2          = scanner(name           = 'Scan2',
                            origin          = [0,0,0], #Origin
-                           focus_dist      = 80,
+                           focus_dist      = np.array([80]),
                            sample_rate     = 10,
-                           theta           = np.array([5]),
+                           theta           = np.array([7]),
                            phi             = np.array([np.arange(0,360,10)]) ,
-                           stdv_focus_dist = 0.9,
-                           stdv_theta      = 0.1,
-                           stdv_phi        = 0.1,
+                           stdv_focus_dist = .001,
+                           stdv_theta      = 0.05,
+                           stdv_phi        = 0.01,
                            unc_func        = uopc.UQ_Scanner)       
 
 Scanner3          = scanner(name           = 'Scan3',
                            origin          = [0,0,0], #Origin
-                           focus_dist      = 80,
+                           focus_dist      = np.array([80]),
                            sample_rate     = 10,
-                           theta           = np.array([5]),
+                           theta           = np.array([7]),
                            phi             = np.array([np.arange(0,360,10)]) ,
-                           stdv_focus_dist = 1.4,
-                           stdv_theta      = 0.8,
-                           stdv_phi        = 0.87,
+                           stdv_focus_dist = .001,
+                           stdv_theta      = 2,
+                           stdv_phi        = 1,
                            unc_func        = uopc.UQ_Scanner)       
 
 
@@ -164,3 +164,59 @@ else:
 
     Atmospheric_Scenario=atmosphere(name        = 'Atmosphere1',
                                     temperature = [300])
+
+#%% Plotting:
+flag_plot=1
+# Plot parameters:
+if flag_plot==1:
+    
+    plot_param={'axes_label_fontsize' : 13,
+                'title_fontsize'      : 23,
+                'legend_fontsize'     : 12,
+                'xlim'                : [-30,30],
+                'ylim'                : [-30,30],
+                'zlim'                : [0,150],
+                'markersize'          : 5,
+                'marker'              : 'o',
+                'tick_labelrotation'  : 45}
+    # Scanner pointing accuracy uncertainty:
+    Unc1=Lidar1.optics.scanner.Uncertainty(Lidar1,Atmospheric_Scenario,cts)
+    Unc2=Lidar2.optics.scanner.Uncertainty(Lidar2,Atmospheric_Scenario,cts) 
+    Unc3=Lidar3.optics.scanner.Uncertainty(Lidar3,Atmospheric_Scenario,cts)     
+    
+    
+    
+    ax=plt.axes(projection='3d')
+    ax.plot((Unc1[0][0]),(Unc1[1][0]),(Unc1[2]),plot_param['marker'],markersize=6.5,label='Theoretic measuring point')
+    ax.plot((Unc2[0][0]),(Unc2[1][0]),(Unc2[2]),plot_param['marker'],markersize=plot_param['markersize'],label='Low uncertainty ($stdv [m]$ = {})'.format(round(Unc2[3],2)))
+    ax.plot((Unc3[0][0]),(Unc3[1][0]),(Unc3[2]),plot_param['marker'],markersize=plot_param['markersize'],label='High uncertainty($stdv$ [m]= {})'.format(round(Unc3[3],2)))
+    
+    ax.plot([0],[0],[0],'ob',label='{}'.format('Lidar'),markersize=9)
+    
+    ax.set_xlabel('x [m]',fontsize=plot_param['axes_label_fontsize'])#,orientation=plot_param['tick_labelrotation'])
+    ax.set_ylabel('y [m]',fontsize=plot_param['axes_label_fontsize'])#,orientation=plot_param['tick_labelrotation'])
+    ax.set_zlabel('z [m]',fontsize=plot_param['axes_label_fontsize'])
+    
+    ax.set_title('Pointing accuraccy',fontsize=plot_param['title_fontsize'])
+    
+    ax.set_xlim3d(plot_param['xlim'][0],plot_param['xlim'][1])
+    ax.set_ylim3d(plot_param['ylim'][0],plot_param['ylim'][1])
+    ax.set_zlim3d(plot_param['zlim'][0],plot_param['zlim'][1])
+#    plt.rcParams['legend.fontsize'] = plot_param['legend_fontsize']
+    
+#    ax.legend('stdv focus distance  {}'.format(stdv_focus_dist))
+    
+    
+    
+    
+    #
+    #params = {'legend.fontsize': 'x-large',
+    #          'figure.figsize': (15, 5),
+    #         'axes.labelsize': 'x-large',
+    #         'axes.titlesize':'x-large',
+    #         'xtick.labelsize':'x-large',
+    #         'ytick.labelsize':'x-large'}
+    #pylab.rcParams.update(params)
+    #ax.set_legend('stdv_rho  {}'.format(stdv_rho))
+    #ax.quiver(*origin,xcart,ycart,zcart)
+    #    
