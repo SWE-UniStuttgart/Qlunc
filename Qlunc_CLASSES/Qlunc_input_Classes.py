@@ -23,13 +23,13 @@ Example: ....
 
 Scanner1          = scanner(name           = 'Scan1',
                            origin          = [0,0,0], #Origin
-                           focus_dist      = np.array([80]),
+                           focus_dist      = np.array([500,600,750,950,1250,1550,2100, 2950,3700]),
                            sample_rate     = 10,
-                           theta           = np.array([7]),
-                           phi             = np.array([np.arange(0,360,10)]) ,
-                           stdv_focus_dist = 0.0,
-                           stdv_theta      = 0.0,
-                           stdv_phi        = 0.0,
+                           theta           = np.array([0]*9),
+                           phi             = np.arange(0,360,40) ,
+                           stdv_focus_dist = 0.04,
+                           stdv_theta      = 0.01,
+                           stdv_phi        = 0.01,
                            unc_func        = uopc.UQ_Scanner)       
 
 Scanner2          = scanner(name           = 'Scan2',
@@ -37,7 +37,7 @@ Scanner2          = scanner(name           = 'Scan2',
                            focus_dist      = np.array([80]),
                            sample_rate     = 10,
                            theta           = np.array([7]),
-                           phi             = np.array([np.arange(0,360,10)]) ,
+                           phi             = np.array([45]) ,
                            stdv_focus_dist = .001,
                            stdv_theta      = 0.05,
                            stdv_phi        = 0.01,
@@ -45,13 +45,13 @@ Scanner2          = scanner(name           = 'Scan2',
 
 Scanner3          = scanner(name           = 'Scan3',
                            origin          = [0,0,0], #Origin
-                           focus_dist      = np.array([80]),
+                           focus_dist      = np.array([80]*36),
                            sample_rate     = 10,
-                           theta           = np.array([7]),
-                           phi             = np.array([np.arange(0,360,10)]) ,
-                           stdv_focus_dist = .001,
-                           stdv_theta      = 2,
-                           stdv_phi        = 1,
+                           theta           = np.array([7]*36),
+                           phi             = np.arange(0,360,10) ,
+                           stdv_focus_dist = .1,
+                           stdv_theta      = .2,
+                           stdv_phi        = .1,
                            unc_func        = uopc.UQ_Scanner)       
 
 
@@ -166,7 +166,7 @@ else:
                                     temperature = [300])
 
 #%% Plotting:
-flag_plot=1
+flag_plot=0
 # Plot parameters:
 if flag_plot==1:
     
@@ -180,32 +180,43 @@ if flag_plot==1:
                 'marker'              : 'o',
                 'tick_labelrotation'  : 45}
     # Scanner pointing accuracy uncertainty:
-    Unc1=Lidar1.optics.scanner.Uncertainty(Lidar1,Atmospheric_Scenario,cts)
-    Unc2=Lidar2.optics.scanner.Uncertainty(Lidar2,Atmospheric_Scenario,cts) 
-    Unc3=Lidar3.optics.scanner.Uncertainty(Lidar3,Atmospheric_Scenario,cts)     
+#    Distance1,Stdv1=Lidar1.optics.scanner.Uncertainty(Lidar1,Atmospheric_Scenario,cts)
+    Distance3,Stdv3=Lidar3.optics.scanner.Uncertainty(Lidar3,Atmospheric_Scenario,cts)
+#    Unc2=Lidar2.optics.scanner.Uncertainty(Lidar2,Atmospheric_Scenario,cts) 
+#    Unc3=Lidar3.optics.scanner.Uncertainty(Lidar3,Atmospheric_Scenario,cts)     
     
     
     
-    ax=plt.axes(projection='3d')
-    ax.plot((Unc1[0][0]),(Unc1[1][0]),(Unc1[2]),plot_param['marker'],markersize=6.5,label='Theoretic measuring point')
-    ax.plot((Unc2[0][0]),(Unc2[1][0]),(Unc2[2]),plot_param['marker'],markersize=plot_param['markersize'],label='Low uncertainty ($stdv [m]$ = {})'.format(round(Unc2[3],2)))
-    ax.plot((Unc3[0][0]),(Unc3[1][0]),(Unc3[2]),plot_param['marker'],markersize=plot_param['markersize'],label='High uncertainty($stdv$ [m]= {})'.format(round(Unc3[3],2)))
+#    ax=plt.axes(projection='3d')
+    ax=plt.axes()
+#    ax.plot.errorbar(Lidar1.optics.scanner.focus_dist,,plot_param['marker'],markersize=6.5,label='stdv Distance')
     
-    ax.plot([0],[0],[0],'ob',label='{}'.format('Lidar'),markersize=9)
+    z = np.polyfit(Lidar3.optics.scanner.focus_dist, Distance3, 1) # With '1' is a straight line y=ax+b
+    f = np.poly1d(z)
+    # calculate new x's and y's
+    x_new = np.linspace(Lidar3.optics.scanner.focus_dist[0], Lidar3.optics.scanner.focus_dist[-1], 50)
+    y_new = f(x_new)
+    plt.plot(x_new,y_new,'r-',label='Fitted curve')
+    plt.errorbar(Lidar3.optics.scanner.focus_dist,Distance3,yerr=Stdv3,label='Data')
     
-    ax.set_xlabel('x [m]',fontsize=plot_param['axes_label_fontsize'])#,orientation=plot_param['tick_labelrotation'])
-    ax.set_ylabel('y [m]',fontsize=plot_param['axes_label_fontsize'])#,orientation=plot_param['tick_labelrotation'])
-    ax.set_zlabel('z [m]',fontsize=plot_param['axes_label_fontsize'])
+    #    ax.plot((Lidar1.optics.scanner.[0][0]),(Unc2[1][0]),(Unc2[2]),plot_param['marker'],markersize=plot_param['markersize'],label='Low uncertainty ($stdv [m]$ = {})'.format(round(Unc2[3],2)))
+#    ax.plot((Lidar1.optics.scanner.[0][0]),(Unc3[1][0]),(Unc3[2]),plot_param['marker'],markersize=plot_param['markersize'],label='High uncertainty($stdv$ [m]= {})'.format(round(Unc3[3],2)))
     
-    ax.set_title('Pointing accuraccy',fontsize=plot_param['title_fontsize'])
+#    ax.plot([0],[0],[0],'ob',label='{}'.format('Lidar'),markersize=9)
     
-    ax.set_xlim3d(plot_param['xlim'][0],plot_param['xlim'][1])
-    ax.set_ylim3d(plot_param['ylim'][0],plot_param['ylim'][1])
-    ax.set_zlim3d(plot_param['zlim'][0],plot_param['zlim'][1])
+    ax.set_xlabel('Focus Distance [m]',fontsize=plot_param['axes_label_fontsize'])#,orientation=plot_param['tick_labelrotation'])
+    ax.set_ylabel('Pointing accuracy [m]',fontsize=plot_param['axes_label_fontsize'])#,orientation=plot_param['tick_labelrotation'])
+#    ax.set_zlabel('z [m]',fontsize=plot_param['axes_label_fontsize'])
+    
+    ax.set_title('Pointing accuracy Vs Focus Distance',fontsize=plot_param['title_fontsize'])
+    ax.legend()
+    ax.text(np.min(x_new),np.max(y_new),'$y$={0:.3g}$x$+{1:.3g}'.format(z[0],z[1]))
+#    ax.set_xlim3d(plot_param['xlim'][0],plot_param['xlim'][1])
+#    ax.set_ylim3d(plot_param['ylim'][0],plot_param['ylim'][1])
+#    ax.set_zlim3d(plot_param['zlim'][0],plot_param['zlim'][1])
 #    plt.rcParams['legend.fontsize'] = plot_param['legend_fontsize']
     
-#    ax.legend('stdv focus distance  {}'.format(stdv_focus_dist))
-    
+   
     
     
     
