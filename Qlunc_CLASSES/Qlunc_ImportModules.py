@@ -13,6 +13,7 @@ import scipy.interpolate as itp
 import pandas as pd
 import numbers
 import pdb
+from scipy.optimize import curve_fit
 #import pickle # for GUI
 import itertools
 import functools
@@ -22,3 +23,4 @@ from functools import reduce
 from operator import getitem
 import time
 import yaml
+import pylab

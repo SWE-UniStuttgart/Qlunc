@@ -38,7 +38,7 @@ def Sum_dB(W_data,*args,**kwargs):
     return list (flatten(Sum_decibels))
 
 #%% Combine uncertainties:
-def unc_comb(data): # data is provided as list of elements want to add on
+def unc_comb(data): # data is provided as list of elements want to add on. Data is expected to be in watts
     sqr=[]    
     sqr_db=[]
     Array=(np.array(data)) 
@@ -49,8 +49,8 @@ def unc_comb(data): # data is provided as list of elements want to add on
             sq.append(Array[ii,i]**2) # make the square of each value
         sqr.append(np.sqrt(sum(sq))) #Sqrt of the values in the column
     for i_w in sqr:
-        sqr_db.append(10*np.log10(i_w))
-    return sqr_db
+        sqr_db.append(10*np.log10(i_w)) # en dB
+    return sqr_db #The function offer both results, in watts and in dB
 # %% Getting data frame:
     
 def Get_DataFrame(H_UQ,Temperature):  
@@ -86,15 +86,16 @@ def Get_DataFrame(H_UQ,Temperature):
 
 
 #%% Spherical into cartesian  coordinate transformation
-def sph2cart(Lidar,rho, theta,phi): 
+def sph2cart(Lidar): 
 #    pdb.set_trace()
     x=[]
     y=[]
     z=[]
-    for i in range(len(rho)):
-        x=rho[i]*np.cos(np.deg2rad(Lidar.optics.scanner.phi))*np.sin(np.deg2rad(Lidar.optics.scanner.theta))
-        y=rho[i]*np.sin(np.deg2rad(Lidar.optics.scanner.phi))*np.sin(np.deg2rad(Lidar.optics.scanner.theta)) 
-        z=rho[i]*np.cos(np.deg2rad(Lidar.optics.scanner.theta)) 
+    
+    for i in range(len(Lidar.optics.scanner.focus_dist)):
+        x=Lidar.optics.scanner.focus_dist[i]*np.cos(np.deg2rad(Lidar.optics.scanner.phi))*np.sin(np.deg2rad(Lidar.optics.scanner.theta))
+        y=Lidar.optics.scanner.focus_dist[i]*np.sin(np.deg2rad(Lidar.optics.scanner.phi))*np.sin(np.deg2rad(Lidar.optics.scanner.theta)) 
+        z=Lidar.optics.scanner.focus_dist[i]*np.cos(np.deg2rad(Lidar.optics.scanner.theta)) 
     return(x,y,z)
 
     # POLARS:
