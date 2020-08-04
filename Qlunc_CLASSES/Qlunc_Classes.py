@@ -24,6 +24,7 @@ from Qlunc_ImportModules import *
 import UQ_Photonics_Classes as uphc
 import UQ_Power_Classes as upwc
 import UQ_Optics_Classes as uopc
+import UQ_Lidar_Classes as ulc
 #import pandas as pd
 #import numpy as np
 #import pdb
@@ -56,21 +57,21 @@ class photodetector():
         self.Gain_TIA         = G_TIA
         self.V_Noise_TIA      = V_noise_TIA
         self.Uncertainty      = unc_func
-        print('Created: {}'.format(self.PhotodetectorID))
+        print('Created new photodetector: {}'.format(self.PhotodetectorID))
 class optical_amplifier():
     def __init__(self,name,OA_NF,OA_Gain,unc_func):
         self.Optical_AmplifierID = name
         self.NoiseFig            = OA_NF
         self.Gain                = OA_Gain
         self.Uncertainty         = unc_func
-        print('Created: {}'.format(self.Optical_AmplifierID))
+        print('Created new optical amplifier: {}'.format(self.Optical_AmplifierID))
 class power_source():
     def __init__(self,name,Inp_power,Out_power,unc_func):
         self.Power_SourceID = name
         self.Input_power    = Inp_power
         self.Output_power   = Out_power
         self.Uncertainty    = unc_func
-        print('Created: {}'.format(self.Power_SourceID))
+        print('Created new power source: {}'.format(self.Power_SourceID))
 class converter():
     def __init__(self,name,frequency,Conv_BW,Infinit,unc_func):
         self.ConverterID = name
@@ -78,11 +79,11 @@ class converter():
         self.BandWidth   = Conv_BW
         self.Infinit     = Infinit
         self.Uncertainty = unc_func
-        print('Created: {}'.format(self.ConverterID))
+        print('Created new converter: {}'.format(self.ConverterID))
 
 class scanner():
     def __init__(self,name,origin,sample_rate,focus_dist,theta,phi,stdv_focus_dist,stdv_theta,stdv_phi,unc_func):
-        self.ScannerID            = name
+        self.ScannerID       = name
         self.origin          = origin
         self.sample_rate     = sample_rate
         self.focus_dist      = focus_dist
@@ -93,7 +94,7 @@ class scanner():
         self.stdv_phi        = stdv_phi
         self.Uncertainty     = unc_func
         
-        print('Created: {}'.format(self.ScannerID))
+        print('Created new scanner: {}'.format(self.ScannerID))
     
 #%%modules classes
 
@@ -103,7 +104,7 @@ class photonics():
         self.photodetector     = photodetector
         self.optical_amp       = optical_amplifier
         self.Uncertainty       = unc_func 
-        print('Created: {}'.format(self.PhotonicModuleID))
+        print('Created new photonic module: {}'.format(self.PhotonicModuleID))
 
 class power():
     def __init__(self,name,power_source,converter,unc_func):
@@ -111,21 +112,21 @@ class power():
         self.power_source  = power_source
         self.converter     = converter
         self.Uncertainty   = unc_func  
-        print('Created: {}'.format(self.PoweModuleID))
+        print('Created new power module: {}'.format(self.PoweModuleID))
 
 class optics():
     def __init__(self,name,scanner,unc_func):
         self.OpticsModuleID = name
         self.scanner        = scanner
         self.Uncertainty    = unc_func 
-        print('Created: {}'.format(self.OpticsModuleID))
+        print('Created new optic module: {}'.format(self.OpticsModuleID))
         
 #atmosphere object:
 class atmosphere():
     def __init__(self,name,temperature):
         self.AtmosphereID = name
         self.temperature  = temperature
-        print('Created: {}'.format(self.AtmosphereID))
+        print('Created new atmosphere: {}'.format(self.AtmosphereID))
 
 
 #%% Creating lidar general data class:
@@ -134,17 +135,18 @@ class lidar_gral_inp():
         self.Gral_InputsID = name
         self.Wavelength    = wave
         self.SampleRate    = sample_rate
-        print('Created: {}'.format(self.Gral_InputsID))
+        print('Created new lidar general inputs: {}'.format(self.Gral_InputsID))
 
 #%% Lidar class
 class lidar():
-    def __init__(self,name,photonics,optics,power,lidar_inputs):
+    def __init__(self,name,photonics,optics,power,lidar_inputs,unc_func):
         self.LidarID      = name
         self.photonics    = photonics
         self.optics       = optics
         self.power        = power 
         self.lidar_inputs = lidar_inputs
-        print('Created: {}'.format(self.LidarID))
+        self.Uncertainty  = unc_func
+        print('Created new lidar device: {}'.format(self.LidarID))
 
 
 ##%% ################################################################
