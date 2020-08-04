@@ -13,6 +13,7 @@ import scipy.interpolate as itp
 import pandas as pd
 import numbers
 import pdb
+from scipy.optimize import curve_fit
 #import pickle # for GUI
 import itertools
 import functools
