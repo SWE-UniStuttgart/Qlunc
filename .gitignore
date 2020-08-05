@@ -1,4 +1,4 @@
-# Don't keep this files:
+# Ignore this file formats:
 
 *.xlsx
 *.png
@@ -10,10 +10,8 @@ DF.pickle
 untitled0.py
 Noise_Photodetector_TEST.py
 Qlunc_NoteBook-checkpoint.ipynb
-Qlunc_CLASSES/untitled1.py
+Qlunc_CLASSES\untitled1.py
 
 # Ignore specific folders:
 Figures/
 OldVersion_Qlunc/
-
-\
