@@ -43,7 +43,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts):
         for trial in range(0,100):
             
         # Create white noise with stdv selected by user for each pointing input
-            n=100000 # Number of cases to combine
+            n=1000 # Number of cases to combine
             del_focus_dist = np.array(np.random.normal(0 ,Lidar.optics.scanner.stdv_focus_dist,n))
             del_theta      = np.array(np.random.normal(0,Lidar.optics.scanner.stdv_theta,n))
             del_phi        = np.array(np.random.normal(0,Lidar.optics.scanner.stdv_phi,n))
@@ -72,4 +72,34 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts):
     return SimMean_DISTANCE,Mean_Stdv_DISTANCE
     
     
+#%% Sum of uncertainty components in optics module: 
+def sum_unc_optics(Lidar,Atmospheric_Scenario,cts): 
+    try: # ecah try/except evaluates wether the component is included in the module, therefore in the calculations
+#        if Photodetector_Uncertainty not in locals():
+        Scanner_Uncertainty=Lidar.optics.scanner.Uncertainty(Lidar,Atmospheric_Scenario,cts)
+    except:
+        Scanner_Uncertainty=None
+        print('No scanner in calculations!')
+    try:
+        Telescope_Uncertainty=Lidar.optics.telescope.Uncertainty(Lidar,Atmospheric_Scenario,cts)
+    except:
+        Telescope_Uncertainty=None
+        print('No telescope in calculations!')
+    pdb.set_trace()
+#    ##########################
+    Uncertainty_Optics_Module=2 # this is just for test
+    ############################
+#    List_Unc_optics1=[]
+#    List_Unc_optics0=[Scanner_Uncertainty,Telescope_Uncertainty]
+#    for x in List_Unc_optics0:
+#        
+#        if isinstance(x,list):
+#           
+#            List_Unc_optics0=([10**(i/10) for i in x]) # Make the list without None values and convert in watts(necessary for SA.unc_comb)
+#            List_Unc_optics1.append([List_Unc_optics0]) # Make a list suitable for unc.comb function
 
+#    Uncertainty_Optics_Module=SA.unc_comb(List_Unc_optics1)
+    print('Done')
+    return Uncertainty_Optics_Module
+
+#    return list(SA.flatten(Uncertainty_Optics_Module))
