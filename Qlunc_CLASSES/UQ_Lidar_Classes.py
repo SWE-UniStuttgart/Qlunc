@@ -25,3 +25,5 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts):
     except:
         Power_Uncertainty=None
         print('No power module in calculations!')
+    
+    print('Lidar unc Done')

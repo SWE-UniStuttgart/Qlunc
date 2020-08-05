@@ -49,7 +49,7 @@ lidar system)
 class photodetector():
     def __init__(self,name,Photo_BW,RL,n,DC,Photo_SP,G_TIA,V_noise_TIA,unc_func):
         self.PhotodetectorID  = name
-        self.BandWidth        =Photo_BW
+        self.BandWidth        = Photo_BW
         self.RL               = RL
         self.Efficiency       = n
         self.DarkCurrent      = DC

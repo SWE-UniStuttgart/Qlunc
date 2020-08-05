@@ -11,7 +11,7 @@ import pandas as pd
 import scipy.interpolate as itp
 
 #%% PHOTODETECTOR
-def UQ_Photodetector(Lidar, Atmospheric_Scenario,cts):
+def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts):
     UQ_Photodetector.Thermal_noise=[]
     UQ_Photodetector.SNR_thermal_noise=[]
     UQ_Photodetector.Shot_noise=[]
@@ -24,6 +24,7 @@ def UQ_Photodetector(Lidar, Atmospheric_Scenario,cts):
     R = Lidar.photonics.photodetector.Efficiency*cts.e*Lidar.lidar_inputs.Wavelength/(cts.h*cts.c)  #[W/A]  Responsivity
     UQ_Photodetector.Responsivity = (R) # this notation allows me to get Responsivity from outside of the function 
     '''#Where are these noise definintions coming from (reference in literature)?'''
+    pdb.set_trace()
     for i in range(len(Atmospheric_Scenario.temperature)):
         # Photodetector Thermal noise
         UQ_Photodetector.Thermal_noise.append(4*cts.k*Atmospheric_Scenario.temperature[i]/Lidar.photonics.photodetector.RL*Lidar.photonics.photodetector.BandWidth) #[dBm]
@@ -35,7 +36,7 @@ def UQ_Photodetector(Lidar, Atmospheric_Scenario,cts):
     #Photodetector dark current noise
     UQ_Photodetector.Dark_current_noise = [(2*cts.e*Lidar.photonics.photodetector.DarkCurrent*Lidar.photonics.photodetector.BandWidth*Lidar.photonics.photodetector.SignalPower)]*len(Atmospheric_Scenario.temperature) 
     UQ_Photodetector.SNR_DarkCurrent    = [(((R**2)/(2*cts.e*Lidar.photonics.photodetector.DarkCurrent*Lidar.photonics.photodetector.BandWidth))*((Lidar.photonics.photodetector.SignalPower/1000)**2))]*len(Atmospheric_Scenario.temperature) 
-#    pdb.set_trace()
+
     
     if any(TIA_val == None for TIA_val in [Lidar.photonics.photodetector.Gain_TIA,Lidar.photonics.photodetector.V_Noise_TIA]): # If any value of TIA is None dont include TIA noise in estimations :
         UQ_Photodetector.UQ_Photo = [(SA.unc_comb([UQ_Photodetector.Thermal_noise,UQ_Photodetector.Shot_noise,UQ_Photodetector.Dark_current_noise]))]
@@ -81,11 +82,12 @@ def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts):
     except:
         Optical_Amplifier_Uncertainty=None
         print('No OA in calculations!')
-#    pdb.set_trace()
+    
     
     
     List_Unc_photonics1=[]
     List_Unc_photonics0=[Photodetector_Uncertainty,Optical_Amplifier_Uncertainty]
+    pdb.set_trace()
     for x in List_Unc_photonics0:
         
         if isinstance(x,list):
