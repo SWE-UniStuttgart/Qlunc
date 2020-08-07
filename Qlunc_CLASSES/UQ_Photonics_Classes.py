@@ -12,15 +12,15 @@ import scipy.interpolate as itp
 
 #%% PHOTODETECTOR
 def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts):
-    UQ_Photodetector.Thermal_noise=[]
-    UQ_Photodetector.SNR_thermal_noise=[]
-    UQ_Photodetector.Shot_noise=[]
-    UQ_Photodetector.SNR_Shot_noise=[]
-    UQ_Photodetector.Dark_current_noise=[]
-    UQ_Photodetector.SNR_DarkCurrent=[]
-    UQ_Photodetector.UQ_Photo=[]
-    UQ_Photodetector.SNR_TIA=[]
-    UQ_Photodetector.TIA_noise=[]
+    UQ_Photodetector.Thermal_noise      = []
+    UQ_Photodetector.SNR_thermal_noise  = []
+    UQ_Photodetector.Shot_noise         = []
+    UQ_Photodetector.SNR_Shot_noise     = []
+    UQ_Photodetector.Dark_current_noise = []
+    UQ_Photodetector.SNR_DarkCurrent    = []
+    UQ_Photodetector.UQ_Photo           = []
+    UQ_Photodetector.SNR_TIA            = []
+    UQ_Photodetector.TIA_noise          = []
     R = Lidar.photonics.photodetector.Efficiency*cts.e*Lidar.lidar_inputs.Wavelength/(cts.h*cts.c)  #[W/A]  Responsivity
     UQ_Photodetector.Responsivity = (R) # this notation allows me to get Responsivity from outside of the function 
     '''#Where are these noise definintions coming from (reference in literature)?'''

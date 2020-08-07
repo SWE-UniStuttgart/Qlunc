@@ -58,3 +58,7 @@ Mean_Mean_DISTANCE0=np.mean(Mean_DISTANCE0)
 #    print('DISTANCE= {} m.'.format(Mean_DISTANCE))
 #    print('stdv_DISTANCE= {}  m.'.format(np.mean(stdv_DISTANCE)))
 #    print('Combined Uncertainty = {}'.format(stdv_total_sph))
+
+####################################################################
+dii=[]
+dii.append([np.sqrt((NCoor3[0][i]-Coor3[0][i])**2+(NCoor3[1][i]-Coor3[1][i])**2+(NCoor3[2][i]-Coor3[2][i])**2) for i in  range (np.size(NCoor3,1))])
