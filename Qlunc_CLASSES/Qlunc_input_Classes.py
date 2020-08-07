@@ -21,37 +21,46 @@ Example: ....
 
 # Components:
 
+#Scanner1          = scanner(name           = 'Scan1',
+#                           origin          = [0,0,0], #Origin
+#                           focus_dist      = np.array([500,600,750,950,1250,1550,2100, 2950,3700]),
+#                           sample_rate     = 10,
+#                           theta           = np.array([0]*9),
+#                           phi             = np.array([0]*9) ,
+#                           stdv_focus_dist = .1,
+#                           stdv_theta      = .1,
+#                           stdv_phi        = .1,
+#                           unc_func        = uopc.UQ_Scanner)       
 Scanner1          = scanner(name           = 'Scan1',
                            origin          = [0,0,0], #Origin
-                           focus_dist      = np.array([500,600,750,950,1250,1550,2100, 2950,3700]),
+                           focus_dist      = np.array([40]*24),
                            sample_rate     = 10,
-                           theta           = np.array([0]*9),
-                           phi             = np.array([0]*9) ,
-                           stdv_focus_dist = .1,
-                           stdv_theta      = .1,
-                           stdv_phi        = .1,
-                           unc_func        = uopc.UQ_Scanner)       
-
+                           theta           = np.array([20]*24),
+                           phi             = np.arange(0,360,15),
+                           stdv_focus_dist = 2,
+                           stdv_theta      = 1,
+                           stdv_phi        = 1,
+                           unc_func        = uopc.UQ_Scanner)  
 Scanner2          = scanner(name           = 'Scan2',
                            origin          = [0,0,0], #Origin
-                           focus_dist      = np.array([80]*9),
+                           focus_dist      = np.array([80]*24),
                            sample_rate     = 10,
-                           theta           = np.arange(0,90,10),
-                           phi             = np.array([0]*9) ,
-                           stdv_focus_dist = .1,
-                           stdv_theta      = .1,
-                           stdv_phi        = .1,
+                           theta           = np.array([20]*24),
+                           phi             = np.arange(0,360,15),
+                           stdv_focus_dist = 2,
+                           stdv_theta      = 1,
+                           stdv_phi        = 1,
                            unc_func        = uopc.UQ_Scanner)       
 
 Scanner3          = scanner(name           = 'Scan3',
                            origin          = [0,0,0], #Origin
-                           focus_dist      = np.array([80]*9),
+                           focus_dist      = np.array([120]*24),
                            sample_rate     = 10,
-                           theta           = np.array([10]*9),
-                           phi             = np.arange(0,360,40) ,
-                           stdv_focus_dist = .1,
-                           stdv_theta      = .1,
-                           stdv_phi        = .1,
+                           theta           = np.array([20]*24),
+                           phi             = np.arange(0,360,15) ,
+                           stdv_focus_dist = 2,
+                           stdv_theta      = 1,
+                           stdv_phi        = 1,
                            unc_func        = uopc.UQ_Scanner)       
 
 # Module:
@@ -171,48 +180,54 @@ if flag_plot==1:
     
     plot_param={'axes_label_fontsize' : 16,
                 'textbox_fontsize'    : 14,
-                'title_fontsize'      : 15,
-                'suptitle_fontsize'      : 23,
+                'title_fontsize'      : 24,
+                'suptitle_fontsize'   : 23,
                 'legend_fontsize'     : 12,
-                'xlim'                : [-30,30],
-                'ylim'                : [-30,30],
-                'zlim'                : [0,150],
+                'xlim'                : [-50,50],
+                'ylim'                : [-50,50],
+                'zlim'                : [0,130],
                 'markersize'          : 5,
-                'marker'              : 'o',
+                'markersize_lidar'    : 9,
+                'marker'              : '.',
+                'markerTheo'          : '.b',
                 'tick_labelrotation'  : 45}
-    # Scanner pointing accuracy uncertainty:
-    Distance1,Stdv1=Lidar1.optics.scanner.Uncertainty(Lidar1,Atmospheric_Scenario,cts)
-    Distance2,Stdv2=Lidar2.optics.scanner.Uncertainty(Lidar2,Atmospheric_Scenario,cts)
-    Distance3,Stdv3=Lidar3.optics.scanner.Uncertainty(Lidar3,Atmospheric_Scenario,cts)
-#    Unc3=Lidar3.optics.scanner.Uncertainty(Lidar3,Atmospheric_Scenario,cts)     
     
+#########    # Scanner pointing accuracy uncertainty:#################
     
+#    Calculating inputs for plotting:
+    Distance1,Stdv1,Coor1,NCoor1 = Lidar1.optics.scanner.Uncertainty(Lidar1,Atmospheric_Scenario,cts)
+    Distance2,Stdv2,Coor2,NCoor2 = Lidar2.optics.scanner.Uncertainty(Lidar2,Atmospheric_Scenario,cts)
+    Distance3,Stdv3,Coor3,NCoor3 = Lidar3.optics.scanner.Uncertainty(Lidar3,Atmospheric_Scenario,cts)
     
-#    ax=plt.axes(projection='3d')
-    fig,(axs1,axs2,axs3) = plt.subplots(1,3,sharey=False) # Creating the figure and the axes
+    # Creating the figure and the axes
+    fig,(axs1,axs2,axs3) = plt.subplots(1,3,sharey=False) 
 #    ax.plot.errorbar(Lidar1.optics.scanner.focus_dist,,plot_param['marker'],markersize=6.5,label='stdv Distance')
     
+    # fitting the results to a straight line
     z1 = np.polyfit(Lidar1.optics.scanner.focus_dist, Distance1, 1) # With '1' is a straight line y=ax+b
     f1 = np.poly1d(z1)
     # calculate new x's and y's
     x_new1 = np.linspace(Lidar1.optics.scanner.focus_dist[0], Lidar1.optics.scanner.focus_dist[-1], 50)
     y_new1 = f1(x_new1)
-    axs1.plot(x_new1,y_new1,'r-',label='Fitted curve1')
-    axs1.errorbar(Lidar1.optics.scanner.focus_dist,Distance1,yerr=Stdv1,label='Data1')
+
     
     z2 = np.polyfit(Scanner2.theta, Distance2, 1) # With '1' is a straight line y=ax+b
     f2 = np.poly1d(z2)
     # calculate new x's and y's
     x_new2 = np.linspace(Scanner2.theta[0], Scanner2.theta[-1], 50)
     y_new2 = f2(x_new2)
-    axs2.plot(x_new2,y_new2,'r-',label='Fitted curve2')
-    axs2.errorbar(Scanner2.theta,Distance2,yerr=Stdv2,label='Data2')
-    
+    1
     z3 = np.polyfit(Scanner3.phi, Distance3, 1) # With '1' is a straight line y=ax+b
     f3 = np.poly1d(z3)
     # calculate new x's and y's
     x_new3 = np.linspace(Scanner3.phi[0], Scanner3.phi[-1], 50)
     y_new3 = f3(x_new3)
+    
+     # Plotting:
+    axs1.plot(x_new1,y_new1,'r-',label='Fitted curve1')
+    axs1.errorbar(Lidar1.optics.scanner.focus_dist,Distance1,yerr=Stdv1,label='Data1')
+    axs2.plot(x_new2,y_new2,'r-',label='Fitted curve2')
+    axs2.errorbar(Scanner2.theta,Distance2,yerr=Stdv2,label='Data2')
     axs3.plot(x_new3,y_new3,'r-',label='Fitted curve3')
     axs3.errorbar(Scanner3.phi,Distance3,yerr=Stdv3,label='Data3')
     
@@ -229,34 +244,39 @@ if flag_plot==1:
     axs3.set(xlabel=r'$\phi$'+' [°]')
     axs3.xaxis.get_label().set_fontsize(plot_param['axes_label_fontsize'])
     
-    # write down the fitted polynomial on the plot
+    # text box with the fitted polynomial on the plot
     axs1.text(np.min(x_new1),np.max(y_new1),'$y$={0:.3g}$x$+{1:.3g}'.format(z1[0],z1[1]),fontsize=plot_param['textbox_fontsize'])
     axs2.text(np.min(x_new2),np.max(y_new2),'$y$={0:.3g}$x$+{1:.3g}'.format(z2[0],z2[1]),fontsize=plot_param['textbox_fontsize'])
     axs3.text(np.min(x_new3),np.max(y_new3),'$y$={0:.3g}$x$+{1:.3g}'.format(z3[0],z3[1]),fontsize=plot_param['textbox_fontsize'])
     
+
+##############    Ploting scanner trajectories#######################
+    # Creating the figure and the axes
+    fig,axs4 = plt.subplots()  
+    axs4=plt.axes(projection='3d')
+    
+    axs4.plot([Lidar1.optics.scanner.origin[0]],[Lidar1.optics.scanner.origin[1]],[Lidar1.optics.scanner.origin[2]],'ob',label='{} coordinates [{},{},{}]'.format(Lidar1.LidarID,Lidar1.optics.scanner.origin[0],Lidar1.optics.scanner.origin[1],Lidar1.optics.scanner.origin[2]),markersize=plot_param['markersize_lidar'])
+    axs4.plot(Coor1[0],Coor1[1],Coor1[2],plot_param['markerTheo'],markersize=plot_param['markersize'],label='Theoretical measuring point')
+    axs4.plot(NCoor1[0],NCoor1[1],NCoor1[2],plot_param['marker'],markersize=plot_param['markersize'],label='Distance error [m] = {0:.3g}$\pm${1:.3g}'.format(np.mean(Distance1),np.mean(Stdv1)))
+
+    axs4.plot(Coor2[0],Coor2[1],Coor2[2],plot_param['markerTheo'],markersize=plot_param['markersize'])
+    axs4.plot(NCoor2[0],NCoor2[1],NCoor2[2],plot_param['marker'],markersize=plot_param['markersize'],label='Distance error [m] = {0:.3g}$\pm${1:.3g}'.format(np.mean(Distance2),np.mean(Stdv2)))
+    
+    axs4.plot(Coor3[0],Coor3[1],Coor3[2],plot_param['markerTheo'],markersize=plot_param['markersize'])
+    axs4.plot(NCoor3[0],NCoor3[1],NCoor3[2],plot_param['marker'],markersize=plot_param['markersize'],label='Distance error [m] = {0:.3g}$\pm${1:.3g}'.format(np.mean(Distance3),np.mean(Stdv3)))
     
     
-    
-    
-    
-    
-    
-    
-    #    ax.plot((Lidar1.optics.scanner.[0][0]),(Unc2[1][0]),(Unc2[2]),plot_param['marker'],markersize=plot_param['markersize'],label='Low uncertainty ($stdv [m]$ = {})'.format(round(Unc2[3],2)))
-#    ax.plot((Lidar1.optics.scanner.[0][0]),(Unc3[1][0]),(Unc3[2]),plot_param['marker'],markersize=plot_param['markersize'],label='High uncertainty($stdv$ [m]= {})'.format(round(Unc3[3],2)))
-    
-#    ax.plot([0],[0],[0],'ob',label='{}'.format('Lidar'),markersize=9)
-    
-#    ax.set_xlabel('Focus Distance [m]',fontsize=plot_param['axes_label_fontsize'])#,orientation=plot_param['tick_labelrotation'])
-#    ax.set_ylabel('Pointing accuracy [m]',fontsize=plot_param['axes_label_fontsize'])#,orientation=plot_param['tick_labelrotation'])
-##    ax.set_zlabel('z [m]',fontsize=plot_param['axes_label_fontsize'])
+    axs4.set_xlabel('x [m]',fontsize=plot_param['axes_label_fontsize'])#,orientation=plot_param['tick_labelrotation'])
+    axs4.set_ylabel('y [m]',fontsize=plot_param['axes_label_fontsize'])#,orientation=plot_param['tick_labelrotation'])
+    axs4.set_zlabel('z [m]',fontsize=plot_param['axes_label_fontsize'])
 #    
-#    ax.set_title('Pointing accuracy Vs Focus Distance',fontsize=plot_param['title_fontsize'])
-#    ax.legend()
-#    ax.text(np.min(x_new1),np.max(y_new1),'$y$={0:.3g}$x$+{1:.3g}'.format(z1[0],z1[1]))
-#    ax.set_xlim3d(plot_param['xlim'][0],plot_param['xlim'][1])
-#    ax.set_ylim3d(plot_param['ylim'][0],plot_param['ylim'][1])
-#    ax.set_zlim3d(plot_param['zlim'][0],plot_param['zlim'][1])
+    axs4.set_title('Scanner pointing accuracy',fontsize=plot_param['title_fontsize'])
+#    axs4.text(np.min(x_new3),np.max(y_new3),'$y$={0:.3g}$x$+{1:.3g}'.format(z3[0],z3[1]),fontsize=plot_param['textbox_fontsize'])
+    axs4.legend()
+#    axs4.text(np.min(x_new1),np.max(y_new1),'$y$={0:.3g}$x$+{1:.3g}'.format(z1[0],z1[1]))
+    axs4.set_xlim3d(plot_param['xlim'][0],plot_param['xlim'][1])
+    axs4.set_ylim3d(plot_param['ylim'][0],plot_param['ylim'][1])
+    axs4.set_zlim3d(plot_param['zlim'][0],plot_param['zlim'][1])
 #    plt.rcParams['legend.fontsize'] = plot_param['legend_fontsize']
     
    
