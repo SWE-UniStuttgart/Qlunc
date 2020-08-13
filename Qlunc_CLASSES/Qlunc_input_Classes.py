@@ -4,6 +4,9 @@ Created on Fri Jul 24 17:26:23 2020
 
 @author: fcosta
 """
+#%% Flags
+flag_plot=0
+
 
 #%% ################################################################
 ###################### __ Instances __ #################################
@@ -174,7 +177,7 @@ else:
                                     temperature = [300])
 
 #%% Plotting:
-flag_plot=1
+
 # Plot parameters:
 if flag_plot==1:
     
