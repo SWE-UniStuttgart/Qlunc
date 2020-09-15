@@ -24,7 +24,7 @@ def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts):
     R = Lidar.photonics.photodetector.Efficiency*cts.e*Lidar.lidar_inputs.Wavelength/(cts.h*cts.c)  #[W/A]  Responsivity
     UQ_Photodetector.Responsivity = (R) # this notation allows me to get Responsivity from outside of the function 
     '''#Where are these noise definintions coming from (reference in literature)?'''
-    pdb.set_trace()
+#    pdb.set_trace()
     for i in range(len(Atmospheric_Scenario.temperature)):
         # Photodetector Thermal noise
         UQ_Photodetector.Thermal_noise.append(4*cts.k*Atmospheric_Scenario.temperature[i]/Lidar.photonics.photodetector.RL*Lidar.photonics.photodetector.BandWidth) #[dBm]
