@@ -29,22 +29,20 @@ def UQ_Telescope(Lidar, Atmospheric_Scenario,cts):
     
 def UQ_Scanner(Lidar, Atmospheric_Scenario,cts):
     Coord=[]
-    Mean_Stdv_DISTANCE=[]
-    stdvPointMean=[]
-    DistancePointMean=[]  
+    Mean_Stdv_DISTANCE=[]  
     SimMean_DISTANCE=[]
     X,Y,Z,X0,Y0,Z0=[],[],[],[],[],[]
-    NCoord=[]
+    Noisy_Coord=[]
     NoisyX=[]
     NoisyY=[]
     NoisyZ=[]
     coun=0
-    for fd_or,theta_or,phi_or in zip(Lidar.optics.scanner.focus_dist,Lidar.optics.scanner.theta,Lidar.optics.scanner.phi):
+    for fd_or,theta_or,phi_or in zip(Lidar.optics.scanner.focus_dist,Lidar.optics.scanner.theta,Lidar.optics.scanner.phi):# Take coordinates from inputs
         Mean_DISTANCE=[]
         DISTANCE=[]        
         stdv_DISTANCE=[]  
-        
-        #Calculating the theoretical point coordinate transformation:
+
+        #Calculating the theoretical point coordinate transformation (conversion from spherical to cartesians):
         x0=fd_or*np.cos(np.deg2rad(phi_or))*np.sin(np.deg2rad(theta_or))
         y0=fd_or*np.sin(np.deg2rad(phi_or))*np.sin(np.deg2rad(theta_or)) 
         z0=fd_or*np.cos(np.deg2rad(theta_or))
@@ -52,7 +50,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts):
         X0.append(x0)
         Y0.append(y0)
         Z0.append(z0)
-        
+
         for trial in range(0,100):
             
         # Create white noise with stdv selected by user for each pointing input
@@ -71,10 +69,19 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts):
             y=noisy_fd*np.sin(np.deg2rad(noisy_phi))*np.sin(np.deg2rad(noisy_theta)) 
             z=noisy_fd*np.cos(np.deg2rad(noisy_theta)) 
             
+            # Implement error in deployment of the tripod as a rotation over yaw, pitch and roll
 
-               
+            R=[[np.cos(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep)),  np.cos(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))-np.sin(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.roll_error_dep)),  np.cos(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))+np.sin(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))],
+               [np.sin(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep)),  np.sin(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))+np.cos(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.roll_error_dep)),  np.sin(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))-np.cos(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))],
+               [       -np.sin(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))                                             ,                      np.cos(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))                                                                                                                                            ,                                                                np.cos(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))]]
+            
+            xfinal=np.matmul(R,[x,y,z])[0]
+            yfinal=np.matmul(R,[x,y,z])[1]
+            zfinal=np.matmul(R,[x,y,z])[2]
+
+#            pdb.set_trace()
             # Distance between theoretical measured points and noisy points:
-            DISTANCE.append(np.sqrt((x-x0)**2+(y-y0)**2+(z-z0)**2))
+            DISTANCE.append(np.sqrt((xfinal-x0)**2+(yfinal-y0)**2+(zfinal-z0)**2))
             Mean_DISTANCE.append(np.mean(DISTANCE[trial]))    
             stdv_DISTANCE.append(np.std(DISTANCE[trial]))
             
@@ -82,13 +89,13 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts):
         Mean_Stdv_DISTANCE.append(np.mean(stdv_DISTANCE)) # Mean error distance stdv for each point in the pattern
         # Want to create a noise to add to the theoretical position to simulate the error in measurements
         #Storing coordinates
-        X.append(x)
-        Y.append(y)
-        Z.append(z)
+        X.append(xfinal)
+        Y.append(yfinal)
+        Z.append(zfinal)
         NoisyX.append(X[coun][0])
         NoisyY.append(Y[coun][0])
         NoisyZ.append(Z[coun][0])
-        NCoord=[NoisyX,NoisyY,NoisyZ]
+        Noisy_Coord=[NoisyX,NoisyY,NoisyZ]
         Coord=[X0,Y0,Z0]
         coun+=1
 #        Xn,Yn,Zn=X0,Y0
@@ -108,9 +115,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts):
 #    DistancePointMean.append(np.mean(SimMean_DISTANCE)) #We can use that for computing the total pattern mean error distance
 #    stdvPointMean.append(np.mean(Mean_Stdv_DISTANCE))   #We can use that for computing the total pattern stdv error distance
 #    
-    pdb.set_trace()
+#    pdb.set_trace()
 
-    return SimMean_DISTANCE,Mean_Stdv_DISTANCE,Coord,NCoord#,Coor #plot_dist,plot_stdv_dist
+    return SimMean_DISTANCE,Mean_Stdv_DISTANCE,Coord,Noisy_Coord#,Coor #plot_dist,plot_stdv_dist
     
     
 #%% Sum of uncertainty components in optics module: 
