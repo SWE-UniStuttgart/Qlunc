@@ -48,9 +48,9 @@ lidar system)
 #Component Classes:
 class photodetector():
     def __init__(self,name,Photo_BW,RL,n,DC,Photo_SP,G_TIA,V_noise_TIA,unc_func):
-        self.PhotodetectorID  = name
-        self.BandWidth        = Photo_BW
-        self.RL               = RL
+        self.PhotodetectorID  = name 
+        self.BandWidth        = Photo_BW 
+        self.RL               = RL   # load resistor
         self.Efficiency       = n
         self.DarkCurrent      = DC
         self.SignalPower      = Photo_SP
@@ -131,10 +131,15 @@ class atmosphere():
 
 #%% Creating lidar general data class:
 class lidar_gral_inp():
-    def __init__(self,name,wave,sample_rate):
-        self.Gral_InputsID = name
-        self.Wavelength    = wave
-        self.SampleRate    = sample_rate
+    def __init__(self,name,wave,sample_rate,yaw_error,pitch_error,roll_error):
+        self.Gral_InputsID   = name
+        self.Wavelength      = wave
+        self.SampleRate      = sample_rate
+        self.yaw_error_dep   = yaw_error   # error angles when deploying the lidar device in the grounf or in the nacelle
+        self.pitch_error_dep = pitch_error
+        self.roll_error_dep  =  roll_error
+        
+        
         print('Created new lidar general inputs: {}'.format(self.Gral_InputsID))
 
 #%% Lidar class
