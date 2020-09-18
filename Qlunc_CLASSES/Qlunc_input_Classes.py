@@ -5,7 +5,8 @@ Created on Fri Jul 24 17:26:23 2020
 @author: fcosta
 """
 #%% Flags
-flag_plot=0
+flag_plot=1
+
 
 
 #%% ################################################################
@@ -131,7 +132,10 @@ Power_Module     = power(name         = 'PowerMod1',
 ########## Lidar general inputs #########################:
 Lidar_inputs     = lidar_gral_inp(name        = 'Gral_inp1', 
                                   wave        = 1550e-9, 
-                                  sample_rate = 2) # Hz
+                                  sample_rate = 2,       # Hz
+                                  yaw_error   = 90,       # Degreesof rotation around z axis
+                                  pitch_error = 0,       # Degrees of rotation around y axis
+                                  roll_error  = 0)       # Degrees of rotation around x axis
 
 
 ##########  LIDAR  #####################################
@@ -253,7 +257,7 @@ if flag_plot==1:
     axs3.text(np.min(x_new3),np.max(y_new3),'$y$={0:.3g}$x$+{1:.3g}'.format(z3[0],z3[1]),fontsize=plot_param['textbox_fontsize'])
     
 
-##############    Ploting scanner trajectories#######################
+##############    Ploting scanner measuring points #######################
     # Creating the figure and the axes
     fig,axs4 = plt.subplots()  
     axs4=plt.axes(projection='3d')
@@ -283,9 +287,30 @@ if flag_plot==1:
 #    plt.rcParams['legend.fontsize'] = plot_param['legend_fontsize']
     
    
+###########   Plot photodetector noise   #############################       
     
     
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     #
     #params = {'legend.fontsize': 'x-large',
     #          'figure.figsize': (15, 5),
