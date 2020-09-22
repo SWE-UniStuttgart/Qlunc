@@ -47,13 +47,13 @@ lidar system)
  '''   
 #Component Classes:
 class photodetector():
-    def __init__(self,name,Photo_BW,RL,n,DC,Photo_SP,G_TIA,V_noise_TIA,unc_func):
+    def __init__(self,name,Photo_BandWidth,Load_Resistor,Photo_efficiency,Dark_Current,Photo_SignalP,G_TIA,V_noise_TIA,unc_func):
         self.PhotodetectorID  = name 
-        self.BandWidth        = Photo_BW 
-        self.RL               = RL   # load resistor
-        self.Efficiency       = n
-        self.DarkCurrent      = DC
-        self.SignalPower      = Photo_SP
+        self.BandWidth        = Photo_BandWidth 
+        self.Load_Resistor    = Load_Resistor 
+        self.Efficiency       = Photo_efficiency
+        self.DarkCurrent      = Dark_Current
+        self.SignalPower      = Photo_SignalP
         self.Gain_TIA         = G_TIA
         self.V_Noise_TIA      = V_noise_TIA
         self.Uncertainty      = unc_func

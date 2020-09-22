@@ -88,15 +88,15 @@ OpticalAmplifier = optical_amplifier(name     = 'OA1',
                                      OA_Gain  = 30,
                                      unc_func = uphc.UQ_Optical_amplifier)
 
-Photodetector    = photodetector(name        = 'Photo1',
-                                 Photo_BW    = 1e9,
-                                 RL          = 50,
-                                 n           = .85,
-                                 DC          = 5e-9,
-                                 Photo_SP    = 1e-3,
-                                 G_TIA       = 5e3,
-                                 V_noise_TIA = 160e-6,
-                                 unc_func    = uphc.UQ_Photodetector)
+Photodetector    = photodetector(name             = 'Photo1',
+                                 Photo_BandWidth  = 380e6,
+                                 Load_Resistor    = 50,
+                                 Photo_efficiency = .85,
+                                 Dark_Current     = 5e-9,
+                                 Photo_SignalP    = 1e-3,
+                                 G_TIA            = 5e3,
+                                 V_noise_TIA      = 160e-6,
+                                 unc_func         = uphc.UQ_Photodetector)
 
 # Module:
 
@@ -288,8 +288,21 @@ if flag_plot==1:
     
    
 ###########   Plot photodetector noise   #############################       
+
+    UQ_Photo,SNR_photo=Lidar1.photonics.photodetector.Uncertainty(Lidar1,Atmospheric_Scenario,cts)
+    Ps=np.arange(0,10000,.001)
+    Psax=10*np.log10(Ps) 
+    plt.figure()
+    #plt.xscale('log',basex=10)
+    #plt.yscale('log',basey=10)
     
-    
+    plt.plot(Psax,SNR_photo['SNR_Shot_Noise'][0],Psax,SNR_photo['SNR_Thermal'][0],Psax,SNR_photo['SNR_Dark_Current'][0],Psax,SNR_photo['SNR_TIA'][0])
+    plt.xlabel('Input Signal optical power (dBm)',fontsize=29)
+    plt.ylabel('SNR (dB)',fontsize=29)
+    plt.legend(['Shot Noise','Thermal Noise','Dark current Noise','TIA Noise'],fontsize=16)#,'Total error [w]'])
+    plt.title('SNR Photodetector',fontsize=35)
+    plt.grid(axis='both')
+       
 
 
 
