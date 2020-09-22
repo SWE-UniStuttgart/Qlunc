@@ -137,7 +137,7 @@ class lidar_gral_inp():
         self.SampleRate      = sample_rate
         self.yaw_error_dep   = yaw_error   # error angles when deploying the lidar device in the grounf or in the nacelle
         self.pitch_error_dep = pitch_error
-        self.roll_error_dep  =  roll_error
+        self.roll_error_dep  = roll_error
         
         
         print('Created new lidar general inputs: {}'.format(self.Gral_InputsID))

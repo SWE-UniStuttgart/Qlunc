@@ -5,7 +5,7 @@ Created on Fri Jul 24 17:26:23 2020
 @author: fcosta
 """
 #%% Flags
-flag_plot=1
+flag_plot=0
 
 
 
@@ -133,9 +133,9 @@ Power_Module     = power(name         = 'PowerMod1',
 Lidar_inputs     = lidar_gral_inp(name        = 'Gral_inp1', 
                                   wave        = 1550e-9, 
                                   sample_rate = 2,       # Hz
-                                  yaw_error   = 90,       # Degreesof rotation around z axis
+                                  yaw_error   = 0,       # Degreesof rotation around z axis because of inclinometer errors
                                   pitch_error = 0,       # Degrees of rotation around y axis
-                                  roll_error  = 0)       # Degrees of rotation around x axis
+                                  roll_error  = 30)       # Degrees of rotation around z axis
 
 
 ##########  LIDAR  #####################################
