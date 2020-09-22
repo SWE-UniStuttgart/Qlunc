@@ -18,7 +18,7 @@ k = 1.38064852e-23 # Boltzman constant:[m^2 kg s^-2 K^-1]
 h = 6.6207004e-34 # Plank constant [m^2 kg s^-1]
 e = 1.60217662e-19 # electron charge [C]
 c = 2.99792e8 #speed of light [m s^-1]
-T = 3400 #[K] Temperature
+T = 300 #[K] Temperature
 
 #Photodiode Inputs
 BW          = 380e6 #1*10**(9) #[Hz] Band width
@@ -46,12 +46,12 @@ Thermal_noise = (4*k*T/RL)*BW #[W]
 Photo_SNR_Thermal   = 10*np.log10(((R**2)/(4*k*T*BW/RL))*(Ps/1000)**2)
 
 # Shot noise:
-Shot_noise        = 10*np.log10(2*e*R*BW*Ps)
-Photo_SNR_Shot_noise    = 10*np.log10(((R**2)/(2*e*R*BW))*Ps/1000)
+Shot_noise            = 10*np.log10(2*e*R*BW*Ps)
+Photo_SNR_Shot_noise  = 10*np.log10(((R**2)/(2*e*R*BW))*Ps/1000)
 
 ## Dark current noise
-Dark_current_noise  = 10*np.log10(2*e*Id*BW*Ps)
-Photo_SNR_DarkCurrent     = 10*np.log10(((R**2)/(2*e*Id*BW))*((Ps/1000)**2) )
+Dark_current_noise     = 10*np.log10(2*e*Id*BW*Ps)
+Photo_SNR_DarkCurrent  = 10*np.log10(((R**2)/(2*e*Id*BW))*((Ps/1000)**2) )
 
 
 #%% AMPLIFIER: TIA noise 'input-referred noise':
