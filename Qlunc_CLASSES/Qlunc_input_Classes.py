@@ -290,7 +290,7 @@ if flag_plot==1:
 ###########   Plot photodetector noise   #############################       
 
     UQ_Photo,SNR_photo=Lidar1.photonics.photodetector.Uncertainty(Lidar1,Atmospheric_Scenario,cts)
-    Ps=np.arange(0,10000,.001)
+    Ps=np.arange(0,1000,.001)
     Psax=10*np.log10(Ps) 
     plt.figure()
     #plt.xscale('log',basex=10)
