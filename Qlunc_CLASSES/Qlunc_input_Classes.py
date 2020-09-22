@@ -5,7 +5,7 @@ Created on Fri Jul 24 17:26:23 2020
 @author: fcosta
 """
 #%% Flags
-flag_plot=0
+flag_plot=1
 
 
 
@@ -297,10 +297,10 @@ if flag_plot==1:
     #plt.yscale('log',basey=10)
     
     plt.plot(Psax,SNR_photo['SNR_Shot_Noise'][0],Psax,SNR_photo['SNR_Thermal'][0],Psax,SNR_photo['SNR_Dark_Current'][0],Psax,SNR_photo['SNR_TIA'][0])
-    plt.xlabel('Input Signal optical power (dBm)',fontsize=29)
-    plt.ylabel('SNR (dB)',fontsize=29)
-    plt.legend(['Shot Noise','Thermal Noise','Dark current Noise','TIA Noise'],fontsize=16)#,'Total error [w]'])
-    plt.title('SNR Photodetector',fontsize=35)
+    plt.xlabel('Input Signal optical power (dBm)',fontsize=plot_param['axes_label_fontsize'])
+    plt.ylabel('SNR (dB)',fontsize=plot_param['axes_label_fontsize'])
+    plt.legend(['Shot Noise','Thermal Noise','Dark current Noise','TIA Noise'],fontsize=plot_param['legend_fontsize'])#,'Total error [w]'])
+    plt.title('SNR Photodetector',fontsize=plot_param['title_fontsize'])
     plt.grid(axis='both')
        
 
