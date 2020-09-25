@@ -41,9 +41,9 @@ Scanner1          = scanner(name           = 'Scan1',
                            sample_rate     = 10,
                            theta           = np.array([20]*24),
                            phi             = np.arange(0,360,15),
-                           stdv_focus_dist = 2,
-                           stdv_theta      = 1,
-                           stdv_phi        = 1,
+                           stdv_focus_dist = 0,
+                           stdv_theta      = 0,
+                           stdv_phi        = 0,
                            unc_func        = uopc.UQ_Scanner)  
 Scanner2          = scanner(name           = 'Scan2',
                            origin          = [0,0,0], #Origin
@@ -51,9 +51,9 @@ Scanner2          = scanner(name           = 'Scan2',
                            sample_rate     = 10,
                            theta           = np.array([20]*24),
                            phi             = np.arange(0,360,15),
-                           stdv_focus_dist = 2,
-                           stdv_theta      = 1,
-                           stdv_phi        = 1,
+                           stdv_focus_dist = 0,
+                           stdv_theta      = 0,
+                           stdv_phi        = 0,
                            unc_func        = uopc.UQ_Scanner)       
 
 Scanner3          = scanner(name           = 'Scan3',
@@ -62,9 +62,9 @@ Scanner3          = scanner(name           = 'Scan3',
                            sample_rate     = 10,
                            theta           = np.array([20]*24),
                            phi             = np.arange(0,360,15) ,
-                           stdv_focus_dist = 2,
-                           stdv_theta      = 1,
-                           stdv_phi        = 1,
+                           stdv_focus_dist = 0,
+                           stdv_theta      = 0,
+                           stdv_phi        = 0,
                            unc_func        = uopc.UQ_Scanner)       
 
 # Module:
@@ -133,9 +133,9 @@ Power_Module     = power(name         = 'PowerMod1',
 Lidar_inputs     = lidar_gral_inp(name        = 'Gral_inp1', 
                                   wave        = 1550e-9, 
                                   sample_rate = 2,       # Hz
-                                  yaw_error   = 0,       # Degreesof rotation around z axis because of inclinometer errors
-                                  pitch_error = 0,       # Degrees of rotation around y axis
-                                  roll_error  = 30)       # Degrees of rotation around z axis
+                                  yaw_error   = 5,       # Degreesof rotation around z axis because of inclinometer errors
+                                  pitch_error = 5,       # Degrees of rotation around y axis
+                                  roll_error  = 0)       # Degrees of rotation around z axis
 
 
 ##########  LIDAR  #####################################
