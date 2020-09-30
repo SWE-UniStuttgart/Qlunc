@@ -55,7 +55,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts):
             
         # Create white noise with stdv selected by user for each pointing input
             n=10000 # Number of cases to combine
-            del_focus_dist = np.array(np.random.normal(0 ,Lidar.optics.scanner.stdv_focus_dist,n))
+            del_focus_dist = np.array(np.random.normal(0 ,Lidar.optics.scanner.stdv_focus_dist,n)) # why a normal distribution??Does it have sense, can be completely random?
             del_theta      = np.array(np.random.normal(0,Lidar.optics.scanner.stdv_theta,n))
             del_phi        = np.array(np.random.normal(0,Lidar.optics.scanner.stdv_phi,n))
             
