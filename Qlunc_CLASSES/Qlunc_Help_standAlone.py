@@ -6,6 +6,8 @@ Created on Mon May 18 00:03:43 2020
 """
 
 from Qlunc_ImportModules import *
+import numpy as np
+
 #import Qlunc_Help_standAlone as SA
 #from Main.Qlunc_inputs import inputs
 
@@ -34,7 +36,7 @@ def Sum_dB(W_data,*args,**kwargs):
         Sumat.append (gg)
     Sum_in_dB = sum(Sumat)
     Sum_decibels.append(10*np.log10(Sum_in_dB) )
-#    pdb.set_trace()
+    pdb.set_trace()
     return list (flatten(Sum_decibels))
 
 #%% Combine uncertainties:
@@ -42,14 +44,16 @@ def unc_comb(data): # data is provided as list of elements want to add on. Data 
     sqr=[]    
     sqr_db=[]
     Array=(np.array(data)) 
-#    pdb.set_trace()
+
     for i in range(np.shape(Array)[1]):
         sq=[]
         for ii in range (len(Array)):
             sq.append(Array[ii,i]**2) # make the square of each value
+        pdb.set_trace()
         sqr.append(np.sqrt(sum(sq))) #Sqrt of the values in the column
     for i_w in sqr:
         sqr_db.append(10*np.log10(i_w)) # en dB
+
     return sqr_db #The function offer both results, in watts and in dB
 # %% Getting data frame:
     
