@@ -38,11 +38,12 @@ def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts):
     UQ_Photodetector.Shot_noise     = [(2*cts.e*R*Lidar.photonics.photodetector.BandWidth*Lidar.photonics.photodetector.SignalPower)]*len(Atmospheric_Scenario.temperature)     
     #Photodetector dark current noise
     UQ_Photodetector.Dark_current_noise = [(2*cts.e*Lidar.photonics.photodetector.DarkCurrent*Lidar.photonics.photodetector.BandWidth*Lidar.photonics.photodetector.SignalPower)]*len(Atmospheric_Scenario.temperature) 
+    
     SNR_data={'SNR_Shot_Noise':UQ_Photodetector.SNR_Shot_noise,'SNR_Thermal':UQ_Photodetector.SNR_thermal_noise,'SNR_Dark_Current':UQ_Photodetector.SNR_DarkCurrent}  
     
     if any(TIA_val == None for TIA_val in [Lidar.photonics.photodetector.Gain_TIA,Lidar.photonics.photodetector.V_Noise_TIA]): # If any value of TIA is None dont include TIA noise in estimations :
         UQ_Photodetector.UQ_Photo = [(SA.unc_comb([UQ_Photodetector.Thermal_noise,UQ_Photodetector.Shot_noise,UQ_Photodetector.Dark_current_noise]))]
-        print('no TIA')
+        print('There is NO TIA component in the photodetector')
     else:
         # Photodetector TIA noise
         UQ_Photodetector.TIA_noise = [(Lidar.photonics.photodetector.V_Noise_TIA**2/Lidar.photonics.photodetector.Gain_TIA**2)]*len(Atmospheric_Scenario.temperature) 
@@ -50,11 +51,11 @@ def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts):
         UQ_Photodetector.UQ_Photo  = [(SA.unc_comb([UQ_Photodetector.Thermal_noise,UQ_Photodetector.Shot_noise,UQ_Photodetector.Dark_current_noise,UQ_Photodetector.TIA_noise]))]
 #        pdb.set_trace()
         SNR_data['SNR_TIA']=UQ_Photodetector.SNR_TIA
-        print('TIA')
+        print('There is a TIA component in the photodetector')
     UQ_Photodetector.UQ_Photo=list(SA.flatten(UQ_Photodetector.UQ_Photo))
-          
+    Final_Output_UQ_Photo={'Uncertainty_Photo':UQ_Photodetector.UQ_Photo,'SNR_data_photo':SNR_data}      
 #    pdb.set_trace()
-    return UQ_Photodetector.UQ_Photo,SNR_data
+    return Final_Output_UQ_Photo
 
 
 
@@ -73,7 +74,8 @@ def UQ_Optical_amplifier(Lidar,Atmospheric_Scenario,cts): # Calculating ASE - Am
         UQ_Optical_amplifier = [10*np.log10((10**(FigureNoise/10))*cts.h*(cts.c/Lidar.lidar_inputs.Wavelength)*10**(Lidar.photonics.optical_amp.Gain/10))]*len(Atmospheric_Scenario.temperature) # ASE
     except:
         print('No Optical Amplifier implemented')
-    return UQ_Optical_amplifier
+    Final_Output_UQ_Optical_Amplifier={'Uncertainty_OpticalAmp':UQ_Optical_amplifier}
+    return Final_Output_UQ_Optical_Amplifier
 
 #%% Sum of uncertainty components in photonics module: 
 def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts): 
@@ -87,13 +89,13 @@ def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts):
         Optical_Amplifier_Uncertainty=Lidar.photonics.optical_amp.Uncertainty(Lidar,Atmospheric_Scenario,cts)
     except:
         Optical_Amplifier_Uncertainty=None
-        print('No OA in calculations!')
+        print('No optical amplifier in calculations!')
     
     
     
     List_Unc_photonics1=[]
-    List_Unc_photonics0=[Photodetector_Uncertainty,Optical_Amplifier_Uncertainty]
-    pdb.set_trace()
+    List_Unc_photonics0=[Photodetector_Uncertainty['Uncertainty_Photo'],Optical_Amplifier_Uncertainty['Uncertainty_OpticalAmp']]
+#    pdb.set_trace()
     for x in List_Unc_photonics0:
         
         if isinstance(x,list):
