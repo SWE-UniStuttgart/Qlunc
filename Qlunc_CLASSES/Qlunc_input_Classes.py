@@ -5,7 +5,7 @@ Created on Fri Jul 24 17:26:23 2020
 @author: fcosta
 """
 #%% Flags
-flag_plot=1
+flag_plot=0
 
 
 
@@ -39,44 +39,50 @@ Scanner1          = scanner(name           = 'Scan1',
                            origin          = [0,0,0], #Origin
                            focus_dist      = np.array([40]*24),
                            sample_rate     = 10,
-                           theta           = np.array([20]*24),
+                           theta           = np.linspace(0,125,24),#np.array([0]*24),
                            phi             = np.arange(0,360,15),
-                           stdv_focus_dist = 0,
-                           stdv_theta      = 0,
-                           stdv_phi        = 0,
+                           stdv_focus_dist = 0.8,
+                           stdv_theta      = 0.8,
+                           stdv_phi        = 0.8,
                            unc_func        = uopc.UQ_Scanner)  
 Scanner2          = scanner(name           = 'Scan2',
                            origin          = [0,0,0], #Origin
-                           focus_dist      = np.array([80]*24),
+                           focus_dist      = np.array([0]*24),
                            sample_rate     = 10,
-                           theta           = np.array([20]*24),
+                           theta           = np.array([0]*24),
                            phi             = np.arange(0,360,15),
-                           stdv_focus_dist = 0,
-                           stdv_theta      = 0,
-                           stdv_phi        = 0,
+                           stdv_focus_dist = 0.3,
+                           stdv_theta      = 0.3,
+                           stdv_phi        = 0.1,
                            unc_func        = uopc.UQ_Scanner)       
 
 Scanner3          = scanner(name           = 'Scan3',
                            origin          = [0,0,0], #Origin
                            focus_dist      = np.array([120]*24),
                            sample_rate     = 10,
-                           theta           = np.array([20]*24),
-                           phi             = np.arange(0,360,15) ,
-                           stdv_focus_dist = 0,
-                           stdv_theta      = 0,
-                           stdv_phi        = 0,
+                           theta           = np.linspace(0,180,24),#np.array([20]*24),
+                           phi             = np.array([0]*24),#np.arange(0,360,15) ,
+                           stdv_focus_dist = 1,
+                           stdv_theta      = 1,
+                           stdv_phi        = 4,
                            unc_func        = uopc.UQ_Scanner)       
 
+Optical_circulator1 = optical_circulator (name = 'OptCirc1',
+                                          insertion_loss = 2.1,
+                                          unc_func = uopc.UQ_OpticalCirculator) 
 # Module:
 
 Optics_Module1 =  optics (name     = 'OptMod1',
                          scanner  = Scanner1,
+                         optical_circulator = Optical_circulator1,
                          unc_func = uopc.sum_unc_optics) # here you put the function describing your uncertainty
 Optics_Module2 =  optics (name     = 'OptMod2',
                          scanner  = Scanner2,
+                         optical_circulator = Optical_circulator1,
                          unc_func = uopc.sum_unc_optics)
 Optics_Module3 =  optics (name     = 'OptMod3',
                          scanner  = Scanner3,
+                         optical_circulator = Optical_circulator1,
                          unc_func = uopc.sum_unc_optics)
 
 #############  Photonics ###################
@@ -143,7 +149,7 @@ Lidar_inputs     = lidar_gral_inp(name        = 'Gral_inp1',
 Lidar1 = lidar(name         = 'Caixa1',
                photonics    = Photonics_Module,
                optics       = Optics_Module1,
-               power        = Power_Module,
+               power        = None,
                lidar_inputs = Lidar_inputs,
                unc_func     = ulc.sum_unc_lidar)
 Lidar2 = lidar(name         = 'Caixa2',
@@ -161,9 +167,9 @@ Lidar3 = lidar(name         = 'Caixa3',
                unc_func     = ulc.sum_unc_lidar)
 
 #%% Creating atmospheric scenarios:
-TimeSeries=True  # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere (T, H, rain and fog) 
-                  # If so we obtain a time series describing the noise implemented in the measurement.
-if TimeSeries:
+Atmospheric_TimeSeries = False # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere (T, H, rain and fog) 
+                               # If so we obtain a time series describing the noise implemented in the measurement.
+if Atmospheric_TimeSeries:
     Atmos_TS_FILE           = 'AtmosphericScenarios.csv'
     AtmosphericScenarios_TS = pd.read_csv(Atmos_TS_FILE,delimiter=';',decimal=',')
     Atmospheric_inputs={
