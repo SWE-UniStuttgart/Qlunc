@@ -34,10 +34,11 @@ def unc_comb(data): # data is provided as a list of elements want to add on. Dat
     res_dB      = []
     res_watts   = []
     zipped_data = []
-    
+    if not isinstance (data,np.ndarray):
+        data=np.array(data)
 #    pdb.set_trace() 
     
-    for data_row in range(np.shape(data)[0]):
+    for data_row in range(np.shape(data)[0]):# trnasform into watts
         
         try:    
             data2=data[data_row,:]
