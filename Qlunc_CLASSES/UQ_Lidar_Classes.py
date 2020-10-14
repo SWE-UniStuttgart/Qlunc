@@ -8,7 +8,8 @@ from Qlunc_ImportModules import *
 import Qlunc_Help_standAlone as SA
 # Calculates the lidar global uncertainty:
 
-def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts): 
+def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts):
+    
     try: # ecah try/except evaluates wether the component is included in the module, therefore in the calculations
 #        if Photodetector_Uncertainty not in locals():
         Photonics_Uncertainty=Lidar.photonics.Uncertainty(Lidar,Atmospheric_Scenario,cts)

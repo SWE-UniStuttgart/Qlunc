@@ -47,15 +47,15 @@ lidar system)
  '''   
 #Component Classes:
 class photodetector():
-    def __init__(self,name,Photo_BandWidth,Load_Resistor,Photo_efficiency,Dark_Current,Photo_SignalP,G_TIA,V_noise_TIA,unc_func):
+    def __init__(self,name,Photo_BandWidth,Load_Resistor,Photo_efficiency,Dark_Current,Photo_SignalP,Gain_TIA,V_Noise_TIA,unc_func):
         self.PhotodetectorID  = name 
         self.BandWidth        = Photo_BandWidth 
         self.Load_Resistor    = Load_Resistor 
         self.Efficiency       = Photo_efficiency
         self.DarkCurrent      = Dark_Current
         self.SignalPower      = Photo_SignalP
-        self.Gain_TIA         = G_TIA
-        self.V_Noise_TIA      = V_noise_TIA
+        self.Gain_TIA         = Gain_TIA
+        self.V_Noise_TIA      = V_Noise_TIA
         self.Uncertainty      = unc_func
         print('Created new photodetector: {}'.format(self.PhotodetectorID))
         
@@ -112,10 +112,10 @@ class optical_circulator():
 
 class photonics():
     def __init__(self,name,photodetector,optical_amplifier,unc_func):
-        self.PhotonicModuleID  = name
-        self.photodetector     = photodetector
-        self.optical_amp       = optical_amplifier
-        self.Uncertainty       = unc_func 
+        self.PhotonicModuleID   = name
+        self.photodetector      = photodetector
+        self.optical_amplifier  = optical_amplifier
+        self.Uncertainty        = unc_func 
         print('Created new photonic module: {}'.format(self.PhotonicModuleID))
 
 class power():
