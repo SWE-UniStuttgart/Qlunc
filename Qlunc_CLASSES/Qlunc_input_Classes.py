@@ -5,7 +5,7 @@ Created on Fri Jul 24 17:26:23 2020
 @author: fcosta
 """
 #%% Flags
-flag_plot=0
+flag_plot=1
 
 
 
@@ -39,7 +39,7 @@ Scanner1          = scanner(name           = 'Scan1',
                            origin          = [0,0,0], #Origin
                            focus_dist      = np.array([40]*24),
                            sample_rate     = 10,
-                           theta           = np.linspace(0,125,24),#np.array([0]*24),
+                           theta           = np.array([7]*24), #np.linspace(0,125,24),#
                            phi             = np.arange(0,360,15),
                            stdv_focus_dist = 0.8,
                            stdv_theta      = 0.8,
@@ -47,9 +47,9 @@ Scanner1          = scanner(name           = 'Scan1',
                            unc_func        = uopc.UQ_Scanner)  
 Scanner2          = scanner(name           = 'Scan2',
                            origin          = [0,0,0], #Origin
-                           focus_dist      = np.array([0]*24),
+                           focus_dist      = np.array([80]*24),
                            sample_rate     = 10,
-                           theta           = np.array([0]*24),
+                           theta           = np.array([7]*24),
                            phi             = np.arange(0,360,15),
                            stdv_focus_dist = 0.3,
                            stdv_theta      = 0.3,
@@ -60,9 +60,9 @@ Scanner3          = scanner(name           = 'Scan3',
                            origin          = [0,0,0], #Origin
                            focus_dist      = np.array([120]*24),
                            sample_rate     = 10,
-                           theta           = np.linspace(0,180,24),#np.array([20]*24),
-                           phi             = np.array([0]*24),#np.arange(0,360,15) ,
-                           stdv_focus_dist = 1,
+                           theta           = np.array([7]*24),# np.linspace(0,180,24),#
+                           phi             = np.arange(0,360,15) ,#np.array([0]*24),#
+                           stdv_focus_dist = 6,
                            stdv_theta      = 1,
                            stdv_phi        = 4,
                            unc_func        = uopc.UQ_Scanner)       
@@ -100,6 +100,7 @@ Photodetector    = photodetector(name             = 'Photo1',
                                  Photo_efficiency = .85,
                                  Dark_Current     = 5e-9,
                                  Photo_SignalP    = 1e-3,
+                                 Power_interval   = np.arange(0,1000,.001), # power interval for the photodetector interval
                                  Gain_TIA         = 5e3,
                                  V_Noise_TIA      = 160e-6,
                                  unc_func         = uphc.UQ_Photodetector)
@@ -108,7 +109,7 @@ Photodetector    = photodetector(name             = 'Photo1',
 
 Photonics_Module = photonics(name              = 'PhotoMod1',
                              photodetector     = Photodetector, # or None
-                             optical_amplifier = OpticalAmplifier,
+                             optical_amplifier = None,# OpticalAmplifier,# 
                              unc_func          = uphc.sum_unc_photonics)
 
 #############  Power #########################################
@@ -117,7 +118,7 @@ Photonics_Module = photonics(name              = 'PhotoMod1',
 
 PowerSource      = power_source(name      = 'P_Source1',
                                 Inp_power = 1,
-                                Out_power = 2,
+                                Out_power = 2e-3,
                                 unc_func  = upwc.UQ_PowerSource)
 
 Converter        = converter(name      = 'Conv1',
@@ -139,8 +140,8 @@ Power_Module     = power(name         = 'PowerMod1',
 Lidar_inputs     = lidar_gral_inp(name        = 'Gral_inp1', 
                                   wave        = 1550e-9, 
                                   sample_rate = 2,       # Hz
-                                  yaw_error   = 5,       # Degreesof rotation around z axis because of inclinometer errors
-                                  pitch_error = 5,       # Degrees of rotation around y axis
+                                  yaw_error   = 0,       # Degreesof rotation around z axis because of inclinometer errors
+                                  pitch_error = 0,       # Degrees of rotation around y axis
                                   roll_error  = 0)       # Degrees of rotation around z axis
 
 
@@ -148,7 +149,7 @@ Lidar_inputs     = lidar_gral_inp(name        = 'Gral_inp1',
 
 Lidar1 = lidar(name         = 'Caixa1',
                photonics    = Photonics_Module,
-               optics       = None,
+               optics       = Optics_Module1,
                power        = None,
                lidar_inputs = Lidar_inputs,
                unc_func     = ulc.sum_unc_lidar)
@@ -208,29 +209,30 @@ if flag_plot==1:
 #########    # Scanner pointing accuracy uncertainty:#################
     
 #    Calculating inputs for plotting:
-    Distance1,Stdv1,Coor1,NCoor1 = Lidar1.optics.scanner.Uncertainty(Lidar1,Atmospheric_Scenario,cts)
-    Distance2,Stdv2,Coor2,NCoor2 = Lidar2.optics.scanner.Uncertainty(Lidar2,Atmospheric_Scenario,cts)
-    Distance3,Stdv3,Coor3,NCoor3 = Lidar3.optics.scanner.Uncertainty(Lidar3,Atmospheric_Scenario,cts)
+    Scanner_Data1 = Lidar1.optics.scanner.Uncertainty(Lidar1,Atmospheric_Scenario,cts)
+    Scanner_Data2 = Lidar2.optics.scanner.Uncertainty(Lidar2,Atmospheric_Scenario,cts)
+    Scanner_Data3 = Lidar3.optics.scanner.Uncertainty(Lidar3,Atmospheric_Scenario,cts)
     
     # Creating the figure and the axes
     fig,(axs1,axs2,axs3) = plt.subplots(1,3,sharey=False) 
 #    ax.plot.errorbar(Lidar1.optics.scanner.focus_dist,,plot_param['marker'],markersize=6.5,label='stdv Distance')
     
     # fitting the results to a straight line
-    z1 = np.polyfit(Lidar1.optics.scanner.focus_dist, Distance1, 1) # With '1' is a straight line y=ax+b
+    z1 = np.polyfit(Lidar1.optics.scanner.focus_dist, Scanner_Data1['Simu_Mean_Distance'], 1) # With '1' is a straight line y=ax+b
     f1 = np.poly1d(z1)
     # calculate new x's and y's
     x_new1 = np.linspace(Lidar1.optics.scanner.focus_dist[0], Lidar1.optics.scanner.focus_dist[-1], 50)
     y_new1 = f1(x_new1)
 
     
-    z2 = np.polyfit(Scanner2.theta, Distance2, 1) # With '1' is a straight line y=ax+b
+    z2 = np.polyfit(Scanner2.theta, Scanner_Data2['Simu_Mean_Distance'], 1) # With '1' is a straight line y=ax+b
     f2 = np.poly1d(z2)
     # calculate new x's and y's
     x_new2 = np.linspace(Scanner2.theta[0], Scanner2.theta[-1], 50)
     y_new2 = f2(x_new2)
-    1
-    z3 = np.polyfit(Scanner3.phi, Distance3, 1) # With '1' is a straight line y=ax+b
+
+   
+    z3 = np.polyfit(Scanner3.phi, Scanner_Data3['Simu_Mean_Distance'], 1) # With '1' is a straight line y=ax+b
     f3 = np.poly1d(z3)
     # calculate new x's and y's
     x_new3 = np.linspace(Scanner3.phi[0], Scanner3.phi[-1], 50)
@@ -238,11 +240,11 @@ if flag_plot==1:
     
      # Plotting:
     axs1.plot(x_new1,y_new1,'r-',label='Fitted curve1')
-    axs1.errorbar(Lidar1.optics.scanner.focus_dist,Distance1,yerr=Stdv1,label='Data1')
+    axs1.errorbar(Lidar1.optics.scanner.focus_dist,Scanner_Data1['Simu_Mean_Distance'],yerr=Scanner_Data1['STDV_Distance'],label='Data1')
     axs2.plot(x_new2,y_new2,'r-',label='Fitted curve2')
-    axs2.errorbar(Scanner2.theta,Distance2,yerr=Stdv2,label='Data2')
+    axs2.errorbar(Scanner2.theta,Scanner_Data2['Simu_Mean_Distance'],yerr=Scanner_Data2['STDV_Distance'],label='Data2')
     axs3.plot(x_new3,y_new3,'r-',label='Fitted curve3')
-    axs3.errorbar(Scanner3.phi,Distance3,yerr=Stdv3,label='Data3')
+    axs3.errorbar(Scanner3.phi,Scanner_Data3['Simu_Mean_Distance'],yerr=Scanner_Data3['STDV_Distance'],label='Data3')
     
     #Title and axis labels for the different plots
     fig.suptitle('Mean Distance error and stdv of the Distance error [m]',fontsize=plot_param['suptitle_fontsize'])
@@ -261,7 +263,7 @@ if flag_plot==1:
     axs1.text(np.min(x_new1),np.max(y_new1),'$y$={0:.3g}$x$+{1:.3g}'.format(z1[0],z1[1]),fontsize=plot_param['textbox_fontsize'])
     axs2.text(np.min(x_new2),np.max(y_new2),'$y$={0:.3g}$x$+{1:.3g}'.format(z2[0],z2[1]),fontsize=plot_param['textbox_fontsize'])
     axs3.text(np.min(x_new3),np.max(y_new3),'$y$={0:.3g}$x$+{1:.3g}'.format(z3[0],z3[1]),fontsize=plot_param['textbox_fontsize'])
-    
+#    
 
 ##############    Ploting scanner measuring points #######################
     # Creating the figure and the axes
@@ -269,15 +271,14 @@ if flag_plot==1:
     axs4=plt.axes(projection='3d')
     
     axs4.plot([Lidar1.optics.scanner.origin[0]],[Lidar1.optics.scanner.origin[1]],[Lidar1.optics.scanner.origin[2]],'ob',label='{} coordinates [{},{},{}]'.format(Lidar1.LidarID,Lidar1.optics.scanner.origin[0],Lidar1.optics.scanner.origin[1],Lidar1.optics.scanner.origin[2]),markersize=plot_param['markersize_lidar'])
-    axs4.plot(Coor1[0],Coor1[1],Coor1[2],plot_param['markerTheo'],markersize=plot_param['markersize'],label='Theoretical measuring point')
-    axs4.plot(NCoor1[0],NCoor1[1],NCoor1[2],plot_param['marker'],markersize=plot_param['markersize'],label='Distance error [m] = {0:.3g}$\pm${1:.3g}'.format(np.mean(Distance1),np.mean(Stdv1)))
+    axs4.plot(Scanner_Data1['MeasPoint_Coordinates'][0],Scanner_Data1['MeasPoint_Coordinates'][1],Scanner_Data1['MeasPoint_Coordinates'][2],plot_param['markerTheo'],markersize=plot_param['markersize'],label='Theoretical measuring point')
+    axs4.plot(Scanner_Data1['NoisyMeasPoint_Coordinates'][0],Scanner_Data1['NoisyMeasPoint_Coordinates'][1],Scanner_Data1['NoisyMeasPoint_Coordinates'][2],plot_param['marker'],markersize=plot_param['markersize'],label='Distance error [m] = {0:.3g}$\pm${1:.3g}'.format(np.mean(Scanner_Data1['Simu_Mean_Distance']),np.mean(Scanner_Data1['STDV_Distance'])))
 
-    axs4.plot(Coor2[0],Coor2[1],Coor2[2],plot_param['markerTheo'],markersize=plot_param['markersize'])
-    axs4.plot(NCoor2[0],NCoor2[1],NCoor2[2],plot_param['marker'],markersize=plot_param['markersize'],label='Distance error [m] = {0:.3g}$\pm${1:.3g}'.format(np.mean(Distance2),np.mean(Stdv2)))
+    axs4.plot(Scanner_Data2['MeasPoint_Coordinates'][0],Scanner_Data2['MeasPoint_Coordinates'][1],Scanner_Data2['MeasPoint_Coordinates'][2],plot_param['markerTheo'],markersize=plot_param['markersize'])
+    axs4.plot(Scanner_Data2['NoisyMeasPoint_Coordinates'][0],Scanner_Data2['NoisyMeasPoint_Coordinates'][1],Scanner_Data2['NoisyMeasPoint_Coordinates'][2],plot_param['marker'],markersize=plot_param['markersize'],label='Distance error [m] = {0:.3g}$\pm${1:.3g}'.format(np.mean(Scanner_Data2['Simu_Mean_Distance']),np.mean(Scanner_Data2['STDV_Distance'])))
     
-    axs4.plot(Coor3[0],Coor3[1],Coor3[2],plot_param['markerTheo'],markersize=plot_param['markersize'])
-    axs4.plot(NCoor3[0],NCoor3[1],NCoor3[2],plot_param['marker'],markersize=plot_param['markersize'],label='Distance error [m] = {0:.3g}$\pm${1:.3g}'.format(np.mean(Distance3),np.mean(Stdv3)))
-    
+    axs4.plot(Scanner_Data3['MeasPoint_Coordinates'][0],Scanner_Data3['MeasPoint_Coordinates'][1],Scanner_Data3['MeasPoint_Coordinates'][2],plot_param['markerTheo'],markersize=plot_param['markersize'])
+    axs4.plot(Scanner_Data3['NoisyMeasPoint_Coordinates'][0],Scanner_Data3['NoisyMeasPoint_Coordinates'][1],Scanner_Data3['NoisyMeasPoint_Coordinates'][2],plot_param['marker'],markersize=plot_param['markersize'],label='Distance error [m] = {0:.3g}$\pm${1:.3g}'.format(np.mean(Scanner_Data3['Simu_Mean_Distance']),np.mean(Scanner_Data3['STDV_Distance'])))
     
     axs4.set_xlabel('x [m]',fontsize=plot_param['axes_label_fontsize'])#,orientation=plot_param['tick_labelrotation'])
     axs4.set_ylabel('y [m]',fontsize=plot_param['axes_label_fontsize'])#,orientation=plot_param['tick_labelrotation'])
@@ -295,14 +296,14 @@ if flag_plot==1:
    
 ###########   Plot photodetector noise   #############################       
 
-    UQ_Photo,SNR_photo=Lidar1.photonics.photodetector.Uncertainty(Lidar1,Atmospheric_Scenario,cts)
-    Ps=np.arange(0,1000,.001)
-    Psax=10*np.log10(Ps) 
+    UQ_photo=Lidar1.photonics.photodetector.Uncertainty(Lidar1,Atmospheric_Scenario,cts) # Obtain the UQ photodetector dictionary wit SNR and UQ information
+    
+    Psax=10*np.log10(Lidar1.photonics.photodetector.Power_interval) 
     plt.figure()
     #plt.xscale('log',basex=10)
     #plt.yscale('log',basey=10)
     
-    plt.plot(Psax,SNR_photo['SNR_Shot_Noise'][0],Psax,SNR_photo['SNR_Thermal'][0],Psax,SNR_photo['SNR_Dark_Current'][0],Psax,SNR_photo['SNR_TIA'][0])
+    plt.plot(Psax,UQ_photo['SNR_data_photo']['SNR_Shot_Noise'][0],Psax,UQ_photo['SNR_data_photo']['SNR_Thermal'][0],Psax,UQ_photo['SNR_data_photo']['SNR_Dark_Current'][0],Psax,UQ_photo['SNR_data_photo']['SNR_TIA'][0])
     plt.xlabel('Input Signal optical power (dBm)',fontsize=plot_param['axes_label_fontsize'])
     plt.ylabel('SNR (dB)',fontsize=plot_param['axes_label_fontsize'])
     plt.legend(['Shot Noise','Thermal Noise','Dark current Noise','TIA Noise'],fontsize=plot_param['legend_fontsize'])#,'Total error [w]'])
