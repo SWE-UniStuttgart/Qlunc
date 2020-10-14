@@ -5,7 +5,7 @@ Created on Fri Jul 24 17:26:23 2020
 @author: fcosta
 """
 #%% Flags
-flag_plot=1
+flag_plot=0
 
 
 
@@ -68,12 +68,12 @@ Scanner3          = scanner(name           = 'Scan3',
                            unc_func        = uopc.UQ_Scanner)       
 
 Optical_circulator1 = optical_circulator (name = 'OptCirc1',
-                                          insertion_loss = 2.1,
+                                          insertion_loss = -127,
                                           unc_func = uopc.UQ_OpticalCirculator) 
 # Module:
 
 Optics_Module1 =  optics (name     = 'OptMod1',
-                         scanner  = Scanner1,
+                         scanner  = None,#Scanner1,
                          optical_circulator = Optical_circulator1,
                          unc_func = uopc.sum_unc_optics) # here you put the function describing your uncertainty
 Optics_Module2 =  optics (name     = 'OptMod2',
@@ -109,7 +109,7 @@ Photodetector    = photodetector(name             = 'Photo1',
 
 Photonics_Module = photonics(name              = 'PhotoMod1',
                              photodetector     = Photodetector, # or None
-                             optical_amplifier = None,# OpticalAmplifier,# 
+                             optical_amplifier =  OpticalAmplifier,# None,#
                              unc_func          = uphc.sum_unc_photonics)
 
 #############  Power #########################################

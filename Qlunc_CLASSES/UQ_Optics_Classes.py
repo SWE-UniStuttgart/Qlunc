@@ -120,14 +120,16 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts):
     Final_Output_UQ_Scanner={'Simu_Mean_Distance':SimMean_DISTANCE,'STDV_Distance':Mean_Stdv_DISTANCE,'MeasPoint_Coordinates':Coord,'NoisyMeasPoint_Coordinates':Noisy_Coord}
     return Final_Output_UQ_Scanner#,Coor #plot_dist,plot_stdv_dist
     
-def UQ_OpticalCirculator(Lidar,Atmospheric_Scenario,ctsr):#
-#    print('Paco')
-    Final_Output_UQ_Optical_Circulator={'Optical_Circulator_Uncertainty':Lidar.optics.optical_circulator.insertion_loss}
+def UQ_OpticalCirculator(Lidar,Atmospheric_Scenario,cts):
+    Optical_Circulator_Uncertainty = [Lidar.optics.optical_circulator.insertion_loss]
+    Final_Output_UQ_Optical_Circulator={'Optical_Circulator_Uncertainty':Optical_Circulator_Uncertainty}
     return Final_Output_UQ_Optical_Circulator
 #%% Sum of uncertainty components in optics module: 
-def sum_unc_optics(Lidar,Atmospheric_Scenario,cts): 
+def sum_unc_optics(Lidar,Atmospheric_Scenario,cts):
+    List_Unc_optics = []
     try: # ecah try/except evaluates wether the component is included in the module, therefore in the calculations
         Scanner_Uncertainty=Lidar.optics.scanner.Uncertainty(Lidar,Atmospheric_Scenario,cts)
+        
     except:
         Scanner_Uncertainty=None
         print('No scanner in calculations!')
@@ -138,24 +140,16 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts):
         print('No telescope in calculations!')
     try:
         Optical_circulator_Uncertainty = Lidar.optics.optical_circulator.Uncertainty(Lidar,Atmospheric_Scenario,cts)
+        List_Unc_optics.append(Optical_circulator_Uncertainty['Optical_Circulator_Uncertainty'])
+        
     except:
         Optical_circulator_Uncertainty = None
         print('No optical circulator in calculations!')
 
-
-
-    List_Unc_optics1=[]
-    List_Unc_optics0=[Optical_circulator_Uncertainty['Optical_Circulator_Uncertainty']] # Have to add here the values you want to account for in the calculations 
-    for x in List_Unc_optics0:                                                          # (scanner is not included because the uncertainty is not expressed in dB, so we don't have to sum it up)
-#        
-        if isinstance(x,list):
-#           
-            List_Unc_optics0=([10**(i/10) for i in x]) # Make the list without None values and convert to watts(necessary for SA.unc_comb)
-            List_Unc_optics1.append([List_Unc_optics0]) # Make a list suitable for unc.comb function
-        else:
-            List_Unc_optics0=([10**(x/10)])
-            List_Unc_optics1=[List_Unc_optics0]
-    Uncertainty_Optics_Module=SA.unc_comb(List_Unc_optics1)
-    return Uncertainty_Optics_Module
+            
+#    pdb.set_trace()   
+    Uncertainty_Optics_Module=SA.unc_comb(List_Unc_optics)
+    Final_Output_UQ_Optics = {'Uncertainty_Optics':Uncertainty_Optics_Module}
+    return Final_Output_UQ_Optics
 
 #    return list(SA.flatten(Uncertainty_Optics_Module))
