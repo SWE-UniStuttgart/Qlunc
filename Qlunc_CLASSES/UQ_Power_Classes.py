@@ -39,12 +39,12 @@ def sum_unc_power(Lidar,Atmospheric_Scenario,cts):
         PowerSource_Uncertainty=Lidar.power.power_source.Uncertainty(Lidar,Atmospheric_Scenario,cts)
     except:
         PowerSource_Uncertainty=None
-        print('No photodetector in calculations!')
+        print('No power source in calculations!')
     try:
         Converter_Uncertainty=Lidar.power.converter.Uncertainty(Lidar,Atmospheric_Scenario,cts)
     except:
         Converter_Uncertainty=None
-        print('No OA in calculations!')
+        print('No converter in calculations!')
 #    pdb.set_trace()
     
     

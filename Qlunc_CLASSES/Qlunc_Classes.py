@@ -47,17 +47,18 @@ lidar system)
  '''   
 #Component Classes:
 class photodetector():
-    def __init__(self,name,Photo_BandWidth,Load_Resistor,Photo_efficiency,Dark_Current,Photo_SignalP,G_TIA,V_noise_TIA,unc_func):
+    def __init__(self,name,Photo_BandWidth,Load_Resistor,Photo_efficiency,Dark_Current,Photo_SignalP,Gain_TIA,V_Noise_TIA,unc_func):
         self.PhotodetectorID  = name 
         self.BandWidth        = Photo_BandWidth 
         self.Load_Resistor    = Load_Resistor 
         self.Efficiency       = Photo_efficiency
         self.DarkCurrent      = Dark_Current
         self.SignalPower      = Photo_SignalP
-        self.Gain_TIA         = G_TIA
-        self.V_Noise_TIA      = V_noise_TIA
+        self.Gain_TIA         = Gain_TIA
+        self.V_Noise_TIA      = V_Noise_TIA
         self.Uncertainty      = unc_func
         print('Created new photodetector: {}'.format(self.PhotodetectorID))
+        
 class optical_amplifier():
     def __init__(self,name,OA_NF,OA_Gain,unc_func):
         self.Optical_AmplifierID = name
@@ -65,6 +66,7 @@ class optical_amplifier():
         self.Gain                = OA_Gain
         self.Uncertainty         = unc_func
         print('Created new optical amplifier: {}'.format(self.Optical_AmplifierID))
+        
 class power_source():
     def __init__(self,name,Inp_power,Out_power,unc_func):
         self.Power_SourceID = name
@@ -72,6 +74,7 @@ class power_source():
         self.Output_power   = Out_power
         self.Uncertainty    = unc_func
         print('Created new power source: {}'.format(self.Power_SourceID))
+        
 class converter():
     def __init__(self,name,frequency,Conv_BW,Infinit,unc_func):
         self.ConverterID = name
@@ -95,15 +98,24 @@ class scanner():
         self.Uncertainty     = unc_func
         
         print('Created new scanner: {}'.format(self.ScannerID))
-    
+        
+class optical_circulator():
+    def __init__(self,name, insertion_loss,unc_func):#,isolation,return_loss): 
+        self.Optical_CirculatorID = name
+        self.insertion_loss       = insertion_loss # max value in dB
+#        self.isolation            = isolation
+#        self.return_loss          = return_loss
+        self.Uncertainty          = unc_func
+        print ('Created new optical circulator: {}'.format(self.Optical_CirculatorID))
+        
 #%%modules classes
 
 class photonics():
     def __init__(self,name,photodetector,optical_amplifier,unc_func):
-        self.PhotonicModuleID  = name
-        self.photodetector     = photodetector
-        self.optical_amp       = optical_amplifier
-        self.Uncertainty       = unc_func 
+        self.PhotonicModuleID   = name
+        self.photodetector      = photodetector
+        self.optical_amplifier  = optical_amplifier
+        self.Uncertainty        = unc_func 
         print('Created new photonic module: {}'.format(self.PhotonicModuleID))
 
 class power():
@@ -115,10 +127,11 @@ class power():
         print('Created new power module: {}'.format(self.PoweModuleID))
 
 class optics():
-    def __init__(self,name,scanner,unc_func):
-        self.OpticsModuleID = name
-        self.scanner        = scanner
-        self.Uncertainty    = unc_func 
+    def __init__(self,name,scanner,optical_circulator,unc_func):
+        self.OpticsModuleID     = name
+        self.scanner            = scanner
+        self.optical_circulator = optical_circulator
+        self.Uncertainty        = unc_func 
         print('Created new optic module: {}'.format(self.OpticsModuleID))
         
 #atmosphere object:

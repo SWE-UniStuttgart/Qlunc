@@ -39,44 +39,50 @@ Scanner1          = scanner(name           = 'Scan1',
                            origin          = [0,0,0], #Origin
                            focus_dist      = np.array([40]*24),
                            sample_rate     = 10,
-                           theta           = np.array([20]*24),
+                           theta           = np.linspace(0,125,24),#np.array([0]*24),
                            phi             = np.arange(0,360,15),
-                           stdv_focus_dist = 2,
-                           stdv_theta      = 1,
-                           stdv_phi        = 1,
+                           stdv_focus_dist = 0.8,
+                           stdv_theta      = 0.8,
+                           stdv_phi        = 0.8,
                            unc_func        = uopc.UQ_Scanner)  
 Scanner2          = scanner(name           = 'Scan2',
                            origin          = [0,0,0], #Origin
-                           focus_dist      = np.array([80]*24),
+                           focus_dist      = np.array([0]*24),
                            sample_rate     = 10,
-                           theta           = np.array([20]*24),
+                           theta           = np.array([0]*24),
                            phi             = np.arange(0,360,15),
-                           stdv_focus_dist = 2,
-                           stdv_theta      = 1,
-                           stdv_phi        = 1,
+                           stdv_focus_dist = 0.3,
+                           stdv_theta      = 0.3,
+                           stdv_phi        = 0.1,
                            unc_func        = uopc.UQ_Scanner)       
 
 Scanner3          = scanner(name           = 'Scan3',
                            origin          = [0,0,0], #Origin
                            focus_dist      = np.array([120]*24),
                            sample_rate     = 10,
-                           theta           = np.array([20]*24),
-                           phi             = np.arange(0,360,15) ,
-                           stdv_focus_dist = 2,
+                           theta           = np.linspace(0,180,24),#np.array([20]*24),
+                           phi             = np.array([0]*24),#np.arange(0,360,15) ,
+                           stdv_focus_dist = 1,
                            stdv_theta      = 1,
-                           stdv_phi        = 1,
+                           stdv_phi        = 4,
                            unc_func        = uopc.UQ_Scanner)       
 
+Optical_circulator1 = optical_circulator (name = 'OptCirc1',
+                                          insertion_loss = 2.1,
+                                          unc_func = uopc.UQ_OpticalCirculator) 
 # Module:
 
 Optics_Module1 =  optics (name     = 'OptMod1',
                          scanner  = Scanner1,
+                         optical_circulator = Optical_circulator1,
                          unc_func = uopc.sum_unc_optics) # here you put the function describing your uncertainty
 Optics_Module2 =  optics (name     = 'OptMod2',
                          scanner  = Scanner2,
+                         optical_circulator = Optical_circulator1,
                          unc_func = uopc.sum_unc_optics)
 Optics_Module3 =  optics (name     = 'OptMod3',
                          scanner  = Scanner3,
+                         optical_circulator = Optical_circulator1,
                          unc_func = uopc.sum_unc_optics)
 
 #############  Photonics ###################
@@ -84,7 +90,7 @@ Optics_Module3 =  optics (name     = 'OptMod3',
 # Components:
 
 OpticalAmplifier = optical_amplifier(name     = 'OA1',
-                                     OA_NF    = 'NoiseFigure.csv',
+                                     OA_NF    = 'NoiseFigure.csv',#50 ,#
                                      OA_Gain  = 30,
                                      unc_func = uphc.UQ_Optical_amplifier)
 
@@ -94,8 +100,8 @@ Photodetector    = photodetector(name             = 'Photo1',
                                  Photo_efficiency = .85,
                                  Dark_Current     = 5e-9,
                                  Photo_SignalP    = 1e-3,
-                                 G_TIA            = 5e3,
-                                 V_noise_TIA      = 160e-6,
+                                 Gain_TIA         = 5e3,
+                                 V_Noise_TIA      = 160e-6,
                                  unc_func         = uphc.UQ_Photodetector)
 
 # Module:
@@ -133,17 +139,17 @@ Power_Module     = power(name         = 'PowerMod1',
 Lidar_inputs     = lidar_gral_inp(name        = 'Gral_inp1', 
                                   wave        = 1550e-9, 
                                   sample_rate = 2,       # Hz
-                                  yaw_error   = 0,       # Degreesof rotation around z axis because of inclinometer errors
-                                  pitch_error = 0,       # Degrees of rotation around y axis
-                                  roll_error  = 30)       # Degrees of rotation around z axis
+                                  yaw_error   = 5,       # Degreesof rotation around z axis because of inclinometer errors
+                                  pitch_error = 5,       # Degrees of rotation around y axis
+                                  roll_error  = 0)       # Degrees of rotation around z axis
 
 
 ##########  LIDAR  #####################################
 
 Lidar1 = lidar(name         = 'Caixa1',
                photonics    = Photonics_Module,
-               optics       = Optics_Module1,
-               power        = Power_Module,
+               optics       = None,
+               power        = None,
                lidar_inputs = Lidar_inputs,
                unc_func     = ulc.sum_unc_lidar)
 Lidar2 = lidar(name         = 'Caixa2',
@@ -161,9 +167,9 @@ Lidar3 = lidar(name         = 'Caixa3',
                unc_func     = ulc.sum_unc_lidar)
 
 #%% Creating atmospheric scenarios:
-TimeSeries=True  # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere (T, H, rain and fog) 
-                  # If so we obtain a time series describing the noise implemented in the measurement.
-if TimeSeries:
+Atmospheric_TimeSeries = True # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere (T, H, rain and fog) 
+                               # If so we obtain a time series describing the noise implemented in the measurement.
+if Atmospheric_TimeSeries:
     Atmos_TS_FILE           = 'AtmosphericScenarios.csv'
     AtmosphericScenarios_TS = pd.read_csv(Atmos_TS_FILE,delimiter=';',decimal=',')
     Atmospheric_inputs={
@@ -178,7 +184,7 @@ if TimeSeries:
 else:    
 
     Atmospheric_Scenario=atmosphere(name        = 'Atmosphere1',
-                                    temperature = [300])
+                                    temperature = [1])
 
 #%% Plotting:
 
@@ -297,10 +303,10 @@ if flag_plot==1:
     #plt.yscale('log',basey=10)
     
     plt.plot(Psax,SNR_photo['SNR_Shot_Noise'][0],Psax,SNR_photo['SNR_Thermal'][0],Psax,SNR_photo['SNR_Dark_Current'][0],Psax,SNR_photo['SNR_TIA'][0])
-    plt.xlabel('Input Signal optical power (dBm)',fontsize=29)
-    plt.ylabel('SNR (dB)',fontsize=29)
-    plt.legend(['Shot Noise','Thermal Noise','Dark current Noise','TIA Noise'],fontsize=16)#,'Total error [w]'])
-    plt.title('SNR Photodetector',fontsize=35)
+    plt.xlabel('Input Signal optical power (dBm)',fontsize=plot_param['axes_label_fontsize'])
+    plt.ylabel('SNR (dB)',fontsize=plot_param['axes_label_fontsize'])
+    plt.legend(['Shot Noise','Thermal Noise','Dark current Noise','TIA Noise'],fontsize=plot_param['legend_fontsize'])#,'Total error [w]'])
+    plt.title('SNR Photodetector',fontsize=plot_param['title_fontsize'])
     plt.grid(axis='both')
        
 
