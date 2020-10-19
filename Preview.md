@@ -78,5 +78,4 @@ Then once we have created the modules, we can made up a lidar object just in the
                       Mod         = Module_A,                     # Including _Module_1_ in the lidar device.
                       uncertainty = Mod_A_uncertainty_function)   # Uncertainty describing uncertainty in _Lid_a_. Following GUM.
 
-Then, we have created a Lidar object (called Lidar_A) made up of one module, Module_A, and this module contains one single component with properties _Property_1_ and
-_Property_2_.
+Then, we have created a Lidar object, called _Lidar_A_ made up of one module, _Module_A_, which contains one single component, _Component_A_, with properties _Property_1_ and _Property_2_.
