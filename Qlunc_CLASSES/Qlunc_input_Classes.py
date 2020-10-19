@@ -4,7 +4,7 @@ Created on Fri Jul 24 17:26:23 2020
 
 @author: fcosta
 """
-#%% Flags
+#%% Plot Flags
 flag_plot=0
 
 
@@ -68,12 +68,12 @@ Scanner3          = scanner(name           = 'Scan3',
                            unc_func        = uopc.UQ_Scanner)       
 
 Optical_circulator1 = optical_circulator (name = 'OptCirc1',
-                                          insertion_loss = -127,
+                                          insertion_loss = -100,
                                           unc_func = uopc.UQ_OpticalCirculator) 
 # Module:
 
 Optics_Module1 =  optics (name     = 'OptMod1',
-                         scanner  = None,#Scanner1,
+                         scanner  = Scanner1,#None,#
                          optical_circulator = Optical_circulator1,
                          unc_func = uopc.sum_unc_optics) # here you put the function describing your uncertainty
 Optics_Module2 =  optics (name     = 'OptMod2',
@@ -90,7 +90,7 @@ Optics_Module3 =  optics (name     = 'OptMod3',
 # Components:
 
 OpticalAmplifier = optical_amplifier(name     = 'OA1',
-                                     OA_NF    = 'NoiseFigure.csv',#50 ,#
+                                     OA_NF    = 50 ,#'NoiseFigure.csv',#
                                      OA_Gain  = 30,
                                      unc_func = uphc.UQ_Optical_amplifier)
 
@@ -258,14 +258,16 @@ if flag_plot==1:
     axs3.set_title(r'Variation with $\phi$',fontsize=plot_param['title_fontsize'])
     axs3.set(xlabel=r'$\phi$'+' [°]')
     axs3.xaxis.get_label().set_fontsize(plot_param['axes_label_fontsize'])
-    
+    axs1.set_ylim(0,10)
+    axs2.set_ylim(0,10)
+    axs3.set_ylim(0,10)
     # text box with the fitted polynomial on the plot
     axs1.text(np.min(x_new1),np.max(y_new1),'$y$={0:.3g}$x$+{1:.3g}'.format(z1[0],z1[1]),fontsize=plot_param['textbox_fontsize'])
     axs2.text(np.min(x_new2),np.max(y_new2),'$y$={0:.3g}$x$+{1:.3g}'.format(z2[0],z2[1]),fontsize=plot_param['textbox_fontsize'])
     axs3.text(np.min(x_new3),np.max(y_new3),'$y$={0:.3g}$x$+{1:.3g}'.format(z3[0],z3[1]),fontsize=plot_param['textbox_fontsize'])
 #    
 
-##############    Ploting scanner measuring points #######################
+##############    Ploting scanner measuring points pattern #######################
     # Creating the figure and the axes
     fig,axs4 = plt.subplots()  
     axs4=plt.axes(projection='3d')
