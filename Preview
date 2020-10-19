@@ -1,0 +1,9 @@
+Qlunc
+# F.Costa
+# 19.10.2020
+
+Qlunc is softare that aims to quantify errors when measuring with a lidar device. 
+
+The code is objected oriented within the creation of python objects simulating real lidar components, building up a lidar digital twin. The user creates an instance of
+each lidar component,including its functional parameters, and also can define the function is used to obtain the specific uncertainty of the component. Then, each module
+is 
