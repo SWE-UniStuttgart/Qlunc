@@ -16,20 +16,24 @@ and humidity, either single values or time series coming from peripherals are bo
 The last step is ask for the uncertainty we are interested in, either coming from a component, module or lidar object. Indeed, the flexibility of the code allows the 
 user not just to asses lidar uncertainty,  but also to query uncertainties coming from specific modules or even single comonents.
 
+
+# Working example
+
 In this repository is presented a working example of Qlunc in order to facilitate its understanding.
 
 The components are included as python classes, for example a component A is created instanciating class A:
 
 - Creating a class for the component _Component_A_
   >> class Comp_A:
-  >>   def __init__(self, property_1, property_2)
-  >>      self.property_1 = property_1
-  >>      self.property_2 = property_2
-
+  >>   def __init__(self, property_1, property_2, unc_func)
+  >>      self.property_1  = property_1
+  >>      self.property_2  = property_2
+  >>      self.uncertainty = unc_func
 - Then we instantiate class _Comp_A_ tro create the object representing the lidar component digital twin.
 
-  >> Component_A = Comp_A (Property_1 = a1,   # Component A
-                           Property_2 = a2)
+  >> Component_A = Comp_A (property_1 = a1,   # Component A
+  >>                       property_2 = a2,
+  >>                       uncertainty = uncertainty_function) # Define by the user
      
 As well for the modules:
 
@@ -37,10 +41,10 @@ As well for the modules:
   >> class Mod_A:
   >>   def __init__(self, name, Comp_1)
   >>      self.name       = name
-  >>      self.Comp_1 = property_1)
+  >>      self.Comp_1 = Comp_1
 
 - Then we instantiate class _Module_A_
 
   >> Module_A = Mod_A (name       = C_A 
-                       Property_1 = a1,  
-                           Property_2 = a2)
+                       Comp_1 = Component_1,  
+                       Property_2 = a2)
