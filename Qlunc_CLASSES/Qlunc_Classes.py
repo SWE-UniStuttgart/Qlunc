@@ -75,7 +75,16 @@ class power_source():
         self.Output_power   = Out_power
         self.Uncertainty    = unc_func
         print('Created new power source: {}'.format(self.Power_SourceID))
-        
+
+class laser():
+    def __init__(self,name,Wavelength,e_Wavelength,Out_power,unc_func):
+        self.Power_SourceID = name
+        self.Wavelength     = Wavelength
+        self.e_Wavelength   = e_Wavelength
+        self.Output_power   = Out_power
+        self.Uncertainty    = unc_func
+        print('Created new power source: {}'.format(self.Power_SourceID))        
+
 class converter():
     def __init__(self,name,frequency,Conv_BW,Infinit,unc_func):
         self.ConverterID = name
@@ -128,10 +137,11 @@ class power():
         print('Created new power module: {}'.format(self.PoweModuleID))
 
 class optics():
-    def __init__(self,name,scanner,optical_circulator,unc_func):
+    def __init__(self,name,scanner,optical_circulator,laser,unc_func):
         self.OpticsModuleID     = name
         self.scanner            = scanner
         self.optical_circulator = optical_circulator
+        self.laser              = laser
         self.Uncertainty        = unc_func 
         print('Created new optic module: {}'.format(self.OpticsModuleID))
         
