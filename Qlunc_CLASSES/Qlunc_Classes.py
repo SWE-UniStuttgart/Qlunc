@@ -13,7 +13,7 @@ Created on Fri Jun 19 19:57:05 2020
     - Create an instance
     - unc_func is the uncertainty quantification function of the component. We will 
       create a function calculating the combined uncertainty of each module
-3) Insert an uncertainty method
+3) Insert an uncertainty method following GUM to combine uncertainties coming from either different modules or different components of each module
 4) Create the atmospheric scenarios
 5) Create a lidar:
     
@@ -54,7 +54,7 @@ class photodetector():
         self.Efficiency       = Photo_efficiency
         self.DarkCurrent      = Dark_Current
         self.SignalPower      = Photo_SignalP
-        self.Power_interval   = Power_interval
+        self.Power_interval   = Power_interval # interval for the photodetector uncertainty plot
         self.Gain_TIA         = Gain_TIA
         self.V_Noise_TIA      = V_Noise_TIA
         self.Uncertainty      = unc_func
