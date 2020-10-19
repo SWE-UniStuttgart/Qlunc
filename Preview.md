@@ -13,14 +13,15 @@ The user creates an instance of each lidar component (python class), including i
 The user creates also atmospheric scenarios to account for the different atmospheric conditions the lidar has to deal with. Atmospheric inputs, basically temperature 
 and humidity, either single values or time series coming from peripherals are both accepted.
 
+# Qlunc available capabilities:
+
+## Uncertainties:
 The last step is ask for the uncertainty we are interested in, either coming from a component, module or lidar object. Indeed, the flexibility of the code allows the 
 user not just to asses lidar uncertainty,  but also to query uncertainties coming from specific modules or even single comonents.
 
 At this stage the code can calculate errors introduced by photodetector and optical amplifier, forming the photonics module; scanner and optical circulator, forming the optic module. Uncertainty expansion method is applied to obtain the lidar uncertainty due to this modules and components.
 
-
-
-
+## Plots: 
 
 # Working example
 
