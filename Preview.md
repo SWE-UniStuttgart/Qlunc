@@ -36,7 +36,7 @@ We want to create a lidar object maded up with one module. This module wil conta
 In this repository is presented a working example of Qlunc in order to facilitate its understanding.
 
 ## Creating the component digital twin:
-The components are included as python classes, for example a component A is created instanciating class A:
+The components are included as python classes, for example a component, _Component_A_, is created instanciating class _Comp_A_:
 
 - Creating a class for the component _Component_A_:
 
@@ -66,7 +66,7 @@ As well, for the modules:
   >>      self.component   = Comp_1    
   >>      self.uncertainty = unc_func  
   
-- Then we instantiate class _Mod_A_:
+- Then we instantiate class _Mod_A_ to create the Module object:
 
   >> Module_A = Mod_A (name        = M_A, 
                        Comp_1      = Component_1,                # Including _Component_1_ in the module.
@@ -74,7 +74,7 @@ As well, for the modules:
 
 ## Creating the lidar:
 
-Then once we have created the modules, we can made up a lidar object just in the same way:
+Then once we have created the module(s), we can made up a lidar object just in the same way:
 
 
 - Creating a class for the _Lidar_A_:
@@ -84,7 +84,7 @@ Then once we have created the modules, we can made up a lidar object just in the
   >>      self.Mod_1       = Mod_1       
   >>      self.uncertainty = unc_func  
   
-- Then we instantiate class _Lid_A_ to create Lidar_A object:
+- Then we instantiate class _Lid_A_ to create the Lidar object:
 
   >> Lidar_A = Lid_A (name        = M_A, 
                       Mod         = Module_A,                     # Including _Module_1_ in the lidar device.
