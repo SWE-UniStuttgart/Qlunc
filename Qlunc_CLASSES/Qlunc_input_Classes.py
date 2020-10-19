@@ -72,18 +72,21 @@ Optical_circulator1 = optical_circulator (name = 'OptCirc1',
                                           unc_func = uopc.UQ_OpticalCirculator) 
 # Module:
 
-Optics_Module1 =  optics (name     = 'OptMod1',
-                         scanner  = Scanner1,#None,#
-                         optical_circulator = Optical_circulator1,
-                         unc_func = uopc.sum_unc_optics) # here you put the function describing your uncertainty
-Optics_Module2 =  optics (name     = 'OptMod2',
-                         scanner  = Scanner2,
-                         optical_circulator = Optical_circulator1,
-                         unc_func = uopc.sum_unc_optics)
-Optics_Module3 =  optics (name     = 'OptMod3',
-                         scanner  = Scanner3,
-                         optical_circulator = Optical_circulator1,
-                         unc_func = uopc.sum_unc_optics)
+Optics_Module1 =  optics (name                = 'OptMod1',
+                         scanner              = Scanner1,#None,#
+                         optical_circulator   = Optical_circulator1,
+                         laser                = None,
+                         unc_func             = uopc.sum_unc_optics) # here you put the function describing your uncertainty
+Optics_Module2 =  optics (name                = 'OptMod2',
+                         scanner              = Scanner2,
+                         optical_circulator   = Optical_circulator1,
+                         laser                = None,
+                         unc_func             = uopc.sum_unc_optics)
+Optics_Module3 =  optics (name                = 'OptMod3',
+                         scanner              = Scanner3,
+                         optical_circulator   = Optical_circulator1,
+                         laser                = None,
+                         unc_func             = uopc.sum_unc_optics)
 
 #############  Photonics ###################
 
