@@ -5,10 +5,11 @@ F.Costa
 Qlunc is a softare that aims to quantify errors when measuring with a lidar device. The code has an objected oriented structure; using python objects and simulating 
 real lidar components the code puts all together in modules to eventually build up a lidar digital twin. 
 
-The user creates an instance of each lidar component, including its functional parameters and defining the function that is used to obtain the specific components 
-uncertainty. Then, each module (also python objects) is "filled" with the corresponding components and its uncertainty is computed following uncertainty expansion 
-according GUM. Once each component is 'ensembled', the lidar object is created and the modules included. As a result we obtain the lidara modules digital twins, the desired lidar digital twin, uncertainty of which is computed again by following GUM suggestions about uncertaity expansion.
+# Creating lidar device:
 
+The user creates an instance of each lidar component (python class), including its functional parameters and defining the function that is used to obtain the specific components uncertainty. Then, each module (also python objects) is "filled" with the corresponding components and their uncertainties are computed following uncertainty expansion according GUM. Once each component is 'ensembled' building up the different modules, the lidar object is created and the modules included. As a result the desired lidar digital twin is created, uncertainty of which is computed again by following GUM suggestions about uncertaity expansion.
+
+# Creating atmospheric conditions
 The user creates also atmospheric scenarios to account for the different atmospheric conditions the lidar has to deal with. Atmospheric inputs, basically temperature 
 and humidity, either single values or time series coming from peripherals are both accepted.
 
@@ -33,14 +34,14 @@ The components are included as python classes, for example a component A is crea
   >>   def __init__(self, property_1, property_2, unc_func)
   >>      self.property_1  = property_1
   >>      self.property_2  = property_2
-  >>      self.uncertainty = unc_func
+  >>      self.uncertainty = unc_func 
   
 - Then we instantiate class _Comp_A_ tro create the object representing the lidar component digital twin:
 
   >> Component_A = Comp_A (name       = C_A,
   >>                       property_1 = a1,  
   >>                       property_2 = a2,
-  >>                       uncertainty = Comp_A_uncertainty_function) # Uncertainty describing uncertainty in _Comp_a_. Defined by the user.
+  >>                       uncertainty = Comp_A_uncertainty_function)  # Uncertainty describing uncertainty in _Comp_a_. Defined by the user.
      
 As well for the modules:
 
@@ -48,11 +49,30 @@ As well for the modules:
   >> class Mod_A:
   >>   def __init__(self, name, Comp_1, unc_func)
   >>      self.name        = name
-  >>      self.Comp_1      = Comp_1    # Including _Component_1_ in the module
-  >>      self.uncertainty = unc_func  # Uncertainty describing uncertainty in _Mod_a_. Defined by the user.
+  >>      self.component    Comp_1    
+  >>      self.uncertainty = unc_func  
   
 - Then we instantiate class _Mod_A_:
 
   >> Module_A = Mod_A (name        = M_A, 
-                       Comp_1      = Component_1,  
-                       uncertainty = Mod_A_uncertainty_function)
+                       Comp_1      = Component_1,                # Including _Component_1_ in the module.
+                       uncertainty = Mod_A_uncertainty_function) # Uncertainty describing uncertainty in _Mod_a_. Following GUM.
+
+Then once we have created the modules, we can made up a lidar object just in the same way:
+
+
+- Creating a class for the _Lidar_A_:
+  >> class Lid_A:
+  >>   def __init__(self, name, Mod_1, unc_func)
+  >>      self.name        = name
+  >>      self.Mod_1       = Mod_1       
+  >>      self.uncertainty = unc_func  
+  
+- Then we instantiate class _Lid_A_ to create Lidar_A object:
+
+  >> Lidar_A = Lid_A (name        = M_A, 
+                      Mod         = Module_A,                     # Including _Module_1_ in the lidar device.
+                      uncertainty = Mod_A_uncertainty_function)   # Uncertainty describing uncertainty in _Lid_a_. Following GUM.
+
+Then, we have created a Lidar object (called Lidar_A) made up of one module, Module_A, and this module contains one single component with properties _Property_1_ and
+_Property_2_.
