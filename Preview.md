@@ -15,6 +15,11 @@ and humidity, either single values or time series coming from peripherals are bo
 The last step is ask for the uncertainty we are interested in, either coming from a component, module or lidar object. Indeed, the flexibility of the code allows the 
 user not just to asses lidar uncertainty,  but also to query uncertainties coming from specific modules or even single comonents.
 
+At this stage the code can calculate errors introduced by photodetector and optical amplifier, forming the photonics module; scanner and optical circulator, forming the optic module. Uncertainty expansion method is applied to obtain the lidar uncertainty due to this modules and components.
+
+
+
+
 
 # Working example
 
@@ -22,28 +27,32 @@ In this repository is presented a working example of Qlunc in order to facilitat
 
 The components are included as python classes, for example a component A is created instanciating class A:
 
-- Creating a class for the component _Component_A_
+- Creating a class for the component _Component_A_:
+
   >> class Comp_A:
   >>   def __init__(self, property_1, property_2, unc_func)
   >>      self.property_1  = property_1
   >>      self.property_2  = property_2
   >>      self.uncertainty = unc_func
-- Then we instantiate class _Comp_A_ tro create the object representing the lidar component digital twin.
+  
+- Then we instantiate class _Comp_A_ tro create the object representing the lidar component digital twin:
 
-  >> Component_A = Comp_A (property_1 = a1,   # Component A
+  >> Component_A = Comp_A (name       = C_A,
+  >>                       property_1 = a1,  
   >>                       property_2 = a2,
-  >>                       uncertainty = uncertainty_function) # Define by the user
+  >>                       uncertainty = Comp_A_uncertainty_function) # Uncertainty describing uncertainty in _Comp_a_. Defined by the user.
      
 As well for the modules:
 
-- Creating a class for the _Module_A_
+- Creating a class for the _Module_A_:
   >> class Mod_A:
-  >>   def __init__(self, name, Comp_1)
-  >>      self.name       = name
-  >>      self.Comp_1 = Comp_1
+  >>   def __init__(self, name, Comp_1, unc_func)
+  >>      self.name        = name
+  >>      self.Comp_1      = Comp_1    # Including _Component_1_ in the module
+  >>      self.uncertainty = unc_func  # Uncertainty describing uncertainty in _Mod_a_. Defined by the user.
+  
+- Then we instantiate class _Mod_A_:
 
-- Then we instantiate class _Module_A_
-
-  >> Module_A = Mod_A (name       = C_A 
-                       Comp_1 = Component_1,  
-                       Property_2 = a2)
+  >> Module_A = Mod_A (name        = M_A, 
+                       Comp_1      = Component_1,  
+                       uncertainty = Mod_A_uncertainty_function)
