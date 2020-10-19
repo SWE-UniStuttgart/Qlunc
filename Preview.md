@@ -5,6 +5,7 @@ F.Costa
 # What is Qlunc?:
 Qlunc is a softare that aims to quantify errors when measuring with a lidar device. The code has an objected oriented structure; by using python objects and simulating real lidar components the code puts all together in modules to eventually build up a lidar digital twin. The code is meant to be as modular as possible and offers the possibility of creating different lidar objects, with different components at the same time. This allows to easyly combine different modules with different characteristics simulating different lidar devices.
 
+![grafik](https://user-images.githubusercontent.com/51125855/96520562-aa22a880-126f-11eb-8926-55b61eda4276.png)
 
 # Creating lidar device:
 
