@@ -1,32 +1,32 @@
-**Quantification of lidar uncertainties - Qlunc**
+# **Quantification of lidar uncertainties - Qlunc**
 
-# What is Qlunc?:
+## What is Qlunc?:
 Qlunc is a softare that aims to quantify errors when measuring with a lidar device. The code has an objected oriented structure; by using python objects and simulating real lidar components the code puts all together in modules to eventually build up a lidar digital twin. The code is meant to be as modular as possible and offers the possibility of creating different lidar objects, with different components at the same time. This allows to easyly combine different modules with different characteristics simulating different lidar devices.
 
 ![grafik](https://user-images.githubusercontent.com/51125855/96520796-22896980-1270-11eb-9b0a-a745190fa8c8.png)
 
-# Creating a lidar device:
+## Creating a lidar device:
 
 The user creates an instance of each lidar component (python class), including its functional parameters and defining the function that is used to obtain the specific components uncertainty. Then, each module (also python objects) is "filled" with the corresponding components and their uncertainties are computed following uncertainty expansion according GUM. Once each component is 'ensembled' building up the different modules, the lidar object is created and the modules included. As a result the desired lidar digital twin is created, uncertainty of which is computed again by following GUM suggestions about uncertaity expansion.
 
-# Creating atmospheric conditions
+## Creating atmospheric conditions
 The user creates also atmospheric scenarios to account for the different atmospheric conditions the lidar has to deal with. Atmospheric inputs, basically temperature 
 and humidity, either single values or time series coming from peripherals are both accepted.
 
-# Qlunc available capabilities:
+## Qlunc available capabilities:
 
-## Uncertainties:
+### Uncertainties:
 The last step is ask for the uncertainty we are interested in, either coming from a component, module or lidar object. Indeed, the flexibility of the code allows the 
 user not just to asses lidar uncertainty,  but also to query uncertainties coming from specific modules or even single components.
 
 At this stage the code can calculate errors introduced by photodetector and optical amplifier, forming the photonics module; scanner and optical circulator, forming the optic module. Uncertainty expansion method is applied to obtain the lidar uncertainty due to this modules and components.
 
-## Plots: 
+### Plots: 
  - Can draw photodetector uncertainties comparison including shot noise, thermal noise, dark current noise and, if needed, transimpedance amplifier noise.
  - Scanning points and their uncertainty in meters (only VAD)
 
 ----------------------Put this in the Working example Readme.md-------------------------------------
-# Working example to create a lidar digital twin:
+## Working example to create a lidar digital twin:
 We want to create a lidar object maded up with one module. This module wil contain just one component with properties Property_1 and Property_2. The steps we have to follow are: 
 
  1) Create a component with its propertie(s)
@@ -35,7 +35,7 @@ We want to create a lidar object maded up with one module. This module wil conta
 
 In this repository is presented a working example of Qlunc in order to facilitate its understanding.
 
-## Creating the component digital twin:
+### Creating the component digital twin:
 The components are included as python classes, for example a component, _Component_A_, is created instanciating class _Comp_A_:
 
 - Creating a class for the component _Component_A_:
@@ -55,7 +55,7 @@ The components are included as python classes, for example a component, _Compone
 
 The uncertainty function is a function either found in literature or developed by the user that discribes the uncertatinty of the component using its _properties_.
 
-## Creating the module digital twin:
+### Creating the module digital twin:
 As well, for the modules:
 
 - Creating a class for the _Module_A_:
@@ -72,7 +72,7 @@ As well, for the modules:
                        Comp_1      = Component_1,                # Including _Component_1_ in the module.
                        uncertainty = Mod_A_uncertainty_function) # Uncertainty describing uncertainty in _Mod_a_. Following GUM.
 
-## Creating the lidar:
+### Creating the lidar:
 
 Then once we have created the module(s), we can made up a lidar object just in the same way:
 
