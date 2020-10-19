@@ -22,6 +22,9 @@ user not just to asses lidar uncertainty,  but also to query uncertainties comin
 At this stage the code can calculate errors introduced by photodetector and optical amplifier, forming the photonics module; scanner and optical circulator, forming the optic module. Uncertainty expansion method is applied to obtain the lidar uncertainty due to this modules and components.
 
 ## Plots: 
+ - Can draw photodetector uncertainties comparison including shot noise, thermal noise, dark current noise and, if needed, transimpedance amplifier noise.
+ - Scanning points and their uncertainty in meters (only VAD)
+
 
 # Working example
 
