@@ -174,7 +174,7 @@ Lidar3 = lidar(name         = 'Caixa3',
 Atmospheric_TimeSeries = True # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere (T, H, rain and fog) 
                                # If so we obtain a time series describing the noise implemented in the measurement.
 if Atmospheric_TimeSeries:
-    Atmos_TS_FILE           = 'AtmosphericScenarios.csv'
+    Atmos_TS_FILE           = '../metadata/AtmosphericData/AtmosphericScenarios.csv'
     AtmosphericScenarios_TS = pd.read_csv(Atmos_TS_FILE,delimiter=';',decimal=',')
     Atmospheric_inputs={
                         'temperature' : list(AtmosphericScenarios_TS.loc[:,'T']),# [K]

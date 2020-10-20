@@ -20,11 +20,16 @@ Created on Fri Jun 19 19:57:05 2020
     
 @author: fcosta
 """
+import os
+os.chdir('../Utils ')
 from Qlunc_ImportModules import *
+from Qlunc_Help_standAlone import *
+os.chdir('../UQ_functions ')
 import UQ_Photonics_Classes as uphc
 import UQ_Power_Classes as upwc
 import UQ_Optics_Classes as uopc
 import UQ_Lidar_Classes as ulc
+os.chdir('../Main')
 #import pandas as pd
 #import numpy as np
 #import pdb

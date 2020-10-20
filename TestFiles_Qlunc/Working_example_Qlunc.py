@@ -20,9 +20,8 @@ import os
 import pdb
 import sys
 
-os.chdir('..\Qlunc_CLASSES ')                      # 
-directory = os.getcwd()                              # Obtain current directory
-exec(open(directory+'\Qlunc_Classes.py').read())   # Execute Qlunc_Classes.py (creating classes for lidar 'objects')
+os.chdir('../Main ')                                 # go to the current work directory
+exec(open('/Qlunc_Classes.py').read())   # Execute Qlunc_Classes.py (creating classes for lidar 'objects')
 
 #Plot flags:
 
@@ -99,7 +98,7 @@ Lidar_inputs     = lidar_gral_inp(name        = 'Lidar general inputs',     # In
 
 ## Lidar device:
 
-Lidar1 = lidar(name         = 'Caixa1',             # Introduce the name of your lidar device.
+Lidar = lidar(name         = 'Caixa1',             # Introduce the name of your lidar device.
                photonics    = Photonics_Module,     # Introduce the name of your photonics module.
                optics       = Optics_Module,        # Introduce the name of your optics module.
                power        = None,                 # Introduce the name of your power module. NOT IMPLEMENTED YET!
@@ -111,7 +110,7 @@ Lidar1 = lidar(name         = 'Caixa1',             # Introduce the name of your
 Atmospheric_TimeSeries = True # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere (T, H, rain and fog) 
                                # If so we obtain a time series describing the noise implemented in the measurement.
 if Atmospheric_TimeSeries:
-    Atmos_TS_FILE           = 'AtmosphericScenarios.csv'
+    Atmos_TS_FILE           = '../metadata/AtmosphericData/AtmosphericScenarios.csv'
     AtmosphericScenarios_TS = pd.read_csv(Atmos_TS_FILE,delimiter=';',decimal=',')
     Atmospheric_inputs={
                         'temperature' : list(AtmosphericScenarios_TS.loc[:,'T']),# [K]
