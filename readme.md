@@ -25,7 +25,7 @@ At this stage the code can calculate errors introduced by photodetector and opti
  - Can draw photodetector uncertainties comparison including shot noise, thermal noise, dark current noise and, if needed, transimpedance amplifier noise.
  - Scanning points and their uncertainty in meters (only VAD)
 
-### How to use Qlunc:
+## How to use Qlunc:
 By downloading the repository you will get several folders within which Qlunc is organized:
 ### Main:
  - Qlunc_Classes.py contains the snnipet which creates all the lidar digital twins. Each lidar module/component is assigned to a python class
