@@ -29,7 +29,7 @@ exec(open('/Qlunc_Classes.py').read())   # Execute Qlunc_Classes.py (creating cl
 
 ## FLAG inputs: ###############################################################
 
-flag_plot_pointing_accuracy_unc    = 0   # Plot flags:
+flag_plot_pointing_accuracy_unc    = 1   # Plot flags:
 flag_plot_measuring_points_pattern = 0
 flag_plot_photodetector_noise      = 0
 
