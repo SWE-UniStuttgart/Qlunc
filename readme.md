@@ -27,10 +27,10 @@ At this stage the code can calculate errors introduced by photodetector and opti
 
 ### How to use Qlunc:
 By downloading the repository you will get several folders within which Qlunc is organized:
- # - Main:
+ ### - Main:
      - Qlunc_Classes.py contains the snnipet which creates all the lidar digital twins. Each lidar module/component is assigned to a python class
      - Qlunc_input_Classes.py contains 
- # - UQ_Functions: 
+ ### - UQ_Functions: 
      - Contains the fucntions that compute the uncertainties coming from different devices, calculting also the uncertainty propagation corresponding to the different      modules
 ----------------------Put this in the Working example Readme.md-------------------------------------
 ## Working example to create a lidar digital twin:
