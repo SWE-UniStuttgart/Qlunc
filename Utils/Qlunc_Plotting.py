@@ -6,23 +6,24 @@ Created on Tue Oct 20 21:18:05 2020
 """
 
 #%% Plotting:
+    
+plot_param={'axes_label_fontsize' : 16,
+            'textbox_fontsize'    : 14,
+            'title_fontsize'      : 24,
+            'suptitle_fontsize'   : 23,
+            'legend_fontsize'     : 12,
+            'xlim'                : [-50,50],
+            'ylim'                : [-50,50],
+            'zlim'                : [0,130],
+            'markersize'          : 5,
+            'markersize_lidar'    : 9,
+            'marker'              : '.',
+            'markerTheo'          : '.b',
+            'tick_labelrotation'  : 45}
 
 # Plot parameters:
-if flag_plot==1:
-    
-    plot_param={'axes_label_fontsize' : 16,
-                'textbox_fontsize'    : 14,
-                'title_fontsize'      : 24,
-                'suptitle_fontsize'   : 23,
-                'legend_fontsize'     : 12,
-                'xlim'                : [-50,50],
-                'ylim'                : [-50,50],
-                'zlim'                : [0,130],
-                'markersize'          : 5,
-                'markersize_lidar'    : 9,
-                'marker'              : '.',
-                'markerTheo'          : '.b',
-                'tick_labelrotation'  : 45}
+if flag_plot_pointing_accuracy_unc == 1:
+
     
 #########    # Scanner pointing accuracy uncertainty:#################
     
@@ -86,6 +87,7 @@ if flag_plot==1:
 #    
 
 ##############    Ploting scanner measuring points pattern #######################
+if flag_plot_measuring_points_pattern == 1:
     # Creating the figure and the axes
     fig,axs4 = plt.subplots()  
     axs4=plt.axes(projection='3d')
@@ -115,7 +117,7 @@ if flag_plot==1:
     
    
 ###########   Plot photodetector noise   #############################       
-
+if flag_plot_photodetector_noise == 1:
     UQ_photo=Lidar1.photonics.photodetector.Uncertainty(Lidar1,Atmospheric_Scenario,cts) # Obtain the UQ photodetector dictionary wit SNR and UQ information
     
     Psax=10*np.log10(Lidar1.photonics.photodetector.Power_interval) 

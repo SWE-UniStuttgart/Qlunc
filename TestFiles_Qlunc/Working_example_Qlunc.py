@@ -23,10 +23,19 @@ import sys
 os.chdir('../Main ')                                 # go to the current work directory
 exec(open('/Qlunc_Classes.py').read())   # Execute Qlunc_Classes.py (creating classes for lidar 'objects')
 
-#Plot flags:
 
 
-#%% Optics components and Module: #############################################
+#%%%%%%%%%%%%%%%%% INPUTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+## FLAG inputs: ###############################################################
+
+flag_plot_pointing_accuracy_unc    = 0   # Plot flags:
+flag_plot_measuring_points_pattern = 0
+flag_plot_photodetector_noise      = 0
+
+
+
+## Optics components and Module: ##############################################
 
 # Here we create optics components and optics module. User can create as many components as he/she want and combine them to create different module types
 # Each module/component is a python object with their own technical characteristics and can be flexible combined to assess different use cases. 
@@ -60,7 +69,7 @@ Optics_Module =  optics (name               = 'Optics Module',     # Introduce y
                          unc_func           = uopc.sum_unc_optics)
 
 
-#%% Photonics components and Module: ##########################################
+## Photonics components and Module: ###########################################
 
 # Here we create photonics components and photonics module. User can create as many components as he/she want and combine them to create different module types.
 
@@ -87,7 +96,7 @@ Photonics_Module = photonics(name              = 'Photonics Module',        # In
                              optical_amplifier =  OpticalAmplifier,         # Scanner instance (in this example "OpticalAmplifier") or "None". "None" means that you don´t want to include Optical Amplifier in Photonics Module, either in uncertainty calculations.
                              unc_func          = uphc.sum_unc_photonics)
 
-### Lidar general inputs ######################################################
+## Lidar general inputs: ######################################################
 Lidar_inputs     = lidar_gral_inp(name        = 'Lidar general inputs',     # Introduce the name of your lidar data folder.
                                   wave        = 1550e-9,                    # In [m]. Lidar wavelength.
                                   sample_rate = 2,                          # In [Hz]
@@ -106,7 +115,7 @@ Lidar = lidar(name         = 'Caixa1',             # Introduce the name of your 
                unc_func     = ulc.sum_unc_lidar)    # Function estimating lidar global uncertainty
 
 
-#%% Creating atmospheric scenarios:
+## Creating atmospheric scenarios: ############################################
 Atmospheric_TimeSeries = True # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere (T, H, rain and fog) 
                                # If so we obtain a time series describing the noise implemented in the measurement.
 if Atmospheric_TimeSeries:

@@ -5,7 +5,10 @@ Created on Fri Jul 24 17:26:23 2020
 @author: fcosta
 """
 #%% Plot Flags
-flag_plot=0
+
+flag_plot_pointing_accuracy_unc    = 0   # Plot flags:
+flag_plot_measuring_points_pattern = 0
+flag_plot_photodetector_noise      = 0
 
 
 
