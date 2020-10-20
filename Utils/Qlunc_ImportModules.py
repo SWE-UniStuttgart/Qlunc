@@ -13,11 +13,14 @@ import scipy.interpolate as itp
 import pandas as pd
 import numbers
 import pdb
+from scipy.optimize import curve_fit
 #import pickle # for GUI
 import itertools
 import functools
+from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 from functools import reduce
 from operator import getitem
 import time
 import yaml
+import pylab

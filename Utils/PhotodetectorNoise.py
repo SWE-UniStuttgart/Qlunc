@@ -26,7 +26,7 @@ wavelength  = 1550e-9 #[m]
 RL          = 50 #[ohms] Load resistor
 n           = 0.85 #efficiency of the photodiode:
 Id          = 5e-9 #[A] Dark current intensity
-R           = inputs.photodetector.n*cts.e*inputs.lidar_inp.Lidar_inputs['Wavelength'][0]/(cts.h*cts.c)  #[W/A]  Responsivity
+R           = n*e*wavelength/(h*c)  #[W/A]  Responsivity
 
 # Amplifier inputs:
 G           = 10 # Vin/Vout[V] Amplifier Gain:
@@ -39,32 +39,32 @@ Psax=10*np.log10(Ps)
 
 
 
-#%% PHOTODETECTOR:
+#%% PHOTODIODE:
 
 # thermal noise;
-Thermal_noise = (4*cts.k*T/inputs.photodetector.RL)*inputs.photodetector.BW #[W]
-SNR_Thermal   = 10*np.log10(((R**2)/(4*cts.k*T*inputs.photodetector.BW/inputs.photodetector.RL))*(Ps/1000)**2)
+Thermal_noise = (4*k*T/RL)*BW #[W]
+Photo_SNR_Thermal   = 10*np.log10(((R**2)/(4*k*T*BW/RL))*(Ps/1000)**2)
 
 # Shot noise:
-Shot_noise        = 10*np.log10(2*cts.e*R*inputs.photodetector.BW*Ps)
-Photo_SNR_Shot_noise    = 10*np.log10(((R**2)/(2*cts.e*R*inputs.photodetector.BW))*Ps/1000)
+Shot_noise            = 10*np.log10(2*e*R*BW*Ps)
+Photo_SNR_Shot_noise  = 10*np.log10(((R**2)/(2*e*R*BW))*Ps/1000)
 
 ## Dark current noise
-Dark_current_noise  = 10*np.log10(2*cts.e*inputs.photodetector.Id*inputs.photodetector.BW*Ps)
-SNR_DarkCurrent     = 10*np.log10(((R**2)/(2*cts.e*inputs.photodetector.Id*inputs.photodetector.BW))*((Ps/1000)**2) )
+Dark_current_noise     = 10*np.log10(2*e*Id*BW*Ps)
+Photo_SNR_DarkCurrent  = 10*np.log10(((R**2)/(2*e*Id*BW))*((Ps/1000)**2) )
 
 
 #%% AMPLIFIER: TIA noise 'input-referred noise':
 
-TIA_noise= (inputs.photodetector.V_noise_TIA**2/inputs.photodetector.Z_TIA**2)
-SNR_TIA=10*np.log10(((R**2)/(TIA_noise))*(Ps/1000)**2)
+TIA_noise= (V_noise_TIA**2/Z_TIA**2)
+Photo_SNR_TIA=10*np.log10(((R**2)/(TIA_noise))*(Ps/1000)**2)
 
 
 plt.figure()
 #plt.xscale('log',basex=10)
 #plt.yscale('log',basey=10)
 
-plt.plot(Psax,Photo_SNR_Shot_noise,Psax,SNR_Thermal,Psax,SNR_DarkCurrent,Psax,SNR_TIA)
+plt.plot(Psax,Photo_SNR_Shot_noise,Psax,Photo_SNR_Thermal,Psax,Photo_SNR_DarkCurrent,Psax,Photo_SNR_TIA)
 plt.xlabel('Input Signal optical power (dBm)',fontsize=29)
 plt.ylabel('SNR (dB)',fontsize=29)
 plt.legend(['Shot Noise','Thermal Noise','Dark current Noise','TIA Noise'],fontsize=16)#,'Total error [w]'])
