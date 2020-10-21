@@ -15,18 +15,18 @@ import numpy as np
 flatten = lambda *n: (e for a in n for e in (flatten(*a) if isinstance(a, (list,tuple)) else (a,))) 
 
 #%% Sum of dB:
-def Sum_dB(W_data,*args,**kwargs):
+def Sum_dB(dB_data):
    #Sum af decibels:
 #    pdb.set_trace()
     Sumat= []
-    Sum_decibels=[]
-    for ii in W_data:
-        gg=((10**(ii/10)))    
-        Sumat.append (gg)
-    Sum_in_dB = sum(Sumat)
-    Sum_decibels.append(10*np.log10(Sum_in_dB) )
+    Sum_in_decibels=[]
+    for ii in dB_data:
+        watt_data=((10**(ii/10)))    
+        Sumat.append (watt_data)
+    Sum_in_watt = sum(Sumat)
+    Sum_in_decibels.append(10*np.log10(Sum_in_watt) )
 #    pdb.set_trace()
-    return list (flatten(Sum_decibels))
+    return list (flatten(Sum_in_decibels))
 
 #%% Combine uncertainties:
 def unc_comb(data): # data is provided as a list of elements want to add on. Data is expected to be in dB (within this functions dB are transformed into watts). The uncertainty combination is made following GUM

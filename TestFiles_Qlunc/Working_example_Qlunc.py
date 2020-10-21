@@ -20,9 +20,17 @@ import os
 import pdb
 import sys
 
-                                # go to the current work directory
 exec(open(r'..\Main\Qlunc_Classes.py').read())   # Execute Qlunc_Classes.py (creating classes for lidar 'objects')
 
+# Getting input values from the yaml file:
+
+with open (r'../Main/Working_example_yaml_inputs_file.yml') as file:
+    Qlunc_yaml_inputs={}
+    docs = yaml.load(file, Loader=yaml.FullLoader)
+    
+#    for doc in docs:      
+#        for k, v in doc.items():           
+#            Qlunc_yaml_inputs.setdefault(k,v) 
 
 
 #%%%%%%%%%%%%%%%%% INPUTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
