@@ -20,18 +20,17 @@ import os
 import pdb
 import sys
 
-os.chdir('../Main ')                                 # go to the current work directory
-exec(open('/Qlunc_Classes.py').read())   # Execute Qlunc_Classes.py (creating classes for lidar 'objects')
+                                # go to the current work directory
+exec(open(r'..\Main\Qlunc_Classes.py').read())   # Execute Qlunc_Classes.py (creating classes for lidar 'objects')
 
 
 
 #%%%%%%%%%%%%%%%%% INPUTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 ## FLAG inputs: ###############################################################
-
-flag_plot_pointing_accuracy_unc    = 1   # Plot flags:
-flag_plot_measuring_points_pattern = 0
-flag_plot_photodetector_noise      = 0
+flags.flag_plot_pointing_accuracy_unc    = False   # Pointing accuracy uncertainty - Keep False
+flags.flag_plot_measuring_points_pattern = True    # Pattern of measuring points
+flags.flag_plot_photodetector_noise      = True    # Photodetector noise: shot noise, dark current noise, thermal noise as a function of the photodetector input signal power.
 
 
 
@@ -55,9 +54,9 @@ Scanner           = scanner(name           = 'Scanner',           # Introduce yo
 
 #Optical Circulator:
 
-Optical_circulator = optical_circulator (name            = 'Optical Circulator',       # Introduce your Optical circulator name.
-                                          insertion_loss = 2.1,                        # In [dB]. Insertion loss parameters.
-                                          unc_func       = uopc.UQ_OpticalCirculator)  # Function describing your scanner uncertainty.  Further informaion in "UQ_Optics_Classes.py" comments.
+Optical_circulator = optical_circulator (name           = 'Optical Circulator',       # Introduce your Optical circulator name.
+                                         insertion_loss = 2.1,                        # In [dB]. Insertion loss parameters.
+                                         unc_func       = uopc.UQ_OpticalCirculator)  # Function describing your scanner uncertainty.  Further informaion in "UQ_Optics_Classes.py" comments.
 
 
 # Optics Module:
@@ -70,7 +69,6 @@ Optics_Module =  optics (name               = 'Optics Module',     # Introduce y
 
 
 ## Photonics components and Module: ###########################################
-
 # Here we create photonics components and photonics module. User can create as many components as he/she want and combine them to create different module types.
 
 OpticalAmplifier = optical_amplifier(name     = 'Optical Amplifier',        # Introduce your scanner name.
@@ -122,11 +120,11 @@ if Atmospheric_TimeSeries:
     Atmos_TS_FILE           = '../metadata/AtmosphericData/AtmosphericScenarios.csv'
     AtmosphericScenarios_TS = pd.read_csv(Atmos_TS_FILE,delimiter=';',decimal=',')
     Atmospheric_inputs={
-                        'temperature' : list(AtmosphericScenarios_TS.loc[:,'T']),# [K]
-                        'humidity'    : list(AtmosphericScenarios_TS.loc[:,'H']),# [%]
+                        'temperature' : list(AtmosphericScenarios_TS.loc[:,'T']),    # [K]
+                        'humidity'    : list(AtmosphericScenarios_TS.loc[:,'H']),    # [%]
                         'rain'        : list(AtmosphericScenarios_TS.loc[:,'rain']),
                         'fog'         : list(AtmosphericScenarios_TS.loc[:,'fog']),
-                        'time'        : list(AtmosphericScenarios_TS.loc[:,'t'])#for rain and fog intensity intervals might be introduced [none,low, medium high]
+                        'time'        : list(AtmosphericScenarios_TS.loc[:,'t'])     #for rain and fog intensity intervals might be introduced [none,low, medium high]
                         } 
     Atmospheric_Scenario=atmosphere(name        = 'Atmosphere1',
                                     temperature = Atmospheric_inputs['temperature'])

@@ -22,16 +22,17 @@ plot_param={'axes_label_fontsize' : 16,
             'tick_labelrotation'  : 45}
 
 # Plot parameters:
-if flag_plot_pointing_accuracy_unc == 1:
-
+if flags.flag_plot_pointing_accuracy_unc:
+    print('PACO')
+    pdb.set_trace()
     
 #########    # Scanner pointing accuracy uncertainty:#################
     
 #    Calculating inputs for plotting:
     Scanner_Data1 = Lidar1.optics.scanner.Uncertainty(Lidar1,Atmospheric_Scenario,cts)
-#    Scanner_Data2 = Lidar2.optics.scanner.Uncertainty(Lidar2,Atmospheric_Scenario,cts)
-#    Scanner_Data3 = Lidar3.optics.scanner.Uncertainty(Lidar3,Atmospheric_Scenario,cts)
-#    
+    Scanner_Data2 = Lidar2.optics.scanner.Uncertainty(Lidar2,Atmospheric_Scenario,cts)
+    Scanner_Data3 = Lidar3.optics.scanner.Uncertainty(Lidar3,Atmospheric_Scenario,cts)
+    
     # Creating the figure and the axes
     fig,(axs1,axs2,axs3) = plt.subplots(1,3,sharey=False) 
 #    ax.plot.errorbar(Lidar1.optics.scanner.focus_dist,,plot_param['marker'],markersize=6.5,label='stdv Distance')
@@ -87,8 +88,13 @@ if flag_plot_pointing_accuracy_unc == 1:
 #    
 
 ##############    Ploting scanner measuring points pattern #######################
-if flag_plot_measuring_points_pattern == 1:
+if flags.flag_plot_measuring_points_pattern:
     # Creating the figure and the axes
+    #    Calculating inputs for plotting:
+    Scanner_Data1 = Lidar1.optics.scanner.Uncertainty(Lidar1,Atmospheric_Scenario,cts)
+    Scanner_Data2 = Lidar2.optics.scanner.Uncertainty(Lidar2,Atmospheric_Scenario,cts)
+    Scanner_Data3 = Lidar3.optics.scanner.Uncertainty(Lidar3,Atmospheric_Scenario,cts)
+    
     fig,axs4 = plt.subplots()  
     axs4=plt.axes(projection='3d')
     
@@ -117,7 +123,7 @@ if flag_plot_measuring_points_pattern == 1:
     
    
 ###########   Plot photodetector noise   #############################       
-if flag_plot_photodetector_noise == 1:
+if flags.flag_plot_photodetector_noise:
     UQ_photo = Lidar1.photonics.photodetector.Uncertainty(Lidar1,Atmospheric_Scenario,cts) # Obtain the UQ photodetector dictionary wit SNR and UQ information
     
     Psax=10*np.log10(Lidar1.photonics.photodetector.Power_interval) 
@@ -133,19 +139,6 @@ if flag_plot_photodetector_noise == 1:
     plt.grid(axis='both')
        
 
-
-
-#
-#params = {'legend.fontsize': 'x-large',
-#          'figure.figsize': (15, 5),
-#         'axes.labelsize': 'x-large',
-#         'axes.titlesize':'x-large',
-#         'xtick.labelsize':'x-large',
-#         'ytick.labelsize':'x-large'}
-#pylab.rcParams.update(params)
-#ax.set_legend('stdv_rho  {}'.format(stdv_rho))
-#ax.quiver(*origin,xcart,ycart,zcart)
-#    
 
 
 

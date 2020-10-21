@@ -6,9 +6,9 @@ Created on Fri Jul 24 17:26:23 2020
 """
 #%% Plot Flags
 
-flag_plot_pointing_accuracy_unc    = 0   # Plot flags:
-flag_plot_measuring_points_pattern = 0
-flag_plot_photodetector_noise      = 0
+flags.flag_plot_pointing_accuracy_unc    = False   # Plot flags:
+flags.flag_plot_measuring_points_pattern = True
+flags.flag_plot_photodetector_noise      = True
 
 
 
