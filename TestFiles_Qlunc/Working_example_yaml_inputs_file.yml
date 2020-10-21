@@ -1,3 +1,82 @@
-# Yaml inputs file:
+# DIRECTORIES:------------------------------------------------------
+# Template for Qlunc inputs. Here we include a list of the inputs to run Qlunc (Quantification lidar uncertainties).
+#- ? ( 0 | [1-9] [0-9]* ) ( \. [0-9]* )? ( [eE] [-+]? [0-9]+ )?
 
-zt=9
+Main_directory: 
+- '../GitHub_Qlunc/'
+
+Components:
+#Optics: 
+  Scanner:  
+    Name: Scanner_Yaml   
+    Origin: [0,0,0]
+    Focus distance: 60
+    Sample rate: 15
+    Theta: 15   
+    Phi: 7
+    stdv focus distance: 1
+    stdv theta: 0
+    stdv phi: 1
+    Uncertainty function: uopc.UQ_Scanner
+  Optical Circulator:
+    Name: OC_Yaml
+    Insertion loss: 2.1
+    Uncertainty function: uopc.UQ_OpticalCirculator
+  
+# Photonics  
+  Optical Amplifier: 
+    Name: OA_Yaml
+    Optical amplifier noise figure: NoiseFigure.csv
+    Optical amplifier gain: 30
+    Uncertainty function: uphc.UQ_Optical_amplifier
+
+  
+  Photodetector:
+    Name: Photodetector_YAML
+    Photodetector BandWidth: 380.e6                
+    Load Resistor: 50
+    Photodetector efficiency: .85                    # Photodetector efficiency [-]
+    Dark Current: 5.e-9                 #  In [A]. Dark current in the photodetector.
+    Photo signalP: 1.e-3
+    Power interval: (0,1000,.001)
+    Gain TIA: 5.e3                    
+    V Noise TIA: 160.e-6                
+    Uncertainty function: uphc.UQ_Photodetector
+    
+  Lidar general inputs:
+    Name: Lidar general inputs
+    Wavelength: 1550.e-9
+    Sample rate: 2
+    Yaw error: 0
+    Pitch error: 0
+    Roll error: 0
+---
+# Modules:
+Modules:
+  Optics Module:
+    Name: Optics module Yaml
+    Scanner: Scanner
+    Optical circulator: Optical circulator
+    Laser: None
+    Uncertainty function: uopc.sum_unc_optics
+  Photonics Module:
+    Name: Photonics module
+    Photodetector: Photodetector
+    Optical amplifier: Optical amplifier
+    Uncertainty function: uphc.sum_unc_photonics
+---  
+# ATMOSPHERIC INPUTS:-----------------------------------------------
+# Atmospheric_inputs to create the atmospheric scenarios
+
+
+
+Atmospheric_inputs:
+  
+  TimeSeries    : True # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere (T, H, rain and fog)   
+  Atmos_TS_FILE : 'AtmosphericScenarios.csv'  
+  Temperature: 300 # [K] HAve to put the same number of elements for temperature and humidity. Always in paired values   
+  Humidity: 12 # [%] 
+  Rain: true # for rain and fog intensity intervals might be introduced [none,low, medium high
+  Fog: false
+    
+

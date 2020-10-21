@@ -1,3 +1,47 @@
 # Yaml inputs file:
 
-zt=9
+# DIRECTORIES:------------------------------------------------------
+# Template for Qlunc inputs. Here we include a list of the inputs to run Qlunc (Quantification lidar uncertainties).
+
+Main_directory: '../GitHub_Qlunc/'
+
+# MODULES-----------------------------------------------------------
+# Modules to include in estimations: Modules is a dictionary containing the lidar modules as a key. 
+# As values there is a nested dictionary containing components as keys and type of uncertainty as values.
+# Each of this values is related with a function which calculates this specific uncertainty. 
+# The relation between type of unc. and function calculating it is in LiUQ_core when defining methods.
+
+modules:
+# In modules (modules as defined in OpenLidar architecture) user can include wich modules want to include in the estimations. In each module user will include the 
+# name of the component and  the name of the uncertainty (eg "Power" - "Power_source": - "Power_source_noise")  
+  OpticalCirculator:
+    
+    name:
+    - OC_YAML
+   
+    insertion_loss:
+    - [2.1]
+    
+    
+    Converter: # for now Converter_noise and Converter_losses
+    - Converter_noise
+    - Converter_losses
+  
+  Photonics: # for now:'photodetector_noise'; May be include 'TIA_noise' if there is a transimpedance amplifier...
+    
+    Photodetector:
+    - Photodetector_noise
+    
+    Optical_amplifier:
+    - Optical_amplifier_noise #for now:  'Optical_amplifier_noise',... If user includes Optical_amplifier component in dictionary 'modules', figure noise is automatically included in calculations(if don't want to include it have to put 0 in 'Optical_amplifier_uncertainty_inputs')
+    - TIA_noise
+    
+    Laser_source:  # for now:'laser_source_noise',...
+    - Laser_source_noise
+  
+  Optics: # for now:'telescope_noise', 'telescope_losses'...
+    
+    Telescope:
+    - Telescope_losses
+    - Telescope_noise
+---
