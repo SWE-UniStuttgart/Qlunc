@@ -28,6 +28,7 @@ At this stage the code can calculate errors introduced by photodetector and opti
 ## How to use Qlunc:
 By downloading the repository you will get several folders within which Qlunc is organized:
 ### Main:
+This is the core of Qlunc. Here the user creates the classes describing the components, modules and general inputs of the lidar device.
  - Qlunc_Classes.py contains the snippet which creates all the lidar digital twins. Each lidar module/component is assigned to a python class.
  - Qlunc_input_Classes.py contains the values for the different components and atmospheric scenarios.
 ### UQ_Functions: 
@@ -44,7 +45,7 @@ By downloading the repository you will get several folders within which Qlunc is
 
 ## Citing:
 
-## Contact
+## Contact:
 
 F. Costa García 
 University of Stuttgart - Stuttgart Wind Energy
