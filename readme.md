@@ -30,7 +30,7 @@ By downloading the repository you will get several folders within which Qlunc is
 ### Main:
 This is the core of Qlunc. Here the user creates the classes describing the components, modules and general inputs of the lidar device.
  - Qlunc_Classes.py contains the snippet which creates all the lidar digital twins. Each lidar module/component is assigned to a python class.
- - Qlunc_input_Classes.py contains the values for the different components and atmospheric scenarios.
+ - Qlunc_input_Classes.py contains the values for the different components and atmospheric scenarios. Atmospheric scenarios are created here as well.
 ### UQ_Functions: 
  - Contains the functions that compute the uncertainties coming from different devices, calculting also the uncertainty propagation corresponding to the different      modules and lidar uncertainty as well.
 ### Utils:
