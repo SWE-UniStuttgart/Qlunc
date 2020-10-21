@@ -1,5 +1,6 @@
 
 ## Working example to create a lidar digital twin:
+
 We want to create a lidar object maded up with one module. This module wil contain just one component with properties Property_1 and Property_2. The steps we have to follow are: 
 
  1) Create a component with its propertie(s)
