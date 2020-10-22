@@ -34,10 +34,10 @@ Components:
   Photodetector:
     Name: Photodetector_YAML
     Photodetector BandWidth: 380.e6                
-    Load Resistor: 50
+    Load resistor: 50
     Photodetector efficiency: .85                    # Photodetector efficiency [-]
-    Dark Current: 5.e-9                 #  In [A]. Dark current in the photodetector.
-    Photo signalP: 1.e-3
+    Dark current: 5.e-9                 #  In [A]. Dark current in the photodetector.
+    Photodetector signalP: 1.e-3
     Power interval: (0,1000,.001)
     Gain TIA: 5.e3                    
     V Noise TIA: 160.e-6                
@@ -65,6 +65,17 @@ Modules:
     Optical amplifier: Optical amplifier
     Uncertainty function: uphc.sum_unc_photonics
 ---  
+# Lidar:
+Lidar:
+  Name: Caixa1
+  Photonics module: None
+  Optics module: Optics Module
+  Power module: None
+  Lidar inputs: Lidar general inputs
+  Uncertainty function: ulc.sum_unc_lidar
+
+---
+
 # ATMOSPHERIC INPUTS:-----------------------------------------------
 # Atmospheric_inputs to create the atmospheric scenarios
 
