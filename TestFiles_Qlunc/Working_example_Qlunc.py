@@ -50,11 +50,16 @@ flags.flag_plot_photodetector_noise      = True    # Photodetector noise: shot n
 
 Scanner           = scanner(name           = Qlunc_yaml_inputs['Components']['Scanner']['Name'],           # Introduce your scanner name.
                            origin          = Qlunc_yaml_inputs['Components']['Scanner']['Origin'],         # Origin (coordinates of the lidar deployment).
-                           focus_dist      =  np.array([Qlunc_yaml_inputs['Components']['Scanner']['Focus distance']]),   # Focus distance in [meters].
-                           sample_rate     = Qlunc_yaml_inputs['Components']['Scanner']['Sample rate'],                  # for now introduce it in [degrees].
-                           theta           = np.array([Qlunc_yaml_inputs['Components']['Scanner']['Theta']]),    # Cone angle in [degrees].
-                           phi             = np.array([Qlunc_yaml_inputs['Components']['Scanner']['Phi']]),#np.arange(0,360,15), # Azimuth angle in [degrees].
-                           stdv_focus_dist = Qlunc_yaml_inputs['Components']['Scanner']['stdv focus distance'],                 # Focus distance standard deviation in [meters].
+                           sample_rate     = Qlunc_yaml_inputs['Components']['Scanner']['Sample rate'],    # for now introduce it in [degrees].
+                           
+                           # This values for focus distance, theta and phi define a typical VAD scanning sequence
+                           focus_dist      = np.array(Qlunc_yaml_inputs['Components']['Scanner']['Focus distance']*int(Qlunc_yaml_inputs['Components']['Scanner']['Phi'][1]/Qlunc_yaml_inputs['Components']['Scanner']['Phi'][2])),   # Focus distance in [meters]                                        
+                           theta           = np.array(Qlunc_yaml_inputs['Components']['Scanner']['Theta']*int(Qlunc_yaml_inputs['Components']['Scanner']['Phi'][1]/Qlunc_yaml_inputs['Components']['Scanner']['Phi'][2])),    # Cone angle in [degrees].
+                           phi             = np.array(np.arange(Qlunc_yaml_inputs['Components']['Scanner']['Phi'][0],
+                                                                Qlunc_yaml_inputs['Components']['Scanner']['Phi'][1],
+                                                                Qlunc_yaml_inputs['Components']['Scanner']['Phi'][2])),#np.arange(0,360,15), # Azimuth angle in [degrees].
+                           
+                                                                stdv_focus_dist = Qlunc_yaml_inputs['Components']['Scanner']['stdv focus distance'],                 # Focus distance standard deviation in [meters].
                            stdv_theta      = Qlunc_yaml_inputs['Components']['Scanner']['stdv theta'],                 # Cone angle standard deviation in [degrees].
                            stdv_phi        = Qlunc_yaml_inputs['Components']['Scanner']['stdv phi'],                 # Azimuth angle standard deviation in [degrees].
                            unc_func        = eval(Qlunc_yaml_inputs['Components']['Scanner']['Uncertainty function']) )    # here you put the function describing your scanner uncertainty. 
@@ -69,16 +74,16 @@ Optical_circulator = optical_circulator (name           = Qlunc_yaml_inputs['Com
 # Optics Module:
 
 Optics_Module =  optics (name               = Qlunc_yaml_inputs['Modules']['Optics Module']['Name'],     # Introduce your Optics Module name.
-                         scanner            = Qlunc_yaml_inputs['Modules']['Optics Module']['Scanner'],             # Scanner instance (in this example "Scanner") or "None". "None" means that you don´t want to include Scanner in Optics Module, either in uncertainty calculations.
-                         optical_circulator = Qlunc_yaml_inputs['Modules']['Optics Module']['Optical circulator'],  # Optical Circulator instance (in this example "Optical_circulator") or "None". "None" means that you don´t want to include Optical circulator in Optics Module, either in uncertainty calculations.
-                         laser              = Qlunc_yaml_inputs['Modules']['Optics Module']['Laser'],
-                         unc_func           =  eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Uncertainty function']))
+                         scanner            = eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Scanner']),             # Scanner instance (in this example "Scanner") or "None". "None" means that you don´t want to include Scanner in Optics Module, either in uncertainty calculations.
+                         optical_circulator = eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Optical circulator']),  # Optical Circulator instance (in this example "Optical_circulator") or "None". "None" means that you don´t want to include Optical circulator in Optics Module, either in uncertainty calculations.
+                         laser              = eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Laser']),
+                         unc_func           = eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Uncertainty function']))
 
 
 ## Photonics components and Module: ###########################################
 # Here we create photonics components and photonics module. User can create as many components as he/she want and combine them to create different module types.
 
-OpticalAmplifier = optical_amplifier(name     = Qlunc_yaml_inputs['Components']['Optical Amplifier']['Name'],        # Introduce your scanner name.
+Optical_Amplifier = optical_amplifier(name    = Qlunc_yaml_inputs['Components']['Optical Amplifier']['Name'],        # Introduce your scanner name.
                                      OA_NF    = Qlunc_yaml_inputs['Components']['Optical Amplifier']['Optical amplifier noise figure'],          # In [dB]. Can introduce it as a table from manufactures (in this example the data is taken from Thorlabs.com, in section EDFA\Graps) or introduce a single well-known value
                                      OA_Gain  = Qlunc_yaml_inputs['Components']['Optical Amplifier']['Optical amplifier gain'],                         # In [dB]. (in this example the data is taken from Thorlabs.com, in section EDFA\Specs)
                                      unc_func = eval(Qlunc_yaml_inputs['Components']['Optical Amplifier']['Uncertainty function']))  # Function describing Optical Amplifier uncertainty. Further informaion in "UQ_Photonics_Classes.py" comments.
@@ -89,7 +94,9 @@ Photodetector    = photodetector(name             = Qlunc_yaml_inputs['Component
                                  Photo_efficiency = Qlunc_yaml_inputs['Components']['Photodetector']['Photodetector efficiency'],                    # Photodetector efficiency [-]
                                  Dark_Current     = Qlunc_yaml_inputs['Components']['Photodetector']['Dark current'],                   #  In [A]. Dark current in the photodetector.
                                  Photo_SignalP    = Qlunc_yaml_inputs['Components']['Photodetector']['Photodetector signalP'],
-                                 Power_interval   = np.arange(0,1000,.001),#np.arange(Qlunc_yaml_inputs['Components']['Photodetector']['Power interval']), # In [w]. Power interval for the photodetector domain in photodetector SNR plot. 
+                                 Power_interval   = np.array(np.arange(Qlunc_yaml_inputs['Components']['Photodetector']['Power interval'][0],
+                                                                       Qlunc_yaml_inputs['Components']['Photodetector']['Power interval'][1],
+                                                                       Qlunc_yaml_inputs['Components']['Photodetector']['Power interval'][2])),#np.arange(Qlunc_yaml_inputs['Components']['Photodetector']['Power interval']), # In [w]. Power interval for the photodetector domain in photodetector SNR plot. 
                                  Gain_TIA         = Qlunc_yaml_inputs['Components']['Photodetector']['Gain TIA'],                    # In [dB]. If there is a transimpedance amplifier.
                                  V_Noise_TIA      = Qlunc_yaml_inputs['Components']['Photodetector']['V Noise TIA'],                 # In [V]. If there is a transimpedance amplifier.
                                  unc_func         = eval(Qlunc_yaml_inputs['Components']['Photodetector']['Uncertainty function']))  # Function describing Photodetector uncertainty. Further informaion in "UQ_Photonics_Classes.py" comments.
@@ -97,12 +104,12 @@ Photodetector    = photodetector(name             = Qlunc_yaml_inputs['Component
 # Module:
 
 Photonics_Module = photonics(name              = Qlunc_yaml_inputs['Modules']['Photonics Module']['Name'],        # Introduce your Photonics module name
-                             photodetector     = Qlunc_yaml_inputs['Modules']['Photonics Module']['Photodetector'],             # Photodetector instance (in this example "Photodetector") or "None". "None" means that you don´t want to include photodetector in Photonics Module, either in uncertainty calculations.
-                             optical_amplifier = Qlunc_yaml_inputs['Modules']['Photonics Module']['Optical amplifier'],         # Scanner instance (in this example "OpticalAmplifier") or "None". "None" means that you don´t want to include Optical Amplifier in Photonics Module, either in uncertainty calculations.
+                             photodetector     = eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['Photodetector']),             # Photodetector instance (in this example "Photodetector") or "None". "None" means that you don´t want to include photodetector in Photonics Module, either in uncertainty calculations.
+                             optical_amplifier = eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['Optical amplifier']),         # Scanner instance (in this example "OpticalAmplifier") or "None". "None" means that you don´t want to include Optical Amplifier in Photonics Module, either in uncertainty calculations.
                              unc_func          = eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['Uncertainty function']))
 
 ## Lidar general inputs: ######################################################
-Lidar_inputs     = lidar_gral_inp(name        = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Name'],     # Introduce the name of your lidar data folder.
+Lidar_inputs     = lidar_gral_inp(name        = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Name'],      # Introduce the name of your lidar data folder.
                                   wave        = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Wavelength'],                    # In [m]. Lidar wavelength.
                                   sample_rate = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Sample rate'],                          # In [Hz]
                                   yaw_error   = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Yaw error'],                          # In [°]. Degrees of rotation around z axis because of inclinometer errors
@@ -113,18 +120,19 @@ Lidar_inputs     = lidar_gral_inp(name        = Qlunc_yaml_inputs['Components'][
 ## Lidar device:
 
 Lidar = lidar(name          = Qlunc_yaml_inputs['Lidar']['Name'],             # Introduce the name of your lidar device.
-               photonics    = Qlunc_yaml_inputs['Lidar']['Photonics module'],     # Introduce the name of your photonics module.
-               optics       = Qlunc_yaml_inputs['Lidar']['Optics module'],        # Introduce the name of your optics module.
-               power        = Qlunc_yaml_inputs['Lidar']['Power module'],                 # Introduce the name of your power module. NOT IMPLEMENTED YET!
-               lidar_inputs = Qlunc_yaml_inputs['Lidar']['Lidar inputs'],         # Introduce lidar general inputs
+               photonics    = eval(Qlunc_yaml_inputs['Lidar']['Photonics module']),     # Introduce the name of your photonics module.
+               optics       = eval(Qlunc_yaml_inputs['Lidar']['Optics module']),        # Introduce the name of your optics module.
+               power        = eval(Qlunc_yaml_inputs['Lidar']['Power module']),                 # Introduce the name of your power module. NOT IMPLEMENTED YET!
+               lidar_inputs = eval(Qlunc_yaml_inputs['Lidar']['Lidar inputs']),         # Introduce lidar general inputs
                unc_func     = eval(Qlunc_yaml_inputs['Lidar']['Uncertainty function']))    # Function estimating lidar global uncertainty
 
 
 ## Creating atmospheric scenarios: ############################################
+
 Atmospheric_TimeSeries = True # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere (T, H, rain and fog) 
                                # If so we obtain a time series describing the noise implemented in the measurement.
 if Atmospheric_TimeSeries:
-    Atmos_TS_FILE           = '../metadata/AtmosphericData/AtmosphericScenarios.csv'
+    Atmos_TS_FILE           = '../metadata/AtmosphericData/'+Qlunc_yaml_inputs['Atmospheric_inputs']['Atmos_TS_FILE']
     AtmosphericScenarios_TS = pd.read_csv(Atmos_TS_FILE,delimiter=';',decimal=',')
     Atmospheric_inputs={
                         'temperature' : list(AtmosphericScenarios_TS.loc[:,'T']),    # [K]
@@ -138,4 +146,4 @@ if Atmospheric_TimeSeries:
 else:    
 
     Atmospheric_Scenario=atmosphere(name        = 'Atmosphere1',
-                                    temperature = [1])
+                                    temperature = Qlunc_yaml_inputs['Atmospheric_inputs']['Temperature'])

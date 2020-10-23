@@ -39,35 +39,35 @@ Example: ....
 #                           stdv_phi        = .1,
 #                           unc_func        = uopc.UQ_Scanner)       
 Scanner1          = scanner(name           = 'Scan1',
-                           origin          = [0,0,0], #Origin
+                           origin          = [1,22,1], #Origin
                            focus_dist      = np.array([40]*24),
                            sample_rate     = 10,
                            theta           = np.array([7]*24), #np.linspace(0,125,24),#
                            phi             = np.arange(0,360,15),
-                           stdv_focus_dist = 0.8,
-                           stdv_theta      = 0.8,
-                           stdv_phi        = 0.8,
+                           stdv_focus_dist = 0,
+                           stdv_theta      = 0,
+                           stdv_phi        = 0,
                            unc_func        = uopc.UQ_Scanner)  
 Scanner2          = scanner(name           = 'Scan2',
-                           origin          = [0,0,0], #Origin
+                           origin          = [1,22,1], #Origin
                            focus_dist      = np.array([80]*24),
                            sample_rate     = 10,
                            theta           = np.array([7]*24),
                            phi             = np.arange(0,360,15),
-                           stdv_focus_dist = 0.3,
-                           stdv_theta      = 0.3,
-                           stdv_phi        = 0.1,
+                           stdv_focus_dist = 0,
+                           stdv_theta      = 0,
+                           stdv_phi        = 0,
                            unc_func        = uopc.UQ_Scanner)       
 
 Scanner3          = scanner(name           = 'Scan3',
-                           origin          = [0,0,0], #Origin
+                           origin          = [1,22,1], #Origin
                            focus_dist      = np.array([120]*24),
                            sample_rate     = 10,
                            theta           = np.array([7]*24),# np.linspace(0,180,24),#
                            phi             = np.arange(0,360,15) ,#np.array([0]*24),#
-                           stdv_focus_dist = 6,
-                           stdv_theta      = 1,
-                           stdv_phi        = 4,
+                           stdv_focus_dist = 0,
+                           stdv_theta      = 0,
+                           stdv_phi        = 0,
                            unc_func        = uopc.UQ_Scanner)       
 
 Optical_circulator1 = optical_circulator (name = 'OptCirc1',
@@ -147,7 +147,7 @@ Lidar_inputs     = lidar_gral_inp(name        = 'Gral_inp1',
                                   wave        = 1550e-9, 
                                   sample_rate = 2,       # Hz
                                   yaw_error   = 0,       # Degreesof rotation around z axis because of inclinometer errors
-                                  pitch_error = 0,       # Degrees of rotation around y axis
+                                  pitch_error = 90,       # Degrees of rotation around y axis
                                   roll_error  = 0)       # Degrees of rotation around z axis
 
 

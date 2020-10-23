@@ -15,7 +15,7 @@ plot_param={'axes_label_fontsize' : 16,
             'legend_fontsize'     : 12,
             'xlim'                : [-15,15],
             'ylim'                : [-15,15],
-            'zlim'                : [0,60],
+            'zlim'                : [-20,75],
             'markersize'          : 5,
             'markersize_lidar'    : 9,
             'marker'              : '.',
@@ -25,7 +25,7 @@ plot_param={'axes_label_fontsize' : 16,
 # Plot flags:
 flags.flag_plot_pointing_accuracy_unc    = False   # Plot flags:
 flags.flag_plot_measuring_points_pattern = True
-flags.flag_plot_photodetector_noise      = True
+flags.flag_plot_photodetector_noise      = False
 
     
 #########    # Scanner pointing accuracy uncertainty:#################

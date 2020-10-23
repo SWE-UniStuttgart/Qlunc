@@ -1,6 +1,6 @@
 # DIRECTORIES:------------------------------------------------------
 # Template for Qlunc inputs. Here we include a list of the inputs to run Qlunc (Quantification lidar uncertainties).
-#- ? ( 0 | [1-9] [0-9]* ) ( \. [0-9]* )? ( [eE] [-+]? [0-9]+ )?
+
 
 Main_directory: 
 - '../GitHub_Qlunc/'
@@ -9,14 +9,14 @@ Components:
 #Optics: 
   Scanner:  
     Name: Scanner_Yaml   
-    Origin: [0,0,0]
-    Focus distance: 60
-    Sample rate: 15
-    Theta: 15   
-    Phi: 7
-    stdv focus distance: 1
+    Origin: [2,1,2.5]
+    Focus distance: [15]
+    Sample rate: [15]
+    Theta: [7] 
+    Phi: [0,360,15]
+    stdv focus distance: 0
     stdv theta: 0
-    stdv phi: 1
+    stdv phi: 0
     Uncertainty function: uopc.UQ_Scanner
   Optical Circulator:
     Name: OC_Yaml
@@ -26,29 +26,30 @@ Components:
 # Photonics  
   Optical Amplifier: 
     Name: OA_Yaml
-    Optical amplifier noise figure: NoiseFigure.csv
+    Optical amplifier noise figure: ../metadata/NoiseFigure.csv # put the whole path
     Optical amplifier gain: 30
     Uncertainty function: uphc.UQ_Optical_amplifier
 
   
   Photodetector:
     Name: Photodetector_YAML
-    Photodetector BandWidth: 380.e6                
+    Photodetector BandWidth: 380.e+6                
     Load resistor: 50
-    Photodetector efficiency: .85                    # Photodetector efficiency [-]
-    Dark current: 5.e-9                 #  In [A]. Dark current in the photodetector.
+    Photodetector efficiency: .85       # Photodetector efficiency [-]
+    Dark current: 5.e-9                 # In [A]. Dark current in the photodetector.
     Photodetector signalP: 1.e-3
-    Power interval: (0,1000,.001)
-    Gain TIA: 5.e3                    
+    Power interval: [0,1000,.001]
+    Gain TIA: 5.e+3                    
     V Noise TIA: 160.e-6                
     Uncertainty function: uphc.UQ_Photodetector
-    
+ 
+# Lidar general inputs 
   Lidar general inputs:
     Name: Lidar general inputs
     Wavelength: 1550.e-9
     Sample rate: 2
     Yaw error: 0
-    Pitch error: 0
+    Pitch error: -90
     Roll error: 0
 ---
 # Modules:
@@ -56,22 +57,22 @@ Modules:
   Optics Module:
     Name: Optics module Yaml
     Scanner: Scanner
-    Optical circulator: Optical circulator
+    Optical circulator: Optical_circulator # Have to be the same name as the instance
     Laser: None
     Uncertainty function: uopc.sum_unc_optics
   Photonics Module:
     Name: Photonics module
-    Photodetector: Photodetector
-    Optical amplifier: Optical amplifier
+    Photodetector: Photodetector           # Have to be the same name as the instance
+    Optical amplifier: Optical_Amplifier   # Have to be the same name as the instance
     Uncertainty function: uphc.sum_unc_photonics
 ---  
 # Lidar:
 Lidar:
   Name: Caixa1
-  Photonics module: None
-  Optics module: Optics Module
-  Power module: None
-  Lidar inputs: Lidar general inputs
+  Photonics module: Photonics_Module       # Have to be the same name as the instance
+  Optics module: Optics_Module             # Have to be the same name as the instance
+  Power module: None                       # Have to be the same name as the instance
+  Lidar inputs: Lidar_inputs               # Have to be the same name as the instance
   Uncertainty function: ulc.sum_unc_lidar
 
 ---

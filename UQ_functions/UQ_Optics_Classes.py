@@ -44,9 +44,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts):
         stdv_DISTANCE=[]  
 
         #Calculating the theoretical point coordinate transformation (conversion from spherical to cartesians):
-        x0=fd_or*np.cos(np.deg2rad(phi_or))*np.sin(np.deg2rad(theta_or))
-        y0=fd_or*np.sin(np.deg2rad(phi_or))*np.sin(np.deg2rad(theta_or)) 
-        z0=fd_or*np.cos(np.deg2rad(theta_or))
+        x0=fd_or*np.cos(np.deg2rad(phi_or))*np.sin(np.deg2rad(theta_or))+Lidar.optics.scanner.origin[0]
+        y0=fd_or*np.sin(np.deg2rad(phi_or))*np.sin(np.deg2rad(theta_or))+ Lidar.optics.scanner.origin[1]
+        z0=fd_or*np.cos(np.deg2rad(theta_or))+Lidar.optics.scanner.origin[2]
         #Storing coordinates
         X0.append(x0)
         Y0.append(y0)
@@ -76,9 +76,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts):
                [np.sin(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep)),  np.sin(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))+np.cos(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.roll_error_dep)),  np.sin(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))-np.cos(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))],
                [       -np.sin(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))                                             ,                      np.cos(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))                                                                                                                                            ,                                                                np.cos(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))]]
             
-            xfinal=np.matmul(R,[x,y,z])[0]
-            yfinal=np.matmul(R,[x,y,z])[1]
-            zfinal=np.matmul(R,[x,y,z])[2]
+            xfinal=np.matmul(R,[x,y,z])[0]+Lidar.optics.scanner.origin[0]
+            yfinal=np.matmul(R,[x,y,z])[1]+Lidar.optics.scanner.origin[1]
+            zfinal=np.matmul(R,[x,y,z])[2]+Lidar.optics.scanner.origin[2]
 
 #            pdb.set_trace()
             # Distance between theoretical measured points and noisy points:
