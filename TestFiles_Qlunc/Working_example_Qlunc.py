@@ -20,24 +20,29 @@ import os
 import pdb
 import sys
 import yaml
-exec(open(r'..\Main\Qlunc_Classes.py').read())   # Execute Qlunc_Classes.py (creating classes for lidar 'objects')
 
+from yaml.constructor import Constructor
+
+#def add_bool(self, node):
+#    return self.construct_scalar(node)
+#
+#Constructor.add_constructor(u'tag:yaml.org,2002:bool', add_bool)
 # Getting input values from the yaml file:
 
-with open (r'../TestFiles_Qlunc/Working_example_yaml_inputs_file.yml') as file:
+with open (r'../TestFiles_Qlunc/Working_example_yaml_inputs_file.yml') as file: # WHere the yaml file is in order to get the input data
     Qlunc_yaml_inputs={}
     docs = yaml.load_all(file, Loader=yaml.FullLoader)
     for doc in docs:      
         for k, v in doc.items():           
-            Qlunc_yaml_inputs.setdefault(k,v)    
+            Qlunc_yaml_inputs.setdefault(k,v)  # save a dictionary with the data coming from yaml file 
 
-
+exec(open(Qlunc_yaml_inputs['Main_directory']+'/Qlunc_Classes.py').read())   # Execute Qlunc_Classes.py (creating classes for lidar 'objects')
 #%%%%%%%%%%%%%%%%% INPUTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 ## FLAG inputs: ###############################################################
-flags.flag_plot_pointing_accuracy_unc    = False   # Pointing accuracy uncertainty - Keep False
-flags.flag_plot_measuring_points_pattern = True    # Pattern of measuring points
-flags.flag_plot_photodetector_noise      = True    # Photodetector noise: shot noise, dark current noise, thermal noise as a function of the photodetector input signal power.
+flags.flag_plot_pointing_accuracy_unc    = Qlunc_yaml_inputs['Flags']['Pointing accuracy uncertainty']   # Pointing accuracy uncertainty - Keep False
+flags.flag_plot_measuring_points_pattern = Qlunc_yaml_inputs['Flags']['Scanning Pattern']  # Pattern of measuring points
+flags.flag_plot_photodetector_noise      = (Qlunc_yaml_inputs['Flags']['Photodetector noise'])  # Photodetector noise: shot noise, dark current noise, thermal noise as a function of the photodetector input signal power.
 
 
 
@@ -52,16 +57,16 @@ Scanner           = scanner(name           = Qlunc_yaml_inputs['Components']['Sc
                            origin          = Qlunc_yaml_inputs['Components']['Scanner']['Origin'],         # Origin (coordinates of the lidar deployment).
                            sample_rate     = Qlunc_yaml_inputs['Components']['Scanner']['Sample rate'],    # for now introduce it in [degrees].
                            
-                           # This values for focus distance, cone_angle and Azimuth define a typical VAD scanning sequence
+                           # This values for focus distance, cone_angle and azimuth define a typical VAD scanning sequence:
                            focus_dist      = np.array(Qlunc_yaml_inputs['Components']['Scanner']['Focus distance']*int(Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][1]/Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][2])),   # Focus distance in [meters]                                        
-                           cone_angle           = np.array(Qlunc_yaml_inputs['Components']['Scanner']['Cone angle']*int(Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][1]/Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][2])),    # Cone angle in [degrees].
-                           azimuth             = np.array(np.arange(Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][0],
+                           cone_angle      = np.array(Qlunc_yaml_inputs['Components']['Scanner']['Cone angle']*int(Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][1]/Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][2])),    # Cone angle in [degrees].
+                           azimuth         = np.array(np.arange(Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][0],
                                                                 Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][1],
                                                                 Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][2])),#np.arange(0,360,15), # Azimuth angle in [degrees].
                            
-                                                                stdv_focus_dist = Qlunc_yaml_inputs['Components']['Scanner']['stdv focus distance'],                 # Focus distance standard deviation in [meters].
-                           stdv_cone_angle      = Qlunc_yaml_inputs['Components']['Scanner']['stdv Cone angle'],                 # Cone angle standard deviation in [degrees].
-                           stdv_azimuth        = Qlunc_yaml_inputs['Components']['Scanner']['stdv Azimuth'],                 # Azimuth angle standard deviation in [degrees].
+                           stdv_focus_dist = Qlunc_yaml_inputs['Components']['Scanner']['stdv focus distance'],                 # Focus distance standard deviation in [meters].
+                           stdv_cone_angle = Qlunc_yaml_inputs['Components']['Scanner']['stdv Cone angle'],                 # Cone angle standard deviation in [degrees].
+                           stdv_azimuth    = Qlunc_yaml_inputs['Components']['Scanner']['stdv Azimuth'],                 # Azimuth angle standard deviation in [degrees].
                            unc_func        = eval(Qlunc_yaml_inputs['Components']['Scanner']['Uncertainty function']) )    # here you put the function describing your scanner uncertainty. 
 
 #Optical Circulator:
@@ -134,16 +139,16 @@ Atmospheric_TimeSeries = True # This defines whether we are using a time series 
 if Atmospheric_TimeSeries:
     Atmos_TS_FILE           = '../metadata/AtmosphericData/'+Qlunc_yaml_inputs['Atmospheric_inputs']['Atmos_TS_FILE']
     AtmosphericScenarios_TS = pd.read_csv(Atmos_TS_FILE,delimiter=';',decimal=',')
-    Atmospheric_inputs={
-                        'temperature' : list(AtmosphericScenarios_TS.loc[:,'T']),    # [K]
-                        'humidity'    : list(AtmosphericScenarios_TS.loc[:,'H']),    # [%]
-                        'rain'        : list(AtmosphericScenarios_TS.loc[:,'rain']),
-                        'fog'         : list(AtmosphericScenarios_TS.loc[:,'fog']),
-                        'time'        : list(AtmosphericScenarios_TS.loc[:,'t'])     #for rain and fog intensity intervals might be introduced [none,low, medium high]
-                        } 
-    Atmospheric_Scenario=atmosphere(name        = 'Atmosphere1',
-                                    temperature = Atmospheric_inputs['temperature'])
+    Atmospheric_inputs = {
+                          'temperature' : list(AtmosphericScenarios_TS.loc[:,'T']),    # [K]
+                          'humidity'    : list(AtmosphericScenarios_TS.loc[:,'H']),    # [%]
+                          'rain'        : list(AtmosphericScenarios_TS.loc[:,'rain']),
+                          'fog'         : list(AtmosphericScenarios_TS.loc[:,'fog']),
+                          'time'        : list(AtmosphericScenarios_TS.loc[:,'t'])     #for rain and fog intensity intervals might be introduced [none,low, medium high]
+                          } 
+    Atmospheric_Scenario = atmosphere(name        = 'Atmosphere1',
+                                      temperature = Atmospheric_inputs['temperature'])
 else:    
 
-    Atmospheric_Scenario=atmosphere(name        = 'Atmosphere1',
-                                    temperature = Qlunc_yaml_inputs['Atmospheric_inputs']['Temperature'])
+    Atmospheric_Scenario = atmosphere(name        = 'Atmosphere1',
+                                      temperature = Qlunc_yaml_inputs['Atmospheric_inputs']['Temperature'])

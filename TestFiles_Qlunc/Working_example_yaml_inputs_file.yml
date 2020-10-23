@@ -2,8 +2,8 @@
 # Template for Qlunc inputs. Here we include a list of the inputs to run Qlunc (Quantification lidar uncertainties).
 
 
-Main_directory: 
-- '../GitHub_Qlunc/'
+Main_directory: # Directory where Qlunc_Classes.py is
+  '../Main'
 
 Components:
 #Optics: 
@@ -115,5 +115,11 @@ Atmospheric_inputs:
   Humidity: 12 # [%] 
   Rain: true # for rain and fog intensity intervals might be introduced [none,low, medium high
   Fog: false
-    
+---
+
+# Plotting:------------------------------------------------------------
+Flags:
+  Pointing accuracy uncertainty: False
+  Scanning Pattern: True
+  Photodetector noise: True
 

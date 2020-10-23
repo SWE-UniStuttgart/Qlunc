@@ -22,11 +22,6 @@ plot_param={'axes_label_fontsize' : 16,
             'markerTheo'          : '.b',
             'tick_labelrotation'  : 45}
 
-# Plot flags:
-flags.flag_plot_pointing_accuracy_unc    = False   # Plot flags:
-flags.flag_plot_measuring_points_pattern = True
-flags.flag_plot_photodetector_noise      = False
-
     
 #########    # Scanner pointing accuracy uncertainty:#################
     
