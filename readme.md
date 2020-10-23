@@ -29,6 +29,7 @@ At this stage the code can calculate errors introduced by photodetector and opti
 By downloading the repository you will get several folders within which Qlunc is organized:
 ### Main:
 This is the core of Qlunc. Here the user creates the classes describing the components, modules and general inputs of the lidar device.
+ - yaml_inputs_file.py is a yaml file where user introduces the lidsar components values, integrated modules and general lidar features as well as atmospheric scenarios.
  - Qlunc_Classes.py contains the snippet which creates all the lidar digital twins. Each lidar module/component is assigned to a python class.
  - Qlunc_input_Classes.py contains the values for the different components and atmospheric scenarios. Atmospheric scenarios are created here as well.
 ### UQ_Functions: 
@@ -36,10 +37,10 @@ This is the core of Qlunc. Here the user creates the classes describing the comp
 ### Utils:
  - Contains scripts meant to do different tasks. Importing packages, plotting script and some stand alone funtions which don´t interface directly with Qlunc but are necessary to compute calculations.
 ###  Test File:
- - A working example is provided to show how the process looks like. In this test case a lidar is builded up with its modules and components, puting all together to set up a lidar device. User can find more information about how this test file is working in the readme.d file dropped in this folder.
+ - A working example is provided to show how the process looks like. In this test case a lidar is builded up with its modules and components, puting all together to set up a lidar device. User can find more information on how to run this test file in the readme.md file dropped in this folder.
 
 ## Requirements
- - Anaconda Navigator has been installed with. It includes, among others, Python (=>3.7) and spyder IDE software features, ready to be used. 
+ - Anaconda Navigator has been installed. It includes, among others, Python3.7 and spyder IDE software features, ready to be used. 
  
 ## License:
 
