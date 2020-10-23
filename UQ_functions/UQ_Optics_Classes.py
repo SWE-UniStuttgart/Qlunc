@@ -38,15 +38,17 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts):
     NoisyY=[]
     NoisyZ=[]
     coun=0
-    for fd_or,theta_or,phi_or in zip(Lidar.optics.scanner.focus_dist,Lidar.optics.scanner.theta,Lidar.optics.scanner.phi):# Take coordinates from inputs
+    sample_rate_count=0
+    for fd_or,cone_angle_or,azimuth_or in zip(Lidar.optics.scanner.focus_dist,Lidar.optics.scanner.cone_angle,Lidar.optics.scanner.azimuth):# Take coordinates from inputs
         Mean_DISTANCE=[]
         DISTANCE=[]        
         stdv_DISTANCE=[]  
-
+        sample_rate_count+=Lidar.optics.scanner.sample_rate
+        
         #Calculating the theoretical point coordinate transformation (conversion from spherical to cartesians):
-        x0=fd_or*np.cos(np.deg2rad(phi_or))*np.sin(np.deg2rad(theta_or))+Lidar.optics.scanner.origin[0]
-        y0=fd_or*np.sin(np.deg2rad(phi_or))*np.sin(np.deg2rad(theta_or))+ Lidar.optics.scanner.origin[1]
-        z0=fd_or*np.cos(np.deg2rad(theta_or))+Lidar.optics.scanner.origin[2]
+        x0=(fd_or)*np.cos(np.deg2rad(azimuth_or))*np.sin(np.deg2rad(cone_angle_or))+Lidar.optics.scanner.origin[0]
+        y0=(fd_or)*np.sin(np.deg2rad(azimuth_or))*np.sin(np.deg2rad(cone_angle_or))+ Lidar.optics.scanner.origin[1]
+        z0=(fd_or)*np.cos(np.deg2rad(cone_angle_or))+Lidar.optics.scanner.origin[2]+sample_rate_count
         #Storing coordinates
         X0.append(x0)
         Y0.append(y0)
@@ -57,18 +59,18 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts):
         # Create white noise with stdv selected by user for each pointing input
             n=10000 # Number of cases to combine
             del_focus_dist = np.array(np.random.normal(0 ,Lidar.optics.scanner.stdv_focus_dist,n)) # why a normal distribution??Does it have sense, can be completely random?
-            del_theta      = np.array(np.random.normal(0,Lidar.optics.scanner.stdv_theta,n))
-            del_phi        = np.array(np.random.normal(0,Lidar.optics.scanner.stdv_phi,n))
+            del_cone_angle = np.array(np.random.normal(0,Lidar.optics.scanner.stdv_cone_angle,n))
+            del_azimuth    = np.array(np.random.normal(0,Lidar.optics.scanner.stdv_azimuth,n))
             
     #        Adding noise to the theoretical position:
-            noisy_fd    = fd_or    + del_focus_dist
-            noisy_theta = theta_or + del_theta 
-            noisy_phi   = phi_or   + del_phi 
+            noisy_fd         = fd_or    + del_focus_dist
+            noisy_cone_angle = cone_angle_or + del_cone_angle 
+            noisy_azimuth    = azimuth_or   + del_azimuth 
             
 #            Cartesian coordinates of the noisy points:            
-            x=noisy_fd*np.cos(np.deg2rad(noisy_phi))*np.sin(np.deg2rad(noisy_theta))
-            y=noisy_fd*np.sin(np.deg2rad(noisy_phi))*np.sin(np.deg2rad(noisy_theta)) 
-            z=noisy_fd*np.cos(np.deg2rad(noisy_theta)) 
+            x=noisy_fd*np.cos(np.deg2rad(noisy_azimuth))*np.sin(np.deg2rad(noisy_cone_angle))
+            y=noisy_fd*np.sin(np.deg2rad(noisy_azimuth))*np.sin(np.deg2rad(noisy_cone_angle)) 
+            z=noisy_fd*np.cos(np.deg2rad(noisy_cone_angle)) + sample_rate_count
             
             # Implement error in deployment of the tripod as a rotation over yaw, pitch and roll
 
@@ -76,9 +78,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts):
                [np.sin(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep)),  np.sin(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))+np.cos(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.roll_error_dep)),  np.sin(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))-np.cos(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))],
                [       -np.sin(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))                                             ,                      np.cos(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))                                                                                                                                            ,                                                                np.cos(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))]]
             
-            xfinal=np.matmul(R,[x,y,z])[0]+Lidar.optics.scanner.origin[0]
-            yfinal=np.matmul(R,[x,y,z])[1]+Lidar.optics.scanner.origin[1]
-            zfinal=np.matmul(R,[x,y,z])[2]+Lidar.optics.scanner.origin[2]
+            xfinal = np.matmul(R,[x,y,z])[0]+Lidar.optics.scanner.origin[0]
+            yfinal = np.matmul(R,[x,y,z])[1]+Lidar.optics.scanner.origin[1]
+            zfinal = np.matmul(R,[x,y,z])[2]+Lidar.optics.scanner.origin[2]
 
 #            pdb.set_trace()
             # Distance between theoretical measured points and noisy points:

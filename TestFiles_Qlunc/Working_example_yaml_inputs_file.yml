@@ -7,17 +7,30 @@ Main_directory:
 
 Components:
 #Optics: 
-  Scanner:  
-    Name: Scanner_Yaml   
+  Scanner:
+    
+    # Provide an ID to your lidar:
+    Name: Scanner_Yaml
+    
+    # Lidar position in meters: [x,y,z]
     Origin: [2,1,2.5]
-    Focus distance: [15]
-    Sample rate: [15]
-    Theta: [7] 
-    Phi: [0,360,15]
-    stdv focus distance: 0
-    stdv theta: 0
-    stdv phi: 0
+    
+    # Lidar sample rate in meters for now (have to know the medium wind speed to put in Hz and do correct calculations) :
+    Sample rate: 0
+    
+    # Pattern:
+    Focus distance: [60]   
+    Cone angle: [7] 
+    Azimuth: [0,360,15]
+    
+    # Systematic error in the scanner pointting accuracy:
+    stdv focus distance: 1
+    stdv Cone angle: 0.6
+    stdv Azimuth: 0.8
+    
+    #Uncertainty function:
     Uncertainty function: uopc.UQ_Scanner
+    
   Optical Circulator:
     Name: OC_Yaml
     Insertion loss: 2.1
@@ -25,9 +38,21 @@ Components:
   
 # Photonics  
   Optical Amplifier: 
+  
+    # Provide an Id to your Optical amplifier:
     Name: OA_Yaml
-    Optical amplifier noise figure: ../metadata/NoiseFigure.csv # put the whole path
+    
+    # Noise figure in dB. Could be a well known value or a table.
+    # If table, FigureNoise Vs Wavelength, is provided Qlunc 
+    # interpolates to obtain a most accurate value according 
+    # with the lidar nominal wavelength.
+    
+    Optical amplifier noise figure: ../metadata/NoiseFigure.csv 
+    
+    # Optical amplifier gain in dB
     Optical amplifier gain: 30
+    
+    # Uncertainty function quantifying the optical amplifier uncertainty
     Uncertainty function: uphc.UQ_Optical_amplifier
 
   
@@ -49,7 +74,7 @@ Components:
     Wavelength: 1550.e-9
     Sample rate: 2
     Yaw error: 0
-    Pitch error: -90
+    Pitch error: 0
     Roll error: 0
 ---
 # Modules:

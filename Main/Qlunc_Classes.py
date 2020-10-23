@@ -107,16 +107,16 @@ class converter():
         print('Created new converter: {}'.format(self.ConverterID))
 
 class scanner():
-    def __init__(self,name,origin,sample_rate,focus_dist,theta,phi,stdv_focus_dist,stdv_theta,stdv_phi,unc_func):
+    def __init__(self,name,origin,sample_rate,focus_dist,cone_angle,azimuth,stdv_focus_dist,stdv_cone_angle,stdv_azimuth,unc_func):
         self.ScannerID       = name
         self.origin          = origin
         self.sample_rate     = sample_rate
         self.focus_dist      = focus_dist
-        self.theta           = theta
-        self.phi             = phi
+        self.cone_angle           = cone_angle
+        self.azimuth             = azimuth
         self.stdv_focus_dist = stdv_focus_dist
-        self.stdv_theta      = stdv_theta
-        self.stdv_phi        = stdv_phi
+        self.stdv_cone_angle      = stdv_cone_angle
+        self.stdv_azimuth        = stdv_azimuth
         self.Uncertainty     = unc_func
         
         print('Created new scanner: {}'.format(self.ScannerID))

@@ -13,9 +13,9 @@ plot_param={'axes_label_fontsize' : 16,
             'title_fontsize'      : 24,
             'suptitle_fontsize'   : 23,
             'legend_fontsize'     : 12,
-            'xlim'                : [-15,15],
-            'ylim'                : [-15,15],
-            'zlim'                : [-20,75],
+            'xlim'                : [-35,35],
+            'ylim'                : [-35,35],
+            'zlim'                : [0,90],
             'markersize'          : 5,
             'markersize_lidar'    : 9,
             'marker'              : '.',
@@ -44,26 +44,26 @@ flags.flag_plot_photodetector_noise      = False
 #    y_new1 = f1(x_new1)
 #
 #    
-#    z2 = np.polyfit(Scanner2.theta, Scanner_Data2['Simu_Mean_Distance'], 1) # With '1' is a straight line y=ax+b
+#    z2 = np.polyfit(Scanner2.cone_angle, Scanner_Data2['Simu_Mean_Distance'], 1) # With '1' is a straight line y=ax+b
 #    f2 = np.poly1d(z2)
 #    # calculate new x's and y's
-#    x_new2 = np.linspace(Scanner2.theta[0], Scanner2.theta[-1], 50)
+#    x_new2 = np.linspace(Scanner2.cone_angle[0], Scanner2.cone_angle[-1], 50)
 #    y_new2 = f2(x_new2)
 #
 #   
-#    z3 = np.polyfit(Scanner3.phi, Scanner_Data3['Simu_Mean_Distance'], 1) # With '1' is a straight line y=ax+b
+#    z3 = np.polyfit(Scanner3.azimuth, Scanner_Data3['Simu_Mean_Distance'], 1) # With '1' is a straight line y=ax+b
 #    f3 = np.poly1d(z3)
 #    # calculate new x's and y's
-#    x_new3 = np.linspace(Scanner3.phi[0], Scanner3.phi[-1], 50)
+#    x_new3 = np.linspace(Scanner3.azimuth[0], Scanner3.azimuth[-1], 50)
 #    y_new3 = f3(x_new3)
 #    
 #     # Plotting:
 #    axs1.plot(x_new1,y_new1,'r-',label='Fitted curve1')
 #    axs1.errorbar(Lidar.optics.scanner.focus_dist,Scanner_Data1['Simu_Mean_Distance'],yerr=Scanner_Data1['STDV_Distance'],label='Data1')
 #    axs2.plot(x_new2,y_new2,'r-',label='Fitted curve2')
-#    axs2.errorbar(Scanner2.theta,Scanner_Data2['Simu_Mean_Distance'],yerr=Scanner_Data2['STDV_Distance'],label='Data2')
+#    axs2.errorbar(Scanner2.cone_angle,Scanner_Data2['Simu_Mean_Distance'],yerr=Scanner_Data2['STDV_Distance'],label='Data2')
 #    axs3.plot(x_new3,y_new3,'r-',label='Fitted curve3')
-#    axs3.errorbar(Scanner3.phi,Scanner_Data3['Simu_Mean_Distance'],yerr=Scanner_Data3['STDV_Distance'],label='Data3')
+#    axs3.errorbar(Scanner3.azimuth,Scanner_Data3['Simu_Mean_Distance'],yerr=Scanner_Data3['STDV_Distance'],label='Data3')
 #    
 #    #Title and axis labels for the different plots
 #    fig.suptitle('Mean Distance error and stdv of the Distance error [m]',fontsize=plot_param['suptitle_fontsize'])
@@ -71,11 +71,11 @@ flags.flag_plot_photodetector_noise      = False
 #    axs1.set(xlabel='Focus Distance [m]',ylabel='Distance error [m]')
 #    axs1.yaxis.get_label().set_fontsize(plot_param['axes_label_fontsize'])
 #    axs1.xaxis.get_label().set_fontsize(plot_param['axes_label_fontsize'])
-#    axs2.set_title(r'Variation with $\theta$',fontsize=plot_param['title_fontsize'])
-#    axs2.set(xlabel=r'$\theta$'+' [°]')
+#    axs2.set_title(r'Variation with $\cone_angle$',fontsize=plot_param['title_fontsize'])
+#    axs2.set(xlabel=r'$\cone_angle$'+' [°]')
 #    axs2.xaxis.get_label().set_fontsize(plot_param['axes_label_fontsize'])
-#    axs3.set_title(r'Variation with $\phi$',fontsize=plot_param['title_fontsize'])
-#    axs3.set(xlabel=r'$\phi$'+' [°]')
+#    axs3.set_title(r'Variation with $\azimuth$',fontsize=plot_param['title_fontsize'])
+#    axs3.set(xlabel=r'$\azimuth$'+' [°]')
 #    axs3.xaxis.get_label().set_fontsize(plot_param['axes_label_fontsize'])
 #    axs1.set_ylim(0,10)
 #    axs2.set_ylim(0,10)

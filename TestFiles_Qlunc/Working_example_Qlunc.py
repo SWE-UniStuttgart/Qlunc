@@ -52,16 +52,16 @@ Scanner           = scanner(name           = Qlunc_yaml_inputs['Components']['Sc
                            origin          = Qlunc_yaml_inputs['Components']['Scanner']['Origin'],         # Origin (coordinates of the lidar deployment).
                            sample_rate     = Qlunc_yaml_inputs['Components']['Scanner']['Sample rate'],    # for now introduce it in [degrees].
                            
-                           # This values for focus distance, theta and phi define a typical VAD scanning sequence
-                           focus_dist      = np.array(Qlunc_yaml_inputs['Components']['Scanner']['Focus distance']*int(Qlunc_yaml_inputs['Components']['Scanner']['Phi'][1]/Qlunc_yaml_inputs['Components']['Scanner']['Phi'][2])),   # Focus distance in [meters]                                        
-                           theta           = np.array(Qlunc_yaml_inputs['Components']['Scanner']['Theta']*int(Qlunc_yaml_inputs['Components']['Scanner']['Phi'][1]/Qlunc_yaml_inputs['Components']['Scanner']['Phi'][2])),    # Cone angle in [degrees].
-                           phi             = np.array(np.arange(Qlunc_yaml_inputs['Components']['Scanner']['Phi'][0],
-                                                                Qlunc_yaml_inputs['Components']['Scanner']['Phi'][1],
-                                                                Qlunc_yaml_inputs['Components']['Scanner']['Phi'][2])),#np.arange(0,360,15), # Azimuth angle in [degrees].
+                           # This values for focus distance, cone_angle and Azimuth define a typical VAD scanning sequence
+                           focus_dist      = np.array(Qlunc_yaml_inputs['Components']['Scanner']['Focus distance']*int(Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][1]/Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][2])),   # Focus distance in [meters]                                        
+                           cone_angle           = np.array(Qlunc_yaml_inputs['Components']['Scanner']['Cone angle']*int(Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][1]/Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][2])),    # Cone angle in [degrees].
+                           azimuth             = np.array(np.arange(Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][0],
+                                                                Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][1],
+                                                                Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][2])),#np.arange(0,360,15), # Azimuth angle in [degrees].
                            
                                                                 stdv_focus_dist = Qlunc_yaml_inputs['Components']['Scanner']['stdv focus distance'],                 # Focus distance standard deviation in [meters].
-                           stdv_theta      = Qlunc_yaml_inputs['Components']['Scanner']['stdv theta'],                 # Cone angle standard deviation in [degrees].
-                           stdv_phi        = Qlunc_yaml_inputs['Components']['Scanner']['stdv phi'],                 # Azimuth angle standard deviation in [degrees].
+                           stdv_cone_angle      = Qlunc_yaml_inputs['Components']['Scanner']['stdv Cone angle'],                 # Cone angle standard deviation in [degrees].
+                           stdv_azimuth        = Qlunc_yaml_inputs['Components']['Scanner']['stdv Azimuth'],                 # Azimuth angle standard deviation in [degrees].
                            unc_func        = eval(Qlunc_yaml_inputs['Components']['Scanner']['Uncertainty function']) )    # here you put the function describing your scanner uncertainty. 
 
 #Optical Circulator:

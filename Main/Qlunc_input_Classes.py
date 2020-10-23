@@ -32,42 +32,42 @@ Example: ....
 #                           origin          = [0,0,0], #Origin
 #                           focus_dist      = np.array([500,600,750,950,1250,1550,2100, 2950,3700]),
 #                           sample_rate     = 10,
-#                           theta           = np.array([0]*9),
-#                           phi             = np.array([0]*9) ,
+#                           cone_angle           = np.array([0]*9),
+#                           azimuth             = np.array([0]*9) ,
 #                           stdv_focus_dist = .1,
-#                           stdv_theta      = .1,
-#                           stdv_phi        = .1,
+#                           stdv_cone_angle      = .1,
+#                           stdv_azimuth        = .1,
 #                           unc_func        = uopc.UQ_Scanner)       
 Scanner1          = scanner(name           = 'Scan1',
                            origin          = [1,22,1], #Origin
                            focus_dist      = np.array([40]*24),
                            sample_rate     = 10,
-                           theta           = np.array([7]*24), #np.linspace(0,125,24),#
-                           phi             = np.arange(0,360,15),
+                           cone_angle           = np.array([7]*24), #np.linspace(0,125,24),#
+                           azimuth             = np.arange(0,360,15),
                            stdv_focus_dist = 0,
-                           stdv_theta      = 0,
-                           stdv_phi        = 0,
+                           stdv_cone_angle      = 0,
+                           stdv_azimuth        = 0,
                            unc_func        = uopc.UQ_Scanner)  
 Scanner2          = scanner(name           = 'Scan2',
                            origin          = [1,22,1], #Origin
                            focus_dist      = np.array([80]*24),
                            sample_rate     = 10,
-                           theta           = np.array([7]*24),
-                           phi             = np.arange(0,360,15),
+                           cone_angle           = np.array([7]*24),
+                           azimuth             = np.arange(0,360,15),
                            stdv_focus_dist = 0,
-                           stdv_theta      = 0,
-                           stdv_phi        = 0,
+                           stdv_cone_angle      = 0,
+                           stdv_azimuth        = 0,
                            unc_func        = uopc.UQ_Scanner)       
 
 Scanner3          = scanner(name           = 'Scan3',
                            origin          = [1,22,1], #Origin
                            focus_dist      = np.array([120]*24),
                            sample_rate     = 10,
-                           theta           = np.array([7]*24),# np.linspace(0,180,24),#
-                           phi             = np.arange(0,360,15) ,#np.array([0]*24),#
+                           cone_angle           = np.array([7]*24),# np.linspace(0,180,24),#
+                           azimuth             = np.arange(0,360,15) ,#np.array([0]*24),#
                            stdv_focus_dist = 0,
-                           stdv_theta      = 0,
-                           stdv_phi        = 0,
+                           stdv_cone_angle      = 0,
+                           stdv_azimuth        = 0,
                            unc_func        = uopc.UQ_Scanner)       
 
 Optical_circulator1 = optical_circulator (name = 'OptCirc1',
