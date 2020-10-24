@@ -2,15 +2,30 @@
 ## Working example to create a lidar digital twin:
 
 The lidar simulated in this example is a VAD scanning lidar.
-We want to create a lidar object maded up with one module. This module wil contain just one component with properties Property_1 and Property_2. The steps we have to follow are: 
+We want to create a lidar object maded up with one module. This module will contain just one component with properties Property_1 and Property_2. The steps we have to follow are: 
 
- 1) Create a component with its propertie(s)
- 2) Create a module containing the component(s)
- 3) Create a lidar containing the module(s)
+ 1) Fill up yaml file with inputs
+ 2) Create a component with its propertie(s)
+ 3) Create a module containing the component(s)
+ 4) Create a lidar containing the module(s)
+ 5) Ask for the uncertainties we are interested in using _dot notation_
 
-In this repository is presented a working example of Qlunc in order to facilitate its understanding.
-
-### Creating the component digital twin:
+### 1) Fill up the inputs yaml file:
+Before creating the classes for the different components we can fill up the yaml file with corresponding values for components, decide the components we want to include in each module and wich module do we want to include in the lidar device for uncertainty calculations.
+ - Name: Provide an ID to out object
+ - Uncertainty function: Function developed by the user decribing the related uncertainty to specific component/device/lidar
+ - When introducing the component in each module the name should be the same as in the instance, e.g. if the name of your photodetector instance is _Photodetector1_ the name to use in the yaml file should be:
+    
+    YAML file:
+    >> Modules:
+    >>  Photonics Module:
+    >>   Name: Photonics module
+    >>   Photodetector: _Photodetector1_           # Have to be the same name as the instance name
+    >>   Optical amplifier: _Optical_Amplifier_    # Have to be the same name as the instance name
+    >>   Uncertainty function: uphc.sum_unc_photonics
+    
+    
+### 2) Creating the component digital twin:
 The components are included as python classes, for example a component, _Component_A_, is created instanciating class _Comp_A_:
 
 - Creating a class for the component _Component_A_:
