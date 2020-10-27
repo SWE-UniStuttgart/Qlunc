@@ -115,7 +115,7 @@ Photodetector    = photodetector(name             = 'Photo1',
 
 Photonics_Module = photonics(name              = 'PhotoMod1',
                              photodetector     = Photodetector, # or None
-                             optical_amplifier =  OpticalAmplifier,# None,#
+                             optical_amplifier = OpticalAmplifier,# None,#
                              unc_func          = uphc.sum_unc_photonics)
 
 #############  Power #########################################

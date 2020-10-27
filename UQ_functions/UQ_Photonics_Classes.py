@@ -63,13 +63,13 @@ def UQ_Optical_amplifier(Lidar,Atmospheric_Scenario,cts): # Calculating ASE - Am
     if isinstance (Lidar.photonics.optical_amplifier.NoiseFig, numbers.Number): #If user introduces a number or a table of values
         FigureNoise=[(Lidar.photonics.optical_amplifier.NoiseFig)]*len(Atmospheric_Scenario.temperature) #Figure noise vector        
         UQ_Optical_amplifier = [np.array([10*np.log10((10**(FigureNoise[0]/10))*cts.h*(cts.c/Lidar.lidar_inputs.Wavelength)*10**(Lidar.photonics.optical_amplifier.Gain/10))]*len(Atmospheric_Scenario.temperature))] # ASE
-        pdb.set_trace()
+#        pdb.set_trace()
     else:
         NoiseFigure_DATA = pd.read_csv(Lidar.photonics.optical_amplifier.NoiseFig,delimiter=';',decimal=',') #read from a .csv file variation of dB with wavelength (for now just with wavelength)    
         figure_noise_INT  = itp.interp1d(NoiseFigure_DATA.iloc[:,0],NoiseFigure_DATA.iloc[:,1],kind='cubic',fill_value="extrapolate")# First column wavelength,second column SNR in dB
         NoiseFigure_VALUE = figure_noise_INT(Lidar.lidar_inputs.Wavelength) # in dB
         FigureNoise=(NoiseFigure_VALUE.tolist())
-#        pdb.set_trace()
+        pdb.set_trace()
         UQ_Optical_amplifier = [np.array([10*np.log10((10**(FigureNoise/10))*cts.h*(cts.c/Lidar.lidar_inputs.Wavelength)*10**(Lidar.photonics.optical_amplifier.Gain/10))]*len(Atmospheric_Scenario.temperature)) ]# ASE
 
     

@@ -137,8 +137,26 @@ if flags.flag_plot_photodetector_noise:
     plt.legend(['Shot Noise','Thermal Noise','Dark current Noise','TIA Noise'],fontsize=plot_param['legend_fontsize'])#,'Total error [w]'])
     plt.title('SNR Photodetector',fontsize=plot_param['title_fontsize'])
     plt.grid(axis='both')
-       
 
 
+
+##This is the new way to do this plotting. Implemented when working in Working_example_Qlunc_Plotting.py
+#The same as in lines 126 to 139 but adding the Qlunc version to the plot. For that have to create axis (fig,ax = ...)       
+############   Plot photodetector noise   #############################       
+#if flags.flag_plot_photodetector_noise:
+#    # Quantifying uncertainty from photodetector and interval domain for the plot Psax is define in the photodetector class properties)
+#    UQ_photo = Lidar.photonics.photodetector.Uncertainty(Lidar,Atmospheric_Scenario,cts) # Obtain the UQ photodetector dictionary wit SNR and UQ information
+#    Psax=10*np.log10(Lidar.photonics.photodetector.Power_interval) 
+#
+#    # Plotting:
+#    
+#    fig,ax=plt.subplots()
+#    ax.plot(Psax,UQ_photo['SNR_data_photo']['SNR_Shot_Noise'][0],Psax,UQ_photo['SNR_data_photo']['SNR_Thermal'][0],Psax,UQ_photo['SNR_data_photo']['SNR_Dark_Current'][0],Psax,UQ_photo['SNR_data_photo']['SNR_TIA'][0])
+#    ax.set_xlabel('Input Signal optical power (dBm)',fontsize=plot_param['axes_label_fontsize'])
+#    ax.set_ylabel('SNR (dB)',fontsize=plot_param['axes_label_fontsize'])
+#    ax.legend(['Shot Noise','Thermal Noise','Dark current Noise','TIA Noise'],fontsize=plot_param['legend_fontsize'])#,'Total error [w]'])
+#    ax.set_title('SNR Photodetector',fontsize=plot_param['title_fontsize'])
+#    ax.grid(axis='both')
+#    ax.text(.90,.05,'Qlunc-V.9',transform=ax.transAxes, fontsize=14,verticalalignment='top',bbox=dict(boxstyle='round', facecolor='white', alpha=0.5))
 
 
