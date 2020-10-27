@@ -2,15 +2,30 @@
 ## Working example to create a lidar digital twin:
 
 The lidar simulated in this example is a VAD scanning lidar.
-We want to create a lidar object maded up with one module. This module wil contain just one component with properties Property_1 and Property_2. The steps we have to follow are: 
+We want to create a lidar object maded up with one module. This module will contain just one component with properties Property_1 and Property_2. The steps we have to follow are: 
 
- 1) Create a component with its propertie(s)
- 2) Create a module containing the component(s)
- 3) Create a lidar containing the module(s)
+ 1) Fill up yaml file with inputs
+ 2) Create a component with its propertie(s)
+ 3) Create a module containing the component(s)
+ 4) Create a lidar containing the module(s)
+ 5) Ask for the uncertainties we are interested in using _dot notation_
 
-In this repository is presented a working example of Qlunc in order to facilitate its understanding.
-
-### Creating the component digital twin:
+### 1. Fill up the inputs yaml file:
+Before creating the classes for the different components we can fill up the yaml file with corresponding values for components, decide the components we want to include in each module and wich module do we want to include in the lidar device for uncertainty calculations.
+ - Name: Provide an ID to out object
+ - Uncertainty function: Function developed by the user decribing the related uncertainty to specific component/device/lidar
+ - When introducing the component in each module the name should be the same as in the component instance, e.g. if the name of your photodetector instance is _Photodetector1_ the name to use in the yaml file should be:
+    
+   YAML file:
+    >> Modules:
+    >>  Photonics Module:
+    >>   Name: Photonics module
+    >>   Photodetector: _Photodetector1_           # Have to be the same name as the instance name
+    >>   Optical amplifier: _Optical_Amplifier_    # Have to be the same name as the instance name
+    >>   Uncertainty function: uphc.sum_unc_photonics
+    
+    
+### 2. Creating the component digital twin:
 The components are included as python classes, for example a component, _Component_A_, is created instanciating class _Comp_A_:
 
 - Creating a class for the component _Component_A_:
@@ -30,7 +45,7 @@ The components are included as python classes, for example a component, _Compone
 
 The uncertainty function is a function either found in literature or developed by the user that discribes the uncertatinty of the component using its _properties_.
 
-### Creating the module digital twin:
+### 3. Creating the module digital twin:
 As well, for the modules:
 
 - Creating a class for the _Module_A_:
@@ -47,7 +62,7 @@ As well, for the modules:
                        Comp_1      = Component_1,                # Including _Component_1_ in the module.
                        uncertainty = Mod_A_uncertainty_function) # Uncertainty describing uncertainty in _Mod_a_. Following GUM.
 
-### Creating the lidar:
+### 4. Creating the lidar:
 
 Then once we have created the module(s), we can made up a lidar object just in the same way:
 
@@ -66,3 +81,10 @@ Then once we have created the module(s), we can made up a lidar object just in t
                       uncertainty = Mod_A_uncertainty_function)   # Uncertainty describing uncertainty in _Lid_a_. Following GUM.
 
 Then, we have created a Lidar object, called _Lidar_A_ made up of one module, _Module_A_, which contains one single component, _Component_A_, with properties _Property_1_ and _Property_2_.
+
+### 5. Asking for uncertainties:
+The modularity of the code  allows user either to ask for _Photodetector1_ uncertainty (component uncertainty), _Photonics_ uncertainty (module unceratinty) or global lidar uncertainty. using the dot notation we can write:
+
+- Lidar.photonics.photodetector.Uncertainty(Lidar, AtmosphericScenario,cts) for the photodetector uncertainty
+- Lidar.photonics.Uncertainty(Lidar, AtmosphericScenario,cts) for the photonics uncertainty
+- Lidar.Uncertainty(Lidar, AtmosphericScenario,cts) for the lidar global uncertainty
