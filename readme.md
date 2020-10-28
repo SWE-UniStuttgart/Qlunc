@@ -9,7 +9,7 @@ At this stage the code can calculate uncertainties coming from photonics, includ
 
 ### Creating a lidar device:
 
-The user creates the different lidar components by instantiating a python class, including its functional parameters and defining the function that is used to obtain the specific component uncertainty. Then, each module (also python objects ) is "filled" with the corresponding components and their uncertainties are computed following uncertainty expansion method according GUM. Once each component is 'ensembled' building up the different modules, the lidar object is created and the modules included. As a result the desired lidar digital twin is created, uncertainty of which is computed again by following GUM suggestions about uncertaity expansion.
+The user creates the different lidar components by instantiating a python class, including its functional parameters and defining the function that is used to obtain the specific component uncertainty. Then, each module (also python objects ) is "filled" with the corresponding components and their uncertainties are computed following uncertainty expansion method according GUM. Once each component is 'ensembled' building up the different modules, the lidar object is created and the modules included. As a result the desired lidar digital twin is created, uncertainty of which is computed again by following the Guide to the expression of Uncertainty in Measurement ([GUM](https://www.bipm.org/utils/common/documents/jcgm/JCGM_100_2008_E.pdf)) suggestions about uncertaity expansion.
 
 ### Creating atmospheric conditions
 The user creates also atmospheric scenarios to account for the different atmospheric conditions the lidar has to deal with. Atmospheric inputs, basically temperature 
