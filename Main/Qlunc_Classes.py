@@ -112,11 +112,11 @@ class scanner():
         self.origin          = origin
         self.sample_rate     = sample_rate
         self.focus_dist      = focus_dist
-        self.cone_angle           = cone_angle
-        self.azimuth             = azimuth
+        self.cone_angle      = cone_angle
+        self.azimuth         = azimuth
         self.stdv_focus_dist = stdv_focus_dist
-        self.stdv_cone_angle      = stdv_cone_angle
-        self.stdv_azimuth        = stdv_azimuth
+        self.stdv_cone_angle = stdv_cone_angle
+        self.stdv_azimuth    = stdv_azimuth
         self.Uncertainty     = unc_func
         
         print('Created new scanner: {}'.format(self.ScannerID))

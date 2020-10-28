@@ -21,7 +21,7 @@ plot_param={'axes_label_fontsize' : 16,
             'marker'              : '.',
             'markerTheo'          : '.b',
             'tick_labelrotation'  : 45,
-            'Qlunc_version'       : 'Qlunc-V.9'
+            'Qlunc_version'       : 'Qlunc Version - 0.9'
             }
 
     

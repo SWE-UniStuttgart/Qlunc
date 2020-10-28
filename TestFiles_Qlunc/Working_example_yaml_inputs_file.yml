@@ -121,5 +121,5 @@ Atmospheric_inputs:
 Flags:
   Pointing accuracy uncertainty: False
   Scanning Pattern: True
-  Photodetector noise: False
+  Photodetector noise: True
 
