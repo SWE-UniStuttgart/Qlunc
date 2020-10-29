@@ -52,7 +52,7 @@ def unc_comb(data): # data is provided as a list of elements want to add on. Dat
         res_watts.append(np.sqrt(sum(map (lambda x: x**2,zipped_data[i]))))
         res_dB=10*np.log10(res_watts)
     del data2
-    return res_dB
+    return np.array(res_dB)
 
 #%% Spherical into cartesian  coordinate transformation
 def sph2cart(Lidar): 
@@ -80,3 +80,36 @@ def sph2cart(Lidar):
     #    zcart = rho*np.cos(theta)
     #    return(xcart, ycart,zcart) 
 
+#%% Get data frame builds up a data frame with the uncertainty data that user queries
+def Get_DataFrame(H_UQ,Temperature):  
+#    pdb.set_trace()
+    indexesDF=list(H_UQ.keys())
+    
+#    for fromModkeys in list(H_UQ.keys()):    
+#        indexesDF
+##        indexesDF.update((reduce(getitem,[fromModkeys],H_UQ)))
+#    indexesDF=list(indexesDF.keys())
+    columnsDF=['T= {} °K'.format(Temperature[i]) for i in range(len(Temperature))] # Getting data frame columns          
+#    pdb.set_trace()
+#    Full_df=([H_UQ[components].get(noise_type,{}) for components  in H_UQ.keys() for noise_type in H_UQ [components].keys() ])
+    
+    Full_df=pd.DataFrame(H_UQ, columns=indexesDF,index=columnsDF)
+#    Full_df=Full_df.T
+#    #Sum af decibels:
+#    in_dB=0
+#    Sum_decibels= []
+#    for valcols in range(0,Full_df.shape[1]):
+#        Sum_in_dB     = sum([(10**(Full_df.iloc[valrows,valcols]/10)) for valrows in range(0,Full_df.shape[0])])
+#    #    Sum_in_dB = sum(in_dB)
+#        Sum_decibels.append(10*np.log10(Sum_in_dB) )
+#    
+#    
+#    Full_df.loc['Total UQ']= Sum_decibels# for now sum the uncertainties. Here have to apply Uncertainty expansion.
+#    
+#
+#   #transform in watts. We supose that raw data is in dB:
+#    df_UQ['Hardware (w)']=(10**(df_UQ['Hardware (dB)']/10))
+
+
+
+    return Full_df  
