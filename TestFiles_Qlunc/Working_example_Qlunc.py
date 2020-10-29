@@ -42,7 +42,7 @@ exec(open(Qlunc_yaml_inputs['Main_directory']+'/Qlunc_Classes.py').read())   # E
 ## FLAG inputs: ###############################################################
 flags.flag_plot_pointing_accuracy_unc    = Qlunc_yaml_inputs['Flags']['Pointing accuracy uncertainty']   # Pointing accuracy uncertainty - Keep False
 flags.flag_plot_measuring_points_pattern = Qlunc_yaml_inputs['Flags']['Scanning Pattern']  # Pattern of measuring points
-flags.flag_plot_photodetector_noise      = (Qlunc_yaml_inputs['Flags']['Photodetector noise'])  # Photodetector noise: shot noise, dark current noise, thermal noise as a function of the photodetector input signal power.
+flags.flag_plot_photodetector_noise      = Qlunc_yaml_inputs['Flags']['Photodetector noise']  # Photodetector noise: shot noise, dark current noise, thermal noise as a function of the photodetector input signal power.
 
 
 
@@ -124,18 +124,18 @@ Lidar_inputs     = lidar_gral_inp(name        = Qlunc_yaml_inputs['Components'][
 
 ## Lidar device:
 
-Lidar = lidar(name          = Qlunc_yaml_inputs['Lidar']['Name'],             # Introduce the name of your lidar device.
+Lidar = lidar(name          = Qlunc_yaml_inputs['Lidar']['Name'],                       # Introduce the name of your lidar device.
                photonics    = eval(Qlunc_yaml_inputs['Lidar']['Photonics module']),     # Introduce the name of your photonics module.
                optics       = eval(Qlunc_yaml_inputs['Lidar']['Optics module']),        # Introduce the name of your optics module.
-               power        = eval(Qlunc_yaml_inputs['Lidar']['Power module']),                 # Introduce the name of your power module. NOT IMPLEMENTED YET!
+               power        = eval(Qlunc_yaml_inputs['Lidar']['Power module']),         # Introduce the name of your power module. NOT IMPLEMENTED YET!
                lidar_inputs = eval(Qlunc_yaml_inputs['Lidar']['Lidar inputs']),         # Introduce lidar general inputs
-               unc_func     = eval(Qlunc_yaml_inputs['Lidar']['Uncertainty function']))    # Function estimating lidar global uncertainty
+               unc_func     = eval(Qlunc_yaml_inputs['Lidar']['Uncertainty function'])) # Function estimating lidar global uncertainty
 
 
 ## Creating atmospheric scenarios: ############################################
 
-Atmospheric_TimeSeries = True # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere (T, H, rain and fog) 
-                               # If so we obtain a time series describing the noise implemented in the measurement.
+Atmospheric_TimeSeries = Qlunc_yaml_inputs['Atmospheric_inputs']['TimeSeries'] # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere (T, H, rain and fog) 
+                                                                           # If so we obtain a time series describing the noise implemented in the measurement.
 if Atmospheric_TimeSeries:
     Atmos_TS_FILE           = '../metadata/AtmosphericData/'+Qlunc_yaml_inputs['Atmospheric_inputs']['Atmos_TS_FILE']
     AtmosphericScenarios_TS = pd.read_csv(Atmos_TS_FILE,delimiter=';',decimal=',')
