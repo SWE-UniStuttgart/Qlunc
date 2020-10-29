@@ -50,7 +50,7 @@ def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts):
         UQ_Photodetector.UQ_Photo  = SA.unc_comb(10*np.log10([UQ_Photodetector.Thermal_noise,UQ_Photodetector.Shot_noise,UQ_Photodetector.Dark_current_noise,UQ_Photodetector.TIA_noise]))
         SNR_data['SNR_TIA']=UQ_Photodetector.SNR_TIA
         print('There is a TIA component in the photodetector')
-    pdb.set_trace()
+#    pdb.set_trace()
     UQ_Photodetector.UQ_Photo=list(SA.flatten(UQ_Photodetector.UQ_Photo))
 #    pdb.set_trace()
     Final_Output_UQ_Photo={'Uncertainty_Photodetector':UQ_Photodetector.UQ_Photo,'SNR_data_photodetector':SNR_data}      
