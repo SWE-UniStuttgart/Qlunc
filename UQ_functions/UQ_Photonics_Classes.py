@@ -50,8 +50,10 @@ def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts):
         UQ_Photodetector.UQ_Photo  = SA.unc_comb(10*np.log10([UQ_Photodetector.Thermal_noise,UQ_Photodetector.Shot_noise,UQ_Photodetector.Dark_current_noise,UQ_Photodetector.TIA_noise]))
         SNR_data['SNR_TIA']=UQ_Photodetector.SNR_TIA
         print('There is a TIA component in the photodetector')
+    pdb.set_trace()
     UQ_Photodetector.UQ_Photo=list(SA.flatten(UQ_Photodetector.UQ_Photo))
-    Final_Output_UQ_Photo={'Uncertainty_Photo':UQ_Photodetector.UQ_Photo,'SNR_data_photo':SNR_data}      
+#    pdb.set_trace()
+    Final_Output_UQ_Photo={'Uncertainty_Photodetector':UQ_Photodetector.UQ_Photo,'SNR_data_photodetector':SNR_data}      
     return Final_Output_UQ_Photo
 
 
@@ -69,7 +71,7 @@ def UQ_Optical_amplifier(Lidar,Atmospheric_Scenario,cts): # Calculating ASE - Am
         figure_noise_INT  = itp.interp1d(NoiseFigure_DATA.iloc[:,0],NoiseFigure_DATA.iloc[:,1],kind='cubic',fill_value="extrapolate")# First column wavelength,second column SNR in dB
         NoiseFigure_VALUE = figure_noise_INT(Lidar.lidar_inputs.Wavelength) # in dB
         FigureNoise=(NoiseFigure_VALUE.tolist())
-        pdb.set_trace()
+#        pdb.set_trace()
         UQ_Optical_amplifier = [np.array([10*np.log10((10**(FigureNoise/10))*cts.h*(cts.c/Lidar.lidar_inputs.Wavelength)*10**(Lidar.photonics.optical_amplifier.Gain/10))]*len(Atmospheric_Scenario.temperature)) ]# ASE
 
     
@@ -84,7 +86,7 @@ def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts):
     try: # ecah try/except evaluates wether the component is included in the module, therefore in the calculations
 #        if Photodetector_Uncertainty not in locals():
         Photodetector_Uncertainty=Lidar.photonics.photodetector.Uncertainty(Lidar,Atmospheric_Scenario,cts)
-        List_Unc_photonics.append(Photodetector_Uncertainty['Uncertainty_Photo'])
+        List_Unc_photonics.append(Photodetector_Uncertainty['Uncertainty_Photodetector'])
     except:
         Photodetector_Uncertainty=None
         print('No photodetector in calculations!')
