@@ -142,11 +142,11 @@ class photonics():
 
 class power():
     def __init__(self,name,power_source,converter,unc_func):
-        self.PoweModuleID  = name
+        self.PowerModuleID  = name
         self.power_source  = power_source
         self.converter     = converter
         self.Uncertainty   = unc_func  
-        print('Created new power module: {}'.format(self.PoweModuleID))
+        print('Created new power module: {}'.format(self.PowerModuleID))
 
 class optics():
     def __init__(self,name,scanner,optical_circulator,laser,unc_func):

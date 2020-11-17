@@ -25,7 +25,10 @@ def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts):
     
     R = Lidar.photonics.photodetector.Efficiency*cts.e*Lidar.lidar_inputs.Wavelength/(cts.h*cts.c)  #[W/A]  Responsivity
     UQ_Photodetector.Responsivity = (R) # this notation allows me to get Responsivity from outside of the function 
-    '''#Where are these noise definintions coming from (reference in literature)?'''
+    
+    '''
+    #Where are these noise definintions coming from (reference in literature)?
+    '''
 
     UQ_Photodetector.SNR_thermal_noise = [10*np.log10(((R**2)/(4*cts.k*300*Lidar.photonics.photodetector.BandWidth/Lidar.photonics.photodetector.Load_Resistor))*(Lidar.photonics.photodetector.Power_interval/1000)**2)]
     UQ_Photodetector.SNR_Shot_noise    = [10*np.log10(((R**2)/(2*cts.e*R*Lidar.photonics.photodetector.BandWidth))*(Lidar.photonics.photodetector.Power_interval)/1000)]
@@ -59,7 +62,12 @@ def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts):
 
 
 #%% OPTICAL AMPLIFIER
-def UQ_Optical_amplifier(Lidar,Atmospheric_Scenario,cts): # Calculating ASE - Amplified Spontaneous Emission definition ((**Optics and Photonics) Bishnu P. Pal - Guided Wave Optical Components and Devices_ Basics, Technology, and Applications -Academic Press (2005))
+'''
+# ASE literature:
+ - Calculating ASE - Amplified Spontaneous Emission definition ((**Optics and Photonics) Bishnu P. Pal - Guided Wave Optical Components and Devices_ Basics, Technology, and Applications -Academic Press (2005))
+ - EDFA Tesing with interpolation techniques - Product note 71452-1
+'''
+def UQ_Optical_amplifier(Lidar,Atmospheric_Scenario,cts): 
 #    try:
 # obtain SNR from figure noise or pass directly numerical value:
     if isinstance (Lidar.photonics.optical_amplifier.NoiseFig, numbers.Number): #If user introduces a number or a table of values
