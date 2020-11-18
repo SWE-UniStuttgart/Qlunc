@@ -11,12 +11,12 @@ Components:
   Scanner:
     
     Name: Scanner_Yaml # Provide an ID to your lidar:    
-    Origin: [2,1,2.5]  # Lidar position in meters: [x,y,z]    
+    Origin: [0,0,0]  # Lidar position in meters: [x,y,z]    
     Sample rate: 0     # Lidar sample rate. In meters for now (have to know the medium wind speed to put in Hz and do correct calculations)
  
     # Pattern:
-    Focus distance: [60]   # [m]
-    Cone angle: [7]        # [deg]
+    Focus distance: [68]   # [m]
+    Cone angle: [30]        # [deg]
     Azimuth: [0,360,15]    # [deg]
      
     # Systematic error in the scanner pointing accuracy:
