@@ -66,6 +66,7 @@ def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts):
 # ASE literature:
  - Calculating ASE - Amplified Spontaneous Emission definition ((**Optics and Photonics) Bishnu P. Pal - Guided Wave Optical Components and Devices_ Basics, Technology, and Applications -Academic Press (2005))
  - EDFA Tesing with interpolation techniques - Product note 71452-1
+ - More literature will come
 '''
 def UQ_Optical_amplifier(Lidar,Atmospheric_Scenario,cts): 
 #    try:
