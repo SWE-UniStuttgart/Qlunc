@@ -1,5 +1,5 @@
 # Ignore this file formats:
-
+*.pyc
 *.xlsx
 *.png
 *.txt
