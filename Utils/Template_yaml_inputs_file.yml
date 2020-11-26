@@ -1,0 +1,118 @@
+# Template for Qlunc (Quantification lidar uncertainties) inputs. 
+
+# DIRECTORIES:------------------------------------------------------
+
+Main_directory: # Directory where Qlunc_Classes.py is
+  ''
+
+Components:
+#Optics: 
+  Scanner:
+    
+    Name: Scanner_Yaml # Provide an ID to your lidar:    
+    Origin: [0,0,0]    # Lidar position in meters: [x,y,z]    
+    Sample rate: 0     # Lidar sample rate. In meters for now (have to know the medium wind speed to put in Hz and do correct calculations)
+ 
+    # Pattern:
+    Focus distance: [-]   # [m]
+    Cone angle: [-]       # [deg]
+    Azimuth: [-]          # [deg]
+     
+    # Systematic error in the scanner pointing accuracy:
+    stdv focus distance: 0  # [m]
+    stdv Cone angle:     0  # [deg]
+    stdv Azimuth:        0  # [deg]
+    
+    # Uncertainty function:
+    Uncertainty function: 
+    
+  Optical Circulator:
+    Name:                OC_Yaml  # Optical Circulator name
+    Insertion loss:      0        # [dB]
+    Uncertainty function:         # Here user have to write the function allocation
+  
+# Photonics  
+  Optical Amplifier: 
+  
+    Name: OpticalAmplifier_Yaml
+    
+    # Noise figure in dB. Could be a well known value or a table.
+    # If table (FigureNoise Vs Wavelength) is provided Qlunc 
+    # interpolates to obtain a most accurate value according 
+    # with the lidar nominal wavelength. Interpolation param. could 
+    # be tunnedin Qlunc_Photonics_Classes --> UQ_Optical_amplifier
+    
+    Optical amplifier noise figure: ../metadata/NoiseFigure.csv 
+    
+    # Optical amplifier gain in dB
+    Optical amplifier gain: 0
+    
+    # Uncertainty function quantifying the optical amplifier uncertainty
+    Uncertainty function: 
+
+  
+  Photodetector:
+    Name: Photodetector_YAML
+    Photodetector BandWidth:  0  # [Hz]            
+    Load resistor:            0  # [Ohm]
+    Photodetector efficiency: 0  # Photodetector efficiency [-]
+    Dark current:             0  # In [A]. Dark current in the photodetector.
+    Photodetector signalP:    0  # [W]
+    Power interval:          [-] # [W]
+    Gain TIA:                 0  # [dB]
+    V Noise TIA:              0  # [V]
+    Uncertainty function:     0  # Here user have to write the function allocation
+ 
+# Lidar general inputs 
+  Lidar general inputs:
+    Name: Lidar_gral_inputs_Yaml
+    Wavelength: 0   # [m]
+    Sample rate: 0          # [Hz]
+    Yaw error: 0            # [deg]
+    Pitch error: 0          # [deg]
+    Roll error: 0           # [deg]
+---
+# Modules:
+Modules:
+  Optics Module:
+    Name: 
+    Scanner: 
+    Optical circulator:  # Have to be the same name as the instance
+    Laser: 
+    Uncertainty function: 
+  Photonics Module:
+    Name: 
+    Photodetector:           # Have to be the same name as the instance
+    Optical amplifier:    # Have to be the same name as the instance
+    Uncertainty function: 
+---  
+# Lidar:
+Lidar:
+  Name: 
+  Photonics module:      # Have to be the same name as the instance
+  Optics module:             # Have to be the same name as the instance
+  Power module:                       # Have to be the same name as the instance
+  Lidar inputs:               # Have to be the same name as the instance
+  Uncertainty function: 
+
+---
+
+# ATMOSPHERIC INPUTS:-----------------------------------------------
+# Atmospheric_inputs to create the atmospheric scenarios
+
+Atmospheric_inputs:
+  
+  TimeSeries    :  # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere characteristics (T, H, rain and fog)   
+  Atmos_TS_FILE : ''  
+  Temperature: [] # [K] Have to put the same number of elements for temperature and humidity. Always in paired values   
+  Humidity: []     # [%] 
+  Rain:  # [True,False]for rain and fog intensity intervals might be introduced [none,low, medium, high]
+  Fog:  # [True,False]
+---
+
+# Plotting:------------------------------------------------------------
+Flags:
+  Pointing accuracy uncertainty:  # [True,False]
+  Scanning Pattern:  # [True,False]
+  Photodetector noise:  # [True,False]
+
