@@ -5,7 +5,6 @@
 Main_directory: # Directory where Qlunc_Classes.py is
   '../Main'
 
-
 Components:
 #Optics: 
   Scanner:
