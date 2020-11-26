@@ -66,7 +66,7 @@ Components:
  
 # Lidar general inputs 
   Lidar general inputs:
-    Name: Lidar general inputs
+    Name: Lidar_gral_inputs_Yaml
     Wavelength: 1550.e-9    # [m]
     Sample rate: 1          # [Hz]
     Yaw error: 0            # [deg]
@@ -76,13 +76,13 @@ Components:
 # Modules:
 Modules:
   Optics Module:
-    Name: Optics module Yaml
+    Name: Optics_module_Yaml
     Scanner: Scanner
     Optical circulator: Optical_circulator # Have to be the same name as the instance
     Laser: None
     Uncertainty function: uopc.sum_unc_optics
   Photonics Module:
-    Name: Photonics module
+    Name: Photonics_module_Yaml
     Photodetector: Photodetector           # Have to be the same name as the instance
     Optical amplifier: Optical_Amplifier   # Have to be the same name as the instance
     Uncertainty function: uphc.sum_unc_photonics
