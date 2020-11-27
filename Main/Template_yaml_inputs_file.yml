@@ -15,7 +15,7 @@ Components:
  
     # Pattern:
     Focus distance: [60]   # [m]
-    Cone angle: [19]        # [deg]
+    Cone angle: [4]        # [deg]
     Azimuth: [0,360,15]    # [deg]
      
     # Systematic error in the scanner pointing accuracy:
