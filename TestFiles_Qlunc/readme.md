@@ -93,4 +93,4 @@ The modularity of the code  allows user either to ask for _Photodetector1_ uncer
 
 # Try it yourself:
 
-[![Binder]([![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/PacoPers/jupyter/HEAD?filepath=Qlunc_NoteBook_WorkingExample.ipynb))
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/PacoPers/jupyter/HEAD?filepath=Qlunc_NoteBook_WorkingExample.ipynb)
