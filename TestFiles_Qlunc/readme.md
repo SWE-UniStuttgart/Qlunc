@@ -92,4 +92,4 @@ The modularity of the code  allows user either to ask for _Photodetector1_ uncer
 ![Uncertainty_WF](https://github.com/PacoCosta/Qlunc/blob/Qlunc-V0.9/Pictures_repo_/FlowChartUnc.JPG)
 
 Try it yourself:
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/PacoCosta/Qlunc/blob/Qlunc-V0.9/Main/Qlunc_NoteBook_WorkingExample.ipynb/master)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/PacoCosta/Qlunc.git/HEAD?urlpath=https%3A%2F%2Fgithub.com%2FPacoCosta%2FQlunc%2Fblob%2FQlunc-V0.9%2FMain%2FQlunc_NoteBook_WorkingExample.ipynb)
