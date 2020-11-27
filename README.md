@@ -3,5 +3,4 @@
 
 
 ## Try it Yourself:
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/PacoCosta/Qlunc/tree/main/HEAD)
 
