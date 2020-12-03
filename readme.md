@@ -51,9 +51,11 @@ This is the core of Qlunc. Here the user creates the classes describing the comp
 ## Contact:
 
 <div itemscope itemtype="https://schema.org/Person"><a itemprop="sameAs" content="https://orcid.org/0000-0003-1318-9677" href="https://orcid.org/0000-0003-1318-9677" target="orcid.widget" rel="me noopener noreferrer" style="vertical-align:top;"><img src="https://orcid.org/sites/default/files/images/orcid_16x16.png" style="width:1em;margin-right:.5em;" alt="ORCID iD icon">Francisco Costa García</a></div>
+
 University of Stuttgart - Stuttgart Wind Energy
  
 email: costa@ifb.uni-stuttgart.de
  
 https://www.ifb.uni-stuttgart.de/en/institute/team/Costa-Garcia/
+
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/PacoCosta/Qlunc/Qlunc-V0.9?filepath=Main%2FQlunc_NoteBook_WorkingExample.ipynb)
