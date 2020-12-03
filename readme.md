@@ -55,7 +55,7 @@ F. Costa García
  University of Stuttgart - Stuttgart Wind Energy
  
  email: costa@ifb.uni-stuttgart.de
+ 
  https://www.ifb.uni-stuttgart.de/en/institute/team/Costa-Garcia/
 
- 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/PacoCosta/Qlunc/Qlunc-V0.9?filepath=Main%2FQlunc_NoteBook_WorkingExample.ipynb)
