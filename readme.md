@@ -1,5 +1,5 @@
 # **Quantification of lidar uncertainties - Qlunc**
-
+<div itemscope itemtype="https://schema.org/Person"><a itemprop="sameAs" content="https://orcid.org/0000-0003-1318-9677" href="https://orcid.org/0000-0003-1318-9677" target="orcid.widget" rel="me noopener noreferrer" style="vertical-align:top;"><img src="https://orcid.org/sites/default/files/images/orcid_16x16.png" style="width:1em;margin-right:.5em;" alt="ORCID iD icon">https://orcid.org/0000-0003-1318-9677</a></div>
 ## What is Qlunc?:
 Qlunc is a software that aims to quantify errors when measuring with a lidar device. The code has an objected oriented structure; by using python objects and simulating real lidar components the code puts all together in modules to eventually build up a lidar digital twin. The code is meant to be as modular as possible and offers the possibility of creating different lidar objects, with different components at the same time. This allows to easyly combine different modules with different characteristics simulating different lidar devices.
 
