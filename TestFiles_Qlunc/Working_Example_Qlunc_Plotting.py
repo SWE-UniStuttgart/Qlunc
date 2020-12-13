@@ -8,11 +8,11 @@ Created on Tue Oct 20 21:18:05 2020
 #%% Plotting:
 
 # Ploting general parameters:
-plot_param={'axes_label_fontsize' : 16,
+plot_param={'axes_label_fontsize' : 25,
             'textbox_fontsize'    : 14,
-            'title_fontsize'      : 24,
+            'title_fontsize'      : 29,
             'suptitle_fontsize'   : 23,
-            'legend_fontsize'     : 12,
+            'legend_fontsize'     : 15,
             'xlim'                : [-25,25],
             'ylim'                : [-25,25],
             'zlim'                : [0,90],

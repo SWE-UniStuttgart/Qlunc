@@ -21,7 +21,7 @@ Created on Fri Jun 19 19:57:05 2020
 @author: fcosta
 """
 import os
-os.chdir('../GitHub_Qlunc/Utils')
+os.chdir('../Utils')
 from Qlunc_ImportModules import *
 from Qlunc_Help_standAlone import *
 os.chdir('../UQ_functions')
