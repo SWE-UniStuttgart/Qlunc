@@ -3,7 +3,7 @@
 # DIRECTORIES:------------------------------------------------------
 
 Main_directory: # Directory where Qlunc_Classes.py is
-  '../GitHub_Qlunc/TestFiles_Qlunc'
+  '../TestFiles_Qlunc'
 
 Components:
 #Optics: 
