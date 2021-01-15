@@ -14,7 +14,7 @@ Components:
     Sample rate: 0     # Lidar sample rate. In meters for now (have to know the medium wind speed to put in Hz and do correct calculations)
  
     # Pattern:
-    Focus distance: [35]   # [m]
+    Focus distance: [55]   # [m]
     Cone angle: [20]        # [deg]
     Azimuth: [0,360,8]    # [deg]
      
@@ -67,10 +67,10 @@ Components:
   Lidar general inputs:
     Name: Lidar_gral_inputs_Yaml2
     Wavelength: 1550.e-9    # [m]
-    Sample rate: 1          # [Hz]
-    Yaw error: 10            # [deg]
-    Pitch error: 10          # [deg]
-    Roll error: 7           # [deg]
+    Sample rate: 0          # [Hz]
+    Yaw error: 0            # [deg]
+    Pitch error: 0          # [deg]
+    Roll error: 0           # [deg]
 ---
 # Modules:
 Modules:
