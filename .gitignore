@@ -7,12 +7,10 @@
 # Ignore specific files:
 I_D.pickle
 DF.pickle
-untitled0.py
 Noise_Photodetector_TEST.py
 Qlunc_NoteBook-checkpoint.ipynb
 
 # Ignore specific folders:
 Figures/
-OldVersion_Qlunc/
 Qlunc_CLASSES/
 
