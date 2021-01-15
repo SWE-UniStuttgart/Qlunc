@@ -40,7 +40,7 @@ Components:
     # If table (FigureNoise Vs Wavelength) is provided Qlunc 
     # interpolates to obtain a most accurate value according 
     # with the lidar nominal wavelength. Interpolation param. could 
-    # be tunnedin Qlunc_Photonics_Classes --> UQ_Optical_amplifier
+    # be tunned in Qlunc_Photonics_Classes --> UQ_Optical_amplifier
     
     Optical amplifier noise figure: ../metadata/NoiseFigure.csv 
     
