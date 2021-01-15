@@ -43,7 +43,10 @@ This is the core of Qlunc. Here the user creates the classes describing the comp
 
 ## Requirements
  - [Anaconda Navigator](https://www.anaconda.com/products/individual) has been installed. It includes, among others, Python3.7 and spyder IDE software features, ready to be used. 
- 
+
+## Author:
+[Francisco Costa](https://www.ifb.uni-stuttgart.de/en/institute/team/Costa-Garcia/)
+
 ## License:
 Qlunc is licensed under **[SD 3-Clause License](https://github.com/PacoCosta/Qlunc/blob/Qlunc-V0.9/LICENSE)**
 
