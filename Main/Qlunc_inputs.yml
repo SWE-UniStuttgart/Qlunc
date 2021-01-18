@@ -1,51 +1,50 @@
-# DIRECTORIES:------------------------------------------------------
-# Template for Qlunc inputs. Here we include a list of the inputs to run Qlunc (Quantification lidar uncertainties).
+# Template for Qlunc (Quantification lidar uncertainties) inputs. 
+# Do not change definition names or vary the structure of the file!! Just change parameter values. 
 
+
+# DIRECTORIES:------------------------------------------------------
 
 Main_directory: # Directory where Qlunc_Classes.py is
-  '../Main'
+  '../GitHub_Qlunc/Main'
+
+# Lidar values. Modules and components parameters: 
 
 Components:
 #Optics: 
   Scanner:
     
-    # Provide an ID to your lidar:
-    Name: Scanner_Yaml
-    
-    # Lidar position in meters: [x,y,z]
-    Origin: [2,1,2.5]
-    
-    # Lidar sample rate in meters for now (have to know the medium wind speed to put in Hz and do correct calculations) :
-    Sample rate: 0
-    
+    Name: Scanner_Yaml # Provide an ID to your lidar:    
+    Origin: [0,0,0]  # Lidar position in meters: [x,y,z]    
+    Sample rate: 3     # Lidar sample rate. In meters for now (have to know the medium wind speed to put in Hz and do correct calculations?)
+ 
     # Pattern:
-    Focus distance: [60]   
-    Cone angle: [7] 
-    Azimuth: [0,360,15]
+    Focus distance: [20]   # [m]
+    Cone angle: [20]        # [deg]
+    Azimuth: [0,360,15]    # [deg]
+     
+    # Systematic error in the scanner pointing accuracy:
+    stdv focus distance: 1  # [m]
+    stdv Cone angle: 0.6    # [deg]
+    stdv Azimuth: 0.8       # [deg]
     
-    # Systematic error in the scanner pointting accuracy:
-    stdv focus distance: 1
-    stdv Cone angle: 0.6
-    stdv Azimuth: 0.8
-    
-    #Uncertainty function:
+    # Uncertainty function:
     Uncertainty function: uopc.UQ_Scanner
     
   Optical Circulator:
     Name: OC_Yaml
-    Insertion loss: 2.1
+    Insertion loss: 2.1 # [dB]
     Uncertainty function: uopc.UQ_OpticalCirculator
   
 # Photonics  
   Optical Amplifier: 
   
-    # Provide an Id to your Optical amplifier:
     Name: OA_Yaml
     
     # Noise figure in dB. Could be a well known value or a table.
-    # If table, FigureNoise Vs Wavelength, is provided Qlunc 
+    # If table (FigureNoise Vs Wavelength) is provided Qlunc 
     # interpolates to obtain a most accurate value according 
-    # with the lidar nominal wavelength.
+    # with the lidar nominal wavelength. Interpolation param. could 
+    # be tunned in Qlunc_Photonics_Classes --> UQ_Optical_amplifier
     
     Optical amplifier noise figure: ../metadata/NoiseFigure.csv 
     
@@ -58,35 +57,35 @@ Components:
   
   Photodetector:
     Name: Photodetector_YAML
-    Photodetector BandWidth: 380.e+6                
-    Load resistor: 50
+    Photodetector BandWidth: 380.e+6    # [Hz]            
+    Load resistor: 50                   # [Ohm]
     Photodetector efficiency: .85       # Photodetector efficiency [-]
     Dark current: 5.e-9                 # In [A]. Dark current in the photodetector.
-    Photodetector signalP: 1.e-3
-    Power interval: [0,1000,.001]
-    Gain TIA: 5.e+3                    
-    V Noise TIA: 160.e-6                
+    Photodetector signalP: 1.e-3        # [W]
+    Power interval: [0,1000,.001]       # [W]
+    Gain TIA: 5.e+3                     # [dB]
+    V Noise TIA: 160.e-6                # [V]
     Uncertainty function: uphc.UQ_Photodetector
  
 # Lidar general inputs 
   Lidar general inputs:
-    Name: Lidar general inputs
-    Wavelength: 1550.e-9
-    Sample rate: 2
-    Yaw error: 0
-    Pitch error: 0
-    Roll error: 0
+    Name: Lidar_gral_inputs_Yaml
+    Wavelength: 1550.e-9    # [m]
+    Sample rate: 1          # [Hz]
+    Yaw error: 0            # [deg]
+    Pitch error: 0          # [deg]
+    Roll error: 0           # [deg]
 ---
 # Modules:
 Modules:
   Optics Module:
-    Name: Optics module Yaml
+    Name: Optics_module_Yaml
     Scanner: Scanner
     Optical circulator: Optical_circulator # Have to be the same name as the instance
     Laser: None
     Uncertainty function: uopc.sum_unc_optics
   Photonics Module:
-    Name: Photonics module
+    Name: Photonics_module_Yaml
     Photodetector: Photodetector           # Have to be the same name as the instance
     Optical amplifier: Optical_Amplifier   # Have to be the same name as the instance
     Uncertainty function: uphc.sum_unc_photonics
@@ -105,15 +104,13 @@ Lidar:
 # ATMOSPHERIC INPUTS:-----------------------------------------------
 # Atmospheric_inputs to create the atmospheric scenarios
 
-
-
 Atmospheric_inputs:
   
-  TimeSeries    : True # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere (T, H, rain and fog)   
+  TimeSeries    : False # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere characteristics (T, H, rain and fog)   
   Atmos_TS_FILE : 'AtmosphericScenarios.csv'  
-  Temperature: 300 # [K] HAve to put the same number of elements for temperature and humidity. Always in paired values   
-  Humidity: 12 # [%] 
-  Rain: true # for rain and fog intensity intervals might be introduced [none,low, medium high
+  Temperature: [300] # [K] Have to put the same number of elements for temperature and humidity. Always in paired values   
+  Humidity: [12]     # [%] 
+  Rain: true # for rain and fog intensity intervals might be introduced [none,low, medium, high]
   Fog: false
 ---
 
