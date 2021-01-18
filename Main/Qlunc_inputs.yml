@@ -18,7 +18,7 @@ Components:
     Sample rate: 3     # Lidar sample rate. In meters for now (have to know the medium wind speed to put in Hz and do correct calculations?)
  
     # Pattern:
-    Focus distance: [20]   # [m]
+    Focus distance: [60]   # [m]
     Cone angle: [20]        # [deg]
     Azimuth: [0,360,15]    # [deg]
      
