@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Jun 19 19:57:05 2020
+@author: fcosta
+
 # The steps are as follows:
 1) Insert a module
     - Create a class with the lidar components you want to include
@@ -18,7 +20,7 @@ Created on Fri Jun 19 19:57:05 2020
 5) Create a lidar:
     
     
-@author: fcosta
+
 """
 import os
 os.chdir('../Utils')

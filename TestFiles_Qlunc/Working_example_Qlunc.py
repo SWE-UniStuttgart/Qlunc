@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 Created on Mon Oct 19 11:08:32 2020
-
 @author: fcosta
-"""
 
-'''Qlunc working example:
+
+Qlunc working example:
     I this example is shown how Qlunc is working:
         
         1) Run Qlunc_Classes.py to create the classes corresponding to components, modules, atmospheric scenarios and lidar device.
@@ -13,15 +12,16 @@ Created on Mon Oct 19 11:08:32 2020
         3) Modules instances are created and components are included in the the modules.
         4) Atmospheric scenarios ara included in the data: We can create it either from a single value or or from a time series
         5) Lidar device general inputs instance is created
-        6) Lidar device instance is created and modules, containing the different components are included in the lidar architecture '''
-    
+        6) Lidar device instance is created and modules, containing the different components are included in the lidar architecture 
+      
+ """   
 #%% Running Qlunc_Classes.py:
 import os
 import pdb
 import sys
 import yaml
 
-from yaml.constructor import Constructor
+#from yaml.constructor import Constructor
 
 #def add_bool(self, node):
 #    return self.construct_scalar(node)
