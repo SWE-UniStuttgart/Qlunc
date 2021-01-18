@@ -1,10 +1,13 @@
 # Template for Qlunc (Quantification lidar uncertainties) inputs. 
+# Do not change definition names or vary the structure of the file!! Just change parameter values. 
+
 
 # DIRECTORIES:------------------------------------------------------
 
 Main_directory: # Directory where Qlunc_Classes.py is
   '../GitHub_Qlunc/Main'
 
+# Lidar values. Modules and components parameters: 
 Components:
 #Optics: 
   Scanner:
@@ -40,7 +43,7 @@ Components:
     # If table (FigureNoise Vs Wavelength) is provided Qlunc 
     # interpolates to obtain a most accurate value according 
     # with the lidar nominal wavelength. Interpolation param. could 
-    # be tunnedin Qlunc_Photonics_Classes --> UQ_Optical_amplifier
+    # be tunned in Qlunc_Photonics_Classes --> UQ_Optical_amplifier
     
     Optical amplifier noise figure: ../metadata/NoiseFigure.csv 
     

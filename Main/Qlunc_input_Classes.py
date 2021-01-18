@@ -3,6 +3,10 @@
 Created on Fri Jul 24 17:26:23 2020
 
 @author: fcosta
+
+This file is just an example on how to instantiate the lidar objects (components and modules) and 
+allows users to implement manually the components parameters. No yaml file is needed when using this "template".
+Don't use this file. It is highly encouraged to use the yaml file for clarity.
 """
 #%% Plot Flags
 
@@ -19,10 +23,9 @@ flags.flag_plot_photodetector_noise      = True
 Here the lidar device is made up with respective modules and components.
 Instances of each component are created to build up the corresponding module. Once we have the components
 we create the modules, adding up the components. In the same way, once we have the different modules that we
-want to include in our lidar, we can create it adding up the modules we have been created.
+want to include in our lidar, we can create the lidar device by adding up the modules we have been created.
 Different lidars, atmospheric scenarios, components and modules can be created on paralel and can be combined
 easily.
-Example: ....
 '''
 #############  Optics ###################
 
