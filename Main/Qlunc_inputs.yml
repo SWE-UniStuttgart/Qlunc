@@ -7,7 +7,7 @@
 Main_directory: # Directory where Qlunc_Classes.py is
   '../GitHub_Qlunc/Main'
 
-# Lidar values. Modules and components parameters: 
+# Lidar values. Modules and components parameters: ------------------------------------------------------
 
 Components:
 #Optics: 
