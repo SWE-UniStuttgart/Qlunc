@@ -8,13 +8,14 @@ Main_directory: # Directory where Qlunc_Classes.py is
   '../GitHub_Qlunc/Main'
 
 # Lidar values. Modules and components parameters: 
+
 Components:
 #Optics: 
   Scanner:
     
     Name: Scanner_Yaml # Provide an ID to your lidar:    
     Origin: [0,0,0]  # Lidar position in meters: [x,y,z]    
-    Sample rate: 3     # Lidar sample rate. In meters for now (have to know the medium wind speed to put in Hz and do correct calculations)
+    Sample rate: 3     # Lidar sample rate. In meters for now (have to know the medium wind speed to put in Hz and do correct calculations?)
  
     # Pattern:
     Focus distance: [20]   # [m]

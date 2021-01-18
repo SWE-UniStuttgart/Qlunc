@@ -1,9 +1,13 @@
 # Template for Qlunc (Quantification lidar uncertainties) inputs. 
+# Do not change definition names or vary the structure of the file!! Just change parameter values. 
+
 
 # DIRECTORIES:------------------------------------------------------
 
 Main_directory: # Directory where Qlunc_Classes.py is
   '../TestFiles_Qlunc'
+
+# Lidar values. Modules and components parameters: 
 
 Components:
 #Optics: 
