@@ -29,7 +29,7 @@ import yaml
 #Constructor.add_constructor(u'tag:yaml.org,2002:bool', add_bool)
 # Getting input values from the yaml file:
 
-with open (r'../TestFiles_Qlunc/Working_example_yaml_inputs_file.yml') as file: # WHere the yaml file is in order to get the input data
+with open (r'./Qlunc_inputs.yml') as file: # WHere the yaml file is in order to get the input data
     Qlunc_yaml_inputs={}
     docs = yaml.load_all(file, Loader=yaml.FullLoader)
     for doc in docs:      
