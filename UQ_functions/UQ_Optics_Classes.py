@@ -69,9 +69,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             y0 = (param1_or)*np.sin(np.deg2rad(param3_or))*np.sin(np.deg2rad(param2_or))+ Lidar.optics.scanner.origin[1]
             z0 = (param1_or)*np.cos(np.deg2rad(param2_or))+Lidar.optics.scanner.origin[2]+sample_rate_count
         elif Qlunc_yaml_inputs['Components']['Scanner']['Type']=='FLN':
-            x0 = param1
-            y0 = param2
-            z0 = param3
+            x0 = param1 + Lidar.optics.scanner.origin[0]
+            y0 = param2 + Lidar.optics.scanner.origin[1]
+            z0 = param3 + Lidar.optics.scanner.origin[2] + sample_rate_count
         #Storing coordinates
         X0.append(x0)
         Y0.append(y0)
@@ -91,10 +91,14 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             noisy_param3 = param3_or + del_param3 
             
 #            Cartesian coordinates of the noisy points:            
-            x = noisy_param1*np.cos(np.deg2rad(noisy_param3))*np.sin(np.deg2rad(noisy_param2))
-            y = noisy_param1*np.sin(np.deg2rad(noisy_param3))*np.sin(np.deg2rad(noisy_param2)) 
-            z = noisy_param1*np.cos(np.deg2rad(noisy_param2)) + sample_rate_count
-            
+            if Qlunc_yaml_inputs['Components']['Scanner']['Type']=='VAD':
+                x = noisy_param1*np.cos(np.deg2rad(noisy_param3))*np.sin(np.deg2rad(noisy_param2))
+                y = noisy_param1*np.sin(np.deg2rad(noisy_param3))*np.sin(np.deg2rad(noisy_param2)) 
+                z = noisy_param1*np.cos(np.deg2rad(noisy_param2)) + sample_rate_count
+            elif Qlunc_yaml_inputs['Components']['Scanner']['Type']=='FLN':
+                x = noisy_param1
+                y = noisy_param2
+                z = noisy_param3 + sample_rate_count                
             # Implement error in deployment of the tripod as a rotation over yaw, pitch and roll
 
             R=[[np.cos(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep)),  np.cos(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))-np.sin(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.roll_error_dep)),  np.cos(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))+np.sin(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))],
