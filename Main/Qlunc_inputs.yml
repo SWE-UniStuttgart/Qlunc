@@ -19,6 +19,11 @@ Components:
     Type: FLN          # Type of the scanning head: VAD or FLN (Forward-Looking-Nacelle-Mounted Lidar)
     
     # VAD Pattern:
+
+    Sample rate: 0     # Lidar sample rate. In meters for now (have to know the medium wind speed to put in Hz and do correct calculations?)
+ 
+    # Pattern:
+
     Focus distance: [60]   # [m]
     Cone angle: [29]       # [deg]
     Azimuth: [0,360,8]    # [deg]
