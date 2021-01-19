@@ -15,7 +15,7 @@ Components:
     
     Name: Scanner_Yaml # Provide an ID to your lidar:    
     Origin: [0,0,100]  # Lidar position in meters: [x,y,z]    
-    Sample rate: 8     # Lidar sample rate. In meters for now (have to know the medium wind speed to put in Hz and do correct calculations?)
+    Sample rate: 5     # Lidar sample rate. In meters for now (have to know the medium wind speed to put in Hz and do correct calculations?)
     Type: FLN #VAD or FLN (Forward-Looking-Nacelle-Mounted Lidar)
     
     # VAD Pattern:
@@ -128,5 +128,5 @@ Atmospheric_inputs:
 Flags:
   Pointing accuracy uncertainty: False
   Scanning Pattern: True
-  Photodetector noise: True
+  Photodetector noise: False
 
