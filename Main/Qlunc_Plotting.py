@@ -103,7 +103,7 @@ if flags.flag_plot_measuring_points_pattern:
     axs4.set_zlabel('z [m]',fontsize=plot_param['axes_label_fontsize'])
 
     
-    axs4.set_title('Scanner pointing accuracy',fontsize=plot_param['title_fontsize'])
+    axs4.set_title('Scanner pointing accuracy ('+Qlunc_yaml_inputs['Components']['Scanner']['Type']+')',fontsize=plot_param['title_fontsize'])
     axs4.legend()
     axs4.set_xlim3d(plot_param['xlim'][0],plot_param['xlim'][1])
     axs4.set_ylim3d(plot_param['ylim'][0],plot_param['ylim'][1])
