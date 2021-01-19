@@ -109,8 +109,9 @@ class converter(): # Not included yet in Version Qlunc v-0.9 calculations
                  print('Created new converter: {}'.format(self.ConverterID))
 
 class scanner():
-    def __init__(self,name,origin,sample_rate,focus_dist,cone_angle,azimuth,stdv_focus_dist,stdv_cone_angle,stdv_azimuth,unc_func):
+    def __init__(self,name,scanner_type,origin,sample_rate,focus_dist,cone_angle,azimuth,x,y,z,stdv_x,stdv_y,stdv_z,stdv_focus_dist,stdv_cone_angle,stdv_azimuth,unc_func):
                  self.ScannerID       = name
+                 self.scanner_type    = scanner_type
                  self.origin          = origin
                  self.sample_rate     = sample_rate
                  self.focus_dist      = focus_dist
@@ -118,7 +119,15 @@ class scanner():
                  self.azimuth         = azimuth
                  self.stdv_focus_dist = stdv_focus_dist
                  self.stdv_cone_angle = stdv_cone_angle
-                 self.stdv_azimuth    = stdv_azimuth
+                 self.stdv_azimuth    = stdv_azimuth                 
+                 self.x               = x
+                 self.y               = y
+                 self.z               = z
+                 self.stdv_x          = stdv_x
+                 self.stdv_y          = stdv_y
+                 self.stdv_z          = stdv_z                
+                 
+
                  self.Uncertainty     = unc_func
         
                  print('Created new scanner: {}'.format(self.ScannerID))

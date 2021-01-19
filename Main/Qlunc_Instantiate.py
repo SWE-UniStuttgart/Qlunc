@@ -29,7 +29,7 @@ import yaml
 #Constructor.add_constructor(u'tag:yaml.org,2002:bool', add_bool)
 # Getting input values from the yaml file:
 
-with open (r'../TestFiles_Qlunc/Working_example_yaml_inputs_file.yml') as file: # WHere the yaml file is in order to get the input data
+with open (r'./Qlunc_inputs.yml') as file: # WHere the yaml file is in order to get the input data
     Qlunc_yaml_inputs={}
     docs = yaml.load_all(file, Loader=yaml.FullLoader)
     for doc in docs:      
@@ -54,6 +54,7 @@ flags.flag_plot_photodetector_noise      = Qlunc_yaml_inputs['Flags']['Photodete
 # Scanner:
 
 Scanner           = scanner(name            = Qlunc_yaml_inputs['Components']['Scanner']['Name'],           # Introduce your scanner name.
+                            scanner_type    = Qlunc_yaml_inputs['Components']['Scanner']['Type'],
                             origin          = Qlunc_yaml_inputs['Components']['Scanner']['Origin'],         # Origin (coordinates of the lidar deployment).
                             sample_rate     = Qlunc_yaml_inputs['Components']['Scanner']['Sample rate'],    # for now introduce it in [degrees].
                            
@@ -63,10 +64,15 @@ Scanner           = scanner(name            = Qlunc_yaml_inputs['Components']['S
                             azimuth         = np.array(np.arange(Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][0],
                                                                 Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][1],
                                                                 Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][2])),#np.arange(0,360,15), # Azimuth angle in [degrees].
-                           
+                            x               = np.array(Qlunc_yaml_inputs['Components']['Scanner']['x']),
+                            y               = np.array(Qlunc_yaml_inputs['Components']['Scanner']['y']),
+                            z               = np.array(Qlunc_yaml_inputs['Components']['Scanner']['z']),
                             stdv_focus_dist = Qlunc_yaml_inputs['Components']['Scanner']['stdv focus distance'],                 # Focus distance standard deviation in [meters].
                             stdv_cone_angle = Qlunc_yaml_inputs['Components']['Scanner']['stdv Cone angle'],                 # Cone angle standard deviation in [degrees].
                             stdv_azimuth    = Qlunc_yaml_inputs['Components']['Scanner']['stdv Azimuth'],                 # Azimuth angle standard deviation in [degrees].
+                            stdv_x          = Qlunc_yaml_inputs['Components']['Scanner']['stdv x'],
+                            stdv_y          = Qlunc_yaml_inputs['Components']['Scanner']['stdv y'],
+                            stdv_z          = Qlunc_yaml_inputs['Components']['Scanner']['stdv z'],
                             unc_func        = eval(Qlunc_yaml_inputs['Components']['Scanner']['Uncertainty function']) )    # here you put the function describing your scanner uncertainty. 
 
 #Optical Circulator:
