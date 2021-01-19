@@ -14,7 +14,7 @@ Components:
   Scanner:
     
     Name: Scanner_Yaml # Provide an ID to your lidar:    
-    Origin: [0,0,100]  # Lidar position in meters: [x,y,z]    
+    Origin: [0,0,0]  # Lidar position in meters: [x,y,z]    
     Sample rate: 0   # Lidar sample rate. In meters for now (have to know the medium wind speed to put in Hz and do correct calculations?)
     Type: VAD          # Type of the scanning head: VAD or FLN (Forward-Looking-Nacelle-Mounted Lidar)
     

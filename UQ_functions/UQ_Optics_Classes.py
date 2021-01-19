@@ -94,7 +94,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             if Qlunc_yaml_inputs['Components']['Scanner']['Type']=='VAD':
                 x = noisy_param1*np.cos(np.deg2rad(noisy_param3))*np.sin(np.deg2rad(noisy_param2))
                 y = noisy_param1*np.sin(np.deg2rad(noisy_param3))*np.sin(np.deg2rad(noisy_param2)) 
-                z = noisy_param1*np.cos(np.deg2rad(noisy_param2))  + sample_rate_count
+                z = noisy_param1*np.cos(np.deg2rad(noisy_param2)) + sample_rate_count
             elif Qlunc_yaml_inputs['Components']['Scanner']['Type']=='FLN':
                 x = noisy_param1 + sample_rate_count
                 y = noisy_param2
