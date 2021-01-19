@@ -65,13 +65,13 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         
         #Calculating the theoretical point coordinate transformation (conversion from spherical to cartesians if 'VAD' is chosen):
         if Qlunc_yaml_inputs['Components']['Scanner']['Type']=='VAD':
-            x0 = (param1_or)*np.cos(np.deg2rad(param3_or))*np.sin(np.deg2rad(param2_or))+Lidar.optics.scanner.origin[0]
-            y0 = (param1_or)*np.sin(np.deg2rad(param3_or))*np.sin(np.deg2rad(param2_or))+ Lidar.optics.scanner.origin[1]
-            z0 = (param1_or)*np.cos(np.deg2rad(param2_or))+Lidar.optics.scanner.origin[2]+sample_rate_count
+            x0 = (param1_or)*np.cos(np.deg2rad(param3_or))*np.sin(np.deg2rad(param2_or)) + Lidar.optics.scanner.origin[0]
+            y0 = (param1_or)*np.sin(np.deg2rad(param3_or))*np.sin(np.deg2rad(param2_or)) + Lidar.optics.scanner.origin[1]
+            z0 = (param1_or)*np.cos(np.deg2rad(param2_or)) + Lidar.optics.scanner.origin[2] + sample_rate_count
         elif Qlunc_yaml_inputs['Components']['Scanner']['Type']=='FLN':
-            x0 = param1 + Lidar.optics.scanner.origin[0]
-            y0 = param2 + Lidar.optics.scanner.origin[1]
-            z0 = param3 + Lidar.optics.scanner.origin[2] + sample_rate_count
+            x0 = param1_or + Lidar.optics.scanner.origin[0] + Lidar.optics.scanner.origin[0]+ sample_rate_count
+            y0 = param2_or + Lidar.optics.scanner.origin[1] + Lidar.optics.scanner.origin[1]
+            z0 = param3_or + Lidar.optics.scanner.origin[2] + Lidar.optics.scanner.origin[2] 
         #Storing coordinates
         X0.append(x0)
         Y0.append(y0)
@@ -92,9 +92,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             
 #            Cartesian coordinates of the noisy points:            
             if Qlunc_yaml_inputs['Components']['Scanner']['Type']=='VAD':
-                x = noisy_param1*np.cos(np.deg2rad(noisy_param3))*np.sin(np.deg2rad(noisy_param2))
+                x = noisy_param1*np.cos(np.deg2rad(noisy_param3))*np.sin(np.deg2rad(noisy_param2)) + sample_rate_count
                 y = noisy_param1*np.sin(np.deg2rad(noisy_param3))*np.sin(np.deg2rad(noisy_param2)) 
-                z = noisy_param1*np.cos(np.deg2rad(noisy_param2)) + sample_rate_count
+                z = noisy_param1*np.cos(np.deg2rad(noisy_param2)) 
             elif Qlunc_yaml_inputs['Components']['Scanner']['Type']=='FLN':
                 x = noisy_param1
                 y = noisy_param2
