@@ -68,7 +68,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             x0 = (param1_or)*np.cos(np.deg2rad(param3_or))*np.sin(np.deg2rad(param2_or)) + Lidar.optics.scanner.origin[0]
             y0 = (param1_or)*np.sin(np.deg2rad(param3_or))*np.sin(np.deg2rad(param2_or)) + Lidar.optics.scanner.origin[1]
             z0 = (param1_or)*np.cos(np.deg2rad(param2_or)) + Lidar.optics.scanner.origin[2] + sample_rate_count
-        elif Qlunc_yaml_inputs['Components']['Scanner']['Type']=='FLN':
+        elif Qlunc_yaml_inputs['Components']['Scanner']['Type']=='SCAN':
             x0 = param1_or + Lidar.optics.scanner.origin[0] + sample_rate_count
             y0 = param2_or + Lidar.optics.scanner.origin[1] 
             z0 = param3_or + Lidar.optics.scanner.origin[2] 
@@ -95,7 +95,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
                 x = noisy_param1*np.cos(np.deg2rad(noisy_param3))*np.sin(np.deg2rad(noisy_param2))
                 y = noisy_param1*np.sin(np.deg2rad(noisy_param3))*np.sin(np.deg2rad(noisy_param2)) 
                 z = noisy_param1*np.cos(np.deg2rad(noisy_param2)) + sample_rate_count
-            elif Qlunc_yaml_inputs['Components']['Scanner']['Type']=='FLN':
+            elif Qlunc_yaml_inputs['Components']['Scanner']['Type']=='SCAN':
                 x = noisy_param1 + sample_rate_count
                 y = noisy_param2
                 z = noisy_param3                
