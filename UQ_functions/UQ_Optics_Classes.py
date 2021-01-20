@@ -49,7 +49,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         stdv_param2=Lidar.optics.scanner.stdv_cone_angle
         stdv_param3=Lidar.optics.scanner.stdv_azimuth
         
-    elif Qlunc_yaml_inputs['Components']['Scanner']['Type']=='FLN':
+    elif Qlunc_yaml_inputs['Components']['Scanner']['Type']=='SCAN':
         param1=Lidar.optics.scanner.x
         param2=Lidar.optics.scanner.y
         param3=Lidar.optics.scanner.z
