@@ -14,11 +14,11 @@ Components:
   Scanner:
     
     Name: Scanner_Yaml # Provide an ID to your lidar:    
-    Origin: [0,0,0]  # Lidar position in meters: [x,y,z]    
+    Origin: [0,0,40]  # Lidar position in meters: [x,y,z]    
     Sample rate: 0   # Lidar sample rate. In meters for now (have to know the medium wind speed to put in Hz and do correct calculations?)
     Type: SCAN          # Type of the scanning head: VAD or SCAN (Scanning Lidar)
  
-    # Pattern:
+    # VAD Pattern:
 
     Focus distance: [60]   # [m]
     Cone angle: [29]       # [deg]
@@ -28,8 +28,8 @@ Components:
     stdv Cone angle: 0.3      # [deg]
     stdv Azimuth: 0.1         # [deg]    
     
-    # Forward-Looking Nacelle-Mounted Lidar Pattern:
-    x: [50]        # [m]
+    # Scanning Lidar Pattern:
+    x: [15]        # [m]
     y: [0]      # [m]
     z: [0]      # [m]
     
