@@ -15,17 +15,27 @@ Components:
     
     Name: Scanner_Yaml # Provide an ID to your lidar:    
     Origin: [0,0,0]  # Lidar position in meters: [x,y,z]    
-    Sample rate: 0     # Lidar sample rate. In meters for now (have to know the medium wind speed to put in Hz and do correct calculations?)
+    Sample rate: 0   # Lidar sample rate. In meters for now (have to know the medium wind speed to put in Hz and do correct calculations?)
+    Type: FLN          # Type of the scanning head: VAD or FLN (Forward-Looking-Nacelle-Mounted Lidar)
  
     # Pattern:
+
     Focus distance: [60]   # [m]
-    Cone angle: [20]        # [deg]
-    Azimuth: [0,360,15]    # [deg]
-     
-    # Systematic error in the scanner pointing accuracy:
+    Cone angle: [29]       # [deg]
+    Azimuth: [0,360,8]    # [deg]
+    
     stdv focus distance: 1  # [m]
-    stdv Cone angle: 0.6    # [deg]
-    stdv Azimuth: 0.8       # [deg]
+    stdv Cone angle: 0.3      # [deg]
+    stdv Azimuth: 0.1         # [deg]    
+    
+    # Forward-Looking Nacelle-Mounted Lidar Pattern:
+    x: [50]        # [m]
+    y: [0]      # [m]
+    z: [0]      # [m]
+    
+    stdv x: 1               # [m]
+    stdv y: 0             # [m]
+    stdv z: 0             # [m]
     
     # Uncertainty function:
     Uncertainty function: uopc.UQ_Scanner
