@@ -113,7 +113,7 @@ if flags.flag_plot_measuring_points_pattern:
 ###########   Plot photodetector noise   #############################       
 if flags.flag_plot_photodetector_noise:
     # Quantifying uncertainty from photodetector and interval domain for the plot Psax is define in the photodetector class properties)
-    UQ_photo = Lidar.photonics.photodetector.Uncertainty(Lidar,Atmospheric_Scenario,cts) # Obtain the UQ photodetector dictionary wit SNR and UQ information
+    UQ_photo = Lidar.photonics.photodetector.Uncertainty(Lidar,Atmospheric_Scenario,cts) # Obtain the UQ photodetector dictionary with SNR and UQ information
     Psax=10*np.log10(Lidar.photonics.photodetector.Power_interval) 
 
     # Plotting:

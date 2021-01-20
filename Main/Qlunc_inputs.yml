@@ -16,7 +16,7 @@ Components:
     Name: Scanner_Yaml # Provide an ID to your lidar:    
     Origin: [0,0,40]  # Lidar position in meters: [x,y,z]    
     Sample rate: 0   # Lidar sample rate. In meters for now (have to know the medium wind speed to put in Hz and do correct calculations?)
-    Type: VAD          # Type of the scanning head: VAD or SCAN (Scanning Lidar)
+    Type: SCAN          # Type of the scanning head: VAD or SCAN (Scanning Lidar)
  
     # VAD Pattern:
 
@@ -82,8 +82,8 @@ Components:
     Name: Lidar_gral_inputs_Yaml
     Wavelength: 1550.e-9    # [m]
     Sample rate: 1          # [Hz]
-    Yaw error: 0            # [deg]
-    Pitch error: 0          # [deg]
+    Yaw error: 10            # [deg]
+    Pitch error: 10          # [deg]
     Roll error: 0           # [deg]
 ---
 # Modules:
