@@ -13,48 +13,80 @@ Creating components, modules and lidar classes.
 The command class is used to create digital "objects", representing the lidar 
 components, and store necessary information to calculate uncertainties coming 
 from hardware and data processing methods. unc_func contains the functions 
-calculating the uncertainty for each component, module and/or lidar system. It 
-is defined as python module. So users can define their own uncertainty 
+calculating the uncertainty for each component, module and/or lidar system,
+following. It 
+is defined as a python module, so users can define their own uncertainty 
 functions and implement them easily just pointing towards a different python 
-module). 
+module. 
 
-Flags and general constants used along the calculations are also 
-treated as classes.
+Flags, general constants and atmospheric scenarios used along the calculations 
+are also treated as classes. User should instantiate all, but the general 
+constants.
 
-If user wants to implement another component/module he should create a class 
-with the desired parameters. For example, we might want to include in the
-a UPS  (uninterruptible power supply) in the system with certain parameter 
-values, e.g. output power, and nominal working voltage, say (Pout and Vnom). 
 
-So:
+How is the code working?
+
+If user wants to implement another component/module s/he should create a class. 
+
+For example, we might want build up a lidar and user wants to include a 'power'
+module which, in turn contains an UPS (uninterruptible power supply) with 
+certain parameter values, e.g. output power and output voltage. Let's call them
+Pout and Vout. 
+
+1) Create the `classes`:
+    
+So we create the class `UPS`:
     
 def UPS():
-    def __init__(self,PowerOutput,NominalVoltage,Uncertainty)
+    def __init__(self,PowerOutput,VoltageOutput,Uncertainty)
         
         self.Pout     = PowerOutput
-        self.Vnom     = NominalVoltage
+        self.Vout     = VoltageOutput
         self.unc_func = Uncertainty
 
-And include it in the power module:
+And also the class `power`, including the UPS component:
 
 def power():
-    def __init__UPS (self, U_PowerSupply)
-        self.UPS = U_PowerSupply
+    def __init__UPS (self, U_PowerSupply,Uncertainty)
+        self.UPS     = U_PowerSupply
+        self.unc_fun = Uncertainty 
 
 Then, the lidar is created (in this simple example) by including the module in 
 a lidar class:
 
-def lidar():
-    def __init__ (self, Power_Module)
-        self.PowerMod = Power_Module
+class lidar():
+      def __init__ (self, Power_Module,Uncertainty)
+          self.PowerMod = Power_Module
+          self.unc_fun  = Uncertainty
 
-
+Setting an atmospheric scenario is also needed:
+class atmos_sc():
+    def __init__ (self, Temperature, Humidity):
+        self.T = Temperature
+        self.H = Humidity
+    
 2) Instantiate the classes
-    - Instantiate modules
-3) Insert an uncertainty method
-4) Create the atmospheric scenarios
-5) Create a lidar:
+
+Instantiating the component class:
+UPS_1 = UPS(Pout     = 500, % in watts
+            Vout     = 24,  % in volts
+            unc_func = function calculating uncertainties)
+
+Instantiating the module class to create the `Power` object:
+Power_1 = power(Power_Module = UPS_1,
+                unc_func      = function calculating uncertainties) 
         
+
+Instantiating the lidar class:
+Lidar_1 = lidar(Power_Module = Power_1,
+                unc_func     = function calculating uncertainties)
+
+So we have created a lidar digital twin with its first module, the `power` 
+module, which in turn contains a component, the uninterruptible power supply.
+
+Qlunc uses GUM (Guide to the expression of Uncertainties in Measurement) 
+suggestions to calculate uncertainty expansion. 
+  
 """
 #%% Importing packages:
 import os
