@@ -3,34 +3,26 @@
 Created on Mon Oct 19 11:08:32 2020
 @author: fcosta
 
+Francisco Costa García
+University of Stuttgart(c) 
 
-Qlunc working example:
-    In this example is shown how Qlunc is working:
+###############################################################################
+###################### __ Instantiate __ ######################################
+
+Digitally creating a virtual object which represents a physical, real object
+could be done by 
         
-        1) Run Qlunc_Classes.py to create the classes corresponding to components, modules, atmospheric scenarios and lidar device.
-        2) Create the Components instances introducing parameter values for each component.
-        3) Modules instances are created and components are included in the the modules.
-        4) Atmospheric scenarios ara included in the data: We can create it either from a single value or or from a time series
-        5) Lidar device general inputs instance is created
-        6) Lidar device instance is created and modules, containing the different components are included in the lidar architecture 
-      
- # The steps are as follows:
-1) Insert a module
-    - Create a class with the lidar components you want to include
-    - Create an instance
-    - unc_func is the uncertainty quantification function of the module.
-      A function calculating the uncertainty sum of the components
-      which made up the module is created
-2) Insert a component
-    - Create a class with characteristics/input parameters of the lidar
-      components
-    - Create an instance
-    - unc_func is the uncertainty quantification function of the component. We 
-      will create a function calculating the combined uncertainty of each 
-      module
-3) Insert an uncertainty method
-4) Create the atmospheric scenarios
-5) Create a lidar:"""   
+        1) Run Qlunc_Classes.py to create the classes corresponding to
+           components, modules, atmospheric scenarios and lidar device
+        2) Instantiate the different components
+        3) Instantiate modules including corresponding components
+        4) Instantiate class `atmosphere` --> atmospheric conditions
+        5) Instantiate class `lidar_gral_inp` --> lidar general inputs
+        6) Instantiate class `lidar` by including modules, lidar general inputs 
+           and atmospheric conditions
+           
+"""
+
 #%% Running Qlunc_Classes.py:
 import os
 import pdb
