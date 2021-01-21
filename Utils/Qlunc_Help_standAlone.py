@@ -11,12 +11,12 @@ import numpy as np
 #import Qlunc_Help_standAlone as SA
 #from Main.Qlunc_inputs import inputs
 
-#%%# used to flatt in som points along the code:
+#%%# used to flatt at some points along the code:
 flatten = lambda *n: (e for a in n for e in (flatten(*a) if isinstance(a, (list,tuple)) else (a,))) 
 
 #%% Sum of dB:
 def Sum_dB(dB_data):
-   #Sum af decibels:
+   #Sum of decibels:
 #    pdb.set_trace()
     Sumat= []
     Sum_in_decibels=[]
@@ -35,9 +35,7 @@ def unc_comb(data): # data is provided as a list of elements want to add on. Dat
     res_watts   = []
     zipped_data = []
     if not isinstance (data,np.ndarray):
-        data=np.array(data)
-#    pdb.set_trace() 
-    
+        data=np.array(data)    
     for data_row in range(np.shape(data)[0]):# trnasform into watts
         
         try:    
@@ -46,7 +44,6 @@ def unc_comb(data): # data is provided as a list of elements want to add on. Dat
             data2=data[data_row][0]
              
         data_watts.append(10**(data2/10))
-#    pdb.set_trace()
     for i in range(len(data_watts[0])): # combining all uncertainties making sum of squares and the sqrt of the sum
         zipped_data.append(list(zip(*data_watts))[i])
         res_watts.append(np.sqrt(sum(map (lambda x: x**2,zipped_data[i]))))
@@ -56,7 +53,6 @@ def unc_comb(data): # data is provided as a list of elements want to add on. Dat
 
 #%% Spherical into cartesian  coordinate transformation
 def sph2cart(Lidar): 
-#    pdb.set_trace()
     x=[]
     y=[]
     z=[]

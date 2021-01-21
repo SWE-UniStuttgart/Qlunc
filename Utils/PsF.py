@@ -11,7 +11,7 @@ from scipy.signal import argrelextrema
 
 # Source:https://www.telescope-optics.net/diffraction_image.htm
 Focal_length      = 1 # f [meters]
-Aperture_diameter = .12 # D [meters]
+Aperture_diameter = 1.12 # D [meters]
 Focal_ratio       = Focal_length/Aperture_diameter  # F [meters]
 Wavelength        = 1550e-9
 

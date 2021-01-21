@@ -40,7 +40,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     coun=0
     sample_rate_count=0
     
-    # Differentiate between 'VAD' or 'Forward-looking nacelle-mounted' lidar depending on users choice:
+    # Differentiate between 'VAD' or 'Scanning' lidar depending on users choice:
     if Qlunc_yaml_inputs['Components']['Scanner']['Type']=='VAD':
         param1=Lidar.optics.scanner.focus_dist
         param2=Lidar.optics.scanner.cone_angle

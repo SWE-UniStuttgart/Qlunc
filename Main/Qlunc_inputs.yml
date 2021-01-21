@@ -29,9 +29,9 @@ Components:
     stdv Azimuth: 0.1         # [deg]    
     
     # Scanning Lidar Pattern:
-    x: [20]        # [m]
-    y: [0]      # [m]
-    z: [20]      # [m]
+    x: [20,20,20]        # [m]
+    y: [0,0,0]      # [m]
+    z: [20,0,-20]      # [m]
     
     stdv x: 0.3               # [m]
     stdv y: 0             # [m]
@@ -81,9 +81,8 @@ Components:
   Lidar general inputs:
     Name: Lidar_gral_inputs_Yaml
     Wavelength: 1550.e-9    # [m]
-    Sample rate: 1          # [Hz]
-    Yaw error: 10            # [deg]
-    Pitch error: 10          # [deg]
+    Yaw error: 0            # [deg]
+    Pitch error: 0          # [deg]
     Roll error: 0           # [deg]
 ---
 # Modules:
