@@ -5,15 +5,14 @@ Created on Sat May 16 14:58:24 2020
 @author: fcosta
 """
 
-#import LiUQ_inputs
 
 from Qlunc_ImportModules import *
 import Qlunc_Help_standAlone as SA
-#import pandas as pd
-#import scipy.interpolate as itp
-#import pdb
 
-def UQ_Telescope(Lidar, Atmospheric_Scenario,cts): #This is not correct yet. Just implemented as an example
+
+# NOT IMPLEMENTED
+#==============================================================================
+def UQ_Telescope(Lidar, Atmospheric_Scenario,cts):
 #    toreturn={}
     UQ_telescope=[(temp*0.5+hum*0.1+curvature_lens*0.1+aberration+o_c_tele) \
                   for temp           in inputs.atm_inp.Atmospheric_inputs['temperature']\
@@ -27,7 +26,8 @@ def UQ_Telescope(Lidar, Atmospheric_Scenario,cts): #This is not correct yet. Jus
 #    toreturn['telescope_losses']=Telescope_Losses
     Final_Output_UQ_Telescope={'Uncertainty_Telescope':UQ_telescope}
     return Final_Output_UQ_Telescope
-    
+#==============================================================================
+   
 def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     Coord=[]
     StdvMean_DISTANCE=[]  
@@ -40,7 +40,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     coun=0
     sample_rate_count=0
     
-    # Differentiate between 'VAD' or 'Scanning' lidar depending on users choice:
+    # Differentiate between 'VAD' or 'Scanning' lidar depending on user's choice:
     if Qlunc_yaml_inputs['Components']['Scanner']['Type']=='VAD':
         param1=Lidar.optics.scanner.focus_dist
         param2=Lidar.optics.scanner.cone_angle
@@ -79,7 +79,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
 
         for trial in range(0,100):
             
-        # Create white noise with stdv selected by user for each pointing input
+        # Create white noise with stdv selected by user:
             n=10000 # Number of cases to combine
             del_param1 = np.array(np.random.normal(0,stdv_param1,n)) # why a normal distribution??Does it have sense, can be completely random?
             del_param2 = np.array(np.random.normal(0,stdv_param2,n))
@@ -157,11 +157,7 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts):
     except:
         Optical_circulator_Uncertainty = None
         print('No optical circulator in calculations!')
-
-            
-#    pdb.set_trace()   
+           
     Uncertainty_Optics_Module=SA.unc_comb(List_Unc_optics)
     Final_Output_UQ_Optics = {'Uncertainty_Optics':Uncertainty_Optics_Module}
     return Final_Output_UQ_Optics
-
-#    return list(SA.flatten(Uncertainty_Optics_Module))
