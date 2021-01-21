@@ -5,7 +5,7 @@ Created on Mon Oct 19 11:08:32 2020
 
 
 Qlunc working example:
-    I this example is shown how Qlunc is working:
+    In this example is shown how Qlunc is working:
         
         1) Run Qlunc_Classes.py to create the classes corresponding to components, modules, atmospheric scenarios and lidar device.
         2) Create the Components instances introducing parameter values for each component.
@@ -14,7 +14,23 @@ Qlunc working example:
         5) Lidar device general inputs instance is created
         6) Lidar device instance is created and modules, containing the different components are included in the lidar architecture 
       
- """   
+ # The steps are as follows:
+1) Insert a module
+    - Create a class with the lidar components you want to include
+    - Create an instance
+    - unc_func is the uncertainty quantification function of the module.
+      A function calculating the uncertainty sum of the components
+      which made up the module is created
+2) Insert a component
+    - Create a class with characteristics/input parameters of the lidar
+      components
+    - Create an instance
+    - unc_func is the uncertainty quantification function of the component. We 
+      will create a function calculating the combined uncertainty of each 
+      module
+3) Insert an uncertainty method
+4) Create the atmospheric scenarios
+5) Create a lidar:"""   
 #%% Running Qlunc_Classes.py:
 import os
 import pdb

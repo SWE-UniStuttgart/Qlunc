@@ -30,7 +30,7 @@ def UQ_Telescope(Lidar, Atmospheric_Scenario,cts): #This is not correct yet. Jus
     
 def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     Coord=[]
-    Mean_Stdv_DISTANCE=[]  
+    StdvMean_DISTANCE=[]  
     SimMean_DISTANCE=[]
     X,Y,Z,X0,Y0,Z0=[],[],[],[],[],[]
     Noisy_Coord=[]
@@ -109,15 +109,15 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             yfinal = np.matmul(R,[x,y,z])[1] + Lidar.optics.scanner.origin[1]
             zfinal = np.matmul(R,[x,y,z])[2] + Lidar.optics.scanner.origin[2]
 
-#            pdb.set_trace()
             # Distance between theoretical measured points and noisy points:
             DISTANCE.append(np.sqrt((xfinal-x0)**2+(yfinal-y0)**2+(zfinal-z0)**2))
             Mean_DISTANCE.append(np.mean(DISTANCE[trial]))    
             stdv_DISTANCE.append(np.std(DISTANCE[trial]))
         sample_rate_count+=Lidar.optics.scanner.sample_rate    
-        SimMean_DISTANCE.append(np.mean(DISTANCE))   # Mean error distance of each point in the pattern  
-        Mean_Stdv_DISTANCE.append(np.mean(stdv_DISTANCE)) # Mean error distance stdv for each point in the pattern
-        # Want to create a noise to add to the theoretical position to simulate the error in measurements
+        SimMean_DISTANCE.append(np.mean(DISTANCE))        # Mean error distance of each point in the pattern  
+        StdvMean_DISTANCE.append(np.mean(stdv_DISTANCE)) # Mean error distance stdv for each point in the pattern
+        
+        # Creating a noise to add to the theoretical position to simulate the error in measurements
         # Storing coordinates:
         X.append(xfinal)
         Y.append(yfinal)
@@ -128,27 +128,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         Noisy_Coord=[NoisyX,NoisyY,NoisyZ]
         Coord=[X0,Y0,Z0]
         coun+=1
-#        Xn,Yn,Zn=X0,Y0
-#        Coor={'Xn':Xn,'Yn':Yn,'Zn':Zn,'X0':X0,'Y0':Y0,'Z0':Z0}
-#    plot_dist=np.mean(SimMean_DISTANCE)
-#    plot_stdv_dist=np.mean(Mean_Stdv_DISTANCE)
-#    noiss=np.array(np.random.normal(plot_dist,plot_stdv_dist,1000))
-#    z=(noiss-np.mean(SimMean_DISTANCE))/np.mean(Mean_Stdv_DISTANCE)
-#    plt.figure,
-#    plt.hist(noiss,bins=35)
-#    plt.show()
-#    plt.figure,
-#    plt.hist(z,bins=35)
-#    plt.show()
-#    print('STDV_Z= {}'.format(np.std(z)))
-#    print('STDV_Dist= {}'.format(plot_stdv_dist))
-#    DistancePointMean.append(np.mean(SimMean_DISTANCE)) #We can use that for computing the total pattern mean error distance
-#    stdvPointMean.append(np.mean(Mean_Stdv_DISTANCE))   #We can use that for computing the total pattern stdv error distance
-#    
-#    pdb.set_trace()
-    Final_Output_UQ_Scanner={'Simu_Mean_Distance':SimMean_DISTANCE,'STDV_Distance':Mean_Stdv_DISTANCE,'MeasPoint_Coordinates':Coord,'NoisyMeasPoint_Coordinates':Noisy_Coord}
-    return Final_Output_UQ_Scanner#,Coor #plot_dist,plot_stdv_dist
-    
+
+    Final_Output_UQ_Scanner={'Simu_Mean_Distance':SimMean_DISTANCE,'STDV_Distance':StdvMean_DISTANCE,'MeasPoint_Coordinates':Coord,'NoisyMeasPoint_Coordinates':Noisy_Coord}
+    return Final_Output_UQ_Scanner
 def UQ_OpticalCirculator(Lidar,Atmospheric_Scenario,cts):
     Optical_Circulator_Uncertainty = [Lidar.optics.optical_circulator.insertion_loss]
     Final_Output_UQ_Optical_Circulator={'Optical_Circulator_Uncertainty':Optical_Circulator_Uncertainty}

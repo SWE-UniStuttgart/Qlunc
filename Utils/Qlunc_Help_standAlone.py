@@ -52,6 +52,10 @@ def unc_comb(data): # data is provided as a list of elements want to add on. Dat
     return np.array(res_dB)
 
 #%% Spherical into cartesian  coordinate transformation
+    #    xcart = rho * cos(phi)*sin(theta)
+    #    ycart = rho * sin(phi)*sin(theta)
+    #    zcart = rho * cos(theta)
+    
 def sph2cart(Lidar): 
     x=[]
     y=[]
@@ -63,18 +67,6 @@ def sph2cart(Lidar):
         z=Lidar.optics.scanner.focus_dist[i]*np.cos(np.deg2rad(Lidar.optics.scanner.theta)) 
     return(x,y,z)
 
-    # POLARS:
-    #def pol2cart(rho, phi):
-    #    xcart= rho * np.cos(phi)
-    #    ycart = rho * np.sin(phi)
-    #    return(xcart, ycart)
-        
-    # SPHERICAL:
-    #def sph2cart(rho, theta,phi): # Spherical into cartesian  coordinate transformation
-    #    xcart = rho * np.cos(phi)*np.sin(theta)
-    #    ycart = rho * np.sin(phi)*np.sin(theta)
-    #    zcart = rho*np.cos(theta)
-    #    return(xcart, ycart,zcart) 
 
 #%% Get data frame builds up a data frame with the uncertainty data that user queries
 def Get_DataFrame(H_UQ,Temperature):  

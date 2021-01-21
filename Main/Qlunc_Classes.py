@@ -3,25 +3,60 @@
 Created on Fri Jun 19 19:57:05 2020
 @author: fcosta
 
-# The steps are as follows:
-1) Insert a module
-    - Create a class with the lidar components you want to include
-    - Create an instance
-    - unc_func is the uncertainty quantification function of the module.
-      A function calculating the uncertainty sum of the components
-      which made up the module is created.
-2) Insert a component
-    - Create a class with characteristics/input parameters of the lidar components
-    - Create an instance
-    - unc_func is the uncertainty quantification function of the component. We will 
-      create a function calculating the combined uncertainty of each module
+Francisco Costa García
+University of Stuttgart(c) 
+
+###############################################################################
+###################### __ Classes __ ##########################################
+
+Creating components, modules and lidar classes. 
+The command class is used to create digital "objects", representing the lidar 
+components, and store necessary information to calculate uncertainties coming 
+from hardware and data processing methods. unc_func contains the functions 
+calculating the uncertainty for each component, module and/or lidar system. It 
+is defined as python module. So users can define their own uncertainty 
+functions and implement them easily just pointing towards a different python 
+module). 
+
+Flags and general constants used along the calculations are also 
+treated as classes.
+
+If user wants to implement another component/module he should create a class 
+with the desired parameters. For example, we might want to include in the
+a UPS  (uninterruptible power supply) in the system with certain parameter 
+values, e.g. output power, and nominal working voltage, say (Pout and Vnom). 
+
+So:
+    
+def UPS():
+    def __init__(self,PowerOutput,NominalVoltage,Uncertainty)
+        
+        self.Pout     = PowerOutput
+        self.Vnom     = NominalVoltage
+        self.unc_func = Uncertainty
+
+And include it in the power module:
+
+def power():
+    def __init__UPS (self, U_PowerSupply)
+        self.UPS = U_PowerSupply
+
+Then, the lidar is created (in this simple example) by including the module in 
+a lidar class:
+
+def lidar():
+    def __init__ (self, Power_Module)
+        self.PowerMod = Power_Module
+
+
+2) Instantiate the classes
+    - Instantiate modules
 3) Insert an uncertainty method
 4) Create the atmospheric scenarios
 5) Create a lidar:
-    
-    
-
+        
 """
+#%% Importing packages:
 import os
 os.chdir('../Utils')
 from Qlunc_ImportModules import *
@@ -32,9 +67,6 @@ import UQ_Power_Classes as upwc
 import UQ_Optics_Classes as uopc
 import UQ_Lidar_Classes as ulc
 os.chdir('../Main')
-#import pandas as pd
-#import numpy as np
-#import pdb
 
 #%% Constants:
 class cts():
@@ -46,19 +78,12 @@ class cts():
 
 class flags():
     def __init__(self,flag_plot_pointing_accuracy_unc,flag_plot_measuring_points_pattern,flag_plot_photodetector_noise):
-        self.flag_plot_pointing_accuracy_unc    = flag_plot_pointing_accuracy_unc
-        self.flag_plot_measuring_points_pattern = flag_plot_measuring_points_pattern
-        self.flag_plot_photodetector_noise      = flag_plot_photodetector_noise
+                 self.flag_plot_pointing_accuracy_unc    = flag_plot_pointing_accuracy_unc
+                 self.flag_plot_measuring_points_pattern = flag_plot_measuring_points_pattern
+                 self.flag_plot_photodetector_noise      = flag_plot_photodetector_noise
     
 #%% 
-'''
-#################################################################
-###################### __ Classes __ #################################
-Creating components, modules and lidar classes. This classes contain the objects information required to build them up, also contain information
-about the  formulation used to retrieve uncertainties (unc_func contains the functions calculating the uncertainty for each component, module and/or 
-lidar system)
-
- '''   
+  
 #Component Classes:
 class photodetector():
     def __init__(self,name,Photo_BandWidth,Load_Resistor,Photo_efficiency,Dark_Current,Photo_SignalP,Power_interval,Gain_TIA,V_Noise_TIA,unc_func):
@@ -126,10 +151,7 @@ class scanner():
                  self.stdv_x          = stdv_x
                  self.stdv_y          = stdv_y
                  self.stdv_z          = stdv_z                
-                 
-
-                 self.Uncertainty     = unc_func
-        
+                 self.Uncertainty     = unc_func      
                  print('Created new scanner: {}'.format(self.ScannerID))
         
 class optical_circulator():
@@ -183,9 +205,7 @@ class lidar_gral_inp():
                  self.Wavelength      = wave
                  self.yaw_error_dep   = yaw_error   # yaw error angle when deploying the lidar device in the grounf or in the nacelle
                  self.pitch_error_dep = pitch_error # pitch error angle when deploying the lidar device in the grounf or in the nacelle
-                 self.roll_error_dep  = roll_error  # roll error angle when deploying the lidar device in the grounf or in the nacelle
-        
-        
+                 self.roll_error_dep  = roll_error  # roll error angle when deploying the lidar device in the grounf or in the nacelle        
                  print('Created new lidar general inputs: {}'.format(self.Gral_InputsID))
 
 #%% Lidar class
