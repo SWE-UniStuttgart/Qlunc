@@ -89,7 +89,7 @@ Components:
 Modules:
   Optics Module:
     Name: Optics_module_Yaml2
-    Scanner: Scanner
+    Scanner: Scanner2
     Optical circulator: Optical_circulator # Have to be the same name as the instance
     Laser: None
     Uncertainty function: uopc.sum_unc_optics
