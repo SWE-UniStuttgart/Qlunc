@@ -5,7 +5,7 @@ Qlunc is a software that aims to quantify errors when measuring with a lidar dev
 
 ![Qlunc basic structure image](https://github.com/PacoCosta/Qlunc/blob/Qlunc-V0.9/Pictures_repo_/Qlunc_GralStructure.JPG)
 
-At this stage the code can calculate uncertainties coming from photonics, including photodetector (with or without transimpedance amplifier) and optical amplifier uncertainties, as well as optics module uncertainty including scanner pointing accuracy and optical circulator uncertainties. For each module Guide to the expression of Uncertainty in Measurement ([GUM](https://www.bipm.org/utils/common/documents/jcgm/JCGM_100_2008_E.pdf)) is applied in order to calcute uncertainty expansion, taking into account that components are considered uncorrelated. 
+At this stage the code can calculate uncertainties coming from photonics, including photodetector (with or without transimpedance amplifier) and optical amplifier uncertainties, as well as optics module uncertainty including scanner pointing accuracy and optical circulator uncertainties. For each module [GUM](https://www.bipm.org/utils/common/documents/jcgm/JCGM_100_2008_E.pdf) is applied in order to calcute uncertainty expansion, taking into account that components are considered uncorrelated. 
 
 ### Creating a lidar device:
 
