@@ -31,9 +31,9 @@ At this stage the code can calculate errors introduced by photodetector and opti
 
 First step is to download/[clone](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository) the `Qlunc` repository and extract the content in the selected folder (in Downloads directory user will find a zip folder called `Qlunc-Qlunc-V0.9.zip`).
 
-By downloading the repository you will get several folders within which Qlunc is organized. The most important to know are:
+By downloading the repository you will get several folders within which Qlunc is organized. The most importants to know are:
 ### Main:
-This is the core of Qlunc. Here the user creates the classes describing the components, modules and general inputs of the lidar device.
+This is the core of Qlunc. Here the user creates the classes describing the components, modules and general inputs of the lidar device and instantiate the classes.
  - `Template_yaml_inputs_file.yml` and `Qlunc_inputs.yml`. The firdt one is a yaml template where user introduces the lidar components values, modules and general lidar features as well as atmospheric scenarios. The second one can be as an example showing how to fill the template.
  - `Qlunc_Classes.py` contains the snippet which creates all the lidar digital twins. Each lidar module/component is assigned to a python class.
  - `Qlunc_Instantiate.py` instantiate the object classes taking the values from `Qlunc_inputs.yml`.
