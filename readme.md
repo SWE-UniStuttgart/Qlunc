@@ -28,19 +28,24 @@ At this stage the code can calculate errors introduced by photodetector and opti
  - Scanning points and their uncertainty in meters (only VAD).
 
 ## How to use Qlunc:
-By downloading the repository you will get several folders within which Qlunc is organized:
+
+First step is to download/[clone](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository) the `Qlunc` repository and extract the content in the selected folder (in Downloads directory user will find a zip folder called `Qlunc-Qlunc-V0.9.zip`).
+
+By downloading the repository you will get several folders within which Qlunc is organized. The most important to know are:
 ### Main:
 This is the core of Qlunc. Here the user creates the classes describing the components, modules and general inputs of the lidar device.
- - yaml_inputs_file.py is a yaml file where user introduces the lidsar components values, integrated modules and general lidar features as well as atmospheric scenarios.
- - Qlunc_Classes.py contains the snippet which creates all the lidar digital twins. Each lidar module/component is assigned to a python class.
- - Qlunc_input_Classes.py contains the values for the different components and atmospheric scenarios. Atmospheric scenarios are created here as well.
+ - `Template_yaml_inputs_file.yml` and `Qlunc_inputs.yml`. The firdt one is a yaml template where user introduces the lidar components values, modules and general lidar features as well as atmospheric scenarios. The second one can be as an example showing how to fill the template.
+ - `Qlunc_Classes.py` contains the snippet which creates all the lidar digital twins. Each lidar module/component is assigned to a python class.
+ - `Qlunc_Instantiate.py` instantiate the object classes taking the values from `Qlunc_inputs.yml`.
+ - `Qlunc_Plotting.py` is a stand alone python module used to plot some results.
 ### UQ_Functions: 
- - Contains the functions that compute the uncertainties coming from different devices, calculting also the uncertainty propagation corresponding to the different      modules and lidar uncertainty as well.
+ - Contains the functions that compute the uncertainties coming from different devices, calculting also the uncertainty propagation corresponding to the different      modules and lidar uncertainty as well. Users can define their own functions to calculate uncertainties and it expansion as well. 
 ### Utils:
- - Contains scripts meant to do different tasks. Importing packages, plotting script and some stand alone funtions which don´t interface directly with Qlunc but are necessary to compute calculations.
-###  Test File:
+ - Contains scripts meant to do different tasks. Importing packages and some stand alone funtions which don´t interface directly with Qlunc but are necessary to compute calculations.
+###  TestFile_Qlunc:
  - A working example is provided to show how the process looks like. In this test case a lidar is builded up with its modules and components, puting all together to set up a lidar device. User can find more information on how to run this test file in the readme.md file dropped in this folder.
-
+### Tutorials:
+- Containing 2 [JupyterNotebook-based tutorial](https://github.com/PacoCosta/Qlunc/tree/Qlunc-V0.9/Tutorials), `Tutorial1.ipynb` and `Tutorial1.ipynb` with their corresponding yaml files. 
 ## Requirements
  - [Anaconda Navigator](https://www.anaconda.com/products/individual) has been installed. It includes, among others, Python3.7 and spyder IDE software features, ready to be used. 
 
