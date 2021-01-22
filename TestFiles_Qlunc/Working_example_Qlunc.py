@@ -3,26 +3,18 @@
 Created on Mon Oct 19 11:08:32 2020
 @author: fcosta
 
-Francisco Costa García
-University of Stuttgart(c) 
 
-###############################################################################
-###################### __ Instantiate __ ######################################
-
-Digitally creating a virtual object which represents a physical, real object
-could be done by 
+Qlunc working example:
+    I this example is shown how Qlunc is working:
         
-        1) Run Qlunc_Classes.py to create the classes corresponding to
-           components, modules, atmospheric scenarios and lidar device
-        2) Instantiate the different components
-        3) Instantiate modules including corresponding components
-        4) Instantiate class `atmosphere` --> atmospheric conditions
-        5) Instantiate class `lidar_gral_inp` --> lidar general inputs
-        6) Instantiate class `lidar` by including modules, lidar general inputs 
-           and atmospheric conditions
-           
-Parameter values are taken from a yaml file, specifically `Working_example_yaml_inputs_file.yml`
-"""  
+        1) Run Qlunc_Classes.py to create the classes corresponding to components, modules, atmospheric scenarios and lidar device.
+        2) Create the Components instances introducing parameter values for each component.
+        3) Modules instances are created and components are included in the the modules.
+        4) Atmospheric scenarios ara included in the data: We can create it either from a single value or or from a time series
+        5) Lidar device general inputs instance is created
+        6) Lidar device instance is created and modules, containing the different components are included in the lidar architecture 
+      
+ """   
 #%% Running Qlunc_Classes.py:
 import os
 import pdb
@@ -44,7 +36,7 @@ with open (r'../TestFiles_Qlunc/Working_example_yaml_inputs_file.yml') as file: 
         for k, v in doc.items():           
             Qlunc_yaml_inputs.setdefault(k,v)  # save a dictionary with the data coming from yaml file 
 
-exec(open(Qlunc_yaml_inputs['Main_directory']+'/WorkingExample_Qlunc_Classes.py').read())   # Execute WorkingExample_Qlunc_Classes.py (creating classes for lidar 'objects')
+exec(open(Qlunc_yaml_inputs['Main_directory']+'/WorkingExample_Qlunc_Classes.py').read())   # Execute Qlunc_Classes.py (creating classes for lidar 'objects')
 #%%%%%%%%%%%%%%%%% INPUTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 ## FLAG inputs: ###############################################################
@@ -130,6 +122,7 @@ Photonics_Module = photonics(name              = Qlunc_yaml_inputs['Modules']['P
 ## Lidar general inputs: ######################################################
 Lidar_inputs     = lidar_gral_inp(name        = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Name'],      # Introduce the name of your lidar data folder.
                                   wave        = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Wavelength'],                    # In [m]. Lidar wavelength.
+                                  sample_rate = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Sample rate'],                          # In [Hz]
                                   yaw_error   = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Yaw error'],                          # In [°]. Degrees of rotation around z axis because of inclinometer errors
                                   pitch_error = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Pitch error'],                          # In [°]. Degrees of rotation around y axis
                                   roll_error  = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Roll error'])                          # In [°]. Degrees of rotation around z axis.
@@ -147,8 +140,8 @@ Lidar = lidar(name         = Qlunc_yaml_inputs['Lidar']['Name'],                
 
 ## Creating atmospheric scenarios: ############################################
 
-Atmospheric_TimeSeries = Qlunc_yaml_inputs['Atmospheric_inputs']['TimeSeries'] # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere (T, H, rain and fog). 
-                                                                               # If True, we obtain a time series describing the noise implemented in the measurement.
+Atmospheric_TimeSeries = Qlunc_yaml_inputs['Atmospheric_inputs']['TimeSeries'] # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere (T, H, rain and fog) 
+                                                                           # If so we obtain a time series describing the noise implemented in the measurement.
 if Atmospheric_TimeSeries:
     Atmos_TS_FILE           = '../metadata/AtmosphericData/'+Qlunc_yaml_inputs['Atmospheric_inputs']['Atmos_TS_FILE']
     AtmosphericScenarios_TS = pd.read_csv(Atmos_TS_FILE,delimiter=';',decimal=',')
