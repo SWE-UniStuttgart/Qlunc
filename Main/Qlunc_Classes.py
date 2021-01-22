@@ -86,7 +86,7 @@ So we have created a lidar digital twin with its first module, the `power`
 module, which in turn contains a component, the uninterruptible power supply.
 
 Qlunc uses GUM (Guide to the expression of Uncertainties in Measurement) 
-suggestions to calculate uncertainty expansion.  
+model to calculate uncertainty expansion.  
   
 """
 #%% Importing packages:
@@ -115,9 +115,9 @@ class flags():
                  self.flag_plot_measuring_points_pattern = flag_plot_measuring_points_pattern
                  self.flag_plot_photodetector_noise      = flag_plot_photodetector_noise
     
-#%% 
+#%% LIDAR COMPONENTS
   
-#Component Classes:
+# Component Classes:
 class photodetector():
     def __init__(self,name,Photo_BandWidth,Load_Resistor,Photo_efficiency,Dark_Current,Photo_SignalP,Power_interval,Gain_TIA,V_Noise_TIA,unc_func):
                  self.PhotodetectorID  = name 
@@ -140,7 +140,7 @@ class optical_amplifier():
                  self.Uncertainty         = unc_func
                  print('Created new optical amplifier: {}'.format(self.Optical_AmplifierID))
         
-class power_source():
+class power_source(): # Not included yet in Version Qlunc v-0.9 calculations
     def __init__(self,name,Inp_power,Out_power,unc_func):
                  self.Power_SourceID = name
                  self.Input_power    = Inp_power
@@ -148,7 +148,7 @@ class power_source():
                  self.Uncertainty    = unc_func
                  print('Created new power source: {}'.format(self.Power_SourceID))
 
-class laser():
+class laser(): # Not included yet in Version Qlunc v-0.9 calculations
     def __init__(self,name,Wavelength,e_Wavelength,Out_power,unc_func):
                  self.Power_SourceID = name
                  self.Wavelength     = Wavelength
@@ -195,9 +195,10 @@ class optical_circulator():
         #        self.return_loss          = return_loss
                  self.Uncertainty          = unc_func
                  print ('Created new optical circulator: {}'.format(self.Optical_CirculatorID))
-        
-#%%modules classes
 
+#%% LIDAR MODULES
+                 
+# Modules classes:
 class photonics():
     def __init__(self,name,photodetector,optical_amplifier,unc_func):
                  self.PhotonicModuleID   = name
@@ -223,7 +224,7 @@ class optics():
                  self.Uncertainty        = unc_func 
                  print('Created new optic module: {}'.format(self.OpticsModuleID))
         
-#atmosphere object:
+#%% Atmosphere object:
 class atmosphere():
     def __init__(self,name,temperature):
                  self.AtmosphereID = name
@@ -241,13 +242,13 @@ class lidar_gral_inp():
                  self.roll_error_dep  = roll_error  # roll error angle when deploying the lidar device in the grounf or in the nacelle        
                  print('Created new lidar general inputs: {}'.format(self.Gral_InputsID))
 
-#%% Lidar class
+#%% Lidar class:
 class lidar():
     def __init__(self,name,photonics,optics,power,lidar_inputs,unc_func):
                  self.LidarID      = name
                  self.photonics    = photonics
                  self.optics       = optics
-                 self.power        = power 
+                 self.power        = power # Not included yet in Version Qlunc v-0.9 calculations
                  self.lidar_inputs = lidar_inputs
                  self.Uncertainty  = unc_func
                  print('Created new lidar device: {}'.format(self.LidarID))

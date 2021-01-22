@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue May 12 02:09:57 2020
-
 @author: fcosta
+
+Francisco Costa García
+University of Stuttgart(c) 
 """
 
 #%% Modules to import: 

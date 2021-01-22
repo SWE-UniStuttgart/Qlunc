@@ -4,22 +4,34 @@ Created on Sat May 16 14:50:18 2020
 @author: fcosta
 
 Francisco Costa García
-University of Stuttgart(c) 
+University of Stuttgart(c)
+
+Here we calculate the uncertainties related with components in the `power`
+module. 
+
+    
+   - noise definintions (reference in literature)
+   
+
 """
+
+
 from Qlunc_ImportModules import *
 import Qlunc_Help_standAlone as SA
 import pandas as pd
 import scipy.interpolate as itp
 import pdb
 
+#%% POWER SOURCE:
 def UQ_PowerSource(Lidar, Atmospheric_Scenario,cts):
     UQ_power_source=[]
     for i in range(len(Atmospheric_Scenario.temperature)):
         UQ_power_source.append(Atmospheric_Scenario.temperature[i]+Lidar.power.power_source.Output_power*Lidar.power.power_source.Input_power)
 
-#    UQ_power_source=[round(UQ_power_source[i_dec],3) for i_dec in range(len(UQ_power_source))]
+    # UQ_power_source=[round(UQ_power_source[i_dec],3) for i_dec in range(len(UQ_power_source))]
     return UQ_power_source
 
+#%% CONVERTER:
 def UQ_Converter(Lidar, Atmospheric_Scenario,cts):
     UQ_converter=[]
     for i in range(len(Atmospheric_Scenario.temperature)):
@@ -27,13 +39,8 @@ def UQ_Converter(Lidar, Atmospheric_Scenario,cts):
 
 #    UQ_converter=[round(UQ_converter[i_dec],3) for i_dec in range(len(UQ_converter))]
     return UQ_converter
-#
-#def Losses_Converter(user_inputs,inputs,cts,direct,Wavelength,**Scenarios):
-#    Losses_converter=[]
-#    for i in range(len(Scenarios.get('VAL_T'))):
-#        Losses_converter.append(Scenarios.get('VAL_CONVERTER_LOSSES')[i])
-#    return Losses_converter
 
+#%% Sum of uncertainties in `power ` module: 
 def sum_unc_power(Lidar,Atmospheric_Scenario,cts): 
     try: # ecah try/except evaluates wether the component is included
         PowerSource_Uncertainty=Lidar.power.power_source.Uncertainty(Lidar,Atmospheric_Scenario,cts)

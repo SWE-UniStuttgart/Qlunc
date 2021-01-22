@@ -4,18 +4,25 @@ Created on Sat May 16 14:58:24 2020
 @author: fcosta
 
 Francisco Costa García
-University of Stuttgart(c) 
+University of Stuttgart(c)
+
+Here we calculate the uncertainties related with components in the `optics`
+module. 
+
+    
+   - noise definintions (reference in literature)
+   
+ 
 """
 
 
 from Qlunc_ImportModules import *
 import Qlunc_Help_standAlone as SA
 
-
+#%% TELESCOPE:
 # NOT IMPLEMENTED
 #==============================================================================
 def UQ_Telescope(Lidar, Atmospheric_Scenario,cts):
-#    toreturn={}
     UQ_telescope=[(temp*0.5+hum*0.1+curvature_lens*0.1+aberration+o_c_tele) \
                   for temp           in inputs.atm_inp.Atmospheric_inputs['temperature']\
                   for hum            in inputs.atm_inp.Atmospheric_inputs['humidity']\
@@ -24,12 +31,11 @@ def UQ_Telescope(Lidar, Atmospheric_Scenario,cts):
                   for o_c_tele       in inputs.optics_inp.Telescope_uncertainty_inputs['OtherChanges_tele']]
     Telescope_Losses =inputs.optics_inp.Telescope_uncertainty_inputs['losses']
     UQ_telescope=[round(UQ_telescope[i_dec],3) for i_dec in range(len(UQ_telescope))]
-#    toreturn['telescope_atm_unc']=UQ_telescope
-#    toreturn['telescope_losses']=Telescope_Losses
     Final_Output_UQ_Telescope={'Uncertainty_Telescope':UQ_telescope}
     return Final_Output_UQ_Telescope
 #==============================================================================
-   
+
+#%% SCANNER:
 def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     Coord=[]
     StdvMean_DISTANCE=[]  
@@ -65,7 +71,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         stdv_DISTANCE=[]  
         sample_rate_count+=Lidar.optics.scanner.sample_rate
         
-        #Calculating the theoretical point coordinate transformation (conversion from spherical to cartesians if 'VAD' is chosen):
+        # Calculating the theoretical point coordinate transformation (conversion from spherical to cartesians if 'VAD' is chosen):
         if Qlunc_yaml_inputs['Components']['Scanner']['Type']=='VAD':
             x0 = (param1_or)*np.cos(np.deg2rad(param3_or))*np.sin(np.deg2rad(param2_or)) + Lidar.optics.scanner.origin[0]
             y0 = (param1_or)*np.sin(np.deg2rad(param3_or))*np.sin(np.deg2rad(param2_or)) + Lidar.optics.scanner.origin[1]
@@ -74,25 +80,26 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             x0 = param1_or + Lidar.optics.scanner.origin[0] + sample_rate_count
             y0 = param2_or + Lidar.optics.scanner.origin[1] 
             z0 = param3_or + Lidar.optics.scanner.origin[2] 
-        #Storing coordinates
+        
+        # Storing coordinates
         X0.append(x0)
         Y0.append(y0)
         Z0.append(z0)
 
         for trial in range(0,100):
             
-        # Create white noise with stdv selected by user:
+            # Create white noise with stdv selected by user:
             n=10000 # Number of cases to combine
             del_param1 = np.array(np.random.normal(0,stdv_param1,n)) # why a normal distribution??Does it have sense, can be completely random?
             del_param2 = np.array(np.random.normal(0,stdv_param2,n))
             del_param3 = np.array(np.random.normal(0,stdv_param3,n))
             
-    #        Adding noise to the theoretical position:
+            # Adding noise to the theoretical position:
             noisy_param1 = param1_or + del_param1
             noisy_param2 = param2_or + del_param2 
             noisy_param3 = param3_or + del_param3 
             
-#            Cartesian coordinates of the noisy points when VAD, else coordinate system remains cartesian:            
+            # Cartesian coordinates of the noisy points when VAD, else coordinate system remains cartesian:            
             if Qlunc_yaml_inputs['Components']['Scanner']['Type']=='VAD':
                 x = noisy_param1*np.cos(np.deg2rad(noisy_param3))*np.sin(np.deg2rad(noisy_param2))
                 y = noisy_param1*np.sin(np.deg2rad(noisy_param3))*np.sin(np.deg2rad(noisy_param2)) 
@@ -119,7 +126,6 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         SimMean_DISTANCE.append(np.mean(DISTANCE))        # Mean error distance of each point in the pattern  
         StdvMean_DISTANCE.append(np.mean(stdv_DISTANCE)) # Mean error distance stdv for each point in the pattern
         
-        # Creating a noise to add to the theoretical position to simulate the error in measurements
         # Storing coordinates:
         X.append(xfinal)
         Y.append(yfinal)
@@ -138,12 +144,11 @@ def UQ_OpticalCirculator(Lidar,Atmospheric_Scenario,cts):
     Final_Output_UQ_Optical_Circulator={'Optical_Circulator_Uncertainty':Optical_Circulator_Uncertainty}
     return Final_Output_UQ_Optical_Circulator
 
-#%% Sum of uncertainty components in optics module: 
+#%% Sum of uncertainties in `optics` module: 
 def sum_unc_optics(Lidar,Atmospheric_Scenario,cts):
     List_Unc_optics = []
     try: # ecah try/except evaluates wether the component is included in the module, therefore in the calculations
-        Scanner_Uncertainty=Lidar.optics.scanner.Uncertainty(Lidar,Atmospheric_Scenario,cts)
-        
+        Scanner_Uncertainty=Lidar.optics.scanner.Uncertainty(Lidar,Atmospheric_Scenario,cts)        
     except:
         Scanner_Uncertainty=None
         print('No scanner in calculations!')
@@ -154,8 +159,7 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts):
         print('No telescope in calculations!')
     try:
         Optical_circulator_Uncertainty = Lidar.optics.optical_circulator.Uncertainty(Lidar,Atmospheric_Scenario,cts)
-        List_Unc_optics.append(Optical_circulator_Uncertainty['Optical_Circulator_Uncertainty'])
-        
+        List_Unc_optics.append(Optical_circulator_Uncertainty['Optical_Circulator_Uncertainty'])       
     except:
         Optical_circulator_Uncertainty = None
         print('No optical circulator in calculations!')

@@ -4,7 +4,12 @@ Created on Tue Aug  4 13:55:41 2020
 @author: fcosta
 
 Francisco Costa García
-University of Stuttgart(c) 
+University of Stuttgart(c)
+
+Here we calculate the uncertainty expansion from uncertainties obtained for
+each lidar module following GUM (Guide to the expression of Uncertainties in 
+Measurement) model. 
+ 
 """
 from Qlunc_ImportModules import *
 import Qlunc_Help_standAlone as SA

@@ -115,7 +115,7 @@ class flags():
                  self.flag_plot_measuring_points_pattern = flag_plot_measuring_points_pattern
                  self.flag_plot_photodetector_noise      = flag_plot_photodetector_noise
     
-#%% 
+#%% LIDAR COMPONENTS
   
 #Component Classes:
 class photodetector():
@@ -196,7 +196,9 @@ class optical_circulator():
                  self.Uncertainty          = unc_func
                  print ('Created new optical circulator: {}'.format(self.Optical_CirculatorID))
         
-#%%modules classes
+#%% LIDAR MODULES
+
+# Modules classes
 
 class photonics():
     def __init__(self,name,photodetector,optical_amplifier,unc_func):
@@ -223,7 +225,7 @@ class optics():
                  self.Uncertainty        = unc_func 
                  print('Created new optic module: {}'.format(self.OpticsModuleID))
         
-#atmosphere object:
+#%% Atmosphere object:
 class atmosphere():
     def __init__(self,name,temperature):
                  self.AtmosphereID = name
