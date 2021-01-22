@@ -12,10 +12,11 @@ University of Stuttgart(c)
 Creating components, modules and lidar classes. 
 The command class is used to create digital "objects", representing the lidar 
 components, and store necessary information to calculate uncertainties coming 
-from hardware and data processing methods. unc_func contains the functions 
-calculating the uncertainty for each component, module and/or lidar system,
-following. It 
-is defined as a python module, so users can define their own uncertainty 
+from hardware and data processing methods. 
+
+`unc_func` contains the functions calculating the uncertainty for each
+component, module and/or lidar system.
+It is defined as a python module, so users can define their own uncertainty 
 functions and implement them easily just pointing towards a different python 
 module. 
 
@@ -85,7 +86,7 @@ So we have created a lidar digital twin with its first module, the `power`
 module, which in turn contains a component, the uninterruptible power supply.
 
 Qlunc uses GUM (Guide to the expression of Uncertainties in Measurement) 
-suggestions to calculate uncertainty expansion. 
+suggestions to calculate uncertainty expansion.  
   
 """
 #%% Importing packages:
