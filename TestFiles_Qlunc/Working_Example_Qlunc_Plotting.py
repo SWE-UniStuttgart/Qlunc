@@ -26,7 +26,7 @@ plot_param={'axes_label_fontsize' : 25,
 
 ##############    Ploting scanner measuring points pattern #######################
 if flags.flag_plot_measuring_points_pattern:
-    Scanner_Data1 = Lidar.optics.scanner.Uncertainty(Lidar,Atmospheric_Scenario,cts) # Calling Scanner uncertainty to plot the graphics
+    Scanner_Data1 = Lidar.optics.scanner.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs) # Calling Scanner uncertainty to plot the graphics
 
     
     # Creating the figure and the axes

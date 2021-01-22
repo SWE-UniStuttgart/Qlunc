@@ -36,7 +36,7 @@ with open (r'../TestFiles_Qlunc/Working_example_yaml_inputs_file.yml') as file: 
         for k, v in doc.items():           
             Qlunc_yaml_inputs.setdefault(k,v)  # save a dictionary with the data coming from yaml file 
 
-exec(open(Qlunc_yaml_inputs['Main_directory']+'/Qlunc_Classes.py').read())   # Execute Qlunc_Classes.py (creating classes for lidar 'objects')
+exec(open(Qlunc_yaml_inputs['Main_directory']+'/WorkingExample_Qlunc_Classes.py').read())   # Execute Qlunc_Classes.py (creating classes for lidar 'objects')
 #%%%%%%%%%%%%%%%%% INPUTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 ## FLAG inputs: ###############################################################
@@ -54,6 +54,7 @@ flags.flag_plot_photodetector_noise      = Qlunc_yaml_inputs['Flags']['Photodete
 # Scanner:
 
 Scanner           = scanner(name            = Qlunc_yaml_inputs['Components']['Scanner']['Name'],           # Introduce your scanner name.
+                            scanner_type    = Qlunc_yaml_inputs['Components']['Scanner']['Type'],
                             origin          = Qlunc_yaml_inputs['Components']['Scanner']['Origin'],         # Origin (coordinates of the lidar deployment).
                             sample_rate     = Qlunc_yaml_inputs['Components']['Scanner']['Sample rate'],    # for now introduce it in [degrees].
                            
@@ -63,10 +64,15 @@ Scanner           = scanner(name            = Qlunc_yaml_inputs['Components']['S
                             azimuth         = np.array(np.arange(Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][0],
                                                                 Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][1],
                                                                 Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][2])),#np.arange(0,360,15), # Azimuth angle in [degrees].
-                           
+                            x               = np.array(Qlunc_yaml_inputs['Components']['Scanner']['x']),
+                            y               = np.array(Qlunc_yaml_inputs['Components']['Scanner']['y']),
+                            z               = np.array(Qlunc_yaml_inputs['Components']['Scanner']['z']),
                             stdv_focus_dist = Qlunc_yaml_inputs['Components']['Scanner']['stdv focus distance'],                 # Focus distance standard deviation in [meters].
                             stdv_cone_angle = Qlunc_yaml_inputs['Components']['Scanner']['stdv Cone angle'],                 # Cone angle standard deviation in [degrees].
                             stdv_azimuth    = Qlunc_yaml_inputs['Components']['Scanner']['stdv Azimuth'],                 # Azimuth angle standard deviation in [degrees].
+                            stdv_x          = Qlunc_yaml_inputs['Components']['Scanner']['stdv x'],
+                            stdv_y          = Qlunc_yaml_inputs['Components']['Scanner']['stdv y'],
+                            stdv_z          = Qlunc_yaml_inputs['Components']['Scanner']['stdv z'],
                             unc_func        = eval(Qlunc_yaml_inputs['Components']['Scanner']['Uncertainty function']) )    # here you put the function describing your scanner uncertainty. 
 
 #Optical Circulator:
@@ -116,7 +122,6 @@ Photonics_Module = photonics(name              = Qlunc_yaml_inputs['Modules']['P
 ## Lidar general inputs: ######################################################
 Lidar_inputs     = lidar_gral_inp(name        = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Name'],      # Introduce the name of your lidar data folder.
                                   wave        = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Wavelength'],                    # In [m]. Lidar wavelength.
-                                  sample_rate = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Sample rate'],                          # In [Hz]
                                   yaw_error   = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Yaw error'],                          # In [°]. Degrees of rotation around z axis because of inclinometer errors
                                   pitch_error = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Pitch error'],                          # In [°]. Degrees of rotation around y axis
                                   roll_error  = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Roll error'])                          # In [°]. Degrees of rotation around z axis.
