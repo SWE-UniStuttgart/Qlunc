@@ -110,7 +110,7 @@ Lidar:
 
 Atmospheric_inputs:
   
-  TimeSeries    : False # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere characteristics (T, H, rain and fog)   
+  TimeSeries    : True # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere characteristics (T, H, rain and fog)   
   Atmos_TS_FILE : 'AtmosphericScenarios.csv'  
   Temperature: [300] # [K] Have to put the same number of elements for temperature and humidity. Always in paired values   
   Humidity: [12]     # [%] 
