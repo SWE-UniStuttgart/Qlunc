@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 Created on Mon May 18 00:03:43 2020
-
 @author: fcosta
+
+Francisco Costa García
+University of Stuttgart(c) 
 """
 
 from Qlunc_ImportModules import *

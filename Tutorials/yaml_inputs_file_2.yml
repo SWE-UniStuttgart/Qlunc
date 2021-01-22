@@ -7,38 +7,48 @@
 Main_directory: # Directory where Qlunc_Classes.py is
   '../TestFiles_Qlunc'
 
-# Lidar values. Modules and components parameters: 
+# Lidar values. Modules and components parameters: ------------------------------------------------------
 
 Components:
 #Optics: 
   Scanner:
     
-    Name: Scanner_Yaml2 # Provide an ID to your lidar:    
+    Name: Scanner_Yaml # Provide an ID to your lidar:    
     Origin: [0,0,0]  # Lidar position in meters: [x,y,z]    
-    Sample rate: 0     # Lidar sample rate. In meters for now (have to know the medium wind speed to put in Hz and do correct calculations)
+    Sample rate: 0   # Lidar sample rate. In meters for now (have to know the medium wind speed to put in Hz and do correct calculations?)
+    Type: VAD          # Type of the scanning head: VAD or SCAN (Scanning Lidar)
  
-    # Pattern:
-    Focus distance: [55]   # [m]
-    Cone angle: [20]        # [deg]
+    # VAD Pattern:
+
+    Focus distance: [65]   # [m]
+    Cone angle: [20]       # [deg]
     Azimuth: [0,360,8]    # [deg]
-     
-    # Systematic error in the scanner pointing accuracy:
+    
     stdv focus distance: 1  # [m]
-    stdv Cone angle: 0.6    # [deg]
-    stdv Azimuth: 0.8       # [deg]
+    stdv Cone angle: 2.3      # [deg]
+    stdv Azimuth: 0.1         # [deg]    
+    
+    # Scanning Lidar Pattern:
+    x: [20,20,20]        # [m]
+    y: [0,0,0]      # [m]
+    z: [20,0,-20]      # [m]
+    
+    stdv x: 0.3               # [m]
+    stdv y: 0             # [m]
+    stdv z: 0             # [m]
     
     # Uncertainty function:
     Uncertainty function: uopc.UQ_Scanner
     
   Optical Circulator:
-    Name: OC_Yaml2
+    Name: OC_Yaml
     Insertion loss: 2.1 # [dB]
     Uncertainty function: uopc.UQ_OpticalCirculator
   
 # Photonics  
   Optical Amplifier: 
   
-    Name: OA_Yaml2
+    Name: OA_Yaml
     
     # Noise figure in dB. Could be a well known value or a table.
     # If table (FigureNoise Vs Wavelength) is provided Qlunc 
@@ -56,7 +66,7 @@ Components:
 
   
   Photodetector:
-    Name: Photodetector_YAML2
+    Name: Photodetector_YAML
     Photodetector BandWidth: 380.e+6    # [Hz]            
     Load resistor: 50                   # [Ohm]
     Photodetector efficiency: .85       # Photodetector efficiency [-]
@@ -69,9 +79,8 @@ Components:
  
 # Lidar general inputs 
   Lidar general inputs:
-    Name: Lidar_gral_inputs_Yaml2
+    Name: Lidar_gral_inputs_Yaml
     Wavelength: 1550.e-9    # [m]
-    Sample rate: 0          # [Hz]
     Yaw error: 0            # [deg]
     Pitch error: 0          # [deg]
     Roll error: 0           # [deg]
@@ -79,8 +88,8 @@ Components:
 # Modules:
 Modules:
   Optics Module:
-    Name: Optics_module_Yaml2
-    Scanner: Scanner2
+    Name: Optics_module_Yaml
+    Scanner: Scanner
     Optical circulator: Optical_circulator # Have to be the same name as the instance
     Laser: None
     Uncertainty function: uopc.sum_unc_optics
@@ -92,11 +101,11 @@ Modules:
 ---  
 # Lidar:
 Lidar:
-  Name: Caixa2
+  Name: Caixa1
   Photonics module: Photonics_Module       # Have to be the same name as the instance
-  Optics module: Optics_Module2             # Have to be the same name as the instance
+  Optics module: Optics_Module             # Have to be the same name as the instance
   Power module: None                       # Have to be the same name as the instance
-  Lidar inputs: Lidar_inputs_2               # Have to be the same name as the instance
+  Lidar inputs: Lidar_inputs               # Have to be the same name as the instance
   Uncertainty function: ulc.sum_unc_lidar
 
 ---
@@ -118,5 +127,5 @@ Atmospheric_inputs:
 Flags:
   Pointing accuracy uncertainty: False
   Scanning Pattern: True
-  Photodetector noise: True
+  Photodetector noise: False
 

@@ -13,9 +13,9 @@ plot_param={'axes_label_fontsize' : 25,
             'title_fontsize'      : 29,
             'suptitle_fontsize'   : 23,
             'legend_fontsize'     : 15,
-            'xlim'                : [-25,25],
-            'ylim'                : [-25,25],
-            'zlim'                : [0,200],
+            'xlim'                : [-50,50],
+            'ylim'                : [-50,50],
+            'zlim'                : [0,150],
             'markersize'          : 5,
             'markersize_lidar'    : 9,
             'marker'              : '.',
@@ -23,65 +23,6 @@ plot_param={'axes_label_fontsize' : 25,
             'tick_labelrotation'  : 45,
             'Qlunc_version'       : 'Qlunc Version - 0.9'
             }
-
-    
-#########    # Scanner pointing accuracy uncertainty:#################
-    
-#    Calculating inputs for plotting:
-#    Scanner_Data1 = Lidar.optics.scanner.Uncertainty(Lidar,Atmospheric_Scenario,cts)
-#    
-    # Creating the figure and the axes
-#    fig,(axs1,axs2,axs3) = plt.subplots(1,3,sharey=False) 
-#    
-#    # fitting the results to a straight line
-#    z1 = np.polyfit(Lidar.optics.scanner.focus_dist, Scanner_Data1['Simu_Mean_Distance'], 1) # With '1' is a straight line y=ax+b
-#    f1 = np.poly1d(z1)
-#    # calculate new x's and y's
-#    x_new1 = np.linspace(Lidar.optics.scanner.focus_dist[0], Lidar.optics.scanner.focus_dist[-1], 50)
-#    y_new1 = f1(x_new1)
-#
-#    
-#    z2 = np.polyfit(Scanner2.cone_angle, Scanner_Data2['Simu_Mean_Distance'], 1) # With '1' is a straight line y=ax+b
-#    f2 = np.poly1d(z2)
-#    # calculate new x's and y's
-#    x_new2 = np.linspace(Scanner2.cone_angle[0], Scanner2.cone_angle[-1], 50)
-#    y_new2 = f2(x_new2)
-#
-#   
-#    z3 = np.polyfit(Scanner3.azimuth, Scanner_Data3['Simu_Mean_Distance'], 1) # With '1' is a straight line y=ax+b
-#    f3 = np.poly1d(z3)
-#    # calculate new x's and y's
-#    x_new3 = np.linspace(Scanner3.azimuth[0], Scanner3.azimuth[-1], 50)
-#    y_new3 = f3(x_new3)
-#    
-#     # Plotting:
-#    axs1.plot(x_new1,y_new1,'r-',label='Fitted curve1')
-#    axs1.errorbar(Lidar.optics.scanner.focus_dist,Scanner_Data1['Simu_Mean_Distance'],yerr=Scanner_Data1['STDV_Distance'],label='Data1')
-#    axs2.plot(x_new2,y_new2,'r-',label='Fitted curve2')
-#    axs2.errorbar(Scanner2.cone_angle,Scanner_Data2['Simu_Mean_Distance'],yerr=Scanner_Data2['STDV_Distance'],label='Data2')
-#    axs3.plot(x_new3,y_new3,'r-',label='Fitted curve3')
-#    axs3.errorbar(Scanner3.azimuth,Scanner_Data3['Simu_Mean_Distance'],yerr=Scanner_Data3['STDV_Distance'],label='Data3')
-#    
-#    #Title and axis labels for the different plots
-#    fig.suptitle('Mean Distance error and stdv of the Distance error [m]',fontsize=plot_param['suptitle_fontsize'])
-#    axs1.set_title('Variation with f.distance',fontsize=plot_param['title_fontsize'])
-#    axs1.set(xlabel='Focus Distance [m]',ylabel='Distance error [m]')
-#    axs1.yaxis.get_label().set_fontsize(plot_param['axes_label_fontsize'])
-#    axs1.xaxis.get_label().set_fontsize(plot_param['axes_label_fontsize'])
-#    axs2.set_title(r'Variation with $\cone_angle$',fontsize=plot_param['title_fontsize'])
-#    axs2.set(xlabel=r'$\cone_angle$'+' [°]')
-#    axs2.xaxis.get_label().set_fontsize(plot_param['axes_label_fontsize'])
-#    axs3.set_title(r'Variation with $\azimuth$',fontsize=plot_param['title_fontsize'])
-#    axs3.set(xlabel=r'$\azimuth$'+' [°]')
-#    axs3.xaxis.get_label().set_fontsize(plot_param['axes_label_fontsize'])
-#    axs1.set_ylim(0,10)
-#    axs2.set_ylim(0,10)
-#    axs3.set_ylim(0,10)
-#    # text box with the fitted polynomial on the plot
-#    axs1.text(np.min(x_new1),np.max(y_new1),'$y$={0:.3g}$x$+{1:.3g}'.format(z1[0],z1[1]),fontsize=plot_param['textbox_fontsize'])
-#    axs2.text(np.min(x_new2),np.max(y_new2),'$y$={0:.3g}$x$+{1:.3g}'.format(z2[0],z2[1]),fontsize=plot_param['textbox_fontsize'])
-#    axs3.text(np.min(x_new3),np.max(y_new3),'$y$={0:.3g}$x$+{1:.3g}'.format(z3[0],z3[1]),fontsize=plot_param['textbox_fontsize'])
-#    
 
 ##############    Ploting scanner measuring points pattern #######################
 if flags.flag_plot_measuring_points_pattern:

@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Oct 20 21:18:05 2020
-
 @author: fcosta
+
+Francisco Costa García
+University of Stuttgart(c) 
+
 """
 
 #%% Plotting:

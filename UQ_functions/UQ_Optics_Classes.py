@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat May 16 14:58:24 2020
-
 @author: fcosta
+
+Francisco Costa García
+University of Stuttgart(c) 
 """
 
 
