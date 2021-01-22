@@ -3,25 +3,34 @@
 # DIRECTORIES:------------------------------------------------------
 
 Main_directory: # Directory where Qlunc_Classes.py is
-  '../Main'
+  './'
 
 Components:
 #Optics: 
   Scanner:
     
     Name: Scanner_Yaml # Provide an ID to your lidar:    
-    Origin: [0,0,0]  # Lidar position in meters: [x,y,z]    
-    Sample rate: 1.5     # Lidar sample rate. In meters for now (have to know the medium wind speed to put in Hz and do correct calculations)
+    Origin: [0,0,00]  # Lidar position in meters: [x,y,z]    
+    Sample rate: 0   # Lidar sample rate. In meters. Use 0 for now.
+    Type: VAD          # Type of the scanning head: VAD or SCAN (Scanning Lidar)
  
-    # Pattern:
-    Focus distance: [70]   # [m]
-    Cone angle: [10]        # [deg]
+    # VAD Pattern:
+    Focus distance: [100]   # [m]
+    Cone angle: [15]       # [deg]
     Azimuth: [0,360,15]    # [deg]
-     
-    # Systematic error in the scanner pointing accuracy:
+    
     stdv focus distance: 1  # [m]
-    stdv Cone angle: 0.6    # [deg]
-    stdv Azimuth: 0.8       # [deg]
+    stdv Cone angle: 2.3      # [deg]
+    stdv Azimuth: 0.1         # [deg]    
+    
+    # Scanning Lidar Pattern:
+    x: [20,20,20]        # [m]
+    y: [0,0,0]      # [m]
+    z: [20,0,-20]      # [m]
+    
+    stdv x: 0.3               # [m]
+    stdv y: 0             # [m]
+    stdv z: 0             # [m]
     
     # Uncertainty function:
     Uncertainty function: uopc.UQ_Scanner
@@ -52,7 +61,7 @@ Components:
 
   
   Photodetector:
-    Name: Photodetector_YAML
+    Name: Photodetector_Yaml
     Photodetector BandWidth: 380.e+6    # [Hz]            
     Load resistor: 50                   # [Ohm]
     Photodetector efficiency: .85       # Photodetector efficiency [-]
@@ -67,7 +76,6 @@ Components:
   Lidar general inputs:
     Name: Lidar_gral_inputs_Yaml
     Wavelength: 1550.e-9    # [m]
-    Sample rate: 1          # [Hz]
     Yaw error: 1            # [deg]
     Pitch error: 2          # [deg]
     Roll error: 2           # [deg]
@@ -112,7 +120,7 @@ Atmospheric_inputs:
 
 # Plotting:------------------------------------------------------------
 Flags:
-  Pointing accuracy uncertainty: False
+  Pointing accuracy uncertainty: False # Not implemented yet
   Scanning Pattern: True
-  Photodetector noise: False
+  Photodetector noise: True
 
