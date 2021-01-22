@@ -45,7 +45,7 @@ This is the core of Qlunc. Here the user creates the classes describing the comp
 ###  TestFile_Qlunc:
  - A working example is provided to show how the process looks like. In this test case a lidar is builded up with its modules and components, puting all together to set up a lidar device. User can find more information on how to run this test file in the readme.md file dropped in this folder.
 ### Tutorials:
-- Containing 2 [JupyterNotebook-based tutorial](https://github.com/PacoCosta/Qlunc/tree/Qlunc-V0.9/Tutorials), `Tutorial1.ipynb` and `Tutorial1.ipynb` with their corresponding yaml files. 
+- Containing 2 [JupyterNotebook-based tutorials](https://github.com/PacoCosta/Qlunc/tree/Qlunc-V0.9/Tutorials); `Tutorial1.ipynb` and `Tutorial1.ipynb` with their corresponding yaml files. 
 ## Requirements
  - [Anaconda Navigator](https://www.anaconda.com/products/individual) has been installed. It includes, among others, Python3.7 and spyder IDE software features, ready to be used. 
 
