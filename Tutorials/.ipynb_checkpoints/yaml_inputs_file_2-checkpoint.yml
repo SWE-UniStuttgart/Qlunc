@@ -13,7 +13,7 @@ Components:
 #Optics: 
   Scanner:
     
-    Name: Scanner_Yaml2 # Provide an ID to your lidar:    
+    Name: Scanner_Yaml # Provide an ID to your lidar:    
     Origin: [0,0,0]  # Lidar position in meters: [x,y,z]    
     Sample rate: 0   # Lidar sample rate. In meters for now (have to know the medium wind speed to put in Hz and do correct calculations?)
     Type: VAD          # Type of the scanning head: VAD or SCAN (Scanning Lidar)
@@ -88,22 +88,22 @@ Components:
 # Modules:
 Modules:
   Optics Module:
-    Name: Optics_module_Yaml2
+    Name: Optics_module_Yaml
     Scanner: Scanner
     Optical circulator: Optical_circulator # Have to be the same name as the instance
     Laser: None
     Uncertainty function: uopc.sum_unc_optics
   Photonics Module:
-    Name: Photonics_module_Yaml2
+    Name: Photonics_module_Yaml
     Photodetector: Photodetector           # Have to be the same name as the instance
     Optical amplifier: Optical_Amplifier   # Have to be the same name as the instance
     Uncertainty function: uphc.sum_unc_photonics
 ---  
 # Lidar:
 Lidar:
-  Name: Caixa2
+  Name: Caixa1
   Photonics module: Photonics_Module       # Have to be the same name as the instance
-  Optics module: Optics_Module2            # Have to be the same name as the instance
+  Optics module: Optics_Module             # Have to be the same name as the instance
   Power module: None                       # Have to be the same name as the instance
   Lidar inputs: Lidar_inputs               # Have to be the same name as the instance
   Uncertainty function: ulc.sum_unc_lidar
