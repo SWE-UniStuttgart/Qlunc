@@ -83,7 +83,7 @@ Components:
     Wavelength: 1550.e-9    # [m]
     Yaw error: 15            # [deg]
     Pitch error: 25          # [deg]
-    Roll error: 0           # [deg]
+    Roll error: 20           # [deg]
 ---
 # Modules:
 Modules:
