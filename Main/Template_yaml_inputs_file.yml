@@ -1,41 +1,58 @@
-# Template for Qlunc (Quantification lidar uncertainties) inputs. 
-# Do not change or remove neither the definition names nor vary the structure of the file!! Just change parameter values. 
+# Francisco Costa García
+# University of Stuttgart(c) 
+
+# Inputs file for Qlunc (Quantification lidar uncertainties). 
+# Do not change definition names or vary the structure of the file!! Just change parameter values. 
+# Users can find a yaml format template in the repository '/Main/Template_yaml_inputs_file.yml'
 
 
 # DIRECTORIES:------------------------------------------------------
 
 Main_directory: # Directory where Qlunc_Classes.py is
-  '../'
+  '.'
 
 # Lidar values. Modules and components parameters: ------------------------------------------------------
 
 Components:
 #Optics: 
-  Scanner:   
-    Name:             # Provide an ID to your lidar:    
-    Origin: [,,]      # Lidar position in meters: [x,y,z]    
-    Sample rate:      # Lidar sample rate. In meters for now (have to know the medium wind speed to put in Hz and do correct calculations?)
+  Scanner:
+    
+    Name:           # Provide an ID to your lidar:    
+    Origin: [,,]    # Lidar position in meters: [x,y,z]    
+    Sample rate:    # Lidar sample rate. In meters. Use 0 for now.
+    Type:           # Type of the scanning head: VAD or SCAN (Scanning Lidar)
  
-    # Pattern:
-    Focus distance: []    # [m]
-    Cone angle: []        # [deg]
-    Azimuth: []           # [deg]
-     
-    # Systematic error in the scanner pointing accuracy:
+    # VAD Pattern:
+
+    Focus distance: []     # [m]
+    Cone angle: []         # [deg]
+    Azimuth: [,,]          # [deg]
+    
     stdv focus distance:   # [m]
     stdv Cone angle:       # [deg]
-    stdv Azimuth:          # [deg]
+    stdv Azimuth:          # [deg]    
+    
+    # Scanning Lidar Pattern:
+    x: [,,]      # [m]
+    y: [,,]      # [m]
+    z: [,,]      # [m]
+    
+    stdv x:      # [m]
+    stdv y:      # [m]
+    stdv z:      # [m]
     
     # Uncertainty function:
-    Uncertainty function: 
+    Uncertainty function:    # Python module! (You develop a function and save it as a python module)
     
   Optical Circulator:
-    Name: 
-    Insertion loss:             # [dB]
-    Uncertainty function:       # Python module! (You develop a function and save it as a python module)
+    Name:                    # Provide an ID to your optical circulator
+    Insertion loss:          # [dB]
+    Uncertainty function:    # Python module! (You develop a function and save it as a python module)
+  
 # Photonics  
-  Optical Amplifier:   
-    Name: 
+  Optical Amplifier: 
+  
+    Name:                    # Provide an ID to your optical amplifier
     
     # Noise figure in dB. Could be a well known value or a table.
     # If table (FigureNoise Vs Wavelength) is provided Qlunc 
@@ -43,76 +60,73 @@ Components:
     # with the lidar nominal wavelength. Interpolation param. could 
     # be tunned in Qlunc_Photonics_Classes --> UQ_Optical_amplifier
     
-    Optical amplifier noise figure:     # Either a waell-known value or the directory where the file is.
-    
-    # Optical amplifier gain in dB
-    Optical amplifier gain: 
+    Optical amplifier noise figure:    # Either a well-known value or the directory where the file is.
+    Optical amplifier gain:            # Optical amplifier gain in dB
     
     # Uncertainty function quantifying the optical amplifier uncertainty
-    Uncertainty function:        # Python module! (You develop a function and save it as a python module)
+    Uncertainty function:  # Python module! (You develop a function and save it as a python module)
 
   
   Photodetector:
-    Name: 
-    Photodetector BandWidth:     # [Hz]            
-    Load resistor:               # [Ohm]
-    Photodetector efficiency:    # Photodetector efficiency [-]
-    Dark current:                # In [A]. Dark current in the photodetector.
-    Photodetector signalP:       # [W]
-    Power interval: [,,]         # [W]
-    Gain TIA:                    # [dB]
-    V Noise TIA:                 # [V]
-    Uncertainty function:        # Python module! (You develop a function and save it as a python module)
+    Name:                       # Provide an ID to your photodetector
+    Photodetector BandWidth:    # [Hz]            
+    Load resistor:              # [Ohm]
+    Photodetector efficiency:   # Photodetector efficiency [-]
+    Dark current:               # In [A]. Dark current in the photodetector.
+    Photodetector signalP:      # [W]
+    Power interval: [,,]        # [W]
+    Gain TIA:                   # [dB]
+    V Noise TIA:                # [V]
+    Uncertainty function:       # Python module! (You develop a function and save it as a python module)
  
 # Lidar general inputs 
   Lidar general inputs:
-    Name: 
-    Wavelength:            # [m]
-    Sample rate:           # [Hz]
-    Yaw error:             # [deg]
-    Pitch error:           # [deg]
-    Roll error:            # [deg]
+    Name:           # Provide an ID to lidar gral inputs data set
+    Wavelength:     # [m]
+    Yaw error:      # [deg]
+    Pitch error:    # [deg]
+    Roll error:     # [deg]
 ---
 # Modules:
 Modules:
   Optics Module:
-    Name: 
-    Scanner: 
-    Optical circulator:       # Have to be the same name as the instance
-    Laser: 
-    Uncertainty function:     # Python module! (You develop a function and save it as a python module)
+    Name:                  # Provide an ID to your optics module
+    Scanner:               # Have to be the same name as the instance
+    Optical circulator:    # Have to be the same name as the instance
+    Laser:                 # Have to be the same name as the instance
+    Uncertainty function:  # Python module! (You develop a function and save it as a python module)
   Photonics Module:
-    Name: 
-    Photodetector:            # Have to be the same name as the instance
-    Optical amplifier:        # Have to be the same name as the instance
-    Uncertainty function: 
----  
+    Name:                 # Provide an ID to your photonics module
+    Photodetector:        # Have to be the same name as the instance
+    Optical amplifier:    # Have to be the same name as the instance
+    Uncertainty function: # Python module! (You develop a function and save it as a python module)
 # Lidar:
 Lidar:
-  Name: 
-  Photonics module:           # Have to be the same name as the instance
-  Optics module:              # Have to be the same name as the instance
-  Power module:               # Have to be the same name as the instance
-  Lidar inputs:               # Have to be the same name as the instance
-  Uncertainty function: 
+  Name:                   # Provide an ID to your lidar device
+  Photonics module:       # Have to be the same name as the instance
+  Optics module:          # Have to be the same name as the instance
+  Power module:           # Have to be the same name as the instance
+  Lidar inputs:           # Have to be the same name as the instance
+  Uncertainty function:   # Python module! (You develop a function and save it as a python module)
 
 ---
 
 # ATMOSPHERIC INPUTS:-----------------------------------------------
 # Atmospheric_inputs to create the atmospheric scenarios
 
-Atmospheric_inputs:  
+Atmospheric_inputs:
+  
   TimeSeries    :     # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere characteristics (T, H, rain and fog)   
   Atmos_TS_FILE : ''  # (... .csv)
   Temperature: []     # [K] Have to put the same number of elements for temperature and humidity. Always in paired values   
   Humidity: []        # [%] 
-  Rain: true          # for rain and fog intensity intervals might be introduced [none,low, medium, high]
+  Rain: false         # for rain and fog intensity intervals might be introduced [none,low, medium, high]
   Fog: false
 ---
 
 # Plotting:------------------------------------------------------------
-Flags:
-  Pointing accuracy uncertainty: False
-  Scanning Pattern: False
-  Photodetector noise: False
+Flags: # True if want to plot it
+  Pointing accuracy uncertainty: 
+  Scanning Pattern: 
+  Photodetector noise: 
 

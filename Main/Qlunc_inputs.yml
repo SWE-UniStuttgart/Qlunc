@@ -60,13 +60,13 @@ Components:
     # with the lidar nominal wavelength. Interpolation param. could 
     # be tunned in Qlunc_Photonics_Classes --> UQ_Optical_amplifier
     
-    Optical amplifier noise figure: ../metadata/NoiseFigure.csv 
+    Optical amplifier noise figure: ../metadata/NoiseFigure.csv  # Either a well-known value or the directory where the file is.
     
     # Optical amplifier gain in dB
     Optical amplifier gain: 30
     
     # Uncertainty function quantifying the optical amplifier uncertainty
-    Uncertainty function: uphc.UQ_Optical_amplifier
+    Uncertainty function: uphc.UQ_Optical_amplifier # Python module! (You develop a function and save it as a python module)
 
   
   Photodetector:
@@ -79,7 +79,7 @@ Components:
     Power interval: [0,1000,.001]       # [W]
     Gain TIA: 5.e+3                     # [dB]
     V Noise TIA: 160.e-6                # [V]
-    Uncertainty function: uphc.UQ_Photodetector
+    Uncertainty function: uphc.UQ_Photodetector # Python module! (You develop a function and save it as a python module)
  
 # Lidar general inputs 
   Lidar general inputs:
@@ -96,12 +96,12 @@ Modules:
     Scanner: Scanner
     Optical circulator: Optical_circulator # Have to be the same name as the instance
     Laser: None
-    Uncertainty function: uopc.sum_unc_optics
+    Uncertainty function: uopc.sum_unc_optics # Python module! (You develop a function and save it as a python module)
   Photonics Module:
     Name: Photonics_module_Yaml
     Photodetector: Photodetector           # Have to be the same name as the instance
     Optical amplifier: Optical_Amplifier   # Have to be the same name as the instance
-    Uncertainty function: uphc.sum_unc_photonics
+    Uncertainty function: uphc.sum_unc_photonics # Python module! (You develop a function and save it as a python module)
 ---  
 # Lidar:
 Lidar:
@@ -110,7 +110,7 @@ Lidar:
   Optics module: Optics_Module             # Have to be the same name as the instance
   Power module: None                       # Have to be the same name as the instance
   Lidar inputs: Lidar_inputs               # Have to be the same name as the instance
-  Uncertainty function: ulc.sum_unc_lidar
+  Uncertainty function: ulc.sum_unc_lidar  # Python module! (You develop a function and save it as a python module)
 
 ---
 
@@ -120,7 +120,7 @@ Lidar:
 Atmospheric_inputs:
   
   TimeSeries    : False # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere characteristics (T, H, rain and fog)   
-  Atmos_TS_FILE : 'AtmosphericScenarios.csv'  
+  Atmos_TS_FILE : 'AtmosphericScenarios.csv'  # (... .csv)
   Temperature: [300] # [K] Have to put the same number of elements for temperature and humidity. Always in paired values   
   Humidity: [12]     # [%] 
   Rain: true # for rain and fog intensity intervals might be introduced [none,low, medium, high]
