@@ -81,8 +81,8 @@ Components:
   Lidar general inputs:
     Name: Lidar_gral_inputs_Yaml2
     Wavelength: 1550.e-9    # [m]
-    Yaw error: 0            # [deg]
-    Pitch error: 0          # [deg]
+    Yaw error: 3            # [deg]
+    Pitch error: 2          # [deg]
     Roll error: 0           # [deg]
 ---
 # Modules:
