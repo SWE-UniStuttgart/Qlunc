@@ -145,7 +145,7 @@ def UQ_OpticalCirculator(Lidar,Atmospheric_Scenario,cts):
     return Final_Output_UQ_Optical_Circulator
 
 #%% Sum of uncertainties in `optics` module: 
-def sum_unc_optics(Lidar,Atmospheric_Scenario,cts):
+def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     List_Unc_optics = []
     try: # ecah try/except evaluates wether the component is included in the module, therefore in the calculations
         Scanner_Uncertainty=Lidar.optics.scanner.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)        
