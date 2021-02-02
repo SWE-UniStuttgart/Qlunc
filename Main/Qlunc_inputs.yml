@@ -107,7 +107,7 @@ Modules:
 Lidar:
   Name: Caixa1
   Photonics module: Photonics_Module       # Have to be the same name as the instance
-  Optics module: Optics_Module             # Have to be the same name as the instance
+  Optics module: None             # Have to be the same name as the instance
   Power module: None                       # Have to be the same name as the instance
   Lidar inputs: Lidar_inputs               # Have to be the same name as the instance
   Uncertainty function: ulc.sum_unc_lidar  # Python module! (You develop a function and save it as a python module)
