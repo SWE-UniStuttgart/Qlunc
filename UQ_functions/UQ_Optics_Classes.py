@@ -18,6 +18,7 @@ module.
 
 from Qlunc_ImportModules import *
 import Qlunc_Help_standAlone as SA
+import pdb
 
 #%% TELESCOPE:
 # NOT IMPLEMENTED
@@ -69,7 +70,6 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         Mean_DISTANCE=[]
         DISTANCE=[]        
         stdv_DISTANCE=[]  
-        sample_rate_count+=Lidar.optics.scanner.sample_rate
         
         # Calculating the theoretical point coordinate transformation (conversion from spherical to cartesians if 'VAD' is chosen):
         if Qlunc_yaml_inputs['Components']['Scanner']['Type']=='VAD':
@@ -80,7 +80,6 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             x0 = param1_or + Lidar.optics.scanner.origin[0] + sample_rate_count
             y0 = param2_or + Lidar.optics.scanner.origin[1] 
             z0 = param3_or + Lidar.optics.scanner.origin[2] 
-        
         # Storing coordinates
         X0.append(x0)
         Y0.append(y0)
