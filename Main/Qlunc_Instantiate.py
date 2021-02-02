@@ -10,7 +10,7 @@ University of Stuttgart(c)
 ###################### __ Instantiate __ ######################################
 
 Digitally creating a virtual object which represents a physical, real object
-could be done by instantiating their classes:
+could be done by instantiating their python classes:
         
         1) Run Qlunc_Classes.py to create the classes corresponding to
            components, modules, atmospheric scenarios and lidar device
