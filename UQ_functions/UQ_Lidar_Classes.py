@@ -15,7 +15,7 @@ from Qlunc_ImportModules import *
 import Qlunc_Help_standAlone as SA
 # Calculates the lidar global uncertainty using uncertainty expansion calculation methods:
 
-def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts):
+def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     List_Unc_lidar = []
     try: # ecah try/except evaluates wether the component is included in the module, therefore in the calculations
 #        if Photodetector_Uncertainty not in locals():
@@ -25,7 +25,7 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts):
         Photonics_Uncertainty=None
         print('No photonics module in calculations!')
     try:
-        Optics_Uncertainty=Lidar.optics.Uncertainty(Lidar,Atmospheric_Scenario,cts)
+        Optics_Uncertainty=Lidar.optics.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
         Optics_Uncertainty=np.ndarray.tolist(Optics_Uncertainty['Uncertainty_Optics'])*len(Atmospheric_Scenario.temperature)
         List_Unc_lidar.append(np.array([Optics_Uncertainty]))
     except:
