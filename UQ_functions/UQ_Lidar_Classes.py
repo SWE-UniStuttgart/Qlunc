@@ -37,7 +37,8 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     except:
         Power_Uncertainty=None
         print('No power module in calculations!')
+    print('Processing lidar uncertainties...')
     Uncertainty_Lidar=SA.unc_comb(List_Unc_lidar)
     Final_Output_Lidar_Uncertainty = {'Lidar_Uncertainty':Uncertainty_Lidar}    
-    print('Lidar unc Done')
+    print('Lidar uncertainty done')
     return Final_Output_Lidar_Uncertainty
