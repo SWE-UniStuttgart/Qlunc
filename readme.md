@@ -54,6 +54,7 @@ This is the core of Qlunc. Here the user creates the classes describing the comp
 
 ## License:
 Qlunc is licensed under **[SD 3-Clause License](https://github.com/PacoCosta/Qlunc/blob/Qlunc-V0.9/LICENSE)**
+
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
 ## Citing and Contact:
