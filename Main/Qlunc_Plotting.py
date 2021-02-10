@@ -7,7 +7,9 @@ Francisco Costa García
 University of Stuttgart(c) 
 
 """
-
+# from Qlunc_Instantiate import *
+# import pandas as pd
+from Qlunc_Instantiate import *
 #%% Plotting:
 
 # Ploting general parameters:
@@ -29,7 +31,7 @@ plot_param={'axes_label_fontsize' : 25,
 
 
 ##############    Ploting scanner measuring points pattern #######################
-if flags.flag_plot_measuring_points_pattern:
+if flags.flag_plot_measuring_points_pattern:  
     Scanner_Data1 = Lidar.optics.scanner.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs) # Calling Scanner uncertainty to plot the graphics
 
     
@@ -70,4 +72,5 @@ if flags.flag_plot_photodetector_noise:
     ax.set_title('SNR Photodetector',fontsize=plot_param['title_fontsize'])
     ax.grid(axis='both')
     ax.text(.90,.05,plot_param['Qlunc_version'],transform=ax.transAxes, fontsize=14,verticalalignment='top',bbox=dict(boxstyle='round', facecolor='white', alpha=0.5))
+
 

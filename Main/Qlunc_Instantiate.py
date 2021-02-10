@@ -25,10 +25,10 @@ could be done by instantiating their python classes:
 
 #%% Running Qlunc_Classes.py:
 import os
-import pdb
-import sys
-import yaml
-
+os.chdir('../Utils')
+from Qlunc_ImportModules import *
+os.chdir('../Main')
+from Qlunc_Classes import *
 #from yaml.constructor import Constructor
 
 #def add_bool(self, node):

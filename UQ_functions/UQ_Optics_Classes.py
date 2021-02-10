@@ -16,24 +16,25 @@ module.
 """
 
 
-from Qlunc_ImportModules import *
-import Qlunc_Help_standAlone as SA
-import pdb
+# from Qlunc_ImportModules import *
+from Qlunc_Help_standAlone import *
+# import pdb
+import numpy as np
 
 #%% TELESCOPE:
 # NOT IMPLEMENTED
 #==============================================================================
-def UQ_Telescope(Lidar, Atmospheric_Scenario,cts):
-    UQ_telescope=[(temp*0.5+hum*0.1+curvature_lens*0.1+aberration+o_c_tele) \
-                  for temp           in inputs.atm_inp.Atmospheric_inputs['temperature']\
-                  for hum            in inputs.atm_inp.Atmospheric_inputs['humidity']\
-                  for curvature_lens in inputs.optics_inp.Telescope_uncertainty_inputs['curvature_lens'] \
-                  for aberration     in inputs.optics_inp.Telescope_uncertainty_inputs['aberration'] \
-                  for o_c_tele       in inputs.optics_inp.Telescope_uncertainty_inputs['OtherChanges_tele']]
-    Telescope_Losses =inputs.optics_inp.Telescope_uncertainty_inputs['losses']
-    UQ_telescope=[round(UQ_telescope[i_dec],3) for i_dec in range(len(UQ_telescope))]
-    Final_Output_UQ_Telescope={'Uncertainty_Telescope':UQ_telescope}
-    return Final_Output_UQ_Telescope
+# def UQ_Telescope(Lidar, Atmospheric_Scenario,cts):
+#     UQ_telescope=[(temp*0.5+hum*0.1+curvature_lens*0.1+aberration+o_c_tele) \
+#                   for temp           in inputs.atm_inp.Atmospheric_inputs['temperature']\
+#                   for hum            in inputs.atm_inp.Atmospheric_inputs['humidity']\
+#                   for curvature_lens in inputs.optics_inp.Telescope_uncertainty_inputs['curvature_lens'] \
+#                   for aberration     in inputs.optics_inp.Telescope_uncertainty_inputs['aberration'] \
+#                   for o_c_tele       in inputs.optics_inp.Telescope_uncertainty_inputs['OtherChanges_tele']]
+#     Telescope_Losses =inputs.optics_inp.Telescope_uncertainty_inputs['losses']
+#     UQ_telescope=[round(UQ_telescope[i_dec],3) for i_dec in range(len(UQ_telescope))]
+#     Final_Output_UQ_Telescope={'Uncertainty_Telescope':UQ_telescope}
+#     return Final_Output_UQ_Telescope
 #==============================================================================
 
 #%% SCANNER:
@@ -163,6 +164,6 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         Optical_circulator_Uncertainty = None
         print('No optical circulator in calculations!')
            
-    Uncertainty_Optics_Module=SA.unc_comb(List_Unc_optics)
+    Uncertainty_Optics_Module=unc_comb(List_Unc_optics)
     Final_Output_UQ_Optics = {'Uncertainty_Optics':Uncertainty_Optics_Module}
     return Final_Output_UQ_Optics
