@@ -8,17 +8,19 @@ University of Stuttgart(c)
 
 Here we calculate the uncertainties related with components in the `photonics`
 module. 
-
     
-   - noise definintions (reference in literature)
-   
+   - noise definintions: 
+       - Photodetector: H. Rongqing, “Introduction to Fiber-Optic Communications,” Elsevier, vol. 4, pp. 125–154, 2019, doi: https://doi.org/10.1016/B978-0-12-805345-4.00004-4.
+       - Optical amplifier:  
+           - Calculating ASE - Amplified Spontaneous Emission definition ((**Optics and Photonics) Bishnu P. Pal - Guided Wave Optical Components and Devices_ Basics, Technology, and Applications -Academic Press (2005))
+           - EDFA Testing with interpolation techniques - Product note 71452-1
 """
-# from Qlunc_ImportModules import *
+from Qlunc_ImportModules import *
 import Qlunc_Help_standAlone as SA
-import numpy as np
-import pandas as pd
-import scipy.interpolate as itp
-import numbers
+# import numpy as np
+# import pandas as pd
+# import scipy.interpolate as itp
+# import numbers
 
 #%% PHOTODETECTOR:
 def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts):
@@ -33,7 +35,7 @@ def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts):
     UQ_Photodetector.TIA_noise          = []
     SNR_data={}
     
-    R = Lidar.photonics.photodetector.Efficiency*cts.e*Lidar.lidar_inputs.Wavelength/(cts.h*cts.c)  #[W/A]  Responsivity
+    R = Lidar.photonics.photodetector.Efficiency*cts.e*Lidar.lidar_inputs.Wavelength/(cts.h*cts.c)  #[A/W]  Responsivity
     UQ_Photodetector.Responsivity = (R) # this notation allows me to get Responsivity from outside of the function 
 
     UQ_Photodetector.SNR_thermal_noise = [10*np.log10(((R**2)/(4*cts.k*300*Lidar.photonics.photodetector.BandWidth/Lidar.photonics.photodetector.Load_Resistor))*(Lidar.photonics.photodetector.Power_interval/1000)**2)]
@@ -70,12 +72,6 @@ def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts):
 
 
 #%% OPTICAL AMPLIFIER:
-'''
-# ASE literature:
- - Calculating ASE - Amplified Spontaneous Emission definition ((**Optics and Photonics) Bishnu P. Pal - Guided Wave Optical Components and Devices_ Basics, Technology, and Applications -Academic Press (2005))
- - EDFA Tesing with interpolation techniques - Product note 71452-1
- - More literature will come
-'''
 def UQ_Optical_amplifier(Lidar,Atmospheric_Scenario,cts): 
 
 # Obtain SNR from figure noise or pass directly numerical value:
