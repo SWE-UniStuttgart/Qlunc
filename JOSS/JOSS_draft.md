@@ -31,7 +31,7 @@ affiliations:
  
  output: html_document
  
- bibliography: paper.bib
+ bibliography: paper.yml
 
 References:
 - id:fenner2012a
