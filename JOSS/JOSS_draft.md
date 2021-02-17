@@ -3,6 +3,7 @@
 # <div align="center"> **Qlunc**
   
 tags: 
+
   - wind lidar
   - hardware uncertainty
   - photonics module
@@ -11,12 +12,15 @@ tags:
   - OpenScience
 
 authors:
+
   - name: Costa, Francisco
     
     orcid: https://orcid.org/0000-0003-1318-9677
     
     affiliation: 1
-affiliation:
+    
+affiliations:
+
   - name: Institute of Aircraft Design and Manufacture - Stuttgart Wind Energy, University of Stuttgart
     
     index: 1
