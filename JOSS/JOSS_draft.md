@@ -3,14 +3,14 @@
   
 Tags: wind lidar, hardware uncertainty, photonics module, optics module, OpenLidar
 
-Author: Costa, Francisco
+Author: Costa, Francisco^1
 
-Introduction
+## Introduction
 
 
 Measuring uncertainty means doubt about the validity of the result of a measurement [1] or, in other words, it represents the dispersion of the values attributed to a measurand. The importance of knowing uncertainty in measurements lies on both, the quality of the measurement and understanding of the results, and it can have a huge impact on the veracity of an experiment or measuring set up, hence in decision-making processes based on the experiment outcomes. In the wind energy community wind lidar devices have been widely used to characterize the wind and research for most suitable sites, with best wind conditions, but also in wind forecasting, wind turbine power performance, loads assessment and lidar-assisted turbine control [2]. Building a wind farm entails a huge effort and investment, so knowing beforehand site and wind key parameters is important to minimize risks and optimize energy acquisition. In this sense, lidar measurement uncertainties assessment plays a crucial role, since it can determine decision-making processes and therefore the global performance of a wind facility.
 
-What’s Qlunc 
+## What’s Qlunc 
 
 
 Lidar is a remote sensing measuring device and, to increase confidence in its measurements, the uncertainty of the measuring data must be assessed. This project develops and implements an open-source, freely available uncertainty model that allows us to assess lidar measurement uncertainties for profiling lidar and forward-looking nacelle-mounted lidar  before a lidar is built.
