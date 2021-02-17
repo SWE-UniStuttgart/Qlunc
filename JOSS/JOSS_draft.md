@@ -36,4 +36,4 @@ The code has an objected-oriented structure taking advantage of python features;
 Each component, pertaining to correspondent module (e.g. photodetector belongs to the photonics module) is created as a python object and enclosed in other python class, which represents the aforementioned modules. Following this procedure these modules are, in turn, included in the lidar python class, which gathers all classes corresponding to the different modules a lidar is made of, thus creating the lidar digital 
 
 # References
--- paper.bib
+--referencesb
