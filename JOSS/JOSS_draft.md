@@ -1,7 +1,4 @@
 ---
-# <div align="center"> **Q**uantification of **l**idar (hardware) **unc**ertainties
-# <div align="center"> **Qlunc**
-  
 title: "Quantification of lidar (hardware) uncertainties"
 tags:
   - wind lidar
@@ -16,14 +13,14 @@ authors:
     affiliation: 1
 affiliations:
   - name: Institute of Aircraft Design and Manufacture - Stuttgart Wind Energy, University of Stuttgart
-    index: 1
- 
+    index: 1 
 date: 17 February 2021
 output: html_document
-bibliography: paper.yml
+bibliography: paper.bib
 ---
 
-
+# <div align="center"> **Q**uantification of **l**idar (hardware) **unc**ertainties
+# <div align="center"> **Qlunc**
 ## Introduction
 
 
@@ -38,12 +35,3 @@ The code has an objected-oriented structure taking advantage of python features;
 Each component, pertaining to correspondent module (e.g. photodetector belongs to the photonics module) is created as a python object and enclosed in other python class, which represents the aforementioned modules. Following this procedure these modules are, in turn, included in the lidar python class, which gathers all classes corresponding to the different modules a lidar is made of, thus creating the lidar digital 
 
 # References
-
-@misc{fidgit,
-  author = {A. Smith},
-  title = {Fidgit: An ungodly union of GitHub and Figshare},
-  year = {2020},
-  publisher = {GitHub},
-  journal = {GitHub repository},
-  url = {https://github.com/arfon/fidgit}
-}
