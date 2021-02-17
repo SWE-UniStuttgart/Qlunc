@@ -16,7 +16,7 @@ references:
   issued:
     year: 2012
     month: 3
- ---
+---
 @misc{fidgit,
   author = {A. Smith},
   title = {Fidgit: An ungodly union of GitHub and Figshare},
