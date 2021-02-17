@@ -49,14 +49,14 @@ References:
     year: 2012
     month: 3
     
-[^c1]: Really useful citation mode
+[^fn1]: Really useful citation mode
 ---
-[^c1]: Really useful citation mode
+[^fn1]: Really useful citation mode
 
 ## Introduction
 
 
-Measuring uncertainty means doubt about the validity of the result of a measurement see [^c1] or, in other words, it represents the dispersion of the values attributed to a measurand. The importance of knowing uncertainty in measurements lies on both, the quality of the measurement and understanding of the results, and it can have a huge impact on the veracity of an experiment or measuring set up, hence in decision-making processes based on the experiment outcomes. In the wind energy community wind lidar devices have been widely used to characterize the wind and research for most suitable sites, with best wind conditions, but also in wind forecasting, wind turbine power performance, loads assessment and lidar-assisted turbine control [2]. Building a wind farm entails a huge effort and investment, so knowing beforehand site and wind key parameters is important to minimize risks and optimize energy acquisition. In this sense, lidar measurement uncertainties assessment plays a crucial role, since it can determine decision-making processes and therefore the global performance of a wind facility.
+Measuring uncertainty means doubt about the validity of the result of a measurement see [^fn1] or, in other words, it represents the dispersion of the values attributed to a measurand. The importance of knowing uncertainty in measurements lies on both, the quality of the measurement and understanding of the results, and it can have a huge impact on the veracity of an experiment or measuring set up, hence in decision-making processes based on the experiment outcomes. In the wind energy community wind lidar devices have been widely used to characterize the wind and research for most suitable sites, with best wind conditions, but also in wind forecasting, wind turbine power performance, loads assessment and lidar-assisted turbine control [2]. Building a wind farm entails a huge effort and investment, so knowing beforehand site and wind key parameters is important to minimize risks and optimize energy acquisition. In this sense, lidar measurement uncertainties assessment plays a crucial role, since it can determine decision-making processes and therefore the global performance of a wind facility.
 
 ## What’s Qlunc 
 
