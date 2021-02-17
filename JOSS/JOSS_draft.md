@@ -1,7 +1,8 @@
+---
 # <div align="center"> **Q**uantification of **l**idar (hardware) **unc**ertainties
 # <div align="center"> **Qlunc**
   
-Tags: 
+tags: 
   - wind lidar
   - hardware uncertainty
   - photonics module
@@ -9,16 +10,16 @@ Tags:
   - OpenLidar
   - OpenScience
 
-Authors:
+authors:
   - name: Costa, Francisco
     orcid: https://orcid.org/0000-0003-1318-9677
     affiliation: 1
-Affiliation:
+affiliation:
   - name: Institute of Aircraft Design and Manufacture - Stuttgart Wind Energy, University of Stuttgart
     index: 1
  date: 17 February 2021
  bibliography: paper.bib
-
+---
 
 
 ## Introduction
@@ -30,6 +31,6 @@ Measuring uncertainty means doubt about the validity of the result of a measurem
 
 
 Lidar is a remote sensing measuring device and, to increase confidence in its measurements, the uncertainty of the measuring data must be assessed. This project develops and implements an open-source, freely available uncertainty model that allows us to assess lidar measurement uncertainties for profiling lidar and forward-looking nacelle-mounted lidar  before a lidar is built.
-Inspired by the OpenLidar architecture [3], this model is a python-based tool called Qlunc for “Quantification of Lidar UNCertainties”, that aims to estimate the uncertainty of a wind lidar device, including hardware and data processing methods. It contains models of the uncertainty contributed by individual lidar components that are then combined to estimate the total uncertainty of the lidar device.
-The code (Qlunc) has an objected-oriented structure taking advantage of python features; by using python objects and simulating real lidar components, the code puts all together in modules to eventually build up a lidar digital twin. Qlunc is meant to be as modular as possible and offers to the user the possibility of creating different lidar objects on parallel, with different components, simultaneously. This allows to easily combine different modules with different characteristics simulating different lidar devices and compare them against each other. Furthermore, it allows to easily integrate different uncertainty methods or interface external codes.
+Inspired by the OpenLidar architecture [3], this model is a python-based tool called `Qlunc` for “Quantification of Lidar UNCertainties”, that aims to estimate the uncertainty of a wind lidar device, including hardware and data processing methods. It contains models of the uncertainty contributed by individual lidar components that are then combined to estimate the total uncertainty of the lidar device.
+The code has an objected-oriented structure taking advantage of python features; by using python objects and simulating real lidar components, the code puts all together in modules to eventually build up a lidar digital twin. Qlunc is meant to be as modular as possible and offers to the user the possibility of creating different lidar objects on parallel, with different components, simultaneously. This allows to easily combine different modules with different characteristics simulating different lidar devices and compare them against each other. Furthermore, it allows to easily integrate different uncertainty methods or interface external codes.
 Each component, pertaining to correspondent module (e.g. photodetector belongs to the photonics module) is created as a python object and enclosed in other python class, which represents the aforementioned modules. Following this procedure these modules are, in turn, included in the lidar python class, which gathers all classes corresponding to the different modules a lidar is made of, thus creating the lidar digital 
