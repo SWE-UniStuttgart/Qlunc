@@ -31,7 +31,7 @@ affiliations:
  
  output: html_document
  
- bibliography: paper.yml
+ bibliography: paper.bib
 ---
 
 
