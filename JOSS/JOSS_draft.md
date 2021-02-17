@@ -1,5 +1,5 @@
-# <div align="center"> *Q*uantification of *l*idar (hardware) *unc*ertainties
-# <div align="center"> Qlunc
+# <div align="center"> **Q**uantification of **l**idar (hardware) **unc**ertainties
+# <div align="center"> **Qlunc**
   
 Tags: wind lidar, hardware uncertainty, photonics module, optics module, OpenLidar
 Author: Costa, Francisco
