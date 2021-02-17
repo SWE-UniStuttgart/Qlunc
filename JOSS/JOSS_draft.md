@@ -3,7 +3,7 @@
   
 Tags: wind lidar, hardware uncertainty, photonics module, optics module, OpenLidar
 
-Author: Costa, Francisco^1
+Author: Costa, Francisco^^1
 
 ## Introduction
 
