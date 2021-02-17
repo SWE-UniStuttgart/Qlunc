@@ -49,10 +49,10 @@ References:
     year: 2012
     month: 3
     
-[^fn1]: [@Really:useful_mode:2021]
+
 ---
 
-[^fn1]: [@Really:useful_mode:2021]
+[citation 1]: [@Really:useful_mode:2021]
 
 ## Introduction
 
