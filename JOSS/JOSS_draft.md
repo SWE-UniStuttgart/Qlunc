@@ -1,5 +1,5 @@
-# Quantification of lidar (hardware) uncertainties
-# Qlunc
+<div align="center"> # Quantification of lidar (hardware) uncertainties
+<div align="center"> # Qlunc
 Tags: wind lidar, hardware uncertainty, photonics module, optics module, OpenLidar
 Author: Costa, Francisco 
 Introduction
