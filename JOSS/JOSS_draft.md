@@ -3,35 +3,24 @@
 # <div align="center"> **Qlunc**
   
 title: "Quantification of lidar (hardware) uncertainties"
-
-tags: 
-
+tags:
   - wind lidar
   - hardware uncertainty
   - photonics module
   - optics module
   - OpenLidar
   - OpenScience
-
 authors:
-
-  - name: Costa, Francisco
-    
-    orcid: https://orcid.org/0000-0003-1318-9677
-    
+  - name: Costa, Francisco  
+    orcid: https://orcid.org/0000-0003-1318-9677   
     affiliation: 1
-    
 affiliations:
-
   - name: Institute of Aircraft Design and Manufacture - Stuttgart Wind Energy, University of Stuttgart
-    
     index: 1
  
- date: 17 February 2021
- 
- output: html_document
- 
- bibliography: paper.bib
+date: 17 February 2021
+output: html_document
+bibliography: paper.bib
 ---
 
 
