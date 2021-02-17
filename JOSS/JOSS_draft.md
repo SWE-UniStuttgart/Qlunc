@@ -20,7 +20,7 @@ affiliations:
  
 date: 17 February 2021
 output: html_document
-bibliography: paper.bib
+bibliography: paper.yml
 ---
 
 
