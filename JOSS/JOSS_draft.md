@@ -1,9 +1,25 @@
 # <div align="center"> **Q**uantification of **l**idar (hardware) **unc**ertainties
 # <div align="center"> **Qlunc**
   
-Tags: wind lidar, hardware uncertainty, photonics module, optics module, OpenLidar
+Tags: 
+  - wind lidar
+  - hardware uncertainty
+  - photonics module
+  - optics module
+  - OpenLidar
+  - OpenScience
 
-Author: Costa, Francisco^^1
+Authors:
+  - name: Costa, Francisco
+    orcid: https://orcid.org/0000-0003-1318-9677
+    affiliation: 1
+Affiliation:
+  - name: Institute of Aircraft Design and Manufacture - Stuttgart Wind Energy, University of Stuttgart
+    index: 1
+ date: 17 February 2021
+ bibliography: paper.bib
+
+
 
 ## Introduction
 
