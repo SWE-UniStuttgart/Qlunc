@@ -16,7 +16,8 @@ affiliations:
     index: 1 
 date: 17 February 2021
 output: html_document
-bibliography: paper.yml
+link-citations: true
+bibliography: paper.bib
 ---
 
 # <div align="center"> **Q**uantification of **l**idar (hardware) **unc**ertainties
