@@ -51,7 +51,14 @@ References:
     year: 2012
     month: 3
     
-
+@misc{fidgit,
+  author = {A. Smith},
+  title = {Fidgit: An ungodly union of GitHub and Figshare},
+  year = {2020},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  url = {https://github.com/arfon/fidgit}
+}
 ---
 
 
@@ -70,6 +77,11 @@ Each component, pertaining to correspondent module (e.g. photodetector belongs t
 
 # References
 
-
-
-[^1]: [@Really:useful_mode:2021]
+@misc{fidgit,
+  author = {A. Smith},
+  title = {Fidgit: An ungodly union of GitHub and Figshare},
+  year = {2020},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  url = {https://github.com/arfon/fidgit}
+}
