@@ -29,7 +29,7 @@ affiliations:
  
  bibliography: paper.bib
 
-references:
+References:
 - id: fenner2012a
   title: One-click science marketing
   author:
