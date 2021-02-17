@@ -52,12 +52,11 @@ References:
 
 ---
 
-[citation 1]: [@Really:useful_mode:2021]
 
 ## Introduction
 
 
-Measuring uncertainty means doubt about the validity of the result of a measurement see [^fn1] or, in other words, it represents the dispersion of the values attributed to a measurand. The importance of knowing uncertainty in measurements lies on both, the quality of the measurement and understanding of the results, and it can have a huge impact on the veracity of an experiment or measuring set up, hence in decision-making processes based on the experiment outcomes. In the wind energy community wind lidar devices have been widely used to characterize the wind and research for most suitable sites, with best wind conditions, but also in wind forecasting, wind turbine power performance, loads assessment and lidar-assisted turbine control [2]. Building a wind farm entails a huge effort and investment, so knowing beforehand site and wind key parameters is important to minimize risks and optimize energy acquisition. In this sense, lidar measurement uncertainties assessment plays a crucial role, since it can determine decision-making processes and therefore the global performance of a wind facility.
+Measuring uncertainty means doubt about the validity of the result of a measurement see [^1] or, in other words, it represents the dispersion of the values attributed to a measurand. The importance of knowing uncertainty in measurements lies on both, the quality of the measurement and understanding of the results, and it can have a huge impact on the veracity of an experiment or measuring set up, hence in decision-making processes based on the experiment outcomes. In the wind energy community wind lidar devices have been widely used to characterize the wind and research for most suitable sites, with best wind conditions, but also in wind forecasting, wind turbine power performance, loads assessment and lidar-assisted turbine control [2]. Building a wind farm entails a huge effort and investment, so knowing beforehand site and wind key parameters is important to minimize risks and optimize energy acquisition. In this sense, lidar measurement uncertainties assessment plays a crucial role, since it can determine decision-making processes and therefore the global performance of a wind facility.
 
 ## What’s Qlunc 
 
@@ -68,4 +67,7 @@ The code has an objected-oriented structure taking advantage of python features;
 Each component, pertaining to correspondent module (e.g. photodetector belongs to the photonics module) is created as a python object and enclosed in other python class, which represents the aforementioned modules. Following this procedure these modules are, in turn, included in the lidar python class, which gathers all classes corresponding to the different modules a lidar is made of, thus creating the lidar digital 
 
 # References
-[^fn1]: [@Really:useful_mode:2021]
+
+
+
+[^1]: [@Really:useful_mode:2021]
