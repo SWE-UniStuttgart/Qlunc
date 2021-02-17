@@ -51,7 +51,7 @@ References:
     
 [^c1]: Really useful citation mode
 ---
-
+[^c1]: Really useful citation mode
 
 ## Introduction
 
