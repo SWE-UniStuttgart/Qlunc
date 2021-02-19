@@ -3,6 +3,7 @@
 *.xlsx
 *.png
 *.txt
+*.tmp
 
 # Ignore specific files:
 I_D.pickle
