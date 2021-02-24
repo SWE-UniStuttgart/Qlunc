@@ -92,7 +92,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         Y0.append(y0)
         Z0.append(z0)
 
-        for trial in range(0,3):
+        for trial in range(0,100):
             
             # Create white noise with stdv selected by user:
             n=10000 # Number of cases to combine
@@ -124,9 +124,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             DISTANCE.append(np.sqrt((xfinal-x0)**2+(yfinal-y0)**2+(zfinal-z0)**2))
             Mean_DISTANCE.append(np.mean(DISTANCE[trial]))    
             stdv_DISTANCE.append(np.std(DISTANCE[trial]))
-            pdb.set_trace()
+            # pdb.set_trace()
             
-        pdb.set_trace()
+        # pdb.set_trace()
         sample_rate_count+=Lidar.optics.scanner.sample_rate    
         SimMean_DISTANCE.append(np.mean(DISTANCE))        # Mean error distance of each point in the pattern  
         StdvMean_DISTANCE.append(np.mean(stdv_DISTANCE)) # Mean error distance stdv for each point in the pattern
