@@ -36,7 +36,7 @@ for sharing knowledge about lidar uncertainties estimation methods. It also enco
 collaborations among lidar field experts aiming to characterize a common lidar architecture
 for different types of lidars, to assess lidar data processing methods or even helps to get
 a consensus for lidar terminology, giving place to a lidar ontology, which is a developing
-project driven by Nikola Vasiljevic and others [@OntoStack;@sheet2rdf]. 
+project driven by Andy CliftonNikola Vasiljevic and others [@OntoStack;@sheet2rdf]. 
 
 The source code for ``Qlunc`` has been archived to Zenodo with the linked DOI: [@zenodo]
 
