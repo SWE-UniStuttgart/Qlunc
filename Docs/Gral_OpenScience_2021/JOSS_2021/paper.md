@@ -14,7 +14,6 @@ affiliations:
    index: 1
 date: 25 February 2021
 bibliography: paper.bib
-
 @article{ViConDAR,
   	url = {https://github.com/SWE-UniStuttgart/ViConDAR},
   	Archiveprefix = {},
@@ -25,7 +24,6 @@ bibliography: paper.bib
     License = {GNU General Public License v3.0},
   	Year = 2020
 }
-
 ---
 
 # Summary
