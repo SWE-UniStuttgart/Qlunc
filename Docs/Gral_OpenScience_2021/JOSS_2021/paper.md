@@ -23,7 +23,7 @@ bibliography: paper.bib
 the uncertainty of a wind lidar device, including hardware and data processing methods.
 Based on the OpenLidar architecture [1], it contains models of the uncertainty contributed
 by individual lidar components and modules, that are then combined to estimate the total
-uncertainty of the lidar device.[@Pearson:2017]
+uncertainty of the lidar device.[@article]
 
 The code is meant to be as modular as possible, easily allowing lidar components’ (represented
 by python objects) interchangeability and outcomes’ repeatability.
