@@ -24,6 +24,7 @@ the uncertainty of a wind lidar device, including hardware and data processing m
 Based on the OpenLidar architecture [1], it contains models of the uncertainty contributed
 by individual lidar components and modules, that are then combined to estimate the total
 uncertainty of the lidar device.
+
 The code is meant to be as modular as possible, easily allowing lidar components’ (represented
 by python objects) interchangeability and outcomes’ repeatability.
 Furthermore, it allows to easily integrate different uncertainty methods or interface
@@ -49,6 +50,7 @@ measurement as on the understanding of the results, and it can have a huge impac
 the veracity of an experiment or measuring set up. In this sense, lidar measurement
 uncertainties assessment plays a crucial role, since it can determine decision-making
 processes and therefore the global performance of a wind facility.
+
 The scope of this project is to create an open, common and collaborative reference numerical
 framework to describe unique lidar architectures, characterize lidar uncertainties and provide
 a tool for others to contribute within those frameworks. This is so, but following lines of
@@ -57,7 +59,7 @@ sharable tools and knowledge, to reinforce or promote new or existing links and 
 collaborations among research institutions and/or industry, within the wind energy community,
 but not limited to it. 
 
-#``Qlunc`` available capabilities
+# ``Qlunc`` available capabilities
 
 Currently, ``Qlunc`` can perform both, VAD and scanning lidar patterns. For now, it can perform
 lidar hardware uncertainties from photonics module, including photodetector (with or without
@@ -65,6 +67,7 @@ trans-impedance amplifier) and optical amplifier components, as well as optics m
 including scanner pointing accuracy distance errors and optical circulator uncertainties. In the
 near future, uncertainties regarding other hardware components and data processing methods will
 be impemented in the model.
+
 Output plots show different signal noise contributors of the photodetector components and estimates
 of scanning points distance uncertainty.
 
@@ -83,6 +86,7 @@ digital twin. Dot notation methodology is used to ask for lidar component proper
 All components are characterized by their technical parameters and their uncertainty functions,
 which are feed to the code via a yaml file. Combined uncertainties throughout components and modules
 are computed according to the Guide to the expression of Uncertainty in Measurement [4] (GUM) model. 
+
 As mentioned above, the code claims flexibility and aims to foster collaboration, especially among researchers.
 To encourage both, flexibility and further collaborations each lidar module has its own uncertainty estimation
 function, which includes the components the module is made of. These stand-alone uncertainty estimation
