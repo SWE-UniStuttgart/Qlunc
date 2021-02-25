@@ -85,7 +85,7 @@ digital twin. Dot notation methodology is used to ask for lidar component proper
 
 All components are characterized by their technical parameters and their uncertainty functions,
 which are feed to the code via a yaml file. Combined uncertainties throughout components and modules
-are computed according to the Guide to the expression of Uncertainty in Measurement [4] (GUM) model. 
+are computed according to the Guide to the expression of Uncertainty in Measurement [4] ([GUM](https://www.bipm.org/utils/common/documents/jcgm/JCGM_100_2008_E.pdf)) model. 
 
 As mentioned above, the code claims flexibility and aims to foster collaboration, especially among researchers.
 To encourage both, flexibility and further collaborations each lidar module has its own uncertainty estimation
