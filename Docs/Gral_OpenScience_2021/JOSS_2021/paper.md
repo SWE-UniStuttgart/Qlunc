@@ -22,9 +22,9 @@ bibliography: paper.bib
 ``Qlunc``, for Quantification of lidar uncertainty, is an open-source, freely available
 (https://github.com/SWE-UniStuttgart/Qlunc) python-based tool that aims to estimate
 the uncertainty of a wind lidar device, including hardware and data processing methods.
-Based on the OpenLidar architecture [1], it contains models of the uncertainty contributed
+Based on the OpenLidar architecture [@OpenLidar], it contains models of the uncertainty contributed
 by individual lidar components and modules, that are then combined to estimate the total
-uncertainty of the lidar device [@ViConDAR]
+uncertainty of the lidar device.
 
 The code is meant to be as modular as possible, easily allowing lidar components’ (represented
 by python objects) interchangeability and outcomes’ repeatability.
@@ -37,14 +37,13 @@ for sharing knowledge about lidar uncertainties estimation methods. It also enco
 collaborations among lidar field experts aiming to characterize a common lidar architecture
 for different types of lidars, to assess lidar data processing methods or even helps to get
 a consensus for lidar terminology, giving place to a lidar ontology, which is a developing
-project driven by Nikola Vasiljevic and others [2] [3]. 
+project driven by Nikola Vasiljevic and others [@OntoStack;@sheet2rdf]. 
 
-The source code for ``Qlunc`` has been
-archived to Zenodo with the linked DOI: [@zenodo]
+The source code for ``Qlunc`` has been archived to Zenodo with the linked DOI: [@zenodo]
 
 # Motivation
 
-Measuring uncertainty means doubt about the validity of the result of a measurement [4]
+Measuring uncertainty means doubt about the validity of the result of a measurement [@GUM]
 or, in other words, it represents the dispersion of the values attributed to a measurand.
 The importance of knowing uncertainty in measurements lies both, on the quality of the
 measurement as on the understanding of the results, and it can have a huge impact on
@@ -89,7 +88,7 @@ digital twin. Dot notation methodology is used to ask for lidar component proper
 
 All components are characterized by their technical parameters and their uncertainty functions,
 which are feed to the code via a yaml file. Combined uncertainties throughout components and modules
-are computed according to the Guide to the expression of Uncertainty in Measurement [4] ([GUM](https://www.bipm.org/utils/common/documents/jcgm/JCGM_100_2008_E.pdf)) model. 
+are computed according to the Guide to the expression of Uncertainty in Measurement [@GUM] ([GUM](https://www.bipm.org/utils/common/documents/jcgm/JCGM_100_2008_E.pdf)) model. 
 
 As mentioned above, the code claims flexibility and aims to foster collaboration, especially among researchers.
 To encourage both, flexibility and further collaborations each lidar module has its own uncertainty estimation
@@ -114,5 +113,3 @@ This project has received funding from the European Union's Horizon 2020 researc
 under grant agreement No 858358, within the frame of LIKE project.
 
 # References
-
-# Figures
