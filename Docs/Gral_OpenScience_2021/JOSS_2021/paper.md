@@ -14,16 +14,7 @@ affiliations:
    index: 1
 date: 25 February 2021
 bibliography: paper.bib
-@article{ViConDAR,
-  	url = {https://github.com/SWE-UniStuttgart/ViConDAR},
-  	Archiveprefix = {},
-  	Author = {Pettas, V. and Costa, F. and Kretschmer, M. and Clifton, A. and Rinker, J. and Cheng P.},
-  	DOI = {10.2514/6.2020-0993},
-  	Journal = {AIAA Scitech 2020 Forum},  	
-  	Title = {{A numerical framework for constraining synthetic wind fields with lidar measurements for improved load simulations}},
-    License = {GNU General Public License v3.0},
-  	Year = 2020
-}
+
 ---
 
 # Summary
