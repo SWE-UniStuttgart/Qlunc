@@ -47,7 +47,7 @@ Measuring uncertainty means doubt about the validity of the result of a measurem
 or, in other words, it represents the dispersion of the values attributed to a measurand.
 The importance of knowing uncertainty in measurements lies both, on the quality of the
 measurement as on the understanding of the results, and it can have a huge impact on
-the veracity of an experiment or measuring set up. In this sense, lidar measurement
+the veracity of an experiment or measuring set up. In this sense, wind lidar measurement
 uncertainties assessment plays a crucial role, since it can determine decision-making
 processes and therefore the global performance of a wind facility.
 
