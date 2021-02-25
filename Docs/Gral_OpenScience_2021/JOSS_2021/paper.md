@@ -81,7 +81,7 @@ module. Following this procedure these lidar modules are, in turn, included in t
 gathers all classes corresponding to the different modules a lidar is made of, thus creating the lidar
 digital twin. Dot notation methodology is used to ask for lidar component properties.
 
-!['Qlunc basic structure.'](https://github.com/SWE-UniStuttgart/Qlunc/blob/Qlunc-V0.9/Docs/Gral_OpenScience_2021/JOSS_2021/Qlunc_BasicStructure_diagram.png)
+!['Qlunc basic structure.'](https://github.com/SWE-UniStuttgart/Qlunc/blob/Qlunc-V0.9/Docs/Gral_OpenScience_2021/JOSS_2021/Qlunc_BasicStructure_diagram.png){text-align: center}
 *Fig. 1: 'Qlunc basic structure.'*
 
 ## Uncertainty estimation model
