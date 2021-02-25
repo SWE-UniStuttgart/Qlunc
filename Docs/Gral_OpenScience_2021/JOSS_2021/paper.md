@@ -14,7 +14,6 @@ affiliations:
    index: 1
 date: 25 February 2021
 bibliography: paper.bib
-
 ---
 
 # Summary
