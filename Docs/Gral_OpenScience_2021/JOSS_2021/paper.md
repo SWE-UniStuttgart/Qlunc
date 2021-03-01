@@ -106,11 +106,11 @@ lidar digital twin is treated in depth.
 
 # Future development roadmap
 
-Over the next year, we plan to implement further lidar hardware modules and compute their combined uncertainties.
+Over the next year, we plan to implement further lidar hardware modules in the model and compute their combined uncertainties.
 Most significant data Processing methods, which are expected to be the highest uncertainty contributors, will be
 assessed and implemented in the model during the next project stage, as well. 
 
-This is a modular numerical framework, aiming to combine with other lidar codes dealing with lidar uncertaintes. 
+``Qlunc`` is a modular numerical framework, aiming to combine with other lidar codes dealing with lidar uncertaintes. 
 In this sense, ``Qlunc`` in combination with other existing tools like yaddum [@yaddum] and mocalum [@mocalum] will
 help to improve lidar uncertainty estimations, thus increasing lidar measurements reliability. The "openness" of
 these group of tools makes it possible to share within the wind energy community and even beyond it.
@@ -119,9 +119,9 @@ One of the next objectives is to align the lidar components/parameters/character
 the controlled vocabulary from an ongoing collaboration regarding a lidar ontology, aiming to achieve a standard for
 lidar components labeling.
 
-All documentation from the project, papers derived from the research period, tutorials and raw code as well, are meant
-to be povided thoughout a sphinx-based online site, to provide possible users with all needed information to get in deep
-in the numerical framework and get used to the Qlunc routine.
+All documentation from the project, scientific articles derived from the research period, tutorials and raw code as well are meant
+to be provided throughout a sphinx-based online site, to give possible users all needed information to dive into
+the numerical framework and get used to the Qlunc routine.
 
 # Acknowledgements
 
