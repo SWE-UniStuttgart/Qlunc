@@ -106,7 +106,7 @@ lidar digital twin is treated in depth.
 
 # Future development roadmap
 
-- Integration with kother codes mocalum and yaddum
+- Integration with other codes: mocalum and yaddum
 - Ontology
 - Lidar hardware uncertainties
 - Data processing methods uncertainties
