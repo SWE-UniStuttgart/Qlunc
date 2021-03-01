@@ -36,7 +36,7 @@ for sharing knowledge about lidar uncertainties estimation methods. It also enco
 collaborations among lidar field experts aiming to characterize a common lidar architecture
 for different types of lidars, to assess lidar data processing methods or even helps to get
 a consensus for lidar terminology, giving place to a lidar ontology, which is a developing
-project driven by Andy Clifton, Nikola Vasiljevic and others [@OntoStack;@sheet2rdf]. 
+project driven by Andy Clifton, Nikola Vasiljevic and in collaboration with Francisco Costa [@OntoStack;@sheet2rdf]. 
 
 The source code for ``Qlunc`` has been archived to Zenodo with the linked DOI: [@zenodo]
 
@@ -106,10 +106,22 @@ lidar digital twin is treated in depth.
 
 # Future development roadmap
 
-- [_] Integration with other codes: mocalum and yaddum
-- [-] Ontology
-- Lidar hardware uncertainties
-- Data processing methods uncertainties
+Over the next year, we plan to implement further lidar hardware modules and compute their combined uncertainties.
+Most significant data Processing methods, which are expected to be the highest uncertainty contributors, will be
+assessed and implemented in the model during the next project stage, as well. 
+
+This is a modular numerical framework, aiming to combine with other lidar codes dealing with lidar uncertaintes. 
+In this sense, ``Qlunc`` in combination with other existing tools like yaddum [@yaddum] and mocalum [@mocalum] will
+help to improve lidar uncertainty estimations, thus increasing lidar measurements reliability. The "openness" of
+these group of tools makes it possible to share within the wind energy community and even beyond it.
+
+One of the next objectives is to align the lidar components/parameters/characteristics labeling process, used by Qlunc, to
+the controlled vocabulary from an ongoing collaboration regarding a lidar ontology, aiming to achieve a standard for
+lidar components labeling.
+
+All documentation from the project, papers derived from the research period, tutorials and raw code as well, are meant
+to be povided thoughout a sphinx-based online site, to provide possible users with all needed information to get in deep
+in the numerical framework and get used to the Qlunc routine.
 
 # Acknowledgements
 
