@@ -104,6 +104,13 @@ Apart from the tutorials, the package includes a functional working example. Mor
 working example is given in the readme, included in the Qlunc repository, where the process of creating a
 lidar digital twin is treated in depth.
 
+# Future development roadmap
+
+- Integration with kother codes mocalum and yaddum
+- Ontology
+- Lidar hardware uncertainties
+- Data processing methods uncertainties
+
 # Acknowledgements
 
 Author want also to thank Andrew Clifton, Nikola Vasiljevic and Ines Würth for their support and valuable suggestions,
