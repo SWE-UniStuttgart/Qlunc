@@ -106,8 +106,8 @@ lidar digital twin is treated in depth.
 
 # Future development roadmap
 
-- [ ] Integration with other codes: mocalum and yaddum
-- [ ] Ontology
+[ ] Integration with other codes: mocalum and yaddum
+[ ] Ontology
 - Lidar hardware uncertainties
 - Data processing methods uncertainties
 
