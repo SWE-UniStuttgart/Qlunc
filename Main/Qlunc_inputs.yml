@@ -18,9 +18,9 @@ Components:
   Scanner:
     
     Name: Scanner_Yaml # Provide an ID to your lidar:    
-    Origin: [0,0,40]  # Lidar position in meters: [x,y,z]    
+    Origin: [0,0,80]  # Lidar position in meters: [x,y,z]    
     Sample rate: 0   # Lidar sample rate. In meters. Use 0 for now.
-    Type: VAD          # Type of the scanning head: VAD or SCAN (Scanning Lidar)
+    Type: SCAN          # Type of the scanning head: VAD or SCAN (Scanning Lidar)
  
     # VAD Pattern:
 
@@ -28,18 +28,18 @@ Components:
     Cone angle: [29]       # [deg]
     Azimuth: [0,360,8]     # [deg]
     
-    stdv focus distance: .1    # [m]
-    stdv Cone angle: .3      # [deg]
-    stdv Azimuth: 0.1         # [deg]    
+    stdv focus distance: 0   # [m]
+    stdv Cone angle: 0      # [deg]
+    stdv Azimuth: 0         # [deg]    
     
     # Scanning Lidar Pattern:
-    x: [20,20,20,20,20]        # [m]
+    x: [40,40,40,40,40]        # [m]
     y: [0,20,20,-20,-20]      # [m]
     z: [0,20,-20,20,-20]      # [m]
     
     stdv x: 0.3               # [m]
-    stdv y: 0             # [m]
-    stdv z: 0             # [m]
+    stdv y: 1.6             # [m]
+    stdv z: 1.1             # [m]
     
     # Uncertainty function:
     Uncertainty function: uopc.UQ_Scanner
@@ -85,9 +85,9 @@ Components:
   Lidar general inputs:
     Name: Lidar_gral_inputs_Yaml
     Wavelength: 1550.e-9    # [m]
-    Yaw error: 0            # [deg]
-    Pitch error: 0          # [deg]
-    Roll error: 0           # [deg]
+    Yaw error: 5            # [deg]
+    Pitch error: 5          # [deg]
+    Roll error: 5          # [deg]
 ---
 # Modules:
 Modules:

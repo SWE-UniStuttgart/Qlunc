@@ -18,12 +18,12 @@ plot_param={'axes_label_fontsize' : 25,
             'title_fontsize'      : 29,
             'suptitle_fontsize'   : 23,
             'legend_fontsize'     : 15,
-            'xlim'                : [-50,50],
-            'ylim'                : [-50,50],
-            'zlim'                : [0,150],
+            'xlim'                : [-10,60],
+            'ylim'                : [-40,40],
+            'zlim'                : [0,115],
             'markersize'          : 5,
             'markersize_lidar'    : 9,
-            'marker'              : '.',
+            'marker'              : '.r',
             'markerTheo'          : '.b',
             'tick_labelrotation'  : 45,
             'Qlunc_version'       : 'Qlunc Version - 0.9'
@@ -50,7 +50,7 @@ if flags.flag_plot_measuring_points_pattern:
     axs4.set_zlabel('z [m]',fontsize=plot_param['axes_label_fontsize'])
 
     
-    axs4.set_title('Scanner pointing accuracy ['+Qlunc_yaml_inputs['Components']['Scanner']['Type']+']',fontsize=plot_param['title_fontsize'])
+    axs4.set_title('Lidar pointing accuracy ['+Qlunc_yaml_inputs['Components']['Scanner']['Type']+']',fontsize=plot_param['title_fontsize'])
     axs4.legend()
     axs4.set_xlim3d(plot_param['xlim'][0],plot_param['xlim'][1])
     axs4.set_ylim3d(plot_param['ylim'][0],plot_param['ylim'][1])

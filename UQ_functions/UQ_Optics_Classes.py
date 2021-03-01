@@ -92,7 +92,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         Y0.append(y0)
         Z0.append(z0)
 
-        for trial in range(0,100):
+        for trial in range(0,10):
             
             # Create white noise with stdv selected by user:
             n=10000 # Number of cases to combine
