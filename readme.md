@@ -47,7 +47,7 @@ This is the core of Qlunc. Here the user creates the classes describing the comp
 ### Tutorials:
 - Containing 2 [JupyterNotebook-based tutorials](https://github.com/PacoCosta/Qlunc/tree/Qlunc-V0.9/Tutorials); `Tutorial1.ipynb` and `Tutorial2.ipynb` with their corresponding yaml files. 
 ## Requirements
- - [Anaconda Navigator1.9.12](https://www.anaconda.com/products/individual) has been installed as a graphical user interface. It includes, among others, Python3.7 and spyder4.2.1 version IDE software features, ready to be used. It includes also JupyterLab 2.2.6 and Jupyter Notebook 6.2.0 versions.
+ - [Anaconda Navigator1.9.12](https://www.anaconda.com/products/individual) has been installed as a graphical user interface. It includes, among others, Python3.7 and spyder4.2.1 version IDE software features, ready to be used. It includes also JupyterLab2.2.6 and JupyterNotebook6.2.0 versions.
 
 The following python libraries should be installed beforehand:
  - numpy=1.18.5
