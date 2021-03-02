@@ -6,10 +6,10 @@ tags:
   - OpenScience
   - OpenLidar
 authors:
-  - name: Francisco Costa
+  - name: Francisco Costa^[Author]
     orcid: 0000-0003-1318-9677
     affiliation: 1
-  - name: Andy Clifton
+  - name: Andy Clifton^[Co-authors]
     orcid: 0000-0001-9698-5083
     affiliation: 1
 affiliations:
@@ -76,6 +76,7 @@ of scanning points distance uncertainty.
 ![Qlunc basic structure.\label{fig:QluncStructure}](Qlunc_BasicStructure_diagram.png)
 
 # Usage
+
 
 ## Creating a lidar digital twin
 
