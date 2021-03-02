@@ -2,8 +2,9 @@
 # $ conda create --name <env> --file <this file>
 # platform: win-64
 #
-# This is the complete list of modules, libraries and packages
-# of the environment in which ´´Qlunc´´ is working.  
+# This is the complete list of modules, libraries and packages of the environment 
+# in which the application is being developed.
+
 _anaconda_depends=2019.10=py37_0
 _ipyw_jlab_nb_ext_conf=0.1.0=py37_0
 aiohttp=4.0.0a1=pypi_0
