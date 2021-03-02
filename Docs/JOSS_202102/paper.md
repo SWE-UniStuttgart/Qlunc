@@ -77,8 +77,7 @@ of scanning points distance uncertainty.
 
 # Usage
 
-Add some text here
-
+The framework has been developed and tested using python3.7.9 64bit. A list of required python libraries() for using ``Qlunc`` is provided in the repository, in the *Requirements* section. Existing tutorials and working example will help user to navigate all along the Qlunc framework aand to reproduce the most important steps. First of all user have to create a digital twin and later on ask for the uncertaintes following the dot notation.
 
 ## Creating a lidar digital twin
 
