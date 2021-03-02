@@ -1,5 +1,5 @@
 ---
-title: '``Qlunc``: A Python package for quantification of lidar uncertainty'
+title: '``Qlunc``: Quantification of lidar (hardware) uncertainty'
 tags:
   - wind lidar
   - lidar hardware uncertainty
