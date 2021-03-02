@@ -77,6 +77,8 @@ of scanning points distance uncertainty.
 
 # Usage
 
+Add some text here
+
 
 ## Creating a lidar digital twin
 
