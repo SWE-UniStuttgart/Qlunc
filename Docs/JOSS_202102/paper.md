@@ -85,8 +85,8 @@ of the distance error between theoretical and actually measured points.
 
 # Usage
 
-The framework has been developed and tested using python3.7.9 64bit. A list of required python libraries
-for using ``Qlunc`` is provided in the repository, in the readme.md file, *Requirements* section. For more
+The framework has been developed and tested using python3.7.9 64bit. A required programming environment
+to use ``Qlunc`` is provided in the repository, in the *readme.md* file, *Requirements* section. For more
 information about the system requirements, please consult *requirements.txt* file.
 Existing tutorials and working example will help user to navigate along the ``Qlunc`` framework, reproducing
 the most important steps. Two of them are explained below in order to facilitate the understanding of the workflow.
@@ -127,26 +127,25 @@ lidar digital twin is treated in depth.
 # Future development roadmap
 
 Over the next year, we plan to implement further lidar hardware modules in the model and compute their combined uncertainties.
-Most significant data Processing methods, which are expected to be the highest uncertainty contributors, will be
-assessed and implemented in the model during the next project stage, as well. 
+Also, most significant data processing methods, which are expected to be the highest uncertainty contributors, will be
+assessed and implemented in the model during the next stage of the project. 
 
-``Qlunc`` is a modular numerical framework, aiming to combine with other lidar codes dealing with lidar uncertaintes. 
+``Qlunc`` is a modular numerical framework and could feasibly combine with existing codes dealing with lidar uncertaintes. 
 In this sense, ``Qlunc`` in combination with other existing tools like yaddum [@yaddum] and mocalum [@mocalum] will
 help to improve lidar uncertainty estimations, thus increasing lidar measurements reliability. The "openness" of
 these group of tools makes it possible to share within the wind energy community and even beyond it.
 
-One of the next objectives is to align the lidar components/parameters/characteristics labeling process, used by Qlunc, to
+One of the next objectives is to align the lidar components/parameters/characteristics labeling process used by ``Qlunc``, to
 the controlled vocabulary resulting from an ongoing collaboration regarding a lidar ontology within an IEA Wind Task32 initiative,
 aiming to achieve a standard for lidar components labeling.
 
-All documentation from the project, scientific articles derived from the research period, tutorials and raw code as well are meant
-to be provided throughout a sphinx-based online site, to give possible users all needed information to dive into
-the numerical framework and get used to the Qlunc routine.
+All documentation from the project, scientific articles derived from the research period, tutorials and raw code are meant
+to be provided throughout a sphinx-based online site, to give users all needed information to dive into the numerical framework
+and get used to the ``Qlunc`` routines.
 
 # Acknowledgements
 
-Author wants to thank Andrew Clifton (ORCID iD: 0000-0001-9698-5083), Nikola Vasiljevic (ORCID iD: 0000-0002-9381-9693) and Ines Würth (ORCID iD: 0000-0002-1365-0243) for their support and valuable suggestions,
-feedback and insight.
+Author wants to thank Andrew Clifton (ORCID iD: 0000-0001-9698-5083), Nikola Vasiljevic (ORCID iD: 0000-0002-9381-9693) and Ines Würth (ORCID iD: 0000-0002-1365-0243) for their support and valuable suggestions, feedback and insight.
 This project has received funding from the European Union's Horizon 2020 research and innovation programme
 under grant agreement No 858358, within the frame of LIKE project.
 
