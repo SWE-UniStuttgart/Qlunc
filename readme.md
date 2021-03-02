@@ -50,7 +50,7 @@ This is the core of Qlunc. Here the user creates the classes describing the comp
  - [Anaconda Navigator1.9.12](https://www.anaconda.com/products/individual) has been installed as a graphical user interface. It includes, among others, Python3.7 and spyder4.2.1 version IDE software features, ready to be used. It includes also JupyterLab 2.2.6 and Jupyter Notebook 6.2.0 versions.
 
 The following python libraries should be installed beforehand:
- - numpy1.18.5
+ - numpy=1.18.5
  - matplotlib=3.2.1
  - pandas=1.2.1
  - pyyaml=5.4.1
