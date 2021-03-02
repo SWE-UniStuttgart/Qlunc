@@ -100,7 +100,7 @@ To encourage both, flexibility and further collaborations each lidar module has 
 function, which includes the components the module is made of. These stand-alone uncertainty estimation
 functions are easily exchangeable, just in case users want to use another uncertainty model. 
 
-# Working example and Tutorials: Do it yourself
+# Working example and tutorials: do it yourself
 
 Included in the ``Qlunc`` repository users can find Jupyter Notebooks-based tutorials
 (https://github.com/SWE-UniStuttgart/Qlunc/tree/Qlunc-V0.9/Tutorials) on how ``Qlunc`` works, providing a tool
