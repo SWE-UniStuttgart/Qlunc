@@ -5,6 +5,7 @@
 # This is the complete list of modules, libraries and packages of the environment 
 # in which the application is being developed.
 
+'''
 _anaconda_depends=2019.10=py37_0
 _ipyw_jlab_nb_ext_conf=0.1.0=py37_0
 aiohttp=4.0.0a1=pypi_0
@@ -384,3 +385,4 @@ zope=1.0=py37_1
 zope.event=4.5.0=py37_0
 zope.interface=5.2.0=py37h2bbff1b_0
 zstd=1.4.5=h04227a9_0
+'''
