@@ -1,9 +1,9 @@
 # **Quantification of lidar uncertainties - Qlunc**
 
 ## What is Qlunc?
-Qlunc is a software that aims to quantify errors when measuring with a lidar device. The code has an objected-oriented structure; by using python objects and simulating real lidar components the code puts all together in modules to eventually build up a lidar [digital twin](https://en.wikipedia.org/wiki/Digital_twin). The code is meant to be as modular as possible and offers the possibility of creating different lidar objects on parallel (see [Tutorial2.ipynb](https://github.com/PacoCosta/Qlunc/blob/Qlunc-V0.9/Tutorials/Tutorial2.ipynb)), with different components at the same time. This allows to easily combine different modules with different characteristics simulating different lidar devices.
+Qlunc is a software that aims to quantify errors when measuring with a lidar device. The code has an objected-oriented structure; by using python objects and simulating real lidar components the code puts all together in modules to eventually build up a lidar [digital twin](https://en.wikipedia.org/wiki/Digital_twin). The code is meant to be as modular as possible and offers the possibility of creating different lidar objects on parallel (see [Tutorial2.ipynb](https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Tutorials/Tutorial2.ipynb)), with different components at the same time. This allows to easily combine different modules with different characteristics simulating different lidar devices.
 
-![Qlunc basic structure image](https://github.com/PacoCosta/Qlunc/blob/Qlunc-V0.9/Pictures_repo_/Qlunc_GralStructure.JPG)
+![Qlunc basic structure image](https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Pictures_repo_/Qlunc_GralStructure.JPG)
 
 Currently, the code can calculate uncertainties coming from photonics, including photodetector (with or without trans-impedance amplifier) and optical amplifier uncertainties, as well as optics module uncertainty including scanner pointing accuracy and optical circulator uncertainties. For each module the Guide to the Expression of Uncertainty in Measurement ([GUM](https://www.bipm.org/utils/common/documents/jcgm/JCGM_100_2008_E.pdf)) is applied to calculate uncertainty expansion, taking into account that components are considered uncorrelated. 
 
@@ -29,7 +29,7 @@ At this stage the code can calculate errors introduced by the photodetector and 
 
 ## How to use Qlunc:
 
-First step is to download/[clone](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository) the `Qlunc` repository and extract the content in the selected folder (in Downloads directory user will find a zip folder called `Qlunc-Qlunc-V0.9.zip`).  Please downolad the latest (V0.91) release.
+First step is to download/[clone](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository) the `Qlunc` repository and extract the content in the selected folder (in Downloads directory user will find a zip folder called `Qlunc-Qlunc-V0.91.zip`).  Please downolad the latest (V0.91) release.
 
 
 By downloading the repository you will get several folders within which Qlunc is organized. The most importants to know are:
@@ -46,7 +46,7 @@ This is the core of Qlunc. Here the user creates the classes describing the comp
 ###  TestFile_Qlunc:
  - A working example is provided to show how the process looks like. In this test case a lidar is builded up with its modules and components, puting all together to set up a lidar device. User can find more information on how to run this test file in the readme.md file dropped in this folder.
 ### Tutorials:
-- Containing 2 [JupyterNotebook-based tutorials](https://github.com/PacoCosta/Qlunc/tree/Qlunc-V0.9/Tutorials); `Tutorial1.ipynb` and `Tutorial2.ipynb` with their corresponding yaml files. 
+- Containing 2 [JupyterNotebook-based tutorials](https://github.com/SWE-UniStuttgart/Qlunc/tree/Qlunc-V0.9/Tutorials); `Tutorial1.ipynb` and `Tutorial2.ipynb` with their corresponding yaml files. 
 ## Requirements
 [Anaconda Navigator1.9.12](https://www.anaconda.com/products/individual) has been installed as a graphical user interface. It includes, among others, Python3.7 and spyder4.2.1 version IDE software features, ready to be used. It includes also JupyterLab2.2.6 and JupyterNotebook6.2.0 versions.
 
@@ -62,7 +62,7 @@ The following python libraries should be installed beforehand:
 [Francisco Costa](https://www.ifb.uni-stuttgart.de/en/institute/team/Costa-Garcia/)
 
 ## License:
-Qlunc is licensed under **[SD 3-Clause License](https://github.com/PacoCosta/Qlunc/blob/Qlunc-V0.9/LICENSE)**
+Qlunc is licensed under **[SD 3-Clause License](https://github.com/SWE-UniStuttgart/Qlunc/blob/main/LICENSE)**
 
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
