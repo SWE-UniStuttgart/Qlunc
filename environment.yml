@@ -1,7 +1,7 @@
 # This file can be used to create an environment with specific dependencies by running
-#```
-#conda env create -f environment.yml
-#```
+#
+# $conda env create -f environment.yml
+#
 # in the Anaconda Prompt
 
 # Name of the environment
