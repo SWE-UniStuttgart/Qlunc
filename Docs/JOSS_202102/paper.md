@@ -87,7 +87,7 @@ of the distance error between theoretical and actually measured points.
 
 The framework has been developed and tested using python3.7.9 64bit. A required programming environment
 to use ``Qlunc`` is provided in the repository, in the *readme.md* file, *Requirements* section. For more
-information about the system requirements, please consult *requirements.txt* file.
+information about the system requirements, please rise an [issue](https://github.com/SWE-UniStuttgart/Qlunc/issues) at the repository.
 Existing tutorials and working example will help user to navigate along the ``Qlunc`` framework, reproducing
 the most important steps. Two of them are explained below in order to facilitate the understanding of the workflow.
 In a first step user creates the lidar digital twin. In a later step user introduces a model, by means of a python
