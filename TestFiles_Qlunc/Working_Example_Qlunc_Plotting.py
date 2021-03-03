@@ -10,7 +10,7 @@ University of Stuttgart(c)
 
 #%% Plotting:
 
-# Ploting general parameters:
+# Plotting general parameters:
 plot_param={'axes_label_fontsize' : 25,
             'textbox_fontsize'    : 14,
             'title_fontsize'      : 29,
@@ -27,7 +27,7 @@ plot_param={'axes_label_fontsize' : 25,
             'Qlunc_version'       : 'Qlunc Version - 0.9'
             }
 
-##############    Ploting scanner measuring points pattern #######################
+##############    Plotting scanner measuring points pattern and their uncertainty #######################
 if flags.flag_plot_measuring_points_pattern:
     Scanner_Data1 = Lidar.optics.scanner.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs) # Calling Scanner uncertainty to plot the graphics
 
