@@ -46,9 +46,8 @@ This, combined with the underlying open-source code attribute, defines an attrac
 for sharing knowledge about lidar uncertainties estimation methods. It also encourages
 collaborations among the wind lidar community, aiming to characterize a common lidar architecture,
 to assess wind lidar data processing methods or even to get a consensus for lidar terminology,
-giving place to a lidar ontology, which is a developing project driven by Andy Clifton, Nikola Vasiljevic
-and Francisco Costa, as collaborator [@OntoStack;@sheet2rdf] and it is been developed within the frame of the
-IEA Wind Task32 initiative.
+giving place to a lidar ontology, which is a developing project driven by Andy Clifton and Nikola Vasiljevic
+[@OntoStack;@sheet2rdf] and it is been developed within the frame of the IEA Wind Task32 initiative.
 
 The source code for ``Qlunc`` has been archived to Zenodo with the linked DOI: [@zenodo]
 
