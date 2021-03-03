@@ -79,7 +79,7 @@ accuracy distance errors and optical circulator uncertainties. In the near futur
 other hardware components and data processing methods will be impemented in the model.
 
 Output plots show 1) different signal noise contributors of the photodetector components and 2) estimates 
-of the distance error between theoretical and actually measured points.
+of the distance error between theoretical and actually measured points. 
 
 ![Qlunc basic structure.\label{fig:QluncStructure}](Qlunc_BasicStructure_diagram.png)
 
@@ -141,7 +141,7 @@ All documentation from the project, scientific articles derived from the researc
 to be provided throughout a sphinx-based online site, to give users all needed information to dive into the numerical framework
 and get used to the ``Qlunc`` routines.
 
-# Acknowledgements
+# Acknowledgements  :-)
 
 Author wants to thank Andrew Clifton (ORCID iD: 0000-0001-9698-5083), Nikola Vasiljevic (ORCID iD: 0000-0002-9381-9693) and Ines Würth (ORCID iD: 0000-0002-1365-0243) for their support and valuable suggestions, feedback and insight.
 This project has received funding from the European Union's Horizon 2020 research and innovation programme
