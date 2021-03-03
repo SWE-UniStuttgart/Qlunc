@@ -1,3 +1,8 @@
+# This file can be used to create an environment with specific dependencies by running
+#```
+#conda env create -f environment.yml
+#```
+
 name: test0
 dependencies:
   - matplotlib==3.2.1
