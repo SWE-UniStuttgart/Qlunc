@@ -30,15 +30,23 @@ At this stage the code can calculate errors introduced by the photodetector and 
 ## How to use Qlunc:
 
 ### Prerequisites
+
 1) Install anaconda and create a new environment. In the Anaconda prompt type:
 ``conda create QluncEnv``
 ``conda activate QluncEnv``
+
 2)Install pip & git
+
 ``conda install pip``
+
 ``conda install git``
+
 3)Download, fork or clone the repository
+
 4)Go to the directory of the repository and install the requirements in the new environment:
+
 pip install -r requirements.txt
+
 5) Environment is ready to rumble
 
 
