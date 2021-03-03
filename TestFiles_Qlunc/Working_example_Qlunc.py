@@ -22,12 +22,9 @@ could be done by instantiating their classes:
       
  """   
 #%% Running Qlunc_Classes.py:
-import os
-import pdb
-import sys
-import yaml
+from Qlunc_Classes import *
 
-# Accessing yaml file 
+# Reading data from the yaml file:
 with open (r'../TestFiles_Qlunc/Working_example_yaml_inputs_file.yml') as file: # WHere the yaml file is in order to get the input data
     Qlunc_yaml_inputs={}
     docs = yaml.load_all(file, Loader=yaml.FullLoader)
