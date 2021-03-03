@@ -32,8 +32,10 @@ At this stage the code can calculate errors introduced by the photodetector and 
 ### Prerequisites
 
 1) Install anaconda and create a new environment. In the Anaconda prompt type:
-``conda create QluncEnv``
-``conda activate QluncEnv``
+'''
+conda create QluncEnv
+conda activate QluncEnv
+'''
 
 2)Install pip & git
 
