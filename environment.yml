@@ -5,7 +5,7 @@
 # in the Anaconda Prompt
 
 # Name of the environment
-name: test0 
+name: Qlunc_Env
 # Dependencies we want to install
 dependencies:
   - matplotlib==3.2.1
