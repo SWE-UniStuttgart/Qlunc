@@ -99,7 +99,7 @@ import UQ_Photonics_Classes as uphc
 import UQ_Power_Classes as upwc
 import UQ_Optics_Classes as uopc
 import UQ_Lidar_Classes as ulc
-os.chdir('../Main')
+os.chdir('../TestFiles_Qlunc')
 
 #%% Constants:
 class cts():
