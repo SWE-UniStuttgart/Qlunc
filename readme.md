@@ -29,7 +29,8 @@ At this stage the code can calculate errors introduced by the photodetector and 
 
 ## How to use Qlunc:
 
-First step is to download/[clone](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository) the `Qlunc` repository and extract the content in the selected folder (in Downloads directory user will find a zip folder called `Qlunc-Qlunc-V0.9.zip`).
+First step is to download/[clone](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository) the `Qlunc` repository and extract the content in the selected folder (in Downloads directory user will find a zip folder called `Qlunc-Qlunc-V0.9.zip`).  Please downolad the latest (V0.91) release.
+
 
 By downloading the repository you will get several folders within which Qlunc is organized. The most importants to know are:
 ### Main:
