@@ -9,13 +9,13 @@ Digitally creating a virtual object which represents a physical, real object
 could be done by instantiating their classes:
         
         1) Run Qlunc_Classes.py to create the classes corresponding to 
-           components, modules, atmospheric scenarios and lidar device.
+           components, modules, atmospheric scenarios and lidar device
         2) Create the Components instances introducing parameter values for 
-           each component.
+           each component (yaml file).
         3) Modules instances are created and components are included in the the
-           modules.
+           modules
         4) Atmospheric scenarios ara included in the data: We can create it 
-           either from a single value or or from a time series
+           either from a single value or from a time series
         5) Lidar device general inputs instance is created
         6) Lidar device instance is created and modules, containing the 
            different components are included in the lidar architecture 
@@ -27,14 +27,7 @@ import pdb
 import sys
 import yaml
 
-#from yaml.constructor import Constructor
-
-#def add_bool(self, node):
-#    return self.construct_scalar(node)
-#
-#Constructor.add_constructor(u'tag:yaml.org,2002:bool', add_bool)
-# Getting input values from the yaml file:
-
+# Accessing yaml file 
 with open (r'../TestFiles_Qlunc/Working_example_yaml_inputs_file.yml') as file: # WHere the yaml file is in order to get the input data
     Qlunc_yaml_inputs={}
     docs = yaml.load_all(file, Loader=yaml.FullLoader)
@@ -55,7 +48,7 @@ flags.flag_plot_photodetector_noise      = Qlunc_yaml_inputs['Flags']['Photodete
 ## Optics components and Module: ##############################################
 
 # Here we create optics components and optics module. User can create as many components as he/she want and combine them to create different module types
-# Each module/component is a python object with their own technical characteristics and can be flexible combined to assess different use cases. 
+# Each module/component is a python object with their own technical characteristics and can be flexibly combined to assess different use cases. 
 
 # Scanner:
 
