@@ -120,7 +120,7 @@ Included in the ``Qlunc`` repository users can find 2 Jupyter Notebooks-based tu
 them get started with the software. Binder badge is also provided to ease accessibility and reproducibility.
 Users can find more information about these tutorials in the readme file attached to the ``Qlunc`` repository.
 Apart from the tutorials, the package includes a functional working example. More information about this
-working example is given in the readme, included in the *``Qlunc``/TestFilesQlunc* directory, where the process
+working example is given in the readme file, included in the *Qlunc/TestFilesQlunc* directory, where the process
 of creating a lidar digital twin is treated in depth.
 
 # Future development roadmap
@@ -132,10 +132,10 @@ assessed and implemented in the model during the next stage of the project.
 ``Qlunc`` is a modular numerical framework and could feasibly combine with existing codes dealing with lidar uncertaintes. 
 In this sense, ``Qlunc`` in combination with other existing tools like yaddum [@yaddum] and mocalum [@mocalum] will
 help to improve lidar uncertainty estimations, thus increasing lidar measurements reliability. The "openness" of
-these group of tools makes it possible to share within the wind energy community and even beyond it.
+this group of tools makes possible to share them within the wind energy community and even beyond it.
 
 Another future objective is to align the lidar components/parameters/characteristics labeling process used by ``Qlunc``, to
-the controlled vocabulary resulting from [@OntoStack,@sheet2rdf].
+the controlled vocabulary resulting from [@OntoStack] and [@sheet2rdf].
 
 All documentation from the project, scientific articles derived from the research period, tutorials and raw code are meant
 to be provided throughout a sphinx-based online site, to give users all needed information to dive into the numerical framework
