@@ -1,0 +1,131 @@
+# Case2: Inputs file for Qlunc. 
+# Do not change definition names or vary the structure of the file!! Just change parameter values. 
+
+
+# DIRECTORIES:------------------------------------------------------
+
+Main_directory: # Directory where Qlunc_Classes.py is
+  '../TestFiles_Qlunc'
+
+# Lidar values. Modules and components parameters: ------------------------------------------------------
+
+Components:
+#Optics: 
+  Scanner:
+    
+    Name: Scanner_Yaml2 # Provide an ID to your lidar:    
+    Origin: [0,0,0]  # Lidar position in meters: [x,y,z]    
+    Sample rate: 0   # Lidar sample rate. In meters. Use 0.
+    Type: VAD          # Type of the scanning head: VAD or SCAN (Scanning Lidar)
+ 
+    # VAD Pattern:
+
+    Focus distance: [65]   # [m]
+    Cone angle: [20]       # [deg]
+    Azimuth: [0,360,8]    # [deg]
+    
+    stdv focus distance: 1  # [m]
+    stdv Cone angle: 2.3      # [deg]
+    stdv Azimuth: 0.1         # [deg]    
+    
+    # Scanning Lidar Pattern:
+    x: [20,20,20]        # [m]
+    y: [0,0,0]      # [m]
+    z: [20,0,-20]      # [m]
+    
+    stdv x: 0.3               # [m]
+    stdv y: 0             # [m]
+    stdv z: 0             # [m]
+    
+    # Uncertainty function:
+    Uncertainty function: uopc.UQ_Scanner
+    
+  Optical Circulator:
+    Name: OC_Yaml
+    Insertion loss: 2.1 # [dB]
+    Uncertainty function: uopc.UQ_OpticalCirculator
+  
+# Photonics  
+  Optical Amplifier: 
+  
+    Name: OA_Yaml
+    
+    # Noise figure in dB. Could be a well known value or a table.
+    # If table (FigureNoise Vs Wavelength) is provided Qlunc 
+    # interpolates to obtain a most accurate value according 
+    # with the lidar nominal wavelength. Interpolation param. could 
+    # be tunned in Qlunc_Photonics_Classes --> UQ_Optical_amplifier
+    
+    Optical amplifier noise figure: ../metadata/NoiseFigure.csv 
+    
+    # Optical amplifier gain in dB
+    Optical amplifier gain: 30
+    
+    # Uncertainty function quantifying the optical amplifier uncertainty
+    Uncertainty function: uphc.UQ_Optical_amplifier
+
+  
+  Photodetector:
+    Name: Photodetector_YAML
+    Photodetector BandWidth: 380.e+6    # [Hz]            
+    Load resistor: 50                   # [Ohm]
+    Photodetector efficiency: .85       # Photodetector efficiency [-]
+    Dark current: 5.e-9                 # In [A]. Dark current in the photodetector.
+    Photodetector signalP: 1.e-3        # [W]
+    Power interval: [0,1000,.001]       # [W]
+    Gain TIA: 5.e+3                     # [dB]
+    V Noise TIA: 160.e-6                # [V]
+    Uncertainty function: uphc.UQ_Photodetector
+ 
+# Lidar general inputs 
+  Lidar general inputs:
+    Name: Lidar_gral_inputs_Yaml2
+    Wavelength: 1550.e-9    # [m]
+    Yaw error: 5            # [deg]
+    Pitch error: 3          # [deg]
+    Roll error: 7           # [deg]
+---
+# Modules:
+Modules:
+  Optics Module:
+    Name: Optics_module_Yaml2
+    Scanner: Scanner2
+    Optical circulator: Optical_circulator # Have to be the same name as the instance
+    Laser: None
+    Uncertainty function: uopc.sum_unc_optics
+  Photonics Module:
+    Name: Photonics_module_Yaml2
+    Photodetector: Photodetector           # Have to be the same name as the instance
+    Optical amplifier: Optical_Amplifier   # Have to be the same name as the instance
+    Uncertainty function: uphc.sum_unc_photonics
+---  
+# Lidar:
+Lidar:
+  Name: Caixa2
+  Photonics module: Photonics_Module       # Have to be the same name as the instance
+  Optics module: Optics_Module2            # Have to be the same name as the instance
+  Power module: None                       # Have to be the same name as the instance
+  Lidar inputs: Lidar_inputs_2               # Have to be the same name as the instance
+  Uncertainty function: ulc.sum_unc_lidar
+
+---
+
+# ATMOSPHERIC INPUTS:-----------------------------------------------
+# Atmospheric_inputs to create the atmospheric scenarios
+
+Atmospheric_inputs:
+  
+  TimeSeries    : False # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere characteristics (T, H, rain and fog)   
+  Atmos_TS_FILE : 'AtmosphericScenarios.csv'  
+  Temperature: [300] # [K] Have to put the same number of elements for temperature and humidity. Always in paired values   
+  Humidity: [12]     # [%] 
+  Rain: true # for rain and fog intensity intervals might be introduced [none,low, medium, high]
+  Fog: false
+---
+
+# Plotting:------------------------------------------------------------
+Flags:
+  Pointing accuracy uncertainty: False
+  Scanning Pattern: True
+  Photodetector noise: False
+
