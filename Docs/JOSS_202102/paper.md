@@ -136,7 +136,7 @@ help to improve lidar uncertainty estimations, thus increasing lidar measurement
 these group of tools makes it possible to share within the wind energy community and even beyond it.
 
 Another future objective is to align the lidar components/parameters/characteristics labeling process used by ``Qlunc``, to
-the controlled vocabulary resulting from [@OntoStack,@sheet2rdf]
+the controlled vocabulary resulting from [@OntoStack,@sheet2rdf].
 
 All documentation from the project, scientific articles derived from the research period, tutorials and raw code are meant
 to be provided throughout a sphinx-based online site, to give users all needed information to dive into the numerical framework
