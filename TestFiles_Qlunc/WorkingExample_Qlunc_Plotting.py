@@ -7,7 +7,7 @@ Francisco Costa García
 University of Stuttgart(c) 
 
 """
-from Qlunc_Instantiate import *
+from WorkingExample_Qlunc_Instantiate import *
 
 #%% Plotting:
 
@@ -25,7 +25,7 @@ plot_param={'axes_label_fontsize' : 25,
             'marker'              : '.',
             'markerTheo'          : '.b',
             'tick_labelrotation'  : 45,
-            'Qlunc_version'       : 'Qlunc Version - 0.9'
+            'Qlunc_version'       : 'Qlunc Version - 0.91'
             }
 
 ##############    Plotting scanner measuring points pattern and their uncertainty #######################
