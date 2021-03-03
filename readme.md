@@ -33,7 +33,7 @@ At this stage the code can calculate errors introduced by the photodetector and 
 
 ### Create am environment and install dependencies
 
-1) Having [Anaconda](https://docs.anaconda.com) installed is a prerequisite. Then, we create a new environment based on the requirements added to the ``environment.yaml`` file, where we include the name  and the tools/packages we want to install in the new environment. 
+1) Having [Anaconda](https://docs.anaconda.com) installed is a prerequisite if we want to work in a different environment. Then, based on the requirements added to the ``environment.yaml`` file on the repository, where are included the name and the tools/packages we want to install, we build the new environment. 
 
 2) In the Anacond Prompt type:
 
