@@ -44,14 +44,14 @@ conda install pip
 conda install git
 '''
 
-3) [Download or clone](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository) the repository to a local directory. **Please downolad the latest (V0.91) release.**
+3) Download or [clone](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository) the repository to a local directory. **Please downolad the latest (V0.91) release.**
 
 
 4) Go to the directory of the repository and install the requirements in the new environment:
 
 '''pip install -r requirements.txt'''
 
-5) Environment is ready to rumble
+5) Environment is ready to rumble. You have now all the packages needed to run Qlunc.
 
 
 By downloading the repository you will get several folders within which Qlunc is organized. The most importants to know are:
