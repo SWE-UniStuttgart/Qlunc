@@ -33,18 +33,18 @@ At this stage the code can calculate errors introduced by the photodetector and 
 
 ### Create am environment and install dependencies
 
-1) Having Anaconda installed is a prerequisite. Then, we create a new environment based on the requirements added to the ``environment.yaml`` file, where we include the name  and the tools/packages we want to install in the new environment. 
+1) Having [Anaconda](https://docs.anaconda.com) installed is a prerequisite if we want to work in a different environment. Then, based on the requirements added to the ``environment.yaml`` file on the repository, where are included the name and the tools/packages we want to install, we build the new environment. 
 
 2) In the Anacond Prompt type:
 
 ```
 conda env create -f environment.yml 
+conda activate <envname>
 ```
 
-3) Download or [clone](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository) the repository to a local directory. 
+3) Environment is ready to rumble. You have now all the packages needed to run Qlunc.
 
-4) Environment is ready to rumble. You have now all the packages needed to run Qlunc.
-
+### Download or [clone](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository) the repository to a local directory. 
 
 By downloading the repository you will get several folders within which Qlunc is organized. The most importants to know are:
 
@@ -65,15 +65,17 @@ This is the core of Qlunc. Here the user creates the classes describing the comp
 ## Requirements
 [Anaconda Navigator1.9.12](https://www.anaconda.com/products/individual) has been installed as a graphical user interface. It includes, among others, Python3.7 and spyder4.2.1 version IDE software features, ready to be used. It includes also JupyterLab2.2.6 and JupyterNotebook6.2.0 versions.
 
-The following python libraries should be installed beforehand:
+The following python libraries and tools should be installed beforehand:
 
-- matplotlib==3.2.1
-- numpy==1.18.5 
-- pandas==1.2.1
-- pyyaml==5.4.1
-- scipy==1.6.0
-- sympy==1.7.1
-- xarray==0.15.1
+- matplotlib=3.2.1
+- numpy=1.18.5 
+- pandas=1.2.1
+- pyyaml=5.4.1
+- scipy=1.6.0
+- sympy=1.7.1
+- xarray=0.15.1
+- python=2.7
+- spyder=4.2.1
 - notebook
 - jupyterlab
 
