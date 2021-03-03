@@ -3,7 +3,7 @@
 ## What is Qlunc?
 Qlunc is a software that aims to quantify errors when measuring with a lidar device. The code has an objected-oriented structure; by using python objects and simulating real lidar components the code puts all together in modules to eventually build up a lidar [digital twin](https://en.wikipedia.org/wiki/Digital_twin). The code is meant to be as modular as possible and offers the possibility of creating different lidar objects on parallel (see [Tutorial2.ipynb](https://github.com/PacoCosta/Qlunc/blob/Qlunc-V0.9/Tutorials/Tutorial2.ipynb)), with different components at the same time. This allows to easily combine different modules with different characteristics simulating different lidar devices.
 
-![Qlunc basic structure image](https://github.com/PacoCosta/Qlunc/blob/Qlunc-V0.9/Pictures_repo_/Qlunc_GralStructure.JPG)
+![Qlunc basic structure image](https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Pictures_repo_/Qlunc_GralStructure.JPG)
 
 Currently, the code can calculate uncertainties coming from photonics, including photodetector (with or without trans-impedance amplifier) and optical amplifier uncertainties, as well as optics module uncertainty including scanner pointing accuracy and optical circulator uncertainties. For each module the Guide to the Expression of Uncertainty in Measurement ([GUM](https://www.bipm.org/utils/common/documents/jcgm/JCGM_100_2008_E.pdf)) is applied to calculate uncertainty expansion, taking into account that components are considered uncorrelated. 
 
