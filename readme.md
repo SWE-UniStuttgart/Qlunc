@@ -29,6 +29,19 @@ At this stage the code can calculate errors introduced by the photodetector and 
 
 ## How to use Qlunc:
 
+### Prerequisites
+1) Install anaconda and create a new environment. In the Anaconda prompt type:
+``conda create QluncEnv``
+``conda activate QluncEnv``
+2)Install pip & git
+``conda install pip``
+``conda install git``
+3)Download, fork or clone the repository
+4)Go to the directory of the repository and install the requirements in the new environment:
+pip install -r requirements.txt
+5) Environment is ready to rumble
+
+
 First step is to download/[clone](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository) the `Qlunc` repository and extract the content in the selected folder (in Downloads directory user will find a zip folder called `Qlunc-Qlunc-V0.91.zip`).  Please downolad the latest (V0.91) release.
 
 
@@ -51,12 +64,17 @@ This is the core of Qlunc. Here the user creates the classes describing the comp
 [Anaconda Navigator1.9.12](https://www.anaconda.com/products/individual) has been installed as a graphical user interface. It includes, among others, Python3.7 and spyder4.2.1 version IDE software features, ready to be used. It includes also JupyterLab2.2.6 and JupyterNotebook6.2.0 versions.
 
 The following python libraries should be installed beforehand:
- - numpy=1.18.5
- - matplotlib=3.2.1
- - pandas=1.2.1
- - pyyaml=5.4.1
- - scipy=1.6.0
- - sympy=1.7.1
+
+- matplotlib==3.2.1
+- numpy==1.18.5 
+- pandas==1.2.1
+- pyyaml==5.4.1
+- scipy==1.6.0
+- sympy==1.7.1
+- xarray==0.15.1
+- notebook
+- jupyterlab
+
 
 ## Author:
 [Francisco Costa](https://www.ifb.uni-stuttgart.de/en/institute/team/Costa-Garcia/)
