@@ -15,5 +15,7 @@ dependencies:
   - scipy==1.6.0
   - sympy==1.7.1
   - xarray==0.15.1
+  - spyder==4.2.1
+  - python
   - notebook
   - jupyterlab
