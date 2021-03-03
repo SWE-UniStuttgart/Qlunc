@@ -5,13 +5,13 @@
 # This is a list of modules, libraries and packages of the environment 
 # in which the application is being developed and tested
 
-matplotlib==3.2.1 # python library
-numpy==1.18.5  #  python library
-pandas==1.2.1   #python library
+matplotlib==3.2.1
+numpy==1.18.5 
+pandas==1.2.1
 
-pyyaml==5.4.1 # python library
-scipy==1.6.0 # python library
-spyder==4.2.1 # python IDE
-sympy==1.7.1 # python library
+pyyaml==5.4.1
+scipy==1.6.0
+spyder==4.2.1 
+sympy==1.7.1
 
 
