@@ -33,18 +33,18 @@ At this stage the code can calculate errors introduced by the photodetector and 
 
 ### Create am environment and install dependencies
 
-1) Having Anaconda installed is a prerequisite. Then, we create a new environment based on the requirements added to the ``environment.yaml`` file, where we include the name  and the tools/packages we want to install in the new environment. 
+1) Having [Anaconda](https://docs.anaconda.com) installed is a prerequisite. Then, we create a new environment based on the requirements added to the ``environment.yaml`` file, where we include the name  and the tools/packages we want to install in the new environment. 
 
 2) In the Anacond Prompt type:
 
 ```
 conda env create -f environment.yml 
+conda activate <envname>
 ```
 
-3) Download or [clone](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository) the repository to a local directory. 
+3) Environment is ready to rumble. You have now all the packages needed to run Qlunc.
 
-4) Environment is ready to rumble. You have now all the packages needed to run Qlunc.
-
+### Download or [clone](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository) the repository to a local directory. 
 
 By downloading the repository you will get several folders within which Qlunc is organized. The most importants to know are:
 
