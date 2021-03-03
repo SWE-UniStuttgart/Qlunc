@@ -47,7 +47,8 @@ for sharing knowledge about lidar uncertainties estimation methods. It also enco
 collaborations among the wind lidar community, aiming to characterize a common lidar architecture,
 to assess wind lidar data processing methods or even to get a consensus for lidar terminology,
 giving place to a lidar ontology, which is a developing project driven by Andy Clifton, Nikola Vasiljevic
-and Francisco Costa [@OntoStack;@sheet2rdf]. 
+and Francisco Costa, as collaborator [@OntoStack;@sheet2rdf] and it is been developed within the frame of the
+IEA Wind Task32 initiative.
 
 The source code for ``Qlunc`` has been archived to Zenodo with the linked DOI: [@zenodo]
 
@@ -96,10 +97,10 @@ module,to calculate the uncertainty of the system.
 ## Creating a lidar digital twin
 
 Each component, pertaining to the correspondent module (e.g. photodetector belongs to the photonics
-module) is created as a python object and enclosed in other python class, which represents the aforementioned
+module), is created as a python class and enclosed in other python class, which represents the aforementioned
 module. Following this procedure these lidar modules are, in turn, included in the lidar python class, which
 gathers all classes corresponding to the different modules a lidar is made of, thus creating the lidar
-digital twin. Dot notation methodology is used to ask for lidar component properties and uncetainties as well.
+digital twin. Dot notation methodology can be used to ask for lidar component properties and uncetainties.
 
 
 ## Uncertainty estimation model
@@ -117,12 +118,11 @@ estimation functions are easily exchangeable, just in case users want to use ano
 
 Included in the ``Qlunc`` repository users can find 2 Jupyter Notebooks-based tutorials
 (https://github.com/SWE-UniStuttgart/Qlunc/tree/Qlunc-V0.9/Tutorials) on how ``Qlunc`` works, helping
-them get started with the software. Tutorials’ Binder badge is also provided to ease accessibility 
-and reproducibility. Users can find more information about these tutorials in the readme file attached
-to the ``Qlunc`` repository.
+them get started with the software. Binder badge is also provided to ease accessibility and reproducibility.
+Users can find more information about these tutorials in the readme file attached to the ``Qlunc`` repository.
 Apart from the tutorials, the package includes a functional working example. More information about this
-working example is given in the readme, included in the *``Qlunc``/TestFilesQlunc* directory, where the process of creating a
-lidar digital twin is treated in depth.
+working example is given in the readme, included in the *``Qlunc``/TestFilesQlunc* directory, where the process
+of creating a lidar digital twin is treated in depth.
 
 # Future development roadmap
 
@@ -135,9 +135,8 @@ In this sense, ``Qlunc`` in combination with other existing tools like yaddum [@
 help to improve lidar uncertainty estimations, thus increasing lidar measurements reliability. The "openness" of
 these group of tools makes it possible to share within the wind energy community and even beyond it.
 
-One of the next objectives is to align the lidar components/parameters/characteristics labeling process used by ``Qlunc``, to
-the controlled vocabulary resulting from an ongoing collaboration regarding a lidar ontology within an IEA Wind Task32 initiative,
-aiming to achieve a standard for lidar components labeling.
+Another future objective is to align the lidar components/parameters/characteristics labeling process used by ``Qlunc``, to
+the controlled vocabulary resulting from [@OntoStack,@sheet2rdf]
 
 All documentation from the project, scientific articles derived from the research period, tutorials and raw code are meant
 to be provided throughout a sphinx-based online site, to give users all needed information to dive into the numerical framework
