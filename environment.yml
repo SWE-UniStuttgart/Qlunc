@@ -2,8 +2,11 @@
 #```
 #conda env create -f environment.yml
 #```
+# in the Anaconda Prompt
 
-name: test0
+# Name of the environment
+name: test0 
+# Dependencies we want to install
 dependencies:
   - matplotlib==3.2.1
   - numpy==1.18.5 
