@@ -6,16 +6,16 @@ tags:
   - OpenScience
   - OpenLidar
 authors:
-  - name: Francisco Costa^[Author]
+  - name: Francisco Costa
     orcid: 0000-0003-1318-9677
     affiliation: 1
-  - name: Andy Clifton^[Co-authors]
+  - name: Andy Clifton
     orcid: 0000-0001-9698-5083
     affiliation: 1
-  - name: Nikola Vasiljevic^[Co-authors]
+  - name: Nikola Vasiljevic
     orcid: 0000-0002-9381-9693
     affiliation: 2
-  - name: Ines Wuerth^[Co-authors]
+  - name: Ines Wuerth
     orcid: 0000-0002-1365-0243
     affiliation: 1
 affiliations:
