@@ -20,7 +20,7 @@ Components:
     Azimuth: [0,360,15]    # [deg]
     
     stdv focus distance: 1  # [m]
-    stdv Cone angle: 2.3      # [deg]
+    stdv Cone angle: 1.3      # [deg]
     stdv Azimuth: 0.1         # [deg]    
     
     # Scanning Lidar Pattern:
@@ -76,9 +76,9 @@ Components:
   Lidar general inputs:
     Name: Lidar_gral_inputs_Yaml
     Wavelength: 1550.e-9    # [m]
-    Yaw error: 20            # [deg]
-    Pitch error: 20          # [deg]
-    Roll error: 20           # [deg]
+    Yaw error: 5            # [deg]
+    Pitch error: 5          # [deg]
+    Roll error: 0.9           # [deg]
 ---
 # Modules:
 Modules:

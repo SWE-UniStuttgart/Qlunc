@@ -23,7 +23,7 @@ plot_param={'axes_label_fontsize' : 25,
             'markersize'          : 5,
             'markersize_lidar'    : 9,
             'marker'              : '.',
-            'markerTheo'          : '.b',
+            'markerTheo'          : '.r',
             'tick_labelrotation'  : 45,
             'Qlunc_version'       : 'Qlunc Version - 0.91'
             }
