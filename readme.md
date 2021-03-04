@@ -42,7 +42,9 @@ conda env create -f environment.yml
 conda activate <envname>
 ```
 
-3) Environment is ready to rumble. You have now all the packages needed to run Qlunc.
+3) Environment is ready to rumble. You have now a new environment (``Qlunc_Env`` by default) with all the packages needed to run Qlunc.
+
+4) In case you don't want to create a new environment, just install the requirements in the *Requirements* section below.
 
 ### Download or [clone](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository) the repository to a local directory. 
 
@@ -63,19 +65,19 @@ This is the core of Qlunc. Here the user creates the classes describing the comp
 ### Tutorials:
 - Containing 2 [JupyterNotebook-based tutorials](https://github.com/SWE-UniStuttgart/Qlunc/tree/Qlunc-V0.9/Tutorials); `Tutorial1.ipynb` and `Tutorial2.ipynb` with their corresponding yaml files. 
 ## Requirements
-[Anaconda Navigator1.9.12](https://www.anaconda.com/products/individual) has been installed as a graphical user interface. It includes, among others, Python3.7 and spyder4.2.1 version IDE software features, ready to be used. It includes also JupyterLab2.2.6 and JupyterNotebook6.2.0 versions.
+[Anaconda Navigator1.9.12](https://www.anaconda.com/products/individual) has been installed as a graphical user interface. It includes, among others, Python 3.7 and spyder 4.2.1 version IDE software features, ready to be used. It includes also JupyterLab 2.2.6 and JupyterNotebook 6.2.0 versions.
 
 The following python libraries and tools should be installed beforehand:
 
-- matplotlib=3.2.1
-- numpy=1.18.5 
-- pandas=1.2.1
-- pyyaml=5.4.1
-- scipy=1.6.0
-- sympy=1.7.1
-- xarray=0.15.1
-- python=2.7
-- spyder=4.2.1
+- matplotlib==3.2.1
+- numpy==1.18.5 
+- pandas==1.2.1
+- pyyaml==5.4.1
+- scipy==1.6.0
+- sympy==1.7.1
+- xarray==0.15.1
+- python==2.7
+- spyder==4.2.1
 - notebook
 - jupyterlab
 
