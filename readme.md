@@ -42,9 +42,9 @@ conda env create -f environment.yml
 conda activate <envname>
 ```
 
-3) Environment is ready to rumble. You have now a new environment (``Qlunc_Env`` by default) with all the packages needed to run Qlunc.
+3) Your environment is ready to rumble. You have now a new environment (`Qlunc_Env` by default) with all the packages needed to run Qlunc.
 
-4) In case you don't want to create a new environment, just install the requirements in the *Requirements* section below.
+4) In case you don't want to create a new environment, just install the requirements listed in the *Requirements* section below.
 
 ### Download or [clone](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository) the repository to a local directory. 
 
