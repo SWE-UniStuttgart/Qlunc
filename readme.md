@@ -1,7 +1,7 @@
 # **Quantification of lidar uncertainties - Qlunc**
 
 ## What is Qlunc?
-Qlunc is a software that aims to quantify errors when measuring with a lidar device. The code has an objected-oriented structure; by using python objects and simulating real lidar components the code puts all together in modules to eventually build up a lidar [digital twin](https://en.wikipedia.org/wiki/Digital_twin). The code is meant to be as modular as possible and offers the possibility of creating different lidar objects on parallel (see [Tutorial2.ipynb](https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Tutorials/Tutorial2.ipynb)), with different components at the same time. This allows to easily combine different modules with different characteristics simulating different lidar devices.
+Qlunc is a python-based, open, freely available software that aims to quantify errors when measuring with a lidar device. The code has an objected-oriented structure; by using python objects and simulating real lidar components the code puts all together in modules to eventually build up a lidar [digital twin](https://en.wikipedia.org/wiki/Digital_twin). The code is meant to be as modular as possible and offers the possibility of creating different lidar objects on parallel (see [Tutorial2.ipynb](https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Tutorials/Tutorial2.ipynb)), with different components at the same time. This allows to easily combine different modules with different characteristics simulating different lidar devices.
 
 ![Qlunc basic structure image](https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Pictures_repo_/Qlunc_GralStructure.JPG)
 
@@ -31,9 +31,9 @@ At this stage the code can calculate errors introduced by the photodetector and 
 
 **Please downolad the latest (V0.91) release.**
 
-### Create am environment and install dependencies
+### Create an environment and install dependencies
 
-1) Having [Anaconda](https://docs.anaconda.com) installed is a prerequisite if we want to work in a different environment. Then, based on the requirements added to the ``environment.yaml`` file on the repository, where are included the name and the tools/packages we want to install, we build the new environment. 
+1) Having [Anaconda](https://docs.anaconda.com) installed is a prerequisite if we want to work in a different environment than `base`. Then, based on the requirements added to the ``environment.yaml`` file on the repository, where are included the name and the tools/packages we want to install, we build the new environment. 
 
 2) In the Anacond Prompt type:
 
@@ -42,9 +42,9 @@ conda env create -f environment.yml
 conda activate <envname>
 ```
 
-3) Environment is ready to rumble. You have now a new environment (``Qlunc_Env`` by default) with all the packages needed to run Qlunc.
+3) Your environment is ready to rumble. You have now a new environment (`Qlunc_Env` by default) with all the packages needed to run Qlunc.
 
-4) In case you don't want to create a new environment, just install the requirements in the *Requirements* section below.
+4) In case you don't want to create a new environment, just install the requirements listed in the *Requirements* section below.
 
 ### Download or [clone](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository) the repository to a local directory. 
 
