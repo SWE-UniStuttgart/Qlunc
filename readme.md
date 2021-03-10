@@ -29,7 +29,7 @@ At this stage the code can calculate errors introduced by the photodetector and 
 
 ## How to use Qlunc:
 
-**Please downolad the latest (V0.91) release.**
+**Please downolad the latest release (V0.91).**
 
 ### Create an environment and install dependencies
 

@@ -1,150 +1,76 @@
 ---
-title: '``Qlunc``: Quantification of lidar (hardware) uncertainty'
+title: '``Qlunc``: Quantification of lidar uncertainty'
 tags:
   - wind lidar
   - lidar hardware uncertainty
   - OpenScience
   - OpenLidar
+
+  - e-WindLidar
 authors:
   - name: Francisco Costa
-    orcid: 0000-0003-1318-9677
-    affiliation: 1
-  - name: Andy Clifton
-    orcid: 0000-0001-9698-5083
-    affiliation: 1
+	orcid: 0000-0003-1318-9677
+	affiliation: 1
+  - name: Andrew Clifton
+	orcid: 0000-0001-9698-5083
+	affiliation: 1
   - name: Nikola Vasiljevic
-    orcid: 0000-0002-9381-9693
-    affiliation: 2
-  - name: Ines Wuerth
-    orcid: 0000-0002-1365-0243
-    affiliation: 1
+	orcid: 0000-0002-9381-9693
+	affiliation: 2
+  - name: Ines Würth
+	orcid: 0000-0002-1365-0243
+	affiliation: 1
 affiliations:
- - name: University of Stuttgart. Institute for Aircraft Design - SWE
+ - name: Stuttgart Wind Energy (SWE), Allmandring 5b, 70569 Stuttgart, Germany
    index: 1
- - name: Technical University of Denmark. Department of Wind Energy Resource Assessment and Meteorology
+ - name: DTU Wind Energy, Frederiksborgvej 399, 4000 Roskilde Denmark 
    index: 2
-date: 25 February 2021
+date: xx March 2021
 bibliography: paper.bib
 ---
-
 # Summary
-
-``Qlunc``, for Quantification of lidar uncertainty, is an open-source, freely available
-(https://github.com/SWE-UniStuttgart/Qlunc) python-based tool that aims to estimate
-the uncertainty of a wind lidar device, including hardware and data processing methods.
-Based on the OpenLidar architecture [@OpenLidar], it contains models of the uncertainty contributed
-by individual lidar components and modules, that are then combined to estimate the total
-uncertainty of the lidar device.
-
-The code is meant to be as modular as possible, easily allowing lidar components’ (represented
-by python objects) interchangeability and outcomes’ repeatability (see \autoref{fig:QluncStructure}).
-Furthermore, it allows to easily integrate different uncertainty methods or interface
-external codes. ``Qlunc`` has an objected-oriented structure taking advantage of python
-features; by using python objects and simulating real lidar components, the code puts all
-together in modules and, eventually builds up a lidar digital twin.
-This, combined with the underlying open-source code attribute, defines an attractive scenario
-for sharing knowledge about lidar uncertainties estimation methods. It also encourages
-collaborations among the wind lidar community, aiming to characterize a common lidar architecture,
-to assess wind lidar data processing methods or even to get a consensus for lidar terminology,
-giving place to a lidar ontology, which is a developing project driven by Andy Clifton and Nikola Vasiljevic
-[@OntoStack;@sheet2rdf] and it is been developed within the frame of the IEA Wind Task32 initiative.
-
-The source code for ``Qlunc`` has been archived to Zenodo with the linked DOI: [@zenodo]
-
+``Qlunc``, which stands for Quantification of lidar uncertainty, is an open-source python-based tool to estimate the uncertainty of a wind lidar wind speed measurements.
+``Qlunc`` contains models of the uncertainty contributed by individual lidar components and modules, that are then combined, considering their different nature, to estimate the uncertainties in wind lidar measurements. The modules are based on the OpenLidar architecture [@OpenLidar]. The terminology for the components and modules defined within Qlunc has also been aligned with a community-driven wind lidar ontology, which is in development [@OntoStack;@sheet2rdf]. 
+The code is modular. This allows lidar components (represented by python objects) to be modified and swapped in a trackable way to allow adaptation of the tool for particular use-cases(see \autoref{fig:QluncStructure}).
+Furthermore, ``Qlunc`` is designed to easily integrate different uncertainty methods or interfaces to external codes. It has an objected-oriented structure taking advantage of python features; by using python objects that represent physical lidar components, the code articulates the lidar physical modules, thus resulting in a digital twin of the wind lidar. 
+Besides uncertainty estimations, ``Qlunc``’s functions could be extended for other applications, for example to compare different  wind velocity vector calculation methods. This, combined with the underlying open-source code, defines an attractive scenario for sharing knowledge about wind lidars. 
+``Qlunc`` provides a common, open-source platform that can be used to try many different uncertainty estimation methods, thus encouraging collaboration amongst the wind lidar community.
+The source code for ``Qlunc`` [is available on Github](https://github.com/SWE-UniStuttgart/Qlunc) and the release associated with this paper has been archived to Zenodo( [@zenodo].
+ 
 # Motivation
-
-Measuring uncertainty means doubt about the validity of the result of a measurement [@GUM]
-or, in other words, it represents the dispersion of the values attributed to a measurand.
-The importance of knowing uncertainty in measurements lies both, on the quality of the
-measurement as on the understanding of the results, and it can have a huge impact on
-the veracity of an experiment or measuring set up. In this sense, wind lidar measurement
-uncertainties assessment plays a crucial role, since it can determine decision-making
-processes and therefore the performance of a wind facility.
-
-The scope of this project is to create an open, standardize and collaborative reference numerical
-framework to describe unique lidar architectures, characterize lidar uncertainties and provide the
-tools for others to contribute within this framework. This is so, but following lines of OpenScience
-Principles [@OpenScience], the underlying main motivation of this project is to create open and
-sharable tools and knowledge, to foster collaborations among research institutions and/or industry
-and to reinforce/promote new/existing links within the wind energy community, but not limited to it. 
-
-# ``Qlunc`` available capabilities
-
-``Qlunc`` can perform any kind of scanning pattern, but since the present investigation is focused on VAD 
-(velocity azimuth display) and forward-looking nacelle-mounted measuring modes, the code bends
-to the use of those patterns.
-For now, it can compute wind lidar hardware uncertainties from photonics module, including photodetector
-and optical amplifier components, as well as optics module uncertainty, including scanner pointing
-accuracy distance errors and optical circulator uncertainties. In the near future, uncertainties regarding
-other hardware components and data processing methods will be impemented in the model.
-
-Output plots show 1) different signal noise contributors of the photodetector components and 2) estimates 
-of the distance error between theoretical and actually measured points. 
-
+Measurement uncertainty means doubt about the validity of the result of a measurement [@GUM]. It represents the dispersion of the values attributed to a measurand. The ability to simulate uncertainty through a model such as ``Qlunc`` is important for judging measurement data but can also be useful for designing and setting up experiments and optimizing lidar design. Because wind lidar is important for wind energy applications [@Clifton_2018], better models for wind lidar hardware (e.g., ``Qlunc``) and measurement processes (e.g., through ``MOCALUM`` or ``YADDUM``, with which ``Qlunc`` can feasibly combine) will directly contribute to the adoption of wind lidar for wind energy applications. 
+This project is influenced by fundamental open science principles [@OpenScience]. The scope is to create an open, standardized and collaborative framework to describe both generic and specific lidar architectures, characterize lidar uncertainties, and provide the tools for others to contribute within this framework. 
+ 
+# ``Qlunc``’s capabilities
+Wind lidars acquire wind observations remotely, using optic faculties of a laser beam. They do this by emitting the laser light and coherently detecting the Doppler frequency shift in the elastically backscattered light by aerosols. The Doppler shift, the frequency difference between the emitted and backscattered light, is a direct measure of the radial or Line Of Sight (LOS) velocity, which is equal to the wind velocity projected on the laser light propagation path [@Fuji].
+Wind lidars are flexible and versatile remote sensing devices for wind energy applications [@Hauke] that have also been customized for specific use cases, mainly through the choice of components and scanning patterns. Accordingly, ``Qlunc`` is flexible and will ultimately be able to simulate a lidar carrying out any kind of scanning pattern. The first release is focused on velocity azimuth display (VAD)[@Browning] scans and forward-looking nacelle-mounted measuring modes, which are common wind-energy-industry applications. 
+For now, ``Qlunc``can compute wind lidar hardware uncertainties from the photonics module (including photodetector and optical amplifier components) and the optics module (including scanner pointing accuracy distance errors and optical circulator uncertainties). In the near future, uncertainties for other hardware components and lidar data processing methods will be implemented in the model.
+``Qlunc`` generates several output plots. These show 1) the different signal noise contributors of the photodetector components and 2) estimates of the distance error between theoretical and measured points. Other output plots can be created by the user from the output data.
+ 
 ![Qlunc basic structure.\label{fig:QluncStructure}](Qlunc_BasicStructure_diagram.png)
-
+ 
 # Usage
-
-The framework has been developed and tested using python3.7.9 64bit. A required programming environment
-to use ``Qlunc`` is provided in the repository, in the *readme.md* file, *Requirements* section. For more
-information about the system requirements, please raise an [issue](https://github.com/SWE-UniStuttgart/Qlunc/issues) to the repository.
-Existing tutorials and working example will help user to navigate along the ``Qlunc`` framework, reproducing
-the most important steps. Two of them are explained below in order to facilitate the understanding of the workflow.
-In a first step user creates the lidar digital twin. In a later step user introduces a model, by means of a python
-module,to calculate the uncertainty of the system.
-
+The framework has been developed and tested using python 3.7. The programming environment required to use ``Qlunc`` is provided in the repository. 
+There are two basic steps in using ``Qlunc``, which are described below. A more comprehensive  explanation of ``Qlunc``’s workflow can be found in the repository.
 ## Creating a lidar digital twin
-
-Each component, pertaining to the correspondent module (e.g. photodetector belongs to the photonics
-module), is created as a python class and enclosed in other python class, which represents the aforementioned
-module. Following this procedure these lidar modules are, in turn, included in the lidar python class, which
-gathers all classes corresponding to the different modules a lidar is made of, thus creating the lidar
-digital twin. Dot notation methodology can be used to ask for lidar component properties and uncetainties.
-
-
+As can be seen in [Figure 1](\autoref{fig:QluncStructure}) each lidar component is “built up” using python classes. Parameter values for the components are defined in a yaml file. 
 ## Uncertainty estimation model
-
-All components are characterized by their technical parameters and their uncertainty functions,
-which are feed to the code via a yaml file. Combined uncertainties throughout components and modules
-are computed according to the Guide to the expression of Uncertainty in Measurement [@GUM] (GUM) model. 
-
-It is seen that the code claims flexibility and aims to foster collaboration, especially among researchers.
-To encourage both, flexibility and further collaborations each lidar module has its own uncertainty estimation
-function, which includes the uncertainty of the components the module is made of. These stand-alone uncertainty
-estimation functions are easily exchangeable, just in case users want to use another uncertainty model. 
-
-# Working example and tutorials: do it yourself
-
-Included in the ``Qlunc`` repository users can find 2 Jupyter Notebooks-based tutorials
-(https://github.com/SWE-UniStuttgart/Qlunc/tree/Qlunc-V0.9/Tutorials) on how ``Qlunc`` works, helping
-them get started with the software. Binder badge is also provided to ease accessibility and reproducibility.
+Each component has associated an uncertainty function. The users can modify the uncertainty models by creating their own. 
+The combined uncertainties of the  components and modules are then computed according to the Guide to the Expression of Uncertainty in Measurement (GUM) process [@GUM].
+ 
+# Tutorials
+There are  two Jupyter Notebooks-based tutorials in the [``Qlunc`` repository](https://github.com/SWE-UniStuttgart/Qlunc/tree/Qlunc-V0.9/Tutorials). The tutorials are also available through the Binder service to ease accessibility and reproducibility. 
 Users can find more information about these tutorials in the *readme.md* file attached to the ``Qlunc`` repository.
-Apart from the tutorials, the package includes a functional working example. More information about this
-working example is given in the *readme.md* file, included in the directory *Qlunc/TestFilesQlunc*, where the process
-of creating a lidar digital twin is treated in depth.
-
+``Qlunc``’s repository also includes a functional working example. More information about this working example is given in *Qlunc/TestFilesQlunc/readme.md*, where the process of creating a lidar digital twin is explained in depth.
+ 
 # Future development roadmap
-
-Over the next year, we plan to implement further lidar hardware modules in the model and compute their combined uncertainties.
-Also, most significant data processing methods, which are expected to be the highest uncertainty contributors, will be
-assessed and implemented in the model during the next stage of the project. 
-
-``Qlunc`` is a modular numerical framework and could feasibly combine with existing codes dealing with lidar uncertaintes. 
-In this sense, ``Qlunc`` in combination with other existing tools like yaddum [@yaddum] and mocalum [@mocalum] will
-help to improve lidar uncertainty estimations, thus increasing lidar measurements reliability. The "openness" of
-this group of tools makes possible to share them within the wind energy community and even beyond it.
-
-Another future objective is to align the lidar components/parameters/characteristics labeling process used by ``Qlunc``, to
-the controlled vocabulary resulting from [@OntoStack] and [@sheet2rdf].
-
-All documentation from the project, scientific articles derived from the research period, tutorials and raw code are meant
-to be provided throughout a sphinx-based online site, to give users all needed information to dive into the numerical framework
-and get used to the ``Qlunc`` routines.
-
-# Acknowledgements  :-)
-
-Author wants to thank Andrew Clifton (ORCID iD: 0000-0001-9698-5083), Nikola Vasiljevic (ORCID iD: 0000-0002-9381-9693) and Ines Würth (ORCID iD: 0000-0002-1365-0243) for their support and valuable suggestions, feedback and insight.
-This project has received funding from the European Union's Horizon 2020 research and innovation programme
-under grant agreement No 858358, within the frame of LIKE project.
-
+Over the next year, we plan to implement further lidar hardware modules in the model and compute their combined uncertainties. In addition, we will identify main data processing methods and include those that we consider the highest contributors to uncertainty. 
+We also plan to further align the terminology used in ``Qlunc`` with the IEA Wind Task 32 controlled vocabulary for wind lidar [@task32ControlledVocabulary]. This will make it easier for users to understand what each of the modules and components do, and promotes interoperability.
+All documentation from the project, tutorials, and raw code will be published through a web site, to enable users to dive into the numerical framework and get used to the ``Qlunc`` routines.
+We welcome contributions from the wind lidar community.
+# Acknowledgements
+This work is part of the LIKE ([Lidar Knowledge Europe](https://www.msca-like.eu/)) project. The project LIKE H2020-MSCA-ITN-2019, Grant number 858358 is funded by the European Union.
+ 
 # References
+ 
+
