@@ -11,4 +11,4 @@ Along `Tutorial1` we learn how to virtually create a lidar device, being the inp
 
 #### Try it yourself:
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/SWE-UniStuttgart/Qlunc.git/main?filepath=Tutorials%2FTutorial2.ipynb)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/SWE-UniStuttgart/Qlunc.git/HEAD?filepath=Tutorials%2FTutorial2.ipynb)
