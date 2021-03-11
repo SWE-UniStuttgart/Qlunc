@@ -18,10 +18,15 @@ Before creating the classes for the different components we can fill up the yaml
     
    YAML file:
     >> Modules:
+    >> 
     >>  Photonics Module:
+    >>  
     >>   Name: Photonics module
+    >>   
     >>   Photodetector: _Photodetector1_           # Have to be the same name as the instance name
+    >>   
     >>   Optical amplifier: _Optical_Amplifier_    # Have to be the same name as the instance name
+    >>   
     >>   Uncertainty function: uphc.sum_unc_photonics
     
     
@@ -31,17 +36,24 @@ The components are included as python classes, for example a component, _Compone
 - Creating a class for the component _Component_A_:
 
   >> class Comp_A:
+  >> 
   >>   def __init__(self, property_1, property_2, unc_func)
+  >>   
   >>      self.property_1  = property_1
+  >>      
   >>      self.property_2  = property_2
+  >>      
   >>      self.uncertainty = unc_func 
   
 - Then we instantiate class _Comp_A_ tro create the object representing the lidar component digital twin:
 
   >> Component_A = Comp_A (name       = C_A,
-  >>                       property_1 = a1,  
-  >>                       property_2 = a2,
-  >>                       uncertainty = Comp_A_uncertainty_function)  # Uncertainty describing uncertainty in _Comp_a_. Defined by the user.
+  >> 
+  >>                       property_1 = property_1_value,  
+  >>                       
+  >>                       property_2 = property_2_value,
+  >>                       
+  >>                       uncertainty = Component_A_uncertainty_function)  # Uncertainty describing uncertainty in _Comp_a_. Defined by the user.
 
 The uncertainty function is a function either found in literature or developed by the user that discribes the uncertatinty of the component using its _properties_.
 
@@ -51,16 +63,23 @@ As well, for the modules:
 - Creating a class for the _Module_A_:
   
   >> class Mod_A:
+  >> 
   >>   def __init__(self, name, Comp_1, unc_func)
+  >>   
   >>      self.name        = name
+  >>      
   >>      self.component   = Comp_1    
+  >>      
   >>      self.uncertainty = unc_func  
   
 - Then we instantiate class _Mod_A_ to create the Module object:
 
   >> Module_A = Mod_A (name        = M_A, 
+  >> 
                        Comp_1      = Component_1,                # Including _Component_1_ in the module.
+                       
                        uncertainty = Mod_A_uncertainty_function) # Uncertainty describing uncertainty in _Mod_a_. Following GUM.
+                       
 
 ### 4. Creating the lidar:
 
@@ -69,15 +88,21 @@ Then once we have created the module(s), we can made up a lidar object just in t
 
 - Creating a class for the _Lidar_A_:
   >> class Lid_A:
+  >> 
   >>   def __init__(self, name, Mod_1, unc_func)
+  >>   
   >>      self.name        = name
-  >>      self.Mod_1       = Mod_1       
+  >>      
+  >>      self.Mod_1       = Module_A
+  >>             
   >>      self.uncertainty = unc_func  
   
 - Then we instantiate class _Lid_A_ to create the Lidar object:
 
-  >> Lidar_A = Lid_A (name        = M_A, 
-                      Mod         = Module_A,                     # Including _Module_1_ in the lidar device.
+  >> Lidar_A = Lid_A (name        = Caixa_Lidar_A, 
+  >> 
+                      Mod         = Module_A,                     # Including _Module_A_ in the lidar device.
+                      
                       uncertainty = Mod_A_uncertainty_function)   # Uncertainty describing uncertainty in _Lid_a_. Following GUM.
 
 Then, we have created a Lidar object, called _Lidar_A_ made up of one module, _Module_A_, which contains one single component, _Component_A_, with properties _Property_1_ and _Property_2_.
