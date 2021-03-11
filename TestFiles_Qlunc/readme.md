@@ -15,9 +15,9 @@ Before creating the classes for the different components we need to fill up the 
  - Name: Provide an ID to our object
  - Uncertainty function: Function developed by the user decribing the related uncertainty to specific component/device/lidar
  - When introducing the component in each module, the name should be the same as in the component instance. For instance, if the name of your module instance is _Module_A_ the name to use in the yaml file should be the same. 
-    
+   ''' 
    YAML file:
-    >> # Components:
+    >> ## Components:
     >> 
     >>  Component_A:
     >>  
@@ -27,7 +27,7 @@ Before creating the classes for the different components we need to fill up the 
     >>   
     >>    Uncertainty function: Uncertainty_ComponentA  # Function describing the module uncertainty in _Module_A_ due to their components.
    
-    >> # Modules:
+    >> ## Modules:
     >> 
     >>  Module_A: 
     >>  
@@ -94,6 +94,8 @@ Then once we have created the module(s), we can made up a lidar object just in t
 
 
 - Creating a class for the _Lidar_A_:
+  >> ## Lidar:
+
   >> class Lid_A:
   >> 
   >>   def __init__(self, name, Mod_1, unc_func)
