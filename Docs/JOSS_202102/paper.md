@@ -63,7 +63,7 @@ The framework has been developed and tested using python 3.7. The programming en
 There are two basic steps in using ``Qlunc``, which are described below. A more comprehensive  explanation of ``Qlunc``’s workflow can be found in the repository.
 
 ## Creating a lidar digital twin
-As can be seen in [Figure 1]( \autoref{fig:QluncStructure}), each lidar component is “built up” using python classes. Parameter values for the components are defined in a yaml file. 
+As can be seen in \autoref{fig:QluncStructure}, each lidar component is “built up” using python classes. Parameter values for the components are defined in a yaml file. 
 
 ## Uncertainty estimation model
 Each component has associated an uncertainty function. The users can modify the uncertainty models by creating their own. 
