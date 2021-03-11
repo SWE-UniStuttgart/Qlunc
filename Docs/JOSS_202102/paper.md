@@ -7,7 +7,7 @@ tags:
   - OpenLidar
   - digital twin
 authors:
-  - name: Francisco Costa
+  - name: Francisco Costa^[Francisco Costa]
 	orcid: 0000-0003-1318-9677
 	affiliation: 1
   - name: Andrew Clifton
