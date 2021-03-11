@@ -36,7 +36,7 @@ Before creating the classes for the different components we need to fill up the 
     >>    Module: _Module_A_                         # Have to be the same name as the instance name.
     >>   
     >>    Uncertainty function: Uncertainty_ModuleA  # Function describing the module uncertainty in _Module_A_ due to their components.
-    ```
+```
 ### 2. Creating the component digital twin:
 The components are included as python classes, for example a component, _Component_A_, is created instanciating class _Comp_A_:
 
