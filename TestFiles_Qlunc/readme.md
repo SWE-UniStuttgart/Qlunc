@@ -119,7 +119,7 @@ Then, we have created a Lidar object, called _Lidar_A_ made up of one module, _M
 ### 5. Asking for uncertainties:
 The modularity of the code  allows user either to ask for _Photodetector1_ uncertainty (component uncertainty), _Photonics_ uncertainty (module unceratinty) or global lidar uncertainty. using the dot notation we can write:
 ```
->> Lidar.Module.Component.uncertainty(Lidar, AtmosphericScenario,cts,,Qlunc_yaml_inputs) for the component uncertainty included in Module
+>> Lidar.Module.Component.uncertainty(Lidar, AtmosphericScenario,cts,Qlunc_yaml_inputs) for the component uncertainty included in Module
 >> Lidar.Module.uncertainty(Lidar, AtmosphericScenario,cts,Qlunc_yaml_inputs) for the Module uncertainty
 >> Lidar.uncertainty(Lidar, AtmosphericScenario,cts,Qlunc_yaml_inputs) for the lidar global uncertainty
 ```
