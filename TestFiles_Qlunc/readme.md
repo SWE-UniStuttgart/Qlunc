@@ -2,7 +2,7 @@
 ## Working example to create a lidar digital twin:
 
 The lidar simulated in this example is a VAD scanning lidar.
-We want to create a lidar object maded up with one module. This module will contain just one component with properties Property_1 and Property_2. The steps we have to follow are: 
+We want to create a lidar object made up with one module. This module will contain just one component with properties Property_1 and Property_2. The steps we have to follow are: 
 
  1) Fill up yaml file with inputs
  2) Create a component with its propertie(s)
@@ -11,24 +11,31 @@ We want to create a lidar object maded up with one module. This module will cont
  5) Ask for the uncertainties we are interested in using _dot notation_
 
 ### 1. Fill up the inputs yaml file:
-Before creating the classes for the different components we can fill up the yaml file with corresponding values for components, decide the components we want to include in each module and wich module do we want to include in the lidar device for uncertainty calculations.
- - Name: Provide an ID to out object
+Before creating the classes for the different components we need to fill up the yaml file with the corresponding values for the components and decide the components and the modules that we want to include in the lidar device for uncertainty calculations. Users have a [yaml template for Qlunc's inputs](https://github.com/SWE-UniStuttgart/Qlunc/tree/main/Main) in the repository ("Template_yaml_inputs_file.yml").
+ - Name: Provide an ID to our object
  - Uncertainty function: Function developed by the user decribing the related uncertainty to specific component/device/lidar
- - When introducing the component in each module the name should be the same as in the component instance, e.g. if the name of your photodetector instance is _Photodetector1_ the name to use in the yaml file should be:
+ - When introducing the component in each module, the name should be the same as in the component instance. For instance, if the name of your module instance is _Module_A_ the name to use in the yaml file should be the same. 
     
    YAML file:
-    >> Modules:
+    >> # Components:
     >> 
-    >>  Photonics Module:
+    >>  Component_A:
     >>  
-    >>   Name: Photonics module
+    >>    Name: ComponentA
     >>   
-    >>   Photodetector: _Photodetector1_           # Have to be the same name as the instance name
+    >>    Property_A: property_1_value                        # Have to be the same name as the instance name.
     >>   
-    >>   Optical amplifier: _Optical_Amplifier_    # Have to be the same name as the instance name
+    >>    Uncertainty function: Uncertainty_ComponentA  # Function describing the module uncertainty in _Module_A_ due to their components.
+   
+    >> # Modules:
+    >> 
+    >>  Module_A: 
+    >>  
+    >>    Name: ModuleA
     >>   
-    >>   Uncertainty function: uphc.sum_unc_photonics
-    
+    >>    Module: _Module_A_                         # Have to be the same name as the instance name.
+    >>   
+    >>    Uncertainty function: Uncertainty_ModuleA  # Function describing the module uncertainty in _Module_A_ due to their components.
     
 ### 2. Creating the component digital twin:
 The components are included as python classes, for example a component, _Component_A_, is created instanciating class _Comp_A_:
@@ -45,17 +52,17 @@ The components are included as python classes, for example a component, _Compone
   >>      
   >>      self.uncertainty = unc_func 
   
-- Then we instantiate class _Comp_A_ tro create the object representing the lidar component digital twin:
+- Then we instantiate class _Comp_A_ to create the object representing the lidar component digital twin:
 
   >> Component_A = Comp_A (name       = C_A,
   >> 
-  >>                       property_1 = property_1_value,  
+  >>                       property_1 = property_1_value,  # picked from the yaml file
   >>                       
-  >>                       property_2 = property_2_value,
+  >>                       property_2 = property_2_value,  # picked from the yaml file
   >>                       
-  >>                       uncertainty = Component_A_uncertainty_function)  # Uncertainty describing uncertainty in _Comp_a_. Defined by the user.
+  >>                       uncertainty = Component_A_uncertainty_function)  # Function describing uncertainty in _Comp_a_. Defined by the user.
 
-The uncertainty function is a function either found in literature or developed by the user that discribes the uncertatinty of the component using its _properties_.
+The uncertainty function is a function either found in literature or developed by the user that discribes the uncertatinty of the component.
 
 ### 3. Creating the module digital twin:
 As well, for the modules:
@@ -74,9 +81,9 @@ As well, for the modules:
   
 - Then we instantiate class _Mod_A_ to create the Module object:
 
-  >> Module_A = Mod_A (name        = M_A, 
+  >> Module_A = Mod_A (name        = ModuleA, 
   >> 
-                       Comp_1      = Component_1,                # Including _Component_1_ in the module.
+                       Comp_1      = Component_A,                # Including _Component_1_ in the module.
                        
                        uncertainty = Mod_A_uncertainty_function) # Uncertainty describing uncertainty in _Mod_a_. Following GUM.
                        
@@ -99,19 +106,19 @@ Then once we have created the module(s), we can made up a lidar object just in t
   
 - Then we instantiate class _Lid_A_ to create the Lidar object:
 
-  >> Lidar_A = Lid_A (name        = Caixa_Lidar_A, 
+  >> Lidar_A = Lid_A (name        = LidarA, 
   >> 
-                      Mod         = Module_A,                     # Including _Module_A_ in the lidar device.
-                      
-                      uncertainty = Mod_A_uncertainty_function)   # Uncertainty describing uncertainty in _Lid_a_. Following GUM.
+  >>                  Mod         = Module_A,                     # Including _Module_A_ in the lidar device.
+  >>                    
+  >>                  uncertainty = Mod_A_uncertainty_function)   # Uncertainty describing uncertainty in _Lidar_a_. Following GUM.
 
 Then, we have created a Lidar object, called _Lidar_A_ made up of one module, _Module_A_, which contains one single component, _Component_A_, with properties _Property_1_ and _Property_2_.
 
 ### 5. Asking for uncertainties:
 The modularity of the code  allows user either to ask for _Photodetector1_ uncertainty (component uncertainty), _Photonics_ uncertainty (module unceratinty) or global lidar uncertainty. using the dot notation we can write:
 
-- Lidar.photonics.photodetector.Uncertainty(Lidar, AtmosphericScenario,cts) for the photodetector uncertainty
-- Lidar.photonics.Uncertainty(Lidar, AtmosphericScenario,cts) for the photonics uncertainty
-- Lidar.Uncertainty(Lidar, AtmosphericScenario,cts) for the lidar global uncertainty
+>> Lidar.photonics.photodetector.Uncertainty(Lidar, AtmosphericScenario,cts) for the photodetector uncertainty
+>> Lidar.photonics.Uncertainty(Lidar, AtmosphericScenario,cts) for the photonics uncertainty
+>> Lidar.Uncertainty(Lidar, AtmosphericScenario,cts) for the lidar global uncertainty
 
 ![Uncertainty_WF](https://github.com/PacoCosta/Qlunc/blob/Qlunc-V0.9/Pictures_repo_/FlowChartUnc.JPG)
