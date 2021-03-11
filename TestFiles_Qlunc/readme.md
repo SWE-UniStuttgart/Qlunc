@@ -85,8 +85,7 @@ As well, for the modules:
   >> 
                        Comp_1      = Component_A,                # Including _Component_1_ in the module.
                        
-                       uncertainty = Mod_A_uncertainty_function) # Uncertainty describing uncertainty in _Mod_a_. Following GUM.
-                       
+                       uncertainty = Mod_A_uncertainty_function) # Uncertainty describing uncertainty in _Mod_a_. Following GUM.                      
 ```
 ### 4. Creating the lidar:
 
