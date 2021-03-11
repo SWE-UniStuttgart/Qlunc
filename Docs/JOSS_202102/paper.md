@@ -29,6 +29,7 @@ affiliations:
 date: xx March 2021
 bibliography: paper.bib
 ---
+
 # Summary
 Wind lidar measures the wind vector remotely using laser light backscattered from aerosols. They are a key tool for wind energy and meteorology. Like any measurement method, it is essential to estimate their uncertainty.
 ``Qlunc``, which stands for Quantification of lidar uncertainty, is an open-source python-based tool to create a digital twin of the lidar hardware, and estimate the uncertainty of wind lidar wind speed measurements.
@@ -38,6 +39,7 @@ Furthermore, ``Qlunc`` is designed to easily integrate different uncertainty met
 Besides uncertainty estimations, ``Qlunc``’s functions could be extended for other applications, for example to compare different  wind velocity vector calculation methods. This, combined with the underlying open-source code, defines an attractive scenario for sharing knowledge about wind lidars. 
 ``Qlunc`` provides a common, open-source platform that can be used to try many different uncertainty estimation methods, thus encouraging collaboration amongst the wind lidar community.
 The source code for ``Qlunc`` [is available on Github](https://github.com/SWE-UniStuttgart/Qlunc) and the release associated with this paper has been archived to Zenodo( [@zenodo].
+
 # Motivation
 Wind lidars are measuring devices, and as for any other measuring systems, lidar measurements have uncertainties [@Borraccino_2016]. Therefore, as already stated, it is crucial to assess their measurements uncertainty, to increase confidence in lidar technology.
 Measurement uncertainty means doubt about the validity of the result of a measurement [@GUM]. It represents the dispersion of the values attributed to a measurand. The ability to simulate uncertainty through a model such as ``Qlunc`` is important for judging measurement data but can also be useful for designing and setting up experiments and optimizing lidar design. Because wind lidar is important for wind energy applications [@Clifton_2018], better models for wind lidar hardware (e.g., ``Qlunc``) and measurement processes (e.g., through ``MOCALUM`` or ``YADDUM``, with which ``Qlunc`` can feasibly combine) will directly contribute to the adoption of wind lidar for wind energy applications. 
