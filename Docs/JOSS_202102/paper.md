@@ -29,14 +29,12 @@ bibliography: paper.bib
 ---
 # Summary
 Wind lidar measures the wind vector remotely using laser light backscattered from aerosols. They are a key tool for wind energy and meteorology. Like any measurement method, it is essential to estimate their uncertainty.
-``Qlunc``, which stands for Quantification of lidar uncertainty, is an open-source python-based tool to create a digital twin of the lidar hardware, and estimate the uncertainty of wind lidar wind speed measurements.
-``Qlunc`` contains models of the uncertainty contributed by individual lidar components and modules, that are then combined, considering their different nature, to estimate the uncertainties in wind lidar measurements. The modules are based on the OpenLidar architecture [@OpenLidar]. The terminology for the components and modules defined within Qlunc has also been aligned with a community-driven wind lidar ontology, which is in development [@OntoStack;@sheet2rdf]. 
+``Qlunc``, which stands for **Q**uantification of **l**idar **unc**ertainty, is an open-source python-based tool to create a digital twin of the lidar hardware, and estimate the uncertainty of wind lidar wind speed measurements.
+``Qlunc`` contains models of the uncertainty contributed by individual lidar components and modules, that are then combined considering their different nature, to estimate the uncertainties in wind lidar measurements. The structuring of the modules are based on the OpenLidar architecture [@OpenLidar]. The terminology for the components and modules defined within Qlunc has also been aligned with a community-driven wind lidar ontology, which is in development [@OntoStack;@sheet2rdf]. 
 
-The code is modular. This allows lidar components (represented by python objects) to be modified and swapped in a trackable way to allow adaptation of the tool for particular use-cases(see \autoref{fig:QluncStructure}).
+The code is modular. This allows lidar components (represented by python objects) to be modified and swapped in a trackable way to allow adaptation of the tool for particular use-cases (see \autoref{fig:QluncStructure}). Furthermore, ``Qlunc`` is designed to easily integrate different uncertainty methods or interfaces to external codes. It has an object-oriented structure taking advantage of python features; by using python objects that represent physical lidar components, the code articulates the lidar physical modules, thus resulting in a digital twin of the wind lidar. 
 
-Furthermore, ``Qlunc`` is designed to easily integrate different uncertainty methods or interfaces to external codes. It has an object-oriented structure taking advantage of python features; by using python objects that represent physical lidar components, the code articulates the lidar physical modules, thus resulting in a digital twin of the wind lidar. 
 Besides uncertainty estimations, ``Qlunc``’s functions could be extended for other applications, for example to compare different  wind velocity vector calculation methods. This, combined with the underlying open-source code, defines an attractive scenario for sharing knowledge about wind lidars. 
-
 ``Qlunc`` provides a common, open-source platform that can be used to try many different uncertainty estimation methods, thus encouraging collaboration amongst the wind lidar community.
 The source code for ``Qlunc`` [is available on Github](https://github.com/SWE-UniStuttgart/Qlunc) and the release associated with this paper has been archived to Zenodo( [@zenodo].
 
@@ -59,7 +57,7 @@ The framework has been developed and tested using python 3.7. The programming en
 There are two basic steps in using ``Qlunc``, which are described below. A more comprehensive  explanation of ``Qlunc``’s workflow can be found in the repository.
 
 ## Creating a lidar digital twin
-As can be seen in [Figure 1](\autoref{fig:QluncStructure}) each lidar component is “built up” using python classes. Parameter values for the components are defined in a yaml file. 
+As can be seen in [Figure 1](\autoref{fig:QluncStructure}), each lidar component is “built up” using python classes. Parameter values for the components are defined in a yaml file. 
 
 ## Uncertainty estimation model
 Each component has associated an uncertainty function. The users can modify the uncertainty models by creating their own. 
