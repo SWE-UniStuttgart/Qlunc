@@ -41,7 +41,7 @@ Before creating the classes for the different components we need to fill up the 
 The components are included as python classes, for example a component, _Component_A_, is created instanciating class _Comp_A_:
 
 - Creating a class for the component _Component_A_:
-
+```
   >> class Comp_A:
   >> 
   >>   def __init__(self, property_1, property_2, unc_func)
@@ -51,9 +51,9 @@ The components are included as python classes, for example a component, _Compone
   >>      self.property_2  = property_2
   >>      
   >>      self.uncertainty = unc_func 
-  
+``` 
 - Then we instantiate class _Comp_A_ to create the object representing the lidar component digital twin:
-
+```
   >> Component_A = Comp_A (name       = C_A,
   >> 
   >>                       property_1 = property_1_value,  # picked from the yaml file
@@ -61,14 +61,14 @@ The components are included as python classes, for example a component, _Compone
   >>                       property_2 = property_2_value,  # picked from the yaml file
   >>                       
   >>                       uncertainty = Component_A_uncertainty_function)  # Function describing uncertainty in _Comp_a_. Defined by the user.
-
+```
 The uncertainty function is a function either found in literature or developed by the user that discribes the uncertatinty of the component.
 
 ### 3. Creating the module digital twin:
 As well, for the modules:
 
 - Creating a class for the _Module_A_:
-  
+ ``` 
   >> class Mod_A:
   >> 
   >>   def __init__(self, name, Comp_1, unc_func)
@@ -78,22 +78,23 @@ As well, for the modules:
   >>      self.component   = Comp_1    
   >>      
   >>      self.uncertainty = unc_func  
-  
+``` 
 - Then we instantiate class _Mod_A_ to create the Module object:
-
+```
   >> Module_A = Mod_A (name        = ModuleA, 
   >> 
                        Comp_1      = Component_A,                # Including _Component_1_ in the module.
                        
                        uncertainty = Mod_A_uncertainty_function) # Uncertainty describing uncertainty in _Mod_a_. Following GUM.
                        
-
+```
 ### 4. Creating the lidar:
 
 Then once we have created the module(s), we can made up a lidar object just in the same way:
 
 
 - Creating a class for the _Lidar_A_:
+```
   >> ## Lidar:
 
   >> class Lid_A:
@@ -105,22 +106,22 @@ Then once we have created the module(s), we can made up a lidar object just in t
   >>      self.Mod_1       = Module_A
   >>             
   >>      self.uncertainty = unc_func  
-  
+```  
 - Then we instantiate class _Lid_A_ to create the Lidar object:
-
+```
   >> Lidar_A = Lid_A (name        = LidarA, 
   >> 
   >>                  Mod         = Module_A,                     # Including _Module_A_ in the lidar device.
   >>                    
   >>                  uncertainty = Mod_A_uncertainty_function)   # Uncertainty describing uncertainty in _Lidar_a_. Following GUM.
-
+```
 Then, we have created a Lidar object, called _Lidar_A_ made up of one module, _Module_A_, which contains one single component, _Component_A_, with properties _Property_1_ and _Property_2_.
 
 ### 5. Asking for uncertainties:
 The modularity of the code  allows user either to ask for _Photodetector1_ uncertainty (component uncertainty), _Photonics_ uncertainty (module unceratinty) or global lidar uncertainty. using the dot notation we can write:
-
+```
 >> Lidar.photonics.photodetector.Uncertainty(Lidar, AtmosphericScenario,cts) for the photodetector uncertainty
 >> Lidar.photonics.Uncertainty(Lidar, AtmosphericScenario,cts) for the photonics uncertainty
 >> Lidar.Uncertainty(Lidar, AtmosphericScenario,cts) for the lidar global uncertainty
-
+```
 ![Uncertainty_WF](https://github.com/PacoCosta/Qlunc/blob/Qlunc-V0.9/Pictures_repo_/FlowChartUnc.JPG)
