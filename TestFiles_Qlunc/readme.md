@@ -83,7 +83,7 @@ As well, for the modules:
 ```
   >> Module_A = Mod_A (name        = ModuleA, 
   >> 
-                       Comp_1      = Component_A,                # Including _Component_1_ in the module.
+                       Component   = Component_A,                # Including _Component_1_ in the module.
                        
                        uncertainty = Mod_A_uncertainty_function) # Uncertainty describing uncertainty in _Mod_a_. Following GUM.                      
 ```
@@ -110,7 +110,7 @@ Then once we have created the module(s), we can made up a lidar object just in t
 ```
   >> Lidar_A = Lid_A (name        = LidarA, 
   >> 
-  >>                  Mod         = Module_A,                     # Including _Module_A_ in the lidar device.
+  >>                  Module      = Module_A,                     # Including _Module_A_ in the lidar device.
   >>                    
   >>                  uncertainty = Mod_A_uncertainty_function)   # Uncertainty describing uncertainty in _Lidar_a_. Following GUM.
 ```
@@ -119,8 +119,8 @@ Then, we have created a Lidar object, called _Lidar_A_ made up of one module, _M
 ### 5. Asking for uncertainties:
 The modularity of the code  allows user either to ask for _Photodetector1_ uncertainty (component uncertainty), _Photonics_ uncertainty (module unceratinty) or global lidar uncertainty. using the dot notation we can write:
 ```
->> Lidar.photonics.photodetector.Uncertainty(Lidar, AtmosphericScenario,cts) for the photodetector uncertainty
->> Lidar.photonics.Uncertainty(Lidar, AtmosphericScenario,cts) for the photonics uncertainty
->> Lidar.Uncertainty(Lidar, AtmosphericScenario,cts) for the lidar global uncertainty
+>> Lidar.Module.Component.Uncertainty(Lidar, AtmosphericScenario,cts,,Qlunc_yaml_inputs) for the component uncertainty included in Module
+>> Lidar.Module.Uncertainty(Lidar, AtmosphericScenario,cts,Qlunc_yaml_inputs) for the Module uncertainty
+>> Lidar.Uncertainty(Lidar, AtmosphericScenario,cts,Qlunc_yaml_inputs) for the lidar global uncertainty
 ```
 ![Uncertainty_WF](https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Pictures_repo_/FlowChartUnc.JPG)
