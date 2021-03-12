@@ -38,7 +38,7 @@ Before creating the classes for the different components we need to fill up the 
     >>  
     >>    Name: ModuleA
     >>   
-    >>    Component: _Component_A_                         # Have to be the same name as the instance name.
+    >>    Component: _Component_A_                         # It has to be the same name as the instance name.
     >>   
     >>    Uncertainty function: Uncertainty_ModuleA  # Function describing the module uncertainty in _Module_A_ due to their components.
 ```
