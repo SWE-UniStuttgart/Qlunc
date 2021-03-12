@@ -20,7 +20,7 @@ Before creating the classes for the different components we need to fill up the 
 
   ```
    YAML file:
-    >> ## Components:
+    >>## Components:
     >> 
     >>  Component_A:
     >>  
@@ -31,19 +31,30 @@ Before creating the classes for the different components we need to fill up the 
     >>    Property_B: property_2_value 
     >>   
     >>    Uncertainty function: Uncertainty_ComponentA  # Function describing the module uncertainty in _Module_A_ due to their components.
-   
-    >> ## Modules:
+    >>---
+    >>## Modules:
     >> 
     >>  Module_A: 
     >>  
     >>    Name: ModuleA
     >>   
-    >>    Component: _Component_A_                         # It has to be the same name as the instance name.
+    >>    Component: _Component_A_                   # It has to be the same name as the instance (*).
+    >>   
+    >>    Uncertainty function: Uncertainty_ModuleA  # Function describing the module uncertainty in _Module_A_ due to their components.
+    >>---
+    >>## Lidar:
+    >> 
+    >>  Lidar_A:
+    >>  
+    >>    Name: LidarA
+    >>   
+    >>    Module: _Module_A_                         # It has to be the same name as the instance (**).
     >>   
     >>    Uncertainty function: Uncertainty_ModuleA  # Function describing the module uncertainty in _Module_A_ due to their components.
 ```
+
 ### 2. Creating the component digital twin
-The components are included as python classes, for example a component, _Component_A_, is created instanciating class _Comp_A_:
+The components are included as python classes, for example a component, _Component_A_, is created by instantiating class _Comp_A_:
 
 - Creating a class for the component _Component_A_:
 ```
@@ -60,17 +71,17 @@ The components are included as python classes, for example a component, _Compone
 - Then we instantiate class _Comp_A_ to create the object representing the lidar component digital twin:
 ```
   >> Component_A (*) = Comp_A (name        = C_A,
-  >> 
-  >>                           property_1  = property_1_value,  # picked from the yaml file
+  >>   
+  >>                           property_1  = property_1_value,         # picked from the yaml file
   >>                       
-  >>                           property_2  = property_2_value,  # picked from the yaml file
+  >>                           property_2  = property_2_value,         # picked from the yaml file
   >>                       
-  >>                           uncertainty = Component_A_uncertainty_function)  # Function describing uncertainty in _Comp_a_. Defined by the user.
+  >>                           uncertainty = Component_A_uncertainty)  # parameter describing uncertainty in _Comp_a_.
 ```
 The uncertainty function is a function either found in literature or developed by the user that discribes the uncertatinty of the component.
 
 ### 3. Creating the module digital twin:
-As well, for the modules:
+For the modules we create a class and include the 
 
 - Creating a class for the _Module_A_:
  ``` 
@@ -88,14 +99,13 @@ As well, for the modules:
 ```
   >> Module_A (**) = Mod_A (name        = ModuleA, 
   >> 
-                            component   = Component_A,                # Including _Component_1_ in the module. It has to be the same name as the instance name (*). 
-                       
-                            uncertainty = Mod_A_uncertainty_function) # Uncertainty describing uncertainty in _Mod_a_. Following GUM.                      
+                            component   = Component_A,                      # Including _Component_A_ in the module. 
+                                                                            # It has to be the same as in the instance (*).
+                            uncertainty = Module_A_uncertainty_function.py) # Uncertainty describing uncertainty in _Mod_a_. Following GUM.                      
 ```
 ### 4. Creating the lidar:
 
 Then once we have created the module(s), we can made up a lidar object just in the same way:
-
 
 - Creating a class for the _Lidar_A_ device:
 ```
@@ -115,9 +125,9 @@ Then once we have created the module(s), we can made up a lidar object just in t
 ```
   >> Lidar_A = lidar (name        = LidarA, 
   >> 
-  >>                  module      = Module_A,                     # Including _Module_A_ in the lidar device. It has to be the same name as the instance name (**).
-  >>                    
-  >>                  uncertainty = Mod_A_uncertainty_function)   # Uncertainty describing uncertainty in _Lidar_a_. Following GUM.
+  >>                  module      = Module_A,                         # Actually, picked from the yaml file. 
+  >>                                                                  # It has to be the same name as the instance (**).                
+  >>                  uncertainty = Lidar_A_uncertainty_function.py)  # Uncertainty describing uncertainty in _Lidar_a_. Following GUM.
 ```
 Then, we have created a lidar (python-based) object called _Lidar_A_, made up of one module, _Module_A_, which contains one single component, _Component_A_, with properties _Property_1_ and _Property_2_.
 
