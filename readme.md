@@ -45,7 +45,7 @@ conda activate <envname>
 
 ### Download or [clone](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository) the repository to a local directory
 
-By downloading the repository you will get several folders within which `Qlunc` is organized. The most importants to know are:
+By downloading or cloning the repository you will get several folders within which `Qlunc` is organized. The most importants to know are:
 
 ### Main
 This is the core of `Qlunc`. Here the user creates the classes describing the components, modules and general inputs of the lidar device and instantiate the classes.
