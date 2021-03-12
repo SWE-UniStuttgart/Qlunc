@@ -1,17 +1,19 @@
 
 ## Working example to create a lidar digital twin
 
-The lidar simulated in this example is a VAD scanning lidar.
-We want to create a lidar object made up with one module. This module will contain just one component with properties Property_1 and Property_2. The steps we have to follow are: 
+In the following lines it is shown the `Qlunc`'s workflow and the code structure it is based on; the `WorkingExample` files are a use case example.
+Now, imagine we want to create a lidar object made up with one single module. This module will contain one single component with properties Property_1 and Property_2. The steps we have to follow are: 
 
  1) Fill up yaml file with inputs
  2) Create a component with its propertie(s)
  3) Create a module containing the component(s)
  4) Create a lidar containing the module(s)
- 5) Ask for the uncertainties we are interested in using _dot notation_
+ 5) Ask for the uncertainties we are interested in by using _dot notation_
 
 ### 1. Fill up the inputs yaml file
-Before creating the classes for the different components we need to fill up the yaml file with the corresponding values for the components and decide the components and the modules that we want to include in the lidar device for uncertainty calculations. Users have a [yaml template for Qlunc's inputs](https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Main/Template_yaml_inputs_file.yml) in the repository.
+Before creating the classes for the different components we will fill in the yaml file with the corresponding values for the components and decide the components and the modules that we want to include in the lidar device for uncertainty calculations. Users have a [yaml template for Qlunc inputs](https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Main/Template_yaml_inputs_file.yml) in the repository.
+
+The minimum information defining your component might be:
  - Name: Provide an ID to our object
  - Property: As many as the component has (e.g. for the photodetector could be `wavelength`, `load resistor` and  `gain`).
  - Uncertainty function: Function developed by the user decribing the uncertainty of the lidar module.
@@ -80,7 +82,7 @@ The components are included as python classes, for example a component, _Compone
 ```
 The uncertainty function is a function either found in literature or developed by the user that discribes the uncertatinty of the component.
 
-### 3. Creating the module digital twin:
+### 3. Creating the module digital twin
 For the modules we create a class and include the 
 
 - Creating a class for the _Module_A_:
@@ -103,7 +105,7 @@ For the modules we create a class and include the
                                                                             # It has to be the same as in the instance (*).
                             uncertainty = Module_A_uncertainty_function.py) # Uncertainty describing uncertainty in _Module_A_. Following GUM.                      
 ```
-### 4. Creating the lidar:
+### 4. Creating the lidar
 
 Then once we have created the module(s), we can made up a lidar object just in the same way:
 
@@ -131,7 +133,7 @@ Then once we have created the module(s), we can made up a lidar object just in t
 ```
 Then, we have created a lidar (python-based) object called _Lidar_A_, made up of one module, _Module_A_, which contains one single component, _Component_A_, with properties _Property_1_ and _Property_2_.
 
-### 5. Asking for uncertainties:
+### 5. Asking for uncertainties
 The modularity of the code  allows user either to ask for _Photodetector1_ uncertainty (component uncertainty), _Photonics_ uncertainty (module unceratinty) or global lidar uncertainty. using the dot notation we can write:
 ```
 >> Lidar_A.module.component.uncertainty(Lidar_A, AtmosphericScenario,cts,Qlunc_yaml_inputs) for the component uncertainty included in Module
