@@ -101,7 +101,7 @@ For the modules we create a class and include the
   >> 
                             component   = Component_A,                      # Including _Component_A_ in the module. 
                                                                             # It has to be the same as in the instance (*).
-                            uncertainty = Module_A_uncertainty_function.py) # Uncertainty describing uncertainty in _Mod_a_. Following GUM.                      
+                            uncertainty = Module_A_uncertainty_function.py) # Uncertainty describing uncertainty in _Module_A_. Following GUM.                      
 ```
 ### 4. Creating the lidar:
 
@@ -127,15 +127,15 @@ Then once we have created the module(s), we can made up a lidar object just in t
   >> 
   >>                  module      = Module_A,                         # Actually, picked from the yaml file. 
   >>                                                                  # It has to be the same name as the instance (**).                
-  >>                  uncertainty = Lidar_A_uncertainty_function.py)  # Uncertainty describing uncertainty in _Lidar_a_. Following GUM.
+  >>                  uncertainty = Lidar_A_uncertainty_function.py)  # Uncertainty describing uncertainty in _Lidar_A_. Following GUM.
 ```
 Then, we have created a lidar (python-based) object called _Lidar_A_, made up of one module, _Module_A_, which contains one single component, _Component_A_, with properties _Property_1_ and _Property_2_.
 
 ### 5. Asking for uncertainties:
 The modularity of the code  allows user either to ask for _Photodetector1_ uncertainty (component uncertainty), _Photonics_ uncertainty (module unceratinty) or global lidar uncertainty. using the dot notation we can write:
 ```
->> Lidar.module.component.uncertainty(Lidar, AtmosphericScenario,cts,Qlunc_yaml_inputs) for the component uncertainty included in Module
->> Lidar.module.uncertainty(Lidar, AtmosphericScenario,cts,Qlunc_yaml_inputs) for the Module uncertainty
->> Lidar.uncertainty(Lidar, AtmosphericScenario,cts,Qlunc_yaml_inputs) for the lidar global uncertainty
+>> Lidar_A.module.component.uncertainty(Lidar_A, AtmosphericScenario,cts,Qlunc_yaml_inputs) for the component uncertainty included in Module
+>> Lidar_A.module.uncertainty(Lidar_A, AtmosphericScenario,cts,Qlunc_yaml_inputs) for the Module uncertainty
+>> Lidar_A.uncertainty(Lidar_A, AtmosphericScenario,cts,Qlunc_yaml_inputs) for the lidar global uncertainty
 ```
 ![Uncertainty_WF](https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Pictures_repo_/FlowChartUnc.JPG)
