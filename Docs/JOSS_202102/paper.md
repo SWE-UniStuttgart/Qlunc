@@ -8,17 +8,17 @@ tags:
   - digital twin
 authors:
   - name: Francisco Costa
-	orcid: 0000-0003-1318-9677
-	affiliation: 1
+    orcid: 0000-0003-1318-9677
+    affiliation: 1
   - name: Andrew Clifton
-	orcid: 0000-0001-9698-5083
-	affiliation: 1
+    orcid: 0000-0001-9698-5083
+    affiliation: 1
   - name: Nikola Vasiljevic
-	orcid: 0000-0002-9381-9693
-	affiliation: 2
+    orcid: 0000-0002-9381-9693
+    affiliation: 2
   - name: Ines Würth
-	orcid: 0000-0002-1365-0243
-	affiliation: 1
+    orcid: 0000-0002-1365-0243
+    affiliation: 1
 affiliations:
  - name: Stuttgart Wind Energy (SWE), Allmandring 5b, 70569 Stuttgart, Germany
    index: 1
