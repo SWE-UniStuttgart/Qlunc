@@ -1,5 +1,9 @@
 # **Quantification of lidar uncertainties - Qlunc**
 
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4579843.svg)](https://doi.org/10.5281/zenodo.4579843)
+
+
 ## What is `Qlunc`?
 `Qlunc` is a python-based, open, freely available software that aims to quantify errors when measuring with a lidar device. The code has an objected-oriented structure; by using python objects and simulating real lidar components the code puts all together in modules to eventually build up a lidar [digital twin](https://en.wikipedia.org/wiki/Digital_twin). The code is meant to be as modular as possible and offers the possibility of creating different lidar objects on parallel (see [Tutorial2.ipynb](https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Tutorials/Tutorial2.ipynb)), with different components at the same time. This allows to easily combine different modules with different characteristics simulating different lidar devices.
 
