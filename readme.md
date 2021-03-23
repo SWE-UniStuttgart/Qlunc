@@ -1,7 +1,9 @@
 # **Quantification of lidar uncertainties - Qlunc**
 
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4579843.svg)](https://doi.org/10.5281/zenodo.4579843)
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4579842.svg)](https://doi.org/10.5281/zenodo.4579842)
+
 
 
 ## What is `Qlunc`?
