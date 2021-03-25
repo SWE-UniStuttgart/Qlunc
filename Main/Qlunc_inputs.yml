@@ -18,19 +18,19 @@ Components:
   Scanner:
     
     Name: Scanner_Yaml # Provide an ID to your lidar:    
-    Origin: [0,0,80]  # Lidar position in meters: [x,y,z]    
+    Origin: [0,0,0]  # Lidar position in meters: [x,y,z]    
     Sample rate: 0   # Lidar sample rate. In meters. Use 0 for now.
-    Type: SCAN          # Type of the scanning head: VAD or SCAN (Scanning Lidar)
+    Type: VAD          # Type of the scanning head: VAD or SCAN (Scanning Lidar)
  
     # VAD Pattern:
 
     Focus distance: [60]   # [m]
-    Cone angle: [29]       # [deg]
-    Azimuth: [0,360,8]     # [deg]
+    Cone angle: [0]       # [deg]
+    Azimuth: [0,360,360]     # [deg] [origin,end,steps]
     
-    stdv focus distance: 0   # [m]
-    stdv Cone angle: 0      # [deg]
-    stdv Azimuth: 0         # [deg]    
+    stdv focus distance: 2   # [m]
+    stdv Cone angle: 0     # [deg]
+    stdv Azimuth: 0        # [deg]    
     
     # Scanning Lidar Pattern:
     x: [40,40,40,40,40]        # [m]
@@ -85,9 +85,9 @@ Components:
   Lidar general inputs:
     Name: Lidar_gral_inputs_Yaml
     Wavelength: 1550.e-9    # [m]
-    Yaw error: 5            # [deg]
-    Pitch error: 5          # [deg]
-    Roll error: 5          # [deg]
+    Yaw error: 0            # [deg]
+    Pitch error: 0          # [deg]
+    Roll error: 0          # [deg]
 ---
 # Modules:
 Modules:
@@ -131,5 +131,5 @@ Atmospheric_inputs:
 Flags:
   Pointing accuracy uncertainty: False
   Scanning Pattern: True
-  Photodetector noise: True
+  Photodetector noise: False
 
