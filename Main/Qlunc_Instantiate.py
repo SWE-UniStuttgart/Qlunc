@@ -25,7 +25,7 @@ could be done by instantiating their python classes:
 
 #%% Running Qlunc_Classes.py:
 from Qlunc_Classes import *
-
+import pdb
 # Reading data from the yaml file:
 with open (r'./Qlunc_inputs.yml') as file: # WHere the yaml file is in order to get the input data
     Qlunc_yaml_inputs={}
@@ -57,11 +57,16 @@ Scanner           = scanner(name            = Qlunc_yaml_inputs['Components']['S
                             sample_rate     = Qlunc_yaml_inputs['Components']['Scanner']['Sample rate'],    # for now introduce it in [degrees].
                            
                            # This values for focus distance, cone_angle and azimuth define a typical VAD scanning sequence:
-                            focus_dist      = np.array(Qlunc_yaml_inputs['Components']['Scanner']['Focus distance']*int(Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][1]/Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][2])),   # Focus distance in [meters]                                        
-                            cone_angle      = np.array(Qlunc_yaml_inputs['Components']['Scanner']['Cone angle']*int(Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][1]/Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][2])),    # Cone angle in [degrees].
-                            azimuth         = np.array(np.arange(Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][0],
-                                                                Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][1],
-                                                                Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][2])),#np.arange(0,360,15), # Azimuth angle in [degrees].
+                            azimuth         = np.array(np.arange(Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][0],                                                  
+                                                                 Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][1],
+                                                                 Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][2])), # Azimuth angle in [degrees].
+                            focus_dist      = np.tile(Qlunc_yaml_inputs['Components']['Scanner']['Focus distance'],(1,len(np.arange(Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][0],                                                  
+                                                                 Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][1],
+                                                                 Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][2]))))[0],   # Focus distance in [meters]                                        
+                            cone_angle      = np.tile(Qlunc_yaml_inputs['Components']['Scanner']['Cone angle'],(1,len(np.arange(Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][0],                                                  
+                                                                 Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][1],
+                                                                 Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][2]))))[0],   # Cone angle in [degrees].
+
                             x               = np.array(Qlunc_yaml_inputs['Components']['Scanner']['x']),
                             y               = np.array(Qlunc_yaml_inputs['Components']['Scanner']['y']),
                             z               = np.array(Qlunc_yaml_inputs['Components']['Scanner']['z']),

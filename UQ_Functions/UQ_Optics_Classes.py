@@ -87,6 +87,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             x0 = param1_or + Lidar.optics.scanner.origin[0] + sample_rate_count
             y0 = param2_or + Lidar.optics.scanner.origin[1] 
             z0 = param3_or + Lidar.optics.scanner.origin[2] 
+        
         # Storing coordinates
         X0.append(x0)
         Y0.append(y0)
@@ -105,6 +106,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             noisy_param2 = param2_or + del_param2 
             noisy_param3 = param3_or + del_param3 
             
+           
             # Coordinates of the noisy points:            
             if Qlunc_yaml_inputs['Components']['Scanner']['Type']=='VAD':
                 x = noisy_param1*np.cos(np.deg2rad(noisy_param3))*np.sin(np.deg2rad(noisy_param2))
@@ -124,13 +126,12 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             DISTANCE.append(np.sqrt((xfinal-x0)**2+(yfinal-y0)**2+(zfinal-z0)**2))
             Mean_DISTANCE.append(np.mean(DISTANCE[trial]))    
             stdv_DISTANCE.append(np.std(DISTANCE[trial]))
-            # pdb.set_trace()
-            
-        # pdb.set_trace()
+            pdb.set_trace()
+
         sample_rate_count+=Lidar.optics.scanner.sample_rate    
         SimMean_DISTANCE.append(np.mean(DISTANCE))        # Mean error distance of each point in the pattern  
         StdvMean_DISTANCE.append(np.mean(stdv_DISTANCE)) # Mean error distance stdv for each point in the pattern
-        # pdb.set_trace()
+
         # Storing coordinates:
         X.append(xfinal)
         Y.append(yfinal)
