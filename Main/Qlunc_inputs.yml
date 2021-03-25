@@ -25,21 +25,21 @@ Components:
     # VAD Pattern:
 
     Focus distance: [60]   # [m]
-    Cone angle: [0]       # [deg]
-    Azimuth: [0,360,360]     # [deg] [origin,end,steps]
+    Cone angle: [30]       # [deg]
+    Azimuth: [0,360,180]     # [deg] [origin,end,steps]
     
-    stdv focus distance: 2   # [m]
+    stdv focus distance: 0.3   # [m]
     stdv Cone angle: 0     # [deg]
     stdv Azimuth: 0        # [deg]    
     
     # Scanning Lidar Pattern:
-    x: [40,40,40,40,40]        # [m]
-    y: [0,20,20,-20,-20]      # [m]
-    z: [0,20,-20,20,-20]      # [m]
+    x: [60,60]        # [m]
+    y: [-10,10]      # [m]
+    z: [0]      # [m]
     
     stdv x: 0.3               # [m]
-    stdv y: 1.6             # [m]
-    stdv z: 1.1             # [m]
+    stdv y: 0             # [m]
+    stdv z: 0            # [m]
     
     # Uncertainty function:
     Uncertainty function: uopc.UQ_Scanner
