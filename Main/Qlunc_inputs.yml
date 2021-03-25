@@ -78,7 +78,7 @@ Components:
     Photodetector signalP: 1.e-3        # [W]
     Power interval: [0,1000,.001]       # [W]
     Gain TIA: 5.e+3                     # [dB] Value or 'None' if no TIA in the photodetector
-    V Noise TIA: None #160.e-6                # [V] Value or 'None' if no TIA in the photodetector
+    V Noise TIA: None #160.e-6 #               # [V] Value or 'None' if no TIA in the photodetector
     Uncertainty function: uphc.UQ_Photodetector # Python module! (You develop a function and save it as a python module)
  
 # Lidar general inputs 
@@ -131,5 +131,5 @@ Atmospheric_inputs:
 Flags:
   Pointing accuracy uncertainty: False
   Scanning Pattern: True
-  Photodetector noise: False
+  Photodetector noise: True
 

@@ -64,7 +64,8 @@ if flags.flag_plot_photodetector_noise:
     # Plotting:
     
     fig,ax=plt.subplots()
-    ax.plot(Psax,UQ_photo['SNR_data_photodetector']['SNR_Shot_Noise'][0],Psax,UQ_photo['SNR_data_photodetector']['SNR_Thermal'][0],Psax,UQ_photo['SNR_data_photodetector']['SNR_Dark_Current'][0],Psax,UQ_photo['SNR_data_photodetector']['SNR_TIA'][0])
+    for i in UQ_photo['SNR_data_photodetector']:
+        ax.plot(Psax,UQ_photo['SNR_data_photodetector'][i][0])    
     ax.set_xlabel('Input Signal optical power (dBm)',fontsize=plot_param['axes_label_fontsize'])
     ax.set_ylabel('SNR (dB)',fontsize=plot_param['axes_label_fontsize'])
     ax.legend(['Shot Noise','Thermal Noise','Dark current Noise','TIA Noise'],fontsize=plot_param['legend_fontsize'])#,'Total error [w]'])
