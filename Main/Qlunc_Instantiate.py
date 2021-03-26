@@ -66,16 +66,12 @@ Scanner           = scanner(name            = Qlunc_yaml_inputs['Components']['S
                             cone_angle      = np.tile(Qlunc_yaml_inputs['Components']['Scanner']['Cone angle'],(1,len(np.arange(Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][0],                                                  
                                                                  Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][1],
                                                                  Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][2]))))[0],   # Cone angle in [degrees].
-
                             x               = np.array(Qlunc_yaml_inputs['Components']['Scanner']['x']),
                             y               = np.array(Qlunc_yaml_inputs['Components']['Scanner']['y']),
                             z               = np.array(Qlunc_yaml_inputs['Components']['Scanner']['z']),
                             stdv_focus_dist = Qlunc_yaml_inputs['Components']['Scanner']['stdv focus distance'],                 # Focus distance standard deviation in [meters].
                             stdv_cone_angle = Qlunc_yaml_inputs['Components']['Scanner']['stdv Cone angle'],                 # Cone angle standard deviation in [degrees].
                             stdv_azimuth    = Qlunc_yaml_inputs['Components']['Scanner']['stdv Azimuth'],                 # Azimuth angle standard deviation in [degrees].
-                            stdv_x          = Qlunc_yaml_inputs['Components']['Scanner']['stdv x'],
-                            stdv_y          = Qlunc_yaml_inputs['Components']['Scanner']['stdv y'],
-                            stdv_z          = Qlunc_yaml_inputs['Components']['Scanner']['stdv z'],
                             unc_func        = eval(Qlunc_yaml_inputs['Components']['Scanner']['Uncertainty function']) )    # here you put the function describing your scanner uncertainty. 
 
 #Optical Circulator:
@@ -154,9 +150,9 @@ if Atmospheric_TimeSeries:
                           'fog'         : list(AtmosphericScenarios_TS.loc[:,'fog']),
                           'time'        : list(AtmosphericScenarios_TS.loc[:,'t'])     #for rain and fog intensity intervals might be introduced [none,low, medium high]
                           } 
-    Atmospheric_Scenario = atmosphere(name        = 'Atmosphere1',
+    Atmospheric_Scenario = atmosphere(name        = Qlunc_yaml_inputs['Atmospheric_inputs']['Name'],
                                       temperature = Atmospheric_inputs['temperature'])
 else:    
 
-    Atmospheric_Scenario = atmosphere(name        = 'Atmosphere1',
+    Atmospheric_Scenario = atmosphere(name        = Qlunc_yaml_inputs['Atmospheric_inputs']['Name'],
                                       temperature = Qlunc_yaml_inputs['Atmospheric_inputs']['Temperature'])
