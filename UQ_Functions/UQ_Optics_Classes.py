@@ -72,7 +72,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         param3=[]            
         param1=np.array(np.sqrt(Lidar.optics.scanner.x**2+Lidar.optics.scanner.y**2+Lidar.optics.scanner.z**2)) 
         
-        # Calculating parameter2 and parameter3 depending on the quadrant:
+        # Calculating parameter2 and parameter3 depending on the quadrant (https://es.wikipedia.org/wiki/Coordenadas_esf%C3%A9ricas):
         for ind in range(len( Lidar.optics.scanner.z)):
            
             #Parameter2
