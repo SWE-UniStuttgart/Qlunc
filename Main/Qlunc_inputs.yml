@@ -25,12 +25,12 @@ Components:
     # VAD Pattern:
 
     Focus distance: [60]   # [m]
-    Cone angle: [0]       # [deg]
+    Cone angle: [30]       # [deg]
     Azimuth: [0,360,360]     # [deg] [origin,end,steps]
     
-    stdv focus distance: 2   # [m]
+    stdv focus distance: 0   # [m]
     stdv Cone angle: 0     # [deg]
-    stdv Azimuth: 0        # [deg]    
+    stdv Azimuth: 15        # [deg]    
     
     # Scanning Lidar Pattern:
     x: [40,40,40,40,40]        # [m]
@@ -118,7 +118,7 @@ Lidar:
 # Atmospheric_inputs to create the atmospheric scenarios
 
 Atmospheric_inputs:
-  
+  Name: 'Atmosphere_Yaml'
   TimeSeries    : False # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere characteristics (T, H, rain and fog)   
   Atmos_TS_FILE : 'AtmosphericScenarios.csv'  # (... .csv)
   Temperature: [300] # [K] Have to put the same number of elements for temperature and humidity. Always in paired values   
