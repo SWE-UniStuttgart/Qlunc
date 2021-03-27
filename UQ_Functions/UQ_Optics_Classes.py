@@ -153,9 +153,12 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     # Svaing coordenates
     file=open('C:/Users/fcosta/Desktop/data_'+Qlunc_yaml_inputs['Components']['Scanner']['Type']+'.txt','w')
-    XX=repr(param1_or)
-    YY=repr(param2_or)
-    ZZ=repr(param3_or)
+    XX=repr(X0)
+    YY=repr(Y0)
+    ZZ=repr(Z0)
+    XX_noisy=repr(NoisyX)
+    Y_noisy=repr(NoisyY)
+    ZZ_noisy=repr(NoisyZ)    
 
     file.write('\n'+Qlunc_yaml_inputs['Components']['Scanner']['Type'] +'\nX:'+XX+"\n"+'\nY:'+YY+"\n"+'\nZ:'+ZZ+"\n")
     file.close()   
