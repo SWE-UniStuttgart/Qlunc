@@ -19,8 +19,6 @@ module.
 # from Qlunc_ImportModules import *
 from Qlunc_Help_standAlone import *
 import pdb
-import numpy as np
-import math
 #%% TELESCOPE:
 # NOT IMPLEMENTED
 #==============================================================================
