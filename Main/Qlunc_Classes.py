@@ -97,8 +97,8 @@ from Qlunc_Help_standAlone import *
 os.chdir('../UQ_functions')
 import UQ_Photonics_Classes as uphc
 import UQ_Power_Classes as upwc
-import UQ_Optics_Classes as uopc
 import UQ_Lidar_Classes as ulc
+import UQ_Optics_Classes as uopc
 os.chdir('../Main')
 
 #%% Constants:
@@ -167,10 +167,11 @@ class converter(): # Not included yet in Version Qlunc v-0.9 calculations
                  print('Created new converter: {}'.format(self.ConverterID))
 
 class scanner():
-    def __init__(self,name,scanner_type,origin,sample_rate,focus_dist,cone_angle,azimuth,x,y,z,stdv_focus_dist,stdv_cone_angle,stdv_azimuth,unc_func):
+    def __init__(self,name,scanner_type,pattern,origin,sample_rate,focus_dist,cone_angle,azimuth,x,y,z,stdv_focus_dist,stdv_cone_angle,stdv_azimuth,unc_func):
                  self.ScannerID       = name
                  self.scanner_type    = scanner_type
                  self.origin          = origin
+                 self.pattern         = pattern
                  self.sample_rate     = sample_rate
                  self.focus_dist      = focus_dist
                  self.cone_angle      = cone_angle

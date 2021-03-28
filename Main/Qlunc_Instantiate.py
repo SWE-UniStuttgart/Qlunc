@@ -54,6 +54,7 @@ flags.flag_plot_photodetector_noise      = Qlunc_yaml_inputs['Flags']['Photodete
 Scanner           = scanner(name            = Qlunc_yaml_inputs['Components']['Scanner']['Name'],           # Introduce your scanner name.
                             scanner_type    = Qlunc_yaml_inputs['Components']['Scanner']['Type'],
                             origin          = Qlunc_yaml_inputs['Components']['Scanner']['Origin'],         # Origin (coordinates of the lidar deployment).
+                            pattern         = Qlunc_yaml_inputs['Components']['Scanner']['Pattern'],
                             sample_rate     = Qlunc_yaml_inputs['Components']['Scanner']['Sample rate'],    # for now introduce it in [degrees].
                            
                            # This values for focus distance, cone_angle and azimuth define a typical VAD scanning sequence:

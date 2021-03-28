@@ -14,10 +14,11 @@ module.
    
  
 """
-
-
-# from Qlunc_ImportModules import *
+import os
+os.chdir('../Utils')
+import Scanning_patterns as SP
 from Qlunc_Help_standAlone import *
+os.chdir('../Main')
 import pdb
 #%% TELESCOPE:
 # NOT IMPLEMENTED
@@ -64,34 +65,46 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
 
     elif Qlunc_yaml_inputs['Components']['Scanner']['Type']=='SCAN':
         # 'Transform coordinates from cartesians to spherical'
-
         param1=[]
         param2=[]
-        param3=[]            
-        param1=np.array(np.sqrt(Lidar.optics.scanner.x**2+Lidar.optics.scanner.y**2+Lidar.optics.scanner.z**2)) 
+        param3=[]
+        # When SCAN is selected user can choose specific patterns already implemented (./Qlunc/Utils/Scanning_patterns.py)
+        if Qlunc_yaml_inputs['Components']['Scanner']['Pattern']=='lissajous':
+            x_init,y_init,z_init = SP.lissajous_pattern(20,20,20,2,2)
+        elif Qlunc_yaml_inputs['Components']['Scanner']['Pattern']=='None':
+            x_init = Lidar.optics.scanner.x
+            y_init = Lidar.optics.scanner.y
+            z_init = Lidar.optics.scanner.z
         
-        # Calculating parameter2 and parameter3 depending on the quadrant (https://es.wikipedia.org/wiki/Coordenadas_esf%C3%A9ricas):
-        for ind in range(len( Lidar.optics.scanner.z)):
-           
+        # pdb.set_trace()  
+        # Calculating parameter1, parameter2 and parameter3 depending on the quadrant (https://es.wikipedia.org/wiki/Coordenadas_esf%C3%A9ricas):
+        param1=np.array(np.sqrt(x_init**2+y_init**2+z_init**2)) 
+        for ind in range(len(z_init)):
+            
+            # Tolerance:
+            np.around(z_init[ind],decimals=10)
+            # np.around(x_init[ind],decimals=10)
+            # np.around(y_init[ind],decimals=10)
+            
             #Parameter2
-            if int(Lidar.optics.scanner.z[ind])>0:
-                param2.append((math.degrees(np.arctan(np.sqrt(Lidar.optics.scanner.x[ind]**2+Lidar.optics.scanner.y[ind]**2)/Lidar.optics.scanner.z[ind]))))
-            elif int(Lidar.optics.scanner.z[ind])==0:
-                param2.append(np.array(90))
-            elif int(Lidar.optics.scanner.z[ind])<0:
-                param2.append(180+(math.degrees(np.arctan(np.sqrt(Lidar.optics.scanner.x[ind]**2+Lidar.optics.scanner.y[ind]**2)/Lidar.optics.scanner.z[ind]))))
+            if int(z_init[ind])>0:
+                param2.append(np.arctan(np.sqrt(x_init[ind]**2+y_init[ind]**2)/z_init[ind]))
+            elif int(z_init[ind])==0:
+                param2.append(np.array(np.pi/2))
+            elif int(z_init[ind])<0:
+                param2.append((np.pi)+(np.arctan(np.sqrt(x_init[ind]**2+y_init[ind]**2)/z_init[ind])))
             
             #Parameter3
-            if int(Lidar.optics.scanner.x[ind])>0 and int(Lidar.optics.scanner.y[ind])>0:
-                param3.append(np.array(math.degrees(np.arctan(Lidar.optics.scanner.y[ind]/Lidar.optics.scanner.x[ind]))))            
-            elif int(Lidar.optics.scanner.x[ind])>0 and int(Lidar.optics.scanner.y[ind])<0:
-                param3.append(360+(math.degrees(np.arctan(Lidar.optics.scanner.y[ind]/Lidar.optics.scanner.x[ind]))))           
-            elif int(Lidar.optics.scanner.x[ind])<0:
-                param3.append(180+(math.degrees(np.arctan(Lidar.optics.scanner.y[ind]/Lidar.optics.scanner.x[ind]))))            
-            elif int(Lidar.optics.scanner.x[ind])==0:
-                param3.append(90*np.array(np.sign(Lidar.optics.scanner.y[ind])))
+            if int(x_init[ind])>0 and int(y_init[ind])>0:
+                param3.append(np.array(np.arctan(y_init[ind]/x_init[ind])))            
+            elif int(x_init[ind])>0 and int(y_init[ind])<0:
+                param3.append((2*np.pi)+(np.arctan(y_init[ind]/x_init[ind])))           
+            elif int(x_init[ind])<0:
+                param3.append((np.pi)+(np.arctan(y_init[ind]/x_init[ind])))            
+            elif int(x_init[ind])==0:
+                param3.append(np.pi/2*np.array(np.sign(y_init[ind])))
     
-    # pdb.set_trace()    
+    # pdb.set_trace()
     for param1_or,param2_or,param3_or in zip(param1,param2,param3):# Take coordinates from inputs
         Mean_DISTANCE=[]
         DISTANCE=[]        
@@ -99,10 +112,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         
         # Coordinates of the original points:
         # Calculating the theoretical point coordinate transformation + lidar origin + sample rate  (conversion from spherical to cartesians):
-        x0 = (param1_or)*np.cos(np.deg2rad(param3_or))*np.sin(np.deg2rad(param2_or)) + Lidar.optics.scanner.origin[0]
-        y0 = (param1_or)*np.sin(np.deg2rad(param3_or))*np.sin(np.deg2rad(param2_or)) + Lidar.optics.scanner.origin[1]
-        z0 = (param1_or)*np.cos(np.deg2rad(param2_or)) + Lidar.optics.scanner.origin[2] + sample_rate_count
-        
+        x0 = (param1_or)*np.cos(param3_or)*np.sin(param2_or) + Lidar.optics.scanner.origin[0]
+        y0 = (param1_or)*np.sin(param3_or)*np.sin(param2_or) + Lidar.optics.scanner.origin[1]
+        z0 = (param1_or)*np.cos(param2_or) + Lidar.optics.scanner.origin[2] + sample_rate_count
         # Storing coordinates
         X0.append(x0)
         Y0.append(y0)
@@ -122,9 +134,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             
            
             # Coordinates of the noisy points:            
-            x = noisy_param1*np.cos(np.deg2rad(noisy_param3))*np.sin(np.deg2rad(noisy_param2))
-            y = noisy_param1*np.sin(np.deg2rad(noisy_param3))*np.sin(np.deg2rad(noisy_param2)) 
-            z = noisy_param1*np.cos(np.deg2rad(noisy_param2)) + sample_rate_count
+            x = noisy_param1*np.cos(noisy_param3)*np.sin(noisy_param2)
+            y = noisy_param1*np.sin(noisy_param3)*np.sin(noisy_param2) 
+            z = noisy_param1*np.cos(noisy_param2) + sample_rate_count
             # Apply error in inclinometers   
             xfinal = np.matmul(R,[x,y,z])[0] + Lidar.optics.scanner.origin[0] # Rotation
             yfinal = np.matmul(R,[x,y,z])[1] + Lidar.optics.scanner.origin[1]
@@ -151,7 +163,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     Noisy_Coord=[NoisyX,NoisyY,NoisyZ]
     Coord=[X0,Y0,Z0]
     
-    # Svaing coordenates
+    # Svaing coordenates to a file in desktop
     file=open('C:/Users/fcosta/Desktop/data_'+Qlunc_yaml_inputs['Components']['Scanner']['Type']+'.txt','w')
     XX=repr(X0)
     YY=repr(Y0)
