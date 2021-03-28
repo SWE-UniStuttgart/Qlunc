@@ -82,28 +82,34 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         for ind in range(len(z_init)):
             
             # Tolerance:
-            np.around(z_init[ind],decimals=10)
+            # np.around(z_init[ind],decimals=15)
             # np.around(x_init[ind],decimals=10)
             # np.around(y_init[ind],decimals=10)
             
             #Parameter2
-            if int(z_init[ind])>0:
+            if z_init[ind]>0:
                 param2.append(np.arctan(np.sqrt(x_init[ind]**2+y_init[ind]**2)/z_init[ind]))
-            elif int(z_init[ind])==0:
+            elif z_init[ind]==0:
                 param2.append(np.array(np.pi/2))
-            elif int(z_init[ind])<0:
+            elif z_init[ind]<0:
                 param2.append((np.pi)+(np.arctan(np.sqrt(x_init[ind]**2+y_init[ind]**2)/z_init[ind])))
             
             #Parameter3
-            if int(x_init[ind])>0 and int(y_init[ind])>0:
-                param3.append(np.array(np.arctan(y_init[ind]/x_init[ind])))            
-            elif int(x_init[ind])>0 and int(y_init[ind])<0:
-                param3.append((2*np.pi)+(np.arctan(y_init[ind]/x_init[ind])))           
-            elif int(x_init[ind])<0:
+                # param3.append(np.array_init(np.arctan(y_init[ind]/x_init[ind])))        
+                # np.around(z_init[ind],decimals=16)
+            np.around(y_init[ind],decimals=2)
+            np.around(x_init[ind],decimals=2)
+            if x_init[ind]>0:
+                if  y_init[ind]>0:
+                    param3.append(np.arctan(y_init[ind]/x_init[ind]))            
+                elif x_init[ind]>0 and y_init[ind]<0:
+                    param3.append((2.0*np.pi)+(np.arctan(y_init[ind]/x_init[ind])))           
+            elif x_init[ind]<0:
                 param3.append((np.pi)+(np.arctan(y_init[ind]/x_init[ind])))            
-            elif int(x_init[ind])==0:
-                param3.append(np.pi/2*np.array(np.sign(y_init[ind])))
-    
+            elif x_init[ind]==0:
+                # param3.append(np.array_init(999))
+                param3.append(np.pi/2.0*(np.sign(y_init[ind])))
+   
     # pdb.set_trace()
     for param1_or,param2_or,param3_or in zip(param1,param2,param3):# Take coordinates from inputs
         Mean_DISTANCE=[]
