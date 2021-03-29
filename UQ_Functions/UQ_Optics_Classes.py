@@ -89,8 +89,8 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
                 param2.append((np.pi)+(np.arctan(np.sqrt(x_init[ind]**2+y_init[ind]**2)/z_init[ind])))
             
             #Parameter3
-            np.around(y_init[ind],decimals=2)
-            np.around(x_init[ind],decimals=2)
+            # np.around(y_init[ind],decimals=2)
+            # np.around(x_init[ind],decimals=2)
             if x_init[ind]>0:
                 if  y_init[ind]>0:
                     param3.append(np.arctan(y_init[ind]/x_init[ind]))            
