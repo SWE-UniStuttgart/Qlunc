@@ -21,12 +21,14 @@ Components:
     Origin: [0,0,0]  # Lidar position in meters: [x,y,z]    
     Pattern: 'None' # 'lissajous', user defined pattern or 'None' in case no predefined pattern is used
     Sample rate: 0   # Lidar sample rate. In meters. Use 0 for now.
+
     Type: SCAN    # Type of the scanning head: VAD or SCAN (Scanning Lidar)
     
     # STDV in lidar angles and focus distance
     stdv focus distance: 0   # [m]
     stdv Cone angle: 0      # [deg]
     stdv Azimuth: 5         # [deg]   
+
     
     # VAD Pattern:
     Focus distance: [20]   # [m]
@@ -34,10 +36,12 @@ Components:
     Azimuth: [0,360,15]     # [deg] [origin,end,steps]
 
     # Scanning Lidar Pattern:
+
     x: [10,-10,-10,10]
     y: [-5,5,-5,5]   
     z: [40,40,40,40] #[10,   -10, -10 , 10 ]
         
+
     # Uncertainty function:
     Uncertainty function: uopc.UQ_Scanner
     
