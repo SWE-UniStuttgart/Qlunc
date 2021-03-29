@@ -10,17 +10,17 @@ Here we calculate the uncertainties related with components in the `optics`
 module. 
 
     
-   - noise definintions (reference in literature)
+   - noise definitions (reference in literature)
    
  
 """
 import os
-os.chdir('../Utils')
-import Scanning_patterns as SP
-from Qlunc_Help_standAlone import *
-os.chdir('../Main')
+
 import pdb
-#%% TELESCOPE:
+from Utils.Qlunc_ImportModules import *
+from Utils import Qlunc_Help_standAlone as SA
+from Utils import Scanning_patterns as SP
+
 # NOT IMPLEMENTED
 #==============================================================================
 # def UQ_Telescope(Lidar, Atmospheric_Scenario,cts):
@@ -54,14 +54,14 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
       [np.sin(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep)),  np.sin(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))+np.cos(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.roll_error_dep)),  np.sin(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))-np.cos(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))],
       [       -np.sin(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))                                             ,                      np.cos(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))                                                                                                                                            ,                                                                np.cos(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))]]
     stdv_param1=Lidar.optics.scanner.stdv_focus_dist
-    stdv_param2=Lidar.optics.scanner.stdv_cone_angle
-    stdv_param3=Lidar.optics.scanner.stdv_azimuth
+    stdv_param2=np.deg2rad(Lidar.optics.scanner.stdv_cone_angle)
+    stdv_param3=np.deg2rad(Lidar.optics.scanner.stdv_azimuth)
     
     # Differentiate between 'VAD' or 'Scanning' lidar depending on user's choice:
     if Qlunc_yaml_inputs['Components']['Scanner']['Type']=='VAD':
         param1=Lidar.optics.scanner.focus_dist
-        param2=Lidar.optics.scanner.cone_angle
-        param3=Lidar.optics.scanner.azimuth      
+        param2=np.deg2rad(Lidar.optics.scanner.cone_angle)
+        param3=np.deg2rad(Lidar.optics.scanner.azimuth)
 
     elif Qlunc_yaml_inputs['Components']['Scanner']['Type']=='SCAN':
         # 'Transform coordinates from cartesians to spherical'
@@ -70,21 +70,15 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         param3=[]
         # When SCAN is selected user can choose specific patterns already implemented (./Qlunc/Utils/Scanning_patterns.py)
         if Qlunc_yaml_inputs['Components']['Scanner']['Pattern']=='lissajous':
-            x_init,y_init,z_init = SP.lissajous_pattern(20,20,20,2,2)
+            x_init,y_init,z_init = SP.lissajous_pattern(20,20,20,3,3)
         elif Qlunc_yaml_inputs['Components']['Scanner']['Pattern']=='None':
             x_init = Lidar.optics.scanner.x
             y_init = Lidar.optics.scanner.y
             z_init = Lidar.optics.scanner.z
         
-        # pdb.set_trace()  
         # Calculating parameter1, parameter2 and parameter3 depending on the quadrant (https://es.wikipedia.org/wiki/Coordenadas_esf%C3%A9ricas):
         param1=np.array(np.sqrt(x_init**2+y_init**2+z_init**2)) 
         for ind in range(len(z_init)):
-            
-            # Tolerance:
-            # np.around(z_init[ind],decimals=15)
-            # np.around(x_init[ind],decimals=10)
-            # np.around(y_init[ind],decimals=10)
             
             #Parameter2
             if z_init[ind]>0:
@@ -95,8 +89,6 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
                 param2.append((np.pi)+(np.arctan(np.sqrt(x_init[ind]**2+y_init[ind]**2)/z_init[ind])))
             
             #Parameter3
-                # param3.append(np.array_init(np.arctan(y_init[ind]/x_init[ind])))        
-                # np.around(z_init[ind],decimals=16)
             np.around(y_init[ind],decimals=2)
             np.around(x_init[ind],decimals=2)
             if x_init[ind]>0:
@@ -107,10 +99,8 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             elif x_init[ind]<0:
                 param3.append((np.pi)+(np.arctan(y_init[ind]/x_init[ind])))            
             elif x_init[ind]==0:
-                # param3.append(np.array_init(999))
                 param3.append(np.pi/2.0*(np.sign(y_init[ind])))
    
-    # pdb.set_trace()
     for param1_or,param2_or,param3_or in zip(param1,param2,param3):# Take coordinates from inputs
         Mean_DISTANCE=[]
         DISTANCE=[]        
@@ -168,18 +158,18 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # pdb.set_trace()
     Noisy_Coord=[NoisyX,NoisyY,NoisyZ]
     Coord=[X0,Y0,Z0]
+    # if flags.flag_save_scancoord2file:
+    #     # Svaing coordenates to a file in desktop
+    #     file=open('C:/Users/fcosta/Desktop/data_'+Qlunc_yaml_inputs['Components']['Scanner']['Type']+'.txt','w')
+    #     XX=repr(X0)
+    #     YY=repr(Y0)
+    #     ZZ=repr(Z0)
+    #     XX_noisy=repr(NoisyX)
+    #     Y_noisy=repr(NoisyY)
+    #     ZZ_noisy=repr(NoisyZ)    
     
-    # Svaing coordenates to a file in desktop
-    file=open('C:/Users/fcosta/Desktop/data_'+Qlunc_yaml_inputs['Components']['Scanner']['Type']+'.txt','w')
-    XX=repr(X0)
-    YY=repr(Y0)
-    ZZ=repr(Z0)
-    XX_noisy=repr(NoisyX)
-    Y_noisy=repr(NoisyY)
-    ZZ_noisy=repr(NoisyZ)    
-
-    file.write('\n'+Qlunc_yaml_inputs['Components']['Scanner']['Type'] +'\nX:'+XX+"\n"+'\nY:'+YY+"\n"+'\nZ:'+ZZ+"\n")
-    file.close()   
+    #     file.write('\n'+Qlunc_yaml_inputs['Components']['Scanner']['Type'] +'\nX:'+XX+"\n"+'\nY:'+YY+"\n"+'\nZ:'+ZZ+"\n")
+    #     file.close()   
         
     Final_Output_UQ_Scanner={'Simu_Mean_Distance':SimMean_DISTANCE,'STDV_Distance':StdvMean_DISTANCE,'MeasPoint_Coordinates':Coord,'NoisyMeasPoint_Coordinates':Noisy_Coord}
     return Final_Output_UQ_Scanner
@@ -210,6 +200,6 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         Optical_circulator_Uncertainty = None
         print('No optical circulator in calculations!')
            
-    Uncertainty_Optics_Module=unc_comb(List_Unc_optics)
-    Final_Output_UQ_Optics = {'Uncertainty_Optics':Uncertainty_Optics_Module}
+    Uncertainty_Optics_Module=SA.unc_comb(List_Unc_optics)
+    Final_Output_UQ_Optics = {'Uncertainty_Optics':Uncertainty_Optics_Module,'Uncertainty_PointingAccuracy':[Scanner_Uncertainty[0],Scanner_Uncertainty[1]]}
     return Final_Output_UQ_Optics
