@@ -11,11 +11,10 @@ each lidar module following GUM (Guide to the expression of Uncertainties in
 Measurement) model. 
  
 """
-# from Qlunc_ImportModules import *
-import Qlunc_Help_standAlone as SA
-import numpy as np
-# Calculates the lidar global uncertainty using uncertainty expansion calculation methods:
+from Utils.Qlunc_ImportModules import *
+import Utils.Qlunc_Help_standAlone as SA
 
+# Calculates the lidar global uncertainty using uncertainty expansion calculation methods:
 def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     List_Unc_lidar = []
     try: # ecah try/except evaluates wether the component is included in the module, therefore in the calculations
