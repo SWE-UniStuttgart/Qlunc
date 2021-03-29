@@ -19,7 +19,7 @@ Components:
     
     Name: Scanner_Yaml # Provide an ID to your lidar:    
     Origin: [0,0,0]  # Lidar position in meters: [x,y,z]    
-    Pattern: 'lissajous' # 'lissajous', user defined pattern or 'None' in case no predefined pattern is used
+    Pattern: 'None' # 'lissajous', user defined pattern or 'None' in case no predefined pattern is used
     Sample rate: 0   # Lidar sample rate. In meters. Use 0 for now.
     Type: SCAN    # Type of the scanning head: VAD or SCAN (Scanning Lidar)
     
@@ -128,6 +128,6 @@ Atmospheric_inputs:
 # Plotting:------------------------------------------------------------
 Flags:
   Pointing accuracy uncertainty: False
-  Scanning Pattern: True
+  Scanning Pattern: False
   Photodetector noise: False
   Save Scanning Coordinates: False

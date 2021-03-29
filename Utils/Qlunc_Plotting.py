@@ -8,17 +8,10 @@ University of Stuttgart(c)
 
 """
 #%% import packages:
-import pdb
-import os
-print('Plotting: '+os.getcwd())
-# pdb.set_trace()
-  
 from Utils.Qlunc_ImportModules import *
-from UQ_Functions.UQ_Optics_Classes import *
-# Final_Output_UQ_Scanner
-def plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,flag_plot_measuring_points_pattern,flag_plot_photodetector_noise):
+
 #%% Plotting:
-    
+def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,flag_plot_photodetector_noise):
     # Ploting general parameters:
     plot_param={'axes_label_fontsize' : 25,
                 'textbox_fontsize'    : 14,
@@ -35,21 +28,17 @@ def plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,flag_plot_measuring
                 'tick_labelrotation'  : 45,
                 'Qlunc_version'       : 'Qlunc Version - 0.9'
                 }
-    
-    
-    ##############    Ploting scanner measuring points pattern #######################
-    if flag_plot_measuring_points_pattern:  
-        # Final_Output_UQ_Scanner = Lidar.optics.scanner.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs) # Calling Scanner uncertainty to plot the graphics
-    
         
+    ##############    Ploting scanner measuring points pattern #######################
+    if flag_plot_measuring_points_pattern:              
         # Creating the figure and the axes
         fig,axs4 = plt.subplots()  
         axs4=plt.axes(projection='3d')
         # pdb.set_trace()
         # Plotting
         axs4.plot([Lidar.optics.scanner.origin[0]],[Lidar.optics.scanner.origin[1]],[Lidar.optics.scanner.origin[2]],'ob',label='{} coordinates [{},{},{}]'.format(Lidar.LidarID,Lidar.optics.scanner.origin[0],Lidar.optics.scanner.origin[1],Lidar.optics.scanner.origin[2]),markersize=plot_param['markersize_lidar'])
-        axs4.plot(Final_Output_UQ_Scanner['MeasPoint_Coordinates'][0],Final_Output_UQ_Scanner['MeasPoint_Coordinates'][1],Final_Output_UQ_Scanner['MeasPoint_Coordinates'][2],plot_param['markerTheo'],markersize=plot_param['markersize'],label='Theoretical measuring point')
-        axs4.plot(Final_Output_UQ_Scanner['NoisyMeasPoint_Coordinates'][0],Final_Output_UQ_Scanner['NoisyMeasPoint_Coordinates'][1],Final_Output_UQ_Scanner['NoisyMeasPoint_Coordinates'][2],plot_param['marker'],markersize=plot_param['markersize'],label='Distance error [m] = {0:.3g}$\pm${1:.3g}'.format(np.mean(Final_Output_UQ_Scanner['Simu_Mean_Distance']),np.mean(Final_Output_UQ_Scanner['STDV_Distance'])))
+        axs4.plot(Data['MeasPoint_Coordinates'][0],Data['MeasPoint_Coordinates'][1],Data['MeasPoint_Coordinates'][2],plot_param['markerTheo'],markersize=plot_param['markersize'],label='Theoretical measuring point')
+        axs4.plot(Data['NoisyMeasPoint_Coordinates'][0],Data['NoisyMeasPoint_Coordinates'][1],Data['NoisyMeasPoint_Coordinates'][2],plot_param['marker'],markersize=plot_param['markersize'],label='Distance error [m] = {0:.3g}$\pm${1:.3g}'.format(np.mean(Data['Simu_Mean_Distance']),np.mean(Data['STDV_Distance'])))
         
         # Setting labels, legend, title and axes limits:
         axs4.set_xlabel('x [m]',fontsize=plot_param['axes_label_fontsize'])#,orientation=plot_param['tick_labelrotation'])
@@ -66,14 +55,13 @@ def plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,flag_plot_measuring
     ###########   Plot photodetector noise   #############################       
     if flag_plot_photodetector_noise:
         # Quantifying uncertainty from photodetector and interval domain for the plot Psax is define in the photodetector class properties)
-        UQ_photo = Lidar.photonics.photodetector.Uncertainty(Lidar,Atmospheric_Scenario,cts) # Obtain the UQ photodetector dictionary with SNR and UQ information
         Psax=10*np.log10(Lidar.photonics.photodetector.Power_interval) 
     
         # Plotting:
         
         fig,ax=plt.subplots()
-        for i in UQ_photo['SNR_data_photodetector']:
-            ax.plot(Psax,UQ_photo['SNR_data_photodetector'][i][0])    
+        for i in Data['SNR_data_photodetector']:
+            ax.plot(Psax,Data['SNR_data_photodetector'][i][0])    
         ax.set_xlabel('Input Signal optical power (dBm)',fontsize=plot_param['axes_label_fontsize'])
         ax.set_ylabel('SNR (dB)',fontsize=plot_param['axes_label_fontsize'])
         ax.legend(['Shot Noise','Thermal Noise','Dark current Noise','TIA Noise'],fontsize=plot_param['legend_fontsize'])#,'Total error [w]'])

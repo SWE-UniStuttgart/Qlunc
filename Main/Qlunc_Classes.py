@@ -91,9 +91,6 @@ Qlunc uses GUM (Guide to the expression of Uncertainties in Measurement)
 model to calculate uncertainty expansion.  
   
 """
-#%% Importing packages:
-# import pdb
-# import os
 
 #%% Constants:
 class cts():
@@ -101,15 +98,7 @@ class cts():
     h = 6.6207004e-34 # Plank constant [m^2 kg s^-1]
     e = 1.60217662e-19 # electron charge [C]
     c = 2.99792e8 #speed of light [m s^-1]
-
-
-class flags():
-    def __init__(self,flag_plot_pointing_accuracy_unc,flag_plot_measuring_points_pattern,flag_plot_photodetector_noise,flag_save_scancoord2file):
-                 self.flag_plot_pointing_accuracy_unc    = flag_plot_pointing_accuracy_unc
-                 self.flag_plot_measuring_points_pattern = flag_plot_measuring_points_pattern
-                 self.flag_plot_photodetector_noise      = flag_plot_photodetector_noise
-                 self.flag_save_scancoord2file           = flag_save_scancoord2file
-    
+  
 #%% LIDAR COMPONENTS
   
 # Component Classes:

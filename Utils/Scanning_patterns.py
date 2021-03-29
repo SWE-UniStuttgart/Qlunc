@@ -7,7 +7,6 @@ Lissajous' pattern
 
 from Utils.Qlunc_ImportModules import *
 
-
 #%% Lissajous pattern
 def lissajous_pattern(size_x,size_y,size_z,q,p):
     # parameters
@@ -29,11 +28,11 @@ def lissajous_pattern(size_x,size_y,size_z,q,p):
     # ax1.set_ylim(-30,30)
     
     # 3D
-    fig,ax = plt.subplots()
-    ax     = plt.axes(projection='3d')
-    ax.plot(x,y,z)
-    ax.set_xlim3d(-30,30)
-    ax.set_ylim3d(-30,30)
-    ax.set_zlim3d(-30,30)
+    # fig,ax = plt.subplots()
+    # ax     = plt.axes(projection='3d')
+    # ax.plot(x,y,z)
+    # ax.set_xlim3d(-30,30)
+    # ax.set_ylim3d(-30,30)
+    # ax.set_zlim3d(-30,30)
   
     return x,y,z

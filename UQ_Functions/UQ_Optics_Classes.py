@@ -14,18 +14,13 @@ module.
    
  
 """
-import os
 
-import pdb
-# print('Optics: '+os.getcwd())
-# pdb.set_trace()
 from Utils.Qlunc_ImportModules import *
 from Utils import Qlunc_Help_standAlone as SA
 from Utils import Scanning_patterns as SP
 from Utils import Qlunc_Plotting as QPlot
-print('SecionOptics: '+os.getcwd())
-# pdb.set_trace()
-# from  Main.Qlunc_Instantiate import *
+
+
 # NOT IMPLEMENTED
 #==============================================================================
 # def UQ_Telescope(Lidar, Atmospheric_Scenario,cts):
@@ -178,9 +173,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         
     Final_Output_UQ_Scanner={'Simu_Mean_Distance':SimMean_DISTANCE,'STDV_Distance':StdvMean_DISTANCE,'MeasPoint_Coordinates':Coord,'NoisyMeasPoint_Coordinates':Noisy_Coord}
     #%% Plotting
-    pdb.set_trace()
-    # if Qlunc_yaml_inputs['Flags']['Scanning Pattern']:
-    QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,True,False)
+    QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,Qlunc_yaml_inputs['Flags']['Scanning Pattern'],False)
     return Final_Output_UQ_Scanner
 
 #%% Optical circulator:

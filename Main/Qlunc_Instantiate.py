@@ -23,16 +23,12 @@ could be done by instantiating their python classes:
            
 """
 import os
-import pdb
-os.chdir(r'C:\Users\fcosta\SWE_LOCAL\GIT_Qlunc')
-print(os.getcwd())
-# pdb.set_trace()
+os.chdir('../')
 import UQ_Functions.UQ_Photonics_Classes as uphc,UQ_Functions.UQ_Optics_Classes as uopc, UQ_Functions.UQ_Power_Classes as upwc,UQ_Functions.UQ_Lidar_Classes as ulc
 from Utils.Qlunc_ImportModules import *
 
 #%% Running Qlunc_Classes.py:
-# print(os.getcwd())
-# pdb.set_trace()
+
 with open (r'./Main/Qlunc_inputs.yml') as file: # WHere the yaml file is in order to get the input data
     Qlunc_yaml_inputs={}
     docs = yaml.load_all(file, Loader=yaml.FullLoader)
@@ -40,15 +36,10 @@ with open (r'./Main/Qlunc_inputs.yml') as file: # WHere the yaml file is in orde
         for k, v in doc.items():           
             Qlunc_yaml_inputs.setdefault(k,v)  # save a dictionary with the data coming from yaml file 
 
-exec(open(Qlunc_yaml_inputs['Main_directory']+'/Main/Qlunc_Classes.py').read())   # Execute Qlunc_Classes.py (creating classes for lidar 'objects')
-# import Main.Qlunc_Classes
-#%%%%%%%%%%%%%%%%% INPUTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Execute Qlunc_Classes.py (creating classes for lidar 'objects')
+exec(open(Qlunc_yaml_inputs['Main_directory']+'/Main/Qlunc_Classes.py').read())   
 
-## FLAG inputs: ###############################################################
-# flags.flag_plot_pointing_accuracy_unc    = Qlunc_yaml_inputs['Flags']['Pointing accuracy uncertainty']  # Pointing accuracy uncertainty - Keep False
-# flags.flag_plot_measuring_points_pattern = Qlunc_yaml_inputs['Flags']['Scanning Pattern']  # Pattern of measuring points
-# flags.flag_plot_photodetector_noise      = Qlunc_yaml_inputs['Flags']['Photodetector noise']  # Photodetector noise: shot noise, dark current noise, thermal noise as a function of the photodetector input signal power.
-# flags.flag_save_scancoord2file           = Qlunc_yaml_inputs['Flags']['Save Scanning Coordinates']
+#%%%%%%%%%%%%%%%%% INPUTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 ## Optics components and Module: ##############################################
 
