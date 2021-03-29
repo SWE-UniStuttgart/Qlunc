@@ -85,13 +85,15 @@ Lidar_1 = lidar(Power_Module = Power_1,
 So we have created a lidar digital twin with its first module, the `power` 
 module, which in turn contains a component, the uninterruptible power supply.
 
+(How to ask for uncertainties...)
+
 Qlunc uses GUM (Guide to the expression of Uncertainties in Measurement) 
 model to calculate uncertainty expansion.  
   
 """
 #%% Importing packages:
-import pdb
-import os
+# import pdb
+# import os
 
 #%% Constants:
 class cts():
