@@ -7,11 +7,7 @@ Francisco Costa García
 University of Stuttgart(c) 
 """
 
-from Qlunc_ImportModules import *
-import numpy as np
-
-#import Qlunc_Help_standAlone as SA
-#from Main.Qlunc_inputs import inputs
+from Utils.Qlunc_ImportModules import *
 
 #%%# used to flatt at some points along the code:
 flatten = lambda *n: (e for a in n for e in (flatten(*a) if isinstance(a, (list,tuple)) else (a,))) 

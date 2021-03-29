@@ -15,15 +15,13 @@ module.
            - Calculating ASE - Amplified Spontaneous Emission definition ((**Optics and Photonics) Bishnu P. Pal - Guided Wave Optical Components and Devices_ Basics, Technology, and Applications -Academic Press (2005))
            - EDFA Testing with interpolation techniques - Product note 71452-1
 """
-from Qlunc_ImportModules import *
-import Qlunc_Help_standAlone as SA
-# import numpy as np
-# import pandas as pd
-# import scipy.interpolate as itp
-# import numbers
+
+from Utils.Qlunc_ImportModules import *
+from Utils import Qlunc_Help_standAlone as SA
+from Utils import Qlunc_Plotting as QPlot
 
 #%% PHOTODETECTOR:
-def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts):
+def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     UQ_Photodetector.Thermal_noise      = []
     UQ_Photodetector.SNR_thermal_noise  = []
     UQ_Photodetector.Shot_noise         = []
@@ -67,6 +65,9 @@ def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts):
     
     UQ_Photodetector.UQ_Photo=list(SA.flatten(UQ_Photodetector.UQ_Photo))
     Final_Output_UQ_Photo={'Uncertainty_Photodetector':UQ_Photodetector.UQ_Photo,'SNR_data_photodetector':SNR_data}      
+    
+    # Plotting:
+    QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Photo,False,Qlunc_yaml_inputs['Flags']['Photodetector noise'])
     return Final_Output_UQ_Photo
 
 

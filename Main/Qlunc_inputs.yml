@@ -19,28 +19,29 @@ Components:
     
     Name: Scanner_Yaml # Provide an ID to your lidar:    
     Origin: [0,0,0]  # Lidar position in meters: [x,y,z]    
+    Pattern: 'None' # 'lissajous', user defined pattern or 'None' in case no predefined pattern is used
     Sample rate: 0   # Lidar sample rate. In meters. Use 0 for now.
-    Type: VAD          # Type of the scanning head: VAD or SCAN (Scanning Lidar)
- 
-    # VAD Pattern:
 
-    Focus distance: [60]   # [m]
-    Cone angle: [30]       # [deg]
-    Azimuth: [0,360,180]     # [deg] [origin,end,steps]
+    Type: SCAN    # Type of the scanning head: VAD or SCAN (Scanning Lidar)
     
-    stdv focus distance: 0.3   # [m]
-    stdv Cone angle: 0     # [deg]
-    stdv Azimuth: 0        # [deg]    
+    # STDV in lidar angles and focus distance
+    stdv focus distance: 0   # [m]
+    stdv Cone angle: 0      # [deg]
+    stdv Azimuth: 5         # [deg]   
+
     
+    # VAD Pattern:
+    Focus distance: [20]   # [m]
+    Cone angle: [5]       # [deg]
+    Azimuth: [0,360,15]     # [deg] [origin,end,steps]
+
     # Scanning Lidar Pattern:
-    x: [60,60]        # [m]
-    y: [-10,10]      # [m]
-    z: [0]      # [m]
-    
-    stdv x: 0.3               # [m]
-    stdv y: 0             # [m]
-    stdv z: 0            # [m]
-    
+
+    x: [10,-10,-10,10]
+    y: [-5,5,-5,5]   
+    z: [40,40,40,40] #[10,   -10, -10 , 10 ]
+        
+
     # Uncertainty function:
     Uncertainty function: uopc.UQ_Scanner
     
@@ -118,7 +119,8 @@ Lidar:
 # Atmospheric_inputs to create the atmospheric scenarios
 
 Atmospheric_inputs:
-  
+
+  Name: 'Atmosphere_Yaml'
   TimeSeries    : False # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere characteristics (T, H, rain and fog)   
   Atmos_TS_FILE : 'AtmosphericScenarios.csv'  # (... .csv)
   Temperature: [300] # [K] Have to put the same number of elements for temperature and humidity. Always in paired values   
@@ -130,6 +132,6 @@ Atmospheric_inputs:
 # Plotting:------------------------------------------------------------
 Flags:
   Pointing accuracy uncertainty: False
-  Scanning Pattern: True
+  Scanning Pattern: False
   Photodetector noise: False
-
+  Save Scanning Coordinates: False

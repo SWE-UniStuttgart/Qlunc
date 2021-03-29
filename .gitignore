@@ -5,6 +5,7 @@
 # Ignore specific files:
 Qlunc_NoteBook-checkpoint.ipynb
 UQ_Functions/UQ_Power_Classes.py
+Lissajou_pattern.py
 # Ignore specific folders:
 Figures/
 Sphinx4Qlunc/
