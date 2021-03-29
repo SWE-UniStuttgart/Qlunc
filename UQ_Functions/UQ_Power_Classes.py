@@ -15,12 +15,8 @@ module.
 
 """
 
-
-# from Qlunc_ImportModules import *
-# import Qlunc_Help_standAlone as SA
-import pandas as pd
-import scipy.interpolate as itp
-import pdb
+from Utils.Qlunc_ImportModules import *
+import Utils.Qlunc_Help_standAlone as SA
 
 #%% POWER SOURCE:
 def UQ_PowerSource(Lidar, Atmospheric_Scenario,cts):
