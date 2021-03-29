@@ -58,11 +58,10 @@ This is the core of `Qlunc`. Here the user creates the classes describing the co
  - `Template_yaml_inputs_file.yml` and `Qlunc_inputs.yml`. The former is a yaml template where user introduces the lidar components values, modules and general lidar features as well as atmospheric scenarios; the latter can be taken as an example showing how to fill in the template.
  - `Qlunc_Classes.py` contains the code which _creates_ all the lidar digital twins. Each lidar module/component is assigned to a python `class`.
  - `Qlunc_Instantiate.py` instantiate the lidar classes taking the values from `Qlunc_inputs.yml`.
- - `Qlunc_Plotting.py` is a stand alone python module used to plot some results.
 ### UQ_Functions
  - Contains the functions that compute the uncertainties coming from different devices, calculting also the uncertainty propagation corresponding to the different      modules and lidar uncertainty as well. Users can define their own functions to calculate specific module uncertainties, and combined/expanded uncertainties as well. 
 ### Utils
- - Contains scripts meant to do different tasks. Importing packages and some stand alone funtions which don´t interface directly with `Qlunc` but are necessary to compute calculations.
+ - Contains scripts meant to do different tasks. Importing packages and some stand alone funtions which don´t interface directly with `Qlunc` but are necessary to compute calculations. Also contains a plotting function to introduce pre-defined scanning patterns.
 ###  TestFile_Qlunc
  - A working example is provided to show how the process looks like. In this test case a lidar is built up with its modules and components, puting all together to set up a lidar device. User can find more information on how to run this test file in the `readme.md` file dropped in this folder.
 ### Tutorials
