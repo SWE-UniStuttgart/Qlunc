@@ -4,10 +4,11 @@ Created on Sat Mar 27 12:10:47 2021
 Lissajous' pattern
 @author: fcosta
 """
-import numpy as np
-import matplotlib.pyplot as plt
 
-#%% Lissajous psttern
+from Utils.Qlunc_ImportModules import *
+
+
+#%% Lissajous pattern
 def lissajous_pattern(size_x,size_y,size_z,q,p):
     # parameters
     # (1<p<q)
@@ -18,9 +19,9 @@ def lissajous_pattern(size_x,size_y,size_z,q,p):
     x = size_x*np.sin((p*t+phi))
     y = size_y*np.sin((q*t))
     z = np.array(len(t)*[size_z])
-    
+   
     # plotting
-    
+
     # 2D:
     # fig,ax1 = plt.subplots()
     # ax1.plot(x,y)
