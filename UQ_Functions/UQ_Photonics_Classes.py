@@ -15,12 +15,9 @@ module.
            - Calculating ASE - Amplified Spontaneous Emission definition ((**Optics and Photonics) Bishnu P. Pal - Guided Wave Optical Components and Devices_ Basics, Technology, and Applications -Academic Press (2005))
            - EDFA Testing with interpolation techniques - Product note 71452-1
 """
-from Qlunc_ImportModules import *
-import Qlunc_Help_standAlone as SA
-# import numpy as np
-# import pandas as pd
-# import scipy.interpolate as itp
-# import numbers
+
+from Utils.Qlunc_ImportModules import *
+from Utils import Qlunc_Help_standAlone as SA
 
 #%% PHOTODETECTOR:
 def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts):
