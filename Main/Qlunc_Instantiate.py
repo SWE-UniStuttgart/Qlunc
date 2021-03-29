@@ -23,26 +23,29 @@ could be done by instantiating their python classes:
            
 """
 
-#%% Running Qlunc_Classes.py:
-from Qlunc_Classes import *
 import pdb
-# Reading data from the yaml file:
-with open (r'./Qlunc_inputs.yml') as file: # WHere the yaml file is in order to get the input data
+import os
+from Utils.Qlunc_ImportModules import *
+import UQ_Functions.UQ_Photonics_Classes as uphc,UQ_Functions.UQ_Optics_Classes as uopc, UQ_Functions.UQ_Power_Classes as upwc,UQ_Functions.UQ_Lidar_Classes as ulc
+from Utils.Qlunc_ImportModules import *
+
+#%% Running Qlunc_Classes.py:
+
+with open (r'./Main/Qlunc_inputs.yml') as file: # WHere the yaml file is in order to get the input data
     Qlunc_yaml_inputs={}
     docs = yaml.load_all(file, Loader=yaml.FullLoader)
     for doc in docs:      
         for k, v in doc.items():           
             Qlunc_yaml_inputs.setdefault(k,v)  # save a dictionary with the data coming from yaml file 
+exec(open(Qlunc_yaml_inputs['Main_directory']+'/Main/Qlunc_Classes.py').read())   # Execute Qlunc_Classes.py (creating classes for lidar 'objects')
 
-exec(open(Qlunc_yaml_inputs['Main_directory']+'/Qlunc_Classes.py').read())   # Execute Qlunc_Classes.py (creating classes for lidar 'objects')
 #%%%%%%%%%%%%%%%%% INPUTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 ## FLAG inputs: ###############################################################
-flags.flag_plot_pointing_accuracy_unc    = Qlunc_yaml_inputs['Flags']['Pointing accuracy uncertainty']   # Pointing accuracy uncertainty - Keep False
+flags.flag_plot_pointing_accuracy_unc    = Qlunc_yaml_inputs['Flags']['Pointing accuracy uncertainty']  # Pointing accuracy uncertainty - Keep False
 flags.flag_plot_measuring_points_pattern = Qlunc_yaml_inputs['Flags']['Scanning Pattern']  # Pattern of measuring points
 flags.flag_plot_photodetector_noise      = Qlunc_yaml_inputs['Flags']['Photodetector noise']  # Photodetector noise: shot noise, dark current noise, thermal noise as a function of the photodetector input signal power.
-
-
+flags.flag_save_scancoord2file           = Qlunc_yaml_inputs['Flags']['Save Scanning Coordinates']
 
 ## Optics components and Module: ##############################################
 
