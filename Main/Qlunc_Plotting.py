@@ -7,8 +7,11 @@ Francisco Costa García
 University of Stuttgart(c) 
 
 """
+#%% import packages:
+import os
+os.chdir('../')
+from Main.Qlunc_Instantiate import *
 
-from Qlunc_Instantiate import *
 #%% Plotting:
 
 # Ploting general parameters:
@@ -19,7 +22,7 @@ plot_param={'axes_label_fontsize' : 25,
             'legend_fontsize'     : 15,
             'xlim'                : [-45,45],
             'ylim'                : [-45,45],
-            'zlim'                : [-60,45],
+            'zlim'                : [-40,45],
             'markersize'          : 5,
             'markersize_lidar'    : 9,
             'marker'              : '.r',
@@ -37,7 +40,7 @@ if flags.flag_plot_measuring_points_pattern:
     # Creating the figure and the axes
     fig,axs4 = plt.subplots()  
     axs4=plt.axes(projection='3d')
-    
+    # pdb.set_trace()
     # Plotting
     axs4.plot([Lidar.optics.scanner.origin[0]],[Lidar.optics.scanner.origin[1]],[Lidar.optics.scanner.origin[2]],'ob',label='{} coordinates [{},{},{}]'.format(Lidar.LidarID,Lidar.optics.scanner.origin[0],Lidar.optics.scanner.origin[1],Lidar.optics.scanner.origin[2]),markersize=plot_param['markersize_lidar'])
     axs4.plot(Scanner_Data1['MeasPoint_Coordinates'][0],Scanner_Data1['MeasPoint_Coordinates'][1],Scanner_Data1['MeasPoint_Coordinates'][2],plot_param['markerTheo'],markersize=plot_param['markersize'],label='Theoretical measuring point')
