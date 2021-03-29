@@ -92,9 +92,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             # np.around(y_init[ind],decimals=2)
             # np.around(x_init[ind],decimals=2)
             if x_init[ind]>0:
-                if  y_init[ind]>0:
+                if  y_init[ind]>=0:
                     param3.append(np.arctan(y_init[ind]/x_init[ind]))            
-                elif x_init[ind]>0 and y_init[ind]<0:
+                elif  y_init[ind]<0:
                     param3.append((2.0*np.pi)+(np.arctan(y_init[ind]/x_init[ind])))           
             elif x_init[ind]<0:
                 param3.append((np.pi)+(np.arctan(y_init[ind]/x_init[ind])))            
@@ -159,17 +159,17 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     Noisy_Coord=[NoisyX,NoisyY,NoisyZ]
     Coord=[X0,Y0,Z0]
     # if flags.flag_save_scancoord2file:
-    #     # Svaing coordenates to a file in desktop
-    #     file=open('C:/Users/fcosta/Desktop/data_'+Qlunc_yaml_inputs['Components']['Scanner']['Type']+'.txt','w')
-    #     XX=repr(X0)
-    #     YY=repr(Y0)
-    #     ZZ=repr(Z0)
-    #     XX_noisy=repr(NoisyX)
-    #     Y_noisy=repr(NoisyY)
-    #     ZZ_noisy=repr(NoisyZ)    
-    
-    #     file.write('\n'+Qlunc_yaml_inputs['Components']['Scanner']['Type'] +'\nX:'+XX+"\n"+'\nY:'+YY+"\n"+'\nZ:'+ZZ+"\n")
-    #     file.close()   
+    # Svaing coordenates to a file in desktop
+    file=open('C:/Users/fcosta/Desktop/data_'+Qlunc_yaml_inputs['Components']['Scanner']['Type']+'.txt','w')
+    XX=repr(param1)
+    YY=repr(np.degrees(param2))
+    ZZ=repr(np.degrees(param3))
+    XX_noisy=repr(NoisyX)
+    Y_noisy=repr(NoisyY)
+    ZZ_noisy=repr(NoisyZ)    
+
+    file.write('\n'+Qlunc_yaml_inputs['Components']['Scanner']['Type'] +'\nParam1:'+XX+"\n"+'\nParam2:'+YY+"\n"+'\nParam3:'+ZZ+"\n")
+    file.close()   
         
     Final_Output_UQ_Scanner={'Simu_Mean_Distance':SimMean_DISTANCE,'STDV_Distance':StdvMean_DISTANCE,'MeasPoint_Coordinates':Coord,'NoisyMeasPoint_Coordinates':Noisy_Coord}
     #%% Plotting
