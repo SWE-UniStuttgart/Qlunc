@@ -90,16 +90,8 @@ model to calculate uncertainty expansion.
   
 """
 #%% Importing packages:
+import pdb
 import os
-os.chdir('../Utils')
-from Qlunc_ImportModules import *
-from Qlunc_Help_standAlone import *
-os.chdir('../UQ_functions')
-import UQ_Photonics_Classes as uphc
-import UQ_Power_Classes as upwc
-import UQ_Lidar_Classes as ulc
-import UQ_Optics_Classes as uopc
-os.chdir('../Main')
 
 #%% Constants:
 class cts():
@@ -110,10 +102,11 @@ class cts():
 
 
 class flags():
-    def __init__(self,flag_plot_pointing_accuracy_unc,flag_plot_measuring_points_pattern,flag_plot_photodetector_noise):
+    def __init__(self,flag_plot_pointing_accuracy_unc,flag_plot_measuring_points_pattern,flag_plot_photodetector_noise,flag_save_scancoord2file):
                  self.flag_plot_pointing_accuracy_unc    = flag_plot_pointing_accuracy_unc
                  self.flag_plot_measuring_points_pattern = flag_plot_measuring_points_pattern
                  self.flag_plot_photodetector_noise      = flag_plot_photodetector_noise
+                 self.flag_save_scancoord2file           = flag_save_scancoord2file
     
 #%% LIDAR COMPONENTS
   
