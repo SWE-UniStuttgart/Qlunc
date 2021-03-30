@@ -108,7 +108,6 @@ def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     except:
         Optical_Amplifier_Uncertainty=None
         print('No optical amplifier in calculations!')
-
     Uncertainty_Photonics_Module=SA.unc_comb(List_Unc_photonics)# to use SA.unc_comb data in watts is needed
     Final_Output_UQ_Photonics={'Uncertainty_Photonics':Uncertainty_Photonics_Module}
     return Final_Output_UQ_Photonics
