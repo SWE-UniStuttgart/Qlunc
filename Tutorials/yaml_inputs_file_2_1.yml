@@ -29,7 +29,7 @@ Components:
     stdv Azimuth: 0         # [deg] 
     
     # VAD Pattern:
-    Focus distance: [40]   # [m]
+    Focus distance: [70]   # [m]
     Cone angle: [20]       # [deg]
     Azimuth: [0,360,8]    # [deg]
         
