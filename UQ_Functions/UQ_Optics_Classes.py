@@ -89,8 +89,6 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
                 param2.append((np.pi)+(np.arctan(np.sqrt(x_init[ind]**2+y_init[ind]**2)/z_init[ind])))
             
             #Parameter3
-            # np.around(y_init[ind],decimals=2)
-            # np.around(x_init[ind],decimals=2)
             if x_init[ind]>0:
                 if  y_init[ind]>=0:
                     param3.append(np.arctan(y_init[ind]/x_init[ind]))            
@@ -155,24 +153,23 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         NoisyY.append(Y[coun][0])
         NoisyZ.append(Z[coun][0])
         coun+=1
-    # pdb.set_trace()
     Noisy_Coord=[NoisyX,NoisyY,NoisyZ]
     Coord=[X0,Y0,Z0]
-    # if flags.flag_save_scancoord2file:
-    # Svaing coordenates to a file in desktop
-    file=open('C:/Users/fcosta/Desktop/data_'+Qlunc_yaml_inputs['Components']['Scanner']['Type']+'.txt','w')
-    XX=repr(param1)
-    YY=repr(np.degrees(param2))
-    ZZ=repr(np.degrees(param3))
-    XX_noisy=repr(NoisyX)
-    Y_noisy=repr(NoisyY)
-    ZZ_noisy=repr(NoisyZ)    
 
-    file.write('\n'+Qlunc_yaml_inputs['Components']['Scanner']['Type'] +'\nParam1:'+XX+"\n"+'\nParam2:'+YY+"\n"+'\nParam3:'+ZZ+"\n")
-    file.close()   
+    # Saving coordenates to a file in desktop
+    # file=open('C:/Users/fcosta/Desktop/data_'+Qlunc_yaml_inputs['Components']['Scanner']['Type']+'.txt','w')
+    # XX=repr(param1)
+    # YY=repr(np.degrees(param2))
+    # ZZ=repr(np.degrees(param3))
+    # XX_noisy=repr(NoisyX)
+    # Y_noisy=repr(NoisyY)
+    # ZZ_noisy=repr(NoisyZ)    
+
+    # file.write('\n'+Qlunc_yaml_inputs['Components']['Scanner']['Type'] +'\nParam1:'+XX+"\n"+'\nParam2:'+YY+"\n"+'\nParam3:'+ZZ+"\n")
+    # file.close()   
         
     Final_Output_UQ_Scanner={'Simu_Mean_Distance':SimMean_DISTANCE,'STDV_Distance':StdvMean_DISTANCE,'MeasPoint_Coordinates':Coord,'NoisyMeasPoint_Coordinates':Noisy_Coord}
-    #%% Plotting
+    # Plotting
     QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,Qlunc_yaml_inputs['Flags']['Scanning Pattern'],False)
     return Final_Output_UQ_Scanner
 

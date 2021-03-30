@@ -89,17 +89,6 @@ Qlunc uses GUM (Guide to the expression of Uncertainties in Measurement)
 suggestions to calculate uncertainty expansion.  
   
 """
-#%% Importing packages:
-import os
-os.chdir('../Utils')
-from Qlunc_ImportModules import *
-from Qlunc_Help_standAlone import *
-os.chdir('../UQ_Functions')
-import UQ_Photonics_Classes as uphc
-import UQ_Power_Classes as upwc
-import UQ_Optics_Classes as uopc
-import UQ_Lidar_Classes as ulc
-os.chdir('../TestFiles_Qlunc')
 
 #%% Constants:
 class cts():
@@ -107,13 +96,6 @@ class cts():
     h = 6.6207004e-34 # Plank constant [m^2 kg s^-1]
     e = 1.60217662e-19 # electron charge [C]
     c = 2.99792e8 #speed of light [m s^-1]
-
-
-class flags():
-    def __init__(self,flag_plot_pointing_accuracy_unc,flag_plot_measuring_points_pattern,flag_plot_photodetector_noise):
-                 self.flag_plot_pointing_accuracy_unc    = flag_plot_pointing_accuracy_unc
-                 self.flag_plot_measuring_points_pattern = flag_plot_measuring_points_pattern
-                 self.flag_plot_photodetector_noise      = flag_plot_photodetector_noise
     
 #%% LIDAR COMPONENTS
   
@@ -167,10 +149,11 @@ class converter(): # Not included yet in Version Qlunc v-0.9 calculations
                  print('Created new converter: {}'.format(self.ConverterID))
 
 class scanner():
-    def __init__(self,name,scanner_type,origin,sample_rate,focus_dist,cone_angle,azimuth,x,y,z,stdv_x,stdv_y,stdv_z,stdv_focus_dist,stdv_cone_angle,stdv_azimuth,unc_func):
+    def __init__(self,name,scanner_type,pattern,origin,sample_rate,focus_dist,cone_angle,azimuth,x,y,z,stdv_focus_dist,stdv_cone_angle,stdv_azimuth,unc_func):
                  self.ScannerID       = name
                  self.scanner_type    = scanner_type
                  self.origin          = origin
+                 self.pattern         = pattern
                  self.sample_rate     = sample_rate
                  self.focus_dist      = focus_dist
                  self.cone_angle      = cone_angle
@@ -180,13 +163,10 @@ class scanner():
                  self.stdv_azimuth    = stdv_azimuth                 
                  self.x               = x
                  self.y               = y
-                 self.z               = z
-                 self.stdv_x          = stdv_x
-                 self.stdv_y          = stdv_y
-                 self.stdv_z          = stdv_z                
+                 self.z               = z               
                  self.Uncertainty     = unc_func      
-                 print('Created new scanner: {}'.format(self.ScannerID))
-        
+                 print('Created new scanner: {}'.format(self.ScannerID))        
+
 class optical_circulator():
     def __init__(self,name, insertion_loss,unc_func):#,isolation,return_loss): 
                  self.Optical_CirculatorID = name
