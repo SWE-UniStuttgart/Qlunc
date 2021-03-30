@@ -63,7 +63,7 @@ def unc_comb(data):
     ----------
     
     * data
-        data is provided as a list of elements want to add on. Data is expected to be in dB (within this functions dB are transformed into watts).
+        data is provided as a list of elements want to add on. Data is expected to be in dB.
         
     Returns
     -------
@@ -77,13 +77,11 @@ def unc_comb(data):
     zipped_data = []
     if not isinstance (data,np.ndarray):
         data=np.array(data)    
-    for data_row in range(np.shape(data)[0]):# transform into watts
-        
+    for data_row in range(np.shape(data)[0]):# transform into watts        
         try:    
             data_db=data[data_row,:]
         except:
-            data_db=data[data_row][0]
-             
+            data_db=data[data_row][0]             
         data_watts.append(10**(data_db/10))
     for i in range(len(data_watts[0])): # combining all uncertainties making sum of squares and the sqrt of the sum
         zipped_data.append(list(zip(*data_watts))[i])
@@ -100,8 +98,7 @@ def unc_comb(data):
 def sph2cart(Lidar): 
     x=[]
     y=[]
-    z=[]
-    
+    z=[]    
     for i in range(len(Lidar.optics.scanner.focus_dist)):
         x=Lidar.optics.scanner.focus_dist[i]*np.cos(np.deg2rad(Lidar.optics.scanner.phi))*np.sin(np.deg2rad(Lidar.optics.scanner.theta))
         y=Lidar.optics.scanner.focus_dist[i]*np.sin(np.deg2rad(Lidar.optics.scanner.phi))*np.sin(np.deg2rad(Lidar.optics.scanner.theta)) 
