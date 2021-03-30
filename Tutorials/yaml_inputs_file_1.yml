@@ -1,5 +1,9 @@
-# Case1: Inputs file for Qlunc. 
+# Francisco Costa García
+# University of Stuttgart(c) 
+
+# Inputs file for Qlunc (Quantification lidar uncertainties). 
 # Do not change definition names or vary the structure of the file!! Just change parameter values. 
+# Users can find a yaml format template in the repository '/Main/Template_yaml_inputs_file.yml'
 
 
 # DIRECTORIES:------------------------------------------------------
@@ -14,29 +18,26 @@ Components:
   Scanner:
     
     Name: Scanner_Yaml # Provide an ID to your lidar:    
-    Origin: [0,0,0]  # Lidar position in meters: [x,y,z]    
+    Origin: [0,0,0]  # Lidar position in meters: [x,y,z]
+    Pattern: 'None' # 'lissajous', user defined pattern or 'None' in case no predefined pattern is used
     Sample rate: 0   # Lidar sample rate. In meters. Use 0.
     Type: VAD          # Type of the scanning head: VAD or SCAN (Scanning Lidar)
  
+    # STDV in lidar angles and focus distance
+    stdv focus distance: 0   # [m]
+    stdv Cone angle: 10      # [deg]
+    stdv Azimuth: 0         # [deg] 
+    
     # VAD Pattern:
-
     Focus distance: [40]   # [m]
     Cone angle: [20]       # [deg]
     Azimuth: [0,360,8]    # [deg]
-    
-    stdv focus distance: 1  # [m]
-    stdv Cone angle: 2.3      # [deg]
-    stdv Azimuth: 0.1         # [deg]    
-    
+        
     # Scanning Lidar Pattern:
     x: [20,20,20]        # [m]
     y: [0,0,0]      # [m]
     z: [20,0,-20]      # [m]
-    
-    stdv x: 0.3               # [m]
-    stdv y: 0             # [m]
-    stdv z: 0             # [m]
-    
+
     # Uncertainty function:
     Uncertainty function: uopc.UQ_Scanner
     
@@ -66,7 +67,7 @@ Components:
 
   
   Photodetector:
-    Name: Photodetector_YAML
+    Name: Photodetector_Yaml
     Photodetector BandWidth: 380.e+6    # [Hz]            
     Load resistor: 50                   # [Ohm]
     Photodetector efficiency: .85       # Photodetector efficiency [-]
@@ -114,7 +115,7 @@ Lidar:
 # Atmospheric_inputs to create the atmospheric scenarios
 
 Atmospheric_inputs:
-  
+  Name: 'Atmosphere_Yaml'
   TimeSeries    : False # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere characteristics (T, H, rain and fog)   
   Atmos_TS_FILE : 'AtmosphericScenarios.csv'  
   Temperature: [300] # [K] Have to put the same number of elements for temperature and humidity. Always in paired values   
@@ -128,4 +129,4 @@ Flags:
   Pointing accuracy uncertainty: False
   Scanning Pattern: True
   Photodetector noise: True
-
+  Save Scanning Coordinates: False
