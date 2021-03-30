@@ -5,7 +5,6 @@
 # Do not change definition names or vary the structure of the file!! Just change parameter values. 
 # Users can find a yaml format template in the repository '/Main/Template_yaml_inputs_file.yml'
 
-
 # DIRECTORIES:------------------------------------------------------
 
 Main_directory: # Directory where Qlunc_Classes.py is
@@ -48,7 +47,6 @@ Components:
   
 # Photonics  
   Optical Amplifier: 
-  
     Name: OA_Yaml2
     
     # Noise figure in dB. Could be a well known value or a table.
@@ -64,8 +62,7 @@ Components:
     
     # Uncertainty function quantifying the optical amplifier uncertainty
     Uncertainty function: uphc.UQ_Optical_amplifier
-
-  
+    
   Photodetector:
     Name: Photodetector_Yaml2
     Photodetector BandWidth: 380.e+6    # [Hz]            
@@ -90,12 +87,12 @@ Components:
 Modules:
   Optics Module:
     Name: Optics_module_Yaml2
-    Scanner: Scanner
+    Scanner: Scanner2
     Optical circulator: Optical_circulator # Have to be the same name as the instance
     Laser: None
     Uncertainty function: uopc.sum_unc_optics
   Photonics Module:
-    Name: Photonics_module_Yaml
+    Name: Photonics_module_Yaml2
     Photodetector: Photodetector           # Have to be the same name as the instance
     Optical amplifier: Optical_Amplifier   # Have to be the same name as the instance
     Uncertainty function: uphc.sum_unc_photonics
@@ -104,9 +101,10 @@ Modules:
 Lidar:
   Name: Caixa2
   Photonics module: Photonics_Module       # Have to be the same name as the instance
-  Optics module: Optics_Module             # Have to be the same name as the instance
+
+  Optics module: Optics_Module2            # Have to be the same name as the instance
   Power module: None                       # Have to be the same name as the instance
-  Lidar inputs: Lidar_inputs               # Have to be the same name as the instance
+  Lidar inputs: Lidar_inputs_2               # Have to be the same name as the instance
   Uncertainty function: ulc.sum_unc_lidar
 
 ---
