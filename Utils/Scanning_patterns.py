@@ -9,6 +9,21 @@ from Utils.Qlunc_ImportModules import *
 
 #%% Lissajous pattern
 def lissajous_pattern(size_x,size_y,size_z,q,p):
+        """
+    Plotting. Location: .Utils/Qlunc_plotting.py
+    
+    Parameters
+    ----------
+    
+    * Lidar
+        data...
+        
+    Returns
+    -------
+    
+    list
+    
+    """
     # parameters
     # (1<p<q)
     t   = np.arange(0,2*np.pi,.01)
