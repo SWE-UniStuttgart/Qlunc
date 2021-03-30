@@ -12,6 +12,21 @@ from Utils.Qlunc_ImportModules import *
 
 #%% Plotting:
 def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,flag_plot_photodetector_noise):
+    """
+    Plotting. Location: .Utils/Qlunc_plotting.py
+    
+    Parameters
+    ----------
+    
+    * Lidar
+        data...
+        
+    Returns
+    -------
+    
+    list
+    
+    """
     # Ploting general parameters:
     plot_param={'axes_label_fontsize' : 25,
                 'textbox_fontsize'    : 14,
@@ -58,13 +73,17 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         Psax=10*np.log10(Lidar.photonics.photodetector.Power_interval) 
     
         # Plotting:
-        
         fig,ax=plt.subplots()
+        label0=['Shot SNR','Thermal SNR','Dark current SNR','TIA SNR']
+        i_label=0
         for i in Data['SNR_data_photodetector']:
-            ax.plot(Psax,Data['SNR_data_photodetector'][i][0])    
+            
+            ax.plot(Psax,Data['SNR_data_photodetector'][i][0],label=label0[i_label])  
+            i_label+=1
+        ax.plot(Psax,Data['Total_SNR_data'],label='Total SNR')
         ax.set_xlabel('Input Signal optical power (dBm)',fontsize=plot_param['axes_label_fontsize'])
         ax.set_ylabel('SNR (dB)',fontsize=plot_param['axes_label_fontsize'])
-        ax.legend(['Shot Noise','Thermal Noise','Dark current Noise','TIA Noise'],fontsize=plot_param['legend_fontsize'])#,'Total error [w]'])
+        ax.legend(fontsize=plot_param['legend_fontsize'])
         ax.set_title('SNR Photodetector',fontsize=plot_param['title_fontsize'])
         ax.grid(axis='both')
         ax.text(.90,.05,plot_param['Qlunc_version'],transform=ax.transAxes, fontsize=14,verticalalignment='top',bbox=dict(boxstyle='round', facecolor='white', alpha=0.5))
