@@ -5,6 +5,7 @@
 # Do not change definition names or vary the structure of the file!! Just change parameter values. 
 # Users can find a yaml format template in the repository '/Main/Template_yaml_inputs_file.yml'
 
+
 # DIRECTORIES:------------------------------------------------------
 
 Main_directory: # Directory where Qlunc_Classes.py is
@@ -16,7 +17,7 @@ Components:
 #Optics: 
   Scanner:
     
-    Name: Scanner_Yaml2 # Provide an ID to your lidar:    
+    Name: Scanner_Yaml # Provide an ID to your lidar:    
     Origin: [0,0,0]  # Lidar position in meters: [x,y,z]
     Pattern: 'None' # 'lissajous', user defined pattern or 'None' in case no predefined pattern is used
     Sample rate: 0   # Lidar sample rate. In meters. Use 0.
@@ -28,7 +29,7 @@ Components:
     stdv Azimuth: 0         # [deg] 
     
     # VAD Pattern:
-    Focus distance: [30]   # [m]
+    Focus distance: [70]   # [m]
     Cone angle: [20]       # [deg]
     Azimuth: [0,360,8]    # [deg]
         
@@ -41,13 +42,14 @@ Components:
     Uncertainty function: uopc.UQ_Scanner
     
   Optical Circulator:
-    Name: OC_Yaml2
+    Name: OC_Yaml
     Insertion loss: 2.1 # [dB]
     Uncertainty function: uopc.UQ_OpticalCirculator
   
 # Photonics  
   Optical Amplifier: 
-    Name: OA_Yaml2
+  
+    Name: OA_Yaml
     
     # Noise figure in dB. Could be a well known value or a table.
     # If table (FigureNoise Vs Wavelength) is provided Qlunc 
@@ -62,9 +64,10 @@ Components:
     
     # Uncertainty function quantifying the optical amplifier uncertainty
     Uncertainty function: uphc.UQ_Optical_amplifier
-    
+
+  
   Photodetector:
-    Name: Photodetector_Yaml2
+    Name: Photodetector_Yaml
     Photodetector BandWidth: 380.e+6    # [Hz]            
     Load resistor: 50                   # [Ohm]
     Photodetector efficiency: .85       # Photodetector efficiency [-]
@@ -77,7 +80,7 @@ Components:
  
 # Lidar general inputs 
   Lidar general inputs:
-    Name: Lidar_gral_inputs_Yaml2
+    Name: Lidar_gral_inputs_Yaml
     Wavelength: 1550.e-9    # [m]
     Yaw error: 0            # [deg]
     Pitch error: 0          # [deg]
@@ -86,25 +89,24 @@ Components:
 # Modules:
 Modules:
   Optics Module:
-    Name: Optics_module_Yaml2
-    Scanner: Scanner2
+    Name: Optics_module_Yaml
+    Scanner: Scanner
     Optical circulator: Optical_circulator # Have to be the same name as the instance
     Laser: None
     Uncertainty function: uopc.sum_unc_optics
   Photonics Module:
-    Name: Photonics_module_Yaml2
+    Name: Photonics_module_Yaml
     Photodetector: Photodetector           # Have to be the same name as the instance
     Optical amplifier: Optical_Amplifier   # Have to be the same name as the instance
     Uncertainty function: uphc.sum_unc_photonics
 ---  
 # Lidar:
 Lidar:
-  Name: Caixa2
+  Name: Caixa1
   Photonics module: Photonics_Module       # Have to be the same name as the instance
-
-  Optics module: Optics_Module2            # Have to be the same name as the instance
+  Optics module: Optics_Module             # Have to be the same name as the instance
   Power module: None                       # Have to be the same name as the instance
-  Lidar inputs: Lidar_inputs_2               # Have to be the same name as the instance
+  Lidar inputs: Lidar_inputs               # Have to be the same name as the instance
   Uncertainty function: ulc.sum_unc_lidar
 
 ---
@@ -113,7 +115,7 @@ Lidar:
 # Atmospheric_inputs to create the atmospheric scenarios
 
 Atmospheric_inputs:
-  Name: 'Atmosphere_Yaml2'
+  Name: 'Atmosphere_Yaml'
   TimeSeries    : False # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere characteristics (T, H, rain and fog)   
   Atmos_TS_FILE : 'AtmosphericScenarios.csv'  
   Temperature: [300] # [K] Have to put the same number of elements for temperature and humidity. Always in paired values   
@@ -125,6 +127,6 @@ Atmospheric_inputs:
 # Plotting:------------------------------------------------------------
 Flags:
   Pointing accuracy uncertainty: False
-  Scanning Pattern: True
-  Photodetector noise: True
+  Scanning Pattern: False
+  Photodetector noise: False
   Save Scanning Coordinates: False
