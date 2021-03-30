@@ -90,7 +90,7 @@ Components:
 Modules:
   Optics Module:
     Name: Optics_module_Yaml2
-    Scanner: Scanner
+    Scanner: Scanner2
     Optical circulator: Optical_circulator # Have to be the same name as the instance
     Laser: None
     Uncertainty function: uopc.sum_unc_optics
@@ -104,9 +104,9 @@ Modules:
 Lidar:
   Name: Caixa2
   Photonics module: Photonics_Module       # Have to be the same name as the instance
-  Optics module: Optics_Module             # Have to be the same name as the instance
+  Optics module: Optics_Module2             # Have to be the same name as the instance
   Power module: None                       # Have to be the same name as the instance
-  Lidar inputs: Lidar_inputs               # Have to be the same name as the instance
+  Lidar inputs: Lidar_inputs2               # Have to be the same name as the instance
   Uncertainty function: ulc.sum_unc_lidar
 
 ---
