@@ -18,28 +18,25 @@ Components:
   Scanner:
     
     Name:           # Provide an ID to your lidar:    
-    Origin: [,,]    # Lidar position in meters: [x,y,z]    
+    Origin: [,,]    # Lidar position in meters: [x,y,z]
+    Pattern: 'None' # 'lissajous', user defined pattern or 'None' in case none predefined pattern is used
     Sample rate:    # Lidar sample rate. In meters. Use 0 for now.
     Type:           # Type of the scanning head: VAD or SCAN (Scanning Lidar)
  
-    # VAD Pattern:
-
-    Focus distance: []     # [m]
-    Cone angle: []         # [deg]
-    Azimuth: [,,]          # [deg]
-    
+    # STDV in lidar angles and focus distance
     stdv focus distance:   # [m]
     stdv Cone angle:       # [deg]
     stdv Azimuth:          # [deg]    
     
+    # VAD Pattern:
+    Focus distance: []     # [m]
+    Cone angle: []         # [deg]
+    Azimuth: [,,]          # [deg]
+
     # Scanning Lidar Pattern:
     x: [,,]      # [m]
     y: [,,]      # [m]
     z: [,,]      # [m]
-    
-    stdv x:      # [m]
-    stdv y:      # [m]
-    stdv z:      # [m]
     
     # Uncertainty function:
     Uncertainty function:    # Python module! (You develop a function and save it as a python module)
@@ -66,7 +63,6 @@ Components:
     # Uncertainty function quantifying the optical amplifier uncertainty
     Uncertainty function:  # Python module! (You develop a function and save it as a python module)
 
-  
   Photodetector:
     Name:                       # Provide an ID to your photodetector
     Photodetector BandWidth:    # [Hz]            
@@ -115,7 +111,7 @@ Lidar:
 # Atmospheric_inputs to create the atmospheric scenarios
 
 Atmospheric_inputs:
-  
+  Name:
   TimeSeries    :     # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere characteristics (T, H, rain and fog)   
   Atmos_TS_FILE : ''  # (... .csv)
   Temperature: []     # [K] Have to put the same number of elements for temperature and humidity. Always in paired values   
@@ -129,4 +125,4 @@ Flags: # True if want to plot it
   Pointing accuracy uncertainty: 
   Scanning Pattern: 
   Photodetector noise: 
-
+  Save Scanning Coordinates: 
