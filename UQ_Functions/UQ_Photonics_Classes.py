@@ -68,7 +68,7 @@ def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     Total_SNR=SA.sum_dB(Total_SNR_data_zipped,True)
     UQ_Photodetector.UQ_Photo=list(SA.flatten(UQ_Photodetector.UQ_Photo))
     Final_Output_UQ_Photo={'Uncertainty_Photodetector':UQ_Photodetector.UQ_Photo,'SNR_data_photodetector':SNR_data,'Total_SNR_data':Total_SNR}      
-    
+    Lidar.lidar_inputs.dataframe['photodetector']=Final_Output_UQ_Photo
     # Plotting:
     QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Photo,False,Qlunc_yaml_inputs['Flags']['Photodetector noise'])
     return Final_Output_UQ_Photo
@@ -83,6 +83,7 @@ def UQ_Optical_amplifier(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         
         # ASE noise:
         UQ_Optical_amplifier = [np.array([10*np.log10((10**(FigureNoise[0]/10))*cts.h*(cts.c/Lidar.lidar_inputs.Wavelength)*10**(Lidar.photonics.optical_amplifier.OA_Gain/10))]*len(Atmospheric_Scenario.temperature))] 
+        
     else:
         NoiseFigure_DATA = pd.read_csv(Lidar.photonics.optical_amplifier.NoiseFig,delimiter=';',decimal=',') #read from a .csv file variation of dB with wavelength (for now just with wavelength)    
         # HERE THERE IS AN ERROR PRODUCED BY THE INTERPOLATION --> DATAPROCESSING UNCERTAINTIES
@@ -92,8 +93,9 @@ def UQ_Optical_amplifier(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         
         # ASE noise:
         UQ_Optical_amplifier = [np.array([10*np.log10((10**(FigureNoise/10))*cts.h*(cts.c/Lidar.lidar_inputs.Wavelength)*10**(Lidar.photonics.optical_amplifier.OA_Gain/10))]*len(Atmospheric_Scenario.temperature)) ]
-
+    
     Final_Output_UQ_Optical_Amplifier={'Uncertainty_OpticalAmp':UQ_Optical_amplifier}
+    Lidar.lidar_inputs.dataframe['Optical Amplifier']=Final_Output_UQ_Optical_Amplifier
     return Final_Output_UQ_Optical_Amplifier
 
 #%% Sum of uncertainties in photonics module: 
@@ -102,6 +104,7 @@ def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     try: # ecah try/except evaluates wether the component is included in the module, therefore in the calculations
         Photodetector_Uncertainty=Lidar.photonics.photodetector.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
         List_Unc_photonics.append(Photodetector_Uncertainty['Uncertainty_Photodetector'])
+        
     except:
         Photodetector_Uncertainty=None
         print('No photodetector in calculations!')
@@ -113,4 +116,5 @@ def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         print('No optical amplifier in calculations!')
     Uncertainty_Photonics_Module=SA.unc_comb(List_Unc_photonics)# to use SA.unc_comb data in watts is needed
     Final_Output_UQ_Photonics={'Uncertainty_Photonics':Uncertainty_Photonics_Module}
+    Lidar.lidar_inputs.dataframe['Photonics Module']=Final_Output_UQ_Photonics
     return Final_Output_UQ_Photonics
