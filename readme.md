@@ -32,7 +32,7 @@ user not just to assess global lidar uncertainty,  but also to query uncertainti
 
 ## How to use `Qlunc`
 
-**Please downolad the latest release (V0.91).**
+:warning: **Please downolad the latest release (V0.91).**
 
 ### Create an environment and install dependencies
 
