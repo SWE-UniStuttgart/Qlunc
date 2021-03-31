@@ -8,9 +8,8 @@
 
 # DIRECTORIES:------------------------------------------------------
 
-Main_directory: # Directory where Qlunc_Classes.py is
-  '.'
-
+Main_directory: '.' # Directory where Qlunc_Classes.py is
+  
 # Lidar values. Modules and components parameters: ------------------------------------------------------
 
 Components:
