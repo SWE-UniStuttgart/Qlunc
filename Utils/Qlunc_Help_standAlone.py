@@ -88,7 +88,7 @@ def unc_comb(data):
         res_watts.append(np.sqrt(sum(map (lambda x: x**2,zipped_data[i]))))
         res_dB=10*np.log10(res_watts) #Convert into dB 
     del data_db
-    return (res_dB)
+    return np.array(res_dB)
 
 #%% Spherical into cartesian  coordinate transformation
     #    xcart = rho * cos(phi)*sin(theta) 
