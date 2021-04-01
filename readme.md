@@ -61,9 +61,9 @@ This is the core of `Qlunc`. Here the user creates the classes describing the co
 ### UQ_Functions
  - Contains the functions that compute the uncertainties coming from different devices, calculting also the uncertainty propagation corresponding to the different      modules and lidar uncertainty as well. Users can define their own functions to calculate specific module uncertainties, and combined/expanded uncertainties as well. 
 ### Utils
- - Contains scripts meant to do different tasks. Importing packages and some stand alone funtions which don´t interface directly with `Qlunc` but are necessary to compute calculations. Also contains a plotting function to introduce pre-defined scanning patterns.
+ - Contains scripts meant to do different tasks. Importing packages and some stand alone funtions which don´t interface directly with `Qlunc` but are necessary to compute calculations. Also contains a `Qlunc_Plotting.py` script to automate plots and `Scanning_patterns.py` to introduce pre-defined scanning patterns.
 ###  TestFile_Qlunc
- - A working example is provided to show how the process looks like. In this test case a lidar is built up with its modules and components, puting all together to set up a lidar device. User can find more information on how to run this test file in the `readme.md` file dropped in this folder.
+ - A working example is provided to show how the process looks like. In this test case, a lidar is built up with its modules and components, puting all together to set up a lidar device. User can find more information on how to run this test file in the `readme.md` file dropped in this folder.
 ### Tutorials
 - Containing 2 [Jupyter Notebook-based tutorials](https://github.com/SWE-UniStuttgart/Qlunc/tree/Qlunc-V0.9/Tutorials); `Tutorial1.ipynb` and `Tutorial2.ipynb` with their corresponding yaml files. The tutorials are also available through the Binder service to ease accessibility and reproducibility. Users can find more information about these tutorials in the corresponding `readme.md` file dropped in this folder.
 ## Requirements
