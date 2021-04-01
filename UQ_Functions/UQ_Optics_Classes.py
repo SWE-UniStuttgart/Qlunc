@@ -175,7 +175,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     return Final_Output_UQ_Scanner
 
 #%% Optical circulator:
-def UQ_OpticalCirculator(Lidar,Atmospheric_Scenario,cts):
+def UQ_OpticalCirculator(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     Optical_Circulator_Uncertainty = [Lidar.optics.optical_circulator.insertion_loss]
     Final_Output_UQ_Optical_Circulator={'Optical_Circulator_Uncertainty':Optical_Circulator_Uncertainty}
     Lidar.lidar_inputs.dataframe['Optical circulator']=Final_Output_UQ_Optical_Circulator
@@ -196,7 +196,7 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         Telescope_Uncertainty=None
         print('No telescope in calculations!')
     try:
-        Optical_circulator_Uncertainty = Lidar.optics.optical_circulator.Uncertainty(Lidar,Atmospheric_Scenario,cts)
+        Optical_circulator_Uncertainty = Lidar.optics.optical_circulator.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
         List_Unc_optics.append(Optical_circulator_Uncertainty['Optical_Circulator_Uncertainty'])       
     except:
         Optical_circulator_Uncertainty = None
