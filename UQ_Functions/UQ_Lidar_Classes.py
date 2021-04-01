@@ -41,6 +41,5 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     Uncertainty_Lidar=SA.unc_comb(List_Unc_lidar)
     Final_Output_Lidar_Uncertainty = {'Lidar_Uncertainty':Uncertainty_Lidar}    
     Lidar.lidar_inputs.dataframe['Lidar']=Final_Output_Lidar_Uncertainty
-
     print('Lidar uncertainty done')
     return Final_Output_Lidar_Uncertainty,Lidar.lidar_inputs.dataframe
