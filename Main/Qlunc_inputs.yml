@@ -71,7 +71,7 @@ Components:
     Photodetector BandWidth: 380.e+6    # [Hz]            
     Load resistor: 50                   # [Ohm]
     Photodetector efficiency: .85       # Photodetector efficiency [-]
-    Dark current: 5.e-1                 # In [A]. Dark current in the photodetector.
+    Dark current: 5.e-9                 # In [A]. Dark current in the photodetector.
     Photodetector signalP: 1.e-3        # [W]
     Power interval: [0,1000,.001]       # [W]
     Gain TIA: 5.e+3                     # [dB] Value or 'None' if no TIA in the photodetector
@@ -118,7 +118,7 @@ Atmospheric_inputs:
   Name: 'Atmosphere_Yaml'
   TimeSeries    : False # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere characteristics (T, H, rain and fog)   
   Atmos_TS_FILE : 'AtmosphericScenarios.csv'  # (... .csv)
-  Temperature: [300] # [K] Have to put the same number of elements for temperature and humidity. Always in paired values   
+  Temperature: [20] # [K] Have to put the same number of elements for temperature and humidity. Always in paired values   
   Humidity: [12]     # [%] 
   Rain: true # for rain and fog intensity intervals might be introduced [none,low, medium, high]
   Fog: false
@@ -128,5 +128,5 @@ Atmospheric_inputs:
 Flags:
   Pointing accuracy uncertainty: False
   Scanning Pattern: False
-  Photodetector noise: False
+  Photodetector noise: True
   Save Scanning Coordinates: False
