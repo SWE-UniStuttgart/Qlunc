@@ -29,7 +29,7 @@ Components:
     stdv Azimuth: 0         # [deg] 
     
     # VAD Pattern:
-    Focus distance: [70]   # [m]
+    Focus distance: [40]   # [m]
     Cone angle: [20]       # [deg]
     Azimuth: [0,360,8]    # [deg]
         
@@ -57,7 +57,7 @@ Components:
     # with the lidar nominal wavelength. Interpolation param. could 
     # be tunned in Qlunc_Photonics_Classes --> UQ_Optical_amplifier
     
-    Optical amplifier noise figure: ./metadata/NoiseFigure.csv 
+    Optical amplifier noise figure: 1 #metadata/NoiseFigure.csv 
     
     # Optical amplifier gain in dB
     Optical amplifier gain: 30
@@ -127,6 +127,6 @@ Atmospheric_inputs:
 # Plotting:------------------------------------------------------------
 Flags:
   Pointing accuracy uncertainty: False
-  Scanning Pattern: False
-  Photodetector noise: False
+  Scanning Pattern: True
+  Photodetector noise: True
   Save Scanning Coordinates: False
