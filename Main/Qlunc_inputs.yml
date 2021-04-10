@@ -25,7 +25,7 @@ Components:
     
     # STDV in lidar angles and focus distance
     stdv focus distance: 0   # [m]
-    stdv Cone angle: 10      # [deg]
+    stdv Cone angle: 5      # [deg]
     stdv Azimuth: 0         # [deg]   
    
     # VAD Pattern:
@@ -118,7 +118,7 @@ Atmospheric_inputs:
   Name: 'Atmosphere_Yaml'
   TimeSeries    : False # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere characteristics (T, H, rain and fog)   
   Atmos_TS_FILE : 'AtmosphericScenarios.csv'  # (... .csv)
-  Temperature: [20] # [K] Have to put the same number of elements for temperature and humidity. Always in paired values   
+  Temperature: [300] # [K] Have to put the same number of elements for temperature and humidity. Always in paired values   
   Humidity: [12]     # [%] 
   Rain: true # for rain and fog intensity intervals might be introduced [none,low, medium, high]
   Fog: false
@@ -127,6 +127,6 @@ Atmospheric_inputs:
 # Plotting:------------------------------------------------------------
 Flags:
   Pointing accuracy uncertainty: False
-  Scanning Pattern: False
+  Scanning Pattern: True
   Photodetector noise: True
   Save Scanning Coordinates: False
