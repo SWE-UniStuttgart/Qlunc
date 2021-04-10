@@ -41,7 +41,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 'marker'              : '.r',
                 'markerTheo'          : '.b',
                 'tick_labelrotation'  : 45,
-                'Qlunc_version'       : 'Qlunc Version - 0.9'
+                'Qlunc_version'       : 'Qlunc Version - 0.91'
                 }
         
 ##################    Ploting scanner measuring points pattern #######################
@@ -76,8 +76,8 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             ax.plot(Psax,Data['SNR_data_photodetector'][i][0],label=label0[i_label])  
             i_label+=1
         ax.plot(Psax,Data['Total_SNR_data'],label='Total SNR')
-        ax.set_xlabel('Input Signal optical power (dBm)',fontsize=plot_param['axes_label_fontsize'])
-        ax.set_ylabel('SNR (dB)',fontsize=plot_param['axes_label_fontsize'])
+        ax.set_xlabel('Input Signal optical power [dBm] or [mW]',fontsize=plot_param['axes_label_fontsize'])
+        ax.set_ylabel('SNR [dB]',fontsize=plot_param['axes_label_fontsize'])
         ax.legend(fontsize=plot_param['legend_fontsize'])
         ax.set_title('SNR Photodetector',fontsize=plot_param['title_fontsize'])
         ax.grid(axis='both')
