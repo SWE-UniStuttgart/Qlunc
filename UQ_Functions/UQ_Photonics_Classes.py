@@ -23,6 +23,28 @@ import os
 import pdb
 #%% PHOTODETECTOR:
 def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
+    """
+    Photodetector uncertainty estimation. Location: ./UQ_Functions/UQ_Photonics_Classes.py
+    
+    Parameters
+    ----------
+    
+    * Lidar
+        data...
+    * Atmospheric_Scenario
+        Atmospheric data. Integer or Time series
+    * cts
+        Physical constants
+    * Qlunc_yaml_inputs
+        Lidar parameters data
+        
+    Returns
+    -------
+    
+    list
+    
+    """    
+    
     UQ_Photodetector.Thermal_noise      = []
     UQ_Photodetector.SNR_thermal_noise  = []
     UQ_Photodetector.Shot_noise         = []
@@ -76,7 +98,28 @@ def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
 
 #%% OPTICAL AMPLIFIER:
 def UQ_Optical_amplifier(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs): 
-# Obtain SNR from figure noise or pass directly numerical value:
+    """
+    Optical amplifier uncertainty estimation. Location: ./UQ_Functions/UQ_Photonics_Classes.py
+    
+    Parameters
+    ----------
+    
+    * Lidar
+        data...
+    * Atmospheric_Scenario
+        Atmospheric data. Integer or Time series
+    * cts
+        Physical constants
+    * Qlunc_yaml_inputs
+        Lidar parameters data
+        
+    Returns
+    -------
+    
+    list
+    
+    """ 
+    # Obtain SNR from figure noise or pass directly numerical value:
     if isinstance (Lidar.photonics.optical_amplifier.NoiseFig, numbers.Number): #If user introduces a number or a table of values
         FigureNoise=[(Lidar.photonics.optical_amplifier.NoiseFig)]*len(Atmospheric_Scenario.temperature) #Figure noise vector        
         

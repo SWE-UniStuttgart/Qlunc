@@ -16,6 +16,27 @@ import Utils.Qlunc_Help_standAlone as SA
 
 # Calculates the lidar global uncertainty using uncertainty expansion calculation methods:
 def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
+    """
+    Lidar uncertainty estimation. Location: ./UQ_Functions/UQ_Lidar_Classes.py
+    
+    Parameters
+    ----------
+    
+    * Lidar
+        data...
+    * Atmospheric_Scenario
+        Atmospheric data. Integer or Time series
+    * cts
+        Physical constants
+    * Qlunc_yaml_inputs
+        Lidar parameters data
+        
+    Returns
+    -------
+    
+    list
+    
+    """ 
     List_Unc_lidar = []
     try: # ecah try/except evaluates wether the component is included in the module, therefore in the calculations
 #        if Photodetector_Uncertainty not in locals():
