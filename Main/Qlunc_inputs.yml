@@ -68,14 +68,14 @@ Components:
   
   Photodetector:
     Name: Photodetector_YAML
-    Photodetector BandWidth: 380.e+6    # [Hz]            
+    Photodetector BandWidth: 1.e+9    # [Hz]            
     Load resistor: 50                   # [Ohm]
     Photodetector efficiency: .85       # Photodetector efficiency [-]
     Dark current: 5.e-9                 # In [A]. Dark current in the photodetector.
-    Photodetector signalP: 1.e-3        # [W]
+    Photodetector signalP: 1.e-6        # [W]
     Power interval: [0,1000,.001]       # [W]
     Gain TIA: 5.e+3                     # [dB] Value or 'None' if no TIA in the photodetector
-    V Noise TIA:  160.e-6 #None #             # [V] Value or 'None' if no TIA in the photodetector
+    V Noise TIA:  None #160.e-6 #             # [V] Value or 'None' if no TIA in the photodetector
     Uncertainty function: uphc.UQ_Photodetector # Python module! (You develop a function and save it as a python module)
  
 # Lidar general inputs 
