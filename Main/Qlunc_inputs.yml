@@ -73,7 +73,7 @@ Components:
     Photodetector efficiency: .85       # Photodetector efficiency [-]
     Dark current: 5.e-9                 # In [A]. Dark current in the photodetector.
     Photodetector signalP: 1.e-6        # [W]
-    Power interval: [0,1000,.001]       # [W]
+    Power interval: [0,1000,.001]       # [mW]
     Gain TIA: 5.e+3                     # [dB] Value or 'None' if no TIA in the photodetector
     V Noise TIA:  160.e-6 # None #             # [V] Value or 'None' if no TIA in the photodetector
     Uncertainty function: uphc.UQ_Photodetector # Python module! (You develop a function and save it as a python module)
@@ -116,7 +116,7 @@ Lidar:
 
 Atmospheric_inputs:
   Name: 'Atmosphere_Yaml'
-  TimeSeries    : False # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere characteristics (T, H, rain and fog)   
+  TimeSeries    : True # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere characteristics (T, H, rain and fog)   
   Atmos_TS_FILE : 'AtmosphericScenarios.csv'  # (... .csv)
   Temperature: [300] # [K] Have to put the same number of elements for temperature and humidity. Always in paired values   
   Humidity: [12]     # [%] 
