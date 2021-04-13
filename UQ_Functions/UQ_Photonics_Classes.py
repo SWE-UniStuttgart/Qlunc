@@ -119,8 +119,8 @@ def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     # Total_SNR_data_zipped=list(zip(*Total_SNR_data))[0]
     # Total_SNR=SA.sum_dB(Total_SNR_data_zipped,True) # 'True' for uncorrelated errors
-    UQ_Photodetector.UQ_Photo=list(SA.flatten(UQ_Photodetector.UQ_Photo))
-    Final_Output_UQ_Photo={'Uncertainty_Photodetector':UQ_Photodetector.UQ_Photo,'SNR_data_photodetector':SNR_data}      
+    UQ_Photodetector.UQ_Photo_total=list(SA.flatten(UQ_Photodetector.UQ_Photo))
+    Final_Output_UQ_Photo={'Total_Uncertainty_Photodetector':UQ_Photodetector.UQ_Photo_total,'SNR_data_photodetector':SNR_data}      
     Lidar.lidar_inputs.dataframe['Photodetector']=Final_Output_UQ_Photo
     
     # Plotting:
@@ -177,6 +177,7 @@ def UQ_Optical_amplifier(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
 def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs): 
     List_Unc_photonics=[]
     try: # ecah try/except evaluates wether the component is included in the module, therefore in the calculations
+        pdb.set_trace()
         Photodetector_Uncertainty,DataFrame=Lidar.photonics.photodetector.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
         List_Unc_photonics.append(Photodetector_Uncertainty['Uncertainty_Photodetector'])
         
