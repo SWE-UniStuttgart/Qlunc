@@ -176,7 +176,6 @@ def UQ_Optical_amplifier(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
 def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs): 
     List_Unc_photonics=[]
     try: # ecah try/except evaluates wether the component is included in the module, therefore in the calculations
-        pdb.set_trace()
         Photodetector_Uncertainty,DataFrame=Lidar.photonics.photodetector.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
         List_Unc_photonics.append(Photodetector_Uncertainty['Total_Uncertainty_Photodetector'])
         
