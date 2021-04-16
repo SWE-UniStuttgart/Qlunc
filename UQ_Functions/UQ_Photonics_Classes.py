@@ -46,50 +46,82 @@ def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     """    
     
     UQ_Photodetector.Thermal_noise      = []
-    UQ_Photodetector.SNR_thermal_noise  = []
+    UQ_Photodetector.SNR_thermal  = []
     UQ_Photodetector.Shot_noise         = []
-    UQ_Photodetector.SNR_Shot_noise     = []
+    UQ_Photodetector.SNR_shot     = []
     UQ_Photodetector.Dark_current_noise = []
     UQ_Photodetector.SNR_DarkCurrent    = []
     UQ_Photodetector.UQ_Photo           = []
     UQ_Photodetector.SNR_TIA            = []
     UQ_Photodetector.TIA_noise          = []
-    SNR_data={}
-    Total_SNR_data=[]
+    
     R = Lidar.photonics.photodetector.Efficiency*cts.e*Lidar.lidar_inputs.Wavelength/(cts.h*cts.c)  #[A/W]  Responsivity
-    UQ_Photodetector.Responsivity = (R) # this notation allows me to get Responsivity from outside of the function 
-    UQ_Photodetector.SNR_thermal_noise = [10*np.log10(((R**2)/(4*cts.k*Atmospheric_Scenario.temperature[0]*Lidar.photonics.photodetector.BandWidth/Lidar.photonics.photodetector.Load_Resistor))*(Lidar.photonics.photodetector.Power_interval/1000)**2)]
-    UQ_Photodetector.SNR_Shot_noise    = [10*np.log10(((R**2)/(2*cts.e*R*Lidar.photonics.photodetector.BandWidth))*(Lidar.photonics.photodetector.Power_interval)/1000)]
-    UQ_Photodetector.SNR_DarkCurrent   = [10*np.log10(((R**2)/(2*cts.e*Lidar.photonics.photodetector.DarkCurrent*Lidar.photonics.photodetector.BandWidth))*((Lidar.photonics.photodetector.Power_interval/1000)**2))]
-    for i in range(len(Atmospheric_Scenario.temperature)):
+    # UQ_Photodetector.Responsivity = (R) # this notation allows me to get Responsivity from outside of the function 
+    
+    # SNR calculations:
+    # SNR in watts
+    UQ_Photodetector.SNR_thermal_w = [((R**2)/(4*cts.k*Atmospheric_Scenario.temperature[0]*Lidar.photonics.photodetector.BandWidth/Lidar.photonics.photodetector.Load_Resistor))*(Lidar.photonics.photodetector.Power_interval/1000)**2]
+    UQ_Photodetector.SNR_shot_w    = [((R**2)/(2*cts.e*R*Lidar.photonics.photodetector.BandWidth))*(Lidar.photonics.photodetector.Power_interval)/1000]
+    UQ_Photodetector.SNR_DarkCurrent_w   = [((R**2)/(2*cts.e*Lidar.photonics.photodetector.DarkCurrent*Lidar.photonics.photodetector.BandWidth))*(Lidar.photonics.photodetector.Power_interval/1000)**2]
+    # SNR in dBW
+    UQ_Photodetector.SNR_thermal     = [10*np.log10(UQ_Photodetector.SNR_thermal_w)][0]
+    UQ_Photodetector.SNR_shot        = [10*np.log10(UQ_Photodetector.SNR_shot_w )][0]
+    UQ_Photodetector.SNR_DarkCurrent = [10*np.log10(UQ_Photodetector.SNR_DarkCurrent_w)][0]
+    
     
     # Photodetector Thermal noise:
-        UQ_Photodetector.Thermal_noise.append(4*cts.k*Atmospheric_Scenario.temperature[i]/Lidar.photonics.photodetector.Load_Resistor*Lidar.photonics.photodetector.BandWidth)         
+    for i in range(len(Atmospheric_Scenario.temperature)):
+        UQ_Photodetector.Thermal_noise.append(4*cts.k*Atmospheric_Scenario.temperature[i]*Lidar.photonics.photodetector.BandWidth/Lidar.photonics.photodetector.Load_Resistor)         
     
     # Photodetector shot noise:
     UQ_Photodetector.Shot_noise     = [(2*cts.e*R*Lidar.photonics.photodetector.BandWidth*Lidar.photonics.photodetector.SignalPower)]*len(Atmospheric_Scenario.temperature)     
     
     # Photodetector dark current noise:
-    UQ_Photodetector.Dark_current_noise = [(2*cts.e*Lidar.photonics.photodetector.DarkCurrent*Lidar.photonics.photodetector.BandWidth*Lidar.photonics.photodetector.SignalPower)]*len(Atmospheric_Scenario.temperature) 
-    SNR_data={'SNR_Shot_Noise':UQ_Photodetector.SNR_Shot_noise,'SNR_Thermal':UQ_Photodetector.SNR_thermal_noise,'SNR_Dark_Current':UQ_Photodetector.SNR_DarkCurrent}  
-    Total_SNR_data=[SNR_data['SNR_Shot_Noise'],SNR_data['SNR_Thermal'],SNR_data['SNR_Dark_Current']]
+    UQ_Photodetector.Dark_current_noise = [(2*cts.e*Lidar.photonics.photodetector.DarkCurrent*Lidar.photonics.photodetector.BandWidth)]*len(Atmospheric_Scenario.temperature) 
+    
+      
     if any(TIA_val == 'None' for TIA_val in [Lidar.photonics.photodetector.Gain_TIA,Lidar.photonics.photodetector.V_Noise_TIA]): # If any value of TIA is None dont include TIA noise in estimations :
-        UQ_Photodetector.UQ_Photo = [(SA.unc_comb(10*np.log10([UQ_Photodetector.Thermal_noise,UQ_Photodetector.Shot_noise,UQ_Photodetector.Dark_current_noise])))]
+        UQ_Photodetector.UQ_Photo    = [(SA.unc_comb(10*np.log10([UQ_Photodetector.Thermal_noise,UQ_Photodetector.Shot_noise,UQ_Photodetector.Dark_current_noise])))]        
+        UQ_Photodetector.SNR_total_w = [((R**2)/((2*cts.e*Lidar.photonics.photodetector.DarkCurrent*Lidar.photonics.photodetector.BandWidth)+ \
+                                                 (4*cts.k*Atmospheric_Scenario.temperature[0]*Lidar.photonics.photodetector.BandWidth/Lidar.photonics.photodetector.Load_Resistor)+ \
+                                                 (2*cts.e*R*Lidar.photonics.photodetector.BandWidth*(Lidar.photonics.photodetector.Power_interval/1000))))*(Lidar.photonics.photodetector.Power_interval/1000)**2]
+        UQ_Photodetector.Total_SNR   = [10*np.log10(UQ_Photodetector.SNR_total_w)][0]
+        SNR_data={'SNR_shot':UQ_Photodetector.SNR_shot,'SNR_Thermal':UQ_Photodetector.SNR_thermal,'SNR_Dark_Current':UQ_Photodetector.SNR_DarkCurrent,'Total_SNR':UQ_Photodetector.Total_SNR}
         print('There is NO TIA component in the photodetector')
     else:       
         # Photodetector TIA noise:
-        UQ_Photodetector.TIA_noise = [(Lidar.photonics.photodetector.V_Noise_TIA**2/Lidar.photonics.photodetector.Gain_TIA**2)]*len(Atmospheric_Scenario.temperature)
-        UQ_Photodetector.SNR_TIA   = [10*np.log10(((R**2)/(Lidar.photonics.photodetector.V_Noise_TIA**2/Lidar.photonics.photodetector.Gain_TIA**2))*(Lidar.photonics.photodetector.Power_interval/1000)**2)]       
-
+        UQ_Photodetector.TIA_noise   = [(Lidar.photonics.photodetector.V_Noise_TIA**2/Lidar.photonics.photodetector.Gain_TIA**2)]*len(Atmospheric_Scenario.temperature)
+        UQ_Photodetector.SNR_TIA     = [10*np.log10(((R**2)/(Lidar.photonics.photodetector.V_Noise_TIA**2/Lidar.photonics.photodetector.Gain_TIA**2))*(Lidar.photonics.photodetector.Power_interval/1000)**2)]       
+        
+        UQ_Photodetector.SNR_total_w = [((R**2)/((Lidar.photonics.photodetector.V_Noise_TIA**2/Lidar.photonics.photodetector.Gain_TIA**2)+ \
+                                                 (2*cts.e*Lidar.photonics.photodetector.DarkCurrent*Lidar.photonics.photodetector.BandWidth)+ \
+                                                 (4*cts.k*Atmospheric_Scenario.temperature[0]*Lidar.photonics.photodetector.BandWidth/Lidar.photonics.photodetector.Load_Resistor)+ \
+                                                 (2*cts.e*R*Lidar.photonics.photodetector.BandWidth*(Lidar.photonics.photodetector.Power_interval/1000))))*(Lidar.photonics.photodetector.Power_interval/1000)**2]
+        UQ_Photodetector.Total_SNR   = [10*np.log10(UQ_Photodetector.SNR_total_w)][0]
+        SNR_data={'SNR_shot':UQ_Photodetector.SNR_shot,'SNR_Thermal':UQ_Photodetector.SNR_thermal,'SNR_Dark_Current':UQ_Photodetector.SNR_DarkCurrent,'Total_SNR':UQ_Photodetector.Total_SNR,'TIA_SNR':UQ_Photodetector.SNR_TIA}
         UQ_Photodetector.UQ_Photo  = SA.unc_comb(10*np.log10([UQ_Photodetector.Thermal_noise,UQ_Photodetector.Shot_noise,UQ_Photodetector.Dark_current_noise,UQ_Photodetector.TIA_noise]))
-        SNR_data['SNR_TIA']=UQ_Photodetector.SNR_TIA
-        Total_SNR_data.append(SNR_data['SNR_TIA'])
         print('There is a TIA component in the photodetector')
-    Total_SNR_data_zipped=list(zip(*Total_SNR_data))[0]
-    Total_SNR=SA.sum_dB(Total_SNR_data_zipped,True)
-    UQ_Photodetector.UQ_Photo=list(SA.flatten(UQ_Photodetector.UQ_Photo))
-    Final_Output_UQ_Photo={'Uncertainty_Photodetector':UQ_Photodetector.UQ_Photo,'SNR_data_photodetector':SNR_data,'Total_SNR_data':Total_SNR}      
+    
+    
+    
+        
+    # # #ggggggggggggggggggggggggggggggggggggggg
+    # Total_noise_watts = [UQ_Photodetector.SNR_thermal,UQ_Photodetector.SNR_shot, UQ_Photodetector.SNR_DarkCurrent] #,UQ_Photodetector.TIA_noise]
+    # # division= []
+    
+    # # for ind in range (len(Total_noise_watts)):
+    # #     for ii in Total_noise_watts[ind]:
+    # #        division.append([10*np.log10(i/np.sqrt(ii)) for i in Lidar.photonics.photodetector.Power_interval])
+
+    
+    # #ggggggggggggggggggggggggggggggggggggggg
+    
+    # Total_SNR_data_zipped=list(zip(*Total_SNR_data))[0]
+    # Total_SNR=SA.sum_dB(Total_SNR_data_zipped,True) # 'True' for uncorrelated errors
+    UQ_Photodetector.UQ_Photo_total=list(SA.flatten(UQ_Photodetector.UQ_Photo))
+    Final_Output_UQ_Photo={'Total_Uncertainty_Photodetector':UQ_Photodetector.UQ_Photo_total,'SNR_data_photodetector':SNR_data}      
     Lidar.lidar_inputs.dataframe['Photodetector']=Final_Output_UQ_Photo
+    # pdb.set_trace()
     # Plotting:
     QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Photo,False,Qlunc_yaml_inputs['Flags']['Photodetector noise'])
     return Final_Output_UQ_Photo,Lidar.lidar_inputs.dataframe
@@ -145,7 +177,7 @@ def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     List_Unc_photonics=[]
     try: # ecah try/except evaluates wether the component is included in the module, therefore in the calculations
         Photodetector_Uncertainty,DataFrame=Lidar.photonics.photodetector.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
-        List_Unc_photonics.append(Photodetector_Uncertainty['Uncertainty_Photodetector'])
+        List_Unc_photonics.append(Photodetector_Uncertainty['Total_Uncertainty_Photodetector'])
         
     except:
         Photodetector_Uncertainty=None

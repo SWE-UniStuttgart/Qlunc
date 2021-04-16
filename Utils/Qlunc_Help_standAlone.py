@@ -63,7 +63,7 @@ def unc_comb(data):
     ----------
     
     * data
-        data is provided as a list of elements want to add on. Data is expected to be in dB.
+        data is provided as a list of elements want to add on. Input data is expected to be in dB.
         
     Returns
     -------

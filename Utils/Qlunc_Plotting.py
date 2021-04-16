@@ -33,9 +33,9 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 'title_fontsize'      : 29,
                 'suptitle_fontsize'   : 23,
                 'legend_fontsize'     : 15,
-                'xlim'                : [-45,45],
-                'ylim'                : [-45,45],
-                'zlim'                : [-40,45],
+                'xlim'                : [-60,60],
+                'ylim'                : [-60,60],
+                'zlim'                : [0,80],
                 'markersize'          : 5,
                 'markersize_lidar'    : 9,
                 'marker'              : '.r',
@@ -70,13 +70,13 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
     
         # Plotting:
         fig,ax=plt.subplots()
-        label0=['Shot SNR','Thermal SNR','Dark current SNR','TIA SNR']
+        label0=['Shot SNR','Thermal SNR','Dark current SNR','Total SNR','TIA SNR']
         i_label=0
         for i in Data['SNR_data_photodetector']:            
             ax.plot(Psax,Data['SNR_data_photodetector'][i][0],label=label0[i_label])  
             i_label+=1
-        ax.plot(Psax,Data['Total_SNR_data'],label='Total SNR')
-        ax.set_xlabel('Input Signal optical power [dBm] or [mW]',fontsize=plot_param['axes_label_fontsize'])
+        # ax.plot(Psax,Data['Total_SNR_data'],label='Total SNR')
+        ax.set_xlabel('Input Signal optical power [dBm]',fontsize=plot_param['axes_label_fontsize'])
         ax.set_ylabel('SNR [dB]',fontsize=plot_param['axes_label_fontsize'])
         ax.legend(fontsize=plot_param['legend_fontsize'])
         ax.set_title('SNR Photodetector',fontsize=plot_param['title_fontsize'])

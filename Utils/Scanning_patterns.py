@@ -30,9 +30,9 @@ def lissajous_pattern(size_x,size_y,size_z,q,p):
     phi = np.linspace(0,2*np.pi,len(t))
     
     # lissajous transformation
-    x = size_x*np.sin((p*t+phi))
+    z = size_x*np.sin((p*t+phi))
     y = size_y*np.sin((q*t))
-    z = np.array(len(t)*[size_z])
+    x = np.array(len(t)*[size_z])
    
     # plotting
 
