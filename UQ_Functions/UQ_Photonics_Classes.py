@@ -101,23 +101,7 @@ def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         SNR_data={'SNR_Shot':UQ_Photodetector.SNR_shot,'SNR_Thermal':UQ_Photodetector.SNR_thermal,'SNR_Dark_Current':UQ_Photodetector.SNR_DarkCurrent,'Total_SNR':UQ_Photodetector.Total_SNR,'SNR_TIA':UQ_Photodetector.SNR_TIA}
         UQ_Photodetector.UQ_Photo  = SA.unc_comb(10*np.log10([UQ_Photodetector.Thermal_noise,UQ_Photodetector.Shot_noise,UQ_Photodetector.Dark_current_noise,UQ_Photodetector.TIA_noise]))
         print('There is a TIA component in the photodetector')
-    
-    
-    
-        
-    # # #ggggggggggggggggggggggggggggggggggggggg
-    # Total_noise_watts = [UQ_Photodetector.SNR_thermal,UQ_Photodetector.SNR_shot, UQ_Photodetector.SNR_DarkCurrent] #,UQ_Photodetector.TIA_noise]
-    # # division= []
-    
-    # # for ind in range (len(Total_noise_watts)):
-    # #     for ii in Total_noise_watts[ind]:
-    # #        division.append([10*np.log10(i/np.sqrt(ii)) for i in Lidar.photonics.photodetector.Power_interval])
 
-    
-    # #ggggggggggggggggggggggggggggggggggggggg
-    
-    # Total_SNR_data_zipped=list(zip(*Total_SNR_data))[0]
-    # Total_SNR=SA.sum_dB(Total_SNR_data_zipped,True) # 'True' for uncorrelated errors
     UQ_Photodetector.UQ_Photo_total=list(SA.flatten(UQ_Photodetector.UQ_Photo))
     Final_Output_UQ_Photo={'Total_Uncertainty_Photodetector':UQ_Photodetector.UQ_Photo_total,'SNR_data_photodetector':SNR_data}      
     Lidar.lidar_inputs.dataframe['Photodetector']=Final_Output_UQ_Photo
