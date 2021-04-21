@@ -46,9 +46,9 @@ def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     """    
     
     UQ_Photodetector.Thermal_noise      = []
-    UQ_Photodetector.SNR_thermal  = []
+    UQ_Photodetector.SNR_thermal        = []
     UQ_Photodetector.Shot_noise         = []
-    UQ_Photodetector.SNR_shot     = []
+    UQ_Photodetector.SNR_shot           = []
     UQ_Photodetector.Dark_current_noise = []
     UQ_Photodetector.SNR_DarkCurrent    = []
     UQ_Photodetector.UQ_Photo           = []
@@ -60,9 +60,9 @@ def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     # SNR calculations:
     # SNR in watts
-    UQ_Photodetector.SNR_thermal_w = [((R**2)/(4*cts.k*Atmospheric_Scenario.temperature[0]*Lidar.photonics.photodetector.BandWidth/Lidar.photonics.photodetector.Load_Resistor))*(Lidar.photonics.photodetector.Power_interval/1000)**2]
-    UQ_Photodetector.SNR_shot_w    = [((R**2)/(2*cts.e*R*Lidar.photonics.photodetector.BandWidth))*(Lidar.photonics.photodetector.Power_interval)/1000]
-    UQ_Photodetector.SNR_DarkCurrent_w   = [((R**2)/(2*cts.e*Lidar.photonics.photodetector.DarkCurrent*Lidar.photonics.photodetector.BandWidth))*(Lidar.photonics.photodetector.Power_interval/1000)**2]
+    UQ_Photodetector.SNR_thermal_w      = [((R**2)/(4*cts.k*Atmospheric_Scenario.temperature[0]*Lidar.photonics.photodetector.BandWidth/Lidar.photonics.photodetector.Load_Resistor))*(Lidar.photonics.photodetector.Power_interval/1000)**2]
+    UQ_Photodetector.SNR_shot_w         = [((R**2)/(2*cts.e*R*Lidar.photonics.photodetector.BandWidth))*(Lidar.photonics.photodetector.Power_interval)/1000]
+    UQ_Photodetector.SNR_DarkCurrent_w  = [((R**2)/(2*cts.e*Lidar.photonics.photodetector.DarkCurrent*Lidar.photonics.photodetector.BandWidth))*(Lidar.photonics.photodetector.Power_interval/1000)**2]
     # SNR in dBW
     UQ_Photodetector.SNR_thermal     = [10*np.log10(UQ_Photodetector.SNR_thermal_w)][0]
     UQ_Photodetector.SNR_shot        = [10*np.log10(UQ_Photodetector.SNR_shot_w )][0]
@@ -140,39 +140,39 @@ def UQ_Optical_amplifier(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         FigureNoise=[(Lidar.photonics.optical_amplifier.NoiseFig)]*len(Atmospheric_Scenario.temperature) #Figure noise vector        
         
         # ASE noise:
-        UQ_Optical_amplifier ,DataFrame= [np.array([10*np.log10((10**(FigureNoise[0]/10))*cts.h*(cts.c/Lidar.lidar_inputs.Wavelength)*10**(Lidar.photonics.optical_amplifier.OA_Gain/10))]*len(Atmospheric_Scenario.temperature))] 
+        UQ_Optical_amplifier ,DataFrame = [np.array([10*np.log10((10**(FigureNoise[0]/10))*cts.h*(cts.c/Lidar.lidar_inputs.Wavelength)*10**(Lidar.photonics.optical_amplifier.OA_Gain/10))]*len(Atmospheric_Scenario.temperature))] 
         
     else:
-        NoiseFigure_DATA = pd.read_csv(Lidar.photonics.optical_amplifier.NoiseFig,delimiter=';',decimal=',') #read from a .csv file variation of dB with wavelength (for now just with wavelength)    
+        NoiseFigure_DATA  = pd.read_csv(Lidar.photonics.optical_amplifier.NoiseFig,delimiter=';',decimal=',') #read from a .csv file variation of dB with wavelength (for now just with wavelength)    
         # HERE THERE IS AN ERROR PRODUCED BY THE INTERPOLATION --> DATAPROCESSING UNCERTAINTIES
         figure_noise_INT  = itp.interp1d(NoiseFigure_DATA.iloc[:,0],NoiseFigure_DATA.iloc[:,1],kind='cubic',fill_value="extrapolate")# First column wavelength,second column SNR in dB
         NoiseFigure_VALUE = figure_noise_INT(Lidar.lidar_inputs.Wavelength) # in dB
-        FigureNoise=(NoiseFigure_VALUE.tolist())
+        FigureNoise       = (NoiseFigure_VALUE.tolist())
         
         # ASE noise:
         UQ_Optical_amplifier = [np.array([10*np.log10((10**(FigureNoise/10))*cts.h*(cts.c/Lidar.lidar_inputs.Wavelength)*10**(Lidar.photonics.optical_amplifier.OA_Gain/10))]*len(Atmospheric_Scenario.temperature)) ]
     
-    Final_Output_UQ_Optical_Amplifier={'Uncertainty_OpticalAmp':UQ_Optical_amplifier}
-    Lidar.lidar_inputs.dataframe['Optical Amplifier']=Final_Output_UQ_Optical_Amplifier
+    Final_Output_UQ_Optical_Amplifier = {'Uncertainty_OpticalAmp':UQ_Optical_amplifier}
+    Lidar.lidar_inputs.dataframe['Optical Amplifier'] = Final_Output_UQ_Optical_Amplifier
     return Final_Output_UQ_Optical_Amplifier,Lidar.lidar_inputs.dataframe
 
 #%% Sum of uncertainties in photonics module: 
 def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs): 
-    List_Unc_photonics=[]
+    List_Unc_photonics = []
     try: # ecah try/except evaluates wether the component is included in the module, therefore in the calculations
-        Photodetector_Uncertainty,DataFrame=Lidar.photonics.photodetector.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+        Photodetector_Uncertainty,DataFrame = Lidar.photonics.photodetector.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
         List_Unc_photonics.append(Photodetector_Uncertainty['Total_Uncertainty_Photodetector'])
         
     except:
         Photodetector_Uncertainty=None
         print('No photodetector in calculations!')
     try:
-        Optical_Amplifier_Uncertainty,DataFrame=Lidar.photonics.optical_amplifier.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+        Optical_Amplifier_Uncertainty,DataFrame = Lidar.photonics.optical_amplifier.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
         List_Unc_photonics.append(Optical_Amplifier_Uncertainty['Uncertainty_OpticalAmp'])
     except:
         Optical_Amplifier_Uncertainty=None
         print('No optical amplifier in calculations!')
-    Uncertainty_Photonics_Module=SA.unc_comb(List_Unc_photonics)# to use SA.unc_comb data in watts is needed
-    Final_Output_UQ_Photonics={'Uncertainty_Photonics':Uncertainty_Photonics_Module}
-    Lidar.lidar_inputs.dataframe['Photonics Module']=Final_Output_UQ_Photonics
+    Uncertainty_Photonics_Module                     = SA.unc_comb(List_Unc_photonics)# to use SA.unc_comb data in watts is needed
+    Final_Output_UQ_Photonics                        = {'Uncertainty_Photonics':Uncertainty_Photonics_Module}
+    Lidar.lidar_inputs.dataframe['Photonics Module'] = Final_Output_UQ_Photonics
     return Final_Output_UQ_Photonics,Lidar.lidar_inputs.dataframe
