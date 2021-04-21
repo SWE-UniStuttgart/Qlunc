@@ -40,7 +40,7 @@ Besides uncertainty estimations, ``Qlunc``’s functions could be extended for o
 ``Qlunc`` provides a common, open-source platform that can be used to try many different uncertainty estimation methods, thus encouraging collaboration amongst the wind lidar community.
 The source code for ``Qlunc`` [is available on Github](https://github.com/SWE-UniStuttgart/Qlunc) and the release associated with this paper has been archived to Zenodo [@zenodo].
 
-# Motivation
+# Statement of Need
 
 Wind lidars are measuring devices, and as for any other measuring systems, their measurements have uncertainties [@Borraccino_2016]. Therefore, as already stated, it is crucial to assess their measurements uncertainty in order to increase confidence in lidar technology.
 
