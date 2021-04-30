@@ -138,7 +138,7 @@ def UQ_Optical_amplifier(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # Obtain SNR from figure noise or pass directly numerical value:
     if isinstance (Lidar.photonics.optical_amplifier.NoiseFig, numbers.Number): #If user introduces a number or a table of values
         FigureNoise=[(Lidar.photonics.optical_amplifier.NoiseFig)]*len(Atmospheric_Scenario.temperature) #Figure noise vector        
-        pdb.set_trace()
+        # pdb.set_trace()
         # ASE noise:
         UQ_Optical_amplifier  = [np.array([10*np.log10((10**(FigureNoise[0]/10))*cts.h*(cts.c/Lidar.lidar_inputs.Wavelength)*10**(Lidar.photonics.optical_amplifier.OA_Gain/10))]*len(Atmospheric_Scenario.temperature))] 
         

@@ -120,7 +120,7 @@ class optical_amplifier():
     def __init__(self,name,NoiseFig,OA_Gain,unc_func):
                  self.Optical_AmplifierID = name
                  self.NoiseFig            = NoiseFig
-                 self.OA_Gain                = OA_Gain
+                 self.OA_Gain             = OA_Gain
                  self.Uncertainty         = unc_func
                  print('Created new optical amplifier: {}'.format(self.Optical_AmplifierID))
         

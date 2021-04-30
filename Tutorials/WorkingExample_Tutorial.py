@@ -115,9 +115,9 @@ class photodetector():
                  print('Created new photodetector: {}'.format(self.PhotodetectorID))
         
 class optical_amplifier():
-    def __init__(self,name,OA_NF,OA_Gain,unc_func):
+    def __init__(self,name,NoiseFig,OA_Gain,unc_func):
                  self.Optical_AmplifierID = name
-                 self.NoiseFig            = OA_NF
+                 self.NoiseFig            = NoiseFig
                  self.OA_Gain                = OA_Gain
                  self.Uncertainty         = unc_func
                  print('Created new optical amplifier: {}'.format(self.Optical_AmplifierID))
