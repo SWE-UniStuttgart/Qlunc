@@ -23,8 +23,7 @@ and humidity, either single values or time series coming from peripherals are bo
 ### `Qlunc` available capabilities
 
 #### Uncertainties
-The next step is to ask for the uncertainty we are interested in, either coming from a component, module or lidar object. Indeed, the flexibility of the code allows the 
-user not just to assess global lidar uncertainty,  but also to query uncertainties coming from specific modules or even single components.
+The next step is to ask for the uncertainty we are interested in, either coming from a component, module or lidar object. Indeed, the flexibility of the code allows the user not just to assess global lidar uncertainty,  but also to query uncertainties coming from specific modules or even single components.
 
 #### Plots
  - Can draw photodetector uncertainties comparison including shot noise, thermal noise, dark current noise and, if needed, trans-impedance amplifier noise.
@@ -38,7 +37,7 @@ user not just to assess global lidar uncertainty,  but also to query uncertainti
 
 1) Having [Anaconda](https://docs.anaconda.com) installed is a prerequisite if we want to work in a different environment than `base`, and it is recommended. Then, based on the requirements added to the ``environment.yaml`` file on the repository, where are included the name of the environment and the tools/packages we want to install, we build the new environment. 
 
-2) In the Anacond Prompt type:
+2) In the Anaconda prompt, go to the directory where you have clone/download `Qlunc` and type:
 
 ```
 conda env create -f environment.yml 
