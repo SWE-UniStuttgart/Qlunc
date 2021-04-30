@@ -57,7 +57,7 @@ Components:
     # with the lidar nominal wavelength. Interpolation param. could 
     # be tunned in Qlunc_Photonics_Classes --> UQ_Optical_amplifier
     
-    Optical amplifier noise figure: metadata/NoiseFigure.csv  # Relative Directory to where Noise figure data is. Either a well-known value or the directory where the file is.
+    Optical amplifier noise figure: 1 #metadata/NoiseFigure.csv  # Relative Directory to where Noise figure data is. Either a well-known value or the directory where the file is.
     
     # Optical amplifier gain in dB
     Optical amplifier gain: 30
