@@ -31,7 +31,7 @@ from Utils.Qlunc_ImportModules import *
 print(os.getcwd())
 # os.chdir('../GIT_Qlunc')
 #%% Running Qlunc_Classes.py:
-with open (r'../GIT_Qlunc/Tutorials/yaml_inputs_file1.yml') as file: # WHere the yaml file is in order to get the input data
+with open (r'./Tutorials/yaml_inputs_file1.yml') as file: # WHere the yaml file is in order to get the input data
     Qlunc_yaml_inputs={}
     docs = yaml.load_all(file, Loader=yaml.FullLoader)
     for doc in docs:      
