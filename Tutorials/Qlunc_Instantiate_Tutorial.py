@@ -29,9 +29,9 @@ import os
 import UQ_Functions.UQ_Photonics_Classes as uphc,UQ_Functions.UQ_Optics_Classes as uopc, UQ_Functions.UQ_Power_Classes as upwc,UQ_Functions.UQ_Lidar_Classes as ulc
 from Utils.Qlunc_ImportModules import *
 print(os.getcwd())
-os.chdir('../GIT_Qlunc')
+# os.chdir('../GIT_Qlunc')
 #%% Running Qlunc_Classes.py:
-with open (r'./Tutorials/yaml_inputs_file1.yml') as file: # WHere the yaml file is in order to get the input data
+with open (r'..//GIT_Qlunc//Tutorials//yaml_inputs_file1.yml') as file: # WHere the yaml file is in order to get the input data
     Qlunc_yaml_inputs={}
     docs = yaml.load_all(file, Loader=yaml.FullLoader)
     for doc in docs:      
