@@ -25,7 +25,7 @@ Components:
  
     # STDV in lidar angles and focus distance
     stdv focus distance: 1   # [m]
-    stdv Cone angle: .5      # [deg]
+    stdv Cone angle: 1      # [deg]
     stdv Azimuth: 1        # [deg] 
     
     # VAD Pattern:
