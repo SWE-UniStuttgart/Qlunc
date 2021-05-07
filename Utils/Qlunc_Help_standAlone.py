@@ -57,7 +57,7 @@ def sum_dB(data,uncorrelated):
 # The uncertainty combination is made following GUM
 def unc_comb(data): 
     """
-    Add up dB's. Location: Qlunc_Help_standAlone.py
+    Uncertainty expansion - Location: Qlunc_Help_standAlone.py
     
     Parameters
     ----------
