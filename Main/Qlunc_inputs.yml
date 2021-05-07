@@ -44,8 +44,9 @@ Components:
   Optical Circulator:
     Name: OC_Yaml
     Insertion loss: 2.1 # [dB]
+    SNR: 60 #[dB]
     Uncertainty function: uopc.UQ_OpticalCirculator
-    SNR: 500 #[dB]
+    
   
 # Photonics  
   Optical Amplifier: 
@@ -58,12 +59,8 @@ Components:
     # with the lidar nominal wavelength. Interpolation param. could 
     # be tunned in Qlunc_Photonics_Classes --> UQ_Optical_amplifier
     
-    Optical amplifier noise figure: 1 #metadata/NoiseFigure.csv  # Relative Directory to where Noise figure data is. Either a well-known value or the directory where the file is.
-    
-    # Optical amplifier gain in dB
-    Optical amplifier gain: 30
-    
-    # Uncertainty function quantifying the optical amplifier uncertainty
+    Optical amplifier noise figure: 1 #metadata/NoiseFigure.csv  # Relative Directory to where Noise figure data is. Either a well-known value or the directory where the file is.   
+    Optical amplifier gain: 30 # Optical amplifier gain in dB
     Uncertainty function: uphc.UQ_Optical_amplifier # Python module! (You develop a function and save it as a python module)
 
   
@@ -78,11 +75,13 @@ Components:
     Gain TIA: 5.e+3                     # [dB] Value or 'None' if no TIA in the photodetector
     V Noise TIA:  None # 160.e-6 #             # [V] Value or 'None' if no TIA in the photodetector
     Uncertainty function: uphc.UQ_Photodetector # Python module! (You develop a function and save it as a python module)
+  
   Laser:
     Name: Laser_YAML
     Wavelength: 1550.e-9    # [m]
-    Output power: 1 #[w]
+    Output power: 1.e-6 #[w]
     Uncertainty function: uphc.UQ_Laser
+
 # Lidar general inputs 
   Lidar general inputs:
     Name: Lidar_gral_inputs_Yaml
