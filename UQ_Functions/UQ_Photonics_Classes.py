@@ -159,6 +159,27 @@ def UQ_Optical_amplifier(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
 
 #%% LASER SOURCE
 def UQ_Laser(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
+    """
+    Laser uncertainty estimation. Location: ./UQ_Functions/UQ_Photonics_Classes.py
+    
+    Parameters
+    ----------
+    
+    * Lidar
+        data...
+    * Atmospheric_Scenario
+        Atmospheric data. Integer or Time series
+    * cts
+        Physical constants
+    * Qlunc_yaml_inputs
+        Lidar parameters data
+        
+    Returns
+    -------
+    
+    list
+    
+    """ 
     UQ_Laser = .1
     return UQ_Laser
 
