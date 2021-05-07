@@ -200,7 +200,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
 def UQ_OpticalCirculator(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     """
     Optical circulator uncertainty estimation. Location: ./UQ_Functions/UQ_Optics_Classes.py
-    
+    It assumes an SNR and calculates the Optical circulator noise from it: $SNR\,=\,\frac{{P_{i}},{P_{noise}}$
     Parameters
     ----------
     
@@ -219,8 +219,10 @@ def UQ_OpticalCirculator(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     list
     
     """
-    Optical_Circulator_Uncertainty = [np.array(Lidar.optics.optical_circulator.insertion_loss)]
-    Final_Output_UQ_Optical_Circulator={'Optical_Circulator_Uncertainty':Optical_Circulator_Uncertainty}
+    # Optical_Circulator_Uncertainty = [np.array(Lidar.optics.optical_circulator.insertion_loss)]
+    Optical_Circulator_Uncertainty_w = [Lidar.photonics.laser.Output_power/(10**(Lidar.optics.optical_circulator.SNR/10))]
+    Optical_Circulator_Uncertainty_dB = 10*np.log10(Optical_Circulator_Uncertainty_w)
+    Final_Output_UQ_Optical_Circulator={'Optical_Circulator_Uncertainty':Optical_Circulator_Uncertainty_dB}
     Lidar.lidar_inputs.dataframe['Optical circulator']=Final_Output_UQ_Optical_Circulator
 
     return Final_Output_UQ_Optical_Circulator,Lidar.lidar_inputs.dataframe
