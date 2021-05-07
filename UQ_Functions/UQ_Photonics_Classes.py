@@ -156,6 +156,12 @@ def UQ_Optical_amplifier(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     Lidar.lidar_inputs.dataframe['Optical Amplifier'] = Final_Output_UQ_Optical_Amplifier
     return Final_Output_UQ_Optical_Amplifier,Lidar.lidar_inputs.dataframe
 
+
+#%% LASER SOURCE
+def UQ_Laser(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
+    UQ_Laser = .1
+    return UQ_Laser
+
 #%% Sum of uncertainties in photonics module: 
 def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs): 
     List_Unc_photonics = []
