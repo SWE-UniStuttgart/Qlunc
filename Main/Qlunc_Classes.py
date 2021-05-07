@@ -133,13 +133,12 @@ class power_source(): # Not included yet in Version Qlunc v-0.9 calculations
                  print('Created new power source: {}'.format(self.Power_SourceID))
 
 class laser(): # Not included yet in Version Qlunc v-0.9 calculations
-    def __init__(self,name,Wavelength,e_Wavelength,Out_power,unc_func):
-                 self.Power_SourceID = name
+    def __init__(self,name,Wavelength,Output_power,unc_func):
+                 self.LaserID        = name
                  self.Wavelength     = Wavelength
-                 self.e_Wavelength   = e_Wavelength
-                 self.Output_power   = Out_power
+                 self.Output_power   = Output_power
                  self.Uncertainty    = unc_func
-                 print('Created new power source: {}'.format(self.Power_SourceID))        
+                 print('Created new laser: {}'.format(self.LaserID))        
 
 class converter(): # Not included yet in Version Qlunc v-0.9 calculations
     def __init__(self,name,frequency,Conv_BW,Infinit,unc_func):
@@ -170,9 +169,10 @@ class scanner():
                  print('Created new scanner: {}'.format(self.ScannerID))
         
 class optical_circulator():
-    def __init__(self,name, insertion_loss,unc_func):#,isolation,return_loss): 
+    def __init__(self,name, insertion_loss,SNR,unc_func):#,isolation,return_loss): 
                  self.Optical_CirculatorID = name
                  self.insertion_loss       = insertion_loss # max value in dB
+                 self.SNR                  = SNR #[dB]
         #        self.isolation            = isolation
         #        self.return_loss          = return_loss
                  self.Uncertainty          = unc_func
@@ -182,10 +182,11 @@ class optical_circulator():
                  
 # Modules classes:
 class photonics():
-    def __init__(self,name,photodetector,optical_amplifier,unc_func):
+    def __init__(self,name,photodetector,optical_amplifier,laser,unc_func):
                  self.PhotonicModuleID   = name
                  self.photodetector      = photodetector
                  self.optical_amplifier  = optical_amplifier
+                 self.laser              = laser
                  self.Uncertainty        = unc_func 
                  print('Created new photonic module: {}'.format(self.PhotonicModuleID))
 
