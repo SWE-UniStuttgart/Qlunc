@@ -21,7 +21,7 @@ Components:
     Origin: [0,0,0]  # Lidar position in meters: [x,y,z]    
     Pattern: 'None' # 'lissajous', user defined pattern or 'None' in case none predefined pattern is used
     Sample rate: 0   # Lidar sample rate. In meters. Use 0 for now.
-    Type: VAD    # Type of the scanning head: VAD or SCAN (Scanning Lidar)
+    Type: VAD    # Type of the scanning head: VAD or SCAN (Scanning Lidar).
   
     # STDV in lidar angles and focus distance
     stdv focus distance: 0   # [m]
@@ -45,6 +45,7 @@ Components:
     Name: OC_Yaml
     Insertion loss: 2.1 # [dB]
     Uncertainty function: uopc.UQ_OpticalCirculator
+    SNR: 500 #[dB]
   
 # Photonics  
   Optical Amplifier: 
@@ -77,7 +78,11 @@ Components:
     Gain TIA: 5.e+3                     # [dB] Value or 'None' if no TIA in the photodetector
     V Noise TIA:  None # 160.e-6 #             # [V] Value or 'None' if no TIA in the photodetector
     Uncertainty function: uphc.UQ_Photodetector # Python module! (You develop a function and save it as a python module)
- 
+  Laser:
+    Name: Laser_YAML
+    Wavelength: 1550.e-9    # [m]
+    Output power: 1 #[w]
+    Uncertainty function: uphc.UQ_Laser
 # Lidar general inputs 
   Lidar general inputs:
     Name: Lidar_gral_inputs_Yaml
@@ -98,6 +103,7 @@ Modules:
     Name: Photonics_module_Yaml
     Photodetector: Photodetector           # Have to be the same name as the instance
     Optical amplifier: Optical_Amplifier   # Have to be the same name as the instance
+    Laser: Laser
     Uncertainty function: uphc.sum_unc_photonics # Python module! (You develop a function and save it as a python module)
 ---  
 # Lidar:
@@ -116,7 +122,7 @@ Lidar:
 
 Atmospheric_inputs:
   Name: 'Atmosphere_Yaml'
-  TimeSeries    : True # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere characteristics (T, H, rain and fog)   
+  TimeSeries    : False # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere characteristics (T, H, rain and fog)   
   Atmos_TS_FILE : 'AtmosphericScenarios.csv'  # (... .csv)
   Temperature: [300] # [K] Have to put the same number of elements for temperature and humidity. Always in paired values   
   Humidity: [12]     # [%] 
