@@ -22,19 +22,17 @@ from Utils import Qlunc_Plotting as QPlot
 
 
 # NOT IMPLEMENTED
-#==============================================================================
-# def UQ_Telescope(Lidar, Atmospheric_Scenario,cts):
-#     UQ_telescope=[(temp*0.5+hum*0.1+curvature_lens*0.1+aberration+o_c_tele) \
-#                   for temp           in inputs.atm_inp.Atmospheric_inputs['temperature']\
-#                   for hum            in inputs.atm_inp.Atmospheric_inputs['humidity']\
-#                   for curvature_lens in inputs.optics_inp.Telescope_uncertainty_inputs['curvature_lens'] \
-#                   for aberration     in inputs.optics_inp.Telescope_uncertainty_inputs['aberration'] \
-#                   for o_c_tele       in inputs.optics_inp.Telescope_uncertainty_inputs['OtherChanges_tele']]
-#     Telescope_Losses =inputs.optics_inp.Telescope_uncertainty_inputs['losses']
-#     UQ_telescope=[round(UQ_telescope[i_dec],3) for i_dec in range(len(UQ_telescope))]
-#     Final_Output_UQ_Telescope={'Uncertainty_Telescope':UQ_telescope}
-#     return Final_Output_UQ_Telescope
-#==============================================================================
+def UQ_Telescope(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
+     # UQ_telescope=[(temp*0.5+hum*0.1+curvature_lens*0.1+aberration+o_c_tele) \
+     #               for temp           in inputs.atm_inp.Atmospheric_inputs['temperature']\
+     #               for hum            in inputs.atm_inp.Atmospheric_inputs['humidity']\
+     #               for curvature_lens in inputs.optics_inp.Telescope_uncertainty_inputs['curvature_lens'] \
+     #               for aberration     in inputs.optics_inp.Telescope_uncertainty_inputs['aberration'] \
+     #               for o_c_tele       in inputs.optics_inp.Telescope_uncertainty_inputs['OtherChanges_tele']]
+     # Telescope_Losses =Lidar.optics.telescope.Mirror_losses
+     UQ_telescope=[100]
+     Final_Output_UQ_Telescope={'Uncertainty_Telescope':UQ_telescope}
+     return Final_Output_UQ_Telescope
 
 #%% SCANNER:
 def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
@@ -227,6 +225,20 @@ def UQ_OpticalCirculator(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
 
     return Final_Output_UQ_Optical_Circulator,Lidar.lidar_inputs.dataframe
 
+
+#%% probe volume:
+def probe_volume(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
+    if Lidar.lidar_inputs.LidarType=='CW':
+        # delta_r=(4*Lidar.optics.scanner.focus_dist**2*Lidar.photonics.laser.Wavelength/Lidar.optics.telescope.Aperture)
+        Probe_volume_Uncertainty=np.sqrt((Lidar.optics.scanner.stdv_focus_dist*8*Lidar.optics.scanner.focus_dist*Lidar.photonics.laser.Wavelength/Lidar.optics.telescope.aperture)**2+
+                                  (Lidar.photonics.laser.stdv_wavelength*4*(Lidar.optics.scanner.focus_dist)**2/Lidar.optics.telescope.aperture)**2+
+                                  (Lidar.optics.telescope.stdv_aperture*4*Lidar.photonics.laser.Wavelength*(Lidar.optics.scanner.focus_dist)**2/Lidar.optics.telescope.aperture**2)**2)
+        Final_Output_UQ_Probe_Volume={'Probe_Volume_Uncertainty':Probe_volume_Uncertainty}
+        Lidar.lidar_inputs.dataframe['Probe Volume']=Final_Output_UQ_Optical_Circulator
+
+    elif Lidar.lidar_inputs.LidarType=='Pulsed':
+        x='pulsed'
+    return x
 #%% Sum of uncertainties in `optics` module: 
 def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     List_Unc_optics = []
@@ -236,7 +248,10 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         Scanner_Uncertainty=None
         print('No scanner in calculations!')
     try:
-        Telescope_Uncertainty,DataFrame=Lidar.optics.telescope.Uncertainty(Lidar,Atmospheric_Scenario,cts)
+        Telescope_Uncertainty,DataFrame=Lidar.optics.telescope.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+        List_Unc_optics.append(Telescope_Uncertainty['Telescope_Uncertainty'])       
+        pdb.set_trace()
+
     except:
         Telescope_Uncertainty=None
         print('No telescope in calculations!')

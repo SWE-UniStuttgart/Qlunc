@@ -133,11 +133,12 @@ class power_source(): # Not included yet in Version Qlunc v-0.9 calculations
                  print('Created new power source: {}'.format(self.Power_SourceID))
 
 class laser(): # Not included yet in Version Qlunc v-0.9 calculations
-    def __init__(self,name,Wavelength,Output_power,unc_func):
-                 self.LaserID        = name
-                 self.Wavelength     = Wavelength
-                 self.Output_power   = Output_power
-                 self.Uncertainty    = unc_func
+    def __init__(self,name,Wavelength,stdv_wavelength,Output_power,unc_func):
+                 self.LaserID         = name
+                 self.Wavelength      = Wavelength
+                 self.stdv_wavelength = stdv_wavelength
+                 self.Output_power    = Output_power
+                 self.Uncertainty     = unc_func
                  print('Created new laser: {}'.format(self.LaserID))        
 
 class converter(): # Not included yet in Version Qlunc v-0.9 calculations
@@ -178,6 +179,14 @@ class optical_circulator():
                  self.Uncertainty          = unc_func
                  print ('Created new optical circulator: {}'.format(self.Optical_CirculatorID))
 
+class telescope():
+    def __init__(self,name,aperture,stdv_aperture,unc_func):
+               self.TelescopeID   = name
+               self.aperture      = aperture
+               self.stdv_aperture = stdv_aperture
+               self.Uncertainty   = unc_func
+               print('Created new telescope: {}'.format(self.TelescopeID))
+    
 #%% LIDAR MODULES
                  
 # Modules classes:
@@ -199,11 +208,11 @@ class power(): # Not included yet in Version Qlunc v-0.9 calculations
                  print('Created new power module: {}'.format(self.PowerModuleID))
 
 class optics():
-    def __init__(self,name,scanner,optical_circulator,laser,unc_func):
+    def __init__(self,name,scanner,optical_circulator,telescope,unc_func):
                  self.OpticsModuleID     = name
                  self.scanner            = scanner
                  self.optical_circulator = optical_circulator
-                 self.laser              = laser
+                 self.telescope          = telescope
                  self.Uncertainty        = unc_func 
                  print('Created new optic module: {}'.format(self.OpticsModuleID))
         
@@ -217,8 +226,9 @@ class atmosphere():
 
 #%% Creating lidar general data class:
 class lidar_gral_inp():
-    def __init__(self,name,wave,yaw_error,pitch_error,roll_error,dataframe):
+    def __init__(self,name,wave,ltype,yaw_error,pitch_error,roll_error,dataframe):
                  self.Gral_InputsID   = name
+                 self.LidarType       = ltype
                  self.Wavelength      = wave
                  self.yaw_error_dep   = yaw_error   # yaw error angle when deploying the lidar device in the grounf or in the nacelle
                  self.pitch_error_dep = pitch_error # pitch error angle when deploying the lidar device in the grounf or in the nacelle

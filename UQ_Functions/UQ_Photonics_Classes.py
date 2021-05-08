@@ -186,7 +186,7 @@ def UQ_Laser(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
 #%% Sum of uncertainties in photonics module: 
 def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs): 
     List_Unc_photonics = []
-    try: # ecah try/except evaluates wether the component is included in the module, therefore in the calculations
+    try: # each try/except evaluates wether the component is included in the module, therefore in the calculations
         Photodetector_Uncertainty,DataFrame = Lidar.photonics.photodetector.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
         List_Unc_photonics.append(Photodetector_Uncertainty['Total_Uncertainty_Photodetector'])
         
@@ -199,7 +199,14 @@ def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     except:
         Optical_Amplifier_Uncertainty=None
         print('No optical amplifier in calculations!')
-    Uncertainty_Photonics_Module                     = SA.unc_comb(List_Unc_photonics)# to use SA.unc_comb data in watts is needed
+    try:
+        Laser_Uncertainty,DataFrame = Lidar.photonics.laser.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+        List_Unc_photonics.append(Laser_Uncertainty['Uncertainty_Laser'])
+        
+    except:
+        Photodetector_Uncertainty=None
+        print('No laser in calculations!')
+    Uncertainty_Photonics_Module                     = SA.unc_comb(List_Unc_photonics)
     Final_Output_UQ_Photonics                        = {'Uncertainty_Photonics':Uncertainty_Photonics_Module}
     Lidar.lidar_inputs.dataframe['Photonics Module'] = Final_Output_UQ_Photonics
     return Final_Output_UQ_Photonics,Lidar.lidar_inputs.dataframe
