@@ -21,19 +21,6 @@ from Utils import Scanning_patterns as SP
 from Utils import Qlunc_Plotting as QPlot
 
 
-# NOT IMPLEMENTED
-def UQ_Telescope(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
-     # UQ_telescope=[(temp*0.5+hum*0.1+curvature_lens*0.1+aberration+o_c_tele) \
-     #               for temp           in inputs.atm_inp.Atmospheric_inputs['temperature']\
-     #               for hum            in inputs.atm_inp.Atmospheric_inputs['humidity']\
-     #               for curvature_lens in inputs.optics_inp.Telescope_uncertainty_inputs['curvature_lens'] \
-     #               for aberration     in inputs.optics_inp.Telescope_uncertainty_inputs['aberration'] \
-     #               for o_c_tele       in inputs.optics_inp.Telescope_uncertainty_inputs['OtherChanges_tele']]
-     # Telescope_Losses =Lidar.optics.telescope.Mirror_losses
-     UQ_telescope=[100]
-     Final_Output_UQ_Telescope={'Uncertainty_Telescope':UQ_telescope}
-     return Final_Output_UQ_Telescope
-
 #%% SCANNER:
 def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     """
@@ -225,6 +212,19 @@ def UQ_OpticalCirculator(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
 
     return Final_Output_UQ_Optical_Circulator,Lidar.lidar_inputs.dataframe
 
+#%% TELESCOPE NOT IMPLEMENTED
+def UQ_Telescope(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
+     # UQ_telescope=[(temp*0.5+hum*0.1+curvature_lens*0.1+aberration+o_c_tele) \
+     #               for temp           in inputs.atm_inp.Atmospheric_inputs['temperature']\
+     #               for hum            in inputs.atm_inp.Atmospheric_inputs['humidity']\
+     #               for curvature_lens in inputs.optics_inp.Telescope_uncertainty_inputs['curvature_lens'] \
+     #               for aberration     in inputs.optics_inp.Telescope_uncertainty_inputs['aberration'] \
+     #               for o_c_tele       in inputs.optics_inp.Telescope_uncertainty_inputs['OtherChanges_tele']]
+     # Telescope_Losses =Lidar.optics.telescope.Mirror_losses
+     UQ_telescope=[100]
+     Final_Output_UQ_Telescope={'Telescope_Uncertainty':UQ_telescope}
+     Lidar.lidar_inputs.dataframe['Telescope']=Final_Output_UQ_Telescope
+     return Final_Output_UQ_Telescope,Lidar.lidar_inputs.dataframe
 
 #%% probe volume:
 def probe_volume(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):

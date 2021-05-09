@@ -24,7 +24,7 @@ Components:
     Type: VAD    # Type of the scanning head: VAD or SCAN (Scanning Lidar).
   
     # STDV in lidar angles and focus distance
-    stdv focus distance: 0   # [m]
+    stdv focus distance: 100   # [m]
     stdv Cone angle: .2      # [deg]
     stdv Azimuth: 0         # [deg]   
    
