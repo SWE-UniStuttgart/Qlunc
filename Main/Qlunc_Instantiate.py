@@ -78,11 +78,16 @@ Optical_circulator = optical_circulator (name           = Qlunc_yaml_inputs['Com
                                          unc_func       = uopc.UQ_OpticalCirculator) #eval(Qlunc_yaml_inputs['Components']['Optical Circulator']['Uncertainty function']))  # Function describing your scanner uncertainty.  Further informaion in "UQ_Optics_Classes.py" comments.
 
 
+Telescope = telescope (name     = Qlunc_yaml_inputs['Components']['Telescope']['Name'],
+                       stdv_aperture = Qlunc_yaml_inputs['Components']['Telescope']['Stdv Aperture'],
+                       aperture = Qlunc_yaml_inputs['Components']['Telescope']['Aperture'],
+                       unc_func = uopc.UQ_Telescope)
+
 # Optics Module:
 Optics_Module =  optics (name               = Qlunc_yaml_inputs['Modules']['Optics Module']['Name'],     # Introduce your Optics Module name.
                          scanner            = Scanner, #eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Scanner']),             # Scanner instance (in this example "Scanner") or "None". "None" means that you don´t want to include Scanner in Optics Module, either in uncertainty calculations.
                          optical_circulator = Optical_circulator ,#eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Optical circulator']),  # Optical Circulator instance (in this example "Optical_circulator") or "None". "None" means that you don´t want to include Optical circulator in Optics Module, either in uncertainty calculations.
-                         laser              = 'None',  #eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Laser']),
+                         telescope          = Telescope,
                          unc_func           = uopc.sum_unc_optics) #eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Uncertainty function']))
 
 
@@ -109,6 +114,7 @@ Photodetector    = photodetector(name             = Qlunc_yaml_inputs['Component
 
 Laser           = laser(name         = Qlunc_yaml_inputs['Components']['Laser']['Name'],
                         Wavelength   = Qlunc_yaml_inputs['Components']['Laser']['Wavelength'],
+                        stdv_wavelength   = Qlunc_yaml_inputs['Components']['Laser']['Stdv Wavelength'],
                         Output_power = Qlunc_yaml_inputs['Components']['Laser']['Output power'],
                         unc_func     = uphc.UQ_Laser)
 # Module:
@@ -121,6 +127,7 @@ Photonics_Module = photonics(name              = Qlunc_yaml_inputs['Modules']['P
 ## Lidar general inputs: ######################################################
 Lidar_inputs     = lidar_gral_inp(name        = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Name'],      # Introduce the name of your lidar data folder.
                                   wave        = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Wavelength'],                    # In [m]. Lidar wavelength.
+                                  ltype       = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Type'],
                                   yaw_error   = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Yaw error'],                          # In [°]. Degrees of rotation around z axis because of inclinometer errors
                                   pitch_error = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Pitch error'],                          # In [°]. Degrees of rotation around y axis
                                   roll_error  = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Roll error'],                        # In [°]. Degrees of rotation around z axis.
