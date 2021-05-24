@@ -56,24 +56,6 @@ Qlunc generates several output plots. These show 1) the different signal noise c
  
 ![Qlunc basic structure.\label{fig:QluncStructure}](Qlunc_BasicStructure_diagram.png)
  
-# Usage
-
-The framework has been developed and tested using python 3.7. The programming environment required to use Qlunc is provided in the repository. 
-There are two basic steps in using Qlunc, which are described below. A more comprehensive  explanation of Qlunc’s workflow can be found in the repository.
-
-## Creating a lidar digital twin
-As can be seen in \autoref{fig:QluncStructure}, each lidar component is “built up” using python classes. Parameter values for the components are defined in a yaml file. 
-
-## Uncertainty estimation model
-Each component has associated an uncertainty function. The users can modify the uncertainty models by creating their own. 
-The combined uncertainties of the  components and modules are then computed according to the Guide to the Expression of Uncertainty in Measurement (GUM) process [@GUM].
- 
-# Tutorials
-
-There are  two Jupyter Notebook-based tutorials in the [Qlunc repository](https://github.com/SWE-UniStuttgart/Qlunc/tree/Qlunc-V0.9/Tutorials). The tutorials are also available through the Binder service to ease accessibility and reproducibility. Users can find more information about these tutorials in the corresponding ``readme.md`` file attached to the Qlunc repository.
-
-Qlunc’s repository also includes a functional working example. More information about this working example is given in Qlunc/TestFilesQlunc/readme.md, where the process of creating a lidar digital twin is explained in depth.
- 
 # Future development roadmap
 
 Over the next year, we plan to implement further lidar hardware modules in the model and compute their combined uncertainties. In addition, we will identify main data processing methods and include those that we consider the highest contributors to uncertainty. 
