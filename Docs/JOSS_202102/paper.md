@@ -32,7 +32,7 @@ bibliography: paper.bib
 Wind lidar is a flexible and versatile remote sensing device for wind energy applications [@Hauke] which measures the wind vector remotely using laser light backscattered from aerosols. They are a key tool for wind energy and meteorology. Like any measurement method, it is essential to estimate their uncertainty.
 Qlunc, which stands for **Q**uantification of **l**idar **unc**ertainty, is an open-source python-based tool to create a digital twin of the lidar hardware, and estimate the uncertainty of wind lidar wind speed measurements.
 
-Qlunc contains models of the uncertainty contributed by individual lidar components and modules (represented by python objects, which in turn represent physical lidar  objects), that are then easily combined (thanks to its modularity) considering their different nature, to estimate the uncertainties in wind lidar measurements. The modules are based on the OpenLidar architecture [@OpenLidar] and can be adapted for particular use cases (see \autoref{fig:QluncStructure}). The terminology for the components and modules defined within Qlunc has also been aligned with a community-driven wind lidar ontology, which is in development [@OntoStack;@sheet2rdf]. 
+Qlunc contains models of the uncertainty contributed by individual lidar components and modules (represented by python objects, which in turn represent physical lidar  objects), that are then easily combined (thanks to the modularity of the code) considering their different nature, to estimate the uncertainties in wind lidar measurements. The modules are based on the OpenLidar architecture [@OpenLidar] and can be adapted for particular use cases (see \autoref{fig:QluncStructure}). The terminology for the components and modules defined within Qlunc has also been aligned with a community-driven wind lidar ontology, which is in development [@OntoStack;@sheet2rdf]. 
 
 ![Qlunc basic structure.\label{fig:QluncStructure}](Qlunc_BasicStructure_diagram.png)
  
@@ -45,8 +45,6 @@ Wind lidars are measuring devices, and as for any other measuring systems, their
 Measurement uncertainty means doubt about the validity of the result of a measurement [@GUM]. It represents the dispersion of the values attributed to a measurand. The ability to simulate uncertainty through a model such as Qlunc, is important for judging measurement data but can also be useful for designing and setting up experiments and optimizing lidar design. Because wind lidar is important for wind energy applications [@Clifton_2018], better models for wind lidar hardware (e.g., Qlunc) and measurement processes (e.g., through MOCALUM [@mocalum] or YADDUM [@yaddum], with which Qlunc can feasibly combine) will directly contribute to the adoption of wind lidar for wind energy applications. 
 
 This project is influenced by fundamental open science principles [@OpenScience]. The scope is to create an open, standardized and collaborative framework to describe both generic and specific lidar architectures, characterize lidar uncertainties, and provide the tools for others to contribute within this framework. 
- 
-
  
 # Future development roadmap
 
