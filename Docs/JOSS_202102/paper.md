@@ -29,15 +29,14 @@ bibliography: paper.bib
 ---
 # Summary
 
-Wind lidar measures the wind vector remotely using laser light backscattered from aerosols. They are a key tool for wind energy and meteorology. Like any measurement method, it is essential to estimate their uncertainty.
+Wind lidar is a flexible and versatile remote sensing device for wind energy applications [@Hauke] which measures the wind vector remotely using laser light backscattered from aerosols. They are a key tool for wind energy and meteorology. Like any measurement method, it is essential to estimate their uncertainty.
 Qlunc, which stands for **Q**uantification of **l**idar **unc**ertainty, is an open-source python-based tool to create a digital twin of the lidar hardware, and estimate the uncertainty of wind lidar wind speed measurements.
-Qlunc contains models of the uncertainty contributed by individual lidar components and modules, that are then combined considering their different nature, to estimate the uncertainties in wind lidar measurements. The modules are based on the OpenLidar architecture [@OpenLidar]. The terminology for the components and modules defined within Qlunc has also been aligned with a community-driven wind lidar ontology, which is in development [@OntoStack;@sheet2rdf]. 
 
-The code is modular. This allows lidar components (represented by python objects) to be modified and swapped in a trackable way to allow adaptation of the tool for particular use-cases (see \autoref{fig:QluncStructure}). Furthermore, Qlunc is designed to easily integrate different uncertainty methods or interfaces to external codes. It has an object-oriented structure taking advantage of python features; by using python objects that represent physical lidar components, the code articulates the lidar physical modules, thus resulting in a digital twin of the wind lidar. 
+Qlunc contains models of the uncertainty contributed by individual lidar components and modules (represented by python objects, which in turn represent physical lidar  objects), that are then easily combined (thanks to its modularity) considering their different nature, to estimate the uncertainties in wind lidar measurements. The modules are based on the OpenLidar architecture [@OpenLidar] and can be adapted for particular use cases (see \autoref{fig:QluncStructure}). The terminology for the components and modules defined within Qlunc has also been aligned with a community-driven wind lidar ontology, which is in development [@OntoStack;@sheet2rdf]. 
 
-Besides uncertainty estimations, Qlunc’s functions could be extended for other applications, for example to compare different  wind velocity vector calculation methods. This, combined with the underlying open-source code, defines an attractive scenario for sharing knowledge about wind lidars. 
-
-Qlunc provides a common, open-source platform that can be used to try many different uncertainty estimation methods, thus encouraging collaboration amongst the wind lidar community.
+![Qlunc basic structure.\label{fig:QluncStructure}](Qlunc_BasicStructure_diagram.png)
+ 
+The first release is focused on velocity azimuth display (VAD)[@Browning] scans and forward-looking nacelle-mounted measuring modes, which are common wind-energy-industry applications. Besides uncertainty estimations, Qlunc’s functions could be extended for other applications, for example to compare different  wind velocity vector calculation methods. This, combined with the underlying open-source code, defines an attractive scenario for sharing knowledge and fostering collaboration on wind lidars. 
 
 # Statement of Need
 
@@ -47,14 +46,7 @@ Measurement uncertainty means doubt about the validity of the result of a measur
 
 This project is influenced by fundamental open science principles [@OpenScience]. The scope is to create an open, standardized and collaborative framework to describe both generic and specific lidar architectures, characterize lidar uncertainties, and provide the tools for others to contribute within this framework. 
  
-# Qlunc’s capabilities
 
-Wind lidars are flexible and versatile remote sensing devices for wind energy applications [@Hauke] that have also been customized for specific use cases, mainly through the choice of components and scanning patterns. Accordingly, Qlunc is flexible and will ultimately be able to simulate a lidar carrying out any kind of scanning pattern. The first release is focused on velocity azimuth display (VAD)[@Browning] scans and forward-looking nacelle-mounted measuring modes, which are common wind-energy-industry applications. 
-
-For now, Qlunc can compute wind lidar hardware uncertainties from the photonics module (including photodetector and optical amplifier components) and the optics module (including scanner pointing accuracy distance errors and optical circulator uncertainties). In the near future, uncertainties for other hardware components and lidar data processing methods will be implemented in the model.
-Qlunc generates several output plots. These show 1) the different signal noise contributors of the photodetector components and 2) estimates of the distance error between theoretical and measured points. Other output plots can be created by the user from the output data.
- 
-![Qlunc basic structure.\label{fig:QluncStructure}](Qlunc_BasicStructure_diagram.png)
  
 # Future development roadmap
 
