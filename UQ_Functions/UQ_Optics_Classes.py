@@ -76,7 +76,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         param3=[]
         # When SCAN is selected user can choose specific patterns already implemented (./Qlunc/Utils/Scanning_patterns.py)
         if Qlunc_yaml_inputs['Components']['Scanner']['Pattern']=='lissajous':
-            x_init,y_init,z_init = SP.lissajous_pattern(50,60,60,3,3)
+            x_init,y_init,z_init = SP.lissajous_pattern(Lidar.optics.scanner.lissajous_param[0],Lidar.optics.scanner.lissajous_param[1],Lidar.optics.scanner.lissajous_param[2],Lidar.optics.scanner.lissajous_param[3],Lidar.optics.scanner.lissajous_param[4])
         elif Qlunc_yaml_inputs['Components']['Scanner']['Pattern']=='None':
             x_init = Lidar.optics.scanner.x
             y_init = Lidar.optics.scanner.y

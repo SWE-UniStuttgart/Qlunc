@@ -51,6 +51,7 @@ Scanner           = scanner(name            = Qlunc_yaml_inputs['Components']['S
                             scanner_type    = Qlunc_yaml_inputs['Components']['Scanner']['Type'],
                             origin          = Qlunc_yaml_inputs['Components']['Scanner']['Origin'],         # Origin (coordinates of the lidar deployment).
                             pattern         = Qlunc_yaml_inputs['Components']['Scanner']['Pattern'],
+                            lissajous_param = Qlunc_yaml_inputs['Components']['Scanner']['Lissajous parameters'],
                             sample_rate     = Qlunc_yaml_inputs['Components']['Scanner']['Sample rate'],    # for now introduce it in [degrees].
                            
                            # This values for focus distance, cone_angle and azimuth define a typical VAD scanning sequence:
