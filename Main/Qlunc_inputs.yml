@@ -26,9 +26,9 @@ Components:
     Type: SCAN    # Type of the scanning head: VAD or SCAN (Scanning Lidar).
   
     # STDV in lidar angles and focus distance
-    stdv focus distance: 1   # [m]
-    stdv Cone angle: .2      # [deg]
-    stdv Azimuth: 0         # [deg]   
+    stdv focus distance: .01   # [m]
+    stdv Cone angle: .25      # [deg]
+    stdv Azimuth: 0.5         # [deg]   
    
     # VAD Pattern:
     Focus distance: [70]   # [m]
@@ -90,10 +90,14 @@ Components:
     Output power: 1.e-6 #[w]
     Uncertainty function: uphc.UQ_Laser
 
+  AOM:
+    Name: AOM_YAML
+    Insertion loss: 0.5 # dB
+    
 # Lidar general inputs 
   Lidar general inputs:
     Name: Lidar_gral_inputs_Yaml
-    Type: CW # CW/Pulsed for continuous or pulsed lidars
+    Type: CW # CW/Pulsed for continuous or pulsed lidars. The difference is that AOM (photonics module) is included in calculations when Pulsed
     Wavelength: 1550.e-9    # [m]
     Yaw error: 0            # [deg]
     Pitch error: 0          # [deg]

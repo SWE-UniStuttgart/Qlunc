@@ -183,6 +183,32 @@ def UQ_Laser(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     UQ_Laser = .1
     return UQ_Laser
 
+#%% Acousto-optic-modulator
+
+def UQ_AOM(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
+    """
+    AOM uncertainty estimation. Location: ./UQ_Functions/UQ_Photonics_Classes.py
+    
+    Parameters
+    ----------
+    
+    * Lidar
+        data...
+    * Atmospheric_Scenario
+        Atmospheric data. Integer or Time series
+    * cts
+        Physical constants
+    * Qlunc_yaml_inputs
+        Lidar parameters data
+        
+    Returns
+    -------
+    
+    list
+    
+    """ 
+    UQ_AOM = Lidar.photonics.acousto_optic_modulator.insertion_loss # in dB
+    return UQ_AOM
 #%% Sum of uncertainties in photonics module: 
 def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs): 
     List_Unc_photonics = []

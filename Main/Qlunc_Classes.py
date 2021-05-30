@@ -123,6 +123,12 @@ class optical_amplifier():
                  self.OA_Gain             = OA_Gain
                  self.Uncertainty         = unc_func
                  print('Created new optical amplifier: {}'.format(self.Optical_AmplifierID))
+
+class acousto_optic_modulator():
+    def __init__(self,name,insertion_loss):
+                 self.AOMID          = name
+                 self.insertion_loss = insertion_loss
+                 print ('Created new AOM: {}'.format(self.AOMID))
         
 class power_source(): # Not included yet in Version Qlunc v-0.9 calculations
     def __init__(self,name,Inp_power,Out_power,unc_func):
@@ -192,12 +198,13 @@ class telescope():
                  
 # Modules classes:
 class photonics():
-    def __init__(self,name,photodetector,optical_amplifier,laser,unc_func):
-                 self.PhotonicModuleID   = name
-                 self.photodetector      = photodetector
-                 self.optical_amplifier  = optical_amplifier
-                 self.laser              = laser
-                 self.Uncertainty        = unc_func 
+    def __init__(self,name,photodetector,optical_amplifier,laser,acousto_optic_modulator,unc_func):
+                 self.PhotonicModuleID        = name
+                 self.photodetector           = photodetector
+                 self.optical_amplifier       = optical_amplifier
+                 self.laser                   = laser
+                 self.acousto_optic_modulator = acousto_optic_modulator
+                 self.Uncertainty             = unc_func 
                  print('Created new photonic module: {}'.format(self.PhotonicModuleID))
 
 class power(): # Not included yet in Version Qlunc v-0.9 calculations
