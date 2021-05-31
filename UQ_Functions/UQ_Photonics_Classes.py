@@ -199,15 +199,17 @@ def UQ_AOM(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     * cts
         Physical constants
     * Qlunc_yaml_inputs
-        Lidar parameters data
+        Lidar parameters
         
     Returns
     -------
     
-    list
+    AOM losses
     
     """ 
-    UQ_AOM = Lidar.photonics.acousto_optic_modulator.insertion_loss # in dB
+    if Lidar.lidar_inputs.LidarType=='Pulsed':
+        UQ_AOM = Lidar.photonics.acousto_optic_modulator.insertion_loss # in dB
+        P_il=Pt/(10**(Lidar.photonics.acousto_optic_modulator.insertion_loss/10))
     return UQ_AOM
 #%% Sum of uncertainties in photonics module: 
 def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs): 
