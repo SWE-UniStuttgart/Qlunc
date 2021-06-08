@@ -250,7 +250,7 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     try:
         Telescope_Uncertainty,DataFrame=Lidar.optics.telescope.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
         List_Unc_optics.append(Telescope_Uncertainty['Telescope_Uncertainty'])       
-        pdb.set_trace()
+        # pdb.set_trace()
 
     except:
         Telescope_Uncertainty=None

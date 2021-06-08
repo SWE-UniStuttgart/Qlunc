@@ -180,9 +180,40 @@ def UQ_Laser(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     list
     
     """ 
-    UQ_Laser = .1
-    return UQ_Laser
+    UQ_Laser =( Lidar.photonics.laser.stdv_wavelength/Lidar.photonics.laser.Wavelength)*100 # 'Error in % because of the laser wavelength stdv
+    Final_Output_UQ_Laser = {'Uncertainty_Laser':UQ_Laser}
+    # pdb.set_trace()
+    Lidar.lidar_inputs.dataframe['Laser'] = Final_Output_UQ_Laser
+    return Final_Output_UQ_Laser,Lidar.lidar_inputs.dataframe
 
+#%% Acousto-optic-modulator
+
+def UQ_AOM(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
+    """
+    AOM uncertainty estimation. Location: ./UQ_Functions/UQ_Photonics_Classes.py
+    
+    Parameters
+    ----------
+    
+    * Lidar
+        data...
+    * Atmospheric_Scenario
+        Atmospheric data. Integer or Time series
+    * cts
+        Physical constants
+    * Qlunc_yaml_inputs
+        Lidar parameters
+        
+    Returns
+    -------
+    
+    AOM losses
+    
+    """ 
+    if Lidar.lidar_inputs.LidarType=='Pulsed':
+        UQ_AOM = Lidar.photonics.acousto_optic_modulator.insertion_loss # in dB
+        P_il=Pt/(10**(Lidar.photonics.acousto_optic_modulator.insertion_loss/10))
+    return UQ_AOM
 #%% Sum of uncertainties in photonics module: 
 def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs): 
     List_Unc_photonics = []
@@ -200,11 +231,12 @@ def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         Optical_Amplifier_Uncertainty=None
         print('No optical amplifier in calculations!')
     try:
+        pdb.set_trace()
         Laser_Uncertainty,DataFrame = Lidar.photonics.laser.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
-        List_Unc_photonics.append(Laser_Uncertainty['Uncertainty_Laser'])
+        # List_Unc_photonics.append(Laser_Uncertainty['Uncertainty_Laser'])
         
     except:
-        Photodetector_Uncertainty=None
+        Laser_Uncertainty=None
         print('No laser in calculations!')
     Uncertainty_Photonics_Module                     = SA.unc_comb(List_Unc_photonics)
     Final_Output_UQ_Photonics                        = {'Uncertainty_Photonics':Uncertainty_Photonics_Module}
