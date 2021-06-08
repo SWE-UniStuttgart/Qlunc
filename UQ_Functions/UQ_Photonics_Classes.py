@@ -180,8 +180,11 @@ def UQ_Laser(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     list
     
     """ 
-    UQ_Laser = .1
-    return UQ_Laser
+    UQ_Laser =( Lidar.photonics.laser.stdv_wavelength/Lidar.photonics.laser.Wavelength)*100 # 'Error in % because of the laser wavelength stdv
+    Final_Output_UQ_Laser = {'Uncertainty_Laser':UQ_Laser}
+    # pdb.set_trace()
+    Lidar.lidar_inputs.dataframe['Laser'] = Final_Output_UQ_Laser
+    return Final_Output_UQ_Laser,Lidar.lidar_inputs.dataframe
 
 #%% Acousto-optic-modulator
 
@@ -228,11 +231,12 @@ def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         Optical_Amplifier_Uncertainty=None
         print('No optical amplifier in calculations!')
     try:
+        pdb.set_trace()
         Laser_Uncertainty,DataFrame = Lidar.photonics.laser.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
-        List_Unc_photonics.append(Laser_Uncertainty['Uncertainty_Laser'])
+        # List_Unc_photonics.append(Laser_Uncertainty['Uncertainty_Laser'])
         
     except:
-        Photodetector_Uncertainty=None
+        Laser_Uncertainty=None
         print('No laser in calculations!')
     Uncertainty_Photonics_Module                     = SA.unc_comb(List_Unc_photonics)
     Final_Output_UQ_Photonics                        = {'Uncertainty_Photonics':Uncertainty_Photonics_Module}
