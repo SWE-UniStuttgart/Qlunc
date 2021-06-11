@@ -67,28 +67,28 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     ########################################################################################################
     # Create Xarray to store data. Link with Mocalum and yaddum  ###########################################
-    global da
-    DataXarray=Lidar.lidar_inputs.dataframe
-    Names=[Lidar.LidarID]
-    component=[i for i in DataXarray.keys()]
-    data=[[ii for ii in DataXarray.values()]]
+    # global da
+    # DataXarray=Lidar.lidar_inputs.dataframe
+    # Names=[Lidar.LidarID]
+    # component=[i for i in DataXarray.keys()]
+    # data=[[ii for ii in DataXarray.values()]]
     
-    if os.path.isfile('C:/Users/fcosta/Desktop/data_test.txt'):
-        da2=xr.DataArray(data,
-        coords=[Names,component],
-        dims=('Names','Components'))
-        # da=xr.concat([da,da2],dim='Names')
-        file=open('C:/Users/fcosta/Desktop/data_test.txt','a')
-        file.write('\n'+repr(da2))
-        file.close()
-    else:
-        da=xr.DataArray(data,
-        coords=[Names,component],
-        dims=('Names','Components'))
-        # da=xr.concat([da,da2],dim='Names')
-        file=open('C:/Users/fcosta/Desktop/data_test.txt','w')
-        file.write('\n'+repr(da))
-        file.close()
+    # if os.path.isfile('C:/Users/fcosta/Desktop/data_test.txt'):
+    #     da2=xr.DataArray(data,
+    #     coords=[Names,component],
+    #     dims=('Names','Components'))
+    #     # da=xr.concat([da,da2],dim='Names')
+    #     file=open('C:/Users/fcosta/Desktop/data_test.txt','a')
+    #     file.write('\n'+repr(da2))
+    #     file.close()
+    # else:
+    #     da=xr.DataArray(data,
+    #     coords=[Names,component],
+    #     dims=('Names','Components'))
+    #     # da=xr.concat([da,da2],dim='Names')
+    #     file=open('C:/Users/fcosta/Desktop/data_test.txt','w')
+    #     file.write('\n'+repr(da))
+    #     file.close()
     # try:
     #     da
     #     da2=xr.DataArray(data,
