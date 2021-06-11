@@ -15,6 +15,7 @@ from Utils.Qlunc_ImportModules import *
 import Utils.Qlunc_Help_standAlone as SA
 
 # Calculates the lidar global uncertainty using uncertainty expansion calculation methods:
+global da
 def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     """
     Lidar uncertainty estimation. Location: ./UQ_Functions/UQ_Lidar_Classes.py
@@ -62,6 +63,51 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     print('Processing lidar uncertainties...')
     Uncertainty_Lidar=SA.unc_comb(List_Unc_lidar)
     Final_Output_Lidar_Uncertainty = {'Lidar_Uncertainty':Uncertainty_Lidar}    
-    Lidar.lidar_inputs.dataframe['Lidar']=Final_Output_Lidar_Uncertainty
+    Lidar.lidar_inputs.dataframe['Lidar']=Final_Output_Lidar_Uncertainty['Lidar_Uncertainty']
+    
+    ########################################################################################################
+    # Create Xarray to store data. Link with Mocalum and yaddum  ###########################################
+    global da
+    DataXarray=Lidar.lidar_inputs.dataframe
+    Names=[Lidar.LidarID]
+    component=[i for i in DataXarray.keys()]
+    data=[[ii for ii in DataXarray.values()]]
+    
+    if os.path.isfile('C:/Users/fcosta/Desktop/data_test.txt'):
+        da2=xr.DataArray(data,
+        coords=[Names,component],
+        dims=('Names','Components'))
+        # da=xr.concat([da,da2],dim='Names')
+        file=open('C:/Users/fcosta/Desktop/data_test.txt','a')
+        file.write('\n'+repr(da2))
+        file.close()
+    else:
+        da=xr.DataArray(data,
+        coords=[Names,component],
+        dims=('Names','Components'))
+        # da=xr.concat([da,da2],dim='Names')
+        file=open('C:/Users/fcosta/Desktop/data_test.txt','w')
+        file.write('\n'+repr(da))
+        file.close()
+    # try:
+    #     da
+    #     da2=xr.DataArray(data,
+    #             coords=[Names,component],
+    #             dims=('Names','Components'))
+    #     da=xr.concat([da,da2],dim='Names')
+    #     pdb.set_trace()
+    # except:
+        
+    #     da=xr.DataArray(data,
+    #             coords=[Names,component],
+    #             dims=('Names','Components'))
+    #     # pdb.set_trace()
+
+
+    ########################################################################################################
+    ########################################################################################################
+    
+    # pdb.set_trace()
+    
     print('Lidar uncertainty done')
     return Final_Output_Lidar_Uncertainty,Lidar.lidar_inputs.dataframe

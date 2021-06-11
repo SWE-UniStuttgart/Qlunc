@@ -9,7 +9,7 @@ University of Stuttgart(c)
 
 #%% Modules to import: 
 
-import sys,inspect
+import sys,inspect,os
 import numpy as np
 import scipy.interpolate as itp
 import pandas as pd
@@ -27,3 +27,5 @@ import time
 import yaml
 import pylab
 import math
+import xarray as xr
+import netCDF4 as nc    
