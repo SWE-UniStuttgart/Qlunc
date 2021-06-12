@@ -67,22 +67,24 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     ########################################################################################################
     # Create Xarray to store data. Link with Mocalum and yaddum  ###########################################
-    # DataXarray=Lidar.lidar_inputs.dataframe
-    # Names=[Lidar.LidarID]
-    # component=[i for i in DataXarray.keys()]
-    # data=[[ii for ii in DataXarray.values()]]
     
-
-    # da=xr.DataArray(data,
-    #             coords=[component,Names],
-    #             dims=('Components','Names'))
-    # da.to_netcdf('saved_on_disk.nc')
+    DataXarray=Lidar.lidar_inputs.dataframe
+    Names=[Lidar.LidarID]
+    component=[i for i in DataXarray.keys()]
+    data=[ii for ii in DataXarray.values()]
+    
+    
+    df=xr.DataArray(data,
+                coords=[component,Names],
+                dims=('Components','Names'))
+    pdb.set_trace()
+    df.to_netcdf('{}.nc'.format(Lidar.LidarID))
 
 
     ########################################################################################################
     ########################################################################################################
     
-    # pdb.set_trace()
+    
     
     print('Lidar uncertainty done')
-    return Final_Output_Lidar_Uncertainty,Lidar.lidar_inputs.dataframe
+    return Final_Output_Lidar_Uncertainty,Lidar.lidar_inputs.dataframe,df
