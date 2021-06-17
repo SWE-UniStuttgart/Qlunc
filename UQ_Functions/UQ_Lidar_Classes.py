@@ -72,29 +72,29 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
 
     if os.path.isfile('./Projects/' + Qlunc_yaml_inputs['Project']+ '.nc'):
         # Read the new lidar data
-        names=[Lidar.LidarID]
-        component=[i for i in DataXarray.keys()]
-        data=[ii for ii in DataXarray.values()]
-        df_read = xr.open_dataarray('./Projects/' + Qlunc_yaml_inputs['Project']+ '.nc')
+        names     = [Lidar.LidarID]
+        component = [i for i in DataXarray.keys()]
+        data      = [ii for ii in DataXarray.values()]
+        df_read   = xr.open_dataarray('./Projects/' + Qlunc_yaml_inputs['Project']+ '.nc')
         
         # Creating the new Xarray:
-        dr=xr.DataArray(data,
+        dr = xr.DataArray(data,
                 coords=[component,names],
                 dims=('Components','Names'))
         
         # Concatenate data from different lidars
-        df=xr.concat([df_read,dr],dim='Names')
+        df = xr.concat([df_read,dr],dim='Names')
         df_read.close()
         os.remove('./Projects/' +  Qlunc_yaml_inputs['Project']+ '.nc')
         df.to_netcdf('./Projects/'+ Qlunc_yaml_inputs['Project']+ '.nc','w')
     else:        
-        names=[Lidar.LidarID]
-        component=[i for i in DataXarray.keys()]
-        data=[ii for ii in DataXarray.values()]
+        names     = [Lidar.LidarID]
+        component = [i for i in DataXarray.keys()]
+        data      = [ii for ii in DataXarray.values()]
         
-        df=xr.DataArray(data,
-                coords=[component,names],
-                dims=('Components','Names'))
+        df = xr.DataArray(data,
+                coords = [component,names],
+                dims   = ('Components','Names'))
         if not os.path.exists('./Projects'):
             os.makedirs('./Projects')
         
