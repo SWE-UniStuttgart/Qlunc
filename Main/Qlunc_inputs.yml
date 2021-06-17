@@ -120,7 +120,7 @@ Modules:
 ---  
 # Lidar:
 Lidar:
-  Name: Caixa2
+  Name: Caixa
   Photonics module: Photonics_Module       # Have to be the same name as the instance
   Optics module: None #Optics_Module             # Have to be the same name as the instance
   Power module: None                       # Have to be the same name as the instance
