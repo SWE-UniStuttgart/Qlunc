@@ -70,44 +70,38 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     DataXarray=Lidar.lidar_inputs.dataframe
 
-    if os.path.isfile('C:/Users/fcosta/SWE_LOCAL/GIT_Qlunc/Projects/' + Qlunc_yaml_inputs['Project']+ '.nc'):
+    if os.path.isfile('./Projects/' + Qlunc_yaml_inputs['Project']+ '.nc'):
         # Read the new lidar data
-        Names=[Lidar.LidarID]
+        names=[Lidar.LidarID]
         component=[i for i in DataXarray.keys()]
         data=[ii for ii in DataXarray.values()]
-        df_read = xr.open_dataarray('C:/Users/fcosta/SWE_LOCAL/GIT_Qlunc/Projects/' + Qlunc_yaml_inputs['Project']+ '.nc')
+        df_read = xr.open_dataarray('./Projects/' + Qlunc_yaml_inputs['Project']+ '.nc')
         
         # Creating the new Xarray:
         dr=xr.DataArray(data,
-                coords=[component,Names],
+                coords=[component,names],
                 dims=('Components','Names'))
         
         # Concatenate data from different lidars
         df=xr.concat([df_read,dr],dim='Names')
         df_read.close()
-        os.remove('C:/Users/fcosta/SWE_LOCAL/GIT_Qlunc/Projects/' +  Qlunc_yaml_inputs['Project']+ '.nc')
-        df.to_netcdf('C:/Users/fcosta/SWE_LOCAL/GIT_Qlunc/Projects/'+ Qlunc_yaml_inputs['Project']+ '.nc','w')
-    else:
-        # os.remove('C:/Users/fcosta/SWE_LOCAL/GIT_Qlunc/' + '*.nc')
-        
-        Names=[Lidar.LidarID]
+        os.remove('./Projects/' +  Qlunc_yaml_inputs['Project']+ '.nc')
+        df.to_netcdf('./Projects/'+ Qlunc_yaml_inputs['Project']+ '.nc','w')
+    else:        
+        names=[Lidar.LidarID]
         component=[i for i in DataXarray.keys()]
         data=[ii for ii in DataXarray.values()]
         
         df=xr.DataArray(data,
-                coords=[component,Names],
+                coords=[component,names],
                 dims=('Components','Names'))
-        if not os.path.exists('C:/Users/fcosta/SWE_LOCAL/GIT_Qlunc/Projects'):
-            os.makedirs('C:/Users/fcosta/SWE_LOCAL/GIT_Qlunc/Projects')
+        if not os.path.exists('./Projects'):
+            os.makedirs('./Projects')
         
-        df.to_netcdf('C:/Users/fcosta/SWE_LOCAL/GIT_Qlunc/Projects/'+ Qlunc_yaml_inputs['Project']+ '.nc','w')
-
-        # df.csv.to_csv(df,'C:/Users/fcosta/SWE_LOCAL/GIT_Qlunc/TEST_csv_xarray.csv')
+        df.to_netcdf('./Projects/'+ Qlunc_yaml_inputs['Project']+ '.nc','w')
 
     ########################################################################################################
     ########################################################################################################
-    
-    
-    
+        
     print('Lidar uncertainty done')
     return Final_Output_Lidar_Uncertainty,Lidar.lidar_inputs.dataframe,df
