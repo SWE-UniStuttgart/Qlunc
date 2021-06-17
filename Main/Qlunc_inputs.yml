@@ -9,7 +9,7 @@
 # DIRECTORIES:------------------------------------------------------
 
 Main_directory: '.' # Directory where Qlunc_Classes.py is
-  
+Project: Test2 #Name of the project
 
 # Lidar values. Modules and components parameters: ------------------------------------------------------
 
@@ -45,7 +45,7 @@ Components:
     
   Optical Circulator:
     Name: OC_Yaml
-    Insertion loss: 2.1 # [dB]
+    Insertion loss: 0.8 # [dB]
     SNR: 60 #[dB]
     Uncertainty function: uopc.UQ_OpticalCirculator
   
@@ -74,8 +74,8 @@ Components:
   Photodetector:
     Name: Photodetector_YAML
     Photodetector BandWidth: 1.e+9    # [Hz]            
-    Load resistor: 50                   # [Ohm]
-    Photodetector efficiency: .85       # Photodetector efficiency [-]
+    Load resistor: 500                   # [Ohm]
+    Photodetector efficiency: .085       # Photodetector efficiency [-]
     Dark current: 5.e-9                 # In [A]. Dark current in the photodetector.
     Photodetector signalP: 1.e-6        # [W]
     Power interval: [0,1000,.001]       # [mW]
@@ -120,7 +120,7 @@ Modules:
 ---  
 # Lidar:
 Lidar:
-  Name: Caixa1
+  Name: Caixa2
   Photonics module: Photonics_Module       # Have to be the same name as the instance
   Optics module: None #Optics_Module             # Have to be the same name as the instance
   Power module: None                       # Have to be the same name as the instance

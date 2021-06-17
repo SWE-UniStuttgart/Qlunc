@@ -69,17 +69,40 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # Create Xarray to store data. Link with Mocalum and yaddum  ###########################################
     
     DataXarray=Lidar.lidar_inputs.dataframe
-    Names=[Lidar.LidarID]
-    component=[i for i in DataXarray.keys()]
-    data=[ii for ii in DataXarray.values()]
-    
-    
-    df=xr.DataArray(data,
+
+    if os.path.isfile('C:/Users/fcosta/SWE_LOCAL/GIT_Qlunc/Projects/' + Qlunc_yaml_inputs['Project']+ '.nc'):
+        # Read the new lidar data
+        Names=[Lidar.LidarID]
+        component=[i for i in DataXarray.keys()]
+        data=[ii for ii in DataXarray.values()]
+        df_read = xr.open_dataarray('C:/Users/fcosta/SWE_LOCAL/GIT_Qlunc/Projects/' + Qlunc_yaml_inputs['Project']+ '.nc')
+        
+        # Creating the new Xarray:
+        dr=xr.DataArray(data,
                 coords=[component,Names],
                 dims=('Components','Names'))
-    pdb.set_trace()
-    df.to_netcdf('{}.nc'.format(Lidar.LidarID))
+        
+        # Concatenate data from different lidars
+        df=xr.concat([df_read,dr],dim='Names')
+        df_read.close()
+        os.remove('C:/Users/fcosta/SWE_LOCAL/GIT_Qlunc/Projects/' +  Qlunc_yaml_inputs['Project']+ '.nc')
+        df.to_netcdf('C:/Users/fcosta/SWE_LOCAL/GIT_Qlunc/Projects/'+ Qlunc_yaml_inputs['Project']+ '.nc','w')
+    else:
+        # os.remove('C:/Users/fcosta/SWE_LOCAL/GIT_Qlunc/' + '*.nc')
+        
+        Names=[Lidar.LidarID]
+        component=[i for i in DataXarray.keys()]
+        data=[ii for ii in DataXarray.values()]
+        
+        df=xr.DataArray(data,
+                coords=[component,Names],
+                dims=('Components','Names'))
+        if not os.path.exists('C:/Users/fcosta/SWE_LOCAL/GIT_Qlunc/Projects'):
+            os.makedirs('C:/Users/fcosta/SWE_LOCAL/GIT_Qlunc/Projects')
+        
+        df.to_netcdf('C:/Users/fcosta/SWE_LOCAL/GIT_Qlunc/Projects/'+ Qlunc_yaml_inputs['Project']+ '.nc','w')
 
+        # df.csv.to_csv(df,'C:/Users/fcosta/SWE_LOCAL/GIT_Qlunc/TEST_csv_xarray.csv')
 
     ########################################################################################################
     ########################################################################################################
