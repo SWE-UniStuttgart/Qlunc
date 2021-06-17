@@ -9,7 +9,7 @@
 # DIRECTORIES:------------------------------------------------------
 
 Main_directory: '.' # Directory where Qlunc_Classes.py is
-Project: Test2 #Name of the project
+Project: Test1 #Name of the project
 
 # Lidar values. Modules and components parameters: ------------------------------------------------------
 
@@ -120,7 +120,7 @@ Modules:
 ---  
 # Lidar:
 Lidar:
-  Name: Caixa
+  Name: Caixa1
   Photonics module: Photonics_Module       # Have to be the same name as the instance
   Optics module: None #Optics_Module             # Have to be the same name as the instance
   Power module: None                       # Have to be the same name as the instance
