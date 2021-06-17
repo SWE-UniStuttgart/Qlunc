@@ -15,6 +15,7 @@ from Utils.Qlunc_ImportModules import *
 import Utils.Qlunc_Help_standAlone as SA
 
 # Calculates the lidar global uncertainty using uncertainty expansion calculation methods:
+global da
 def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     """
     Lidar uncertainty estimation. Location: ./UQ_Functions/UQ_Lidar_Classes.py
@@ -62,6 +63,45 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     print('Processing lidar uncertainties...')
     Uncertainty_Lidar=SA.unc_comb(List_Unc_lidar)
     Final_Output_Lidar_Uncertainty = {'Lidar_Uncertainty':Uncertainty_Lidar}    
-    Lidar.lidar_inputs.dataframe['Lidar']=Final_Output_Lidar_Uncertainty
+    Lidar.lidar_inputs.dataframe['Lidar']=Final_Output_Lidar_Uncertainty['Lidar_Uncertainty']
+    
+    ########################################################################################################
+    # Create Xarray to store data. Link with Mocalum and yaddum  ###########################################
+    
+    DataXarray=Lidar.lidar_inputs.dataframe
+
+    if os.path.isfile('./Projects/' + Qlunc_yaml_inputs['Project']+ '.nc'):
+        # Read the new lidar data
+        names     = [Lidar.LidarID]
+        component = [i for i in DataXarray.keys()]
+        data      = [ii for ii in DataXarray.values()]
+        df_read   = xr.open_dataarray('./Projects/' + Qlunc_yaml_inputs['Project']+ '.nc')
+        
+        # Creating the new Xarray:
+        dr = xr.DataArray(data,
+                coords=[component,names],
+                dims=('Components','Names'))
+        
+        # Concatenate data from different lidars
+        df = xr.concat([df_read,dr],dim='Names')
+        df_read.close()
+        os.remove('./Projects/' +  Qlunc_yaml_inputs['Project']+ '.nc')
+        df.to_netcdf('./Projects/'+ Qlunc_yaml_inputs['Project']+ '.nc','w')
+    else:        
+        names     = [Lidar.LidarID]
+        component = [i for i in DataXarray.keys()]
+        data      = [ii for ii in DataXarray.values()]
+        
+        df = xr.DataArray(data,
+                coords = [component,names],
+                dims   = ('Components','Names'))
+        if not os.path.exists('./Projects'):
+            os.makedirs('./Projects')
+        
+        df.to_netcdf('./Projects/'+ Qlunc_yaml_inputs['Project']+ '.nc','w')
+
+    ########################################################################################################
+    ########################################################################################################
+        
     print('Lidar uncertainty done')
-    return Final_Output_Lidar_Uncertainty,Lidar.lidar_inputs.dataframe
+    return Final_Output_Lidar_Uncertainty,Lidar.lidar_inputs.dataframe,df

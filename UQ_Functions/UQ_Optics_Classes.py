@@ -175,7 +175,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # file.close()   
         
     Final_Output_UQ_Scanner={'Simu_Mean_Distance':SimMean_DISTANCE,'STDV_Distance':StdvMean_DISTANCE,'MeasPoint_Coordinates':Coord,'NoisyMeasPoint_Coordinates':Noisy_Coord}
-    Lidar.lidar_inputs.dataframe['Scanner']=Final_Output_UQ_Scanner
+    Lidar.lidar_inputs.dataframe['Scanner']=Final_Output_UQ_Scanner['Simu_Mean_Distance']
     # Plotting
     QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,Qlunc_yaml_inputs['Flags']['Scanning Pattern'],False)
     return Final_Output_UQ_Scanner,Lidar.lidar_inputs.dataframe
@@ -185,7 +185,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
 def UQ_OpticalCirculator(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     """
     Optical circulator uncertainty estimation. Location: ./UQ_Functions/UQ_Optics_Classes.py
-    It assumes an SNR and calculates the Optical circulator noise from it: $SNR\,=\,\frac{{P_{i}},{P_{noise}}$
+    
     Parameters
     ----------
     
@@ -203,13 +203,24 @@ def UQ_OpticalCirculator(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     list
     
-    """
+    """   
+    Optical_Circulator_losses = [np.array(Lidar.optics.optical_circulator.insertion_loss)]
+    
+    #  if the insertion loss is expressed in % (X% losses):    
+    #Optical_Circulator_losses = 10*np.log10(1-(X/100)) # output in dB
+    
+    # # If it is expressed using SNR:
+    # Optical_Circulator_losses = [Qlunc_yaml_inputs['Components']['Laser']['Output power']*(10**(Lidar.optics.optical_circulator.SNR/10))]
+    # Optical_Circulator_Uncertainty_dB = 10*np.log10(Optical_Circulator_Uncertainty_w)
+    # Final_Output_UQ_Optical_Circulator={'Optical_Circulator_Uncertainty':Optical_Circulator_Uncertainty_dB}
+    # Lidar.lidar_inputs.dataframe['Optical circulator']=Final_Output_UQ_Optical_Circulator['Optical_Circulator_Uncertainty']
+
     # Optical_Circulator_Uncertainty = [np.array(Lidar.optics.optical_circulator.insertion_loss)]
     Optical_Circulator_Uncertainty_w = [Qlunc_yaml_inputs['Components']['Laser']['Output power']/(10**(Lidar.optics.optical_circulator.SNR/10))]
     Optical_Circulator_Uncertainty_dB = 10*np.log10(Optical_Circulator_Uncertainty_w)
     Final_Output_UQ_Optical_Circulator={'Optical_Circulator_Uncertainty':Optical_Circulator_Uncertainty_dB}
     Lidar.lidar_inputs.dataframe['Optical circulator']=Final_Output_UQ_Optical_Circulator
-
+    
     return Final_Output_UQ_Optical_Circulator,Lidar.lidar_inputs.dataframe
 
 #%% TELESCOPE NOT IMPLEMENTED
@@ -223,7 +234,7 @@ def UQ_Telescope(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
      # Telescope_Losses =Lidar.optics.telescope.Mirror_losses
      UQ_telescope=[100]
      Final_Output_UQ_Telescope={'Telescope_Uncertainty':UQ_telescope}
-     Lidar.lidar_inputs.dataframe['Telescope']=Final_Output_UQ_Telescope
+     Lidar.lidar_inputs.dataframe['Telescope']=Final_Output_UQ_Telescope['Telescope_Uncertainty']
      return Final_Output_UQ_Telescope,Lidar.lidar_inputs.dataframe
 
 #%% probe volume:
@@ -234,7 +245,7 @@ def probe_volume(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
                                   (Lidar.photonics.laser.stdv_wavelength*4*(Lidar.optics.scanner.focus_dist)**2/Lidar.optics.telescope.aperture)**2+
                                   (Lidar.optics.telescope.stdv_aperture*4*Lidar.photonics.laser.Wavelength*(Lidar.optics.scanner.focus_dist)**2/Lidar.optics.telescope.aperture**2)**2)
         Final_Output_UQ_Probe_Volume={'Probe_Volume_Uncertainty':Probe_volume_Uncertainty}
-        Lidar.lidar_inputs.dataframe['Probe Volume']=Final_Output_UQ_Optical_Circulator
+        Lidar.lidar_inputs.dataframe['Probe Volume']=Final_Output_UQ_Optical_Circulator['Probe_Volume_Uncertainty']
 
     elif Lidar.lidar_inputs.LidarType=='Pulsed':
         x='pulsed'
@@ -261,8 +272,12 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     except:
         Optical_circulator_Uncertainty = None
         print('No optical circulator in calculations!')
+    # try:
+    #     'Probe volume'
+    # except:
+    #         pass
     Uncertainty_Optics_Module=SA.unc_comb(List_Unc_optics)
     Final_Output_UQ_Optics = {'Uncertainty_Optics':Uncertainty_Optics_Module,'Mean_error_PointingAccuracy':Scanner_Uncertainty['Simu_Mean_Distance'],'Stdv_PointingAccuracy':Scanner_Uncertainty['STDV_Distance']}
-    Lidar.lidar_inputs.dataframe['Optics Module']=Final_Output_UQ_Optics
+    Lidar.lidar_inputs.dataframe['Optics Module']=Final_Output_UQ_Optics['Uncertainty_Optics']
     return Final_Output_UQ_Optics,Lidar.lidar_inputs.dataframe
 
