@@ -9,7 +9,7 @@
 # DIRECTORIES:------------------------------------------------------
 
 Main_directory: '.' # Directory where Qlunc_Classes.py is
-Project: Test1 #Name of the project
+Project: Gandia #Name of the project
 
 # Lidar values. Modules and components parameters: ------------------------------------------------------
 
