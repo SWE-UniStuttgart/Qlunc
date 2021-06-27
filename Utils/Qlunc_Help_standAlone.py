@@ -14,7 +14,18 @@ import pdb
 flatten = lambda *n: (e for a in n for e in (flatten(*a) if isinstance(a, (list,tuple)) else (a,))) 
 
 #%% sum dB:
-
+def sum_mat(noisy_yaw,noisy_pitch, noisy_roll):
+    R=[]
+    for i in range(3):
+    # R.append([[np.cos(noisy_yaw)*np.cos(noisy_pitch) ,  np.cos(noisy_yaw)*np.sin(noisy_pitch)*np.sin(noisy_roll)-np.sin(noisy_yaw)*np.cos(noisy_roll) ,  np.cos(noisy_yaw)*np.sin(noisy_pitch)*np.cos(noisy_roll)+np.sin(noisy_yaw)*np.sin(noisy_roll)],
+    #            [np.sin(noisy_yaw)*np.cos(noisy_pitch)  ,  np.sin(noisy_yaw)*np.sin(noisy_pitch)*np.sin(noisy_roll)+np.cos(noisy_yaw)*np.cos(noisy_roll) ,  np.sin(noisy_yaw)*np.sin(noisy_pitch)*np.cos(noisy_roll)-np.cos(noisy_yaw)*np.sin(noisy_roll)],
+    #            [       -np.sin(noisy_pitch)           ,  np.cos(noisy_pitch)*np.sin(noisy_roll)                                                     ,  np.cos(noisy_pitch)*np.cos(noisy_roll)]])
+        R.append([[np.cos(noisy_yaw[i])*np.cos(noisy_pitch[i]) ,  np.cos(noisy_yaw[i])*np.sin(noisy_pitch[i])*np.sin(noisy_roll[i])-np.sin(noisy_yaw[i])*np.cos(noisy_roll[i]) ,  np.cos(noisy_yaw[i])*np.sin(noisy_pitch[i])*np.cos(noisy_roll[i])+np.sin(noisy_yaw[i])*np.sin(noisy_roll[i])],
+                  [np.sin(noisy_yaw[i])*np.cos(noisy_pitch[i])  ,  np.sin(noisy_yaw[i])*np.sin(noisy_pitch[i])*np.sin(noisy_roll[i])+np.cos(noisy_yaw[i])*np.cos(noisy_roll[i]) ,  np.sin(noisy_yaw[i])*np.sin(noisy_pitch[i])*np.cos(noisy_roll[i])-np.cos(noisy_yaw[i])*np.sin(noisy_roll[i])],
+                  [       -np.sin(noisy_pitch[i])           ,  np.cos(noisy_pitch[i])*np.sin(noisy_roll[i])                                                     ,  np.cos(noisy_pitch[i])*np.cos(noisy_roll[i])]])
+    R_mean=np.sum(R,axis=0)/len(noisy_yaw)
+    # pdb.set_trace()
+    return np.degrees(R_mean)
 def sum_dB(data,uncorrelated):
     """
     Add up dB's. Location: Qlunc_Help_standAlone.py

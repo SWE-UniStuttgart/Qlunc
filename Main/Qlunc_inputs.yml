@@ -18,7 +18,7 @@ Components:
   Scanner:
     
     Name: Scanner_Yaml # Provide an ID to your lidar:    
-    Origin: [0,0,60]  # Lidar position in meters: [x,y,z]    
+    Origin: [0,0,0]  # Lidar position in meters: [x,y,z]    
     Pattern: 'None' # 'lissajous', user defined pattern or 'None' in case none predefined pattern is used
     # Lissajous patterns:
     Lissajous parameters: [50,60,60,3,3] # [x_dim,y_dim,z_dim,q,p]
@@ -33,7 +33,7 @@ Components:
     # VAD Pattern:
     Focus distance: [20]   # [m]
     Cone angle: [30]       # [deg]
-    Azimuth: [0,360,360]     # [deg] [origin,end,steps]
+    Azimuth: [0,360,15]     # [deg] [origin,end,steps]
 
     # Scanning Lidar Pattern:
     x: [-40]
@@ -102,9 +102,9 @@ Components:
     Name: Lidar_gral_inputs_Yaml
     Type: CW # CW/Pulsed for continuous or pulsed lidars. The difference is that AOM (photonics module) is included in calculations when Pulsed
     Wavelength: 1550.e-9    # [m]
-    Yaw error: 9            # [deg]
-    Pitch error: 0         # [deg]
-    Roll error: 2          # [deg]
+    Yaw error: [9]        # [deg]
+    Pitch error: [0]         # [deg]
+    Roll error: [2]          # [deg]
 ---
 # Modules:
 Modules:
@@ -148,6 +148,6 @@ Atmospheric_inputs:
 # Plotting:------------------------------------------------------------
 Flags:
   Pointing accuracy uncertainty: False
-  Scanning Pattern: False
-  Photodetector noise: True
+  Scanning Pattern: True
+  Photodetector noise: False
   Save Scanning Coordinates: False
