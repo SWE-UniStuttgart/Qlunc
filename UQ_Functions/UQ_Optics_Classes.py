@@ -205,7 +205,7 @@ def UQ_OpticalCirculator(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     """   
     Optical_Circulator_losses = [np.array(Lidar.optics.optical_circulator.insertion_loss)]
-    
+    Pratio=10**(-Lidar.optics.optical_circulator.insertion_loss/10)# P_in/P_out
     #  if the insertion loss is expressed in % (X% losses):    
     #Optical_Circulator_losses = 10*np.log10(1-(X/100)) # output in dB
     
