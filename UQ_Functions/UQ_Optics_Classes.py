@@ -56,12 +56,17 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     sample_rate_count=0
                 
     # R: Implement error in deployment of the tripod as a rotation over yaw, pitch and roll
-    R=[[np.cos(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep)),  np.cos(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))-np.sin(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.roll_error_dep)),  np.cos(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))+np.sin(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))],
-      [np.sin(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep)),  np.sin(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))+np.cos(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.roll_error_dep)),  np.sin(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))-np.cos(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))],
-      [       -np.sin(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))                                             ,                      np.cos(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))                                                                                                                                            ,                                                                np.cos(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))]]
-    stdv_param1=Lidar.optics.scanner.stdv_focus_dist
-    stdv_param2=np.deg2rad(Lidar.optics.scanner.stdv_cone_angle)
-    stdv_param3=np.deg2rad(Lidar.optics.scanner.stdv_azimuth)
+    stdv_yaw    = np.array(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))
+    stdv_pitch  = np.array(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))
+    stdv_roll   = np.array(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))
+    
+    
+
+    
+    # stdv focus distance, cone angle and azimuth:
+    stdv_param1 = Lidar.optics.scanner.stdv_focus_dist    
+    stdv_param2 = np.deg2rad(Lidar.optics.scanner.stdv_cone_angle)
+    stdv_param3 = np.deg2rad(Lidar.optics.scanner.stdv_azimuth)
     
     # Differentiate between 'VAD' or 'Scanning' lidar depending on user's choice:
     if Qlunc_yaml_inputs['Components']['Scanner']['Type']=='VAD':
@@ -104,7 +109,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
                 param3.append((np.pi)+(np.arctan(y_init[ind]/x_init[ind])))            
             elif x_init[ind]==0:
                 param3.append(np.pi/2.0*(np.sign(y_init[ind])))
-   
+    # pdb.set_trace()
     for param1_or,param2_or,param3_or in zip(param1,param2,param3):# Take coordinates from inputs
         Mean_DISTANCE=[]
         DISTANCE=[]        
@@ -119,25 +124,40 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         X0.append(x0)
         Y0.append(y0)
         Z0.append(z0)
+        
         for trial in range(0,10):
             
             # Create white noise with stdv selected by user:
-            n=10000 # Number of cases to combine
+            n=10 # Number of cases to combine           
+            # Position, due to pointing accuracy
             del_param1 = np.array(np.random.normal(0,stdv_param1,n)) # why a normal distribution??Does it have sense, can be completely random?
             del_param2 = np.array(np.random.normal(0,stdv_param2,n))
-            del_param3 = np.array(np.random.normal(0,stdv_param3,n))
+            del_param3 = np.array(np.random.normal(0,stdv_param3,n))                        
             
             # Adding noise to the theoretical position:
             noisy_param1 = param1_or + del_param1
             noisy_param2 = param2_or + del_param2 
             noisy_param3 = param3_or + del_param3 
-            
-           
             # Coordinates of the noisy points:            
             x = noisy_param1*np.cos(noisy_param3)*np.sin(noisy_param2)
             y = noisy_param1*np.sin(noisy_param3)*np.sin(noisy_param2) 
             z = noisy_param1*np.cos(noisy_param2) + sample_rate_count
+            
             # Apply error in inclinometers   
+            # Rotation, due to inclinometers
+            del_yaw     = np.random.normal(0,stdv_yaw,n)
+            del_pitch   = np.random.normal(0,stdv_pitch,n)
+            del_roll    = np.random.normal(0,stdv_roll,n)
+            
+            # Adding noise to the inclinometer stdv
+            noisy_yaw   = stdv_yaw + del_yaw
+            noisy_pitch = stdv_pitch + del_pitch
+            noisy_roll  = stdv_roll + del_roll
+            # pdb.set_trace()
+            R = SA.sum_mat(noisy_yaw,noisy_pitch,noisy_roll)
+
+            # 
+                           
             xfinal = np.matmul(R,[x,y,z])[0] + Lidar.optics.scanner.origin[0] # Rotation
             yfinal = np.matmul(R,[x,y,z])[1] + Lidar.optics.scanner.origin[1]
             zfinal = np.matmul(R,[x,y,z])[2] + Lidar.optics.scanner.origin[2]
@@ -146,6 +166,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             DISTANCE.append(np.sqrt((xfinal-x0)**2+(yfinal-y0)**2+(zfinal-z0)**2))
             Mean_DISTANCE.append(np.mean(DISTANCE[trial]))    
             stdv_DISTANCE.append(np.std(DISTANCE[trial]))
+              
+            # pdb.set_trace()
+            # R=[]  
         
         sample_rate_count+=Lidar.optics.scanner.sample_rate    
         SimMean_DISTANCE.append(np.mean(Mean_DISTANCE))        # Mean error distance of each point in the pattern  
@@ -161,7 +184,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         coun+=1
     Noisy_Coord=[NoisyX,NoisyY,NoisyZ]
     Coord=[X0,Y0,Z0]
-
+    # pdb.set_trace()
     # Saving coordenates to a file in desktop
     # file=open('C:/Users/fcosta/Desktop/data_'+Qlunc_yaml_inputs['Components']['Scanner']['Type']+'.txt','w')
     # XX=repr(param1)
@@ -174,8 +197,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # file.write('\n'+Qlunc_yaml_inputs['Components']['Scanner']['Type'] +'\nParam1:'+XX+"\n"+'\nParam2:'+YY+"\n"+'\nParam3:'+ZZ+"\n")
     # file.close()   
         
-    Final_Output_UQ_Scanner={'Simu_Mean_Distance':SimMean_DISTANCE,'STDV_Distance':StdvMean_DISTANCE,'MeasPoint_Coordinates':Coord,'NoisyMeasPoint_Coordinates':Noisy_Coord}
-    Lidar.lidar_inputs.dataframe['Scanner']=Final_Output_UQ_Scanner['Simu_Mean_Distance']
+    Final_Output_UQ_Scanner                 = {'Simu_Mean_Distance':SimMean_DISTANCE,'STDV_Distance':StdvMean_DISTANCE,'MeasPoint_Coordinates':Coord,'NoisyMeasPoint_Coordinates':Noisy_Coord}
+    Lidar.lidar_inputs.dataframe['Scanner'] = ([np.mean(Final_Output_UQ_Scanner['Simu_Mean_Distance'])])*len(Atmospheric_Scenario.temperature)  
+    # pdb.set_trace()
     # Plotting
     QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,Qlunc_yaml_inputs['Flags']['Scanning Pattern'],False)
     return Final_Output_UQ_Scanner,Lidar.lidar_inputs.dataframe
