@@ -76,9 +76,7 @@ The following python libraries and tools should be installed beforehand and are 
 - sympy==1.7.1
 - xarray==0.15.1
 - xarray-extras==0.4.2
-- numba
-- dask
-- python==2.7
+- python==3.7.9
 - spyder==4.2.1
 - netcdf4
 - notebook
