@@ -68,36 +68,7 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     ########################################################################################################
     # Create Xarray to store data. Link with Mocalum and yaddum  ###########################################
     
-    DataXarray=Lidar.lidar_inputs.dataframe
-
-    if os.path.isfile('./Projects/' + Qlunc_yaml_inputs['Project']+ '.nc'):
-        # Read the new lidar data
-        names     = [Lidar.LidarID]
-        component = [i for i in DataXarray.keys()]
-        data      = [ii for ii in DataXarray.values()]
-        df_read   = xr.open_dataarray('./Projects/' + Qlunc_yaml_inputs['Project']+ '.nc')
-        pdb.set_trace()
-        # Creating the new Xarray:
-        dr = xr.DataArray(data,
-                          coords = [component,names],
-                          dims   = ('Components','Names'))
-        
-        # Concatenate data from different lidars
-        df = xr.concat([df_read,dr],dim='Names')
-        df_read.close()
-        os.remove('./Projects/' +  Qlunc_yaml_inputs['Project']+ '.nc')
-        df.to_netcdf('./Projects/'+ Qlunc_yaml_inputs['Project']+ '.nc','w')
-    else:        
-        names     = [Lidar.LidarID]
-        component = [i for i in DataXarray.keys()]
-        data      = [ii for ii in DataXarray.values()]
-        df = xr.DataArray(data,
-                          coords = [component,names],
-                          dims   = ('Components','Names'))
-        if not os.path.exists('./Projects'):
-            os.makedirs('./Projects')
-        
-        df.to_netcdf('./Projects/'+ Qlunc_yaml_inputs['Project']+ '.nc','w')
+    df=SA.to_netcdf(Lidar.lidar_inputs.dataframe,Qlunc_yaml_inputs,Lidar)
 
     ########################################################################################################
     ########################################################################################################
