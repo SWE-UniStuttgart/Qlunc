@@ -182,7 +182,26 @@ def UQ_Laser(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     list
     
     """ 
-    UQ_Laser =np.array([( Lidar.photonics.laser.stdv_wavelength/Lidar.photonics.laser.Wavelength)*100 ])# 'Error in % because of the laser wavelength stdv
+    # STDV of the laser due to the wavelength error and the confidence interval, assuming a normal distribution. "JCGM 100:2008 GUM 1995 with minor changes", Anxex G, Table G1
+
+        
+    if Lidar.photonics.laser.conf_int==1:
+        u_fact = 1
+    elif Lidar.photonics.laser.conf_int==2:
+        u_fact = 1.645
+    elif Lidar.photonics.laser.conf_int==3:
+        u_fact = 1.96
+    elif Lidar.photonics.laser.conf_int==4:
+        u_fact = 2
+    elif Lidar.photonics.laser.conf_int==5:
+        u_fact = 2.576
+    elif Lidar.photonics.laser.conf_int==6:
+        u_fact = 3        
+        
+    # UQ_Laser = np.array([( Lidar.photonics.laser.stdv_wavelength/u_fact)])    
+    UQ_Laser = 10*np.log10(10**(Lidar.photonics.laser.RIN/10)*Lidar.photonics.laser.BandWidth*Lidar.photonics.laser.Output_power)
+    
+    
     Final_Output_UQ_Laser = {'Uncertainty_Laser':UQ_Laser}
     # pdb.set_trace()
     Lidar.lidar_inputs.dataframe['Laser'] = Final_Output_UQ_Laser['Uncertainty_Laser']
@@ -237,11 +256,13 @@ def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     try:
         # pdb.set_trace()
         Laser_Uncertainty,DataFrame = Lidar.photonics.laser.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
-        # List_Unc_photonics.append(Laser_Uncertainty['Uncertainty_Laser'])
+        List_Unc_photonics.append(Laser_Uncertainty['Uncertainty_Laser'])
         
     except:
         Laser_Uncertainty=None
         print('No laser in calculations!')
+    
+    pdb.set_trace()
     Uncertainty_Photonics_Module                     = SA.unc_comb(List_Unc_photonics)
     Final_Output_UQ_Photonics                        = {'Uncertainty_Photonics':Uncertainty_Photonics_Module}
     Lidar.lidar_inputs.dataframe['Photonics Module'] = Final_Output_UQ_Photonics['Uncertainty_Photonics'][0]
