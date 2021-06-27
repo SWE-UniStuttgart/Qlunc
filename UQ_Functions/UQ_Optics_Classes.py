@@ -110,7 +110,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             elif x_init[ind]==0:
                 param3.append(np.pi/2.0*(np.sign(y_init[ind])))
     # pdb.set_trace()
-    for param1_or,param2_or,param3_or,stdv_yaw_or,stdv_pitch_or, stdv_roll_or in zip(param1,param2,param3,stdv_yaw,stdv_pitch,stdv_roll):# Take coordinates from inputs
+    for param1_or,param2_or,param3_or in zip(param1,param2,param3):# Take coordinates from inputs
         Mean_DISTANCE=[]
         DISTANCE=[]        
         stdv_DISTANCE=[]  
@@ -124,7 +124,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         X0.append(x0)
         Y0.append(y0)
         Z0.append(z0)
-        # ind_incl = 0 
+        
         for trial in range(0,10):
             
             # Create white noise with stdv selected by user:
@@ -154,7 +154,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             # pdb.set_trace()
             R = SA.sum_mat(noisy_yaw,noisy_pitch,noisy_roll)
 
-            # pdb.set_trace()
+            # 
                            
             xfinal = np.matmul(R,[x,y,z])[0] + Lidar.optics.scanner.origin[0] # Rotation
             yfinal = np.matmul(R,[x,y,z])[1] + Lidar.optics.scanner.origin[1]
@@ -164,9 +164,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             DISTANCE.append(np.sqrt((xfinal-x0)**2+(yfinal-y0)**2+(zfinal-z0)**2))
             Mean_DISTANCE.append(np.mean(DISTANCE[trial]))    
             stdv_DISTANCE.append(np.std(DISTANCE[trial]))
-            # ind_incl =+ 1     
-
-        
+              
+            # pdb.set_trace()
+            R=[]  
         
         sample_rate_count+=Lidar.optics.scanner.sample_rate    
         SimMean_DISTANCE.append(np.mean(Mean_DISTANCE))        # Mean error distance of each point in the pattern  
