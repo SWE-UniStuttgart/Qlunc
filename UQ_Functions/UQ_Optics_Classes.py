@@ -128,7 +128,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         for trial in range(0,10):
             
             # Create white noise with stdv selected by user:
-            n=100 # Number of cases to combine           
+            n=10 # Number of cases to combine           
             # Position, due to pointing accuracy
             del_param1 = np.array(np.random.normal(0,stdv_param1,n)) # why a normal distribution??Does it have sense, can be completely random?
             del_param2 = np.array(np.random.normal(0,stdv_param2,n))
@@ -145,12 +145,14 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             
             # Apply error in inclinometers   
             # Rotation, due to inclinometers
-            del_yaw   = np.random.normal(0,stdv_yaw,n)
-            del_pitch = np.random.normal(0,stdv_pitch,n)
-            del_roll  = np.random.normal(0,stdv_roll,n)
-            noisy_yaw = stdv_yaw + del_yaw
+            del_yaw     = np.random.normal(0,stdv_yaw,n)
+            del_pitch   = np.random.normal(0,stdv_pitch,n)
+            del_roll    = np.random.normal(0,stdv_roll,n)
+            
+            # Adding noise to the inclinometer stdv
+            noisy_yaw   = stdv_yaw + del_yaw
             noisy_pitch = stdv_pitch + del_pitch
-            noisy_roll = stdv_roll + del_roll
+            noisy_roll  = stdv_roll + del_roll
             # pdb.set_trace()
             R = SA.sum_mat(noisy_yaw,noisy_pitch,noisy_roll)
 
@@ -166,7 +168,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             stdv_DISTANCE.append(np.std(DISTANCE[trial]))
               
             # pdb.set_trace()
-            R=[]  
+            # R=[]  
         
         sample_rate_count+=Lidar.optics.scanner.sample_rate    
         SimMean_DISTANCE.append(np.mean(Mean_DISTANCE))        # Mean error distance of each point in the pattern  
@@ -182,7 +184,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         coun+=1
     Noisy_Coord=[NoisyX,NoisyY,NoisyZ]
     Coord=[X0,Y0,Z0]
-
+    # pdb.set_trace()
     # Saving coordenates to a file in desktop
     # file=open('C:/Users/fcosta/Desktop/data_'+Qlunc_yaml_inputs['Components']['Scanner']['Type']+'.txt','w')
     # XX=repr(param1)
@@ -195,8 +197,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # file.write('\n'+Qlunc_yaml_inputs['Components']['Scanner']['Type'] +'\nParam1:'+XX+"\n"+'\nParam2:'+YY+"\n"+'\nParam3:'+ZZ+"\n")
     # file.close()   
         
-    Final_Output_UQ_Scanner={'Simu_Mean_Distance':SimMean_DISTANCE,'STDV_Distance':StdvMean_DISTANCE,'MeasPoint_Coordinates':Coord,'NoisyMeasPoint_Coordinates':Noisy_Coord}
-    Lidar.lidar_inputs.dataframe['Scanner']=Final_Output_UQ_Scanner['Simu_Mean_Distance']
+    Final_Output_UQ_Scanner                 = {'Simu_Mean_Distance':SimMean_DISTANCE,'STDV_Distance':StdvMean_DISTANCE,'MeasPoint_Coordinates':Coord,'NoisyMeasPoint_Coordinates':Noisy_Coord}
+    Lidar.lidar_inputs.dataframe['Scanner'] = ([np.mean(Final_Output_UQ_Scanner['Simu_Mean_Distance'])])*len(Atmospheric_Scenario.temperature)  
+    pdb.set_trace()
     # Plotting
     QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,Qlunc_yaml_inputs['Flags']['Scanning Pattern'],False)
     return Final_Output_UQ_Scanner,Lidar.lidar_inputs.dataframe
