@@ -9,7 +9,7 @@
 # DIRECTORIES:------------------------------------------------------
 
 Main_directory: '.' # Directory where Qlunc_Classes.py is
-Project: Gandia #Name of the project
+Project: Gandia # Name of the project. A .nc file is created in the folder "Projects" to save the lidar object and its characteristics. Aimed to link with mocalum/yaddum
 
 # Lidar values. Modules and components parameters: ------------------------------------------------------
 
@@ -74,10 +74,10 @@ Components:
   Photodetector:
     Name: Photodetector_YAML
     Photodetector BandWidth: 1.e+9    # [Hz]            
-    Load resistor: 500                   # [Ohm]
-    Photodetector efficiency: .085       # Photodetector efficiency [-]
+    Load resistor: 50                  # [Ohm]
+    Photodetector efficiency: .85       # Photodetector efficiency [-]
     Dark current: 5.e-9                 # In [A]. Dark current in the photodetector.
-    Photodetector signalP: 1.e-6        # [W]
+    Photodetector signalP: 1.5e-3        # [W]
     Power interval: [0,1000,.001]       # [mW]
     Gain TIA: 5.e+3                     # [dB] Value or 'None' if no TIA in the photodetector
     V Noise TIA:  None # 160.e-6 #             # [V] Value or 'None' if no TIA in the photodetector
@@ -87,7 +87,10 @@ Components:
     Name: Laser_YAML
     Wavelength: 1550.e-9    # [m]
     Stdv Wavelength: 1.e-9 #[m]
-    Output power: 1.e-6 #[w]
+    Confidence interval: 3 # 1 => confidence interval= 68.27%, 2 => confidence interval= 90%, 3=> confidence interval= 95% 4=> confidence interval = 95.45%, 5 => confidence interval= 99%, 6=> confidence interval= 99.73%
+    Output power: 1.5e-3 #[w]
+    Bandwidth: 250 # Hz
+    RIN: -165 # dBc/Hz
     Uncertainty function: uphc.UQ_Laser
 
   AOM:
@@ -146,5 +149,5 @@ Atmospheric_inputs:
 Flags:
   Pointing accuracy uncertainty: False
   Scanning Pattern: False
-  Photodetector noise: False
+  Photodetector noise: True
   Save Scanning Coordinates: False
