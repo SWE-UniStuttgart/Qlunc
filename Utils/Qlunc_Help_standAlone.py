@@ -178,10 +178,9 @@ def to_netcdf(DataXarray,Qlunc_yaml_inputs,Lidar):
                           coords = [component,names],
                           dims   = ('Components','Names'))
         if not os.path.exists('./Projects'):
-            os.makedirs('./Projects')
-        
+            os.makedirs('./Projects')       
         df.to_netcdf('./Projects/'+ Qlunc_yaml_inputs['Project']+ '.nc','w')
         return df
         
         # READ netcdf FILE.
-        # da=xr.open_dataarray('C:/Users/fcosta/SWE_LOCAL/GIT_Qlunc/Projects/' + 'Test.nc')
+        # da=xr.open_dataarray('C:/Users/fcosta/SWE_LOCAL/GIT_Qlunc/Projects/' + 'Gandia.nc')
