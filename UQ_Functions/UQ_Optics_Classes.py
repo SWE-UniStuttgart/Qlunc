@@ -56,12 +56,19 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     sample_rate_count=0
                 
     # R: Implement error in deployment of the tripod as a rotation over yaw, pitch and roll
-    R=[[np.cos(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep)),  np.cos(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))-np.sin(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.roll_error_dep)),  np.cos(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))+np.sin(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))],
-      [np.sin(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep)),  np.sin(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))+np.cos(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.roll_error_dep)),  np.sin(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))-np.cos(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))],
-      [       -np.sin(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))                                             ,                      np.cos(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))*np.sin(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))                                                                                                                                            ,                                                                np.cos(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))*np.cos(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))]]
-    stdv_param1=Lidar.optics.scanner.stdv_focus_dist
-    stdv_param2=np.deg2rad(Lidar.optics.scanner.stdv_cone_angle)
-    stdv_param3=np.deg2rad(Lidar.optics.scanner.stdv_azimuth)
+    stdv_yaw    = np.deg2rad(Lidar.lidar_inputs.yaw_error_dep)
+    stdv_pitch  = np.deg2rad(Lidar.lidar_inputs.pitch_error_dep)
+    stdv_roll   = np.deg2rad(Lidar.lidar_inputs.roll_error_dep)
+    
+    R=[[np.cos(stdv_yaw)*np.cos(stdv_pitch) ,  np.cos(stdv_yaw)*np.sin(stdv_pitch)*np.sin(stdv_roll)-np.sin(stdv_yaw)*np.cos(stdv_roll) ,  np.cos(stdv_yaw)*np.sin(stdv_pitch)*np.cos(stdv_roll)+np.sin(stdv_yaw)*np.sin(stdv_roll)],
+      [np.sin(stdv_yaw)*np.cos(stdv_pitch)  ,  np.sin(stdv_yaw)*np.sin(stdv_pitch)*np.sin(stdv_roll)+np.cos(stdv_yaw)*np.cos(stdv_roll) ,  np.sin(stdv_yaw)*np.sin(stdv_pitch)*np.cos(stdv_roll)-np.cos(stdv_yaw)*np.sin(stdv_roll)],
+      [       -np.sin(stdv_pitch)           ,  np.cos(stdv_pitch)*np.sin(stdv_roll)                                                     ,  np.cos(stdv_pitch)*np.cos(stdv_roll)]]
+    
+    
+    
+    stdv_param1 = Lidar.optics.scanner.stdv_focus_dist    
+    stdv_param2 = np.deg2rad(Lidar.optics.scanner.stdv_cone_angle)
+    stdv_param3 = np.deg2rad(Lidar.optics.scanner.stdv_azimuth)
     
     # Differentiate between 'VAD' or 'Scanning' lidar depending on user's choice:
     if Qlunc_yaml_inputs['Components']['Scanner']['Type']=='VAD':
@@ -219,8 +226,8 @@ def UQ_OpticalCirculator(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     Optical_Circulator_Uncertainty = [Qlunc_yaml_inputs['Components']['Laser']['Output power']/(10**(Lidar.optics.optical_circulator.SNR/10))]
     Optical_Circulator_Uncertainty_dB = 10*np.log10(Optical_Circulator_Uncertainty_w)
     Final_Output_UQ_Optical_Circulator={'Optical_Circulator_Uncertainty':Optical_Circulator_Uncertainty_dB}
-    Lidar.lidar_inputs.dataframe['Optical circulator']=Final_Output_UQ_Optical_Circulator
-    
+    # Lidar.lidar_inputs.dataframe['Optical circulator']=Final_Output_UQ_Optical_Circulator
+    Lidar.lidar_inputs.dataframe['Optical circulator']=Final_Output_UQ_Optical_Circula
     return Final_Output_UQ_Optical_Circulator,Lidar.lidar_inputs.dataframe
 
 #%% TELESCOPE NOT IMPLEMENTED
