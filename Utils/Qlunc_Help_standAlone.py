@@ -13,19 +13,34 @@ import pdb
 #%%# used to flatt at some points along the code:
 flatten = lambda *n: (e for a in n for e in (flatten(*a) if isinstance(a, (list,tuple)) else (a,))) 
 
-#%% sum dB:
+
+
+#%% Rotation matrix for inclinometers in scanner    
 def sum_mat(noisy_yaw,noisy_pitch, noisy_roll):
+    """
+    Calculates the rotation matrix to apply uncertainty due to inclinometers deployment. Location: Qlunc_Help_standAlone.py
+    
+    Parameters
+    ----------
+    
+    * Noisy_yaw, noisy_pitch, noisy_roll
+        Errors in yaw, pitch and roll
+        
+        
+    Returns
+    -------
+    
+    Mean of the matrix after MonteCarlo simulation
+    """
     R=[]
-    for i in range(len(noisy_yaw)):
-    # R.append([[np.cos(noisy_yaw)*np.cos(noisy_pitch) ,  np.cos(noisy_yaw)*np.sin(noisy_pitch)*np.sin(noisy_roll)-np.sin(noisy_yaw)*np.cos(noisy_roll) ,  np.cos(noisy_yaw)*np.sin(noisy_pitch)*np.cos(noisy_roll)+np.sin(noisy_yaw)*np.sin(noisy_roll)],
-    #            [np.sin(noisy_yaw)*np.cos(noisy_pitch)  ,  np.sin(noisy_yaw)*np.sin(noisy_pitch)*np.sin(noisy_roll)+np.cos(noisy_yaw)*np.cos(noisy_roll) ,  np.sin(noisy_yaw)*np.sin(noisy_pitch)*np.cos(noisy_roll)-np.cos(noisy_yaw)*np.sin(noisy_roll)],
-    #            [       -np.sin(noisy_pitch)           ,  np.cos(noisy_pitch)*np.sin(noisy_roll)                                                     ,  np.cos(noisy_pitch)*np.cos(noisy_roll)]])
-        R.append([[np.cos(noisy_yaw[i])*np.cos(noisy_pitch[i]) ,  np.cos(noisy_yaw[i])*np.sin(noisy_pitch[i])*np.sin(noisy_roll[i])-np.sin(noisy_yaw[i])*np.cos(noisy_roll[i]) ,  np.cos(noisy_yaw[i])*np.sin(noisy_pitch[i])*np.cos(noisy_roll[i])+np.sin(noisy_yaw[i])*np.sin(noisy_roll[i])],
-                  [np.sin(noisy_yaw[i])*np.cos(noisy_pitch[i])  ,  np.sin(noisy_yaw[i])*np.sin(noisy_pitch[i])*np.sin(noisy_roll[i])+np.cos(noisy_yaw[i])*np.cos(noisy_roll[i]) ,  np.sin(noisy_yaw[i])*np.sin(noisy_pitch[i])*np.cos(noisy_roll[i])-np.cos(noisy_yaw[i])*np.sin(noisy_roll[i])],
-                  [       -np.sin(noisy_pitch[i])           ,  np.cos(noisy_pitch[i])*np.sin(noisy_roll[i])                                                     ,  np.cos(noisy_pitch[i])*np.cos(noisy_roll[i])]])
+    for i in range(len(noisy_yaw)):    
+        R.append([[np.cos(noisy_yaw[i])*np.cos(noisy_pitch[i])  ,  np.cos(noisy_yaw[i])*np.sin(noisy_pitch[i])*np.sin(noisy_roll[i])-np.sin(noisy_yaw[i])*np.cos(noisy_roll[i])  ,  np.cos(noisy_yaw[i])*np.sin(noisy_pitch[i])*np.cos(noisy_roll[i])+np.sin(noisy_yaw[i])*np.sin(noisy_roll[i])],
+                  [np.sin(noisy_yaw[i])*np.cos(noisy_pitch[i])  ,  np.sin(noisy_yaw[i])*np.sin(noisy_pitch[i])*np.sin(noisy_roll[i])+np.cos(noisy_yaw[i])*np.cos(noisy_roll[i])  ,  np.sin(noisy_yaw[i])*np.sin(noisy_pitch[i])*np.cos(noisy_roll[i])-np.cos(noisy_yaw[i])*np.sin(noisy_roll[i])],
+                  [       -np.sin(noisy_pitch[i])               ,  np.cos(noisy_pitch[i])*np.sin(noisy_roll[i])                                                                  ,  np.cos(noisy_pitch[i])*np.cos(noisy_roll[i])]])
     R_mean=np.sum(R,axis=0)/len(noisy_yaw)
-    # pdb.set_trace()
     return R_mean
+
+#%% sum dB:
 def sum_dB(data,uncorrelated):
     """
     Add up dB's. Location: Qlunc_Help_standAlone.py
@@ -116,4 +131,57 @@ def sph2cart(Lidar):
         z=Lidar.optics.scanner.focus_dist[i]*np.cos(np.deg2rad(Lidar.optics.scanner.theta)) 
     return(x,y,z)
 
-   
+#%% NDF function
+
+def to_netcdf(DataXarray,Qlunc_yaml_inputs,Lidar):
+    #DataXarray=Lidar.lidar_inputs.dataframe
+    """
+    Save the project to an netndf file - Location: Qlunc_Help_standAlone.py
+    
+    Parameters
+    ----------
+    
+    * DataXarray
+        Data frame containing uncertainties of the lidar. The name of the project is specify in the input yaml file.
+        Change the name to create a different project. Otherwise the data is appended to the existing file. To read the 
+        netndf file:
+            xr.open_dataarray('C:/Users/fcosta/SWE_LOCAL/GIT_Qlunc/Projects/' + '<name_of_the_project>.nc')
+        
+    Returns
+    -------
+    
+    .netndf file
+    
+    """
+    if os.path.isfile('./Projects/' + Qlunc_yaml_inputs['Project']+ '.nc'):
+        # Read the new lidar data
+        names     = [Lidar.LidarID]
+        component = [i for i in DataXarray.keys()]
+        data      = [ii for ii in DataXarray.values()]
+        df_read   = xr.open_dataarray('./Projects/' + Qlunc_yaml_inputs['Project']+ '.nc')
+        # pdb.set_trace()
+        # Creating the new Xarray:
+        dr = xr.DataArray(data,
+                          coords = [component,names],
+                          dims   = ('Components','Names'))
+        
+        # Concatenate data from different lidars
+        df = xr.concat([df_read,dr],dim='Names')
+        df_read.close()
+        os.remove('./Projects/' +  Qlunc_yaml_inputs['Project']+ '.nc')
+        df.to_netcdf('./Projects/'+ Qlunc_yaml_inputs['Project']+ '.nc','w')
+    else:        
+        names     = [Lidar.LidarID]
+        component = [i for i in DataXarray.keys()]
+        data      = [ii for ii in DataXarray.values()]
+        df = xr.DataArray(data,
+                          coords = [component,names],
+                          dims   = ('Components','Names'))
+        if not os.path.exists('./Projects'):
+            os.makedirs('./Projects')
+        
+        df.to_netcdf('./Projects/'+ Qlunc_yaml_inputs['Project']+ '.nc','w')
+        return df
+        
+        # READ netcdf FILE.
+        # da=xr.open_dataarray('C:/Users/fcosta/SWE_LOCAL/GIT_Qlunc/Projects/' + 'Test.nc')
