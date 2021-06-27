@@ -148,6 +148,6 @@ Atmospheric_inputs:
 # Plotting:------------------------------------------------------------
 Flags:
   Pointing accuracy uncertainty: False
-  Scanning Pattern: False
+  Scanning Pattern: True
   Photodetector noise: True
   Save Scanning Coordinates: False
