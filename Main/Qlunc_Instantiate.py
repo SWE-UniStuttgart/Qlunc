@@ -115,11 +115,14 @@ Photodetector    = photodetector(name             = Qlunc_yaml_inputs['Component
                                  V_Noise_TIA      = Qlunc_yaml_inputs['Components']['Photodetector']['V Noise TIA'],                 # In [V]. If there is a transimpedance amplifier.
                                  unc_func         = uphc.UQ_Photodetector) #eval(Qlunc_yaml_inputs['Components']['Photodetector']['Uncertainty function']))  # Function describing Photodetector uncertainty. Further informaion in "UQ_Photonics_Classes.py" comments.
 
-Laser           = laser(name         = Qlunc_yaml_inputs['Components']['Laser']['Name'],
-                        Wavelength   = Qlunc_yaml_inputs['Components']['Laser']['Wavelength'],
+Laser           = laser(name              = Qlunc_yaml_inputs['Components']['Laser']['Name'],
+                        Wavelength        = Qlunc_yaml_inputs['Components']['Laser']['Wavelength'],
                         stdv_wavelength   = Qlunc_yaml_inputs['Components']['Laser']['Stdv Wavelength'],
-                        Output_power = Qlunc_yaml_inputs['Components']['Laser']['Output power'],
-                        unc_func     = uphc.UQ_Laser)
+                        conf_int          = Qlunc_yaml_inputs['Components']['Laser']['Confidence interval'],
+                        Output_power      = Qlunc_yaml_inputs['Components']['Laser']['Output power'],
+                        Laser_Bandwidth   = Qlunc_yaml_inputs['Components']['Laser']['Bandwidth'],
+                        RIN               = Qlunc_yaml_inputs['Components']['Laser']['RIN'],
+                        unc_func          = uphc.UQ_Laser)
 # Module:
 Photonics_Module = photonics(name                    = Qlunc_yaml_inputs['Modules']['Photonics Module']['Name'],        # Introduce your Photonics module name
                              photodetector           = Photodetector, #eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['Photodetector']),             # Photodetector instance (in this example "Photodetector") or "None". "None" means that you don´t want to include photodetector in Photonics Module, either in uncertainty calculations.
