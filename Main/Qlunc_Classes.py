@@ -139,11 +139,14 @@ class power_source(): # Not included yet in Version Qlunc v-0.9 calculations
                  print('Created new power source: {}'.format(self.Power_SourceID))
 
 class laser(): # Not included yet in Version Qlunc v-0.9 calculations
-    def __init__(self,name,Wavelength,stdv_wavelength,Output_power,unc_func):
+    def __init__(self,name,Wavelength,stdv_wavelength,Laser_Bandwidth,Output_power,unc_func,RIN,conf_int):
                  self.LaserID         = name
                  self.Wavelength      = Wavelength
                  self.stdv_wavelength = stdv_wavelength
+                 self.BandWidth       = Laser_Bandwidth
+                 self.conf_int     = conf_int
                  self.Output_power    = Output_power
+                 self.RIN             = RIN
                  self.Uncertainty     = unc_func
                  print('Created new laser: {}'.format(self.LaserID))        
 
