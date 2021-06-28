@@ -61,14 +61,17 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         Power_Uncertainty = None
         print('No power module in calculations!')
     print('Processing lidar uncertainties...')
-    Uncertainty_Lidar                     = SA.unc_comb(List_Unc_lidar)
+    Uncertainty_Lidar                     = SA.unc_comb(List_Unc_lidar)[0]
+    # pdb.set_trace()
     Final_Output_Lidar_Uncertainty        = {'Lidar_Uncertainty':Uncertainty_Lidar}    
-    Lidar.lidar_inputs.dataframe['Lidar'] = Final_Output_Lidar_Uncertainty['Lidar_Uncertainty']
+    Lidar.lidar_inputs.dataframe['Lidar'] = Final_Output_Lidar_Uncertainty['Lidar_Uncertainty']*np.linspace(1,1,len(Atmospheric_Scenario.temperature))
     
+    # Include time in the dataframe:
+    # Lidar.lidar_inputs.dataframe['Time']=Atmospheric_Scenario.time
     ########################################################################################################
     # Create Xarray to store data. Link with Mocalum and yaddum  ###########################################
     
-    df=SA.to_netcdf(Lidar.lidar_inputs.dataframe,Qlunc_yaml_inputs,Lidar)
+    df=SA.to_netcdf(Lidar.lidar_inputs.dataframe,Qlunc_yaml_inputs,Lidar,Atmospheric_Scenario)
 
     ########################################################################################################
     ########################################################################################################
