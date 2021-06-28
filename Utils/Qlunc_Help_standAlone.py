@@ -133,7 +133,7 @@ def sph2cart(Lidar):
 
 #%% NDF function
 
-def to_netcdf(DataXarray,Qlunc_yaml_inputs,Lidar):
+def to_netcdf(DataXarray,Qlunc_yaml_inputs,Lidar,Atmospheric_Scenario):
     #DataXarray=Lidar.lidar_inputs.dataframe
     """
     Save the project to an netndf file - Location: Qlunc_Help_standAlone.py
@@ -155,11 +155,14 @@ def to_netcdf(DataXarray,Qlunc_yaml_inputs,Lidar):
     """
     if os.path.isfile('./Projects/' + Qlunc_yaml_inputs['Project']+ '.nc'):
         # Read the new lidar data
+        Lidar.lidar_inputs.dataframe['Lidar']
+        pdb.set_trace()
+        # time      = Atmospheric_Scenario.time 
         names     = [Lidar.LidarID]
         component = [i for i in DataXarray.keys()]
         data      = [ii for ii in DataXarray.values()]
         df_read   = xr.open_dataarray('./Projects/' + Qlunc_yaml_inputs['Project']+ '.nc')
-        # pdb.set_trace()
+        
         # Creating the new Xarray:
         dr = xr.DataArray(data,
                           coords = [component,names],
@@ -170,10 +173,13 @@ def to_netcdf(DataXarray,Qlunc_yaml_inputs,Lidar):
         df_read.close()
         os.remove('./Projects/' +  Qlunc_yaml_inputs['Project']+ '.nc')
         df.to_netcdf('./Projects/'+ Qlunc_yaml_inputs['Project']+ '.nc','w')
-    else:        
+    else:
+                
         names     = [Lidar.LidarID]
         component = [i for i in DataXarray.keys()]
-        data      = [ii for ii in DataXarray.values()]
+        # time      = [Atmospheric_Scenario.time ]
+        data      =[ii for ii in DataXarray.values()]
+        # pdb.set_trace()
         df = xr.DataArray(data,
                           coords = [component,names],
                           dims   = ('Components','Names'))
