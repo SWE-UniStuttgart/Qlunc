@@ -86,9 +86,10 @@ The following python libraries and tools should be installed beforehand and are 
 [Francisco Costa](https://www.ifb.uni-stuttgart.de/en/institute/team/Costa-Garcia/)
 
 ## Contributions:
+Contributions are very welcome!
 If you are wishing to:
 - Colaborate: please contact the author
-- Report issues: follow [Github guidelines to report code issues](https://docs.github.com/en/issues/tracking-your-work-with-issues/quickstart)
+- Report issues: follow [Github guidelines to report code issues](https://docs.github.com/en/issues/tracking-your-work-with-issues/quickstart) or make a [pull request](https://docs.github.com/en/github/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request)
 - Seek for support: please contact the author
 ## License
 `Qlunc` is licensed under **[SD 3-Clause License](https://github.com/SWE-UniStuttgart/Qlunc/blob/main/LICENSE)**
