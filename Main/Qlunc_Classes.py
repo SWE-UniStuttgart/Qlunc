@@ -229,9 +229,10 @@ class optics():
         
 #%% Atmosphere object:
 class atmosphere():
-    def __init__(self,name,temperature):
+    def __init__(self,name,temperature,time):
                  self.AtmosphereID = name
                  self.temperature  = temperature
+                 self.time         = time
                  print('Created new atmosphere: {}'.format(self.AtmosphereID))
 
 
