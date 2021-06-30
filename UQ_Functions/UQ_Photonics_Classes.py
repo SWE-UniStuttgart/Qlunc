@@ -56,8 +56,8 @@ def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     UQ_Photodetector.TIA_noise          = []
     
     R = Lidar.photonics.photodetector.Efficiency*cts.e*Lidar.lidar_inputs.Wavelength/(cts.h*cts.c)  #[A/W]  Responsivity
-    # UQ_Photodetector.Responsivity = (R) # this notation allows me to get Responsivity from outside of the function 
-    
+    UQ_Photodetector.Responsivity = (R) # this notation allows me to get Responsivity from outside of the function 
+    # pdb.set_trace()
     # SNR calculations:
     # SNR in watts
     UQ_Photodetector.SNR_thermal_w      = [((R**2)/(4*cts.k*Atmospheric_Scenario.temperature[0]*Lidar.photonics.photodetector.BandWidth/Lidar.photonics.photodetector.Load_Resistor))*(Lidar.photonics.photodetector.Power_interval/1000)**2]
@@ -105,7 +105,7 @@ def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     UQ_Photodetector.UQ_Photo_total=list(SA.flatten(UQ_Photodetector.UQ_Photo))
     Final_Output_UQ_Photo={'Uncertainty_Photodetector':UQ_Photodetector.UQ_Photo_total,'SNR_data_photodetector':SNR_data}      
     Lidar.lidar_inputs.dataframe['Photodetector']=Final_Output_UQ_Photo['Uncertainty_Photodetector'][0]
-    # pdb.set_trace()
+    pdb.set_trace()
     # Plotting:
     QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Photo,False,Qlunc_yaml_inputs['Flags']['Photodetector noise'])
     return Final_Output_UQ_Photo,Lidar.lidar_inputs.dataframe
