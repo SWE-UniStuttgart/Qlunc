@@ -78,16 +78,20 @@ Optical_circulator = optical_circulator (name           = Qlunc_yaml_inputs['Com
                                          unc_func       = uopc.UQ_OpticalCirculator) #eval(Qlunc_yaml_inputs['Components']['Optical Circulator']['Uncertainty function']))  # Function describing your scanner uncertainty.  Further informaion in "UQ_Optics_Classes.py" comments.
 
 
-Telescope = telescope (name     = Qlunc_yaml_inputs['Components']['Telescope']['Name'],
+Telescope = telescope (name          = Qlunc_yaml_inputs['Components']['Telescope']['Name'],
                        stdv_aperture = Qlunc_yaml_inputs['Components']['Telescope']['Stdv Aperture'],
-                       aperture = Qlunc_yaml_inputs['Components']['Telescope']['Aperture'],
-                       unc_func = uopc.UQ_Telescope)
+                       aperture      = Qlunc_yaml_inputs['Components']['Telescope']['Aperture'],
+                       unc_func      = uopc.UQ_Telescope)
+
+Probe_Volume = probe_volume (unc_func= uopc.UQ_probe_volume)
+
 
 # Optics Module:
 Optics_Module =  optics (name               = Qlunc_yaml_inputs['Modules']['Optics Module']['Name'],     # Introduce your Optics Module name.
                          scanner            = Scanner, #eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Scanner']),             # Scanner instance (in this example "Scanner") or "None". "None" means that you don´t want to include Scanner in Optics Module, either in uncertainty calculations.
                          optical_circulator = Optical_circulator ,#eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Optical circulator']),  # Optical Circulator instance (in this example "Optical_circulator") or "None". "None" means that you don´t want to include Optical circulator in Optics Module, either in uncertainty calculations.
                          telescope          = Telescope,
+                         probe_volume       = Probe_Volume,
                          unc_func           = uopc.sum_unc_optics) #eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Uncertainty function']))
 
 
