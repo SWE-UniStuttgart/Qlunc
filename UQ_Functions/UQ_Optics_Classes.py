@@ -128,7 +128,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         for trial in range(0,10):
             
             # Create white noise with stdv selected by user:
-            n=10 # Number of cases to combine           
+            n=100 # Number of cases to combine           
             # Position, due to pointing accuracy
             del_param1 = np.array(np.random.normal(0,stdv_param1,n)) # why a normal distribution??Does it have sense, can be completely random?
             del_param2 = np.array(np.random.normal(0,stdv_param2,n))
@@ -262,18 +262,18 @@ def UQ_Telescope(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
      return Final_Output_UQ_Telescope,Lidar.lidar_inputs.dataframe
 
 #%% probe volume:
-def probe_volume(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
+def UQ_probe_volume(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     if Lidar.lidar_inputs.LidarType=='CW':
         # delta_r=(4*Lidar.optics.scanner.focus_dist**2*Lidar.photonics.laser.Wavelength/Lidar.optics.telescope.Aperture)
         Probe_volume_Uncertainty=np.sqrt((Lidar.optics.scanner.stdv_focus_dist*8*Lidar.optics.scanner.focus_dist*Lidar.photonics.laser.Wavelength/Lidar.optics.telescope.aperture)**2+
                                   (Lidar.photonics.laser.stdv_wavelength*4*(Lidar.optics.scanner.focus_dist)**2/Lidar.optics.telescope.aperture)**2+
                                   (Lidar.optics.telescope.stdv_aperture*4*Lidar.photonics.laser.Wavelength*(Lidar.optics.scanner.focus_dist)**2/Lidar.optics.telescope.aperture**2)**2)
         Final_Output_UQ_Probe_Volume={'Probe_Volume_Uncertainty':Probe_volume_Uncertainty}
-        Lidar.lidar_inputs.dataframe['Probe Volume']=Final_Output_UQ_Optical_Circulator['Probe_Volume_Uncertainty']
-
-    elif Lidar.lidar_inputs.LidarType=='Pulsed':
-        x='pulsed'
-    return x
+        Lidar.lidar_inputs.dataframe['Probe Volume']=[np.mean(Final_Output_UQ_Probe_Volume['Probe_Volume_Uncertainty'])]
+        pdb.set_trace()
+    # elif Lidar.lidar_inputs.LidarType=='Pulsed': #convolution of pulse length and weighting function
+    #     x='pulsed lidar has no probe volume variations along its path'
+    return Final_Output_UQ_Probe_Volume,Lidar.lidar_inputs.dataframe
 #%% Sum of uncertainties in `optics` module: 
 def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     List_Unc_optics = []
@@ -296,10 +296,13 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     except:
         Optical_circulator_Uncertainty = None
         print('No optical circulator in calculations!')
-    # try:
-    #     'Probe volume'
-    # except:
-    #         pass
+    try:
+        Probe_volume_Uncertainty,DataFrame = Lidar.optics.probe_volume.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+        # List_Unc_optics.append(Probe_volume_Uncertainty['Probe_Volume_Uncertainty'])       
+    
+    except:
+        Probe_volume_Uncertainty = None
+        print('No probe volume in calculations or pulsed lidar was selected!')
     Uncertainty_Optics_Module=SA.unc_comb(List_Unc_optics)
     Final_Output_UQ_Optics = {'Uncertainty_Optics':Uncertainty_Optics_Module,'Mean_error_PointingAccuracy':Scanner_Uncertainty['Simu_Mean_Distance'],'Stdv_PointingAccuracy':Scanner_Uncertainty['STDV_Distance']}
     Lidar.lidar_inputs.dataframe['Optics Module']=Final_Output_UQ_Optics['Uncertainty_Optics']*np.linspace(1,1,len(Atmospheric_Scenario.temperature))  # linspace to create the appropiate length for the xarray. 
