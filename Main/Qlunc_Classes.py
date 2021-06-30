@@ -191,12 +191,16 @@ class optical_circulator():
 
 class telescope():
     def __init__(self,name,aperture,stdv_aperture,unc_func):
-               self.TelescopeID   = name
-               self.aperture      = aperture
-               self.stdv_aperture = stdv_aperture
-               self.Uncertainty   = unc_func
-               print('Created new telescope: {}'.format(self.TelescopeID))
-    
+                self.TelescopeID   = name
+                self.aperture      = aperture
+                self.stdv_aperture = stdv_aperture
+                self.Uncertainty   = unc_func
+                print('Created new telescope: {}'.format(self.TelescopeID))
+
+class probe_volume():
+    def __init__(self,unc_func):
+                 self.Uncertainty = unc_func
+                 print('Class "Probe volume" created')
 #%% LIDAR MODULES
                  
 # Modules classes:
@@ -219,11 +223,12 @@ class power(): # Not included yet in Version Qlunc v-0.9 calculations
                  print('Created new power module: {}'.format(self.PowerModuleID))
 
 class optics():
-    def __init__(self,name,scanner,optical_circulator,telescope,unc_func):
+    def __init__(self,name,scanner,optical_circulator,telescope,probe_volume,unc_func):
                  self.OpticsModuleID     = name
                  self.scanner            = scanner
                  self.optical_circulator = optical_circulator
                  self.telescope          = telescope
+                 self.probe_volume       = probe_volume
                  self.Uncertainty        = unc_func 
                  print('Created new optic module: {}'.format(self.OpticsModuleID))
         
