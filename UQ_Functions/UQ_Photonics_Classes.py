@@ -14,6 +14,7 @@ module.
        - Optical amplifier:  
            - Calculating ASE - Amplified Spontaneous Emission definition ((**Optics and Photonics) Bishnu P. Pal - Guided Wave Optical Components and Devices_ Basics, Technology, and Applications -Academic Press (2005))
            - EDFA Testing with interpolation techniques - Product note 71452-1
+           - Optik 126 (2015) 3492–3495Contents lists available at ScienceDirectOptikjo ur nal homepage: www.elsevier.de/ijleoStudy of ASE noise power, noise figure and quantum conversionefficiency for wide-band EDFA
 """
 
 from Utils.Qlunc_ImportModules import *
@@ -135,13 +136,19 @@ def UQ_Optical_amplifier(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     list
     
     """ 
+    
     # Obtain SNR from figure noise or pass directly numerical value:
+
+    
     if isinstance (Lidar.photonics.optical_amplifier.NoiseFig, numbers.Number): #If user introduces a number or a table of values
         FigureNoise=[(Lidar.photonics.optical_amplifier.NoiseFig)]*len(Atmospheric_Scenario.temperature) #Figure noise vector        
-        # pdb.set_trace()
+        pdb.set_trace()
         # ASE noise:
-        UQ_Optical_amplifier  = [np.array([10*np.log10((10**(FigureNoise[0]/10))*cts.h*(cts.c/Lidar.lidar_inputs.Wavelength)*10**(Lidar.photonics.optical_amplifier.OA_Gain/10))]*len(Atmospheric_Scenario.temperature))] 
+        # UQ_Optical_amplifier  = [np.array([10*np.log10((10**(FigureNoise[0]/10))*cts.h*(cts.c/Lidar.lidar_inputs.Wavelength)*10**(Lidar.photonics.optical_amplifier.OA_Gain/10))]*len(Atmospheric_Scenario.temperature))] 
+        G_w  = 10**(Lidar.photonics.optical_amplifier.OA_Gain/10) # Gain in Watts
+        NF_w = 10**(FigureNoise[0]/10) # Noise figure in watts
         
+        UQ_Optical_amplifier    = [np.array([(NF_w-(1/G_w))*cts.h*(cts.c/Lidar.lidar_inputs.Wavelength)*Lidar.photonics.optical_amplifier.OA_BW]*len(Atmospheric_Scenario.temperature))] 
     else:
         NoiseFigure_DATA  = pd.read_csv(Lidar.photonics.optical_amplifier.NoiseFig,delimiter=';',decimal=',') #read from a .csv file variation of dB with wavelength (for now just with wavelength)    
         # HERE THERE IS AN ERROR PRODUCED BY THE INTERPOLATION --> DATAPROCESSING UNCERTAINTIES

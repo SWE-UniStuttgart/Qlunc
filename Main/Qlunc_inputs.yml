@@ -65,7 +65,7 @@ Components:
     # interpolates to obtain a most accurate value according 
     # with the lidar nominal wavelength. Interpolation param. could 
     # be tunned in Qlunc_Photonics_Classes --> UQ_Optical_amplifier
-    
+    Optical amplifier BW: 1.e-9 # Band width optical amplifier
     Optical amplifier noise figure: 1 #metadata/NoiseFigure.csv  # Relative Directory to where Noise figure data is. Either a well-known value or the directory where the file is.   
     Optical amplifier gain: 30 # Optical amplifier gain in dB
     Uncertainty function: uphc.UQ_Optical_amplifier # Python module! (You develop a function and save it as a python module)
