@@ -19,11 +19,11 @@ Components:
     
     Name: Scanner_Yaml # Provide an ID to your lidar:    
     Origin: [0,0,60]  # Lidar position in meters: [x,y,z]    
-    Pattern: 'None' # 'lissajous', user defined pattern or 'None' in case none predefined pattern is used
+    Pattern: 'lissajous' # 'lissajous', user defined pattern or 'None' in case none predefined pattern is used
     # Lissajous patterns:
     Lissajous parameters: [50,60,60,3,3] # [x_dim,y_dim,z_dim,q,p]
     Sample rate: 0   # Lidar sample rate. In meters. Use 0 for now.
-    Type: SCAN    # Type of the scanning head: VAD or SCAN (Scanning Lidar).
+    Type: VAD    # Type of the scanning head: VAD or SCAN (Scanning Lidar).
   
     # STDV in lidar angles and focus distance
     stdv focus distance: 0   # [m]
@@ -65,9 +65,9 @@ Components:
     # interpolates to obtain a most accurate value according 
     # with the lidar nominal wavelength. Interpolation param. could 
     # be tunned in Qlunc_Photonics_Classes --> UQ_Optical_amplifier
-    Optical amplifier BW: 1.e-9 # Band width optical amplifier
-    Optical amplifier noise figure: 1 #metadata/NoiseFigure.csv  # Relative Directory to where Noise figure data is. Either a well-known value or the directory where the file is.   
-    Optical amplifier gain: 30 # Optical amplifier gain in dB
+    Optical amplifier BW: 12.5e+12 # [Hz] Bandwidth optical amplifier (Hz)
+    Optical amplifier noise figure: metadata/NoiseFigure.csv  #6.02 #  Relative Directory to where Noise figure data is. Either a well-known value or the directory where the file is.   
+    Optical amplifier gain: 20 # [dB] Optical amplifier gain
     Uncertainty function: uphc.UQ_Optical_amplifier # Python module! (You develop a function and save it as a python module)
 
   
