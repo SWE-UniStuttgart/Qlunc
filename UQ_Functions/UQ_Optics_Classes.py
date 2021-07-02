@@ -270,39 +270,64 @@ def UQ_probe_volume(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
                                   (Lidar.optics.telescope.stdv_aperture*4*Lidar.photonics.laser.Wavelength*(Lidar.optics.scanner.focus_dist)**2/Lidar.optics.telescope.aperture**2)**2)
         Final_Output_UQ_Probe_Volume={'Probe_Volume_Uncertainty':Probe_volume_Uncertainty}
         Lidar.lidar_inputs.dataframe['Probe Volume']=[np.mean(Final_Output_UQ_Probe_Volume['Probe_Volume_Uncertainty'])]
-        pdb.set_trace()
+        # pdb.set_trace()
     # elif Lidar.lidar_inputs.LidarType=='Pulsed': #convolution of pulse length and weighting function
     #     x='pulsed lidar has no probe volume variations along its path'
     return Final_Output_UQ_Probe_Volume,Lidar.lidar_inputs.dataframe
+
+
 #%% Sum of uncertainties in `optics` module: 
 def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     List_Unc_optics = []
-    try: # ecah try/except evaluates wether the component is included in the module, therefore in the calculations
-        Scanner_Uncertainty,DataFrame=Lidar.optics.scanner.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)        
-    except:
-        Scanner_Uncertainty=None
-        print('No scanner in calculations!')
-    try:
-        Telescope_Uncertainty,DataFrame=Lidar.optics.telescope.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
-        List_Unc_optics.append(Telescope_Uncertainty['Telescope_Uncertainty'])       
-        # pdb.set_trace()
-
-    except:
-        Telescope_Uncertainty=None
-        print('No telescope in calculations!')
-    try:
-        Optical_circulator_Uncertainty,DataFrame = Lidar.optics.optical_circulator.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
-        List_Unc_optics.append(Optical_circulator_Uncertainty['Optical_Circulator_Uncertainty'])       
-    except:
-        Optical_circulator_Uncertainty = None
-        print('No optical circulator in calculations!')
-    try:
-        Probe_volume_Uncertainty,DataFrame = Lidar.optics.probe_volume.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
-        # List_Unc_optics.append(Probe_volume_Uncertainty['Probe_Volume_Uncertainty'])       
     
-    except:
-        Probe_volume_Uncertainty = None
-        print('No probe volume in calculations or pulsed lidar was selected!')
+    # Scanner
+    if Lidar.optics.scanner != 'None':
+        try: # ecah try/except evaluates wether the component is included in the module, therefore in the calculations
+            Scanner_Uncertainty,DataFrame=Lidar.optics.scanner.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)        
+        except:
+            Scanner_Uncertainty=None
+            print('Error in scanner uncertainty calculations!')
+    else:
+        print ('You didn´t include a head scanner in the lidar!')
+    
+    # Telescope
+    if Lidar.optics.telescope != 'None':
+        try:
+            Telescope_Uncertainty,DataFrame=Lidar.optics.telescope.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+            List_Unc_optics.append(Telescope_Uncertainty['Telescope_Uncertainty'])       
+            # pdb.set_trace()
+    
+        except:
+            Telescope_Uncertainty=None
+            print('Error in telescope uncertainty calculations!')
+    else:
+        print ('You didn´t include a telescope in the lidar!')
+    
+    # Optical Circulator
+    if Lidar.optics.optical_circulator != 'None': 
+        try:
+            Optical_circulator_Uncertainty,DataFrame = Lidar.optics.optical_circulator.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+            List_Unc_optics.append(Optical_circulator_Uncertainty['Optical_Circulator_Uncertainty'])       
+        except:
+            Optical_circulator_Uncertainty = None
+            print('Error in optical circulator uncertainty calculations!')
+    
+    else:
+        print('You didn´t include an optical circulator in the lidar!')
+    
+    # Probe volume
+    if Lidar.optics.probe_volume != 'None':
+        try:
+            Probe_volume_Uncertainty,DataFrame = Lidar.optics.probe_volume.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+            # List_Unc_optics.append(Probe_volume_Uncertainty['Probe_Volume_Uncertainty'])       
+        
+        except:
+            Probe_volume_Uncertainty = None
+            print('No probe volume in calculations or pulsed lidar was selected!')
+    else:
+        print('You didnt include probe volume in calculations')
+        
+        
     Uncertainty_Optics_Module=SA.unc_comb(List_Unc_optics)
     Final_Output_UQ_Optics = {'Uncertainty_Optics':Uncertainty_Optics_Module,'Mean_error_PointingAccuracy':Scanner_Uncertainty['Simu_Mean_Distance'],'Stdv_PointingAccuracy':Scanner_Uncertainty['STDV_Distance']}
     Lidar.lidar_inputs.dataframe['Optics Module']=Final_Output_UQ_Optics['Uncertainty_Optics']*np.linspace(1,1,len(Atmospheric_Scenario.temperature))  # linspace to create the appropiate length for the xarray. 
