@@ -325,7 +325,7 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             Probe_volume_Uncertainty = None
             print('No probe volume in calculations or pulsed lidar was selected!')
     else:
-        print('You didnt include probe volume in calculations')
+        print('You didn´t include probe volume in calculations')
         
         
     Uncertainty_Optics_Module=SA.unc_comb(List_Unc_optics)
