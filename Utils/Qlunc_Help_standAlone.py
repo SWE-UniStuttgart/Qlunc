@@ -156,7 +156,7 @@ def to_netcdf(DataXarray,Qlunc_yaml_inputs,Lidar,Atmospheric_Scenario):
     if os.path.isfile('./Projects/' + Qlunc_yaml_inputs['Project']+ '.nc'):
         # Read the new lidar data
         Lidar.lidar_inputs.dataframe['Lidar']
-        pdb.set_trace()
+        # pdb.set_trace()
         # time      = Atmospheric_Scenario.time 
         names     = [Lidar.LidarID]
         component = [i for i in DataXarray.keys()]
