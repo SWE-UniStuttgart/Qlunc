@@ -150,7 +150,7 @@ def UQ_Optical_amplifier(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         NoiseFigure_VALUE = figure_noise_INT(Lidar.lidar_inputs.Wavelength) # in dB
         FigureNoise       = (NoiseFigure_VALUE.tolist())
         NF_w = 10**(FigureNoise/10) # Noise figure in watts
-    pdb.set_trace()
+    # pdb.set_trace()
     G_w  = 10**(Lidar.photonics.optical_amplifier.OA_Gain/10) # Gain in Watts        
     # ASE noise:
     UQ_Optical_amplifier    = [np.array([10*np.log10((NF_w-(1/G_w))*cts.h*(cts.c/Lidar.lidar_inputs.Wavelength)*Lidar.photonics.optical_amplifier.OA_BW*G_w)]*len(Atmospheric_Scenario.temperature))] 
