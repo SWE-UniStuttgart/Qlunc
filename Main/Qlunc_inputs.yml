@@ -45,7 +45,7 @@ Components:
     
   Optical Circulator:
     Name: OC_Yaml
-    Insertion loss: 0.8 # [dB]
+    Insertion loss: 0.8 # [dB] # This is a term losses. Only have sense if the uncertainties are correlated...???
     SNR: 60 #[dB]
     Uncertainty function: uopc.UQ_OpticalCirculator
   
