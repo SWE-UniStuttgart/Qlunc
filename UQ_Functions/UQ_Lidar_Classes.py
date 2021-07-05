@@ -40,7 +40,7 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     """ 
     List_Unc_lidar = []
     
-    if Lidar.photonics != 'None':
+    if Lidar.photonics != None:
         try: # ecah try/except evaluates wether the component is included in the module, therefore in the calculations
     #        if Photodetector_Uncertainty not in locals():
             # pdb.set_trace()
@@ -51,7 +51,7 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             print('Error in photonics module calculations!')
     else:
         print('You didn´t include a photonics module in the lidar')
-    if Lidar.optics != 'None':
+    if Lidar.optics != None:
         try:
             Optics_Uncertainty,DataFrame = Lidar.optics.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
             Optics_Uncertainty           = np.ndarray.tolist(Optics_Uncertainty['Uncertainty_Optics'])*len(Atmospheric_Scenario.temperature)
@@ -61,7 +61,7 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             print('Error in optics module calculations!')
     else:
         print('You didn´t include an optics module in the lidar')
-    if Lidar.power !=0:
+    if Lidar.power != None:
         
         try:
             Power_Uncertainty,DataFrame = Lidar.power.Uncertainty(Lidar,Atmospheric_Scenario,cts)
