@@ -282,7 +282,7 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     List_Unc_optics = []
     
     # Scanner
-    if Lidar.optics.scanner != 'None':
+    if Lidar.optics.scanner != None:
         try: # ecah try/except evaluates wether the component is included in the module, therefore in the calculations
             Scanner_Uncertainty,DataFrame=Lidar.optics.scanner.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)        
         except:
@@ -292,7 +292,7 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         print ('You didn´t include a head scanner in the lidar!')
     
     # Telescope
-    if Lidar.optics.telescope != 'None':
+    if Lidar.optics.telescope != None:
         try:
             Telescope_Uncertainty,DataFrame=Lidar.optics.telescope.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
             List_Unc_optics.append(Telescope_Uncertainty['Telescope_Uncertainty'])       
@@ -305,7 +305,7 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         print ('You didn´t include a telescope in the lidar!')
     
     # Optical Circulator
-    if Lidar.optics.optical_circulator != 'None': 
+    if Lidar.optics.optical_circulator != None: 
         try:
             Optical_circulator_Uncertainty,DataFrame = Lidar.optics.optical_circulator.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
             List_Unc_optics.append(Optical_circulator_Uncertainty['Optical_Circulator_Uncertainty'])       
@@ -317,7 +317,7 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         print('You didn´t include an optical circulator in the lidar!')
     
     # Probe volume
-    if Lidar.optics.probe_volume != 'None':
+    if Lidar.optics.probe_volume != None:
         try:
             Probe_volume_Uncertainty,DataFrame = Lidar.optics.probe_volume.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
             # List_Unc_optics.append(Probe_volume_Uncertainty['Probe_Volume_Uncertainty'])       
