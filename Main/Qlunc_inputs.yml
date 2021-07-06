@@ -66,7 +66,7 @@ Components:
     # with the lidar nominal wavelength. Interpolation param. could 
     # be tunned in Qlunc_Photonics_Classes --> UQ_Optical_amplifier
     Optical amplifier BW: 12.5e+12 # [Hz] Bandwidth optical amplifier (Hz)
-    Optical amplifier noise figure: metadata/NoiseFigure.csv  #6.02 #  Relative Directory to where Noise figure data is. Either a well-known value or the directory where the file is.   
+    Optical amplifier noise figure: metadata/NoiseFigure.csv  #6# [dB] Relative Directory to where Noise figure data is. Either a well-known value or the directory where the file is.   
     Optical amplifier gain: 20 # [dB] Optical amplifier gain
     Uncertainty function: uphc.UQ_Optical_amplifier # Python module! (You develop a function and save it as a python module)
 
@@ -77,7 +77,7 @@ Components:
     Load resistor: 50                  # [Ohm]
     Photodetector efficiency: .85       # Photodetector efficiency [-]
     Dark current: 5.e-9                 # In [A]. Dark current in the photodetector.
-    Photodetector signalP: 1.5e-3        # [W]
+    Photodetector signalP: 2.5e-3        # [W]
     Power interval: [0,1000,.001]       # [mW]
     Gain TIA: 5.e+3                     # [dB] Value or 'None' if no TIA in the photodetector
     V Noise TIA:  None # 160.e-6 #             # [V] Value or 'None' if no TIA in the photodetector
@@ -88,7 +88,7 @@ Components:
     Wavelength: 1550.e-9    # [m]
     Stdv Wavelength: 1.e-9 #[m]
     Confidence interval: 3 # 1 => confidence interval= 68.27%, 2 => confidence interval= 90%, 3=> confidence interval= 95% 4=> confidence interval = 95.45%, 5 => confidence interval= 99%, 6=> confidence interval= 99.73%
-    Output power: 1.5e-3 #[w]
+    Output power: 12.5e-3 #[w]
     Bandwidth: 250 # Hz
     RIN: -165 # dBc/Hz
     Uncertainty function: uphc.UQ_Laser

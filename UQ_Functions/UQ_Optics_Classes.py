@@ -229,16 +229,14 @@ def UQ_OpticalCirculator(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     list
     
     """   
-    Optical_Circulator_losses = [np.array(Lidar.optics.optical_circulator.insertion_loss)]
-    Pratio=10**(-Lidar.optics.optical_circulator.insertion_loss/10)# P_in/P_out
+    # To take into account insertion losses (with correlated uncertainties)
+    #Optical_Circulator_losses = [np.array(Lidar.optics.optical_circulator.insertion_loss)]
+    #Pratio=10**(-Lidar.optics.optical_circulator.insertion_loss/10)# P_in/P_out
+    
     #  if the insertion loss is expressed in % (X% losses):    
     #Optical_Circulator_losses = 10*np.log10(1-(X/100)) # output in dB
     
-    # # If it is expressed using SNR:
-    # Optical_Circulator_losses = [Qlunc_yaml_inputs['Components']['Laser']['Output power']*(10**(Lidar.optics.optical_circulator.SNR/10))]
-    # Optical_Circulator_Uncertainty_dB = 10*np.log10(Optical_Circulator_Uncertainty_w)
-    # Final_Output_UQ_Optical_Circulator={'Optical_Circulator_Uncertainty':Optical_Circulator_Uncertainty_dB}
-    # Lidar.lidar_inputs.dataframe['Optical circulator']=Final_Output_UQ_Optical_Circulator['Optical_Circulator_Uncertainty']
+    # If we assume an SNR:
 
     # Optical_Circulator_Uncertainty = [np.array(Lidar.optics.optical_circulator.insertion_loss)]
     Optical_Circulator_Uncertainty_w = [Qlunc_yaml_inputs['Components']['Laser']['Output power']/(10**(Lidar.optics.optical_circulator.SNR/10))]
@@ -289,7 +287,7 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             Scanner_Uncertainty=None
             print('Error in scanner uncertainty calculations!')
     else:
-        print ('You didn´t include a head scanner in the lidar!')
+        print ('You didn´t include a head scanner in the lidar.')
     
     # Telescope
     if Lidar.optics.telescope != None:
@@ -302,7 +300,7 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             Telescope_Uncertainty=None
             print('Error in telescope uncertainty calculations!')
     else:
-        print ('You didn´t include a telescope in the lidar!')
+        print ('You didn´t include a telescope in the lidar.')
     
     # Optical Circulator
     if Lidar.optics.optical_circulator != None: 
@@ -314,7 +312,7 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             print('Error in optical circulator uncertainty calculations!')
     
     else:
-        print('You didn´t include an optical circulator in the lidar!')
+        print('You didn´t include an optical circulator in the lidar.')
     
     # Probe volume
     if Lidar.optics.probe_volume != None:
@@ -324,9 +322,9 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         
         except:
             Probe_volume_Uncertainty = None
-            print('No probe volume in calculations or pulsed lidar was selected!')
+            print('No probe volume in calculations or no pulsed lidar was selected.')
     else:
-        print('You didn´t include probe volume in calculations')
+        print('You didn´t include probe volume in calculations.')
         
         
     Uncertainty_Optics_Module=SA.unc_comb(List_Unc_optics)

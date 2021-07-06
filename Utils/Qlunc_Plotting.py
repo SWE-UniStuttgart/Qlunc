@@ -83,4 +83,21 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         ax.grid(axis='both')
         ax.text(.90,.05,plot_param['Qlunc_version'],transform=ax.transAxes, fontsize=14,verticalalignment='top',bbox=dict(boxstyle='round', facecolor='white', alpha=0.5))
     
+###############   Plot optical amplifier noise   #############################    
+    # if flag_plot_optical_amplifier_noise:
+    #     # Quantifying uncertainty from photodetector and interval domain for the plot Psax is define in the photodetector class properties)
+    #     Psax=10*np.log10(Lidar.photonics.photodetector.Power_interval) 
     
+    #     # Plotting:
+    #     fig,ax=plt.subplots()
+    #     label0=['Optical amplifier OSNR']
+    #     i_label=0
+    #     for i in Data['SNR_data_photodetector']:            
+    #         ax.plot(Psax,Data['OSNR'][i][0],label=label0[i_label])  
+    #         i_label+=1
+    #     ax.set_xlabel('Input Signal optical power [dBm]',fontsize=plot_param['axes_label_fontsize'])
+    #     ax.set_ylabel('SNR [dB]',fontsize=plot_param['axes_label_fontsize'])
+    #     ax.legend(fontsize=plot_param['legend_fontsize'])
+    #     ax.set_title('OSNR Optical Amplifier',fontsize=plot_param['title_fontsize'])
+    #     ax.grid(axis='both')
+    #     ax.text(.90,.05,plot_param['Qlunc_version'],transform=ax.transAxes, fontsize=14,verticalalignment='top',bbox=dict(boxstyle='round', facecolor='white', alpha=0.5))

@@ -150,7 +150,7 @@ def to_netcdf(DataXarray,Qlunc_yaml_inputs,Lidar,Atmospheric_Scenario):
     Returns
     -------
     
-    .netndf file
+    .netcdf file
     
     """
     if os.path.isfile('./Projects/' + Qlunc_yaml_inputs['Project']+ '.nc'):
@@ -179,7 +179,6 @@ def to_netcdf(DataXarray,Qlunc_yaml_inputs,Lidar,Atmospheric_Scenario):
         component = [i for i in DataXarray.keys()]
         # time      = [Atmospheric_Scenario.time ]
         data      =[ii for ii in DataXarray.values()]
-        pdb.set_trace()
         df = xr.DataArray(data,
                           coords = [component,names],
                           dims   = ('Components','Names'))

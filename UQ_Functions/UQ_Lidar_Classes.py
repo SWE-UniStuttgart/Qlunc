@@ -15,7 +15,6 @@ from Utils.Qlunc_ImportModules import *
 import Utils.Qlunc_Help_standAlone as SA
 
 # Calculates the lidar global uncertainty using uncertainty expansion calculation methods:
-global da
 def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     """
     Lidar uncertainty estimation. Location: ./UQ_Functions/UQ_Lidar_Classes.py
