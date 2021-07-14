@@ -14,7 +14,7 @@ module.
        - Optical amplifier:  
            - Calculating ASE - Amplified Spontaneous Emission definition ((**Optics and Photonics) Bishnu P. Pal - Guided Wave Optical Components and Devices_ Basics, Technology, and Applications -Academic Press (2005))
            - EDFA Testing with interpolation techniques - Product note 71452-1
-           - Optik 126 (2015) 3492–3495Contents lists available at ScienceDirectOptikjo ur nal homepage: www.elsevier.de/ijleoStudy of ASE noise power, noise figure and quantum conversionefficiency for wide-band EDFA
+           - Optik 126 (2015) 3492–3495Contents lists available at ScienceDirectOptikjo ur nal homepage: www.elsevier.de/ijleoStudy of ASE noise power, noise figure and quantum conversion efficiency for wide-band EDFA
 """
 
 from Utils.Qlunc_ImportModules import *
