@@ -100,8 +100,8 @@ Components:
 # Lidar general inputs 
   Lidar general inputs:
     Name: Lidar_gral_inputs_Yaml
-    Type: CW # CW/Pulsed for continuous or pulsed lidars. The difference is that AOM (photonics module) is included in calculations when Pulsed
-    Wavelength: 1550.e-9    # [m]
+    Type: CW # CW/Pulsed for continuous wave or pulsed lidars. The difference is that AOM (photonics module) is included in calculations when Pulsed
+    Wavelength: 1553.e-9    # [m]
     Yaw error: 0       # [deg]
     Pitch error: 10         # [deg]
     Roll error: 15          # [deg]
@@ -144,7 +144,17 @@ Atmospheric_inputs:
   Rain: true # for rain and fog intensity intervals might be introduced [none,low, medium, high]
   Fog: false
 ---
-
+# Data processing:-----------------------------------------------------
+Probe Volume:
+  Name: 'Probe_Yaml'
+  Focal length: 200.e-3
+  Fiber-lens distance: 2.e-3
+  Fiber-lens offset: 198.1e-3
+  Effective radius telescope: 16.6e-3
+  Output beam radius: 20.e-3
+  Extinction coeficient: 0.085
+  
+  
 # Plotting:------------------------------------------------------------
 Flags:
   Pointing accuracy uncertainty: False

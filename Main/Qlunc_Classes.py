@@ -199,8 +199,15 @@ class telescope():
                 print('Created new telescope: {}'.format(self.TelescopeID))
 
 class probe_volume():
-    def __init__(self,unc_func):
-                 self.Uncertainty = unc_func
+    def __init__(self,name,focal_length,fiber_lense_d,fiber_lense_offset,effective_radius_telescope,extinction_coef,output_beam_radius,unc_func):
+                 self.ProbeVolumeID              = name         
+                 self.focal_length               = focal_length
+                 self.fiber_lense_d              = fiber_lense_d
+                 self.fiber_lense_offset         = fiber_lense_offset
+                 self.effective_radius_telescope = effective_radius_telescope
+                 self.extinction_coef            = extinction_coef
+                 self.output_beam_radius         = output_beam_radius
+                 self.Uncertainty                = unc_func
                  print('Class "Probe volume" created')
 #%% LIDAR MODULES
                  
@@ -223,13 +230,21 @@ class power(): # Not included yet in Version Qlunc v-0.9 calculations
                  self.Uncertainty   = unc_func  
                  print('Created new power module: {}'.format(self.PowerModuleID))
 
+# class optics():
+#     def __init__(self,name,scanner,optical_circulator,telescope,probe_volume,unc_func):
+#                  self.OpticsModuleID     = name
+#                  self.scanner            = scanner
+#                  self.optical_circulator = optical_circulator
+#                  self.telescope          = telescope
+#                  self.probe_volume       = probe_volume
+#                  self.Uncertainty        = unc_func 
+#                  print('Created new optic module: {}'.format(self.OpticsModuleID))
 class optics():
-    def __init__(self,name,scanner,optical_circulator,telescope,probe_volume,unc_func):
+    def __init__(self,name,scanner,optical_circulator,telescope,unc_func):
                  self.OpticsModuleID     = name
                  self.scanner            = scanner
                  self.optical_circulator = optical_circulator
                  self.telescope          = telescope
-                 self.probe_volume       = probe_volume
                  self.Uncertainty        = unc_func 
                  print('Created new optic module: {}'.format(self.OpticsModuleID))
         
@@ -256,11 +271,12 @@ class lidar_gral_inp():
 
 #%% Lidar class:
 class lidar():
-    def __init__(self,name,photonics,optics,power,lidar_inputs,unc_func):
+    def __init__(self,name,photonics,optics,power,lidar_inputs,probe_volume,unc_func):
                  self.LidarID      = name
                  self.photonics    = photonics
                  self.optics       = optics
                  self.power        = power # Not included yet in Version Qlunc v-0.9 calculations
+                 self.probe_volume = probe_volume
                  self.lidar_inputs = lidar_inputs
                  self.Uncertainty  = unc_func
                  print('Created new lidar device: {}'.format(self.LidarID))

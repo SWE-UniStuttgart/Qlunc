@@ -261,18 +261,18 @@ def UQ_Telescope(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
      return Final_Output_UQ_Telescope,Lidar.lidar_inputs.dataframe
 
 #%% probe volume:
-def UQ_probe_volume(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
-    if Lidar.lidar_inputs.LidarType=='CW':
-        # delta_r=(4*Lidar.optics.scanner.focus_dist**2*Lidar.photonics.laser.Wavelength/Lidar.optics.telescope.Aperture)
-        Probe_volume_Uncertainty=np.sqrt((Lidar.optics.scanner.stdv_focus_dist*8*Lidar.optics.scanner.focus_dist*Lidar.photonics.laser.Wavelength/Lidar.optics.telescope.aperture)**2+
-                                  (Lidar.photonics.laser.stdv_wavelength*4*(Lidar.optics.scanner.focus_dist)**2/Lidar.optics.telescope.aperture)**2+
-                                  (Lidar.optics.telescope.stdv_aperture*4*Lidar.photonics.laser.Wavelength*(Lidar.optics.scanner.focus_dist)**2/Lidar.optics.telescope.aperture**2)**2)
-        Final_Output_UQ_Probe_Volume={'Probe_Volume_Uncertainty':Probe_volume_Uncertainty}
-        Lidar.lidar_inputs.dataframe['Probe Volume']=[np.mean(Final_Output_UQ_Probe_Volume['Probe_Volume_Uncertainty'])]
-        # pdb.set_trace()
-    # elif Lidar.lidar_inputs.LidarType=='Pulsed': #convolution of pulse length and weighting function
-    #     x='pulsed lidar has no probe volume variations along its path'
-    return Final_Output_UQ_Probe_Volume,Lidar.lidar_inputs.dataframe
+# def UQ_probe_volume(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
+#     if Lidar.lidar_inputs.LidarType=='CW':
+#         # delta_r=(4*Lidar.optics.scanner.focus_dist**2*Lidar.photonics.laser.Wavelength/Lidar.optics.telescope.Aperture)
+#         Probe_volume_Uncertainty=np.sqrt((Lidar.optics.scanner.stdv_focus_dist*8*Lidar.optics.scanner.focus_dist*Lidar.photonics.laser.Wavelength/Lidar.optics.telescope.aperture)**2+
+#                                   (Lidar.photonics.laser.stdv_wavelength*4*(Lidar.optics.scanner.focus_dist)**2/Lidar.optics.telescope.aperture)**2+
+#                                   (Lidar.optics.telescope.stdv_aperture*4*Lidar.photonics.laser.Wavelength*(Lidar.optics.scanner.focus_dist)**2/Lidar.optics.telescope.aperture**2)**2)
+#         Final_Output_UQ_Probe_Volume={'Probe_Volume_Uncertainty':Probe_volume_Uncertainty}
+#         Lidar.lidar_inputs.dataframe['Probe Volume']=[np.mean(Final_Output_UQ_Probe_Volume['Probe_Volume_Uncertainty'])]
+#         # pdb.set_trace()
+#     # elif Lidar.lidar_inputs.LidarType=='Pulsed': #convolution of pulse length and weighting function
+#     #     x='pulsed lidar has no probe volume variations along its path'
+#     return Final_Output_UQ_Probe_Volume,Lidar.lidar_inputs.dataframe
 
 
 #%% Sum of uncertainties in `optics` module: 
@@ -315,16 +315,16 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         print('You didn´t include an optical circulator in the lidar.')
     
     # Probe volume
-    if Lidar.optics.probe_volume != None:
-        try:
-            Probe_volume_Uncertainty,DataFrame = Lidar.optics.probe_volume.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
-            # List_Unc_optics.append(Probe_volume_Uncertainty['Probe_Volume_Uncertainty'])       
+    # if Lidar.optics.probe_volume != None:
+    #     try:
+    #         Probe_volume_Uncertainty,DataFrame = Lidar.optics.probe_volume.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+    #         # List_Unc_optics.append(Probe_volume_Uncertainty['Probe_Volume_Uncertainty'])       
         
-        except:
-            Probe_volume_Uncertainty = None
-            print('No probe volume in calculations or no pulsed lidar was selected.')
-    else:
-        print('You didn´t include probe volume in calculations.')
+    #     except:
+    #         Probe_volume_Uncertainty = None
+    #         print('No probe volume in calculations or no pulsed lidar was selected.')
+    # else:
+    #     print('You didn´t include probe volume in calculations.')
         
         
     Uncertainty_Optics_Module=SA.unc_comb(List_Unc_optics)

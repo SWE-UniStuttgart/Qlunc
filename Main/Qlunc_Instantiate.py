@@ -25,7 +25,7 @@ could be done by instantiating their python classes:
 import os
 os.chdir('../')
 # importing  uncertainty functions
-import UQ_Functions.UQ_Photonics_Classes as uphc,UQ_Functions.UQ_Optics_Classes as uopc, UQ_Functions.UQ_Power_Classes as upwc,UQ_Functions.UQ_Lidar_Classes as ulc
+import UQ_Functions.UQ_Photonics_Classes as uphc,UQ_Functions.UQ_Optics_Classes as uopc, UQ_Functions.UQ_Power_Classes as upwc,UQ_Functions.UQ_Lidar_Classes as ulc, UQ_Functions.UQ_ProbeVolume_Classes as upbc
 from Utils.Qlunc_ImportModules import *
 
 #%% Running Qlunc_Classes.py:
@@ -83,7 +83,14 @@ Telescope = telescope (name          = Qlunc_yaml_inputs['Components']['Telescop
                        aperture      = Qlunc_yaml_inputs['Components']['Telescope']['Aperture'],
                        unc_func      = uopc.UQ_Telescope)
 
-Probe_Volume = probe_volume (unc_func= uopc.UQ_probe_volume)
+Probe_Volume = probe_volume (name                       = Qlunc_yaml_inputs['Probe Volume']['Name'],
+                             focal_length               = Qlunc_yaml_inputs['Probe Volume']['Focal length'],
+                             fiber_lense_d              = Qlunc_yaml_inputs['Probe Volume']['Fiber-lens distance'],
+                             fiber_lense_offset         = Qlunc_yaml_inputs['Probe Volume']['Fiber-lens offset'],
+                             effective_radius_telescope = Qlunc_yaml_inputs['Probe Volume']['Effective radius telescope'],
+                             output_beam_radius         = Qlunc_yaml_inputs['Probe Volume']['Output beam radius'],
+                             extinction_coef            = Qlunc_yaml_inputs['Probe Volume']['Extinction coeficient'],
+                             unc_func                   = upbc.UQ_Probe_volume)
 
 
 # Optics Module:
@@ -91,7 +98,7 @@ Optics_Module =  optics (name               = Qlunc_yaml_inputs['Modules']['Opti
                          scanner            = Scanner, #eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Scanner']),             # Scanner instance (in this example "Scanner") or "None". "None" means that you don´t want to include Scanner in Optics Module, either in uncertainty calculations.
                          optical_circulator = Optical_circulator ,#eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Optical circulator']),  # Optical Circulator instance (in this example "Optical_circulator") or "None". "None" means that you don´t want to include Optical circulator in Optics Module, either in uncertainty calculations.
                          telescope          = 'None',#Telescope,
-                         probe_volume       = 'None',#Probe_Volume,
+                         # probe_volume       = 'None',#Probe_Volume,
                          unc_func           = uopc.sum_unc_optics) #eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Uncertainty function']))
 
 
@@ -149,6 +156,7 @@ Lidar = lidar(name         = Qlunc_yaml_inputs['Lidar']['Name'],                
               photonics    = Photonics_Module, #eval(Qlunc_yaml_inputs['Lidar']['Photonics module']),     # Introduce the name of your photonics module.
               optics       = Optics_Module, #eval(Qlunc_yaml_inputs['Lidar']['Optics module']),        # Introduce the name of your optics module.
               power        = None, #eval(Qlunc_yaml_inputs['Lidar']['Power module']),         # Introduce the name of your power module. NOT IMPLEMENTED YET!
+              probe_volume = Probe_Volume, 
               lidar_inputs = Lidar_inputs, #eval(Qlunc_yaml_inputs['Lidar']['Lidar inputs']),         # Introduce lidar general inputs
               unc_func     = ulc.sum_unc_lidar) #eval(Qlunc_yaml_inputs['Lidar']['Uncertainty function'])) # Function estimating lidar global uncertainty
 

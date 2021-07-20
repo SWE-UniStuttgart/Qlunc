@@ -58,7 +58,7 @@ def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     R = Lidar.photonics.photodetector.Efficiency*cts.e*Lidar.lidar_inputs.Wavelength/(cts.h*cts.c)  #[A/W]  Responsivity
     UQ_Photodetector.Responsivity = (R) # this notation allows me to get Responsivity from outside of the function 
-    # pdb.set_trace()
+
     # SNR calculations:
     # SNR in watts
     UQ_Photodetector.SNR_thermal_w      = [((R**2)/(4*cts.k*Atmospheric_Scenario.temperature[0]*Lidar.photonics.photodetector.BandWidth/Lidar.photonics.photodetector.Load_Resistor))*(Lidar.photonics.photodetector.Power_interval/1000)**2]
@@ -106,7 +106,6 @@ def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     UQ_Photodetector.UQ_Photo_total=list(SA.flatten(UQ_Photodetector.UQ_Photo))
     Final_Output_UQ_Photo={'Uncertainty_Photodetector':UQ_Photodetector.UQ_Photo_total,'SNR_data_photodetector':SNR_data}      
     Lidar.lidar_inputs.dataframe['Photodetector']=Final_Output_UQ_Photo['Uncertainty_Photodetector'][0]
-    # pdb.set_trace()
     
     # Plotting:
     QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Photo,False,Qlunc_yaml_inputs['Flags']['Photodetector noise'])
@@ -139,7 +138,7 @@ def UQ_Optical_amplifier(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     """ 
     
     # Obtain SNR from figure noise or pass directly numerical value:
-    
+    pdb.set_trace()
     if isinstance (Lidar.photonics.optical_amplifier.NoiseFig, numbers.Number): #If user introduces a number or a table of values
         FigureNoise=[(Lidar.photonics.optical_amplifier.NoiseFig)]*len(Atmospheric_Scenario.temperature) #Figure noise vector
         NF_w = 10**(FigureNoise[0]/10) # Noise figure in watts
@@ -152,7 +151,7 @@ def UQ_Optical_amplifier(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         FigureNoise       = (NoiseFigure_VALUE.tolist())
         NF_w = 10**(FigureNoise/10) # Noise figure in watts
     G_w  = 10**(Lidar.photonics.optical_amplifier.OA_Gain/10) # Gain in Watts        
-    
+    pdb.set_trace()
     # ASE noise:
     UQ_Optical_amplifier    = [np.array([10*np.log10((NF_w-(1/G_w))*cts.h*(cts.c/Lidar.lidar_inputs.Wavelength)*Lidar.photonics.optical_amplifier.OA_BW*G_w)]*len(Atmospheric_Scenario.temperature))] 
     
@@ -161,7 +160,6 @@ def UQ_Optical_amplifier(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     OSNR_plot = 10*np.log10(((Lidar.photonics.photodetector.Power_interval)/(NF_w*cts.h*(cts.c/Lidar.lidar_inputs.Wavelength)*Lidar.photonics.optical_amplifier.OA_BW))/1000)
     Final_Output_UQ_Optical_Amplifier = {'Uncertainty_OpticalAmp':UQ_Optical_amplifier, 'OSNR': OSNR_plot}
     Lidar.lidar_inputs.dataframe['Optical Amplifier'] = Final_Output_UQ_Optical_Amplifier['Uncertainty_OpticalAmp'][0]
-    # pdb.set_trace()
     # Plotting:
     # QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Optical_Amplifier,False,Qlunc_yaml_inputs['Flags']['Photodetector noise'])
     return Final_Output_UQ_Optical_Amplifier,Lidar.lidar_inputs.dataframe
