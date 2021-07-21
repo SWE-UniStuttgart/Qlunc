@@ -78,21 +78,22 @@ Optical_circulator = optical_circulator (name           = Qlunc_yaml_inputs['Com
                                          unc_func       = uopc.UQ_OpticalCirculator) #eval(Qlunc_yaml_inputs['Components']['Optical Circulator']['Uncertainty function']))  # Function describing your scanner uncertainty.  Further informaion in "UQ_Optics_Classes.py" comments.
 
 
-Telescope = telescope (name          = Qlunc_yaml_inputs['Components']['Telescope']['Name'],
-                       stdv_aperture = Qlunc_yaml_inputs['Components']['Telescope']['Stdv Aperture'],
-                       aperture      = Qlunc_yaml_inputs['Components']['Telescope']['Aperture'],
+Telescope = telescope (name                       = Qlunc_yaml_inputs['Components']['Telescope']['Name'],
+                       stdv_aperture              = Qlunc_yaml_inputs['Components']['Telescope']['Stdv Aperture'],
+                       aperture                   = Qlunc_yaml_inputs['Components']['Telescope']['Aperture'],                       
+                       focal_length               = Qlunc_yaml_inputs['Components']['Telescope']['Focal length'],
+                       fiber_lens_d               = Qlunc_yaml_inputs['Components']['Telescope']['Fiber-lens distance'],
+                       fiber_lens_offset          = Qlunc_yaml_inputs['Components']['Telescope']['Fiber-lens offset'],
+                       effective_radius_telescope = Qlunc_yaml_inputs['Components']['Telescope']['Effective radius telescope'],
+                       output_beam_radius         = Qlunc_yaml_inputs['Components']['Telescope']['Output beam radius'],
+                       stdv_focal_length          = Qlunc_yaml_inputs['Components']['Telescope']['stdv Focal length'],
+                       stdv_fiber_lens_d          = Qlunc_yaml_inputs['Components']['Telescope']['stdv Fiber-lens distance'],
+                       stdv_fiber_lens_offset     = Qlunc_yaml_inputs['Components']['Telescope']['stdv Fiber-lens offset'], 
+                       stdv_eff_radius_telescope  = Qlunc_yaml_inputs['Components']['Telescope']['stdv Effective radius telescope'], 
                        unc_func      = uopc.UQ_Telescope)
 
 Probe_Volume = probe_volume (name                       = Qlunc_yaml_inputs['Probe Volume']['Name'],
-                             focal_length               = Qlunc_yaml_inputs['Probe Volume']['Focal length'],
-                             fiber_lens_d               = Qlunc_yaml_inputs['Probe Volume']['Fiber-lens distance'],
-                             fiber_lens_offset          = Qlunc_yaml_inputs['Probe Volume']['Fiber-lens offset'],
-                             effective_radius_telescope = Qlunc_yaml_inputs['Probe Volume']['Effective radius telescope'],
-                             output_beam_radius         = Qlunc_yaml_inputs['Probe Volume']['Output beam radius'],
                              extinction_coef            = Qlunc_yaml_inputs['Probe Volume']['Extinction coeficient'],
-                             stdv_focal_length          = Qlunc_yaml_inputs['Probe Volume']['stdv Focal length'],
-                             stdv_fiber_lens_d          = Qlunc_yaml_inputs['Probe Volume']['stdv Fiber-lens distance'],
-                             stdv_fiber_lens_offset     = Qlunc_yaml_inputs['Probe Volume']['stdv Fiber-lens offset'],
                              unc_func                   = upbc.UQ_Probe_volume)
 
 
@@ -100,8 +101,8 @@ Probe_Volume = probe_volume (name                       = Qlunc_yaml_inputs['Pro
 Optics_Module =  optics (name               = Qlunc_yaml_inputs['Modules']['Optics Module']['Name'],     # Introduce your Optics Module name.
                          scanner            = Scanner, #eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Scanner']),             # Scanner instance (in this example "Scanner") or "None". "None" means that you don´t want to include Scanner in Optics Module, either in uncertainty calculations.
                          optical_circulator = Optical_circulator ,#eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Optical circulator']),  # Optical Circulator instance (in this example "Optical_circulator") or "None". "None" means that you don´t want to include Optical circulator in Optics Module, either in uncertainty calculations.
-                         telescope          = 'None',#Telescope,
-                         # probe_volume       = 'None',#Probe_Volume,
+                         telescope          = Telescope,#None,#
+                         # probe_volume       = None,#Probe_Volume,
                          unc_func           = uopc.sum_unc_optics) #eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Uncertainty function']))
 
 

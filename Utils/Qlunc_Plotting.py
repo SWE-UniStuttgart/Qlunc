@@ -88,9 +88,9 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
     if flag_probe_volume_param: 
         typeLidar ="CW"
         wave      = Qlunc_yaml_inputs['Components']['Laser']['Wavelength']  # wavelength
-        f_length  = Qlunc_yaml_inputs['Probe Volume']['Focal length'] # focal length
+        f_length  = Qlunc_yaml_inputs['Components']['Telescope']['Focal length'] # focal length
         a         = np.arange(2e-3,4e-3,.02e-3) # distance fiber-end--telescope lens
-        a0        = Qlunc_yaml_inputs['Probe Volume']['Fiber-lens offset'] # the offset (a constant number), to avoid the fiber-end locates at the focal point, otherwise the lights will be parallel to each other
+        a0        = Qlunc_yaml_inputs['Components']['Telescope']['Fiber-lens offset'] # the offset (a constant number), to avoid the fiber-end locates at the focal point, otherwise the lights will be parallel to each other
         A         = 20e-3 # beam radius at the output lens
         ext_coef  = 0.085
         effective_radius_telescope  = 16.6e-3
@@ -101,7 +101,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         dist =(np.linspace(0,60,len(a)))  # distance from the focus position along the beam direction
         
         # Rayleigh length variation due to focus_distance variations (due to the distance between fiber-end and telescope lens)
-        zr = (wave*(focus_distance**2))/(np.pi*(Qlunc_yaml_inputs['Probe Volume']['Effective radius telescope'])**2)# Rayleigh length  (considered as the probe length) # half-width of the weighting function --> FWHM = 2*zr
+        zr = (wave*(focus_distance**2))/(np.pi*(Qlunc_yaml_inputs['Components']['Telescope']['Effective radius telescope'])**2)# Rayleigh length  (considered as the probe length) # half-width of the weighting function --> FWHM = 2*zr
     
         # Probe volume:
         #Probe_volume = np.pi*(A**2)*((4*(focus_distance**2)*wave)/(Telescope_aperture)) # based on Marijn notes

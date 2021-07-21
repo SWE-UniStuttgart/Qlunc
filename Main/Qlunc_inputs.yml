@@ -52,7 +52,16 @@ Components:
   Telescope:
     Name: Telescope_YAML
     Aperture: 2.e-2 #[m]
-    Stdv Aperture: 2.e-6 #[m]
+    Stdv Aperture: 2.e-6 #[m]   
+    Focal length: 200.e-3
+    Fiber-lens distance: 3.5e-3
+    Fiber-lens offset: 198.1e-3
+    Effective radius telescope: 16.6e-3
+    Output beam radius: 20.e-3
+    stdv Focal length: 1.e-4
+    stdv Fiber-lens distance: 1.e-6
+    stdv Fiber-lens offset: 1.e-6
+    stdv Effective radius telescope: 1.e-6
     Uncertainty function: uopc.UQ_Telescope
     
 # Photonics  
@@ -147,21 +156,14 @@ Atmospheric_inputs:
 # Data processing:-----------------------------------------------------
 Probe Volume:
   Name: 'Probe_Yaml'
-  Focal length: 200.e-3
-  Fiber-lens distance: 3.5e-3
-  Fiber-lens offset: 198.1e-3
-  Effective radius telescope: 16.6e-3
-  Output beam radius: 20.e-3
   Extinction coeficient: 0.085
-  stdv Focal length: 1.e-4
-  stdv Fiber-lens distance: 1.e-6
-  stdv Fiber-lens offset: 1.e-6
+ 
   
   
 # Plotting:------------------------------------------------------------
 Flags:
   Pointing accuracy uncertainty: False
   Scanning Pattern: True
-  Photodetector noise: True
+  Photodetector noise: False
   Save Scanning Coordinates: False
   Probe Volume parameters: True
