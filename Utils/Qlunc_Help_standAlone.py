@@ -111,7 +111,9 @@ def unc_comb(data):
         data_watts.append(10**(data_db/10))
     for i in range(len(data_watts[0])): # combining all uncertainties making sum of squares and the sqrt of the sum
         zipped_data.append(list(zip(*data_watts))[i])
-        res_watts.append(np.sqrt(sum(map (lambda x: x**2,zipped_data[i]))))
+        res_watts.append(np.sqrt(sum(map (lambda x: x**2,zipped_data[i])))) #  Combined stdv
+        # res_watts.append(sum(map (lambda x: x**2,zipped_data[i]))) #   Combined Variance
+        
         res_dB=10*np.log10(res_watts) #Convert into dB 
     del data_db
     return np.array(res_dB)

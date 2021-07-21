@@ -26,16 +26,17 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         Unc_r  = Qlunc_yaml_inputs['Probe Volume']['stdv Focal length']
         Unc_a  = Qlunc_yaml_inputs['Probe Volume']['stdv Fiber-lens distance']
         Unc_a0 = Qlunc_yaml_inputs['Probe Volume']['stdv Fiber-lens offset']
+        
         # Focus distance
-        f_distance = 1/((1/r)-(1/(a+a0))) 
+        focus_distance = 1/((1/r)-(1/(a+a0))) 
         
         # Uncertainty in focus distance
-        Unc_f_distance = np.sqrt((((1/r**2)/(((1/r)-(1/(a+a0)))**2))*Unc_r)**2 + (((1/a**2)/(((1/r)-(1/(a+a0)))**2))*Unc_a)**2 + (((1/a0**2)/(((1/r)-(1/(a+a0)))**2))*Unc_a0)**2)
+        Unc_focus_distance = np.sqrt((((1/r**2)/(((1/r)-(1/(a+a0)))**2))*Unc_r)**2 + (((1/(a+a0)**2)/(((1/r)-(1/(a+a0)))**2))*Unc_a)**2 + (((1/(a+a0)**2)/(((1/r)-(1/(a+a0)))**2))*Unc_a0)**2)
         
         # dist =(np.linspace(0,60,len(Qlunc_yaml_inputs['Probe Volume']['Fiber-lens distance'])))  # distance from the focus position along the beam direction
         
-        # Rayleigh length variation due to f_distance variations (due to the distance between fiber-end and telescope lens)
-        zr = (Qlunc_yaml_inputs['Components']['Laser']['Wavelength']*(f_distance**2))/(np.pi*(Qlunc_yaml_inputs['Probe Volume']['Effective radius telescope'])**2)# Rayleigh length  (considered as the probe length) # half-width of the weighting function --> FWHM = 2*zr
+        # Rayleigh length variation due to focus_distance variations (due to the distance between fiber-end and telescope lens)
+        zr = (Qlunc_yaml_inputs['Components']['Laser']['Wavelength']*(focus_distance**2))/(np.pi*(Qlunc_yaml_inputs['Probe Volume']['Effective radius telescope'])**2)# Rayleigh length  (considered as the probe length) # half-width of the weighting function --> FWHM = 2*zr
         
         # Saving coordenates to a file in desktop
         if os.path.isfile('./metadata/rayleigh_distance.txt'):
@@ -43,18 +44,18 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             file=open('./metadata/rayleigh_distance.txt','w')
             file.write(repr(zr))
             file.close()   
-            pdb.set_trace()
+            # pdb.set_trace()
         else:
             file=open('./metadata/rayleigh_distance.txt','w')
             file.write(repr(zr))
             file.close() 
         # Probe volume:
-        #Probe_volume = np.pi*(Qlunc_yaml_inputs['Probe Volume']['Output beam radius']**2)*((4*(f_distance**2)*Qlunc_yaml_inputs['Components']['Laser']['Wavelength'])/(Telescope_aperture)) # based on Marijn notes
+        #Probe_volume = np.pi*(Qlunc_yaml_inputs['Probe Volume']['Output beam radius']**2)*((4*(focus_distance**2)*Qlunc_yaml_inputs['Components']['Laser']['Wavelength'])/(Telescope_aperture)) # based on Marijn notes
         #VolCil       = np.pi*(Qlunc_yaml_inputs['Probe Volume']['Output beam radius']**2)*fwhm  # calculated based on the fwhm
         vol_zr       = np.pi*(Qlunc_yaml_inputs['Probe Volume']['Output beam radius']**2)*(2*zr) # based on the definition of Rayleigh distance in Liqin Jin notes (Focus calibration formula)
-        
+        # pdb.set_trace()
         # Lorentzian weighting function:
-        phi = (Qlunc_yaml_inputs['Probe Volume']['Extinction coeficient']/np.pi)*(1/((1**2)+(36.55-f_distance)**2))
+        phi = (Qlunc_yaml_inputs['Probe Volume']['Extinction coeficient']/np.pi)*(1/((1**2)+(36.55-focus_distance)**2))
         # F = (lamb/np.pi)/(a1**2+lamb**2)  # Lorentzian Weighting function 
     elif typeLidar=="Pulsed":
         print("pulsed lidar probe volume is a convolution between pulse shape and weighting function. Not inplemented yet")
@@ -70,8 +71,8 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         
     # fig2=plt.figure()
     # ax=fig.add_subplot(2,1,2)
-    # ax.plot(f_distance,zr)
-    return zr, Unc_f_distance
+    # ax.plot(focus_distance,zr)
+    return zr,focus_distance, Unc_focus_distance
     #%% ################################ FWHM ##############################
     
     # Method to calculate FWHM
@@ -99,7 +100,7 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # Unc_R=0.1  # uncertainty in focus distance
     # Unc_wave=1e-9 # Uncertainty in wavelength
     # Unc_aperture=3e-6 # uncertainty in beam radius at focus length 
-    # Unc_PV=np.sqrt(((8*f_distance*wave/aperture)*Unc_R)**2+((4*(f_distance**2)/aperture)*Unc_wave)**2+((4*(f_distance**2)*wave/(aperture**2))*Unc_aperture)**2)  # Uncertainty in probe volume
+    # Unc_PV=np.sqrt(((8*focus_distance*wave/aperture)*Unc_R)**2+((4*(focus_distance**2)/aperture)*Unc_wave)**2+((4*(focus_distance**2)*wave/(aperture**2))*Unc_aperture)**2)  # Uncertainty in probe volume
     
     # print('Lamb: {:.3f}'.format(lamb))
     # # print("FWHM: {:.3f}".format(fwhm))

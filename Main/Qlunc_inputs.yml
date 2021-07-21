@@ -85,7 +85,7 @@ Components:
   
   Laser:
     Name: Laser_YAML
-    Wavelength: 1550.e-9    # [m]
+    Wavelength: 1553.e-9    # [m]
     Stdv Wavelength: 1.e-9 #[m]
     Confidence interval: 3 # 1 => confidence interval= 68.27%, 2 => confidence interval= 90%, 3=> confidence interval= 95% 4=> confidence interval = 95.45%, 5 => confidence interval= 99%, 6=> confidence interval= 99.73%
     Output power: 12.5e-3 #[w]
@@ -148,14 +148,14 @@ Atmospheric_inputs:
 Probe Volume:
   Name: 'Probe_Yaml'
   Focal length: 200.e-3
-  Fiber-lens distance: 2.e-3
+  Fiber-lens distance: 2.35e-3
   Fiber-lens offset: 198.1e-3
   Effective radius telescope: 16.6e-3
   Output beam radius: 20.e-3
   Extinction coeficient: 0.085
-  stdv Focal length: 1.e-3
+  stdv Focal length: 1.e-6
   stdv Fiber-lens distance: 1.e-6
-  stdv Fiber-lens offset: 10.e-6
+  stdv Fiber-lens offset: 1.e-6
   
   
 # Plotting:------------------------------------------------------------
