@@ -199,14 +199,17 @@ class telescope():
                 print('Created new telescope: {}'.format(self.TelescopeID))
 
 class probe_volume():
-    def __init__(self,name,focal_length,fiber_lense_d,fiber_lense_offset,effective_radius_telescope,extinction_coef,output_beam_radius,unc_func):
+    def __init__(self,name,focal_length,fiber_lens_d,fiber_lens_offset,effective_radius_telescope,extinction_coef,output_beam_radius,stdv_fiber_lens_d,stdv_fiber_lens_offset,stdv_focal_length,unc_func):
                  self.ProbeVolumeID              = name         
                  self.focal_length               = focal_length
-                 self.fiber_lense_d              = fiber_lense_d
-                 self.fiber_lense_offset         = fiber_lense_offset
+                 self.fiber_lens_d               = fiber_lens_d
+                 self.fiber_lens_offset          = fiber_lens_offset
                  self.effective_radius_telescope = effective_radius_telescope
                  self.extinction_coef            = extinction_coef
                  self.output_beam_radius         = output_beam_radius
+                 self.stdv_fiber_lens_d          = stdv_fiber_lens_d
+                 self.stdv_fiber_lens_offset     = stdv_fiber_lens_offset
+                 self.stdv_focal_length          = stdv_focal_length
                  self.Uncertainty                = unc_func
                  print('Class "Probe volume" created')
 #%% LIDAR MODULES

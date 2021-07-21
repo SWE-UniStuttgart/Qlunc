@@ -15,19 +15,23 @@ from Utils import Scanning_patterns as SP
 from Utils import Qlunc_Plotting as QPlot
 
 def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
-    
-    # f_length  = 200e-3 # focal length
-    # Qlunc_yaml_inputs['Probe Volume']['Fiber-lense distance']         = np.arange(2e-3,4e-3,.02e-3) # distance fiber-end--telescope lens
-    # a0        = 198.1e-3 # the offset (a constant number), to avoid the fiber-end locates at the focal point, otherwise the lights will be parallel to each other
-    # A         = 20e-3 # beam radius at the output lens
-    # ext_coef  = 0.085
-    # effective_radius_telescope  = 16.5e-3
-    
-    # %% Liqin jin
+    # Liqin jin model
     if Qlunc_yaml_inputs['Components']['Lidar general inputs']['Type']=="CW":
-        # The focus distance varies with the distance between the fiber-end and the telescope lens. So that, also the probe length varies with such distance.
-        #Calculating focus distance depending on the distance between the fiber-end and the telescope lens:
-        f_distance = 1/((1/Qlunc_yaml_inputs['Probe Volume']['Focal length'])-(1/(Qlunc_yaml_inputs['Probe Volume']['Fiber-lens distance']+Qlunc_yaml_inputs['Probe Volume']['Fiber-lens offset']))) # Focus distance
+        # The focus distance varies with the focal length and the distance between the fiber-end and the telescope lens as well. So that, also the probe length varies with such distance.
+        # Calculating focus distance depending on the distance between the fiber-end and the telescope lens:
+        
+        r      = Qlunc_yaml_inputs['Probe Volume']['Focal length']
+        a      = Qlunc_yaml_inputs['Probe Volume']['Fiber-lens distance']
+        a0     = Qlunc_yaml_inputs['Probe Volume']['Fiber-lens offset']
+        Unc_r  = Qlunc_yaml_inputs['Probe Volume']['stdv Focal length']
+        Unc_a  = Qlunc_yaml_inputs['Probe Volume']['stdv Fiber-lens distance']
+        Unc_a0 = Qlunc_yaml_inputs['Probe Volume']['stdv Fiber-lens offset']
+        # Focus distance
+        f_distance = 1/((1/r)-(1/(a+a0))) 
+        
+        # Uncertainty in focus distance
+        Unc_f_distance = np.sqrt((((1/r**2)/(((1/r)-(1/(a+a0)))**2))*Unc_r)**2 + (((1/a**2)/(((1/r)-(1/(a+a0)))**2))*Unc_a)**2 + (((1/a0**2)/(((1/r)-(1/(a+a0)))**2))*Unc_a0)**2)
+        
         # dist =(np.linspace(0,60,len(Qlunc_yaml_inputs['Probe Volume']['Fiber-lens distance'])))  # distance from the focus position along the beam direction
         
         # Rayleigh length variation due to f_distance variations (due to the distance between fiber-end and telescope lens)
@@ -67,7 +71,7 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # fig2=plt.figure()
     # ax=fig.add_subplot(2,1,2)
     # ax.plot(f_distance,zr)
-    return zr 
+    return zr, Unc_f_distance
     #%% ################################ FWHM ##############################
     
     # Method to calculate FWHM

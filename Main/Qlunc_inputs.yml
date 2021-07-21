@@ -153,6 +153,9 @@ Probe Volume:
   Effective radius telescope: 16.6e-3
   Output beam radius: 20.e-3
   Extinction coeficient: 0.085
+  stdv Focal length: 1.e-3
+  stdv Fiber-lens distance: 1.e-6
+  stdv Fiber-lens offset: 10.e-6
   
   
 # Plotting:------------------------------------------------------------

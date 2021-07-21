@@ -85,11 +85,14 @@ Telescope = telescope (name          = Qlunc_yaml_inputs['Components']['Telescop
 
 Probe_Volume = probe_volume (name                       = Qlunc_yaml_inputs['Probe Volume']['Name'],
                              focal_length               = Qlunc_yaml_inputs['Probe Volume']['Focal length'],
-                             fiber_lense_d              = Qlunc_yaml_inputs['Probe Volume']['Fiber-lens distance'],
-                             fiber_lense_offset         = Qlunc_yaml_inputs['Probe Volume']['Fiber-lens offset'],
+                             fiber_lens_d               = Qlunc_yaml_inputs['Probe Volume']['Fiber-lens distance'],
+                             fiber_lens_offset          = Qlunc_yaml_inputs['Probe Volume']['Fiber-lens offset'],
                              effective_radius_telescope = Qlunc_yaml_inputs['Probe Volume']['Effective radius telescope'],
                              output_beam_radius         = Qlunc_yaml_inputs['Probe Volume']['Output beam radius'],
                              extinction_coef            = Qlunc_yaml_inputs['Probe Volume']['Extinction coeficient'],
+                             stdv_focal_length          = Qlunc_yaml_inputs['Probe Volume']['stdv Focal length'],
+                             stdv_fiber_lens_d          = Qlunc_yaml_inputs['Probe Volume']['stdv Fiber-lens distance'],
+                             stdv_fiber_lens_offset     = Qlunc_yaml_inputs['Probe Volume']['stdv Fiber-lens offset'],
                              unc_func                   = upbc.UQ_Probe_volume)
 
 
