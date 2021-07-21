@@ -19,6 +19,7 @@ from Utils.Qlunc_ImportModules import *
 from Utils import Qlunc_Help_standAlone as SA
 from Utils import Scanning_patterns as SP
 from Utils import Qlunc_Plotting as QPlot
+# from Functions import UQ_ProbeVolume_Classes as upbc
 
 
 #%% SCANNER:
@@ -61,13 +62,12 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     stdv_roll   = np.array(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))
     
     
-
-    
     # stdv focus distance, cone angle and azimuth:
-    stdv_param1 = Lidar.optics.scanner.stdv_focus_dist    
+    stdv_param1 = Lidar.probe_volume.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)['Focus Distance uncertainty']
+    # stdv_param1 = Lidar.optics.scanner.stdv_focus_dist    
     stdv_param2 = np.deg2rad(Lidar.optics.scanner.stdv_cone_angle)
     stdv_param3 = np.deg2rad(Lidar.optics.scanner.stdv_azimuth)
-    
+    # pdb.set_trace()
     # Differentiate between 'VAD' or 'Scanning' lidar depending on user's choice:
     if Qlunc_yaml_inputs['Components']['Scanner']['Type']=='VAD':
         param1=Lidar.optics.scanner.focus_dist

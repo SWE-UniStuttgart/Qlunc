@@ -52,7 +52,7 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         # Probe volume:
         #Probe_volume = np.pi*(Qlunc_yaml_inputs['Probe Volume']['Output beam radius']**2)*((4*(focus_distance**2)*Qlunc_yaml_inputs['Components']['Laser']['Wavelength'])/(Telescope_aperture)) # based on Marijn notes
         #VolCil       = np.pi*(Qlunc_yaml_inputs['Probe Volume']['Output beam radius']**2)*fwhm  # calculated based on the fwhm
-        vol_zr       = np.pi*(Qlunc_yaml_inputs['Probe Volume']['Output beam radius']**2)*(2*zr) # based on the definition of Rayleigh distance in Liqin Jin notes (Focus calibration formula)
+        vol_zr       = np.pi*(Qlunc_yaml_inputs['Probe Volume']['Output beam radius']**2)*(2*zr) # based on the definition of Rayleigh length in Liqin Jin notes (Focus calibration formula)
         # pdb.set_trace()
         # Lorentzian weighting function:
         phi = (Qlunc_yaml_inputs['Probe Volume']['Extinction coeficient']/np.pi)*(1/((1**2)+(36.55-focus_distance)**2))
@@ -60,19 +60,12 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     elif typeLidar=="Pulsed":
         print("pulsed lidar probe volume is a convolution between pulse shape and weighting function. Not inplemented yet")
         
-    
+    Final_Output_UQ_ProbeVolume = {'Rayleigh Distance':zr,'Focus Distance':focus_distance,'Focus Distance uncertainty':Unc_focus_distance}
+
     # Plotting:
-        
-    # fig=plt.figure()
-    # ax=fig.add_subplot(2,1,1)
-    # ax.plot(dist,phi)
-    # ax.set_yscale('log')
     
-        
-    # fig2=plt.figure()
-    # ax=fig.add_subplot(2,1,2)
-    # ax.plot(focus_distance,zr)
-    return zr,focus_distance, Unc_focus_distance
+    QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_ProbeVolume,False,False,Qlunc_yaml_inputs['Flags']['Probe Volume parameters'])
+    return Final_Output_UQ_ProbeVolume
     #%% ################################ FWHM ##############################
     
     # Method to calculate FWHM
