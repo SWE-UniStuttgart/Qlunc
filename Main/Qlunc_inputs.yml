@@ -19,26 +19,26 @@ Components:
     
     Name: Scanner_Yaml # Provide an ID to your lidar:    
     Origin: [0,0,60]  # Lidar position in meters: [x,y,z]    
-    Pattern: 'lissajous' # 'lissajous', user defined pattern or 'None' in case none predefined pattern is used
+    Pattern: 'None' # 'lissajous', user defined pattern or 'None' in case none predefined pattern is used
     # Lissajous patterns:
-    Lissajous parameters: [50,60,60,3,3] # [x_dim,y_dim,z_dim,q,p]
+    Lissajous parameters: [36,50,50,3,3] # [x_dim,y_dim,z_dim,q,p]
     Sample rate: 0   # Lidar sample rate. In meters. Use 0 for now.
-    Type: VAD    # Type of the scanning head: VAD or SCAN (Scanning Lidar).
+    Type: SCAN    # Type of the scanning head: VAD or SCAN (Scanning Lidar).
   
     # STDV in lidar angles and focus distance
-    stdv focus distance: 0   # [m]  # This will be removed since the error in focus distance  is calculated using probe volume parameters (see probe volume section)
-    stdv Cone angle: 0      # [deg]
-    stdv Azimuth: 0         # [deg]   
+    stdv focus distance: 3.7   # [m]  # This will be removed since the error in focus distance  is calculated using probe volume parameters (see probe volume section)
+    stdv Cone angle: 1.5      # [deg]
+    stdv Azimuth: 1.9         # [deg]   
    
     # VAD Pattern:
-    Focus distance: [20]   # [m]
+    Focus distance: [69]   # [m]
     Cone angle: [30]       # [deg]
     Azimuth: [0,360,10]     # [deg] [origin,end,steps]
 
     # Scanning Lidar Pattern:
-    x: [-40]
-    y: [0]   
-    z: [0] #[10,   -10, -10 , 10 ]
+    x: [10, -10, 10, -10, 0]
+    y: [30, 30, 30, 30,30]   
+    z: [10,-10, -10 , 10,0]
         
     # Uncertainty function:
     Uncertainty function: uopc.UQ_Scanner
@@ -163,9 +163,9 @@ Probe Volume:
   
 # Plotting:------------------------------------------------------------
 Flags:
-  Pointing accuracy uncertainty: False
-  Scanning Pattern: False
+  Pointing accuracy uncertainty: True
+  Scanning Pattern: True
   Photodetector noise: False
   Save Scanning Coordinates: False
   Probe Volume parameters: False
-  Optical_amplifier_noise: True
+  Optical_amplifier_noise: False
