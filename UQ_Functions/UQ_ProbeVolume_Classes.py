@@ -42,13 +42,13 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         Unc_zr = np.sqrt(((focus_distance**2)*Unc_wavelength/(np.pi*rad_eff))**2 + ((2*wavelength*focus_distance*Unc_focus_distance)/(np.pi*rad_eff**2))**2 + ((2*wavelength*(focus_distance**2)*Unc_eff_radius_telescope)/(np.pi*rad_eff**3))**2)
         
         
-        # Saving coordenates to a file in desktop
+        # Saving rayleigh length to a file in desktop to be read by matlab
         if os.path.isfile('./metadata/rayleigh_distance.txt'):
             os.remove('./metadata/rayleigh_distance.txt')
             file=open('./metadata/rayleigh_distance.txt','w')
             file.write(repr(zr))
             file.close()   
-            pdb.set_trace()
+            # pdb.set_trace()
         else:
             file=open('./metadata/rayleigh_distance.txt','w')
             file.write(repr(zr))
