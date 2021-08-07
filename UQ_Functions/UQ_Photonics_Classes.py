@@ -108,7 +108,7 @@ def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     Lidar.lidar_inputs.dataframe['Photodetector']=Final_Output_UQ_Photo['Uncertainty_Photodetector'][0]
     
     # Plotting:
-    QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Photo,False,Qlunc_yaml_inputs['Flags']['Photodetector noise'],False)
+    QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Photo,False,Qlunc_yaml_inputs['Flags']['Photodetector noise'],False,False)
     return Final_Output_UQ_Photo,Lidar.lidar_inputs.dataframe
 
 
@@ -155,13 +155,14 @@ def UQ_Optical_amplifier(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # ASE noise:
     UQ_Optical_amplifier    = [np.array([10*np.log10((NF_w-(1/G_w))*cts.h*(cts.c/Lidar.lidar_inputs.Wavelength)*Lidar.photonics.optical_amplifier.OA_BW*G_w)]*len(Atmospheric_Scenario.temperature))] 
     
-    # Optical SNR
+    # Optical SNR: The OSNR is the ratio between the signal power and the noise power in a given bandwidth.
     OSNR = 10*np.log10(Qlunc_yaml_inputs['Components']['Laser']['Output power']/(NF_w*cts.h*(cts.c/Lidar.lidar_inputs.Wavelength)*Lidar.photonics.optical_amplifier.OA_BW))
-    OSNR_plot = 10*np.log10(((Lidar.photonics.photodetector.Power_interval)/(NF_w*cts.h*(cts.c/Lidar.lidar_inputs.Wavelength)*Lidar.photonics.optical_amplifier.OA_BW))/1000)
+    OSNR_plot = 10*np.log10(((Lidar.photonics.optical_amplifier.Power_interval)/(NF_w*cts.h*(cts.c/Lidar.lidar_inputs.Wavelength)*Lidar.photonics.optical_amplifier.OA_BW))/1000)
     Final_Output_UQ_Optical_Amplifier = {'Uncertainty_OpticalAmp':UQ_Optical_amplifier, 'OSNR': OSNR_plot}
     Lidar.lidar_inputs.dataframe['Optical Amplifier'] = Final_Output_UQ_Optical_Amplifier['Uncertainty_OpticalAmp'][0]
+    # pdb.set_trace()
     # Plotting:
-    # QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Optical_Amplifier,False,Qlunc_yaml_inputs['Flags']['Photodetector noise'])
+    QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Optical_Amplifier,False,False,False,Qlunc_yaml_inputs['Flags']['Optical_amplifier_noise'])
     return Final_Output_UQ_Optical_Amplifier,Lidar.lidar_inputs.dataframe
 
 
