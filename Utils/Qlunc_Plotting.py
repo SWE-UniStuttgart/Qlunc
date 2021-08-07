@@ -11,7 +11,7 @@ University of Stuttgart(c)
 from Utils.Qlunc_ImportModules import *
 
 #%% Plotting:
-def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,flag_plot_photodetector_noise,flag_probe_volume_param):
+def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,flag_plot_photodetector_noise,flag_probe_volume_param,flag_plot_optical_amplifier_noise):
     """
     Plotting. Location: .Utils/Qlunc_plotting.py
     
@@ -92,9 +92,9 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         a         = np.arange(2e-3,4e-3,.02e-3) # distance fiber-end--telescope lens
         a0        = Qlunc_yaml_inputs['Components']['Telescope']['Fiber-lens offset'] # the offset (a constant number), to avoid the fiber-end locates at the focal point, otherwise the lights will be parallel to each other
         A         = 20e-3 # beam radius at the output lens
-        ext_coef  = 0.085
+        ext_coef  = 1
         effective_radius_telescope  = 16.6e-3
-
+        s = 36.55 # distance from telescope to the target
         # The focus distance varies with the distance between the fiber-end and the telescope lens. So that, also the probe length varies with such distance.
         #Calculating focus distance depending on the distance between the fiber-end and the telescope lens:
         focus_distance = 1/((1/f_length)-(1/(a+a0))) # Focus distance
@@ -108,31 +108,39 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         vol_zr       = np.pi*(A**2)*(2*zr) # based on the definition of Rayleigh length in Liqin Jin notes (Focus calibration formula)
         
         # Lorentzian weighting function:
-        phi = (ext_coef/np.pi)*(1/((1**2)+(36.55-focus_distance)**2))
+        phi = (ext_coef/np.pi)*(zr/((zr**2)+(s-focus_distance)**2))
         
         # Plotting
         fig=plt.figure()
-        ax2=fig.add_subplot(2,2,1)
-        ax2.plot(dist,phi)
-        ax2.set_yscale('log')
+        axs2=fig.add_subplot(2,2,1)
+        axs2.plot(dist,phi)
+        axs2.set_yscale('log')
+        axs2.title.set_text('Weighting function')
+        axs2.set_xlabel('focus distance [m]',fontsize=plot_param['axes_label_fontsize'])
+        axs2.set_ylabel('$\phi$ [-]',fontsize=plot_param['axes_label_fontsize'])
+
+        axs3=fig.add_subplot(2,2,2)
+        axs3.plot(focus_distance,zr)
+        # axs3.set_xlabel('focus distance [m]',fontsize=plot_param['axes_label_fontsize'])
+        axs3.set_ylabel('{} [m]'.format('$\mathregular{z_{R}}$'),fontsize=plot_param['axes_label_fontsize'])
         
-            
-        # fig2=plt.figure()
-        ax3=fig.add_subplot(2,2,2)
-        ax3.plot(focus_distance,zr)
+        axs4=fig.add_subplot(2,2,3)
+        axs4.plot(a,zr)
+        axs4.set_xlabel('(a+a0) [m]',fontsize=plot_param['axes_label_fontsize'])
+        axs4.set_ylabel('{} [m]'.format('$\mathregular{z_{R}}$'),fontsize=plot_param['axes_label_fontsize'])
         
-        ax4=fig.add_subplot(2,2,3)
-        ax4.plot(a,zr)
         
-        ax5=fig.add_subplot(2,2,4)
-        ax5.plot(focus_distance,a)
-    
+        axs5=fig.add_subplot(2,2,4)
+        axs5.plot(focus_distance,a)
+        axs5.set_xlabel('focus distance [m]',fontsize=plot_param['axes_label_fontsize'])
+        axs5.set_ylabel('(a+a0) [m]',fontsize=plot_param['axes_label_fontsize'])
     
         # Titles and axes
-        ax2.title.set_text('weighting function')
-        ax3.title.set_text('Rayleigh Vs focus distance')
-        ax4.title.set_text('Rayleigh Vs Fiber-end')
-        ax5.title.set_text('Fiber-end Vs focus distance')
+
+        
+        axs3.title.set_text('Rayleigh Vs focus distance')
+        axs4.title.set_text('Rayleigh Vs Fiber-end/lens')
+        axs5.title.set_text('Fiber-end/lens distance Vs focus distance')
     
     
     
@@ -142,20 +150,32 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
 
 
 ###############   Plot optical amplifier noise   #############################    
-    # if flag_plot_optical_amplifier_noise:
-    #     # Quantifying uncertainty from photodetector and interval domain for the plot Psax is define in the photodetector class properties)
-    #     Psax=10*np.log10(Lidar.photonics.photodetector.Power_interval) 
-    
-    #     # Plotting:
-    #     fig,axs1=plt.subplots()
-    #     label0=['Optical amplifier OSNR']
-    #     i_label=0
-    #     for i in Data['SNR_data_photodetector']:            
-    #         axs1.plot(Psax,Data['OSNR'][i][0],label=label0[i_label])  
-    #         i_label+=1
-    #     axs1.set_xlabel('Input Signal optical power [dBm]',fontsize=plot_param['axes_label_fontsize'])
-    #     axs1.set_ylabel('SNR [dB]',fontsize=plot_param['axes_label_fontsize'])
-    #     axs1.legend(fontsize=plot_param['legend_fontsize'])
-    #     axs1.set_title('OSNR Optical Amplifier',fontsize=plot_param['title_fontsize'])
-    #     axs1.grid(axis='both')
-    #     axs1.text(.90,.05,plot_param['Qlunc_version'],transform=axs1.transAxes, fontsize=14,verticalalignment='top',bbox=dict(boxstyle='round', facecolor='white', alpha=0.5))
+    if flag_plot_optical_amplifier_noise:
+        # Quantifying uncertainty from photodetector and interval domain for the plot Psax is define in the photodetector class properties)
+        # Psax=10*np.log10(np.linspace(0,20e-3,1000))
+        
+        # Plotting:
+        fig=plt.figure()
+        axs1=fig.subplots()
+        pdb.set_trace()
+        label0=['Optical amplifier OSNR']
+        axs1.plot(10*np.log10(Lidar.photonics.optical_amplifier.Power_interval),Data['OSNR'],label=label0[0])  
+        # axs1.plot(Lidar.photonics.optical_amplifier.Power_interval,Data['OSNR'],label=label0[0],marker='o')  
+
+        axs1.set_xlabel('Input Signal optical power [dBm]',fontsize=plot_param['axes_label_fontsize'])
+        axs1.set_ylabel('OSNR [dB]',fontsize=plot_param['axes_label_fontsize'])
+        axs1.legend(fontsize=plot_param['legend_fontsize'])
+        axs1.set_title('OSNR - Optical Amplifier',fontsize=plot_param['title_fontsize'])
+        axs1.grid(axis='both')
+        axs1.text(.90,.05,plot_param['Qlunc_version'],transform=axs1.transAxes, fontsize=14,verticalalignment='top',bbox=dict(boxstyle='round', facecolor='white', alpha=0.5))
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
