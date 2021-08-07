@@ -63,8 +63,8 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     
     # stdv focus distance, cone angle and azimuth:
-    stdv_param1 = Lidar.probe_volume.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)['Focus Distance uncertainty']
-    # stdv_param1 = Lidar.optics.scanner.stdv_focus_dist    
+    # stdv_param1 = Lidar.probe_volume.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)['Focus Distance uncertainty']
+    stdv_param1 = Lidar.optics.scanner.stdv_focus_dist    
     stdv_param2 = np.deg2rad(Lidar.optics.scanner.stdv_cone_angle)
     stdv_param3 = np.deg2rad(Lidar.optics.scanner.stdv_azimuth)
     # pdb.set_trace()
@@ -202,7 +202,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # pdb.set_trace()
     
     # Plotting
-    QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,Qlunc_yaml_inputs['Flags']['Scanning Pattern'],False,False)
+    QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,Qlunc_yaml_inputs['Flags']['Scanning Pattern'],False,False,False)
     return Final_Output_UQ_Scanner,Lidar.lidar_inputs.dataframe
 
 #%% Optical circulator:
