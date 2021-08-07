@@ -79,7 +79,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         axs1.set_xlabel('Input Signal optical power [dBm]',fontsize=plot_param['axes_label_fontsize'])
         axs1.set_ylabel('SNR [dB]',fontsize=plot_param['axes_label_fontsize'])
         axs1.legend(fontsize=plot_param['legend_fontsize'])
-        axs1.set_title('SNR Photodetector',fontsize=plot_param['title_fontsize'])
+        axs1.set_title('SNR - Photodetector',fontsize=plot_param['title_fontsize'])
         axs1.grid(axis='both')
         axs1.text(.90,.05,plot_param['Qlunc_version'],transform=axs1.transAxes, fontsize=14,verticalalignment='top',bbox=dict(boxstyle='round', facecolor='white', alpha=0.5))
 
