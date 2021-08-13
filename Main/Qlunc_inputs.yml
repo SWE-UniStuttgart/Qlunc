@@ -26,9 +26,9 @@ Components:
     Type: SCAN    # Type of the scanning head: VAD or SCAN (Scanning Lidar).
   
     # STDV in lidar angles and focus distance
-    stdv focus distance: 3.7   # [m]  # This will be removed since the error in focus distance  is calculated using probe volume parameters (see probe volume section)
-    stdv Cone angle: 1.5      # [deg]
-    stdv Azimuth: 1.9         # [deg]   
+    #stdv focus distance: 3.7   # [m]  # This will be removed since the error in focus distance is calculated using telescope parameters parameters (see Telescope section)
+    stdv Cone angle: 0      # [deg]
+    stdv Azimuth: 0         # [deg]   
    
     # VAD Pattern:
     Focus distance: [69]   # [m]
@@ -36,9 +36,9 @@ Components:
     Azimuth: [0,360,10]     # [deg] [origin,end,steps]
 
     # Scanning Lidar Pattern:
-    x: [10, -10, 10, -10, 0]
-    y: [30, 30, 30, 30,30]   
-    z: [10,-10, -10 , 10,0]
+    #x: [0] # This will be removed since the focus distance is calculated using telescope parameters. By variying the fiber-lens distance you actually vary the focus distance (see  Telescope section)
+    y: [0]   
+    z: [0]
         
     # Uncertainty function:
     Uncertainty function: uopc.UQ_Scanner
@@ -52,16 +52,17 @@ Components:
   Telescope:
     Name: Telescope_YAML
     Aperture: 2.e-2 #[m]
-    Stdv Aperture: 2.e-6 #[m]   
+     
     Focal length: 200.e-3
-    Fiber-lens distance: 2.1e-3
+    Fiber-lens distance: 2.4e-3
     Fiber-lens offset: 198.1e-3
     Effective radius telescope: 16.6e-3
     Output beam radius: 20.e-3
-    stdv Focal length: 1.e-6
-    stdv Fiber-lens distance: 1.e-6
-    stdv Fiber-lens offset: 1.e-6
-    stdv Effective radius telescope: 1.e-6
+    Stdv Aperture: 2.e-6 #[m]                   # These errors are for now just assumptions (*)  
+    stdv Focal length: 1.e-6                    # (*)  
+    stdv Fiber-lens distance: 1.e-6             # (*)
+    stdv Fiber-lens offset: 1.e-6               # (*)
+    stdv Effective radius telescope: 1.e-6      # (*)
     Uncertainty function: uopc.UQ_Telescope
     
 # Photonics  
@@ -96,7 +97,7 @@ Components:
   Laser:
     Name: Laser_YAML
     Wavelength: 1553.e-9    # [m]
-    Stdv Wavelength: 1.e-9 #[m]
+    stdv Wavelength: 1.e-9 #[m]
     Confidence interval: 3 # 1 => confidence interval= 68.27%, 2 => confidence interval= 90%, 3=> confidence interval= 95% 4=> confidence interval = 95.45%, 5 => confidence interval= 99%, 6=> confidence interval= 99.73%
     Output power: 12.5e-3 #[w]
     Bandwidth: 250 # Hz
@@ -167,5 +168,5 @@ Flags:
   Scanning Pattern: True
   Photodetector noise: False
   Save Scanning Coordinates: False
-  Probe Volume parameters: False
+  Probe Volume parameters: True
   Optical_amplifier_noise: False
