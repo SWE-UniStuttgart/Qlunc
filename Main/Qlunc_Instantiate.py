@@ -134,8 +134,10 @@ Photodetector    = photodetector(name             = Qlunc_yaml_inputs['Component
                                  Power_interval   = np.array(np.arange(Qlunc_yaml_inputs['Components']['Photodetector']['Power interval'][0],
                                                                        Qlunc_yaml_inputs['Components']['Photodetector']['Power interval'][1],
                                                                        Qlunc_yaml_inputs['Components']['Photodetector']['Power interval'][2])),#np.arange(Qlunc_yaml_inputs['Components']['Photodetector']['Power interval']), # In [w]. Power interval for the photodetector domain in photodetector SNR plot. 
+                                 Active_Surf      = Qlunc_yaml_inputs['Components']['Photodetector']['Active Surface'],
                                  Gain_TIA         = Qlunc_yaml_inputs['Components']['Photodetector']['Gain TIA'],                    # In [dB]. If there is a transimpedance amplifier.
                                  V_Noise_TIA      = Qlunc_yaml_inputs['Components']['Photodetector']['V Noise TIA'],                 # In [V]. If there is a transimpedance amplifier.
+                                 
                                  unc_func         = uphc.UQ_Photodetector) #eval(Qlunc_yaml_inputs['Components']['Photodetector']['Uncertainty function']))  # Function describing Photodetector uncertainty. Further informaion in "UQ_Photonics_Classes.py" comments.
 
 Laser           = laser(name              = Qlunc_yaml_inputs['Components']['Laser']['Name'],
