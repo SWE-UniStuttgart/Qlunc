@@ -66,8 +66,8 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
 ###############   Plot photodetector noise   #############################       
     if flag_plot_photodetector_noise:
         # Quantifying uncertainty from photodetector and interval domain for the plot Psax is define in the photodetector class properties)
-        Psax=10*np.log10(Lidar.photonics.photodetector.Power_interval) 
-    
+        Psax=(Lidar.photonics.photodetector.Power_interval) 
+        pdb.set_trace()
         # Plotting:
         fig,axs1=plt.subplots()
         label0=['Shot SNR','Thermal SNR','Dark current SNR','Total SNR','TIA SNR']
@@ -76,7 +76,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             axs1.plot(Psax,Data['SNR_data_photodetector'][i][0],label=label0[i_label])  
             i_label+=1
         # axs1.plot(Psax,Data['Total_SNR_data'],label='Total SNR')
-        axs1.set_xlabel('Input Signal optical power [dBm]',fontsize=plot_param['axes_label_fontsize'])
+        axs1.set_xlabel('Input Signal optical power [W]',fontsize=plot_param['axes_label_fontsize'])
         axs1.set_ylabel('SNR [dB]',fontsize=plot_param['axes_label_fontsize'])
         axs1.legend(fontsize=plot_param['legend_fontsize'])
         axs1.set_title('SNR - Photodetector',fontsize=plot_param['title_fontsize'])
