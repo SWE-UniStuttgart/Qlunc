@@ -33,8 +33,8 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 'title_fontsize'      : 29,
                 'suptitle_fontsize'   : 23,
                 'legend_fontsize'     : 15,
-                'xlim'                : [-60,60],
-                'ylim'                : [-60,60],
+                'xlim'                : [-225,225],
+                'ylim'                : [-225,225],
                 'zlim'                : [0,80],
                 'markersize'          : 5,
                 'markersize_lidar'    : 9,
@@ -51,7 +51,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         axs0=plt.axes(projection='3d')
         axs0.plot([Lidar.optics.scanner.origin[0]],[Lidar.optics.scanner.origin[1]],[Lidar.optics.scanner.origin[2]],'ob',label='{} coordinates [{},{},{}]'.format(Lidar.LidarID,Lidar.optics.scanner.origin[0],Lidar.optics.scanner.origin[1],Lidar.optics.scanner.origin[2]),markersize=plot_param['markersize_lidar'])
         axs0.plot(Data['MeasPoint_Coordinates'][0],Data['MeasPoint_Coordinates'][1],Data['MeasPoint_Coordinates'][2],plot_param['markerTheo'],markersize=plot_param['markersize'],label='Theoretical measuring point')
-        axs0.plot(Data['NoisyMeasPoint_Coordinates'][0],Data['NoisyMeasPoint_Coordinates'][1],Data['NoisyMeasPoint_Coordinates'][2],plot_param['marker'],markersize=plot_param['markersize'],label='Distance error [m] = {0:.3g}$\pm${1:.3g}'.format(np.mean(Data['Simu_Mean_Distance']),np.mean(Data['STDV_Distance'])))
+        axs0.plot(Data['NoisyMeasPoint_Coordinates'][0],Data['NoisyMeasPoint_Coordinates'][1],Data['NoisyMeasPoint_Coordinates'][2],plot_param['marker'],markersize=plot_param['markersize'],label='Distance error [m] = {0:.3g}$\pm${1:.3g}'.format(np.mean(Data['Simu_Mean_Distance_Error']),np.mean(Data['STDV_Distance'])))
         
         # Setting labels, legend, title and axes limits:
         axs0.set_xlabel('x [m]',fontsize=plot_param['axes_label_fontsize'])#,orientation=plot_param['tick_labelrotation'])
@@ -86,19 +86,19 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
 
 ###############   Plot Probe Volume parameters    ############################
     if flag_probe_volume_param: 
-        typeLidar ="CW"
+        # typeLidar ="CW"
         wave      = Qlunc_yaml_inputs['Components']['Laser']['Wavelength']  # wavelength
         f_length  = Qlunc_yaml_inputs['Components']['Telescope']['Focal length'] # focal length
         a         = np.arange(2e-3,4e-3,.02e-3) # distance fiber-end--telescope lens
         a0        = Qlunc_yaml_inputs['Components']['Telescope']['Fiber-lens offset'] # the offset (a constant number), to avoid the fiber-end locates at the focal point, otherwise the lights will be parallel to each other
         A         = 20e-3 # beam radius at the output lens
         ext_coef  = 1
-        effective_radius_telescope  = 16.6e-3
-        s = 36.55 # distance from telescope to the target
+        # effective_radius_telescope  = 16.6e-3
+        s = 50 # distance from telescope to the target
         # The focus distance varies with the distance between the fiber-end and the telescope lens. So that, also the probe length varies with such distance.
         #Calculating focus distance depending on the distance between the fiber-end and the telescope lens:
         focus_distance = 1/((1/f_length)-(1/(a+a0))) # Focus distance
-        dist =(np.linspace(0,60,len(a)))  # distance from the focus position along the beam direction
+        dist =(np.linspace(0,80,len(a)))  # distance from the focus position along the beam direction
         
         # Rayleigh length variation due to focus_distance variations (due to the distance between fiber-end and telescope lens)
         zr = (wave*(focus_distance**2))/(np.pi*(Qlunc_yaml_inputs['Components']['Telescope']['Effective radius telescope'])**2)# Rayleigh length  (considered as the probe length) # half-width of the weighting function --> FWHM = 2*zr
@@ -109,6 +109,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         
         # Lorentzian weighting function:
         phi = (ext_coef/np.pi)*(zr/((zr**2)+(s-focus_distance)**2))
+        # phi = (ext_coef/np.pi)*(zr/((zr**2)))
         
         # Plotting
         fig=plt.figure()
@@ -136,7 +137,6 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         axs5.set_ylabel('(a+a0) [m]',fontsize=plot_param['axes_label_fontsize'])
     
         # Titles and axes
-
         
         axs3.title.set_text('Rayleigh Vs focus distance')
         axs4.title.set_text('Rayleigh Vs Fiber-end/lens')

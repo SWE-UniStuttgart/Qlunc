@@ -57,15 +57,19 @@ Scanner           = scanner(name            = Qlunc_yaml_inputs['Components']['S
                             azimuth         = np.array(np.arange(Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][0],                                                  
                                                                  Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][1],
                                                                  Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][2])), # Azimuth angle in [degrees].
-                            focus_dist      = np.tile(Qlunc_yaml_inputs['Components']['Scanner']['Focus distance'],(1,len(np.arange(Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][0],                                                  
-                                                                 Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][1],
-                                                                 Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][2]))))[0],   # Focus distance in [meters]                                        
+                            # focus_dist      = np.tile(Qlunc_yaml_inputs['Components']['Scanner']['Focus distance'],(1,len(np.arange(Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][0],                                                  
+                            #                                      Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][1],
+                            #                                      Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][2]))))[0],   # Focus distance in [meters]                                        
+                            focus_dist      = [] ,   # Focus distance in [meters]                                        
+                            
                             cone_angle      = np.tile(Qlunc_yaml_inputs['Components']['Scanner']['Cone angle'],(1,len(np.arange(Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][0],                                                  
                                                                  Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][1],
                                                                  Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][2]))))[0],   # Cone angle in [degrees].
                             x               = np.array(Qlunc_yaml_inputs['Components']['Scanner']['x']),
+                            # x               = [],
                             y               = np.array(Qlunc_yaml_inputs['Components']['Scanner']['y']),
                             z               = np.array(Qlunc_yaml_inputs['Components']['Scanner']['z']),
+                            # stdv_focus_dist = [],
                             stdv_focus_dist = Qlunc_yaml_inputs['Components']['Scanner']['stdv focus distance'],                 # Focus distance standard deviation in [meters].
                             stdv_cone_angle = Qlunc_yaml_inputs['Components']['Scanner']['stdv Cone angle'],                 # Cone angle standard deviation in [degrees].
                             stdv_azimuth    = Qlunc_yaml_inputs['Components']['Scanner']['stdv Azimuth'],                 # Azimuth angle standard deviation in [degrees].
@@ -101,7 +105,7 @@ Probe_Volume = probe_volume (name                       = Qlunc_yaml_inputs['Pro
 Optics_Module =  optics (name               = Qlunc_yaml_inputs['Modules']['Optics Module']['Name'],     # Introduce your Optics Module name.
                          scanner            = Scanner, #eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Scanner']),             # Scanner instance (in this example "Scanner") or "None". "None" means that you don´t want to include Scanner in Optics Module, either in uncertainty calculations.
                          optical_circulator = Optical_circulator ,#eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Optical circulator']),  # Optical Circulator instance (in this example "Optical_circulator") or "None". "None" means that you don´t want to include Optical circulator in Optics Module, either in uncertainty calculations.
-                         telescope          = Telescope,#None,#
+                         telescope          = Telescope,#
                          # probe_volume       = None,#Probe_Volume,
                          unc_func           = uopc.sum_unc_optics) #eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Uncertainty function']))
 
@@ -136,7 +140,7 @@ Photodetector    = photodetector(name             = Qlunc_yaml_inputs['Component
 
 Laser           = laser(name              = Qlunc_yaml_inputs['Components']['Laser']['Name'],
                         Wavelength        = Qlunc_yaml_inputs['Components']['Laser']['Wavelength'],
-                        stdv_wavelength   = Qlunc_yaml_inputs['Components']['Laser']['Stdv Wavelength'],
+                        stdv_wavelength   = Qlunc_yaml_inputs['Components']['Laser']['stdv Wavelength'],
                         conf_int          = Qlunc_yaml_inputs['Components']['Laser']['Confidence interval'],
                         Output_power      = Qlunc_yaml_inputs['Components']['Laser']['Output power'],
                         Laser_Bandwidth   = Qlunc_yaml_inputs['Components']['Laser']['Bandwidth'],
@@ -145,7 +149,7 @@ Laser           = laser(name              = Qlunc_yaml_inputs['Components']['Las
 # Module:
 Photonics_Module = photonics(name                    = Qlunc_yaml_inputs['Modules']['Photonics Module']['Name'],        # Introduce your Photonics module name
                              photodetector           = Photodetector, #eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['Photodetector']),             # Photodetector instance (in this example "Photodetector") or "None". "None" means that you don´t want to include photodetector in Photonics Module, either in uncertainty calculations.
-                             optical_amplifier       = Optical_Amplifier, #eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['Optical amplifier']),         # Scanner instance (in this example "OpticalAmplifier") or "None". "None" means that you don´t want to include Optical Amplifier in Photonics Module, either in uncertainty calculations.
+                             optical_amplifier       = Optical_Amplifier, #'None',##eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['Optical amplifier']),         # Scanner instance (in this example "OpticalAmplifier") or "None". "None" means that you don´t want to include Optical Amplifier in Photonics Module, either in uncertainty calculations.
                              laser                   = 'None', #Laser,
                              acousto_optic_modulator = 'None', #AOM,
                              unc_func                = uphc.sum_unc_photonics) #eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['Uncertainty function']))

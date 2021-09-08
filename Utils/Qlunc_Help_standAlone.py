@@ -101,6 +101,7 @@ def unc_comb(data):
     res_dB      = []
     res_watts   = []
     zipped_data = []
+    # pdb.set_trace()
     if not isinstance (data,np.ndarray):
         data=np.array(data)    
     for data_row in range(np.shape(data)[0]):# transform into watts        
@@ -115,6 +116,7 @@ def unc_comb(data):
         # res_watts.append(sum(map (lambda x: x**2,zipped_data[i]))) #   Combined Variance
         
         res_dB=10*np.log10(res_watts) #Convert into dB 
+    # pdb.set_trace()
     del data_db
     return np.array(res_dB)
 
@@ -144,7 +146,7 @@ def to_netcdf(DataXarray,Qlunc_yaml_inputs,Lidar,Atmospheric_Scenario):
     ----------
     
     * DataXarray
-        Data frame containing uncertainties of the lidar. The name of the project is specify in the input yaml file.
+        Data frame containing uncertainties of the lidar in xarray format. The name of the project is specify in the input yaml file.
         Change the name to create a different project. Otherwise the data is appended to the existing file. To read the 
         netndf file:
             xr.open_dataarray('C:/Users/fcosta/SWE_LOCAL/GIT_Qlunc/Projects/' + '<name_of_the_project>.nc')
