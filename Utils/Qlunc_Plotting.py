@@ -66,7 +66,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
 ###############   Plot photodetector noise   #############################       
     if flag_plot_photodetector_noise:
         # Quantifying uncertainty from photodetector and interval domain for the plot Psax is define in the photodetector class properties)
-        Psax=(Lidar.photonics.photodetector.Power_interval) 
+        Psax=(Lidar.photonics.photodetector.Power_interval)*Lidar.photonics.photodetector.Active_Surf
         # pdb.set_trace()
         # Plotting:
         fig,axs1=plt.subplots()
