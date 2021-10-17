@@ -86,12 +86,13 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
 
 ###############   Plot Probe Volume parameters    ############################
     if flag_probe_volume_param: 
+        # pdb.set_trace()
         # typeLidar ="CW"
         wave      = Qlunc_yaml_inputs['Components']['Laser']['Wavelength']  # wavelength
         f_length  = Qlunc_yaml_inputs['Components']['Telescope']['Focal length'] # focal length
         a         = np.arange(2e-3,4e-3,.02e-3) # distance fiber-end--telescope lens
         a0        = Qlunc_yaml_inputs['Components']['Telescope']['Fiber-lens offset'] # the offset (a constant number), to avoid the fiber-end locates at the focal point, otherwise the lights will be parallel to each other
-        A         = 20e-3 # beam radius at the output lens
+        A         = Qlunc_yaml_inputs['Components']['Telescope']['Output beam radius'] # beam radius at the output lens
         ext_coef  = 1
         # effective_radius_telescope  = 16.6e-3
         s = 50 # distance from telescope to the target
@@ -153,16 +154,16 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
     if flag_plot_optical_amplifier_noise:
         # Quantifying uncertainty from photodetector and interval domain for the plot Psax is define in the photodetector class properties)
         # Psax=10*np.log10(np.linspace(0,20e-3,1000))
+        # Psax=(Lidar.photonics.photodetector.Power_interval)*Lidar.photonics.photodetector.Active_Surf
         
         # Plotting:
         fig=plt.figure()
         axs1=fig.subplots()
-        pdb.set_trace()
         label0=['Optical amplifier OSNR']
-        axs1.plot(10*np.log10(Lidar.photonics.optical_amplifier.Power_interval),Data['OSNR'],label=label0[0])  
+        axs1.plot(Lidar.photonics.optical_amplifier.Power_interval,Data['OSNR'],label=label0[0])  
         # axs1.plot(Lidar.photonics.optical_amplifier.Power_interval,Data['OSNR'],label=label0[0],marker='o')  
 
-        axs1.set_xlabel('Input Signal optical power [dBm]',fontsize=plot_param['axes_label_fontsize'])
+        axs1.set_xlabel('Input Signal optical power [W]',fontsize=plot_param['axes_label_fontsize'])
         axs1.set_ylabel('OSNR [dB]',fontsize=plot_param['axes_label_fontsize'])
         axs1.legend(fontsize=plot_param['legend_fontsize'])
         axs1.set_title('OSNR - Optical Amplifier',fontsize=plot_param['title_fontsize'])
@@ -171,6 +172,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         
         
         
+
         
         
         
