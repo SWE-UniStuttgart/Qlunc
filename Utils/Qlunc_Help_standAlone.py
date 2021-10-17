@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-"""
+""".
+
 Created on Mon May 18 00:03:43 2020
 @author: fcosta
 
@@ -13,23 +14,20 @@ import pdb
 #%%# used to flatt at some points along the code:
 flatten = lambda *n: (e for a in n for e in (flatten(*a) if isinstance(a, (list,tuple)) else (a,))) 
 
-
-
 #%% Rotation matrix for inclinometers in scanner    
 def sum_mat(noisy_yaw,noisy_pitch, noisy_roll):
-    """
+    """.
+    
     Calculates the rotation matrix to apply uncertainty due to inclinometers deployment. Location: Qlunc_Help_standAlone.py
     
     Parameters
-    ----------
-    
+    ----------    
     * Noisy_yaw, noisy_pitch, noisy_roll
         Errors in yaw, pitch and roll
         
         
     Returns
-    -------
-    
+    -------    
     Mean of the matrix after MonteCarlo simulation
     """
     R=[]
@@ -42,12 +40,12 @@ def sum_mat(noisy_yaw,noisy_pitch, noisy_roll):
 
 #%% sum dB:
 def sum_dB(data,uncorrelated):
-    """
+    """.
+    
     Add up dB's. Location: Qlunc_Help_standAlone.py
     
     Parameters
-    ----------
-    
+    ----------    
     * SNR_data
         Signal to noise ratio
         
@@ -55,8 +53,7 @@ def sum_dB(data,uncorrelated):
         Uncorrelated noise (default): True
         
     Returns
-    -------
-    
+    -------    
     Sum of dBW
     
     """
@@ -82,18 +79,17 @@ def sum_dB(data,uncorrelated):
 #%% Combine uncertainties:
 # The uncertainty combination is made following GUM
 def unc_comb(data): 
-    """
+    """.
+    
     Uncertainty expansion - Location: Qlunc_Help_standAlone.py
     
     Parameters
-    ----------
-    
+    ----------   
     * data
         data is provided as a list of elements want to add on. Input data is expected to be in dB.
         
     Returns
-    -------
-    
+    -------   
     list
     
     """
@@ -139,12 +135,12 @@ def sph2cart(Lidar):
 
 def to_netcdf(DataXarray,Qlunc_yaml_inputs,Lidar,Atmospheric_Scenario):
     #DataXarray=Lidar.lidar_inputs.dataframe
-    """
+    """.
+    
     Save the project to an netndf file - Location: Qlunc_Help_standAlone.py
     
     Parameters
-    ----------
-    
+    ----------    
     * DataXarray
         Data frame containing uncertainties of the lidar in xarray format. The name of the project is specify in the input yaml file.
         Change the name to create a different project. Otherwise the data is appended to the existing file. To read the 
@@ -152,8 +148,7 @@ def to_netcdf(DataXarray,Qlunc_yaml_inputs,Lidar,Atmospheric_Scenario):
             xr.open_dataarray('C:/Users/fcosta/SWE_LOCAL/GIT_Qlunc/Projects/' + '<name_of_the_project>.nc')
         
     Returns
-    -------
-    
+    -------    
     .netcdf file
     
     """
