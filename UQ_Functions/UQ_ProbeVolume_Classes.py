@@ -65,8 +65,10 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
 
         # F = (lamb/np.pi)/(a1**2+lamb**2)  # Lorentzian Weighting function 
     elif typeLidar=="Pulsed":
+        # for pulsed lidar we have a constant probe volume
         print("pulsed lidar probe volume is a convolution between pulse shape and weighting function. Not inplemented yet")
         
+    
     Final_Output_UQ_ProbeVolume = {'Rayleigh Length':zr,'Rayleigh Length uncertainty':Unc_zr,'Focus Distance':focus_distance,'Focus Distance uncertainty':Unc_focus_distance}
 
     # Plotting:
