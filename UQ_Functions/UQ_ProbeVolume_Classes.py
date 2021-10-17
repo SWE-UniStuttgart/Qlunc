@@ -60,7 +60,9 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         vol_zr       = np.pi*(Qlunc_yaml_inputs['Components']['Telescope']['Output beam radius']**2)*(2*zr) # based on the definition of Rayleigh length in Liqin Jin notes (Focus calibration formula)
 
         # Lorentzian weighting function:
-        phi = (Qlunc_yaml_inputs['Probe Volume']['Extinction coeficient']/np.pi)*(1/((1**2)+(36.55-focus_distance)**2))
+        # phi = (Qlunc_yaml_inputs['Probe Volume']['Extinction coeficient']/np.pi)*(1/((1**2)+(36.55-focus_distance)**2))
+        phi = (Qlunc_yaml_inputs['Probe Volume']['Extinction coeficient']/np.pi)*(1/((1**2)+(focus_distance)**2))
+
         # F = (lamb/np.pi)/(a1**2+lamb**2)  # Lorentzian Weighting function 
     elif typeLidar=="Pulsed":
         print("pulsed lidar probe volume is a convolution between pulse shape and weighting function. Not inplemented yet")
