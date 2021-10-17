@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-"""
+
+""".
+
 Created on Sat May 16 14:58:24 2020
 @author: fcosta
 
@@ -20,13 +22,13 @@ from Utils import Qlunc_Help_standAlone as SA
 from Utils import Scanning_patterns as SP
 from Utils import Qlunc_Plotting as QPlot
 # from Functions import UQ_ProbeVolume_Classes as upbc
-
+import numpy as np
 
 #%% SCANNER:
 def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
-    """
-    Scanner uncertainty estimation. Location: ./UQ_Functions/UQ_Optics_Classes.py
+    """.
     
+    Scanner uncertainty estimation. Location: ./UQ_Functions/UQ_Optics_Classes.py   
     Parameters
     ----------
     
@@ -37,8 +39,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     * cts
         Physical constants
     * Qlunc_yaml_inputs
-        Lidar parameters data
-        
+        Lidar parameters data        
     Returns
     -------
     
@@ -207,20 +208,19 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         
     Final_Output_UQ_Scanner                 = {'Simu_Mean_Distance_Error':SimMean_DISTANCE,'STDV_Distance':StdvMean_DISTANCE,'MeasPoint_Coordinates':Coord,'NoisyMeasPoint_Coordinates':Noisy_Coord}
     Lidar.lidar_inputs.dataframe['Scanner'] = ([np.mean(Final_Output_UQ_Scanner['Simu_Mean_Distance_Error'])])*len(Atmospheric_Scenario.temperature)  
-    pdb.set_trace()
+
     # Plotting
     QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,Qlunc_yaml_inputs['Flags']['Scanning Pattern'],False,False,False)
     return Final_Output_UQ_Scanner,Lidar.lidar_inputs.dataframe
 
 #%% Optical circulator:
 
-def UQ_OpticalCirculator(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
-    """
+def UQ_OpticalCirculator(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):    
+    """.
+    
     Optical circulator uncertainty estimation. Location: ./UQ_Functions/UQ_Optics_Classes.py
-    
-    Parameters
-    ----------
-    
+    Parameters.  
+  
     * Lidar
         data...
     * Atmospheric_Scenario
@@ -228,11 +228,9 @@ def UQ_OpticalCirculator(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     * cts
         Physical constants
     * Qlunc_yaml_inputs
-        Lidar parameters data
-        
+        Lidar parameters data        
     Returns
-    -------
-    
+    -------    
     list
     
     """   
@@ -248,6 +246,8 @@ def UQ_OpticalCirculator(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # Optical_Circulator_Uncertainty = [np.array(Lidar.optics.optical_circulator.insertion_loss)]
     Optical_Circulator_Uncertainty_w = [Qlunc_yaml_inputs['Components']['Laser']['Output power']/(10**(Lidar.optics.optical_circulator.SNR/10))]
     Optical_Circulator_Uncertainty_dB = 10*np.log10(Optical_Circulator_Uncertainty_w)
+    
+    # Add to the dictionary
     Final_Output_UQ_Optical_Circulator={'Optical_Circulator_Uncertainty':Optical_Circulator_Uncertainty_dB}
     Lidar.lidar_inputs.dataframe['Optical circulator']=Final_Output_UQ_Optical_Circulator['Optical_Circulator_Uncertainty']*np.linspace(1,1,len(Atmospheric_Scenario.temperature))  # linspace to create the appropiate length for the xarray. 
     
