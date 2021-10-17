@@ -78,7 +78,7 @@ The following python libraries and tools should be installed beforehand and are 
 - xarray-extras==0.4.2
 - python==3.7.9
 - spyder==4.2.1
-- netcdf4
+- netcdf4==1.5.3
 - notebook
 - jupyterlab
 
