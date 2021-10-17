@@ -103,13 +103,14 @@ class cts():
   
 # Component Classes:
 class photodetector():
-    def __init__(self,name,Photo_BandWidth,Load_Resistor,Photo_efficiency,Dark_Current,Photo_SignalP,Power_interval,Gain_TIA,V_Noise_TIA,unc_func):
+    def __init__(self,name,Photo_BandWidth,Load_Resistor,Photo_efficiency,Dark_Current,Photo_SignalP,Active_Surf,Power_interval,Gain_TIA,V_Noise_TIA,unc_func):
                  self.PhotodetectorID  = name 
                  self.BandWidth        = Photo_BandWidth 
                  self.Load_Resistor    = Load_Resistor 
                  self.Efficiency       = Photo_efficiency
                  self.DarkCurrent      = Dark_Current
                  self.SignalPower      = Photo_SignalP
+                 self.Active_Surf      = Active_Surf
                  self.Power_interval   = Power_interval
                  self.Gain_TIA         = Gain_TIA
                  self.V_Noise_TIA      = V_Noise_TIA
@@ -117,11 +118,12 @@ class photodetector():
                  print('Created new photodetector: {}'.format(self.PhotodetectorID))
         
 class optical_amplifier():
-    def __init__(self,name,NoiseFig,OA_Gain,OA_BW,unc_func):
+    def __init__(self,name,NoiseFig,OA_Gain,OA_BW,Power_interval,unc_func):
                  self.Optical_AmplifierID = name
                  self.NoiseFig            = NoiseFig
                  self.OA_Gain             = OA_Gain
                  self.OA_BW               = OA_BW
+                 self.Power_interval      = Power_interval
                  self.Uncertainty         = unc_func
                  print('Created new optical amplifier: {}'.format(self.Optical_AmplifierID))
 
@@ -191,25 +193,27 @@ class optical_circulator():
                  print ('Created new optical circulator: {}'.format(self.Optical_CirculatorID))
 
 class telescope():
-    def __init__(self,name,aperture,stdv_aperture,unc_func):
-                self.TelescopeID   = name
-                self.aperture      = aperture
-                self.stdv_aperture = stdv_aperture
-                self.Uncertainty   = unc_func
+    def __init__(self,name,aperture,stdv_aperture,focal_length,fiber_lens_d,fiber_lens_offset,effective_radius_telescope,output_beam_radius,stdv_fiber_lens_d,stdv_fiber_lens_offset,stdv_focal_length,stdv_eff_radius_telescope ,unc_func):
+                self.TelescopeID                = name
+                self.aperture                   = aperture
+                self.stdv_aperture              = stdv_aperture
+                self.focal_length               = focal_length
+                self.fiber_lens_d               = fiber_lens_d
+                self.fiber_lens_offset          = fiber_lens_offset
+                self.effective_radius_telescope = effective_radius_telescope
+
+                self.output_beam_radius         = output_beam_radius
+                self.stdv_fiber_lens_d          = stdv_fiber_lens_d
+                self.stdv_fiber_lens_offset     = stdv_fiber_lens_offset
+                self.stdv_focal_length          = stdv_focal_length
+                self.stdv_eff_radius_telescope  = stdv_eff_radius_telescope 
+                self.Uncertainty                = unc_func
                 print('Created new telescope: {}'.format(self.TelescopeID))
 
 class probe_volume():
-    def __init__(self,name,focal_length,fiber_lens_d,fiber_lens_offset,effective_radius_telescope,extinction_coef,output_beam_radius,stdv_fiber_lens_d,stdv_fiber_lens_offset,stdv_focal_length,unc_func):
+    def __init__(self,name,extinction_coef,unc_func):
                  self.ProbeVolumeID              = name         
-                 self.focal_length               = focal_length
-                 self.fiber_lens_d               = fiber_lens_d
-                 self.fiber_lens_offset          = fiber_lens_offset
-                 self.effective_radius_telescope = effective_radius_telescope
                  self.extinction_coef            = extinction_coef
-                 self.output_beam_radius         = output_beam_radius
-                 self.stdv_fiber_lens_d          = stdv_fiber_lens_d
-                 self.stdv_fiber_lens_offset     = stdv_fiber_lens_offset
-                 self.stdv_focal_length          = stdv_focal_length
                  self.Uncertainty                = unc_func
                  print('Class "Probe volume" created')
 #%% LIDAR MODULES

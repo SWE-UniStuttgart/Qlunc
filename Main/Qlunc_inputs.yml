@@ -19,40 +19,50 @@ Components:
     
     Name: Scanner_Yaml # Provide an ID to your lidar:    
     Origin: [0,0,60]  # Lidar position in meters: [x,y,z]    
-    Pattern: 'lissajous' # 'lissajous', user defined pattern or 'None' in case none predefined pattern is used
+    Pattern: 'None' # 'lissajous', user defined pattern or 'None' in case none predefined pattern is used
     # Lissajous patterns:
-    Lissajous parameters: [50,60,60,3,3] # [x_dim,y_dim,z_dim,q,p]
+    Lissajous parameters: [36,50,50,3,3] # [x_dim,y_dim,z_dim,q,p]
     Sample rate: 0   # Lidar sample rate. In meters. Use 0 for now.
-    Type: VAD    # Type of the scanning head: VAD or SCAN (Scanning Lidar).
+    Type: SCAN    # Type of the scanning head: VAD or SCAN (Scanning Lidar).
   
     # STDV in lidar angles and focus distance
-    stdv focus distance: 0   # [m]
-    stdv Cone angle: 0      # [deg]
+    stdv focus distance: 0   # [m]  # This will be removed since the error in focus distance is calculated using telescope parameters parameters (see Telescope section)
+    stdv Cone angle: 0.5      # [deg]
     stdv Azimuth: 0         # [deg]   
    
     # VAD Pattern:
-    Focus distance: [20]   # [m]
+    Focus distance: [69]   # [m]
     Cone angle: [30]       # [deg]
     Azimuth: [0,360,10]     # [deg] [origin,end,steps]
 
     # Scanning Lidar Pattern:
-    x: [-40]
+    x: [2000] # This will be removed since the focus distance is calculated using telescope parameters. By variying the fiber-lens distance you actually vary the focus distance (see  Telescope section)
     y: [0]   
-    z: [0] #[10,   -10, -10 , 10 ]
+    z: [0]
         
     # Uncertainty function:
     Uncertainty function: uopc.UQ_Scanner
     
   Optical Circulator:
     Name: OC_Yaml
-    Insertion loss: 0.8 # [dB] # This is a term losses. Only have sense if the uncertainties are correlated...???
+    Insertion loss: 0.8 # [dB] # This is a term losses. Only Has sense if the uncertainties are correlated...???
     SNR: 60 #[dB]
     Uncertainty function: uopc.UQ_OpticalCirculator
   
   Telescope:
     Name: Telescope_YAML
     Aperture: 2.e-2 #[m]
-    Stdv Aperture: 2.e-6 #[m]
+     
+    Focal length: 200.e-3
+    Fiber-lens distance: 2.4e-3
+    Fiber-lens offset: 198.1e-3
+    Effective radius telescope: 16.6e-3
+    Output beam radius: 20.e-3
+    Stdv Aperture: 2.e-6 #[m]                   # These errors are for now just assumptions (*)  
+    stdv Focal length: 1.e-6                    # (*)  
+    stdv Fiber-lens distance: 1.e-6             # (*)
+    stdv Fiber-lens offset: 1.e-6               # (*)
+    stdv Effective radius telescope: 1.e-6      # (*)
     Uncertainty function: uopc.UQ_Telescope
     
 # Photonics  
@@ -67,26 +77,28 @@ Components:
     # be tunned in Qlunc_Photonics_Classes --> UQ_Optical_amplifier
     Optical amplifier BW: 12.5e+12 # [Hz] Bandwidth optical amplifier (Hz)
     Optical amplifier noise figure: metadata/NoiseFigure.csv  #6# [dB] Relative Directory to where Noise figure data is. Either a well-known value or the directory where the file is.   
-    Optical amplifier gain: 20 # [dB] Optical amplifier gain
+    Optical amplifier gain: 30 # [dB] Optical amplifier gain
+    Power interval: [0,1,.001]       # [mW]
     Uncertainty function: uphc.UQ_Optical_amplifier # Python module! (You develop a function and save it as a python module)
 
   
   Photodetector:
     Name: Photodetector_YAML
     Photodetector BandWidth: 1.e+9    # [Hz]            
-    Load resistor: 50                  # [Ohm]
-    Photodetector efficiency: .85       # Photodetector efficiency [-]
+    Load resistor: 50 #1.e+8                 # [Ohm]
+    Photodetector efficiency: .85  #.8     # Photodetector efficiency [-]
     Dark current: 5.e-9                 # In [A]. Dark current in the photodetector.
-    Photodetector signalP: 2.5e-3        # [W]
-    Power interval: [0,1000,.001]       # [mW]
+    Photodetector signalP: 1.e-3 #1.e-2        # [W/m^2]
+    Power interval: [1.e-6,1,1.e-5]  # [1.e-6,1,1.e-5]          # [W]
     Gain TIA: 5.e+3                     # [dB] Value or 'None' if no TIA in the photodetector
+    Active Surface: 1 #1.e-6               #[m^2]
     V Noise TIA:  None # 160.e-6 #             # [V] Value or 'None' if no TIA in the photodetector
     Uncertainty function: uphc.UQ_Photodetector # Python module! (You develop a function and save it as a python module)
   
   Laser:
     Name: Laser_YAML
-    Wavelength: 1550.e-9    # [m]
-    Stdv Wavelength: 1.e-9 #[m]
+    Wavelength: 1550.e-9 #1000.e-9    # [m]
+    stdv Wavelength: 1.e-9 #[m]
     Confidence interval: 3 # 1 => confidence interval= 68.27%, 2 => confidence interval= 90%, 3=> confidence interval= 95% 4=> confidence interval = 95.45%, 5 => confidence interval= 99%, 6=> confidence interval= 99.73%
     Output power: 12.5e-3 #[w]
     Bandwidth: 250 # Hz
@@ -101,33 +113,33 @@ Components:
   Lidar general inputs:
     Name: Lidar_gral_inputs_Yaml
     Type: CW # CW/Pulsed for continuous wave or pulsed lidars. The difference is that AOM (photonics module) is included in calculations when Pulsed
-    Wavelength: 1553.e-9    # [m]
+    Wavelength: 1550.e-9 #1000.e-9    # [m]
     Yaw error: 0       # [deg]
-    Pitch error: 10         # [deg]
-    Roll error: 15          # [deg]
+    Pitch error: 0         # [deg]
+    Roll error: 0          # [deg]
 ---
 # Modules:
 Modules:
   Optics Module:
     Name: Optics_module_Yaml
     Scanner: Scanner
-    Optical circulator: Optical_circulator # Have to be the same name as the instance
+    Optical circulator: Optical_circulator # Has to be the same name as the instance
     Telescope: Telescope 
     Uncertainty function: uopc.sum_unc_optics # Python module! (You develop a function and save it as a python module)
   Photonics Module:
     Name: Photonics_module_Yaml
-    Photodetector: Photodetector           # Have to be the same name as the instance
-    Optical amplifier: Optical_Amplifier   # Have to be the same name as the instance
+    Photodetector: Photodetector           # Has to be the same name as the instance
+    Optical amplifier: Optical_Amplifier   # Has to be the same name as the instance
     Laser: Laser
     Uncertainty function: uphc.sum_unc_photonics # Python module! (You develop a function and save it as a python module)
 ---  
 # Lidar:
 Lidar:
   Name: Caixa1
-  Photonics module: Photonics_Module       # Have to be the same name as the instance
-  Optics module: None #Optics_Module             # Have to be the same name as the instance
-  Power module: None                       # Have to be the same name as the instance
-  Lidar inputs: Lidar_inputs               # Have to be the same name as the instance
+  Photonics module: Photonics_Module       # Has to be the same name as the instance
+  Optics module: None #Optics_Module             # Has to be the same name as the instance
+  Power module: None                       # Has to be the same name as the instance
+  Lidar inputs: Lidar_inputs               # Has to be the same name as the instance
   Uncertainty function: ulc.sum_unc_lidar  # Python module! (You develop a function and save it as a python module)
 
 ---
@@ -147,20 +159,15 @@ Atmospheric_inputs:
 # Data processing:-----------------------------------------------------
 Probe Volume:
   Name: 'Probe_Yaml'
-  Focal length: 200.e-3
-  Fiber-lens distance: 2.e-3
-  Fiber-lens offset: 198.1e-3
-  Effective radius telescope: 16.6e-3
-  Output beam radius: 20.e-3
   Extinction coeficient: 0.085
-  stdv Focal length: 1.e-3
-  stdv Fiber-lens distance: 1.e-6
-  stdv Fiber-lens offset: 10.e-6
+ 
   
   
 # Plotting:------------------------------------------------------------
 Flags:
   Pointing accuracy uncertainty: False
-  Scanning Pattern: True
-  Photodetector noise: True
+  Scanning Pattern: False
+  Photodetector noise: False
   Save Scanning Coordinates: False
+  Probe Volume parameters: True
+  Optical_amplifier_noise: False
