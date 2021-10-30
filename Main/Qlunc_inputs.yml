@@ -35,7 +35,7 @@ Components:
     # VAD Pattern:
     Focus distance: [261.41]   # [m]
     Cone angle: [11.2]       # [deg]
-    Azimuth: [0,180]     # [deg] [origin,end]
+    Azimuth: [0,350]     # [deg] [origin,end]
 
     # Scanning Lidar Pattern:
     x: [-252.5,-252.5,-252.5,-252.5] # This will be removed since the focus distance is calculated using telescope parameters. By variying the fiber-lens distance you actually vary the focus distance (see  Telescope section)
