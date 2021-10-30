@@ -31,12 +31,12 @@ Components:
     stdv Azimuth: 0         # [deg]   
    
     # VAD Pattern:
-    Focus distance: [69]   # [m]
-    Cone angle: [30]       # [deg]
-    Azimuth: [0,360,10]     # [deg] [origin,end,steps]
+    Focus distance: [700]   # [m]
+    Cone angle: [0]       # [deg]
+    Azimuth: [0,360,360]     # [deg] [origin,end,steps]
 
     # Scanning Lidar Pattern:
-    x: [2000] # This will be removed since the focus distance is calculated using telescope parameters. By variying the fiber-lens distance you actually vary the focus distance (see  Telescope section)
+    x: [25] # This will be removed since the focus distance is calculated using telescope parameters. By variying the fiber-lens distance you actually vary the focus distance (see  Telescope section)
     y: [0]   
     z: [0]
         
@@ -166,8 +166,8 @@ Probe Volume:
 # Plotting:------------------------------------------------------------
 Flags:
   Pointing accuracy uncertainty: False
-  Scanning Pattern: False
+  Scanning Pattern: True
   Photodetector noise: False
   Save Scanning Coordinates: False
-  Probe Volume parameters: True
+  Probe Volume parameters: False
   Optical_amplifier_noise: False

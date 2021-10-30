@@ -93,9 +93,8 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         print('You didn´t include a power module in  the lidar')
     
     Uncertainty_Lidar                     = SA.unc_comb(List_Unc_lidar)[0]
-    # pdb.set_trace()
     Final_Output_Lidar_Uncertainty        = {'Lidar_Uncertainty':Uncertainty_Lidar}    
-    # pdb.set_trace()
+    
     Lidar.lidar_inputs.dataframe['Lidar'] = Final_Output_Lidar_Uncertainty['Lidar_Uncertainty']*np.linspace(1,1,len(Atmospheric_Scenario.temperature))
     
     # Include time in the dataframe:
@@ -104,7 +103,7 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # Create Xarray to store data. Link with Mocalum and yaddum  ###########################################
     
     df=SA.to_netcdf(Lidar.lidar_inputs.dataframe,Qlunc_yaml_inputs,Lidar,Atmospheric_Scenario)
-
+    pdb.set_trace()
     ########################################################################################################
     ########################################################################################################
         
