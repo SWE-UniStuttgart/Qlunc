@@ -112,7 +112,7 @@ Components:
 # Lidar general inputs 
   Lidar general inputs:
     Name: Lidar_gral_inputs_Yaml
-    Type: CW # CW/Pulsed for continuous wave or pulsed lidars. The difference is that AOM (photonics module) is included in calculations when Pulsed
+    Type: CW # CW/Pulsed for continuous wave or pulsed lidars. The difference is that AOM (photonics module) is included in calculations when Pulsed and probe volume calculations
     Wavelength: 1550.e-9 #1000.e-9    # [m]
     Yaw error: 0       # [deg]
     Pitch error: 0         # [deg]
