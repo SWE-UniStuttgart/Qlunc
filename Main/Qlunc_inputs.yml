@@ -18,12 +18,14 @@ Components:
   Scanner:
     
     Name: Scanner_Yaml # Provide an ID to your lidar:    
-    Origin: [0,0,60]  # Lidar position in meters: [x,y,z]    
+    Origin: [0,0,0]  # Lidar position in meters: [x,y,z]    
     Pattern: 'None' # 'lissajous', user defined pattern or 'None' in case none predefined pattern is used
+    #Pattern time: [10] # Time lidar takes to complete a measuring pattern
+    #Single point measuring time: [1] # time lidar spans in one single measurement of a pattern
     # Lissajous patterns:
     Lissajous parameters: [36,50,50,3,3] # [x_dim,y_dim,z_dim,q,p]
     Sample rate: 0   # Lidar sample rate. In meters. Use 0 for now.
-    Type: SCAN    # Type of the scanning head: VAD or SCAN (Scanning Lidar).
+    Type: VAD    # Type of the scanning head: VAD or SCAN (Scanning Lidar).
   
     # STDV in lidar angles and focus distance
     stdv focus distance: 0   # [m]  # This will be removed since the error in focus distance is calculated using telescope parameters parameters (see Telescope section)
@@ -31,14 +33,14 @@ Components:
     stdv Azimuth: 0         # [deg]   
    
     # VAD Pattern:
-    Focus distance: [700]   # [m]
-    Cone angle: [0]       # [deg]
-    Azimuth: [0,360,360]     # [deg] [origin,end,steps]
+    Focus distance: [261.41]   # [m]
+    Cone angle: [11.2]       # [deg]
+    Azimuth: [45,315,4]     # [deg] [origin,end,steps]
 
     # Scanning Lidar Pattern:
-    x: [25] # This will be removed since the focus distance is calculated using telescope parameters. By variying the fiber-lens distance you actually vary the focus distance (see  Telescope section)
-    y: [0]   
-    z: [0]
+    x: [-252.5,-252.5,-252.5,-252.5] # This will be removed since the focus distance is calculated using telescope parameters. By variying the fiber-lens distance you actually vary the focus distance (see  Telescope section)
+    y: [46.21070722778538,-46.21070722778537,-46.210707227785385,46.21070722778536]   
+    z: [46.21070722778538,46.21070722778538,-46.21070722778537,-46.210707227785385]
         
     # Uncertainty function:
     Uncertainty function: uopc.UQ_Scanner
