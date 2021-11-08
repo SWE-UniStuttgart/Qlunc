@@ -176,7 +176,7 @@ def to_netcdf(DataXarray,Qlunc_yaml_inputs,Lidar,Atmospheric_Scenario):
                 
         names     = [Lidar.LidarID]
         component = [i for i in DataXarray.keys()]
-        # time      = [Atmospheric_Scenario.time ]
+        # time      = [Atmospheric_Scenario.time ] 
         data      =[ii for ii in DataXarray.values()]
         df = xr.DataArray(data,
                           coords = [component,names],
@@ -188,3 +188,17 @@ def to_netcdf(DataXarray,Qlunc_yaml_inputs,Lidar,Atmospheric_Scenario):
         
         # READ netcdf FILE.
         # da=xr.open_dataarray('C:/Users/fcosta/SWE_LOCAL/GIT_Qlunc/Projects/' + 'Gandia.nc')
+
+#%% pulsed lidar probe volume calculations
+
+def lin_interp(x, y, i, half):
+    return x[i] + (x[i+1] - x[i]) * ((half - y[i]) / (y[i+1] - y[i]))
+
+def half_max_x(x, y):
+    half = max(y)/2.0
+    signs = np.sign(np.add(y, -half))
+    zero_crossings = (signs[0:-2] != signs[1:-1])
+    zero_crossings_i = np.where(zero_crossings)[0]
+    
+    return [lin_interp(x, y, zero_crossings_i[0], half),
+            lin_interp(x, y, zero_crossings_i[1], half)]
