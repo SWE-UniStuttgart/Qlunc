@@ -58,14 +58,14 @@ Scanner           = scanner(name            = Qlunc_yaml_inputs['Components']['S
                            # This values for focus distance, cone_angle and azimuth define a typical VAD scanning sequence:
                                # I changed azimuth calculations because with "np.arange" we do not capture the last point in the patter. "np.arange does not include the last point"; np.linspace capture all the points.
                                # Furthermore, once the time of the pattern is included in the pattern, we will do calculations based on the n° of points yielded by the ratio: time_pattern[sec]/time_point[sec/point]
-                               
-                            # azimuth         = np.array(np.arange(Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][0],                                                  
-                            #                                      Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][1],
-                            #                                      Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][2])), # Azimuth angle in [degrees].
+                               # HAve to decide if wnat np.arange or np.linspace here (azimuth)
+                            azimuth         = np.array(np.arange(Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][0],                                                  
+                                                                  Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][1],
+                                                                  math.floor((Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][1]-Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][0])/(Qlunc_yaml_inputs['Components']['Scanner']['Pattern time']/Qlunc_yaml_inputs['Components']['Scanner']['Single point measuring time'])))), # Azimuth angle in [degrees].
                             
-                            azimuth         = np.array(np.linspace(Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][0],                                                  
-                                                                   Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][1],
-                                                                   math.floor(Qlunc_yaml_inputs['Components']['Scanner']['Pattern time']/Qlunc_yaml_inputs['Components']['Scanner']['Single point measuring time']))), # Azimuth angle in [degrees].                                  
+                            # azimuth         = np.array(np.linspace(Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][0],                                                  
+                            #                                        Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][1],
+                            #                                        math.floor(Qlunc_yaml_inputs['Components']['Scanner']['Pattern time']/Qlunc_yaml_inputs['Components']['Scanner']['Single point measuring time']))), # Azimuth angle in [degrees].                                  
                             focus_dist      = np.tile(Qlunc_yaml_inputs['Components']['Scanner']['Focus distance'],(1,len(np.linspace(Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][0],                                                  
                                                                    Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][1],
                                                                    math.floor(Qlunc_yaml_inputs['Components']['Scanner']['Pattern time']/Qlunc_yaml_inputs['Components']['Scanner']['Single point measuring time'])))))[0],   # Focus distance in [meters]                                                                                                
@@ -79,7 +79,7 @@ Scanner           = scanner(name            = Qlunc_yaml_inputs['Components']['S
                             stdv_cone_angle = Qlunc_yaml_inputs['Components']['Scanner']['stdv Cone angle'],                 # Cone angle standard deviation in [degrees].
                             stdv_azimuth    = Qlunc_yaml_inputs['Components']['Scanner']['stdv Azimuth'],                 # Azimuth angle standard deviation in [degrees].
                             unc_func        = uopc.UQ_Scanner) #eval(Qlunc_yaml_inputs['Components']['Scanner']['Uncertainty function']) )    # here you put the function describing your scanner uncertainty. 
-pdb.set_trace()
+
 #Optical Circulator:
 Optical_circulator = optical_circulator (name           = Qlunc_yaml_inputs['Components']['Optical Circulator']['Name'],       # Introduce your Optical circulator name.
                                          insertion_loss = Qlunc_yaml_inputs['Components']['Optical Circulator']['Insertion loss'],                        # In [dB]. Insertion loss parameters.
@@ -98,8 +98,11 @@ Telescope = telescope (name                       = Qlunc_yaml_inputs['Component
                        stdv_focal_length          = Qlunc_yaml_inputs['Components']['Telescope']['stdv Focal length'],
                        stdv_fiber_lens_d          = Qlunc_yaml_inputs['Components']['Telescope']['stdv Fiber-lens distance'],
                        stdv_fiber_lens_offset     = Qlunc_yaml_inputs['Components']['Telescope']['stdv Fiber-lens offset'], 
-                       stdv_eff_radius_telescope  = Qlunc_yaml_inputs['Components']['Telescope']['stdv Effective radius telescope'], 
+                       stdv_eff_radius_telescope  = Qlunc_yaml_inputs['Components']['Telescope']['stdv Effective radius telescope'],
+                       tau                        = Qlunc_yaml_inputs['Components']['Telescope']['Pulse shape'],
+                       tau_meas                   = Qlunc_yaml_inputs['Components']['Telescope']['Range gate'], 
                        unc_func      = uopc.UQ_Telescope)
+
 
 Probe_Volume = probe_volume (name                       = Qlunc_yaml_inputs['Probe Volume']['Name'],
                              extinction_coef            = Qlunc_yaml_inputs['Probe Volume']['Extinction coeficient'],
