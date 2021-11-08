@@ -18,27 +18,29 @@ Components:
   Scanner:
     
     Name: Scanner_Yaml # Provide an ID to your lidar:    
-    Origin: [0,0,60]  # Lidar position in meters: [x,y,z]    
+    Origin: [0,0,0]  # Lidar position in meters: [x,y,z]    
     Pattern: 'None' # 'lissajous', user defined pattern or 'None' in case none predefined pattern is used
+    Pattern time: 20 # Time lidar takes to complete a measuring pattern
+    Single point measuring time: 2 # time lidar spans in one single measurement of a pattern
     # Lissajous patterns:
     Lissajous parameters: [36,50,50,3,3] # [x_dim,y_dim,z_dim,q,p]
     Sample rate: 0   # Lidar sample rate. In meters. Use 0 for now.
-    Type: SCAN    # Type of the scanning head: VAD or SCAN (Scanning Lidar).
+    Type: VAD    # Type of the scanning head: VAD or SCAN (Scanning Lidar).
   
     # STDV in lidar angles and focus distance
     stdv focus distance: 0   # [m]  # This will be removed since the error in focus distance is calculated using telescope parameters parameters (see Telescope section)
-    stdv Cone angle: 0.5      # [deg]
+    stdv Cone angle: 0     # [deg]
     stdv Azimuth: 0         # [deg]   
    
     # VAD Pattern:
-    Focus distance: [69]   # [m]
-    Cone angle: [30]       # [deg]
-    Azimuth: [0,360,10]     # [deg] [origin,end,steps]
+    Focus distance: [257.50048543643567]   # [m]
+    Cone angle: [11.309932474020215]       # [deg]
+    Azimuth: [0,180]     # [deg] [origin,end]
 
     # Scanning Lidar Pattern:
-    x: [2000] # This will be removed since the focus distance is calculated using telescope parameters. By variying the fiber-lens distance you actually vary the focus distance (see  Telescope section)
-    y: [0]   
-    z: [0]
+    x: [-252.5,-252.5,-252.5,-252.5] # This will be removed since the focus distance is calculated using telescope parameters. By variying the fiber-lens distance you actually vary the focus distance (see  Telescope section)
+    y: [46.21070722778538,-46.21070722778537,-46.210707227785385,46.21070722778536]   
+    z: [46.21070722778538,46.21070722778538,-46.21070722778537,-46.210707227785385]
         
     # Uncertainty function:
     Uncertainty function: uopc.UQ_Scanner
@@ -51,13 +53,20 @@ Components:
   
   Telescope:
     Name: Telescope_YAML
-    Aperture: 2.e-2 #[m]
-     
-    Focal length: 200.e-3
+    # CW lidar:
+    Aperture: 2.e-2 #[m]     
+    Focal length: 500.e-3
     Fiber-lens distance: 2.4e-3
-    Fiber-lens offset: 198.1e-3
+    Fiber-lens offset: 498.e-3
     Effective radius telescope: 16.6e-3
     Output beam radius: 20.e-3
+    
+    # Pulsed lidar: This is how the pulse is defined and the rayleigh distance calculated 
+    Pulse shape: 165.e-9 # Pulse shape (only for pulsed lidar) - Defined as the FWHM of the pulse shape
+    Range gate: 265.e-9 # Range gate 
+    
+    
+    
     Stdv Aperture: 2.e-6 #[m]                   # These errors are for now just assumptions (*)  
     stdv Focal length: 1.e-6                    # (*)  
     stdv Fiber-lens distance: 1.e-6             # (*)
@@ -112,7 +121,7 @@ Components:
 # Lidar general inputs 
   Lidar general inputs:
     Name: Lidar_gral_inputs_Yaml
-    Type: CW # CW/Pulsed for continuous wave or pulsed lidars. The difference is that AOM (photonics module) is included in calculations when Pulsed
+    Type: CW # CW/Pulsed for continuous wave or pulsed lidars. The difference is that AOM (photonics module) is included in calculations when Pulsed and probe volume calculations
     Wavelength: 1550.e-9 #1000.e-9    # [m]
     Yaw error: 0       # [deg]
     Pitch error: 0         # [deg]
@@ -137,7 +146,7 @@ Modules:
 Lidar:
   Name: Caixa1
   Photonics module: Photonics_Module       # Has to be the same name as the instance
-  Optics module: None #Optics_Module             # Has to be the same name as the instance
+  Optics module: Optics_Module             # Has to be the same name as the instance
   Power module: None                       # Has to be the same name as the instance
   Lidar inputs: Lidar_inputs               # Has to be the same name as the instance
   Uncertainty function: ulc.sum_unc_lidar  # Python module! (You develop a function and save it as a python module)

@@ -163,8 +163,10 @@ class converter(): # Not included yet in Version Qlunc v-0.9 calculations
                  print('Created new converter: {}'.format(self.ConverterID))
 
 class scanner():
-    def __init__(self,name,scanner_type,pattern,lissajous_param,origin,sample_rate,focus_dist,cone_angle,azimuth,x,y,z,stdv_focus_dist,stdv_cone_angle,stdv_azimuth,unc_func):
+    def __init__(self,name,time_pattern,time_point,scanner_type,pattern,lissajous_param,origin,sample_rate,focus_dist,cone_angle,azimuth,x,y,z,stdv_focus_dist,stdv_cone_angle,stdv_azimuth,unc_func):
                  self.ScannerID       = name
+                 self.time_pattern    = time_pattern
+                 self.time_point      = time_point 
                  self.scanner_type    = scanner_type
                  self.origin          = origin
                  self.pattern         = pattern
@@ -193,7 +195,7 @@ class optical_circulator():
                  print ('Created new optical circulator: {}'.format(self.Optical_CirculatorID))
 
 class telescope():
-    def __init__(self,name,aperture,stdv_aperture,focal_length,fiber_lens_d,fiber_lens_offset,effective_radius_telescope,output_beam_radius,stdv_fiber_lens_d,stdv_fiber_lens_offset,stdv_focal_length,stdv_eff_radius_telescope ,unc_func):
+    def __init__(self,name,aperture,stdv_aperture,focal_length,fiber_lens_d,fiber_lens_offset,effective_radius_telescope,output_beam_radius,stdv_fiber_lens_d,stdv_fiber_lens_offset,stdv_focal_length,stdv_eff_radius_telescope,tau,tau_meas,unc_func):
                 self.TelescopeID                = name
                 self.aperture                   = aperture
                 self.stdv_aperture              = stdv_aperture
@@ -201,12 +203,13 @@ class telescope():
                 self.fiber_lens_d               = fiber_lens_d
                 self.fiber_lens_offset          = fiber_lens_offset
                 self.effective_radius_telescope = effective_radius_telescope
-
                 self.output_beam_radius         = output_beam_radius
                 self.stdv_fiber_lens_d          = stdv_fiber_lens_d
                 self.stdv_fiber_lens_offset     = stdv_fiber_lens_offset
                 self.stdv_focal_length          = stdv_focal_length
-                self.stdv_eff_radius_telescope  = stdv_eff_radius_telescope 
+                self.stdv_eff_radius_telescope  = stdv_eff_radius_telescope
+                self.tau                        = tau
+                self.tau_meas                   = tau_meas
                 self.Uncertainty                = unc_func
                 print('Created new telescope: {}'.format(self.TelescopeID))
 

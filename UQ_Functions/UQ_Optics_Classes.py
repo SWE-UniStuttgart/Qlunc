@@ -59,12 +59,11 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     #Call probe volume uncertainty function
     Probe_param = Lidar.probe_volume.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
-    
+    pdb.set_trace()
     # R: Implement error in deployment of the tripod as a rotation over yaw, pitch and roll
     stdv_yaw    = np.array(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))
     stdv_pitch  = np.array(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))
     stdv_roll   = np.array(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))
-    # pdb.set_trace()
     
     # stdv focus distance, cone angle and azimuth:
     # stdv_param1 = Probe_param['Focus Distance uncertainty']
@@ -78,7 +77,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         # param1 = [np.array(Probe_param['Focus Distance'])]
         param2 = np.deg2rad(Lidar.optics.scanner.cone_angle)
         param3 = np.deg2rad(Lidar.optics.scanner.azimuth)
-
+        pdb.set_trace()
     elif Qlunc_yaml_inputs['Components']['Scanner']['Type']=='SCAN':
         
         # 'Transform coordinates from cartesians to spherical'
@@ -97,7 +96,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             # x_init = np.array([Probe_param['Focus Distance']])
             y_init = Lidar.optics.scanner.y
             z_init = Lidar.optics.scanner.z
-        
+            pdb.set_trace()
         # Calculating parameter1, parameter2 and parameter3 depending on the quadrant (https://es.wikipedia.org/wiki/Coordenadas_esf%C3%A9ricas):
         param1=np.array(np.sqrt(x_init**2+y_init**2+z_init**2)) 
         for ind in range(len(z_init)):
