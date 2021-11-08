@@ -28,7 +28,7 @@ def lissajous_pattern(size_x,size_y,size_z,q,p):
     # (1<p<q)
     t   = np.arange(0,2*np.pi,.01)
     phi = np.linspace(0,2*np.pi,len(t))
-    
+    pdb.set_trace()
     # lissajous transformation
     z = size_x*np.sin((p*t+phi))
     y = size_y*np.sin((q*t))
