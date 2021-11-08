@@ -64,7 +64,6 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     stdv_yaw    = np.array(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))
     stdv_pitch  = np.array(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))
     stdv_roll   = np.array(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))
-    # pdb.set_trace()
     
     # stdv focus distance, cone angle and azimuth:
     # stdv_param1 = Probe_param['Focus Distance uncertainty']

@@ -100,7 +100,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         #Calculating focus distance depending on the distance between the fiber-end and the telescope lens:
         focus_distance = 1/((1/f_length)-(1/(a+a0))) # Focus distance
         dist =(np.linspace(0,80,len(a)))  # distance from the focus position along the beam direction
-        pdb.set_trace()
+        # pdb.set_trace()
         # Rayleigh length variation due to focus_distance variations (due to the distance between fiber-end and telescope lens)
         zr = (wave*(focus_distance**2))/(np.pi*(Qlunc_yaml_inputs['Components']['Telescope']['Effective radius telescope'])**2)# Rayleigh length  (considered as the probe length) # half-width of the weighting function --> FWHM = 2*zr
     
