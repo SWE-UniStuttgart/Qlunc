@@ -70,7 +70,7 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         # zr = (cts.c*Lidar.optics.telescope.tau_meas)/(2*math.erf(np.sqrt(np.log(2))*(Lidar.optics.telescope.tau_meas)/(Lidar.optics.telescope.tau)))/2
         
         # Variables
-        tau_meas= Qlunc_yaml_inputs['Components']['Telescope']['Range gate']
+        tau_meas= Qlunc_yaml_inputs['Components']['Telescope']['Gate length']
         tau= Qlunc_yaml_inputs['Components']['Telescope']['Pulse shape']
         focus_distance = random.randrange(1,500,1)
         
