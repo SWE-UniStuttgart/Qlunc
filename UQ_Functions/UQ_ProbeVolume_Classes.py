@@ -30,19 +30,27 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,param1):
         Unc_a0                    = Qlunc_yaml_inputs['Components']['Telescope']['stdv Fiber-lens offset']
         Unc_wavelength            = Qlunc_yaml_inputs['Components']['Laser']['stdv Wavelength']
         Unc_eff_radius_telescope  = Qlunc_yaml_inputs['Components']['Telescope']['stdv Effective radius telescope']
-        # pdb.set_trace()
+        pdb.set_trace()
        
         # Focus distance
-        focus_distance = 1/((1/r)-(1/(a+a0))) 
-        # focus_distance = Qlunc_yaml_inputs['Components']['Telescope']['Focal length']
+        # focus_distance = 1/((1/r)-(1/(a+a0))) # This parameters are complicated to know for users. Maybe it is easier to put just a simple parameter representing the focus distance(*)
+        focus_distance = param1 #(*)
         
         # Uncertainty in focus distance
-        Unc_focus_distance = np.sqrt((((1/r**2)/(((1/r)-(1/(a+a0)))**2))*Unc_r)**2 + (((1/(a+a0)**2)/(((1/r)-(1/(a+a0)))**2))*Unc_a)**2 + (((1/(a+a0)**2)/(((1/r)-(1/(a+a0)))**2))*Unc_a0)**2)
+        # Unc_focus_distance = np.sqrt((((1/r**2)/(((1/r)-(1/(a+a0)))**2))*Unc_r)**2 + (((1/(a+a0)**2)/(((1/r)-(1/(a+a0)))**2))*Unc_a)**2 + (((1/(a+a0)**2)/(((1/r)-(1/(a+a0)))**2))*Unc_a0)**2) # This parameters are complicated to know for users. Maybe it is easier to put just a simple parameter representing the focus distance(**)
+        Unc_focus_distance = Qlunc_yaml_inputs['Components']['Scanner']['stdv focus distance'] #(**)
+        
         
         # Rayleigh length variation due to focus_distance variations (due to the distance between fiber-end and telescope lens)
-        zr = (wavelength*(focus_distance**2))/(np.pi*(rad_eff)**2)# Rayleigh length  (considered as the probe length) # half-width of the weighting function --> FWHM = 2*zr
-        # Uncertainty rayleigh length       
-        Unc_zr = np.sqrt(((focus_distance**2)*Unc_wavelength/(np.pi*rad_eff))**2 + ((2*wavelength*focus_distance*Unc_focus_distance)/(np.pi*rad_eff**2))**2 + ((2*wavelength*(focus_distance**2)*Unc_eff_radius_telescope)/(np.pi*rad_eff**3))**2)
+        # zr= (wavelength*(ind_focusdist**2))/(np.pi*(rad_eff)**2)# Rayleigh length  (considered as the probe length) # half-width of the weighting function --> FWHM = 2*zr
+        # Unc_zr= np.sqrt(((ind_focusdist**2)*Unc_wavelength/(np.pi*rad_eff))**2 + ((2*wavelength*ind_focusdist*Unc_focus_distance)/(np.pi*rad_eff**2))**2 + ((2*wavelength*(ind_focusdist**2)*Unc_eff_radius_telescope)/(np.pi*rad_eff**3))**2)
+
+        zr=[]
+        Unc_zr=[]
+        for ind_focusdist in focus_distance:
+            zr.append( (wavelength*(ind_focusdist**2))/(np.pi*(rad_eff)**2))# Rayleigh length  (considered as the probe length) # half-width of the weighting function --> FWHM = 2*zr
+            # Uncertainty rayleigh length       
+            Unc_zr.append( np.sqrt(((ind_focusdist**2)*Unc_wavelength/(np.pi*rad_eff))**2 + ((2*wavelength*ind_focusdist*Unc_focus_distance)/(np.pi*rad_eff**2))**2 + ((2*wavelength*(ind_focusdist**2)*Unc_eff_radius_telescope)/(np.pi*rad_eff**3))**2))
         
         # Saving rayleigh length to a file in ./metadata to be read by matlab
         if os.path.isfile('./metadata/rayleigh_distance.txt'):
@@ -59,7 +67,7 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,param1):
         # Probe volume:
         #Probe_volume = np.pi*(Qlunc_yaml_inputs['Probe Volume']['Output beam radius']**2)*((4*(focus_distance**2)*Qlunc_yaml_inputs['Components']['Laser']['Wavelength'])/(Telescope_aperture)) # based on Marijn notes
         #VolCil       = np.pi*(Qlunc_yaml_inputs['Probe Volume']['Output beam radius']**2)*fwhm  # calculated based on the fwhm
-        vol_zr       = np.pi*(Qlunc_yaml_inputs['Components']['Telescope']['Output beam radius']**2)*(2*zr) # based on the definition of Rayleigh length in Liqin Jin notes (Focus calibration formula)
+        # vol_zr       = np.pi*(Qlunc_yaml_inputs['Components']['Telescope']['Output beam radius']**2)*(2*zr) # based on the definition of Rayleigh length in Liqin Jin notes (Focus calibration formula)
 
         # Lorentzian weighting function:
         # phi = (Qlunc_yaml_inputs['Probe Volume']['Extinction coeficient']/np.pi)*(1/((1**2)+(36.55-focus_distance)**2))
