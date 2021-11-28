@@ -14,7 +14,7 @@ from Utils import Qlunc_Help_standAlone as SA
 from Utils import Scanning_patterns as SP
 from Utils import Qlunc_Plotting as QPlot
 
-def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
+def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,param1):
     # Liqin jin model
     if Qlunc_yaml_inputs['Components']['Lidar general inputs']['Type']=="CW":
         # The focus distance varies with the focal length and the distance between the fiber-end and the telescope lens as well. So that, also the probe length varies with such distance.
@@ -31,8 +31,10 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         Unc_wavelength            = Qlunc_yaml_inputs['Components']['Laser']['stdv Wavelength']
         Unc_eff_radius_telescope  = Qlunc_yaml_inputs['Components']['Telescope']['stdv Effective radius telescope']
         # pdb.set_trace()
+       
         # Focus distance
         focus_distance = 1/((1/r)-(1/(a+a0))) 
+        # focus_distance = Qlunc_yaml_inputs['Components']['Telescope']['Focal length']
         
         # Uncertainty in focus distance
         Unc_focus_distance = np.sqrt((((1/r**2)/(((1/r)-(1/(a+a0)))**2))*Unc_r)**2 + (((1/(a+a0)**2)/(((1/r)-(1/(a+a0)))**2))*Unc_a)**2 + (((1/(a+a0)**2)/(((1/r)-(1/(a+a0)))**2))*Unc_a0)**2)
@@ -89,6 +91,7 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         # print the answer
         fwhm = hmx[1] - hmx[0]
         print("FWHM:{:.3f}".format(fwhm))
+        print("Zr uncertainty:{:.3f}".format(Unc_zr))
         
     pdb.set_trace()
     
