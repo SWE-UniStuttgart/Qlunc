@@ -20,7 +20,7 @@ Components:
     Name: Scanner_Yaml # Provide an ID to your lidar:    
     Origin: [0,0,0]  # Lidar position in meters: [x,y,z]    
     Pattern: 'None' # 'lissajous', user defined pattern or 'None' in case none predefined pattern is used - Only with SCAN type
-    Pattern time: 300 # Time lidar takes to complete a measuring pattern
+    Pattern time: 20 # Time lidar takes to complete a measuring pattern
     Single point measuring time: 2 # time lidar spans in one single measurement of a pattern
     # Lissajous patterns:
     Lissajous parameters: [100,50,50,3,3] # [x_dim,y_dim,z_dim,q,p]
@@ -33,9 +33,9 @@ Components:
     stdv Azimuth: 0         # [deg]   
    
     # VAD Pattern:
-    Focus distance: [257.50048543643567]   # [m]
-    Cone angle: [11.309932474020215]       # [deg]
-    Azimuth: [0,180]     # [deg] [origin,end]
+    Focus distance: [125]   # [m]
+    Cone angle: [15]       # [deg]
+    Azimuth: [0,360]     # [deg] [origin,end]
 
     # Scanning Lidar Pattern:
     x: [40,90,130,160] # This will be removed since the focus distance is calculated using telescope parameters. By variying the fiber-lens distance you actually vary the focus distance (see  Telescope section)
