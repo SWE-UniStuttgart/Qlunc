@@ -56,7 +56,7 @@ Scanner           = scanner(name            = Qlunc_yaml_inputs['Components']['S
                             time_pattern    = Qlunc_yaml_inputs['Components']['Scanner']['Pattern time'],
                             time_point      = Qlunc_yaml_inputs['Components']['Scanner']['Single point measuring time'],      
                            # This values for focus distance, cone_angle and azimuth define a typical VAD scanning sequence:
-                               # I changed azimuth calculations because with "np.arange" we do not capture the last point in the patter. "np.arange does not include the last point"; np.linspace capture all the points.
+                               # I changed azimuth calculations because with "np.arange" we do not capture the last point in the pattern. "np.arange does not include the last point"; np.linspace capture all the points.
                                # Furthermore, once the time of the pattern is included in the pattern, we will do calculations based on the n° of points yielded by the ratio: time_pattern[sec]/time_point[sec/point]
                                # HAve to decide if wnat np.arange or np.linspace here (azimuth)
                             azimuth         = np.array(np.arange(Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][0],                                                  
@@ -100,7 +100,7 @@ Telescope = telescope (name                       = Qlunc_yaml_inputs['Component
                        stdv_fiber_lens_offset     = Qlunc_yaml_inputs['Components']['Telescope']['stdv Fiber-lens offset'], 
                        stdv_eff_radius_telescope  = Qlunc_yaml_inputs['Components']['Telescope']['stdv Effective radius telescope'],
                        tau                        = Qlunc_yaml_inputs['Components']['Telescope']['Pulse shape'],
-                       tau_meas                   = Qlunc_yaml_inputs['Components']['Telescope']['Range gate'], 
+                       tau_meas                   = Qlunc_yaml_inputs['Components']['Telescope']['Gate length'], 
                        unc_func      = uopc.UQ_Telescope)
 
 
