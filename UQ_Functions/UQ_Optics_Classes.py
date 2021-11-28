@@ -59,7 +59,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     #Call probe volume uncertainty function
     Probe_param = Lidar.probe_volume.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
-    pdb.set_trace()
+    # pdb.set_trace()
     # R: Implement error in deployment of the tripod as a rotation over yaw, pitch and roll
     stdv_yaw    = np.array(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))
     stdv_pitch  = np.array(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))
