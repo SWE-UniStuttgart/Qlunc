@@ -19,13 +19,13 @@ Components:
     
     Name: Scanner_Yaml # Provide an ID to your lidar:    
     Origin: [0,0,0]  # Lidar position in meters: [x,y,z]    
-    Pattern: 'lissajous' # 'lissajous', user defined pattern or 'None' in case none predefined pattern is used - Only with SCAN type
+    Pattern: 'None' # 'lissajous', user defined pattern or 'None' in case none predefined pattern is used - Only with SCAN type
     Pattern time: 300 # Time lidar takes to complete a measuring pattern
     Single point measuring time: 2 # time lidar spans in one single measurement of a pattern
     # Lissajous patterns:
     Lissajous parameters: [100,50,50,3,3] # [x_dim,y_dim,z_dim,q,p]
     Sample rate: 0   # Lidar sample rate. In meters. Use 0 for now.
-    Type: SCAN    # Type of the scanning head: VAD or SCAN (Scanning Lidar).
+    Type: VAD    # Type of the scanning head: VAD or SCAN (Scanning Lidar).
   
     # STDV in lidar angles and focus distance
     stdv focus distance: 0   # [m]  # This will be removed since the error in focus distance is calculated using telescope parameters parameters (see Telescope section)
@@ -38,8 +38,8 @@ Components:
     Azimuth: [0,180]     # [deg] [origin,end]
 
     # Scanning Lidar Pattern:
-    x: [-252.5,-252.5,-252.5,-252.5] # This will be removed since the focus distance is calculated using telescope parameters. By variying the fiber-lens distance you actually vary the focus distance (see  Telescope section)
-    y: [46.21070722778538,-46.21070722778537,-46.210707227785385,46.21070722778536]   
+    x: [40,90,130,160] # This will be removed since the focus distance is calculated using telescope parameters. By variying the fiber-lens distance you actually vary the focus distance (see  Telescope section)
+    y: [50,-50,-50,50]   
     z: [46.21070722778538,46.21070722778538,-46.21070722778537,-46.210707227785385]
         
     # Uncertainty function:
@@ -63,7 +63,7 @@ Components:
     
     # Pulsed lidar: This is how the pulse is defined and the rayleigh distance calculated 
     Pulse shape: 165.e-9 # Pulse shape (only for pulsed lidar) - Defined as the FWHM of the pulse shape
-    Range gate: 265.e-9 # Range gate 
+    Gate length: 265.e-9 # Gate length 
     
     
     
