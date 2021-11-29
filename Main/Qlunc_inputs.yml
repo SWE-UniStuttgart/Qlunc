@@ -153,6 +153,14 @@ Lidar:
 
 ---
 
+# Data processing methods:
+
+WFR model:
+  Model: 'Flat' # Complex, Floating
+
+Filtering method:
+  Method: 'CNR' # Outliers
+
 # ATMOSPHERIC INPUTS:-----------------------------------------------
 # Atmospheric_inputs to create the atmospheric scenarios
 
