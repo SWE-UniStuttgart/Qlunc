@@ -8,7 +8,7 @@ Lissajous' pattern
 from Utils.Qlunc_ImportModules import *
 
 #%% Lissajous pattern
-def lissajous_pattern(size_x,size_y,size_z,q,p):
+def lissajous_pattern(Lidar,size_x,size_y,size_z,q,p):
     """
     Plotting. Location: .Utils/Qlunc_plotting.py
     
@@ -26,9 +26,10 @@ def lissajous_pattern(size_x,size_y,size_z,q,p):
     """
     # parameters
     # (1<p<q)
-    t   = np.arange(0,2*np.pi,.01)
+    # t   = np.arange(0,2*np.pi,.01)
+    t=np.linspace(0,2*np.pi,math.floor(Lidar.optics.scanner.time_pattern/Lidar.optics.scanner.time_point))
     phi = np.linspace(0,2*np.pi,len(t))
-    
+    pdb.set_trace()
     # lissajous transformation
     z = size_x*np.sin((p*t+phi))
     y = size_y*np.sin((q*t))

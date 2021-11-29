@@ -57,9 +57,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     coun=0
     sample_rate_count=0
     
-    #Call probe volume uncertainty function
-    Probe_param = Lidar.probe_volume.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
-    pdb.set_trace()
+    # #Call probe volume uncertainty function. 
+    # Probe_param = Lidar.probe_volume.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+    # pdb.set_trace()
     # R: Implement error in deployment of the tripod as a rotation over yaw, pitch and roll
     stdv_yaw    = np.array(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))
     stdv_pitch  = np.array(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))
@@ -88,17 +88,19 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         # When SCAN is selected user can choose specific patterns already implemented (./Qlunc/Utils/Scanning_patterns.py)
         if Qlunc_yaml_inputs['Components']['Scanner']['Pattern']=='lissajous':
             # x_init,y_init,z_init = SP.lissajous_pattern(Lidar.optics.scanner.lissajous_param[0],Lidar.optics.scanner.lissajous_param[1],Lidar.optics.scanner.lissajous_param[2],Lidar.optics.scanner.lissajous_param[3],Lidar.optics.scanner.lissajous_param[4])
+            pdb.set_trace()
             x_init =np.array( [Probe_param['Focus Distance']])
-            y_init,z_init = SP.lissajous_pattern(Lidar.optics.scanner.lissajous_param[1],Lidar.optics.scanner.lissajous_param[2],Lidar.optics.scanner.lissajous_param[3],Lidar.optics.scanner.lissajous_param[4])
+            x_init,y_init,z_init = SP.lissajous_pattern(Lidar,Lidar.optics.scanner.lissajous_param[0],Lidar.optics.scanner.lissajous_param[1],Lidar.optics.scanner.lissajous_param[2],Lidar.optics.scanner.lissajous_param[3],Lidar.optics.scanner.lissajous_param[4])
         
         elif Qlunc_yaml_inputs['Components']['Scanner']['Pattern']=='None':
             x_init = Lidar.optics.scanner.x
-            # x_init = np.array([Probe_param['Focus Distance']])
+            # x_init = np.array([Probe_param['Focus Distance']]) # This needs to be changed
             y_init = Lidar.optics.scanner.y
             z_init = Lidar.optics.scanner.z
-            pdb.set_trace()
+            
         # Calculating parameter1, parameter2 and parameter3 depending on the quadrant (https://es.wikipedia.org/wiki/Coordenadas_esf%C3%A9ricas):
-        param1=np.array(np.sqrt(x_init**2+y_init**2+z_init**2)) 
+        param1=np.array(np.sqrt(x_init**2+y_init**2+z_init**2))
+        
         for ind in range(len(z_init)):
             
             #Parameter2
@@ -192,7 +194,11 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         coun+=1
     Noisy_Coord=[NoisyX,NoisyY,NoisyZ]
     Coord=[X0,Y0,Z0]
-    # pdb.set_trace()
+    
+    #Call probe volume uncertainty function
+    Probe_param = Lidar.probe_volume.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,param1)
+    
+    pdb.set_trace()
     # Saving coordenates to a file in desktop
     # file=open('C:/Users/fcosta/Desktop/data_'+Qlunc_yaml_inputs['Components']['Scanner']['Type']+'.txt','w')
     # XX=repr(param1)
