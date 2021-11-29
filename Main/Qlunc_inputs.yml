@@ -39,9 +39,9 @@ Components:
     Azimuth: [0,360]     # [deg] [origin,end]
 
     # Scanning Lidar Pattern:
-    x: [40,90,130,160] # This will be removed since the focus distance is calculated using telescope parameters. By variying the fiber-lens distance you actually vary the focus distance (see  Telescope section)
+    x: [160,160,160,160] # This will be removed since the focus distance is calculated using telescope parameters. By variying the fiber-lens distance you actually vary the focus distance (see  Telescope section)
     y: [50,-50,-50,50]   
-    z: [46.21070722778538,46.21070722778538,-46.21070722778537,-46.210707227785385]
+    z: [46.21070722778538,46.21070722778538,-46.21070722778537,-85]
         
     # Uncertainty function:
     Uncertainty function: uopc.UQ_Scanner
@@ -154,13 +154,15 @@ Lidar:
 
 ---
 
-# Data processing methods:
+# Data processing methods: 
 
 WFR model:
-  Model: 'Flat' # Complex, Floating
+  Name: WFR_Yaml
+  Model: 'Flat' # Complex, Floating, None=not apply WFR method
 
 Filtering method:
-  Method: 'CNR' # Outliers
+  Name: Filtering_Yaml
+  Method: 'CNR' # Outliers,None=not apply filtering
 
 # ATMOSPHERIC INPUTS:-----------------------------------------------
 # Atmospheric_inputs to create the atmospheric scenarios
