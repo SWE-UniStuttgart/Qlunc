@@ -30,7 +30,7 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,param1):
         Unc_a0                    = Qlunc_yaml_inputs['Components']['Telescope']['stdv Fiber-lens offset']
         Unc_wavelength            = Qlunc_yaml_inputs['Components']['Laser']['stdv Wavelength']
         Unc_eff_radius_telescope  = Qlunc_yaml_inputs['Components']['Telescope']['stdv Effective radius telescope']
-        pdb.set_trace()
+        
        
         # Focus distance
         # focus_distance = 1/((1/r)-(1/(a+a0))) # This parameters are complicated to know for users. Maybe it is easier to put just a simple parameter representing the focus distance(*)
@@ -100,9 +100,7 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,param1):
         fwhm = hmx[1] - hmx[0]
         print("FWHM:{:.3f}".format(fwhm))
         print("Zr uncertainty:{:.3f}".format(Unc_zr))
-        
-    pdb.set_trace()
-    
+            
     Final_Output_UQ_ProbeVolume = {'Rayleigh Length':zr,'Rayleigh Length uncertainty':Unc_zr,'Focus Distance':focus_distance,'Focus Distance uncertainty':Unc_focus_distance}
 
     # Plotting:
