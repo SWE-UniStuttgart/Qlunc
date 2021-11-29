@@ -291,5 +291,13 @@ class lidar():
                  self.Uncertainty  = unc_func
                  print('Created new lidar device: {}'.format(self.LidarID))
 
-
-
+#%% Wind field recondtruction method
+class wfr():
+    def __init__ (self, name,WFR_model):
+        self.name = name
+        self.model = WFR_model
+#%% Data filtering method
+class filtering_method():
+    def __init__ (self, name,filt_method):
+        self.name = name
+        self.filt_method = filt_method
