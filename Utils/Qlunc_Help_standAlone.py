@@ -202,3 +202,14 @@ def half_max_x(x, y):
     
     return [lin_interp(x, y, zero_crossings_i[0], half),
             lin_interp(x, y, zero_crossings_i[1], half)]
+
+
+#%% Creates a sphere of radius equal to the estimates error distance around the lidar theoretical measured point
+
+def sample_spherical(npoints, ndim=3):
+    vec = np.random.randn(ndim, npoints)
+    vec /= np.linalg.norm(vec, axis=0)
+    return vec
+
+
+
