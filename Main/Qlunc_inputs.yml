@@ -29,9 +29,9 @@ Components:
     Pattern: 'None' # 'lissajous', user defined pattern or 'None' in case none predefined pattern is used - Only with SCAN type
   
     # STDV in lidar angles and focus distance
-    stdv focus distance: 0   # [m]  # This will be removed since the error in focus distance is calculated using telescope parameters parameters (see Telescope section)
-    stdv Cone angle: 0     # [deg]
-    stdv Azimuth: 0         # [deg]   
+    stdv focus distance: 7   # [m]  # This will be removed since the error in focus distance is calculated using telescope parameters parameters (see Telescope section)
+    stdv Cone angle: 3     # [deg]
+    stdv Azimuth: 4         # [deg]   
    
     # VAD Pattern:
     Focus distance: [125]   # [m]
@@ -39,9 +39,9 @@ Components:
     Azimuth: [0,360]     # [deg] [origin,end]
 
     # Scanning Lidar Pattern:
-    x: [160,160,160,160] # This will be removed since the focus distance is calculated using telescope parameters. By variying the fiber-lens distance you actually vary the focus distance (see  Telescope section)
-    y: [50,-50,-50,50]   
-    z: [46.21070722778538,46.21070722778538,-46.21070722778537,-85]
+    x: [50,210] # This will be removed since the focus distance is calculated using telescope parameters. By variying the fiber-lens distance you actually vary the focus distance (see  Telescope section)
+    y: [10,10]   
+    z: [20,20]
         
     # Uncertainty function:
     Uncertainty function: uopc.UQ_Scanner
@@ -159,10 +159,11 @@ Lidar:
 WFR model:
   Name: WFR_Yaml
   Model: 'Flat' # Complex, Floating, None=not apply WFR method
-
 Filtering method:
   Name: Filtering_Yaml
   Method: 'CNR' # Outliers,None=not apply filtering
+  
+---
 
 # ATMOSPHERIC INPUTS:-----------------------------------------------
 # Atmospheric_inputs to create the atmospheric scenarios
