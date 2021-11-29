@@ -26,7 +26,7 @@ could be done by instantiating their python classes:
 import os
 os.chdir('../')
 # importing  uncertainty functions
-import UQ_Functions.UQ_Photonics_Classes as uphc,UQ_Functions.UQ_Optics_Classes as uopc, UQ_Functions.UQ_Power_Classes as upwc,UQ_Functions.UQ_Lidar_Classes as ulc, UQ_Functions.UQ_ProbeVolume_Classes as upbc
+import UQ_Functions.UQ_Photonics_Classes as uphc,UQ_Functions.UQ_Optics_Classes as uopc, UQ_Functions.UQ_Power_Classes as upwc,UQ_Functions.UQ_Lidar_Classes as ulc, UQ_Functions.UQ_ProbeVolume_Classes as upbc,UQ_Data_processing_Classes as uprm
 from Utils.Qlunc_ImportModules import *
 
 #%% Running Qlunc_Classes.py:
@@ -181,8 +181,19 @@ Lidar = lidar(name         = Qlunc_yaml_inputs['Lidar']['Name'],                
               lidar_inputs = Lidar_inputs, #eval(Qlunc_yaml_inputs['Lidar']['Lidar inputs']),         # Introduce lidar general inputs
               unc_func     = ulc.sum_unc_lidar) #eval(Qlunc_yaml_inputs['Lidar']['Uncertainty function'])) # Function estimating lidar global uncertainty
 
+#%% Data processing methods
 
-## Creating atmospheric scenarios: ############################################
+# Wind field reconstruction model
+WFR = wfr (name  = Qlunc_yaml_inputs['WFR model']['Name'],
+           model = Qlunc_yaml_inputs['WFR model']['Model'],
+           unc_func = uprm.UQ_WFR)
+
+# Data filtering method
+Filt = filt (name  = Qlunc_yaml_inputs['Filtering method']['Name'],
+             model = Qlunc_yaml_inputs['Filtering method']['Method'],
+             unc_func = 'uprm.UQ_WFR')
+
+#%% Creating atmospheric scenarios: ############################################
 Atmospheric_TimeSeries = Qlunc_yaml_inputs['Atmospheric_inputs']['TimeSeries'] # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere (T, H, rain and fog) 
                                                                            # If so we obtain a time series describing the noise implemented in the measurement.
 if Atmospheric_TimeSeries:
