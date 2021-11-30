@@ -66,4 +66,5 @@ def UQ_WFR (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scanner_Uncertaint
         ax.set_xlabel('x',fontsize=15)
         ax.set_ylabel('y',fontsize=15)
         ax.set_zlabel('z',fontsize=15)
-        pdb.set_trace()
+    pdb.set_trace()
+    return (xi,yi,zi)
