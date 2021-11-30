@@ -178,7 +178,7 @@ Lidar_inputs     = lidar_gral_inp(name        = Qlunc_yaml_inputs['Components'][
 
 # Wind field reconstruction model
 WFR_M = wfr (name  = Qlunc_yaml_inputs['WFR model']['Name'],
-             WFR_model = Qlunc_yaml_inputs['WFR model']['Model'],
+             reconstruction_model = Qlunc_yaml_inputs['WFR model']['Model'],
              unc_func = uprm.UQ_WFR)
 
 # Data filtering method
