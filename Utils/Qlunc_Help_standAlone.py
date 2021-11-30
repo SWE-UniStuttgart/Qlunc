@@ -116,21 +116,45 @@ def unc_comb(data):
     del data_db
     return np.array(res_dB)
 
-#%% Spherical into cartesian  coordinate transformation
-    #    xcart = rho * cos(phi)*sin(theta) 
-    #    ycart = rho * sin(phi)*sin(theta)
-    #    zcart = rho * cos(theta)
+#%% System coordinates transformation
+
     
-def sph2cart(Lidar): 
+def sph2cart(rho,theta,phi): 
     x=[]
     y=[]
     z=[]    
-    for i in range(len(Lidar.optics.scanner.focus_dist)):
-        x=Lidar.optics.scanner.focus_dist[i]*np.cos(np.deg2rad(Lidar.optics.scanner.phi))*np.sin(np.deg2rad(Lidar.optics.scanner.theta))
-        y=Lidar.optics.scanner.focus_dist[i]*np.sin(np.deg2rad(Lidar.optics.scanner.phi))*np.sin(np.deg2rad(Lidar.optics.scanner.theta)) 
-        z=Lidar.optics.scanner.focus_dist[i]*np.cos(np.deg2rad(Lidar.optics.scanner.theta)) 
+    for i in range(len(rho)):
+        x.append(rho[i]*np.cos((theta[i]))*np.sin((phi[i])))
+        y.append(rho[i]*np.sin((phi[i]))*np.sin((theta[i])) )
+        z.append(rho[i]*np.cos((phi[i])) )
     return(x,y,z)
 
+def cart2sph(x,y,z): 
+    rho=[]
+    theta=[]
+    phi=[]    
+    for ind in range(len(z)):
+        rho.append(np.sqrt(x[ind]**2+y[ind]**2+z[ind]**2))
+        
+        if z[ind]>0:
+                phi.append(np.arctan(np.sqrt(x[ind]**2+y[ind]**2)/z[ind]))
+        elif z[ind]==0:
+                phi.append(np.array(np.pi/2))
+        elif z[ind]<0:
+                phi.append((np.pi)+(np.arctan(np.sqrt(x[ind]**2+y[ind]**2)/z[ind])))
+            
+        #Parameter3
+            # pdb.set_trace()
+        if x[ind]>0:
+            if  y[ind]>=0:
+                theta.append(np.arctan(y[ind]/x[ind]))            
+            elif  y[ind]<0:
+                theta.append((2.0*np.pi)+(np.arctan(y[ind]/x[ind])))           
+        elif x[ind]<0:
+            theta.append((np.pi)+(np.arctan(y[ind]/x[ind])))            
+        elif x[ind]==0:
+                theta.append(np.pi/2.0*(np.sign(y[ind])))
+    return(np.array(rho),np.array(theta),np.array(phi))
 #%% NDF function
 
 def to_netcdf(DataXarray,Qlunc_yaml_inputs,Lidar,Atmospheric_Scenario):
