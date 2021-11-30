@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-"""
+""".
+
 Created on Tue Oct 20 21:18:05 2020
 @author: fcosta
 
@@ -12,21 +13,22 @@ from Utils.Qlunc_ImportModules import *
 
 #%% Plotting:
 def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,flag_plot_photodetector_noise,flag_probe_volume_param,flag_plot_optical_amplifier_noise):
-    """
-    Plotting. Location: .Utils/Qlunc_plotting.py
+    """.
     
+    Plotting. Location: .Utils/Qlunc_plotting.py       
     Parameters
-    ----------
+    ----------    
     
     * Lidar
-        data...
-        
+        data...            
     Returns
-    -------
+    ------- 
     
     list
     
+    
     """
+    
     # Ploting general parameters:
     plot_param={'axes_label_fontsize' : 25,
                 'textbox_fontsize'    : 14,
