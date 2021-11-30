@@ -25,7 +25,7 @@ Components:
     # Lissajous patterns:
     Lissajous parameters: [100,50,50,3,3] # [x_dim,y_dim,z_dim,q,p]
     Sample rate: 0   # Lidar sample rate. In meters. Use 0 for now.
-    Type: SCAN    # Type of the scanning head: VAD or SCAN (Scanning Lidar).
+    Type: VAD    # Type of the scanning head: VAD or SCAN (Scanning Lidar).
     Pattern: 'None' # 'lissajous', user defined pattern or 'None' in case none predefined pattern is used - Only with SCAN type
   
     # STDV in lidar angles and focus distance
@@ -35,13 +35,13 @@ Components:
    
     # VAD Pattern:
     Focus distance: [125]   # [m]
-    Cone angle: [15]       # [deg]
+    Cone angle: [45]       # [deg]
     Azimuth: [0,360]     # [deg] [origin,end]
 
     # Scanning Lidar Pattern:
-    x: [50,210] # This will be removed since the focus distance is calculated using telescope parameters. By variying the fiber-lens distance you actually vary the focus distance (see  Telescope section)
-    y: [10,10]   
-    z: [20,20]
+    x: [50,210,69] # This will be removed since the focus distance is calculated using telescope parameters. By variying the fiber-lens distance you actually vary the focus distance (see  Telescope section)
+    y: [10,10,90]   
+    z: [20,20,55]
         
     # Uncertainty function:
     Uncertainty function: uopc.UQ_Scanner
