@@ -103,7 +103,6 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # Create Xarray to store data. Link with Mocalum and yaddum  ###########################################
     
     df=SA.to_netcdf(Lidar.lidar_inputs.dataframe,Qlunc_yaml_inputs,Lidar,Atmospheric_Scenario)
-    pdb.set_trace()
     ########################################################################################################
     ########################################################################################################
         
