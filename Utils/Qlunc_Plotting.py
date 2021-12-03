@@ -92,12 +92,12 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         # typeLidar ="CW"
         wave      = Qlunc_yaml_inputs['Components']['Laser']['Wavelength']  # wavelength
         f_length  = Qlunc_yaml_inputs['Components']['Telescope']['Focal length'] # focal length
-        a         = np.arange(2e-3,4e-3,.02e-3) # distance fiber-end--telescope lens
+        a         = np.arange(2e-3,4e-3,.002e-3) # distance fiber-end--telescope lens
         a0        = Qlunc_yaml_inputs['Components']['Telescope']['Fiber-lens offset'] # the offset (a constant number), to avoid the fiber-end locates at the focal point, otherwise the lights will be parallel to each other
         A         = Qlunc_yaml_inputs['Components']['Telescope']['Output beam radius'] # beam radius at the output lens
         ext_coef  = 1
         # effective_radius_telescope  = 16.6e-3
-        s = 50 # distance from telescope to the target
+        s = 36.55 # distance from telescope to the target
         # The focus distance varies with the distance between the fiber-end and the telescope lens. So that, also the probe length varies with such distance.
         #Calculating focus distance depending on the distance between the fiber-end and the telescope lens:
         focus_distance = 1/((1/f_length)-(1/(a+a0))) # Focus distance
@@ -111,9 +111,10 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         vol_zr       = np.pi*(A**2)*(2*zr) # based on the definition of Rayleigh length in Liqin Jin notes (Focus calibration formula)
         
         # Lorentzian weighting function:
+        
         phi = (ext_coef/np.pi)*(zr/((zr**2)+(s-focus_distance)**2))
         # phi = (ext_coef/np.pi)*(zr/((zr**2)))
-        
+        # pdb.set_trace()
         # Plotting
         fig=plt.figure()
         axs2=fig.add_subplot(2,2,1)
