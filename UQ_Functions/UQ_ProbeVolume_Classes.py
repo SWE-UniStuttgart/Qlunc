@@ -51,14 +51,14 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,param1):
             zr.append( (wavelength*(ind_focusdist**2))/(np.pi*(rad_eff)**2))# Rayleigh length  (considered as the probe length) # half-width of the weighting function --> FWHM = 2*zr
             # Uncertainty rayleigh length       
             Unc_zr.append( np.sqrt(((ind_focusdist**2)*Unc_wavelength/(np.pi*rad_eff))**2 + ((2*wavelength*ind_focusdist*Unc_focus_distance)/(np.pi*rad_eff**2))**2 + ((2*wavelength*(ind_focusdist**2)*Unc_eff_radius_telescope)/(np.pi*rad_eff**3))**2))
-        
+        pdb.set_trace()
         # Saving rayleigh length to a file in ./metadata to be read by matlab
         if os.path.isfile('./metadata/rayleigh_distance.txt'):
             os.remove('./metadata/rayleigh_distance.txt')
             file=open('./metadata/rayleigh_distance.txt','w')
             file.write(repr(zr))
             file.close()   
-            # pdb.set_trace()
+            
         else:
             file=open('./metadata/rayleigh_distance.txt','w')
             file.write(repr(zr))
@@ -71,7 +71,7 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,param1):
 
         # Lorentzian weighting function:
         # phi = (Qlunc_yaml_inputs['Probe Volume']['Extinction coeficient']/np.pi)*(1/((1**2)+(36.55-focus_distance)**2))
-        phi = (Qlunc_yaml_inputs['Probe Volume']['Extinction coeficient']/np.pi)*(1/((1**2)+(focus_distance)**2))
+        # phi = (Qlunc_yaml_inputs['Probe Volume']['Extinction coeficient']/np.pi)*(1/((1**2)+(focus_distance)**2))
 
         # F = (lamb/np.pi)/(a1**2+lamb**2)  # Lorentzian Weighting function 
     
