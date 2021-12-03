@@ -103,7 +103,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             
         param1,param3,param2=SA.cart2sph(x_init,y_init,z_init)
         xxx,yyy,zzz=SA.sph2cart(param1,param3,param2)
-        pdb.set_trace()
+        # pdb.set_trace()
         # param1=np.array(np.sqrt(x_init**2+y_init**2+z_init**2))
         # for ind in range(len(z_init)):
             
