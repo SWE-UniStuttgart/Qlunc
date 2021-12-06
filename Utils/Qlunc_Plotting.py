@@ -97,7 +97,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         A         = Qlunc_yaml_inputs['Components']['Telescope']['Output beam radius'] # beam radius at the output lens
         ext_coef  = 1
         # effective_radius_telescope  = 16.6e-3
-        s = 36.55 # distance from telescope to the target
+        s = 0 # distance from telescope to the target
         # The focus distance varies with the distance between the fiber-end and the telescope lens. So that, also the probe length varies with such distance.
         #Calculating focus distance depending on the distance between the fiber-end and the telescope lens:
         focus_distance = 1/((1/f_length)-(1/(a+a0))) # Focus distance
