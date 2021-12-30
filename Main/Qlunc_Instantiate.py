@@ -26,7 +26,7 @@ could be done by instantiating their python classes:
 import os
 os.chdir('../')
 # importing  uncertainty functions
-import UQ_Functions.UQ_Photonics_Classes as uphc,UQ_Functions.UQ_Optics_Classes as uopc, UQ_Functions.UQ_Power_Classes as upwc,UQ_Functions.UQ_Lidar_Classes as ulc, UQ_Functions.UQ_ProbeVolume_Classes as upbc,UQ_Data_processing_Classes as uprm
+import UQ_Functions.UQ_Photonics_Classes as uphc,UQ_Functions.UQ_Optics_Classes as uopc, UQ_Functions.UQ_Power_Classes as upwc,UQ_Functions.UQ_Lidar_Classes as ulc, UQ_Functions.UQ_ProbeVolume_Classes as upbc,UQ_Functions.UQ_Data_processing_Classes as uprm
 from Utils.Qlunc_ImportModules import *
 
 #%% Running Qlunc_Classes.py:
@@ -172,26 +172,32 @@ Lidar_inputs     = lidar_gral_inp(name        = Qlunc_yaml_inputs['Components'][
                                   pitch_error = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Pitch error'],                          # In [°]. Degrees of rotation around y axis
                                   roll_error  = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Roll error'],                        # In [°]. Degrees of rotation around z axis.
                                   dataframe   = { })  # Final dataframe
-# Lidar device:
-Lidar = lidar(name         = Qlunc_yaml_inputs['Lidar']['Name'],                       # Introduce the name of your lidar device.
-              photonics    = Photonics_Module, #eval(Qlunc_yaml_inputs['Lidar']['Photonics module']),     # Introduce the name of your photonics module.
-              optics       = Optics_Module, #eval(Qlunc_yaml_inputs['Lidar']['Optics module']),        # Introduce the name of your optics module.
-              power        = None, #eval(Qlunc_yaml_inputs['Lidar']['Power module']),         # Introduce the name of your power module. NOT IMPLEMENTED YET!
-              probe_volume = Probe_Volume, 
-              lidar_inputs = Lidar_inputs, #eval(Qlunc_yaml_inputs['Lidar']['Lidar inputs']),         # Introduce lidar general inputs
-              unc_func     = ulc.sum_unc_lidar) #eval(Qlunc_yaml_inputs['Lidar']['Uncertainty function'])) # Function estimating lidar global uncertainty
+
 
 #%% Data processing methods
 
 # Wind field reconstruction model
-WFR = wfr (name  = Qlunc_yaml_inputs['WFR model']['Name'],
-           model = Qlunc_yaml_inputs['WFR model']['Model'],
-           unc_func = uprm.UQ_WFR)
+WFR_M = wfr (name  = Qlunc_yaml_inputs['WFR model']['Name'],
+             reconstruction_model = Qlunc_yaml_inputs['WFR model']['Model'],
+             unc_func = uprm.UQ_WFR)
 
 # Data filtering method
-Filt = filt (name  = Qlunc_yaml_inputs['Filtering method']['Name'],
-             model = Qlunc_yaml_inputs['Filtering method']['Method'],
-             unc_func = 'uprm.UQ_WFR')
+Filt_M = filtering_method (name  = Qlunc_yaml_inputs['Filtering method']['Name'],
+                           filt_method = Qlunc_yaml_inputs['Filtering method']['Method'],
+                           unc_func = 'uprm.UQ_WFR')
+
+#%% LIDAR device
+
+Lidar = lidar(name           = Qlunc_yaml_inputs['Lidar']['Name'],                       # Introduce the name of your lidar device.
+              photonics      = Photonics_Module, #eval(Qlunc_yaml_inputs['Lidar']['Photonics module']),     # Introduce the name of your photonics module.
+              optics         = Optics_Module, #eval(Qlunc_yaml_inputs['Lidar']['Optics module']),        # Introduce the name of your optics module.
+              power          = None, #eval(Qlunc_yaml_inputs['Lidar']['Power module']),         # Introduce the name of your power module. NOT IMPLEMENTED YET!
+              wfr_model      = WFR_M,
+              filt_method    = Filt_M,
+              probe_volume   = Probe_Volume, 
+              lidar_inputs   = Lidar_inputs, #eval(Qlunc_yaml_inputs['Lidar']['Lidar inputs']),         # Introduce lidar general inputs
+              unc_func       = ulc.sum_unc_lidar) #eval(Qlunc_yaml_inputs['Lidar']['Uncertainty function'])) # Function estimating lidar global uncertainty
+
 
 #%% Creating atmospheric scenarios: ############################################
 Atmospheric_TimeSeries = Qlunc_yaml_inputs['Atmospheric_inputs']['TimeSeries'] # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere (T, H, rain and fog) 

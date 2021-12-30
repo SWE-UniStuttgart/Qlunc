@@ -281,23 +281,29 @@ class lidar_gral_inp():
 
 #%% Lidar class:
 class lidar():
-    def __init__(self,name,photonics,optics,power,lidar_inputs,probe_volume,unc_func):
+    def __init__(self,name,photonics,optics,power,lidar_inputs,probe_volume,wfr_model,filt_method,unc_func):
                  self.LidarID      = name
                  self.photonics    = photonics
                  self.optics       = optics
                  self.power        = power # Not included yet in Version Qlunc v-0.9 calculations
                  self.probe_volume = probe_volume
+                 self.wfr_model          = wfr_model
+                 self.filt_method  = filt_method
                  self.lidar_inputs = lidar_inputs
                  self.Uncertainty  = unc_func
                  print('Created new lidar device: {}'.format(self.LidarID))
 
 #%% Wind field recondtruction method
 class wfr():
-    def __init__ (self, name,WFR_model):
+    def __init__ (self, name,reconstruction_model,unc_func):
         self.name = name
-        self.model = WFR_model
+        self.reconstruction_model = reconstruction_model
+        self.Uncertainty=unc_func
+        print('Selected wfr model: {} terrain'.format(self.reconstruction_model))
 #%% Data filtering method
 class filtering_method():
-    def __init__ (self, name,filt_method):
+    def __init__ (self, name,filt_method,unc_func):
         self.name = name
         self.filt_method = filt_method
+        self.Uncertainty=unc_func
+        print('Selected filtering model: {} '.format(self.filt_method))
