@@ -51,7 +51,6 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,param1):
             zr.append( (wavelength*(ind_focusdist**2))/(np.pi*(rad_eff)**2))# Rayleigh length  (considered as the probe length) # half-width of the weighting function --> FWHM = 2*zr
             # Uncertainty rayleigh length       
             Unc_zr.append( np.sqrt(((ind_focusdist**2)*Unc_wavelength/(np.pi*rad_eff))**2 + ((2*wavelength*ind_focusdist*Unc_focus_distance)/(np.pi*rad_eff**2))**2 + ((2*wavelength*(ind_focusdist**2)*Unc_eff_radius_telescope)/(np.pi*rad_eff**3))**2))
-        pdb.set_trace()
         # Saving rayleigh length to a file in ./metadata to be read by matlab
         if os.path.isfile('./metadata/rayleigh_distance.txt'):
             os.remove('./metadata/rayleigh_distance.txt')
@@ -102,7 +101,7 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,param1):
         print("Zr uncertainty:{:.3f}".format(Unc_zr))
             
     Final_Output_UQ_ProbeVolume = {'Rayleigh Length':zr,'Rayleigh Length uncertainty':Unc_zr,'Focus Distance':focus_distance,'Focus Distance uncertainty':Unc_focus_distance}
-
+    pdb.set_trace()
     # Plotting:
     
     QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_ProbeVolume,False,False,Qlunc_yaml_inputs['Flags']['Probe Volume parameters'],False)
