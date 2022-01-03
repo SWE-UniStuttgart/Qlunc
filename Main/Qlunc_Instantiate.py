@@ -111,15 +111,15 @@ Probe_Volume = probe_volume (name                       = Qlunc_yaml_inputs['Pro
 
 # Optics Module:
 Optics_Module =  optics (name               = Qlunc_yaml_inputs['Modules']['Optics Module']['Name'],     # Introduce your Optics Module name.
-                         scanner            = Scanner, #eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Scanner']),             # Scanner instance (in this example "Scanner") or "None". "None" means that you don´t want to include Scanner in Optics Module, either in uncertainty calculations.
-                         optical_circulator = Optical_circulator ,#eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Optical circulator']),  # Optical Circulator instance (in this example "Optical_circulator") or "None". "None" means that you don´t want to include Optical circulator in Optics Module, either in uncertainty calculations.
-                         telescope          = Telescope,#
+                         scanner            = eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Scanner']),             # Scanner instance (in this example "Scanner") or "None". "None" means that you don´t want to include Scanner in Optics Module, either in uncertainty calculations.
+                         optical_circulator = eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Optical circulator']),  # Optical Circulator instance (in this example "Optical_circulator") or "None". "None" means that you don´t want to include Optical circulator in Optics Module, either in uncertainty calculations.
+                         telescope          = eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Telescope']), #Telescope,#
                          # probe_volume       = None,#Probe_Volume,
                          unc_func           = uopc.sum_unc_optics) #eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Uncertainty function']))
 
 
 ## Photonics components and Module: ###########################################
-# Here we create photonics components and photonics module. User can create as many components as he/she wants and combine them to create different module types.
+# Here we create photonics components and photonics module. Users can create as many components as they want and combine them to create different module types.
 
 AOM = acousto_optic_modulator (name           = Qlunc_yaml_inputs['Components']['AOM']['Name'],
                                insertion_loss = Qlunc_yaml_inputs['Components']['AOM']['Insertion loss'])
@@ -158,8 +158,8 @@ Laser           = laser(name              = Qlunc_yaml_inputs['Components']['Las
                         unc_func          = uphc.UQ_Laser)
 # Module:
 Photonics_Module = photonics(name                    = Qlunc_yaml_inputs['Modules']['Photonics Module']['Name'],        # Introduce your Photonics module name
-                             photodetector           = Photodetector, #eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['Photodetector']),             # Photodetector instance (in this example "Photodetector") or "None". "None" means that you don´t want to include photodetector in Photonics Module, either in uncertainty calculations.
-                             optical_amplifier       = Optical_Amplifier, #'None',##eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['Optical amplifier']),         # Scanner instance (in this example "OpticalAmplifier") or "None". "None" means that you don´t want to include Optical Amplifier in Photonics Module, either in uncertainty calculations.
+                             photodetector           = eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['Photodetector']),             # Photodetector instance (in this example "Photodetector") or "None". "None" means that you don´t want to include photodetector in Photonics Module, either in uncertainty calculations.
+                             optical_amplifier       = eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['Optical amplifier']),         # Scanner instance (in this example "OpticalAmplifier") or "None". "None" means that you don´t want to include Optical Amplifier in Photonics Module, either in uncertainty calculations.
                              laser                   = 'None', #Laser,
                              acousto_optic_modulator = 'None', #AOM,
                              unc_func                = uphc.sum_unc_photonics) #eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['Uncertainty function']))
@@ -177,14 +177,14 @@ Lidar_inputs     = lidar_gral_inp(name        = Qlunc_yaml_inputs['Components'][
 #%% Data processing methods
 
 # Wind field reconstruction model
-WFR_M = wfr (name  = Qlunc_yaml_inputs['WFR model']['Name'],
+WFR_M = wfr (name                 = Qlunc_yaml_inputs['WFR model']['Name'],
              reconstruction_model = Qlunc_yaml_inputs['WFR model']['Model'],
-             unc_func = uprm.UQ_WFR)
+             unc_func             = uprm.UQ_WFR)
 
 # Data filtering method
-Filt_M = filtering_method (name  = Qlunc_yaml_inputs['Filtering method']['Name'],
+Filt_M = filtering_method (name        = Qlunc_yaml_inputs['Filtering method']['Name'],
                            filt_method = Qlunc_yaml_inputs['Filtering method']['Method'],
-                           unc_func = 'uprm.UQ_WFR')
+                           unc_func    = 'uprm.UQ_WFR')
 
 #%% LIDAR device
 
