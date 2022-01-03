@@ -55,7 +55,6 @@ def UQ_WFR (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scanner_Uncertaint
     x1          = []
     y1          = []
     z1          = []
-    pdb.set_trace()
     
     for r_sphere in range (len(Scanner_Uncertainty['Simu_Mean_Distance_Error'])):
         rho     = Scanner_Uncertainty['Simu_Mean_Distance_Error'][r_sphere]
@@ -78,7 +77,6 @@ def UQ_WFR (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scanner_Uncertaint
         # ax.set_zlabel('z',fontsize=15)
     
     # Coordinates of the points on the sphere surface
-    pdb.set_trace()
     for p_sphere in range(len(zi)):
         xi0 = xi[p_sphere]
         yi0 = yi[p_sphere]
@@ -91,7 +89,7 @@ def UQ_WFR (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scanner_Uncertaint
         
         # Just a check to see if the transformation 
         x1,y1,z1 = SA.sph2cart(rho1,phi1,theta1)
-        pdb.set_trace()
+        
         
         
     return (xi,yi,zi)
