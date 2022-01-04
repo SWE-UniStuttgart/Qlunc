@@ -1,5 +1,8 @@
 ## Tutorial0:
 
+Qlunc's presentation and basics. What's Qlunc and how does it work.
+
+#### Try it yourself:
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/SWE-UniStuttgart/Qlunc.git/HEAD?filepath=Tutorials%2FTutorial0.ipynb)
 
