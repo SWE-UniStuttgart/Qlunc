@@ -57,10 +57,11 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     NoisyZ=[]
     coun=0
     sample_rate_count=0
-    
+
     # #Call probe volume uncertainty function. 
     # Probe_param = Lidar.probe_volume.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
-    # pdb.set_trace()
+
+    
     # R: Implement error in deployment of the tripod as a rotation over yaw, pitch and roll
     stdv_yaw    = np.array(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))
     stdv_pitch  = np.array(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))
@@ -90,7 +91,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         if Qlunc_yaml_inputs['Components']['Scanner']['Pattern']=='lissajous':
             # x_init,y_init,z_init = SP.lissajous_pattern(Lidar.optics.scanner.lissajous_param[0],Lidar.optics.scanner.lissajous_param[1],Lidar.optics.scanner.lissajous_param[2],Lidar.optics.scanner.lissajous_param[3],Lidar.optics.scanner.lissajous_param[4])
             
-            x_init =np.array( [Probe_param['Focus Distance']])
+            # x_init =np.array( [Probe_param['Focus Distance']])
             x_init,y_init,z_init = SP.lissajous_pattern(Lidar,Lidar.optics.scanner.lissajous_param[0],Lidar.optics.scanner.lissajous_param[1],Lidar.optics.scanner.lissajous_param[2],Lidar.optics.scanner.lissajous_param[3],Lidar.optics.scanner.lissajous_param[4])
         
         elif Qlunc_yaml_inputs['Components']['Scanner']['Pattern']=='None':
@@ -99,34 +100,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             y_init = Lidar.optics.scanner.y
             z_init = Lidar.optics.scanner.z
             
-        # Calculating parameter1, parameter2 and parameter3 depending on the quadrant (https://es.wikipedia.org/wiki/Coordenadas_esf%C3%A9ricas):
-            
+        # Calculating parameter1, parameter2 and parameter3 depending on the quadrant (https://es.wikipedia.org/wiki/Coordenadas_esf%C3%A9ricas):           
         param1,param3,param2=SA.cart2sph(x_init,y_init,z_init)
-        xxx,yyy,zzz=SA.sph2cart(param1,param3,param2)
-        # pdb.set_trace()
-        # param1=np.array(np.sqrt(x_init**2+y_init**2+z_init**2))
-        # for ind in range(len(z_init)):
-            
-        #     #Parameter2
-        #     if z_init[ind]>0:
-        #         param2.append(np.arctan(np.sqrt(x_init[ind]**2+y_init[ind]**2)/z_init[ind]))
-        #     elif z_init[ind]==0:
-        #         param2.append(np.array(np.pi/2))
-        #     elif z_init[ind]<0:
-        #         param2.append((np.pi)+(np.arctan(np.sqrt(x_init[ind]**2+y_init[ind]**2)/z_init[ind])))
-            
-        #     #Parameter3
-        #     # pdb.set_trace()
-        #     if x_init[ind]>0:
-        #         if  y_init[ind]>=0:
-        #             param3.append(np.arctan(y_init[ind]/x_init[ind]))            
-        #         elif  y_init[ind]<0:
-        #             param3.append((2.0*np.pi)+(np.arctan(y_init[ind]/x_init[ind])))           
-        #     elif x_init[ind]<0:
-        #         param3.append((np.pi)+(np.arctan(y_init[ind]/x_init[ind])))            
-        #     elif x_init[ind]==0:
-        #         param3.append(np.pi/2.0*(np.sign(y_init[ind])))
-    # pdb.set_trace()
+    
     for param1_or,param2_or,param3_or in zip(param1,param2,param3):# Take coordinates from inputs
         Mean_DISTANCE=[]
         DISTANCE=[]        
@@ -185,7 +161,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         sample_rate_count+=Lidar.optics.scanner.sample_rate    
         SimMean_DISTANCE.append(np.mean(Mean_DISTANCE))        # Mean error distance of each point in the pattern  
         StdvMean_DISTANCE.append(np.mean(stdv_DISTANCE)) # Mean error distance stdv for each point in the pattern
-        # pdb.set_trace()
+        
         # Storing coordinates:
         X.append(xfinal)
         Y.append(yfinal)
@@ -212,7 +188,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # file.write('\n'+Qlunc_yaml_inputs['Components']['Scanner']['Type'] +'\nParam1:'+XX+"\n"+'\nParam2:'+YY+"\n"+'\nParam3:'+ZZ+"\n")
     # file.close()   
         
-    Final_Output_UQ_Scanner                 = {'Simu_Mean_Distance_Error':SimMean_DISTANCE,'STDV_Distance':StdvMean_DISTANCE,'MeasPoint_Coordinates':Coord,'NoisyMeasPoint_Coordinates':Noisy_Coord}
+    Final_Output_UQ_Scanner                 = {'Simu_Mean_Distance_Error':SimMean_DISTANCE,'STDV_Distance':StdvMean_DISTANCE,'MeasPoint_Coordinates':Coord,'NoisyMeasPoint_Coordinates':Noisy_Coord,'Rayleigh length':Probe_param['Rayleigh Length'],'Rayleigh length uncertainty':Probe_param['Rayleigh Length uncertainty']}
     Lidar.lidar_inputs.dataframe['Scanner'] = ([np.mean(Final_Output_UQ_Scanner['Simu_Mean_Distance_Error'])])*len(Atmospheric_Scenario.temperature)  
 
     # Plotting
@@ -271,52 +247,31 @@ def UQ_Telescope(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
      # pdb.set_trace()
      UQ_telescope=[-33]
      Final_Output_UQ_Telescope={'Telescope_Uncertainty':UQ_telescope}
-     Lidar.lidar_inputs.dataframe['Telescope']=Final_Output_UQ_Telescope['Telescope_Uncertainty']*np.linspace(1,1,len(Atmospheric_Scenario.temperature)) # linspace to create the appropiate length for the xarray. 
+     Lidar.lidar_inputs.dataframe['Telescope']=Final_Output_UQ_Telescope['Telescope_Uncertainty']*np.linspace(1,1,len(Atmospheric_Scenario.temperature)) # linspace to create the appropriate length for the xarray. 
      return Final_Output_UQ_Telescope,Lidar.lidar_inputs.dataframe
-
-#%% probe volume:
-# def UQ_probe_volume(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
-#     if Lidar.lidar_inputs.LidarType=='CW':
-#         # delta_r=(4*Lidar.optics.scanner.focus_dist**2*Lidar.photonics.laser.Wavelength/Lidar.optics.telescope.Aperture)
-#         Probe_volume_Uncertainty=np.sqrt((Lidar.optics.scanner.stdv_focus_dist*8*Lidar.optics.scanner.focus_dist*Lidar.photonics.laser.Wavelength/Lidar.optics.telescope.aperture)**2+
-#                                   (Lidar.photonics.laser.stdv_wavelength*4*(Lidar.optics.scanner.focus_dist)**2/Lidar.optics.telescope.aperture)**2+
-#                                   (Lidar.optics.telescope.stdv_aperture*4*Lidar.photonics.laser.Wavelength*(Lidar.optics.scanner.focus_dist)**2/Lidar.optics.telescope.aperture**2)**2)
-#         Final_Output_UQ_Probe_Volume={'Probe_Volume_Uncertainty':Probe_volume_Uncertainty}
-#         Lidar.lidar_inputs.dataframe['Probe Volume']=[np.mean(Final_Output_UQ_Probe_Volume['Probe_Volume_Uncertainty'])]
-#         # pdb.set_trace()
-#     # elif Lidar.lidar_inputs.LidarType=='Pulsed': #convolution of pulse length and weighting function
-#     #     x='pulsed lidar has no probe volume variations along its path'
-#     return Final_Output_UQ_Probe_Volume,Lidar.lidar_inputs.dataframe
-
 
 #%% Sum of uncertainties in `optics` module: 
 def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     List_Unc_optics = []
-    
     # Scanner
     if Lidar.optics.scanner != None:
-        try: # ecah try/except evaluates wether the component is included in the module, therefore in the calculations
-            
-            if Lidar.wfr_model.reconstruction_model != None:
-                
+        try: # ecah try/except evaluates wether the component is included in the module, therefore in the calculations            
+            if Lidar.wfr_model.reconstruction_model != 'None':
+                # pdb.set_trace()    
                 Scanner_Uncertainty,DataFrame=Lidar.optics.scanner.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
-                WFR_Uncertainty=Lidar.wfr_model.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scanner_Uncertainty)
-            else:
-                
+                WFR_Uncertainty=Lidar.wfr_model.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scanner_Uncertainty)            
+            else:            
                 Scanner_Uncertainty,DataFrame=Lidar.optics.scanner.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
         except:
             Scanner_Uncertainty=None
             print('Error in scanner uncertainty calculations!')
     else:
-        print ('You didn´t include a head scanner in the lidar.')
-    
+        print ('You didn´t include a head scanner in the lidar.')       
     # Telescope
-    if Lidar.optics.telescope != None:
+    if Lidar.optics.telescope != 'None':
         try:
             Telescope_Uncertainty,DataFrame=Lidar.optics.telescope.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
-            List_Unc_optics.append(Telescope_Uncertainty['Telescope_Uncertainty'])       
-            
-    
+            List_Unc_optics.append(Telescope_Uncertainty['Telescope_Uncertainty'])                   
         except:
             Telescope_Uncertainty=None
             print('Error in telescope uncertainty calculations!')
@@ -324,31 +279,18 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         print ('You didn´t include a telescope in the lidar,so that telescope uncertainty contribution is not in lidar uncertainty estimations.')
     
     # Optical Circulator
-    if Lidar.optics.optical_circulator != None: 
+    if Lidar.optics.optical_circulator != 'None': 
         try:
             Optical_circulator_Uncertainty,DataFrame = Lidar.optics.optical_circulator.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
             List_Unc_optics.append(Optical_circulator_Uncertainty['Optical_Circulator_Uncertainty'])       
         except:
             Optical_circulator_Uncertainty = None
-            print('Error in optical circulator uncertainty calculations!')
-    
+            print('Error in optical circulator uncertainty calculations!')    
     else:
         print('You didn´t include an optical circulator in the lidar,so that optical circulator uncertainty contribution is not in lidar uncertainty estimations.')
-    
-    # Probe volume
-    # if Lidar.optics.probe_volume != None:
-    #     try:
-    #         Probe_volume_Uncertainty,DataFrame = Lidar.optics.probe_volume.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
-    #         # List_Unc_optics.append(Probe_volume_Uncertainty['Probe_Volume_Uncertainty'])       
-        
-    #     except:
-    #         Probe_volume_Uncertainty = None
-    #         print('No probe volume in calculations or no pulsed lidar was selected.')
-    # else:
-    #     print('You didn´t include probe volume in calculations.')
     pdb.set_trace()
     Uncertainty_Optics_Module=SA.unc_comb(List_Unc_optics)
-    Final_Output_UQ_Optics = {'Uncertainty_Optics':Uncertainty_Optics_Module,'Mean_error_PointingAccuracy':Scanner_Uncertainty['Simu_Mean_Distance_Error'],'Stdv_PointingAccuracy':Scanner_Uncertainty['STDV_Distance']}
+    Final_Output_UQ_Optics = {'Uncertainty_Optics':Uncertainty_Optics_Module,'Mean_error_PointingAccuracy':Scanner_Uncertainty['Simu_Mean_Distance_Error'],'Stdv_PointingAccuracy':Scanner_Uncertainty['STDV_Distance'], 'Rayleigh length':Scanner_Uncertainty['Rayleigh length'],'Rayleigh length uncertainty':Scanner_Uncertainty['Rayleigh length uncertainty']}
     Lidar.lidar_inputs.dataframe['Optics Module']=Final_Output_UQ_Optics['Uncertainty_Optics']*np.linspace(1,1,len(Atmospheric_Scenario.temperature))  # linspace to create the appropiate length for the xarray. 
     return Final_Output_UQ_Optics,Lidar.lidar_inputs.dataframe
 

@@ -40,7 +40,7 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     List_Unc_lidar = []
     print('Processing lidar uncertainties...')
     if Lidar.photonics != None:
-        try: # ecah try/except evaluates wether the component is included in the module, therefore in the calculations
+        try: # each try/except evaluates whether the component is included in the module, therefore in the calculations
     #        if Photodetector_Uncertainty not in locals():
             # pdb.set_trace()
             Photonics_Uncertainty,DataFrame = Lidar.photonics.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
