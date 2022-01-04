@@ -1,5 +1,7 @@
 
 ## Working example to create a lidar digital twin
+:warning: To do this exercise interactively try [Tutorial0](https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Tutorials/Tutorial0.ipynb)
+
 
 In the following lines it is shown the `Qlunc`'s workflow and the code structure it is based on; the `WorkingExample` files are a use case example.
 Now, imagine we want to create a lidar object made up with one single module. This module will contain one single component with properties Property_1 and Property_2. The steps we have to follow are: 
