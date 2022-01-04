@@ -11,7 +11,7 @@
 
 ![Qlunc basic structure image](https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Pictures_repo_/Qlunc_GralStructure.JPG)
 
-Currently, the code can calculate uncertainties coming from photonics, including photodetector (with or without trans-impedance amplifier) and optical amplifier uncertainties, as well as optics module uncertainty including scanner pointing accuracy and optical circulator uncertainties. For each module the Guide to the Expression of Uncertainty in Measurement ([GUM](http://www.bipm.org/en/publications/guides/gum.html)) is applied to calculate uncertainty expansion, taking into account that components are considered uncorrelated. 
+Currently, the code can calculate uncertainties coming from photonics, including photodetector (with or without trans-impedance amplifier) and optical amplifier uncertainties, as well as optics module uncertainty including scanner pointing accuracy, probe volume assessment (both continuous wave and pulsed lidars) and optical circulator uncertainties. For each module the Guide to the Expression of Uncertainty in Measurement ([GUM](http://www.bipm.org/en/publications/guides/gum.html)) is applied to calculate uncertainty expansion, taking into account that components are considered uncorrelated. 
 
 ### Creating a lidar device
 The user creates the different lidar components by instantiating a python `class`, including its functional parameters and defining the function that is used to obtain the specific component uncertainty. Then, each module (also python objects) is "filled" with the corresponding components and their uncertainties are computed following uncertainty expansion method according to the GUM model. Once each component is 'ensembled' building up the different modules, the lidar object is created and the modules included. As a result, the desired lidar digital twin is created, the uncertainty of which is computed again by following [GUM](http://www.bipm.org/en/publications/guides/gum.html) suggestions about uncertainty expansion.
@@ -23,11 +23,12 @@ and humidity, either single values or time series coming from peripherals are bo
 ### `Qlunc` available capabilities
 
 #### Uncertainties
-The next step is to ask for the uncertainty we are interested in, either coming from a component, module or lidar object. Indeed, the flexibility of the code allows the user not just to assess global lidar uncertainty,  but also to query uncertainties coming from specific modules or even single components.
+The next step is to ask for the uncertainty we are interested in, either coming from a component, module or lidar object. Indeed, the flexibility of the code allows the user not just to assess global lidar uncertainty, but also to query uncertainties coming from specific modules or even single components.
 
 #### Plots
  - Can draw photodetector uncertainties comparison including shot noise, thermal noise, dark current noise and, if needed, trans-impedance amplifier noise.
  - Scanning points and their uncertainty in meters (VAD and Scanning lidar).
+ - Optical signal to noise ration from the optical amplifier
 
 ## How to use `Qlunc`
 
@@ -60,7 +61,7 @@ This is the core of `Qlunc`. Here the user creates the classes describing the co
 ### UQ_Functions
  - Contains the functions that compute the uncertainties coming from different devices, calculting also the uncertainty propagation corresponding to the different      modules and lidar uncertainty as well. Users can define their own functions to calculate specific module uncertainties, and combined/expanded uncertainties as well. 
 ### Utils
- - Contains scripts meant to do different tasks. Importing packages and some stand alone funtions which don´t interface directly with `Qlunc` but are necessary to compute calculations. Also contains a `Qlunc_Plotting.py` script to automate plots and `Scanning_patterns.py` to introduce pre-defined scanning patterns.
+ - Contains scripts meant to do different tasks. Importing packages and stand alone funtions which don´t interface directly with `Qlunc` but are necessary to compute calculations. Also contains a `Qlunc_Plotting.py` script to automate plots and `Scanning_patterns.py` to introduce users' pre-defined scanning patterns.
 ###  TestFile_Qlunc
  - A working example is provided to show how the process looks like. In this test case, a lidar is built up with its modules and components, puting all together to set up a lidar device. User can find more information on how to run this test file in the `readme.md` file dropped in this folder.
 ### Tutorials
