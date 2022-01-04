@@ -101,7 +101,9 @@ Telescope = telescope (name                       = Qlunc_yaml_inputs['Component
                        stdv_eff_radius_telescope  = Qlunc_yaml_inputs['Components']['Telescope']['stdv Effective radius telescope'],
                        tau                        = Qlunc_yaml_inputs['Components']['Telescope']['Pulse shape'],
                        tau_meas                   = Qlunc_yaml_inputs['Components']['Telescope']['Gate length'], 
-                       unc_func      = uopc.UQ_Telescope)
+                       stdv_tau                   = Qlunc_yaml_inputs['Components']['Telescope']['stdv Pulse shape'],
+                       stdv_tau_meas              = Qlunc_yaml_inputs['Components']['Telescope']['stdv Gate length'], 
+                       unc_func                   = uopc.UQ_Telescope)
 
 
 Probe_Volume = probe_volume (name                       = Qlunc_yaml_inputs['Probe Volume']['Name'],
