@@ -1,3 +1,8 @@
+## Tutorial0:
+
+
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/SWE-UniStuttgart/Qlunc.git/HEAD?filepath=Tutorials%2FTutorial0.ipynb)
+
 ## Tutorial1:
 This tutorial aims to facilitate the introduction to Qlunc. 
 Will go through the code and create a lidar digital twin, with its modules and components. Will ask for uncertainties either lidar general one or component specific uncertainty. We will see some graphical interesting results. Will see how to access design lidar data.
