@@ -45,12 +45,12 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,param1):
         # zr= (wavelength*(ind_focusdist**2))/(np.pi*(rad_eff)**2)# Rayleigh length  (considered as the probe length) # half-width of the weighting function --> FWHM = 2*zr
         # Unc_zr= np.sqrt(((ind_focusdist**2)*Unc_wavelength/(np.pi*rad_eff))**2 + ((2*wavelength*ind_focusdist*Unc_focus_distance)/(np.pi*rad_eff**2))**2 + ((2*wavelength*(ind_focusdist**2)*Unc_eff_radius_telescope)/(np.pi*rad_eff**3))**2)
 
-        zr=[]
-        Unc_zr=[]
+        Rayleigh_length=[]
+        Unc_Rayleigh_length=[]
         for ind_focusdist in focus_distance:
-            zr.append( (wavelength*(ind_focusdist**2))/(np.pi*(rad_eff)**2))# Rayleigh length  (considered as the probe length) # half-width of the weighting function --> FWHM = 2*zr
+            Rayleigh_length.append( (wavelength*(ind_focusdist**2))/(np.pi*(rad_eff)**2))# Rayleigh length  (considered as the probe length) # half-width of the weighting function --> FWHM = 2*zr
             # Uncertainty rayleigh length       
-            Unc_zr.append( np.sqrt(((ind_focusdist**2)*Unc_wavelength/(np.pi*rad_eff))**2 + ((2*wavelength*ind_focusdist*Unc_focus_distance)/(np.pi*rad_eff**2))**2 + ((2*wavelength*(ind_focusdist**2)*Unc_eff_radius_telescope)/(np.pi*rad_eff**3))**2))
+            Unc_Rayleigh_length.append( np.sqrt(((ind_focusdist**2)*Unc_wavelength/(np.pi*rad_eff))**2 + ((2*wavelength*ind_focusdist*Unc_focus_distance)/(np.pi*rad_eff**2))**2 + ((2*wavelength*(ind_focusdist**2)*Unc_eff_radius_telescope)/(np.pi*rad_eff**3))**2))
     
         
         # Probe volume:
@@ -76,11 +76,12 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,param1):
         # Definition from "LEOSPHERE pulsed lidar principles" -->  Theory from Banakh and Smalikho 1994: “Estimation of the turbulence energy dissipation rate from the pulsed Doppler lidar data”.
         Rayleigh_length = (cts.c*tau_meas)/(2*math.erf(np.sqrt(np.log(2))*(tau_meas)/(tau)))/2
         
-        dR_dtauMeas = (cts.c*(2*math.erf(np.sqrt(np.log(2))*(tau_meas)/(tau)))-cts.c*tau_meas*2*(2/np.sqrt(np.pi))*np.exp(-np.sqrt(np.log(2))*(tau_meas/tau))*np.sqrt(np.log(2))/tau)/((2*math.erf(np.sqrt(np.log(2))*(tau_meas)/(tau)))**2)
-        dR_dtau     = (-cts.c*tau_meas*2*(2/np.sqrt(np.pi))*np.exp(-np.sqrt(np.log(2))*(tau_meas/tau))*(-np.sqrt(np.log(2))*tau_meas/tau**2))/((2*math.erf(np.sqrt(np.log(2))*(tau_meas)/(tau)))**2)
-        Unc_zr      = np.sqrt((dR_dtauMeas*stdv_tau_meas)**2+(dR_dtau*stdv_tau)**2)
+        dR_dtauMeas = (cts.c*2*math.erf(np.sqrt(np.log(2))*tau_meas/tau)-cts.c*tau_meas*2*(2/np.sqrt(np.pi))*np.exp(-np.sqrt(np.log(2))*tau_meas/tau)*np.sqrt(np.log(2))/tau)/((2*math.erf(np.sqrt(np.log(2))*(tau_meas)/(tau)))**2)
+        dR_dtau     = (-cts.c*tau_meas*2*(2/np.sqrt(np.pi))*np.exp(-np.sqrt(np.log(2))*(tau_meas/tau))*(-np.sqrt(np.log(2))*tau_meas/(tau**2)))/((2*math.erf(np.sqrt(np.log(2))*tau_meas/tau))**2)
+        Unc_Rayleigh_length      = np.sqrt((dR_dtauMeas*stdv_tau_meas)**2+(dR_dtau*stdv_tau)**2)
+        
         # focus_distance = random.randrange(1,500,1)
-        # Weighting function calculation
+        # # Weighting function calculation
         # WeightingFunction=[]
         # offset = 500
         # focus_distance = 0
@@ -92,25 +93,25 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,param1):
         # hmx = SA.half_max_x(z,WeightingFunction)
         
         # # print the answer
-        # zr = (hmx[1] - hmx[0])/2
+        # Rayleigh_length = (hmx[1] - hmx[0])/2
         # print("Rayleigh distance1:{:.3f}".format(zr))
-        print("Rayleigh distance2:{:.3f}".format(Rayleigh_length))
-        pdb.set_trace()  
+        # print("Rayleigh distance2:{:.3f}".format(Rayleigh_length))
+        # pdb.set_trace()  
         # print("Zr uncertainty:{:.3f}".format(Unc_zr))
     
     # Saving rayleigh length to a file in ./metadata to be read by matlab
     if os.path.isfile('./metadata/rayleigh_distance.txt'): 
        os.remove('./metadata/rayleigh_distance.txt')
        file=open('./metadata/rayleigh_distance.txt','w')
-       file.write(repr(zr))
+       file.write(repr(Rayleigh_length))
        file.close()   
        
     else:
        file=open('./metadata/rayleigh_distance.txt','w')
-       file.write(repr(zr))
+       file.write(repr(Rayleigh_length))
        file.close()      
     
-    Final_Output_UQ_ProbeVolume = {'Rayleigh Length':zr,'Rayleigh Length uncertainty':Unc_zr}
+    Final_Output_UQ_ProbeVolume = {'Rayleigh Length':Rayleigh_length,'Rayleigh Length uncertainty':Unc_Rayleigh_length}
     # pdb.set_trace()
     
     
