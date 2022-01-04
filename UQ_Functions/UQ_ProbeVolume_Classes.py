@@ -51,8 +51,9 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,param1):
             zr.append( (wavelength*(ind_focusdist**2))/(np.pi*(rad_eff)**2))# Rayleigh length  (considered as the probe length) # half-width of the weighting function --> FWHM = 2*zr
             # Uncertainty rayleigh length       
             Unc_zr.append( np.sqrt(((ind_focusdist**2)*Unc_wavelength/(np.pi*rad_eff))**2 + ((2*wavelength*ind_focusdist*Unc_focus_distance)/(np.pi*rad_eff**2))**2 + ((2*wavelength*(ind_focusdist**2)*Unc_eff_radius_telescope)/(np.pi*rad_eff**3))**2))
+        
         # Saving rayleigh length to a file in ./metadata to be read by matlab
-        if os.path.isfile('./metadata/rayleigh_distance.txt'):
+        if os.path.isfile('./metadata/rayleigh_distance.txt'): 
             os.remove('./metadata/rayleigh_distance.txt')
             file=open('./metadata/rayleigh_distance.txt','w')
             file.write(repr(zr))
@@ -76,7 +77,7 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,param1):
     
     elif Qlunc_yaml_inputs['Components']['Lidar general inputs']['Type']=="Pulsed":
         # Definition from LEOSPHERE pulsed principles - "pulsed lidar probe volume is a convolution between pulse shape and weighting function.
-        # zr = (cts.c*Lidar.optics.telescope.tau_meas)/(2*math.erf(np.sqrt(np.log(2))*(Lidar.optics.telescope.tau_meas)/(Lidar.optics.telescope.tau)))/2
+        # zr = (c*tau_meas)/(2*math.erf(sqrt(log(2))*(tau_meas)/(tau)))/2
         
         # Variables
         tau_meas= Qlunc_yaml_inputs['Components']['Telescope']['Gate length']
@@ -88,9 +89,8 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,param1):
         offset = 500
         focus_distance = 0
         z=np.linspace(focus_distance-offset,focus_distance+offset,1001)
-        for i in z:
-        
-            zr.append((1/(tau_meas*cts.c))*(math.erf((4*np.sqrt(np.log(2))*(i-focus_distance)/((cts.c*tau)))+(np.sqrt(np.log(2)))*tau_meas/tau)-math.erf((4*np.sqrt(np.log(2))*(i-focus_distance)/((cts.c*tau)))-(np.sqrt(np.log(2)))*tau_meas/tau)))
+        for i in z:        
+            zr.append((1/(tau_meas*cts.c))*(math.erf((4*np.sqrt(np.log(2))*(i-focus_distance)/((cts.c*tau)))+(np.sqrt(np.log(2)))*tau_meas/tau)-math.erf((4*np.sqrt(np.log(2))*(i-focus_distance)/((cts.c*tau)))-(np.sqrt(np.log(2)))*tau_meas/tau)))        
         
         # find the two crossing points
         hmx = SA.half_max_x(z,zr)
@@ -101,7 +101,7 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,param1):
         print("Zr uncertainty:{:.3f}".format(Unc_zr))
             
     Final_Output_UQ_ProbeVolume = {'Rayleigh Length':zr,'Rayleigh Length uncertainty':Unc_zr,'Focus Distance':focus_distance,'Focus Distance uncertainty':Unc_focus_distance}
-    pdb.set_trace()
+    # pdb.set_trace()
     # Plotting:
     
     QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_ProbeVolume,False,False,Qlunc_yaml_inputs['Flags']['Probe Volume parameters'],False)
