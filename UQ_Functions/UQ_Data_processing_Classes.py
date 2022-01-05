@@ -11,7 +11,8 @@ University of Stuttgart(c)
 Here we calculate the uncertainties related with lidar data processing methods
 
     
-   - noise definitions (reference in literature)
+   - Wind field reconstruction methods
+   - Filtering processes
    
  
 """
@@ -57,14 +58,14 @@ def UQ_WFR (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scanner_Uncertaint
     z1          = []
     
     for r_sphere in range (len(Scanner_Uncertainty['Simu_Mean_Distance_Error'])):
-        rho     = Scanner_Uncertainty['Simu_Mean_Distance_Error'][r_sphere]
+        rho   = Scanner_Uncertainty['Simu_Mean_Distance_Error'][r_sphere]
         phi   = np.linspace(0, np.pi, 20)
         theta = np.linspace(0, 2 * np.pi, 40)
         x = Scanner_Uncertainty['MeasPoint_Coordinates'][0][r_sphere]+rho*np.outer(np.sin(theta), np.cos(phi))
         y = Scanner_Uncertainty['MeasPoint_Coordinates'][1][r_sphere]+rho*np.outer(np.sin(theta), np.sin(phi))
         z = Scanner_Uncertainty['MeasPoint_Coordinates'][2][r_sphere]+rho*np.outer(np.cos(theta), np.ones_like(phi))
         
-        xii, yii, zii = rho*SA.sample_spherical(5)
+        xii, yii, zii = SA.sample_spherical(5)
         xi.append(xii+Scanner_Uncertainty['MeasPoint_Coordinates'][0][r_sphere])
         yi.append(yii+Scanner_Uncertainty['MeasPoint_Coordinates'][1][r_sphere])
         zi.append(zii+Scanner_Uncertainty['MeasPoint_Coordinates'][2][r_sphere])
