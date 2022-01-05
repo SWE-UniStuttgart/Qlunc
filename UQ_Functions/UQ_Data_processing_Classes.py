@@ -65,18 +65,18 @@ def UQ_WFR (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scanner_Uncertaint
         y = Scanner_Uncertainty['MeasPoint_Coordinates'][1][r_sphere]+rho*np.outer(np.sin(theta), np.sin(phi))
         z = Scanner_Uncertainty['MeasPoint_Coordinates'][2][r_sphere]+rho*np.outer(np.cos(theta), np.ones_like(phi))
         
-        xii, yii, zii = SA.sample_spherical(5)
+        xii, yii, zii = SA.sample_sphere(rho,5)
         xi.append(xii+Scanner_Uncertainty['MeasPoint_Coordinates'][0][r_sphere])
         yi.append(yii+Scanner_Uncertainty['MeasPoint_Coordinates'][1][r_sphere])
         zi.append(zii+Scanner_Uncertainty['MeasPoint_Coordinates'][2][r_sphere])
         
-        # fig, ax = plt.subplots(1, 1, subplot_kw={'projection':'3d', 'aspect':'auto'})
-        # ax.plot_wireframe(x, y, z, color='k', rstride=1, cstride=1)
-        # ax.scatter(xi, yi, zi, s=10, c='r', zorder=10)
-        # ax.set_xlabel('x',fontsize=15)
-        # ax.set_ylabel('y',fontsize=15)
-        # ax.set_zlabel('z',fontsize=15)
-    
+        fig, ax = plt.subplots(1, 1, subplot_kw={'projection':'3d', 'aspect':'auto'})
+        ax.plot_wireframe(x, y, z, color='k', rstride=1, cstride=1)
+        ax.scatter(xi, yi, zi, s=10, c='r', zorder=10)
+        ax.set_xlabel('x',fontsize=15)
+        ax.set_ylabel('y',fontsize=15)
+        ax.set_zlabel('z',fontsize=15)
+        pdb.set_trace()
     # Coordinates of the points on the sphere surface
     for p_sphere in range(len(zi)):
         xi0 = xi[p_sphere]
