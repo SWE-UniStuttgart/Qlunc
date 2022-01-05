@@ -82,6 +82,7 @@ The following python libraries and tools should be installed beforehand and are 
 - netcdf4==1.5.3
 - notebook
 - jupyterlab
+- termcolor==1.1.0
 
 ## Author
 [Francisco Costa](https://www.ifb.uni-stuttgart.de/en/institute/team/Costa-Garcia/)
