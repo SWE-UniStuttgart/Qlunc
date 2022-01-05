@@ -98,9 +98,9 @@ class cts():
     h = 6.6207004e-34 # Plank constant [m^2 kg s^-1]
     e = 1.60217662e-19 # electron charge [C]
     c = 2.99792e8 #speed of light [m s^-1]
-  
+
+
 #%% LIDAR COMPONENTS
-  
 # Component Classes:
 class photodetector():
     def __init__(self,name,Photo_BandWidth,Load_Resistor,Photo_efficiency,Dark_Current,Photo_SignalP,Active_Surf,Power_interval,Gain_TIA,V_Noise_TIA,unc_func):
@@ -125,7 +125,8 @@ class optical_amplifier():
                  self.OA_BW               = OA_BW
                  self.Power_interval      = Power_interval
                  self.Uncertainty         = unc_func
-                 print('Created new optical amplifier: {}'.format(self.Optical_AmplifierID))
+                 print ('Created new optical amplifier: {}'.format(self.Optical_AmplifierID))
+                 
 
 class acousto_optic_modulator():
     def __init__(self,name,insertion_loss):

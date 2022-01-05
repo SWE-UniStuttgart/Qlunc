@@ -91,7 +91,7 @@ def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
                                                  (2*cts.e*R*Lidar.photonics.photodetector.BandWidth*(P_int))))*(P_int)**2]
         UQ_Photodetector.Total_SNR   = [10*np.log10(UQ_Photodetector.SNR_total_w)][0]
         SNR_data={'SNR_Shot':UQ_Photodetector.SNR_shot,'SNR_Thermal':UQ_Photodetector.SNR_thermal,'SNR_Dark_Current':UQ_Photodetector.SNR_DarkCurrent,'Total_SNR':UQ_Photodetector.Total_SNR}
-        print('There is NO TIA component in the photodetector')
+        print(colored('There is NO TIA component in the photodetector','cyan', attrs=['bold']))
     else:       
         # Photodetector TIA noise:
         UQ_Photodetector.TIA_noise   = [(Lidar.photonics.photodetector.V_Noise_TIA**2/Lidar.photonics.photodetector.Gain_TIA**2)]*len(Atmospheric_Scenario.temperature)
@@ -104,7 +104,7 @@ def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         UQ_Photodetector.Total_SNR   = [10*np.log10(UQ_Photodetector.SNR_total_w)][0]
         SNR_data={'SNR_Shot':UQ_Photodetector.SNR_shot,'SNR_Thermal':UQ_Photodetector.SNR_thermal,'SNR_Dark_Current':UQ_Photodetector.SNR_DarkCurrent,'Total_SNR':UQ_Photodetector.Total_SNR,'SNR_TIA':UQ_Photodetector.SNR_TIA}
         UQ_Photodetector.UQ_Photo  = [ np.array([10*np.log10(np.sum([UQ_Photodetector.Thermal_noise,UQ_Photodetector.Shot_noise,UQ_Photodetector.Dark_current_noise,UQ_Photodetector.TIA_noise]))])]
-        print('There is a TIA component in the photodetector')
+        print(colored('There is a TIA component in the photodetector','cyan', attrs=['bold']))
 
     UQ_Photodetector.UQ_Photo_total=list(SA.flatten(UQ_Photodetector.UQ_Photo))
     Final_Output_UQ_Photo={'Uncertainty_Photodetector':UQ_Photodetector.UQ_Photo_total,'SNR_data_photodetector':SNR_data}      
@@ -259,9 +259,9 @@ def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             
         except:
             Photodetector_Uncertainty=None
-            print('Error in photodetector uncertainty calculations!')
+            print('Error in photodetector uncertainty calculations!','cyan', attrs=['bold'])
     else:
-        print('You didnt include a photodetector in the lidar, so that photodetector uncertainty contribution is not in lidar uncertainty estimations')
+        print(colored('You didnt include a photodetector in the lidar, so that photodetector uncertainty contribution is not in lidar uncertainty estimations','cyan', attrs=['bold']))
         
     
     # Optical Amplifier
@@ -273,7 +273,7 @@ def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             Optical_Amplifier_Uncertainty=None
             print('Error in optical amplifier uncertainty calculations!')
     else:
-        print('You didnt include an optical amplifier in the lidar,so that optical amplifier uncertainty contribution is not in lidar uncertainty estimations.')
+        print(colored('You didnt include an optical amplifier in the lidar,so that optical amplifier uncertainty contribution is not in lidar uncertainty estimations.','cyan', attrs=['bold']))
     
     # laser
     if Lidar.photonics.laser !='None':
@@ -283,9 +283,9 @@ def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             
         except:
             Laser_Uncertainty=None
-            print('Error in laser uncertainty calculations!')
+            print(colored('Error in laser uncertainty calculations!','cyan', attrs=['bold']))
     else:
-        print('You didn´t include a laser in the lidar,so that laser uncertainty contribution is not in lidar uncertainty estimations.')
+        print(colored('You didn´t include a laser in the lidar,so that laser uncertainty contribution is not in lidar uncertainty estimations.','cyan', attrs=['bold']))
 
     Uncertainty_Photonics_Module                     = SA.unc_comb(List_Unc_photonics)
     Final_Output_UQ_Photonics                        = {'Uncertainty_Photonics':Uncertainty_Photonics_Module}

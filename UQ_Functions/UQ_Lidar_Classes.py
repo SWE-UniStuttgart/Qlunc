@@ -38,7 +38,7 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     """ 
     List_Unc_lidar = []
-    print('Processing lidar uncertainties...')
+    print(colored('Processing lidar uncertainties...','magenta', attrs=['bold']))
     if Lidar.photonics != None:
         try: # each try/except evaluates whether the component is included in the module, therefore in the calculations
             # pdb.set_trace()
@@ -100,5 +100,5 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     ########################################################################################################
     ########################################################################################################
         
-    print('Lidar uncertainty done')
+    print(colored('Lidar uncertainty done','magenta', attrs=['bold']))
     return Final_Output_Lidar_Uncertainty,Lidar.lidar_inputs.dataframe,df

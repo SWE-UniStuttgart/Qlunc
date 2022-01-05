@@ -264,9 +264,9 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
                 Scanner_Uncertainty,DataFrame=Lidar.optics.scanner.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
         except:
             Scanner_Uncertainty=None
-            print('Error in scanner uncertainty calculations!')
+            print(colored('Error in scanner uncertainty calculations!','cyan', attrs=['bold']))
     else:
-        print ('You didn´t include a head scanner in the lidar.')       
+        print (colored('You didn´t include a head scanner in the lidar.','cyan', attrs=['bold']))       
     # Telescope
     if Lidar.optics.telescope != 'None':
         try:
@@ -274,9 +274,9 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             List_Unc_optics.append(Telescope_Uncertainty['Telescope_Uncertainty'])                   
         except:
             Telescope_Uncertainty=None
-            print('Error in telescope uncertainty calculations!')
+            print(colored('Error in telescope uncertainty calculations!','cyan', attrs=['bold']))
     else:
-        print ('You didn´t include a telescope in the lidar,so that telescope uncertainty contribution is not in lidar uncertainty estimations.')
+        print (colored('You didn´t include a telescope in the lidar,so that telescope uncertainty contribution is not in lidar uncertainty estimations.','cyan', attrs=['bold']))
     
     # Optical Circulator
     if Lidar.optics.optical_circulator != 'None': 
@@ -285,9 +285,9 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             List_Unc_optics.append(Optical_circulator_Uncertainty['Optical_Circulator_Uncertainty'])       
         except:
             Optical_circulator_Uncertainty = None
-            print('Error in optical circulator uncertainty calculations!')    
+            print(colored('Error in optical circulator uncertainty calculations!','cyan', attrs=['bold']))    
     else:
-        print('You didn´t include an optical circulator in the lidar,so that optical circulator uncertainty contribution is not in lidar uncertainty estimations.')
+        print(colored('You didn´t include an optical circulator in the lidar,so that optical circulator uncertainty contribution is not in lidar uncertainty estimations.','cyan', attrs=['bold']))
     Uncertainty_Optics_Module=SA.unc_comb(List_Unc_optics)
     Final_Output_UQ_Optics = {'Uncertainty_Optics':Uncertainty_Optics_Module,'Mean_error_PointingAccuracy':Scanner_Uncertainty['Simu_Mean_Distance_Error'],'Stdv_PointingAccuracy':Scanner_Uncertainty['STDV_Distance'], 'Rayleigh length':Scanner_Uncertainty['Rayleigh length'],'Rayleigh length uncertainty':Scanner_Uncertainty['Rayleigh length uncertainty']}
     Lidar.lidar_inputs.dataframe['Optics Module']=Final_Output_UQ_Optics['Uncertainty_Optics']*np.linspace(1,1,len(Atmospheric_Scenario.temperature))  # linspace to create the appropiate length for the xarray. 

@@ -228,7 +228,7 @@ def half_max_x(x, y):
 
 #%% Creates a sphere of radius equal to the estimates error distance around the lidar theoretical measured point
 
-def sample_spherical(r,npoints, ndim=3):
+def sample_sphere(r,npoints, ndim=3):
     vec = np.random.randn(ndim, npoints)
     vec /= np.linalg.norm(vec, axis=0)
     xi,yi,zi=r*vec
