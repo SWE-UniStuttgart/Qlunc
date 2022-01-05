@@ -66,7 +66,7 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,param1):
     
     elif Qlunc_yaml_inputs['Components']['Lidar general inputs']['Type']=="Pulsed":
         # Variables
-        pdb.set_trace()
+        
         tau_meas      = Qlunc_yaml_inputs['Components']['Telescope']['Gate length']
         tau           = Qlunc_yaml_inputs['Components']['Telescope']['Pulse shape']
         stdv_tau_meas = Lidar.optics.telescope.stdv_tau_meas
@@ -112,7 +112,7 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,param1):
        file.close()      
     
     Final_Output_UQ_ProbeVolume = {'Rayleigh Length':Rayleigh_length,'Rayleigh Length uncertainty':Unc_Rayleigh_length}
-    # pdb.set_trace()
+    
     
     
     # Plotting:
