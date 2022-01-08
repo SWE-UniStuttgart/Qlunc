@@ -76,7 +76,7 @@ def UQ_WFR (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scanner_Uncertaint
         ax.set_xlabel('x',fontsize=15)
         ax.set_ylabel('y',fontsize=15)
         ax.set_zlabel('z',fontsize=15)
-        pdb.set_trace()
+        # pdb.set_trace()
     # Coordinates of the points on the sphere surface
     for p_sphere in range(len(zi)):
         xi0 = xi[p_sphere]

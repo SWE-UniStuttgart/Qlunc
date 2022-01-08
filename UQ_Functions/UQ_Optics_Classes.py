@@ -102,7 +102,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             
         # Calculating parameter1, parameter2 and parameter3 depending on the quadrant (https://es.wikipedia.org/wiki/Coordenadas_esf%C3%A9ricas):           
         param1,param3,param2=SA.cart2sph(x_init,y_init,z_init)
-    
+        # xc,yc,zc=SA.sph2cart(param1,param3,param2)
     for param1_or,param2_or,param3_or in zip(param1,param2,param3):# Take coordinates from inputs
         Mean_DISTANCE=[]
         DISTANCE=[]        
@@ -175,7 +175,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     #Call probe volume uncertainty function
     Probe_param = Lidar.probe_volume.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,param1)
-    # pdb.set_trace()
+
     # Saving coordenates to a file in desktop
     # file=open('C:/Users/fcosta/Desktop/data_'+Qlunc_yaml_inputs['Components']['Scanner']['Type']+'.txt','w')
     # XX=repr(param1)
