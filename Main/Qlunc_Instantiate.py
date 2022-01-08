@@ -195,7 +195,7 @@ Lidar = lidar(name           = Qlunc_yaml_inputs['Lidar']['Name'],              
               optics         = Optics_Module, #eval(Qlunc_yaml_inputs['Lidar']['Optics module']),        # Introduce the name of your optics module.
               power          = None, #eval(Qlunc_yaml_inputs['Lidar']['Power module']),         # Introduce the name of your power module. NOT IMPLEMENTED YET!
               wfr_model      = WFR_M,
-              filt_method    = Filt_M,
+              filt_method    = None,
               probe_volume   = Probe_Volume, 
               lidar_inputs   = Lidar_inputs, #eval(Qlunc_yaml_inputs['Lidar']['Lidar inputs']),         # Introduce lidar general inputs
               unc_func       = ulc.sum_unc_lidar) #eval(Qlunc_yaml_inputs['Lidar']['Uncertainty function'])) # Function estimating lidar global uncertainty
