@@ -87,18 +87,9 @@ def UQ_WFR (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scan_Unc):
         
         # Plot spheres around the theoretical measuring points
         ax.plot_wireframe(x, y, z, color='k', rstride=1, cstride=1)
-<<<<<<< Updated upstream
-        ax.scatter(xi, yi, zi, s=10, c='r', zorder=10)
-        ax.set_xlabel('x',fontsize=15)
-        ax.set_ylabel('y',fontsize=15)
-        ax.set_zlabel('z',fontsize=15)
-        # pdb.set_trace()
-    # Coordinates of the points on the sphere surface
-=======
 
-    
     # Coordinates of the points on the sphere surface for each point in the pattern  
->>>>>>> Stashed changes
+
     for p_sphere in range(len(zi)):
         xi0 = xi[p_sphere]
         yi0 = yi[p_sphere]
