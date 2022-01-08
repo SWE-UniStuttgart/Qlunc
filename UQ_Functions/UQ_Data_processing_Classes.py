@@ -111,6 +111,14 @@ def UQ_WFR (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scan_Unc):
         # Just a check to see the transformation 
         # x1,y1,z1 = SA.sph2cart(rho1,phi1,theta1)
         
+        
+        # calculating angles between LOS and I-axes at the theoretical measuring point
+        module_or = np.linalg.norm([Scan_Unc['MeasPoint_Coordinates'][0][0],Scan_Unc['MeasPoint_Coordinates'][1][0],Scan_Unc['MeasPoint_Coordinates'][2][0]])
+        angx_or   = np.rad2deg(math.acos(Scan_Unc['MeasPoint_Coordinates'][0]/module_or))
+        angy_or   = np.rad2deg(math.acos(Scan_Unc['MeasPoint_Coordinates'][1]/module_or))
+        angz_or   = np.rad2deg(math.acos(Scan_Unc['MeasPoint_Coordinates'][2]/module_or))
+        
+        
         module=[]
         angx=[]
         angy=[]
@@ -120,7 +128,7 @@ def UQ_WFR (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scan_Unc):
             # It is assumed v=w=0
             # recon.append( rho1+phi1+theta1)
             # Vectors
-            pdb.set_trace()
+            # pdb.set_trace()
             Mes_vector_X =  xi0-Lidar.optics.scanner.origin[0]
             Mes_vector_Y =  yi0-Lidar.optics.scanner.origin[1]
             Mes_vector_Z =  zi0-Lidar.optics.scanner.origin[2]
@@ -131,12 +139,15 @@ def UQ_WFR (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scan_Unc):
                 # angx.append(math.acos(Mes_vector_X[ind_ang]/module[ind_ang]))
                 # angy.append(math.acos(Mes_vector_Y[ind_ang]/module[ind_ang]))
                 # angz.append(math.acos(Mes_vector_Z[ind_ang]/module[ind_ang]))
-                angx.append(np.rad2deg(math.atan(xi0[ind_ang]/module[ind_ang])))
-
-                angy.append(np.rad2deg(math.atan(yi0[ind_ang]/module[ind_ang])))
-                angz.append(np.rad2deg(math.atan(zi0[ind_ang]/module[ind_ang])))
                 
-                angx=np.rad2deg(math.atan(Mes_vector_Z))
+                
+                
+                angx.append(np.rad2deg(math.acos(xi0[ind_ang]/module[ind_ang])))
+
+                angy.append(np.rad2deg(math.acos(yi0[ind_ang]/module[ind_ang])))
+                angz.append(np.rad2deg(math.acos(zi0[ind_ang]/module[ind_ang])))
+                
+                # angx=np.rad2deg(math.atan(Mes_vector_Z))
             
             
             # In_2_LOS_matrix= [np.cos(anglez(iTra))*cosd(angley(iTra))   -cosd(anglez(iTra))*sind(angley(iTra))   sind(anglez(iTra));
