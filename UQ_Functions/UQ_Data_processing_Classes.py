@@ -47,21 +47,25 @@ def UQ_WFR (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scan_Unc):
     Dictionary with information about...
     
     """        
-    xi          = []
-    yi          = []
-    zi          = []
-    rho_point   = []
-    theta_point = []
-    phi_point   = []
-    x1          = []
-    y1          = []
-    z1          = []
-    rho_recon   = []
-    theta_recon = []
-    phi_recon   = []
-    recon       = []
-    val_transf  = []
-    LOS_2_I     = []
+    xi               = []
+    yi               = []
+    zi               = []
+    # rho_point        = []
+    # theta_point      = []
+    # phi_point        = []
+    # x1               = []
+    # y1               = []
+    # z1               = []
+    # rho_recon        = []
+    # theta_recon      = []
+    # phi_recon        = []
+    # recon            = []
+    Total_val_transf = []
+    val_transf       = []
+    val_or_transf    = []
+    LOS_2_I          = []
+    LOS_2_I_or       = []
+    stdv_sph_points  = []
     # pdb.set_trace()
     fig, ax = plt.subplots(1, 1, subplot_kw={'projection':'3d', 'aspect':'auto'})
     ax.set_xlim3d(-200,200)
@@ -106,7 +110,7 @@ def UQ_WFR (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scan_Unc):
         ax.plot(Scan_Unc['MeasPoint_Coordinates'][0][p_sphere],Scan_Unc['MeasPoint_Coordinates'][1][p_sphere],Scan_Unc['MeasPoint_Coordinates'][2][p_sphere],'ob',markersize=7.8)
         ax.plot(xi0,yi0,zi0,'or',markersize=4)
         
-        # pdb.set_trace()
+        
         ax.plot([Lidar.optics.scanner.origin[0]],[Lidar.optics.scanner.origin[1]],[Lidar.optics.scanner.origin[2]],'ob',label='{} coordinates [{},{},{}]'.format(Lidar.LidarID,Lidar.optics.scanner.origin[0],Lidar.optics.scanner.origin[1],Lidar.optics.scanner.origin[2]),markersize=5)
 
         # Just a check to see the transformation 
@@ -118,40 +122,45 @@ def UQ_WFR (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scan_Unc):
         # angx_or   = np.rad2deg(math.acos(Scan_Unc['MeasPoint_Coordinates'][0]/module_or))
         # angy_or   = np.rad2deg(math.acos(Scan_Unc['MeasPoint_Coordinates'][1]/module_or))
         # angz_or   = np.rad2deg(math.acos(Scan_Unc['MeasPoint_Coordinates'][2]/module_or))
-        angley_or = np.rad2deg(math.atan(Scan_Unc['MeasPoint_Coordinates'][1][0]/Scan_Unc['MeasPoint_Coordinates'][0][0]))
-        anglez_or = np.rad2deg(math.atan(Scan_Unc['MeasPoint_Coordinates'][2][0]/Scan_Unc['MeasPoint_Coordinates'][0][0]))
+        angley_or = np.rad2deg(math.atan(Scan_Unc['MeasPoint_Coordinates'][1][p_sphere]/Scan_Unc['MeasPoint_Coordinates'][0][p_sphere]))
+        anglez_or = np.rad2deg(math.atan(Scan_Unc['MeasPoint_Coordinates'][2][p_sphere]/Scan_Unc['MeasPoint_Coordinates'][0][p_sphere]))
         
         # Rotational matrix
-        LOS_2_I_or.append ((np.matrix([[np.cos(np.deg2rad(anglez_or))*np.cos(np.deg2rad(angley_or)), -np.cos(np.deg2rad(anglez_or))*np.sin(np.deg2rad(angley_or)), np.sin(np.deg2rad(anglez_or))   ],\
+        LOS_2_I_or= ((np.matrix([[np.cos(np.deg2rad(anglez_or))*np.cos(np.deg2rad(angley_or)), -np.cos(np.deg2rad(anglez_or))*np.sin(np.deg2rad(angley_or)), np.sin(np.deg2rad(anglez_or))   ],\
                                        [                    np.sin(np.deg2rad(angley_or)),                          np.cos(np.deg2rad(angley_or)),                               0                 ],\
                                        [ np.cos(np.deg2rad(anglez_or))*np.sin(np.deg2rad(angley_or)), -np.sin(np.deg2rad(anglez_or))*np.sin(np.deg2rad(angley_or)), np.cos(np.deg2rad(anglez_or))] ]))**-1)
         
         # Value of the transformation for the theoretical measurement point. Here assume v=w=0, that´s why it is sum up just the first row of the transformation matrix. Furthermore, since I am interested in the error of the transformation only, I
         # assume a unity vector to represent the LOS velocity. Therefore: 
-        val_or_transf = LOS_2_I_or[0].sum()
+        val_or_transf .append([LOS_2_I_or[p_sphere][0].sum()])
         
         # Wind field reconstruction 
         if Lidar.wfr_model.reconstruction_model=='Flat':
-            
+            val_transf=[]
             # Vectors
             # pdb.set_trace()
             Mes_vector_X =  xi0-Lidar.optics.scanner.origin[0]
             Mes_vector_Y =  yi0-Lidar.optics.scanner.origin[1]
             Mes_vector_Z =  zi0-Lidar.optics.scanner.origin[2]
+            
             for ind_ang in range(len(Mes_vector_X)):
             
                 # Angles between vector and inertial axes
                 angley = np.rad2deg(math.atan(Mes_vector_Y[ind_ang]/Mes_vector_X[ind_ang]))
                 anglez = np.rad2deg(math.atan(Mes_vector_Z[ind_ang]/Mes_vector_X[ind_ang]))
                 # Transformation matrix for the points on the sphere surface
-                LOS_2_I.append ((np.matrix([[np.cos(np.deg2rad(anglez))*np.cos(np.deg2rad(angley)), -np.cos(np.deg2rad(anglez))*np.sin(np.deg2rad(angley)), np.sin(np.deg2rad(anglez))   ],\
+                LOS_2_I=((np.matrix([[np.cos(np.deg2rad(anglez))*np.cos(np.deg2rad(angley)), -np.cos(np.deg2rad(anglez))*np.sin(np.deg2rad(angley)), np.sin(np.deg2rad(anglez))   ],\
                                       [                    np.sin(np.deg2rad(angley)),                          np.cos(np.deg2rad(angley)),                               0                 ],\
                                       [ np.cos(np.deg2rad(anglez))*np.sin(np.deg2rad(angley)), -np.sin(np.deg2rad(anglez))*np.sin(np.deg2rad(angley)), np.cos(np.deg2rad(anglez))] ]))**-1)
                 
                     # Value of the transformation for the points on the sphere surface
-                val_transf.append( LOS_2_I[ind_ang][0].sum())
+                val_transf.append(LOS_2_I[0].sum())
+        Total_val_transf.append(val_transf)
+        # pdb.set_trace()
+    for ind_std in range(len(Total_val_transf)):
+        stdv_sph_points.append(np.std(Total_val_transf[ind_std]))
     
-        pdb.set_trace()
+    pdb.set_trace()
         
         
     return (xi,yi,zi)
