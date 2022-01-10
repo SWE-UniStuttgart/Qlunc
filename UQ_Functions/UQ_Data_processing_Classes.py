@@ -85,7 +85,7 @@ def UQ_WFR (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scan_Unc):
         y = Scan_Unc['MeasPoint_Coordinates'][1][r_sphere]+radius*np.outer(np.sin(theta), np.sin(phi))
         z = Scan_Unc['MeasPoint_Coordinates'][2][r_sphere]+radius*np.outer(np.cos(theta), np.ones_like(phi))
         
-        xii, yii, zii = SA.sample_sphere(radius,5)
+        xii, yii, zii = SA.sample_sphere(radius,1500)
         xi.append(xii+Scan_Unc['MeasPoint_Coordinates'][0][r_sphere])
         yi.append(yii+Scan_Unc['MeasPoint_Coordinates'][1][r_sphere])
         zi.append(zii+Scan_Unc['MeasPoint_Coordinates'][2][r_sphere])
@@ -101,7 +101,7 @@ def UQ_WFR (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scan_Unc):
         zi0 = zi[p_sphere]
         
         # Transform coordinates to spherical coordinate system
-        rho1,phi1,theta1 = SA.cart2sph(xi0,yi0,zi0)       
+        # rho1,phi1,theta1 = SA.cart2sph(xi0,yi0,zi0)       
         # rho_point.append(rho1)
         # phi_point.append(phi1)
         # theta_point.append(theta1)
@@ -129,7 +129,7 @@ def UQ_WFR (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scan_Unc):
         LOS_2_I_or= ((np.matrix([[np.cos(np.deg2rad(anglez_or))*np.cos(np.deg2rad(angley_or)), -np.cos(np.deg2rad(anglez_or))*np.sin(np.deg2rad(angley_or)), np.sin(np.deg2rad(anglez_or))   ],\
                                        [                    np.sin(np.deg2rad(angley_or)),                          np.cos(np.deg2rad(angley_or)),                               0                 ],\
                                        [ np.cos(np.deg2rad(anglez_or))*np.sin(np.deg2rad(angley_or)), -np.sin(np.deg2rad(anglez_or))*np.sin(np.deg2rad(angley_or)), np.cos(np.deg2rad(anglez_or))] ]))**-1)
-        
+        pdb.set_trace()
         # Value of the transformation for the theoretical measurement point. Here assume v=w=0, that´s why it is sum up just the first row of the transformation matrix. Furthermore, since I am interested in the error of the transformation only, I
         # assume a unity vector to represent the LOS velocity. Therefore: 
         val_or_transf .append([LOS_2_I_or[p_sphere][0].sum()])
