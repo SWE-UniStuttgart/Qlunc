@@ -38,59 +38,59 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     """ 
     List_Unc_lidar = []
-    print('Processing lidar uncertainties...')
+    print(colored('Processing lidar uncertainties...','magenta', attrs=['bold']))
     if Lidar.photonics != None:
         try: # each try/except evaluates whether the component is included in the module, therefore in the calculations
-    #        if Photodetector_Uncertainty not in locals():
             # pdb.set_trace()
             Photonics_Uncertainty,DataFrame = Lidar.photonics.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
             # List_Unc_lidar.append(Photonics_Uncertainty['Uncertainty_Photonics'])
             try:
-                List_Unc_lidar.append(DataFrame['Photodetector'])
-                
+                List_Unc_lidar.append(DataFrame['Photodetector'])                
             except:
-                print('Error appending photodetetor for lidar uncertainty estimations.')
+                print(colored('Error appending photodetetor for lidar uncertainty estimations.','cyan', attrs=['bold']))
             try:
                 List_Unc_lidar.append(DataFrame['Optical Amplifier'])
             except:
-                 print('Error appending optical amplifier for lidar uncertainty estimations.')
-                   
+                 print(colored('Error appending optical amplifier for lidar uncertainty estimations.','cyan', attrs=['bold']))                  
         except:
             Photonics_Uncertainty = None
-            print('Error in photonics module calculations!')
+            print(colored('Error in photonics module calculations!','cyan', attrs=['bold']))
     else:
-        print('You didn´t include a photonics module in the lidar')
+        print(colored('You didn´t include a photonics module in the lidar','cyan', attrs=['bold']))
     if Lidar.optics != None:
         try:
             Optics_Uncertainty,DataFrame = Lidar.optics.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
             Optics_Uncertainty           = np.ndarray.tolist(Optics_Uncertainty['Uncertainty_Optics'])*len(Atmospheric_Scenario.temperature)
             # List_Unc_lidar.append(np.array([Optics_Uncertainty]))
             try:
-                List_Unc_lidar.append(DataFrame['Optical circulator'])
-                
+                List_Unc_lidar.append(DataFrame['Optical circulator'])                
             except:
-                 print('Error appending optical circulator for lidar uncertainty estimations.')
+                 print(colored('Error appending optical circulator for lidar uncertainty estimations.','cyan', attrs=['bold']))
             try:
-                List_Unc_lidar.append(DataFrame['Telescope'])
-                
+                List_Unc_lidar.append(DataFrame['Telescope'])                
             except:
-                 print('No telescope in the photonics module. Telescope is not in lidar uncertainty estimations')
-                          
+                 print(colored('No telescope in the photonics module. Telescope is not in lidar uncertainty estimations','cyan', attrs=['bold']))                          
         except:
             Optics_Uncertainty = None
-            print('Error in optics module calculations!')
+            print(colored('Error in optics module calculations!','cyan', attrs=['bold']))
     else:
-        print('You didn´t include an optics module in the lidar')
-    if Lidar.power != None:
-        
+        print(colored('You didn´t include an optics module in the lidar','cyan', attrs=['bold']))
+    if Lidar.power != None:        
         try:
             Power_Uncertainty,DataFrame = Lidar.power.Uncertainty(Lidar,Atmospheric_Scenario,cts)
             List_Unc_lidar.append(Power_Uncertainty['Uncertainty_Power']*len(Atmospheric_Scenario.temperature))
         except:
             Power_Uncertainty = None
-            print('No power module in calculations!')
+            print(colored('No power module in calculations!','cyan', attrs=['bold']))
     else:
-        print('You didn´t include a power module in  the lidar')
+        print(colored('You didn´t include a power module in  the lidar','cyan', attrs=['bold']))
+    # pdb.set_trace()
+    # if Lidar.wfr_model != None:
+    #     try:
+    #         pdb.set_trace()
+    #         WindFieldReconstruction_Uncertainty = Lidar.wfr_model.Uncertainty(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scanner_Uncertainty)
+    #     except:
+    #         print(colored('Error in wfr model','cyan', attrs=['bold']))
     
     Uncertainty_Lidar                     = SA.unc_comb(List_Unc_lidar)[0]
     Final_Output_Lidar_Uncertainty        = {'Lidar_Uncertainty':Uncertainty_Lidar}    
@@ -101,10 +101,11 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # Lidar.lidar_inputs.dataframe['Time']=Atmospheric_Scenario.time
     ########################################################################################################
     # Create Xarray to store data. Link with Mocalum and yaddum  ###########################################
-    
+    # READ netcdf FILE.
+    # da=xr.open_dataarray('C:/SWE_LOCAL/GIT_Qlunc/Projects/' + 'Gandia.nc')
     df=SA.to_netcdf(Lidar.lidar_inputs.dataframe,Qlunc_yaml_inputs,Lidar,Atmospheric_Scenario)
     ########################################################################################################
     ########################################################################################################
         
-    print('Lidar uncertainty done')
+    print(colored('...Lidar uncertainty done','magenta', attrs=['bold']))
     return Final_Output_Lidar_Uncertainty,Lidar.lidar_inputs.dataframe,df

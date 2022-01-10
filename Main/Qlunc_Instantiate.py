@@ -26,7 +26,7 @@ could be done by instantiating their python classes:
 import os
 os.chdir('../')
 # importing  uncertainty functions
-import UQ_Functions.UQ_Photonics_Classes as uphc,UQ_Functions.UQ_Optics_Classes as uopc, UQ_Functions.UQ_Power_Classes as upwc,UQ_Functions.UQ_Lidar_Classes as ulc, UQ_Functions.UQ_ProbeVolume_Classes as upbc,UQ_Functions.UQ_Data_processing_Classes as uprm
+import UQ_Functions.UQ_Photonics_Classes as uphc,UQ_Functions.UQ_Optics_Classes as uopc, UQ_Functions.UQ_Power_Classes as upwc,UQ_Functions.UQ_Lidar_Classes as ulc, UQ_Functions.UQ_ProbeVolume_Classes as upbc,UQ_Functions.UQ_Data_processing_Classes as uprm, UQ_Functions.UQ_SignalProcessor_Classes as uspc
 from Utils.Qlunc_ImportModules import *
 
 #%% Running Qlunc_Classes.py:
@@ -166,6 +166,22 @@ Photonics_Module = photonics(name                    = Qlunc_yaml_inputs['Module
                              acousto_optic_modulator = 'None', #AOM,
                              unc_func                = uphc.sum_unc_photonics) #eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['Uncertainty function']))
 
+## Signal processor components and module: ###########################################################
+
+ADC = analog2digital_converter (name     = Qlunc_yaml_inputs['Components']['ADC']['Name'],
+                                nbits    = Qlunc_yaml_inputs['Components']['ADC']['N bits'],
+                                vref     = Qlunc_yaml_inputs['Components']['ADC']['Reference voltage'],
+                                vground  = Qlunc_yaml_inputs['Components']['ADC']['Ground voltage'],
+                                q_error  = Qlunc_yaml_inputs['Components']['ADC']['Quantization error'],
+                                unc_func = uspc.UQ_ADC)
+
+Signal_processor_Module = signal_processor(name                     = Qlunc_yaml_inputs['Modules']['Signal processor Module']['Name'],
+                                           analog2digital_converter = eval(Qlunc_yaml_inputs['Modules']['Signal processor Module']['ADC']),
+                                           # f_analyser             = Qlunc_yaml_inputs['Modules']['Signal processor Module']['Frequency analyser'],
+                                           unc_func                 = uspc.sum_unc_signal_processor)
+
+
+
 ## Lidar general inputs: ######################################################
 Lidar_inputs     = lidar_gral_inp(name        = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Name'],      # Introduce the name of your lidar data folder.
                                   wave        = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Wavelength'],                    # In [m]. Lidar wavelength.
@@ -194,8 +210,9 @@ Lidar = lidar(name           = Qlunc_yaml_inputs['Lidar']['Name'],              
               photonics      = Photonics_Module, #eval(Qlunc_yaml_inputs['Lidar']['Photonics module']),     # Introduce the name of your photonics module.
               optics         = Optics_Module, #eval(Qlunc_yaml_inputs['Lidar']['Optics module']),        # Introduce the name of your optics module.
               power          = None, #eval(Qlunc_yaml_inputs['Lidar']['Power module']),         # Introduce the name of your power module. NOT IMPLEMENTED YET!
+              signal_processor = Signal_processor_Module,
               wfr_model      = WFR_M,
-              filt_method    = Filt_M,
+              filt_method    = None,
               probe_volume   = Probe_Volume, 
               lidar_inputs   = Lidar_inputs, #eval(Qlunc_yaml_inputs['Lidar']['Lidar inputs']),         # Introduce lidar general inputs
               unc_func       = ulc.sum_unc_lidar) #eval(Qlunc_yaml_inputs['Lidar']['Uncertainty function'])) # Function estimating lidar global uncertainty

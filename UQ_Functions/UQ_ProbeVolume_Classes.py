@@ -66,7 +66,7 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,param1):
     
     elif Qlunc_yaml_inputs['Components']['Lidar general inputs']['Type']=="Pulsed":
         # Variables
-        pdb.set_trace()
+        
         tau_meas      = Qlunc_yaml_inputs['Components']['Telescope']['Gate length']
         tau           = Qlunc_yaml_inputs['Components']['Telescope']['Pulse shape']
         stdv_tau_meas = Lidar.optics.telescope.stdv_tau_meas
@@ -76,8 +76,8 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,param1):
         # Definition from "LEOSPHERE pulsed lidar principles" -->  Theory from Banakh and Smalikho 1994: “Estimation of the turbulence energy dissipation rate from the pulsed Doppler lidar data”.
         Rayleigh_length = (cts.c*tau_meas)/(2*math.erf(np.sqrt(np.log(2))*(tau_meas)/(tau)))/2
         
-        dR_dtauMeas = (cts.c*2*math.erf(np.sqrt(np.log(2))*tau_meas/tau)-cts.c*tau_meas*2*(2/np.sqrt(np.pi))*np.exp(-np.sqrt(np.log(2))*tau_meas/tau)*np.sqrt(np.log(2))/tau)/((2*math.erf(np.sqrt(np.log(2))*(tau_meas)/(tau)))**2)
-        dR_dtau     = (-cts.c*tau_meas*2*(2/np.sqrt(np.pi))*np.exp(-np.sqrt(np.log(2))*(tau_meas/tau))*(-np.sqrt(np.log(2))*tau_meas/(tau**2)))/((2*math.erf(np.sqrt(np.log(2))*tau_meas/tau))**2)
+        dR_dtauMeas = (cts.c*2*math.erf(np.sqrt(np.log(2))*tau_meas/tau)-cts.c*tau_meas*2*(2/np.sqrt(np.pi))*np.exp(-(np.sqrt(np.log(2))*tau_meas/tau)**2)*np.sqrt(np.log(2))/tau)/((2*math.erf(np.sqrt(np.log(2))*(tau_meas)/(tau)))**2)
+        dR_dtau     = (-cts.c*tau_meas*2*(2/np.sqrt(np.pi))*np.exp(-(np.sqrt(np.log(2))*tau_meas/tau)**2)*(-np.sqrt(np.log(2))*tau_meas/(tau**2)))/((2*math.erf(np.sqrt(np.log(2))*tau_meas/tau))**2)
         Unc_Rayleigh_length      = np.sqrt((dR_dtauMeas*stdv_tau_meas)**2+(dR_dtau*stdv_tau)**2)
         
         # focus_distance = random.randrange(1,500,1)
@@ -112,7 +112,7 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,param1):
        file.close()      
     
     Final_Output_UQ_ProbeVolume = {'Rayleigh Length':Rayleigh_length,'Rayleigh Length uncertainty':Unc_Rayleigh_length}
-    # pdb.set_trace()
+    
     
     
     # Plotting:
