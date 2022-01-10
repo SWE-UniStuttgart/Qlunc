@@ -128,6 +128,16 @@ class optical_amplifier():
                  print ('Created new optical amplifier: {}'.format(self.Optical_AmplifierID))
                  
 
+class analog2digital_converter():
+    def __init__(self,name,nbits,vref,vground,q_error,unc_func):
+                 self.ADCID = name
+                 self.nbits =nbits
+                 self.vref = vref
+                 self.vground = vground
+                 self.q_error = q_error
+                 self.Uncertainty = unc_func
+                 print('Created new ADC: {}'.format(self.ADCID))
+                 
 class acousto_optic_modulator():
     def __init__(self,name,insertion_loss):
                  self.AOMID          = name
@@ -222,6 +232,7 @@ class probe_volume():
                  self.extinction_coef            = extinction_coef
                  self.Uncertainty                = unc_func
                  print('Class "Probe volume" created')
+
 #%% LIDAR MODULES
                  
 # Modules classes:
@@ -260,7 +271,14 @@ class optics():
                  self.telescope          = telescope
                  self.Uncertainty        = unc_func 
                  print('Created new optic module: {}'.format(self.OpticsModuleID))
-        
+
+class signal_processor():
+    def __init__(self,name,analog2digital_converter,unc_func): #f_analyser
+                 self.SignalProcessorModuleID = name
+                 self.analog2digital_converter = analog2digital_converter
+                 # self.f_analyser =f_analyser
+                 self.Uncertainty = unc_func
+                 print('Created new signal processor module: {}'.format(self.SignalProcessorModuleID))
 #%% Atmosphere object:
 class atmosphere():
     def __init__(self,name,temperature):
@@ -284,11 +302,12 @@ class lidar_gral_inp():
 
 #%% Lidar class:
 class lidar():
-    def __init__(self,name,photonics,optics,power,lidar_inputs,probe_volume,wfr_model,filt_method,unc_func):
+    def __init__(self,name,photonics,optics,power,signal_processor,lidar_inputs,probe_volume,wfr_model,filt_method,unc_func):
                  self.LidarID      = name
                  self.photonics    = photonics
                  self.optics       = optics
                  self.power        = power # Not included yet in Version Qlunc v-0.9 calculations
+                 self.signal_processor = signal_processor
                  self.probe_volume = probe_volume
                  self.wfr_model          = wfr_model
                  self.filt_method  = filt_method
