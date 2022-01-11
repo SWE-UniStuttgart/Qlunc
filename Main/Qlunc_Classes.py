@@ -174,7 +174,7 @@ class converter(): # Not included yet in Version Qlunc v-0.9 calculations
                  print('Created new converter: {}'.format(self.ConverterID))
 
 class scanner():
-    def __init__(self,name,time_pattern,time_point,scanner_type,pattern,lissajous_param,origin,sample_rate,focus_dist,cone_angle,azimuth,x,y,z,stdv_focus_dist,stdv_cone_angle,stdv_azimuth,unc_func):
+    def __init__(self,name,time_pattern,time_point,scanner_type,pattern,lissajous_param,origin,sample_rate,focus_dist,cone_angle,azimuth,x,y,z,stdv_location,stdv_focus_dist,stdv_cone_angle,stdv_azimuth,unc_func):
                  self.ScannerID       = name
                  self.time_pattern    = time_pattern
                  self.time_point      = time_point 
@@ -186,6 +186,7 @@ class scanner():
                  self.focus_dist      = focus_dist
                  self.cone_angle      = cone_angle
                  self.azimuth         = azimuth
+                 self.stdv_location= stdv_location
                  self.stdv_focus_dist = stdv_focus_dist
                  self.stdv_cone_angle = stdv_cone_angle
                  self.stdv_azimuth    = stdv_azimuth                 

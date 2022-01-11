@@ -75,6 +75,7 @@ Scanner           = scanner(name            = Qlunc_yaml_inputs['Components']['S
                             x               = np.array(Qlunc_yaml_inputs['Components']['Scanner']['x']),
                             y               = np.array(Qlunc_yaml_inputs['Components']['Scanner']['y']),
                             z               = np.array(Qlunc_yaml_inputs['Components']['Scanner']['z']),
+                            stdv_location   = Qlunc_yaml_inputs['Components']['Scanner']['Error origin'],
                             stdv_focus_dist = Qlunc_yaml_inputs['Components']['Scanner']['stdv focus distance'],                 # Focus distance standard deviation in [meters].
                             stdv_cone_angle = Qlunc_yaml_inputs['Components']['Scanner']['stdv Cone angle'],                 # Cone angle standard deviation in [degrees].
                             stdv_azimuth    = Qlunc_yaml_inputs['Components']['Scanner']['stdv Azimuth'],                 # Azimuth angle standard deviation in [degrees].
