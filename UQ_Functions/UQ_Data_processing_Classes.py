@@ -66,6 +66,8 @@ def UQ_WFR (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scan_Unc):
     LOS_2_I          = []
     LOS_2_I_or       = []
     stdv_sph_points  = []
+    Unc_U =[]
+    Total_Unc_U=[]
     # pdb.set_trace()
     fig, ax = plt.subplots(1, 1, subplot_kw={'projection':'3d', 'aspect':'auto'})
     ax.set_xlim3d(-200,200)
@@ -80,11 +82,11 @@ def UQ_WFR (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scan_Unc):
         phi      = np.linspace(0, np.pi, 20)
         theta    = np.linspace(0, 2 * np.pi, 40)
         
-        
+        # x,y,z define the spheres
         x = Scan_Unc['MeasPoint_Coordinates'][0][r_sphere]+radius*np.outer(np.sin(theta), np.cos(phi))
         y = Scan_Unc['MeasPoint_Coordinates'][1][r_sphere]+radius*np.outer(np.sin(theta), np.sin(phi))
         z = Scan_Unc['MeasPoint_Coordinates'][2][r_sphere]+radius*np.outer(np.cos(theta), np.ones_like(phi))
-        
+        #xi, yi,zi define the points on the sphere surface
         xii, yii, zii = SA.sample_sphere(radius,1500)
         xi.append(xii+Scan_Unc['MeasPoint_Coordinates'][0][r_sphere])
         yi.append(yii+Scan_Unc['MeasPoint_Coordinates'][1][r_sphere])
@@ -122,14 +124,18 @@ def UQ_WFR (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scan_Unc):
         # angx_or   = np.rad2deg(math.acos(Scan_Unc['MeasPoint_Coordinates'][0]/module_or))
         # angy_or   = np.rad2deg(math.acos(Scan_Unc['MeasPoint_Coordinates'][1]/module_or))
         # angz_or   = np.rad2deg(math.acos(Scan_Unc['MeasPoint_Coordinates'][2]/module_or))
-        angley_or = np.rad2deg(math.atan(Scan_Unc['MeasPoint_Coordinates'][1][p_sphere]/Scan_Unc['MeasPoint_Coordinates'][0][p_sphere]))
-        anglez_or = np.rad2deg(math.atan(Scan_Unc['MeasPoint_Coordinates'][2][p_sphere]/Scan_Unc['MeasPoint_Coordinates'][0][p_sphere]))
+        if Lidar.optics.scanner.scanner_type == 'SCAN':
+            angley_or = np.rad2deg(math.atan(Scan_Unc['MeasPoint_Coordinates'][1][p_sphere]/Scan_Unc['MeasPoint_Coordinates'][0][p_sphere]))
+            anglez_or = np.rad2deg(math.atan(Scan_Unc['MeasPoint_Coordinates'][2][p_sphere]/Scan_Unc['MeasPoint_Coordinates'][0][p_sphere]))
+        elif Lidar.optics.scanner.scanner_type == 'VAD':
+            angley_or = np.rad2deg(math.atan(Scan_Unc['MeasPoint_Coordinates'][1][p_sphere]/Scan_Unc['MeasPoint_Coordinates'][2][p_sphere]))
+            anglez_or = np.rad2deg(math.atan(Scan_Unc['MeasPoint_Coordinates'][0][p_sphere]/Scan_Unc['MeasPoint_Coordinates'][2][p_sphere]))
         
         # Rotational matrix
         LOS_2_I_or= ((np.matrix([[np.cos(np.deg2rad(anglez_or))*np.cos(np.deg2rad(angley_or)), -np.cos(np.deg2rad(anglez_or))*np.sin(np.deg2rad(angley_or)), np.sin(np.deg2rad(anglez_or))   ],\
                                        [                    np.sin(np.deg2rad(angley_or)),                          np.cos(np.deg2rad(angley_or)),                               0                 ],\
                                        [ np.cos(np.deg2rad(anglez_or))*np.sin(np.deg2rad(angley_or)), -np.sin(np.deg2rad(anglez_or))*np.sin(np.deg2rad(angley_or)), np.cos(np.deg2rad(anglez_or))] ]))**-1)
-        pdb.set_trace()
+        # pdb.set_trace()
         # Value of the transformation for the theoretical measurement point. Here assume v=w=0, that´s why it is sum up just the first row of the transformation matrix. Furthermore, since I am interested in the error of the transformation only, I
         # assume a unity vector to represent the LOS velocity. Therefore: 
         val_or_transf .append([LOS_2_I_or[p_sphere][0].sum()])
@@ -142,21 +148,49 @@ def UQ_WFR (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scan_Unc):
             Mes_vector_X =  xi0-Lidar.optics.scanner.origin[0]
             Mes_vector_Y =  yi0-Lidar.optics.scanner.origin[1]
             Mes_vector_Z =  zi0-Lidar.optics.scanner.origin[2]
+            # pdb.set_trace()
+            # Errors in measurement due to the location error (GPS)
+            unc_Mes_vector_X,unc_Mes_vector_Y,unc_Mes_vector_Z = Lidar.optics.scanner.stdv_location
             
+            # Find uncertainty for each point on the sphere surface
             for ind_ang in range(len(Mes_vector_X)):
             
                 # Angles between vector and inertial axes
                 angley = np.rad2deg(math.atan(Mes_vector_Y[ind_ang]/Mes_vector_X[ind_ang]))
                 anglez = np.rad2deg(math.atan(Mes_vector_Z[ind_ang]/Mes_vector_X[ind_ang]))
                 # Transformation matrix for the points on the sphere surface
-                LOS_2_I=((np.matrix([[np.cos(np.deg2rad(anglez))*np.cos(np.deg2rad(angley)), -np.cos(np.deg2rad(anglez))*np.sin(np.deg2rad(angley)), np.sin(np.deg2rad(anglez))   ],\
-                                      [                    np.sin(np.deg2rad(angley)),                          np.cos(np.deg2rad(angley)),                               0                 ],\
-                                      [ np.cos(np.deg2rad(anglez))*np.sin(np.deg2rad(angley)), -np.sin(np.deg2rad(anglez))*np.sin(np.deg2rad(angley)), np.cos(np.deg2rad(anglez))] ]))**-1)
+                LOS_2_I= (np.matrix([[np.cos(np.deg2rad(anglez))*np.cos(np.deg2rad(angley)), -np.cos(np.deg2rad(anglez))*np.sin(np.deg2rad(angley)), np.sin(np.deg2rad(anglez))    ],\
+                                     [                    np.sin(np.deg2rad(angley)),                          np.cos(np.deg2rad(angley)),                               0         ],\
+                                     [ np.cos(np.deg2rad(anglez))*np.sin(np.deg2rad(angley)), -np.sin(np.deg2rad(anglez))*np.sin(np.deg2rad(angley)), np.cos(np.deg2rad(anglez))]  ]))**-1
                 
-                    # Value of the transformation for the points on the sphere surface
+                # Value of the transformation for the points on the sphere surface. Error due to pointing accuracy
                 val_transf.append(LOS_2_I[0].sum())
-        Total_val_transf.append(val_transf)
+                
+                # Reconstruction uncertainty: Since final velocity is the result of a linear relation between transformation matrix and LOS velocities it is enough to assess the uncertainty of the reconstruction matrix, avoiding to give a 
+                # value for the velocity vector. The uncertainty will be linearly proportional to the velocity vector:
+                # Then, assuming v=w=0 only the first row of the reconstruction matrix is needed.
+                cosaz  = np.cos(np.deg2rad(anglez))
+                cosay  = np.cos(np.deg2rad(angley))
+                sinaz  = np.sin(np.deg2rad(anglez))
+                sinay  = np.sin(np.deg2rad(angley))                
+                cosaz2 = (np.cos(np.deg2rad(anglez)))**2
+                cosay2 = (np.cos(np.deg2rad(angley)))**2
+                sinaz2 = (np.sin(np.deg2rad(anglez)))**2
+                sinay2 = (np.sin(np.deg2rad(angley)))**2
+                
+                # Partial derivatives
+                dU_dangleZ = -(((cosaz*cosay+cosaz2*sinay-cosay*sinaz-sinay*sinaz2)*(-cosay*cosaz2*sinay-2*cosay2*cosaz*sinaz-4*cosaz*sinaz*sinay2+cosay*sinay*sinaz2))/(cosay2*cosaz2+cosaz2*sinay2-cosay*cosaz*sinay*sinaz-sinay2*sinaz2)**2)+((-cosay*cosaz-cosay*sinaz-4*cosaz*sinay*sinaz)/(cosay2*cosaz2+cosaz2*sinay2-cosaz*cosay*sinaz*sinay-sinaz2*sinay2))
+                dU_dangleY = -(((cosaz*cosay+cosaz2*sinay-cosay*sinaz-sinay*sinaz2)*(-cosay2*cosaz*sinaz+cosaz*sinay2*sinaz-2*cosay*sinay*sinaz2))/(cosay2*cosaz2+cosaz2*sinay2-cosay*cosaz*sinay*sinaz-sinay2*sinaz2)**2)+((cosay*cosaz2-cosaz*sinay+sinay*sinaz-cosay*sinaz2)/(cosay2*cosaz2+cosaz2*sinay2-cosaz*cosay*sinaz*sinay-sinaz2*sinay2))
+                # atan(u)' = u'/(1+u^2)
+                dangleY = np.sqrt((((1/Mes_vector_X[ind_ang])/(1+(Mes_vector_Y[ind_ang]/Mes_vector_X[ind_ang])**2))*unc_Mes_vector_Y)**2+(((Mes_vector_Y[ind_ang]/Mes_vector_X[ind_ang]**2)/(1+(Mes_vector_Y[ind_ang]/Mes_vector_X[ind_ang])**2))*unc_Mes_vector_X)**2)
+                dangleZ = np.sqrt((((1/Mes_vector_X[ind_ang])/(1+(Mes_vector_Z[ind_ang]/Mes_vector_X[ind_ang])**2))*unc_Mes_vector_Z)**2+(((Mes_vector_Z[ind_ang]/Mes_vector_X[ind_ang]**2)/(1+(Mes_vector_Z[ind_ang]/Mes_vector_X[ind_ang])**2))*unc_Mes_vector_X)**2)
+                
+                # Unc_U is the error due to the reconstruction process
+                Unc_U.append(np.sqrt((dU_dangleY*dangleY)**2+(dU_dangleZ*dangleZ)**2))
         # pdb.set_trace()
+        Total_Unc_U.append(np.mean(Unc_U))
+        Total_val_transf.append(val_transf)
+        pdb.set_trace()
     for ind_std in range(len(Total_val_transf)):
         stdv_sph_points.append(np.std(Total_val_transf[ind_std]))
     
