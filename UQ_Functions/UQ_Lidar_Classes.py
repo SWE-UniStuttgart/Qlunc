@@ -60,7 +60,8 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     if Lidar.optics != None:
         try:
             Optics_Uncertainty,DataFrame = Lidar.optics.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
-            Optics_Uncertainty           = np.ndarray.tolist(Optics_Uncertainty['Uncertainty_Optics'])*len(Atmospheric_Scenario.temperature)
+            # pdb.set_trace()
+            # Optics_Uncertainty           = np.ndarray.tolist(Optics_Uncertainty['Uncertainty_Optics'])*len(Atmospheric_Scenario.temperature)
             # List_Unc_lidar.append(np.array([Optics_Uncertainty]))
             try:
                 List_Unc_lidar.append(DataFrame['Optical circulator'])                
@@ -93,9 +94,9 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     #         print(colored('Error in wfr model','cyan', attrs=['bold']))
     
     Uncertainty_Lidar                     = SA.unc_comb(List_Unc_lidar)[0]
-    Final_Output_Lidar_Uncertainty        = {'Lidar_Uncertainty':Uncertainty_Lidar}    
+    Final_Output_Lidar_Uncertainty        = {'Hardware_Lidar_Uncertainty_combination':Uncertainty_Lidar,'WFR_Uncertainty':Optics_Uncertainty['Uncertainty_WFR']}    
     
-    Lidar.lidar_inputs.dataframe['Lidar'] = Final_Output_Lidar_Uncertainty['Lidar_Uncertainty']*np.linspace(1,1,len(Atmospheric_Scenario.temperature))
+    Lidar.lidar_inputs.dataframe['Lidar'] = Final_Output_Lidar_Uncertainty['Hardware_Lidar_Uncertainty_combination']*np.linspace(1,1,len(Atmospheric_Scenario.temperature))
     
     # Include time in the dataframe:
     # Lidar.lidar_inputs.dataframe['Time']=Atmospheric_Scenario.time
