@@ -245,7 +245,7 @@ def UQ_Telescope(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
      #               for o_c_tele       in inputs.optics_inp.Telescope_uncertainty_inputs['OtherChanges_tele']]
      # Telescope_Losses =Lidar.optics.telescope.Mirror_losses
      # pdb.set_trace()
-     UQ_telescope=[-33]
+     UQ_telescope=[-100]
      Final_Output_UQ_Telescope={'Telescope_Uncertainty':UQ_telescope}
      Lidar.lidar_inputs.dataframe['Telescope']=Final_Output_UQ_Telescope['Telescope_Uncertainty']*np.linspace(1,1,len(Atmospheric_Scenario.temperature)) # linspace to create the appropriate length for the xarray. 
      return Final_Output_UQ_Telescope,Lidar.lidar_inputs.dataframe
