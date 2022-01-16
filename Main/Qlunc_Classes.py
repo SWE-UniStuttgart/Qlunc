@@ -129,12 +129,13 @@ class optical_amplifier():
                  
 
 class analog2digital_converter():
-    def __init__(self,name,nbits,vref,vground,q_error,unc_func):
+    def __init__(self,name,nbits,vref,vground,q_error,ADC_bandwidth,unc_func):
                  self.ADCID = name
                  self.nbits =nbits
                  self.vref = vref
                  self.vground = vground
                  self.q_error = q_error
+                 self.BandWidth = ADC_bandwidth
                  self.Uncertainty = unc_func
                  print('Created new ADC: {}'.format(self.ADCID))
                  

@@ -236,3 +236,18 @@ def sample_sphere(r,npoints, ndim=3):
 
 
 
+#%% RMSE
+
+def rmse(f,ff):
+    # pdb.set_trace()
+    rm=[]
+    rms=[]
+    # ind_rm=0
+    sum_rm=[]
+    # for ffi,fi in zip(ff,f):
+    # pdb.set_trace()
+    rm=([(np.array(ff)-np.array(f))**2])
+    rms=(np.sqrt(np.sum(rm)/len(ff)))
+    # ind_rm=ind_rm+1
+    # pdb.set_trace()
+    return np.array(rms)

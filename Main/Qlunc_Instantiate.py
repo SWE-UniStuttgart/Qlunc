@@ -174,6 +174,7 @@ ADC = analog2digital_converter (name     = Qlunc_yaml_inputs['Components']['ADC'
                                 vref     = Qlunc_yaml_inputs['Components']['ADC']['Reference voltage'],
                                 vground  = Qlunc_yaml_inputs['Components']['ADC']['Ground voltage'],
                                 q_error  = Qlunc_yaml_inputs['Components']['ADC']['Quantization error'],
+                                ADC_bandwidth = Qlunc_yaml_inputs['Components']['ADC']['ADC Bandwidth'],
                                 unc_func = uspc.UQ_ADC)
 
 Signal_processor_Module = signal_processor(name                     = Qlunc_yaml_inputs['Modules']['Signal processor Module']['Name'],
