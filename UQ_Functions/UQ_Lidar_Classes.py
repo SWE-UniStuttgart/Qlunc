@@ -85,6 +85,20 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             print(colored('No power module in calculations!','cyan', attrs=['bold']))
     else:
         print(colored('You didn´t include a power module in  the lidar','cyan', attrs=['bold']))
+    if Lidar.signal_processor != None:        
+        try:
+            # pdb.set_trace()
+            SignalProcessor_Uncertainty,DataFrame = Lidar.signal_processor.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+            # pdb.set_trace()
+            List_Unc_lidar.append(SignalProcessor_Uncertainty['Uncertainty_SignalProcessor']*len(Atmospheric_Scenario.temperature))
+        
+        except:
+            SignalProcessor_Uncertainty = None
+            print(colored('No signal processor module in calculations!','cyan', attrs=['bold']))
+    else:
+        print(colored('You didn´t include a signal processor module in  the lidar','cyan', attrs=['bold']))    
+    
+    
     # pdb.set_trace()
     # if Lidar.wfr_model != None:
     #     try:
