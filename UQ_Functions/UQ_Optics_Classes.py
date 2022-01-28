@@ -123,7 +123,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             # Create white noise with stdv selected by user:
             n=10000 # Number of cases to combine           
             # Position, due to pointing accuracy
-            del_param1 = np.array(np.random.normal(0,stdv_param1,n)) # why a normal distribution??Does it have sense, can be completely random?
+            del_param1 = np.array(np.random.normal(0,stdv_param1,n)) # why a normal distribution??Does it have sense, can be completely random? --> Because of the central limit theorem!
             del_param2 = np.array(np.random.normal(0,stdv_param2,n))
             del_param3 = np.array(np.random.normal(0,stdv_param3,n))                        
             
