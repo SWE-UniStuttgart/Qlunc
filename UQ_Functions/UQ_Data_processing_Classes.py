@@ -91,11 +91,11 @@ def UQ_WFR (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scan_Unc):
     ax.set_ylabel('y',fontsize=15)
     ax.set_zlabel('z',fontsize=15)
     
-    angley_ref=0
-    anglez_ref=0
-    LOS_ref=  ((np.matrix([[np.cos(np.deg2rad(anglez_ref))*np.cos(np.deg2rad(angley_ref)), -np.cos(np.deg2rad(anglez_ref))*np.sin(np.deg2rad(angley_ref)), np.sin(np.deg2rad(anglez_ref))   ],\
-                           [                    np.sin(np.deg2rad(angley_ref)),                          np.cos(np.deg2rad(angley_ref)),                               0                 ],\
-                           [ np.cos(np.deg2rad(anglez_ref))*np.sin(np.deg2rad(angley_ref)), -np.sin(np.deg2rad(anglez_ref))*np.sin(np.deg2rad(angley_ref)), np.cos(np.deg2rad(anglez_ref))] ]))**-1)
+    # angley_ref=0
+    # anglez_ref=0
+    # LOS_ref=  ((np.matrix([[np.cos(np.deg2rad(anglez_ref))*np.cos(np.deg2rad(angley_ref)), -np.cos(np.deg2rad(anglez_ref))*np.sin(np.deg2rad(angley_ref)), np.sin(np.deg2rad(anglez_ref))   ],\
+    #                        [                    np.sin(np.deg2rad(angley_ref)),                          np.cos(np.deg2rad(angley_ref)),                               0                 ],\
+    #                        [ np.cos(np.deg2rad(anglez_ref))*np.sin(np.deg2rad(angley_ref)), -np.sin(np.deg2rad(anglez_ref))*np.sin(np.deg2rad(angley_ref)), np.cos(np.deg2rad(anglez_ref))] ]))**-1)
     for r_sphere in range (len(Scan_Unc['Simu_Mean_Distance_Error'])):
         # Sphere characteristics
         radius   = Scan_Unc['Simu_Mean_Distance_Error'][r_sphere]
@@ -113,9 +113,10 @@ def UQ_WFR (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scan_Unc):
         
         # Plot spheres around the theoretical measuring points
         ax.plot_wireframe(x, y, z, color='k', rstride=1, cstride=1)
-        # pdb.set_trace()
-    # Coordinates of the points on the sphere surface for each point in the pattern  
+    pdb.set_trace()
     
+    
+    # Coordinates of the points on the sphere surface for each point in the pattern      
     for p_sphere in range(len(zi)):
         xi0 = xi[p_sphere]
         yi0 = yi[p_sphere]
@@ -176,12 +177,12 @@ def UQ_WFR (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scan_Unc):
         # dangleZ_or = np.sqrt((((1/X)/(1+(Z/X)**2))*.1)**2+(((Z/X**2)/(1+(Z/X)**2))*.1)**2)
         # Unc_U_or.append(np.sqrt((angley_or*dU_dangleY_or*dangleY_or)**2+(anglez_or*dU_dangleZ_or*dangleZ_or)**2))
        
-        # pdb.set_trace()
+        pdb.set_trace()
         
         # Wind field reconstruction 
         if Lidar.wfr_model.reconstruction_model=='Flat':
             Val_recon_sphP=[]
-            # Vectors: vectors of the points on the sphere surface for x and their uncertainty           
+            # Vectors: vectors of the points on the sphere surface for x,y,z and their uncertainty (cartesian coordinate system)      
             Mes_vector_X,Mes_vector_Y,Mes_vector_Z =  (xi0-Lidar.optics.scanner.origin[0],yi0-Lidar.optics.scanner.origin[1],zi0-Lidar.optics.scanner.origin[2]) 
 
             # Errors in measurement due to the location error (GPS)
@@ -200,7 +201,7 @@ def UQ_WFR (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scan_Unc):
                 
                 # Value of the transformation for the points on the sphere surface. Error due to pointing accuracy
                 Val_recon_sphP.append(LOS_2_I[0].sum())
-                
+                pdb.set_trace()
                 # # Reconstruction uncertainty following GUM: Since final velocity is the result of a linear relation between transformation matrix and LOS velocities it is enough to assess the uncertainty of the reconstruction matrix, avoiding to give a 
                 # # value for the velocity vector. The uncertainty will be linearly proportional to the velocity vector:
                 # # Then, assuming v=w=0 only the first row of the reconstruction matrix is needed.
@@ -230,7 +231,7 @@ def UQ_WFR (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scan_Unc):
     UQ_WFR.STDV_WFR= STD_WFR
     UQ_WFR.RelSTDV_WFR=RelSTD_WFR
     #RMSE
-    pdb.set_trace()
+    # pdb.set_trace()
     for ind_val in range (len(Val_recon_theoP)):
         if round (Val_recon_theoP[ind_val][0],6)!=1:
             RMSE_pointingacc = SA.rmse(Val_recon_theoP[ind_val],Total_val_recon[ind_val])    
@@ -239,15 +240,15 @@ def UQ_WFR (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scan_Unc):
             RMSE.append(np.array(RMSE_pointingacc + RMSE_recon))
             
             # RMSE.append( np.sqrt(RMSE_pointingacc**2+RMSE_recon**2))
-            pdb.set_trace()
+            # pdb.set_trace()
         else:
             # pdb.set_trace()
             RMSE_pointingacc = SA.rmse(Val_recon_theoP[ind_val],Total_val_recon[ind_val])
             
             RMSE.append( RMSE_pointingacc)
-            pdb.set_trace()
+            # pdb.set_trace()
     UQ_WFR.RMSE = RMSE
-    pdb.set_trace()
+    # pdb.set_trace()
     # UQ_WFR.RMSE_WFR = (SA.rmse( Mean_Total_val_recon,Total_val_recon))
     
     
