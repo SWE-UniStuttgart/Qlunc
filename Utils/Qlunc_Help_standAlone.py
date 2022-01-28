@@ -100,20 +100,25 @@ def unc_comb(data):
     # pdb.set_trace()
     if not isinstance (data,np.ndarray):
         data=np.array(data)    
-    for data_row in range(np.shape(data)[0]):# transform into watts        
-        try:    
-            data_db=data[data_row,:]
-        except:
-            data_db=data[data_row][0]             
-        data_watts.append(10**(data_db/10))
-    for i in range(len(data_watts[0])): # combining all uncertainties making sum of squares and the sqrt of the sum
-        zipped_data.append(list(zip(*data_watts))[i])
-        res_watts.append(np.sqrt(sum(map (lambda x: x**2,zipped_data[i])))) #  Combined stdv
-        # res_watts.append(sum(map (lambda x: x**2,zipped_data[i]))) #   Combined Variance
-        
-        res_dB=10*np.log10(res_watts) #Convert into dB 
-    # pdb.set_trace()
-    del data_db
+    
+    if len(data)==1:
+        res_dB = list(data)
+    else:
+        for data_row in range(np.shape(data)[0]):# transform into watts        
+            try:    
+                data_db=data[data_row,:]
+            except:
+                data_db=data[data_row][0]             
+            data_watts.append(10**(data_db/10))
+        for i in range(len(data_watts[0])): # combining all uncertainties making sum of squares and the sqrt of the sum
+            zipped_data.append(list(zip(*data_watts))[i])
+            res_watts.append(np.sqrt(sum(map (lambda x: x**2,zipped_data[i])))) #  Combined stdv
+            # res_watts.append(sum(map (lambda x: x**2,zipped_data[i]))) #   Combined Variance
+            
+            res_dB=10*np.log10(res_watts) #Convert into dB 
+        # pdb.set_trace()
+        del data_db
+    pdb.set_trace()
     return np.array(res_dB)
 
 #%% System coordinates transformation
