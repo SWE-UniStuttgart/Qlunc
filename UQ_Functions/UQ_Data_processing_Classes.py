@@ -113,7 +113,7 @@ def UQ_WFR (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scan_Unc):
         
         # Plot spheres around the theoretical measuring points
         ax.plot_wireframe(x, y, z, color='k', rstride=1, cstride=1)
-    pdb.set_trace()
+    # pdb.set_trace()
     
     
     # Coordinates of the points on the sphere surface for each point in the pattern      
@@ -177,7 +177,7 @@ def UQ_WFR (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scan_Unc):
         # dangleZ_or = np.sqrt((((1/X)/(1+(Z/X)**2))*.1)**2+(((Z/X**2)/(1+(Z/X)**2))*.1)**2)
         # Unc_U_or.append(np.sqrt((angley_or*dU_dangleY_or*dangleY_or)**2+(anglez_or*dU_dangleZ_or*dangleZ_or)**2))
        
-        pdb.set_trace()
+        # pdb.set_trace()
         
         # Wind field reconstruction 
         if Lidar.wfr_model.reconstruction_model=='Flat':
@@ -201,7 +201,7 @@ def UQ_WFR (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scan_Unc):
                 
                 # Value of the transformation for the points on the sphere surface. Error due to pointing accuracy
                 Val_recon_sphP.append(LOS_2_I[0].sum())
-                pdb.set_trace()
+                # pdb.set_trace()
                 # # Reconstruction uncertainty following GUM: Since final velocity is the result of a linear relation between transformation matrix and LOS velocities it is enough to assess the uncertainty of the reconstruction matrix, avoiding to give a 
                 # # value for the velocity vector. The uncertainty will be linearly proportional to the velocity vector:
                 # # Then, assuming v=w=0 only the first row of the reconstruction matrix is needed.
