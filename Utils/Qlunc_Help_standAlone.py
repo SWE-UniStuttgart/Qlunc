@@ -118,7 +118,7 @@ def unc_comb(data):
             res_dB=10*np.log10(res_watts) #Convert into dB 
         # pdb.set_trace()
         del data_db
-    pdb.set_trace()
+    # pdb.set_trace()
     return np.array(res_dB)
 
 #%% System coordinates transformation
