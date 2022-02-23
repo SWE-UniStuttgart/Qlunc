@@ -19,12 +19,12 @@ MC=1
 #%% MONTECARLO METHOD
 # Define inputs
 if MC==1:
-    pointY=np.linspace(100,350,1000)
+    pointY=np.linspace(100,350,200)
     pointX=100*np.ones(len(pointY))
     # pointX=[100]
     # pointY=[10,]
     alpha0=.1 # shear exponent
-    N=20000#number of points to simulate
+    N=100000#number of points to simulate
     V_h   = 12.5 # reference horizontal velocity in [m/s]
     
     stdv_X = 0
@@ -85,9 +85,9 @@ if MC==1:
         Vrad_shear.append(np.multiply(term_h,term_sh))
         Vh_rec_shear.append(np.divide(Vrad_shear[ind_npoints],(math.cos(np.deg2rad(angles[ind_npoints])))) )
         
-        # Uncertainty            
-        U_Vh_shear.append([np.std(Vh_rec_shear[ind_stdv]) for ind_stdv in range(len(Vh_rec_shear))])
-        U_Vrad_shear.append([np.std(Vrad_shear[ind_stdv]) for ind_stdv in range(len(Vh_rec_shear))])
+    # Uncertainty            
+    U_Vh_shear.append([np.std(Vh_rec_shear[ind_stdv]) for ind_stdv in range(len(Vh_rec_shear))])
+    U_Vrad_shear.append([np.std(Vrad_shear[ind_stdv]) for ind_stdv in range(len(Vh_rec_shear))])
     # print(['U_Shear: ', U_Vh_shear[0]])
     # pdb.set_trace()
     
@@ -101,7 +101,7 @@ if MC==1:
     # ax.set_ylabel('Uncertainty')
     # ax.grid(axis='both')
     # plt.title('Vh Uncertainty')
-    # pdb.set_trace()
+    # 
     fig,ax1=plt.subplots()
     # for ind_al in range(len(alpha0)):
     # pdb.set_trace()
@@ -112,7 +112,7 @@ if MC==1:
     ax1.set_ylabel('Uncertainty [%]')
     ax1.grid(axis='both')
     plt.title('Vh Uncertainty')
-    
+    pdb.set_trace()
     # fig,ax2=plt.subplots()
     # ax2.plot(pointY,U_Vrad_homo[0],'-b' ,label='U_homo')
     # ax2.plot(pointY,U_Vrad_shear[0],'-r' ,label='U_shear')
