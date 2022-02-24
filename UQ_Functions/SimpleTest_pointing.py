@@ -22,9 +22,9 @@ from matplotlib.pyplot import cm
 GUM=1
 MC=1
 #%% Define inputs
-# theta =np.linspace(0,86,100)
-# stdv_theta = np.radians(.0573)
-# alpha =np.round(np.linspace(.1,.5,5),3)
+theta =np.linspace(0,86,100)
+stdv_theta = np.radians(.0573)
+alpha =np.round(np.linspace(.1,.5,5),3)
 pointY=np.linspace(0,350,500)
 pointX=100*np.ones(len(pointY))
 alpha=np.array([.1,.15,.2,.25]) # shear exponent
@@ -49,14 +49,12 @@ for ind_points in range(len(pointX)):
     distance.append (np.sqrt(pointX[ind_points]**2+pointY[ind_points]**2))
     theta.append(np.rad2deg(math.asin(pointY[ind_points]/distance[ind_points])))
     # noisy:
-    distance_noisy.append((np.sqrt(pointX_noisy[ind_points]**2+pointY_noisy[ind_points]**2)))
+    distance_noisy.append(np.sqrt(pointX_noisy[ind_points]**2+pointY_noisy[ind_points]**2))
     argm=np.divide(pointY_noisy[ind_points],distance[ind_points])
     theta_noisy.append([(np.rad2deg(math.asin(argm[ind_arg]))) for ind_arg in range(len(argm))])
 
+stdv_theta=np.radians(np.round(np.mean([np.std(theta_noisy[ind_angle]) for ind_angle in range(len(theta_noisy))]),4))
 
-# distance = 100
-stdv_theta=.01#np.round(np.mean([np.std(theta_noisy[ind_angle]) for ind_angle in range(len(theta_noisy))]),4)/(N)
-# pdb.set_trace()
 #%% MONTECARLO METHOD
 # Define inputs
 if MC==1:
@@ -88,7 +86,7 @@ if MC==1:
     Vrad_shear = []
     # Vh_rec_shear=[]
     U_Vh_shear,U_Vrad_shear=[],[]
-    for ind_npoints in range(len(pointX)):
+    for ind_npoints in range(len(distance)):
         term_sh = np.divide(H2[ind_npoints],H[ind_npoints])**alpha[0]
         term_h  = np.multiply(Vh,np.cos(np.radians(theta_noisy[ind_npoints])))
         # pdb.set_trace()
