@@ -28,7 +28,7 @@ alpha =np.round(np.linspace(.1,.5,5),3)
 pointY=np.linspace(0,350,500)
 pointX=100*np.ones(len(pointY))
 alpha=np.array([.1,.15,.2,.25]) # shear exponent
-N=20000#number of points for the MC simultion
+N=200000#number of points for the MC simultion
 Vh   = 12.5
 
 
@@ -205,10 +205,10 @@ if MC==1 and GUM==1:
     color=iter(cm.rainbow(np.linspace(0,1,len(alpha))))   
     for ind_a in range(len(alpha)):
         c=next(color)
-        ax2.plot(theta,U_Vrad_sh[ind_a],'r-.',label='U Shear GUM  ({})'.format(alpha[ind_a]),c=c)
+        ax2.plot(theta,U_Vrad_sh[ind_a],'r-',label='U Shear GUM  ({})'.format(alpha[ind_a]),c=c)
     
-    ax2.plot(theta,U_Vrad_homo[0],'x-b' ,label='U uniform MC')
-    ax2.plot(theta,U_Vrad_shear[0],'+-r' ,label='U shear MC')
+    ax2.plot(theta,U_Vrad_homo[0],'ob' , markerfacecolor=(1, 1, 0, 0.5),label='U uniform MC')
+    ax2.plot(theta,U_Vrad_shear[0],'or' , markerfacecolor=(1, 1, 0, 0.5),label='U shear MC')
     ax2.legend()
     ax2.set_xlabel('Theta [°]')
     ax2.set_ylabel('Uncertainty [%]')
