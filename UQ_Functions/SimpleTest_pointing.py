@@ -28,12 +28,12 @@ MC=1
 pointY=np.linspace(0,350,500)
 pointX=100*np.ones(len(pointY))
 alpha=np.array([.1,.15,.2,.25]) # shear exponent
-N=2000#number of points for the MC simultion
+N=20000#number of points for the MC simultion
 Vh   = 12.5
 
 
 stdv_X = 0
-stdv_Y = .1
+stdv_Y = 1
 pointX_noisy=[]
 pointY_noisy=[]
 distance=[]
@@ -53,7 +53,9 @@ for ind_points in range(len(pointX)):
     argm=np.divide(pointY_noisy[ind_points],distance[ind_points])
     theta_noisy.append([(np.rad2deg(math.asin(argm[ind_arg]))) for ind_arg in range(len(argm))])
 
-stdv_theta=np.round(np.mean([np.std(theta_noisy[ind_angle]) for ind_angle in range(len(theta_noisy))]),4)
+
+# distance = 100
+stdv_theta=.01#np.round(np.mean([np.std(theta_noisy[ind_angle]) for ind_angle in range(len(theta_noisy))]),4)/(N)
 # pdb.set_trace()
 #%% MONTECARLO METHOD
 # Define inputs
@@ -63,9 +65,9 @@ if MC==1:
     
     # Calculate radial speed
     Vrad_homo = []
-    # Vrad_homo=([Vh*np.cos(np.radians(theta_noisy[ind_theta])) for ind_theta in range (len(theta_noisy))])
-    Vrad_homo=[Vh for ind_theta in range (len(theta_noisy))]
-
+    Vrad_homo=([Vh*np.cos(np.radians(theta_noisy[ind_theta])) for ind_theta in range (len(theta_noisy))])
+    # Vrad_homo=[Vh for ind_theta in range (len(theta_noisy))]
+    # pdb.set_trace()
     # simulation to get reconstructed Vh from the simulated points
     Vh_rec_homo=[]
     for index_vrad in range(len(theta)):      
@@ -80,7 +82,7 @@ if MC==1:
     
     # Calculate the hights
     H  = [np.multiply(distance[ind_mul],np.sin(np.deg2rad(theta[ind_mul]))) for ind_mul in range(len(theta_noisy)) ] # Original heights
-    H2 = [np.multiply(distance_noisy[ind_mul],np.sin(np.deg2rad(theta_noisy[ind_mul]))) for ind_mul in range(len(theta_noisy))] # Noisy heights
+    H2 = [np.multiply(distance[ind_mul],np.sin(np.deg2rad(theta_noisy[ind_mul]))) for ind_mul in range(len(theta_noisy))] # Noisy heights
     
     # Calculate radial speed
     Vrad_shear = []
@@ -103,8 +105,8 @@ if GUM==1:
    
     # Homogeneous flow
     U_Vrad,U_Vh=[],[]
-    # U_Vrad.append([Vh*np.cos(np.radians(theta[ind_u]))*np.tan(np.radians(theta[ind_u]))*stdv_theta for ind_u in range(len(theta))])
-    U_Vrad.append([np.tan(np.radians(theta[ind_u]))*stdv_theta for ind_u in range(len(theta))])
+    U_Vrad.append([Vh*np.cos(np.radians(theta[ind_u]))*np.tan(np.radians(theta[ind_u]))*stdv_theta for ind_u in range(len(theta))])
+    # U_Vrad.append([np.tan(np.radians(theta[ind_u]))*stdv_theta for ind_u in range(len(theta))])
 
     # U_Vh.append([Vh*np.tan(np.radians(theta[ind_u]))*stdv_theta for ind_u in range(len(theta))])
     
