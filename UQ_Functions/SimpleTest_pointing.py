@@ -13,19 +13,30 @@ import pdb
 import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.pyplot import cm
-GUM=0
-MC=1
+GUM=1
+MC=0
+# Define inputs
+theta =np.linspace(0,86,100)
+stdv_angle = np.radians(.0573)
 
+# alpha =np.round(np.linspace(.1,.5,5),3)
+pointY=np.linspace(100,350,1000)
+pointX=100*np.ones(len(pointY))
+# pointX=[100]
+# pointY=[10,]
+alpha=np.array([.1]) # shear exponent
+N=20#number of points to simulate
+Vh   = 12.5
 #%% MONTECARLO METHOD
 # Define inputs
 if MC==1:
-    pointY=np.linspace(100,350,1000)
-    pointX=100*np.ones(len(pointY))
-    # pointX=[100]
-    # pointY=[10,]
-    alpha0=.1 # shear exponent
-    N=200000#number of points to simulate
-    V_h   = 12.5 # reference horizontal velocity in [m/s]
+    # pointY=np.linspace(100,350,1000)
+    # pointX=100*np.ones(len(pointY))
+    # # pointX=[100]
+    # # pointY=[10,]
+    # alpha0=.1 # shear exponent
+    # N=200000#number of points to simulate
+    # Vh   = 12.5 # reference horizontal velocity in [m/s]
     
     stdv_X = 0
     stdv_Y = .1
@@ -54,7 +65,7 @@ if MC==1:
     
     # Calculate radial speed
     Vrad_homo = []
-    Vrad_homo=([V_h*np.cos(np.radians(angles_noisy[ind_theta])) for ind_theta in range (len(angles_noisy))])
+    Vrad_homo=([Vh*np.cos(np.radians(angles_noisy[ind_theta])) for ind_theta in range (len(angles_noisy))])
     
     # simulation to get reconstructed Vh from the simulated points
     Vh_rec_homo=[]
@@ -66,7 +77,7 @@ if MC==1:
     U_Vh_homo.append([np.std(Vh_rec_homo[ind_stdv]) for ind_stdv in range(len(Vh_rec_homo))])
     U_Vrad_homo.append([np.std(Vrad_homo[ind_stdv]) for ind_stdv in range(len(Vrad_homo))])
     # print(['U_Vh: ', U_Vh_homo[0]])
-    pdb.set_trace()
+    # pdb.set_trace()
     # Including shear model
     
     # Calculate the hights
@@ -79,8 +90,8 @@ if MC==1:
     U_Vh_shear,U_Vrad_shear=[],[]
     # for ind_alpha in alpha0:
     for ind_npoints in range(len(pointX)):
-        term_sh = np.divide(H2[ind_npoints],H[ind_npoints])**alpha0
-        term_h  = np.multiply(V_h,np.cos(np.radians(angles_noisy[ind_npoints])))
+        term_sh = np.divide(H2[ind_npoints],H[ind_npoints])**alpha[0]
+        term_h  = np.multiply(Vh,np.cos(np.radians(angles_noisy[ind_npoints])))
         # pdb.set_trace()
         Vrad_shear.append(np.multiply(term_h,term_sh))
         Vh_rec_shear.append(np.divide(Vrad_shear[ind_npoints],(math.cos(np.deg2rad(angles[ind_npoints])))) )
@@ -135,11 +146,11 @@ if MC==1:
 #%% GUM ASSESSMENT
 
 if GUM==1:
-    # Define inputs
-    theta =np.linspace(0,86,1000)
-    stdv_angle = np.radians(.0573)
-    Vh    = 12.5
-    alpha =np.round(np.linspace(.1,.5,5),3)
+    # # Define inputs
+    # theta =np.linspace(0,86,1000)
+    # stdv_angle = np.radians(.0573)
+    # Vh    = 12.5
+    # alpha =np.round(np.linspace(.1,.5,5),3)
     
     # Uncertainty (GUM)
     
