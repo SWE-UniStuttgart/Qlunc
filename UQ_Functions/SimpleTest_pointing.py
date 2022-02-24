@@ -23,17 +23,17 @@ GUM=1
 MC=1
 #%% Define inputs
 theta =np.linspace(0,86,100)
-stdv_theta = np.radians(.0573)
-alpha =np.round(np.linspace(.1,.5,5),3)
+
+# alpha =np.round(np.linspace(.06,.2,.5),3)
 pointY=np.linspace(0,350,500)
-pointX=100*np.ones(len(pointY))
-alpha=np.array([.1,.15,.2,.25]) # shear exponent
-N=200000#number of points for the MC simultion
-Vh   = 12.5
+pointX=231*np.ones(len(pointY))
+alpha=np.array([.03,.25,.134,.33]) # shear exponent
+N=2000#number of points for the MC simultion
+Vh   = 8.5
 
 
-stdv_X = 0
-stdv_Y = 1
+stdv_X = .01
+stdv_Y = 0.58
 pointX_noisy=[]
 pointY_noisy=[]
 distance=[]
