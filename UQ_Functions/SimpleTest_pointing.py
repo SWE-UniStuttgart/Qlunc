@@ -19,12 +19,12 @@ MC=1
 #%% MONTECARLO METHOD
 # Define inputs
 if MC==1:
-    pointY=np.linspace(100,350,200)
+    pointY=np.linspace(100,350,1000)
     pointX=100*np.ones(len(pointY))
     # pointX=[100]
     # pointY=[10,]
     alpha0=.1 # shear exponent
-    N=100000#number of points to simulate
+    N=200000#number of points to simulate
     V_h   = 12.5 # reference horizontal velocity in [m/s]
     
     stdv_X = 0
@@ -66,7 +66,7 @@ if MC==1:
     U_Vh_homo.append([np.std(Vh_rec_homo[ind_stdv]) for ind_stdv in range(len(Vh_rec_homo))])
     U_Vrad_homo.append([np.std(Vrad_homo[ind_stdv]) for ind_stdv in range(len(Vrad_homo))])
     # print(['U_Vh: ', U_Vh_homo[0]])
-    
+    pdb.set_trace()
     # Including shear model
     
     # Calculate the hights
@@ -105,14 +105,14 @@ if MC==1:
     fig,ax1=plt.subplots()
     # for ind_al in range(len(alpha0)):
     # pdb.set_trace()
-    ax1.plot(angles,U_Vh_homo[0],'-b' ,label='U_homo')
-    ax1.plot(angles,U_Vh_shear[0],'-r' ,label='U_shear')
+    ax1.plot(angles,U_Vh_homo[0],'x-b' ,label='U_homo')
+    ax1.plot(angles,U_Vh_shear[0],'+-r' ,label='U_shear')
     ax1.legend()
     ax1.set_xlabel('Theta [°]')
     ax1.set_ylabel('Uncertainty [%]')
     ax1.grid(axis='both')
     plt.title('Vh Uncertainty')
-    pdb.set_trace()
+    # pdb.set_trace()
     # fig,ax2=plt.subplots()
     # ax2.plot(pointY,U_Vrad_homo[0],'-b' ,label='U_homo')
     # ax2.plot(pointY,U_Vrad_shear[0],'-r' ,label='U_shear')
@@ -123,8 +123,8 @@ if MC==1:
     # plt.title('Vrad Uncertainty')
     
     fig,ax3=plt.subplots()
-    ax3.plot(angles,U_Vrad_homo[0],'-b' ,label='U_homo')
-    ax3.plot(angles,U_Vrad_shear[0],'-r' ,label='U_shear')
+    ax3.plot(angles,U_Vrad_homo[0],'x-b' ,label='U_homo')
+    ax3.plot(angles,U_Vrad_shear[0],'+-r' ,label='U_shear')
     ax3.legend()
     ax3.set_xlabel('Theta [°]')
     ax3.set_ylabel('Uncertainty [%]')
@@ -134,60 +134,60 @@ if MC==1:
 
 #%% GUM ASSESSMENT
 
-# if GUM==1:
-#     # Define inputs
-#     theta =np.linspace(0,86,1000)
-#     stdv_angle = np.radians(.0573)
-#     Vh    = 12.5
-#     alpha =np.round(np.linspace(.1,.5,5),3)
+if GUM==1:
+    # Define inputs
+    theta =np.linspace(0,86,1000)
+    stdv_angle = np.radians(.0573)
+    Vh    = 12.5
+    alpha =np.round(np.linspace(.1,.5,5),3)
     
-#     # Uncertainty (GUM)
+    # Uncertainty (GUM)
     
-#     # Uniform flow
-#     U_Vrad,U_Vh=[],[]
-#     # U_Vrad.append([Vh*np.sin(np.radians(theta[ind_u]))*stdv_angle for ind_u in range(len(theta))])
-#     U_Vrad.append([100*np.cos(np.radians(theta[ind_u]))*np.tan(np.radians(theta[ind_u]))*stdv_angle for ind_u in range(len(theta))])
-#     # pdb.set_trace()
-#     U_Vh.append([100*np.tan(np.radians(theta[ind_u]))*stdv_angle for ind_u in range(len(theta))])
+    # Uniform flow
+    U_Vrad,U_Vh=[],[]
+    # U_Vrad.append([Vh*np.sin(np.radians(theta[ind_u]))*stdv_angle for ind_u in range(len(theta))])
+    U_Vrad.append([100*np.cos(np.radians(theta[ind_u]))*np.tan(np.radians(theta[ind_u]))*stdv_angle for ind_u in range(len(theta))])
+    # pdb.set_trace()
+    U_Vh.append([100*np.tan(np.radians(theta[ind_u]))*stdv_angle for ind_u in range(len(theta))])
     
-#     # Including shear:
-#     U_Vrad_sh,U_Vh_sh = [],[]
-#     for ind_alpha in alpha:
-#         # 
-#         U_Vrad_sh.append([100*np.cos(np.radians(theta[ind_u]))*stdv_angle*abs((ind_alpha/math.tan(np.radians(theta[ind_u])))-np.tan(np.radians(theta[ind_u])) ) for ind_u in range(len(theta))])
-#         U_Vh_sh.append([100*stdv_angle*abs((ind_alpha/math.tan(np.radians(theta[ind_u])))-np.tan(np.radians(theta[ind_u])) ) for ind_u in range(len(theta))])
+    # Including shear:
+    U_Vrad_sh,U_Vh_sh = [],[]
+    for ind_alpha in alpha:
+        # 
+        U_Vrad_sh.append([100*np.cos(np.radians(theta[ind_u]))*stdv_angle*abs((ind_alpha/math.tan(np.radians(theta[ind_u])))-np.tan(np.radians(theta[ind_u])) ) for ind_u in range(len(theta))])
+        U_Vh_sh.append([100*stdv_angle*abs((ind_alpha/math.tan(np.radians(theta[ind_u])))-np.tan(np.radians(theta[ind_u])) ) for ind_u in range(len(theta))])
     
-#         # U_Vh_sh.append([(Vh*np.tan(np.radians(theta[ind_u]))+ind_alpha*math.atan(np.radians(theta[ind_u])))*stdv_angle for ind_u in range(len(theta))])
-#         # U_Vh_sh.append([(ind_alpha*math.atan(np.radians(theta[ind_u])))*stdv_angle for ind_u in range(len(theta))])
-#         # pdb.set_trace()
-#         # U_Vh_sh.append([ind_alpha*(()**alpha) for ind_u in range(len(theta))])
+        # U_Vh_sh.append([(Vh*np.tan(np.radians(theta[ind_u]))+ind_alpha*math.atan(np.radians(theta[ind_u])))*stdv_angle for ind_u in range(len(theta))])
+        # U_Vh_sh.append([(ind_alpha*math.atan(np.radians(theta[ind_u])))*stdv_angle for ind_u in range(len(theta))])
+        # pdb.set_trace()
+        # U_Vh_sh.append([ind_alpha*(()**alpha) for ind_u in range(len(theta))])
         
     
-#     # Plot errors
-#     color=iter(cm.rainbow(np.linspace(0,1,len(alpha))))
-#     fig,axs1 = plt.subplots()  
-#     axs1.plot(theta,U_Vrad[0],'b-',label='Uniform flow')
-#     for ind_a in range(len(alpha)):
-#         c=next(color)
-#         axs1.plot(theta,U_Vrad_sh[ind_a],'r-.',label='Shear ({})'.format(alpha[ind_a]),c=c)
+    # Plot errors
+    color=iter(cm.rainbow(np.linspace(0,1,len(alpha))))
+    fig,axs1 = plt.subplots()  
+    axs1.plot(theta,U_Vrad[0],'b-',label='Uniform flow')
+    for ind_a in range(len(alpha)):
+        c=next(color)
+        axs1.plot(theta,U_Vrad_sh[ind_a],'r-.',label='Shear ({})'.format(alpha[ind_a]),c=c)
     
-#     axs1.set_xlabel('theta [°]',fontsize=25)
-#     axs1.set_ylabel('U [%]',fontsize=25)
-#     plt.title('Uncertainty in radial velocity',fontsize=29)
-#     axs1.legend()
-#     axs1.grid(axis='both')
+    axs1.set_xlabel('theta [°]',fontsize=25)
+    axs1.set_ylabel('U [%]',fontsize=25)
+    plt.title('Uncertainty in radial velocity',fontsize=29)
+    axs1.legend()
+    axs1.grid(axis='both')
     
-#     color=iter(cm.rainbow(np.linspace(0,1,len(alpha))))
+    color=iter(cm.rainbow(np.linspace(0,1,len(alpha))))
     
-#     fig,axs2 = plt.subplots()  
-#     axs2.plot(theta,U_Vh[0],'b-',label='Uniform flow')
-#     for ind_a in range(len(alpha)):
-#         c=next(color)
-#         axs2.plot(theta,U_Vh_sh[ind_a],'r-.',label='Shear ({})'.format(alpha[ind_a]),c=c)
+    fig,axs2 = plt.subplots()  
+    axs2.plot(theta,U_Vh[0],'b-',label='Uniform flow')
+    for ind_a in range(len(alpha)):
+        c=next(color)
+        axs2.plot(theta,U_Vh_sh[ind_a],'r-.',label='Shear ({})'.format(alpha[ind_a]),c=c)
     
-#     axs2.set_xlabel('theta [°]',fontsize=25)
-#     axs2.set_ylabel('U [%]',fontsize=25)
+    axs2.set_xlabel('theta [°]',fontsize=25)
+    axs2.set_ylabel('U [%]',fontsize=25)
     
-#     plt.title('Uncertainty in horizontal velocity',fontsize=29)
-#     axs2.legend()
-#     axs2.grid(axis='both')
+    plt.title('Uncertainty in horizontal velocity',fontsize=29)
+    axs2.legend()
+    axs2.grid(axis='both')
