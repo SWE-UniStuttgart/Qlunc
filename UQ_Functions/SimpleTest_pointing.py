@@ -20,7 +20,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.pyplot import cm
 GUM=1
-MC=1
+MC=0
+PL=0
+Linear=1
 #%% Define inputs
 theta =np.linspace(0,86,100)
 
@@ -30,8 +32,6 @@ pointX=231*np.ones(len(pointY))
 alpha=np.array([.03,.25,.134,.33]) # shear exponent
 N=2000#number of points for the MC simultion
 Vh   = 8.5
-
-
 stdv_X = .01
 stdv_Y = 0.58
 pointX_noisy=[]
@@ -77,26 +77,46 @@ if MC==1:
     U_Vrad_homo.append([np.std(Vrad_homo[ind_stdv])  for ind_stdv in range(len(Vrad_homo))])
 
     # Including shear model
-    
+    U_Vh_PL,U_Vrad_Sh=[],[]
     # Calculate the hights
-    H  = [np.multiply(distance[ind_mul],np.sin(np.deg2rad(theta[ind_mul]))) for ind_mul in range(len(theta_noisy)) ] # Original heights
-    H2 = [np.multiply(distance[ind_mul],np.sin(np.deg2rad(theta_noisy[ind_mul]))) for ind_mul in range(len(theta_noisy))] # Noisy heights
-    
-    # Calculate radial speed
-    Vrad_shear = []
-    # Vh_rec_shear=[]
-    U_Vh_shear,U_Vrad_shear=[],[]
-    for ind_npoints in range(len(distance)):
-        term_sh = np.divide(H2[ind_npoints],H[ind_npoints])**alpha[0]
-        term_h  = np.multiply(Vh,np.cos(np.radians(theta_noisy[ind_npoints])))
-        # pdb.set_trace()
-        Vrad_shear.append(np.multiply(term_h,term_sh))
-        # Vh_rec_shear.append(np.divide(Vrad_shear[ind_npoints],(math.cos(np.deg2rad(theta[ind_npoints])))) )
+    H0 = [np.multiply(distance[ind_mul],np.sin(np.deg2rad(theta[ind_mul]))) for ind_mul in range(len(theta_noisy)) ] # Original heights
+    H  = [np.multiply(distance[ind_mul],np.sin(np.deg2rad(theta_noisy[ind_mul]))) for ind_mul in range(len(theta_noisy))] # Noisy heights
         
-    # Uncertainty            
-    # U_Vh_shear.append([np.std(Vh_rec_shear[ind_stdv])*Vh for ind_stdv in range(len(Vh_rec_shear))])
-    U_Vrad_shear.append([np.std(Vrad_shear[ind_stdv]) for ind_stdv in range(len(Vrad_shear))])
-   
+    if PL ==1:
+        # Power Law model
+        
+        # Calculate radial speed
+        Vrad_PL = []
+        # Vh_rec_shear=[]
+
+        for ind_npoints in range(len(distance)):
+            term_sh = np.divide(H[ind_npoints],H0[ind_npoints])**alpha[0]
+            term_h  = np.multiply(Vh,np.cos(np.radians(theta_noisy[ind_npoints])))
+            # pdb.set_trace()
+            Vrad_PL.append(np.multiply(term_h,term_sh))
+            # Vh_rec_shear.append(np.divide(Vrad_PL[ind_npoints],(math.cos(np.deg2rad(theta[ind_npoints])))) )
+            
+        # Uncertainty            
+        # U_Vh_PL.append([np.std(Vh_rec_shear[ind_stdv])*Vh for ind_stdv in range(len(Vh_rec_shear))])
+        U_Vrad_Sh.append([np.std(Vrad_PL[ind_stdv]) for ind_stdv in range(len(Vrad_PL))])
+    elif Linear==1:
+        # Linear model
+        # Linear factor
+        Lf = 3/(2*100)
+         # Calculate radial speed
+        Vrad_L = []
+        # Vh_rec_shear=[]
+        U_Vh_L,U_Vrad_L=[],[]
+        for ind_npoints in range(len(distance)):
+            term_sh = (H0[ind_npoints])*Lf
+            term_h  = np.multiply(Vh,np.cos(np.radians(theta_noisy[ind_npoints])))
+            # pdb.set_trace()
+            Vrad_L.append(np.multiply(term_h,term_sh))
+            # Vh_rec_shear.append(np.divide(Vrad_PL[ind_npoints],(math.cos(np.deg2rad(theta[ind_npoints])))) )
+            
+        # Uncertainty            
+        # U_Vh_PL.append([np.std(Vh_rec_shear[ind_stdv])*Vh for ind_stdv in range(len(Vh_rec_shear))])
+        U_Vrad_Sh.append([np.std(Vrad_L[ind_stdv]) for ind_stdv in range(len(Vrad_L))])
 #%% GUM METHOD
 
 if GUM==1:
@@ -110,12 +130,21 @@ if GUM==1:
     
     # Including shear:
     U_Vrad_sh,U_Vh_sh = [],[]
-    for ind_alpha in alpha:
-        U_Vrad_sh.append([Vh*np.cos(np.radians(theta[ind_u]))*stdv_theta*abs((ind_alpha/math.tan(np.radians(theta[ind_u])))-np.tan(np.radians(theta[ind_u])) ) for ind_u in range(len(theta))])
+    if PL==1:
+       
+        for ind_alpha in alpha:
+            U_Vrad_sh.append([Vh*np.cos(np.radians(theta[ind_u]))*stdv_theta*abs((ind_alpha/math.tan(np.radians(theta[ind_u])))-np.tan(np.radians(theta[ind_u])) ) for ind_u in range(len(theta))])
+    
+            # U_Vrad_sh.append([Vh*np.cos(np.radians(theta[ind_u]))*stdv_theta*abs((ind_alpha/math.tan(np.radians(theta[ind_u])))-np.tan(np.radians(theta[ind_u])) ) for ind_u in range(len(theta))])
+            # U_Vh_sh.append([Vh*stdv_theta*abs((ind_alpha/math.tan(np.radians(theta[ind_u])))-np.tan(np.radians(theta[ind_u])) ) for ind_u in range(len(theta))])
+    elif Linear==1:
+        m=1/10000
+        for ind_alpha in alpha:
+                # U_Vrad_sh.append([Vh*np.cos(np.radians(theta[ind_u]))*((1/(np.cos(np.radians(theta[ind_u]))*np.sin(np.radians(theta[ind_u]))))-math.tan(np.radians(theta[ind_u]))) for ind_u in range(len(theta))])
+                U_Vrad_sh.append([distance[ind_u]*Vh*np.cos(np.radians(theta[ind_u]))*m*np.cos(np.radians(theta[ind_u]))*stdv_theta for ind_u in range(len(theta))])
 
-        # U_Vrad_sh.append([Vh*np.cos(np.radians(theta[ind_u]))*stdv_theta*abs((ind_alpha/math.tan(np.radians(theta[ind_u])))-np.tan(np.radians(theta[ind_u])) ) for ind_u in range(len(theta))])
-        # U_Vh_sh.append([Vh*stdv_theta*abs((ind_alpha/math.tan(np.radians(theta[ind_u])))-np.tan(np.radians(theta[ind_u])) ) for ind_u in range(len(theta))])
-  
+                # U_Vrad_sh.append([Vh*np.cos(np.radians(theta[ind_u]))*stdv_theta*abs((ind_alpha/math.tan(np.radians(theta[ind_u])))-np.tan(np.radians(theta[ind_u])) ) for ind_u in range(len(theta))])
+                # U_Vh_sh.append([Vh*stdv_theta*abs((ind_alpha/math.tan(np.radians(theta[ind_u])))-np.tan(np.radians(theta[ind_u])) ) for ind_u in range(len(theta))])
     
 #%% Plot errors
 if GUM==1 and MC==0:
@@ -150,7 +179,7 @@ elif MC==1 and GUM==0:
     # for ind_al in range(len(alpha0)):
     # pdb.set_trace()
     # ax1.plot(theta,U_Vh_homo[0],'x-b' ,label='U Uniform flow')
-    # ax1.plot(theta,U_Vh_shear[0],'+-r' ,label='U shear')
+    # ax1.plot(theta,U_Vh_PL[0],'+-r' ,label='U shear')
     # ax1.legend()
     # ax1.set_xlabel('Theta [°]')
     # ax1.set_ylabel('Uncertainty [%]')
@@ -159,7 +188,7 @@ elif MC==1 and GUM==0:
     # pdb.set_trace()
     # fig,ax2=plt.subplots()
     # ax2.plot(pointY,U_Vrad_homo[0],'-b' ,label='U_homo')
-    # ax2.plot(pointY,U_Vrad_shear[0],'-r' ,label='U_shear')
+    # ax2.plot(pointY,U_Vrad_PL[0],'-r' ,label='U_shear')
     # ax2.legend()
     # ax2.set_xlabel('Height [m]')
     # ax2.set_ylabel('Uncertainty')
@@ -168,7 +197,7 @@ elif MC==1 and GUM==0:
     
     fig,ax2=plt.subplots()
     ax2.plot(theta,U_Vrad_homo[0],'x-b' ,label='U Uniform flow (MC)')
-    ax2.plot(theta,U_Vrad_shear[0],'+-r' ,label='U shear (MC)')
+    ax2.plot(theta,U_Vrad_PL[0],'+-r' ,label='U shear (MC)')
     ax2.legend()
     ax2.set_xlabel('Theta [°]')
     ax2.set_ylabel('Uncertainty [%]')
@@ -179,7 +208,7 @@ if MC==1 and GUM==1:
     # color=iter(cm.rainbow(np.linspace(0,1,len(alpha))))   
 
     # ax1.plot(theta,U_Vh_homo[0],'x-b' ,label='U uniform MC')
-    # ax1.plot(theta,U_Vh_shear[0],'+-r' ,label='U shear MC')
+    # ax1.plot(theta,U_Vh_PL[0],'+-r' ,label='U shear MC')
     # ax1.plot(theta,U_Vh[0],'b-',label='Uniform flow')
     # for ind_a in range(len(alpha)):
     #     c=next(color)
@@ -193,7 +222,7 @@ if MC==1 and GUM==1:
     # pdb.set_trace()
     # fig,ax2=plt.subplots()
     # ax2.plot(pointY,U_Vrad_homo[0],'-b' ,label='U_homo')
-    # ax2.plot(pointY,U_Vrad_shear[0],'-r' ,label='U_shear')
+    # ax2.plot(pointY,U_Vrad_PL[0],'-r' ,label='U_shear')
     # ax2.legend()
     # ax2.set_xlabel('Height [m]')
     # ax2.set_ylabel('Uncertainty')
@@ -201,14 +230,14 @@ if MC==1 and GUM==1:
     # plt.title('Vrad Uncertainty')
     
     fig,ax2=plt.subplots()
-    ax2.plot(theta,U_Vrad[0],'b-',label='U Uniform flow')
+    ax2.plot(theta,U_Vrad[0],'b-',label='U Uniform flow (GUM)')
     color=iter(cm.rainbow(np.linspace(0,1,len(alpha))))   
     for ind_a in range(len(alpha)):
         c=next(color)
-        ax2.plot(theta,U_Vrad_sh[ind_a],'r-',label='U Shear GUM  ({})'.format(alpha[ind_a]),c=c)
+        ax2.plot(theta,U_Vrad_sh[ind_a],'r-',label='U Shear GUM  (\u03B1 = {})'.format(alpha[ind_a]),c=c)
     
     ax2.plot(theta,U_Vrad_homo[0],'ob' , markerfacecolor=(1, 1, 0, 0.5),label='U uniform MC')
-    ax2.plot(theta,U_Vrad_shear[0],'or' , markerfacecolor=(1, 1, 0, 0.5),label='U shear MC')
+    ax2.plot(theta,U_Vrad_Sh[0],'or' , markerfacecolor=(1, 1, 0, 0.5),label='U shear MC')
     ax2.legend()
     ax2.set_xlabel('Theta [°]')
     ax2.set_ylabel('Uncertainty [%]')
