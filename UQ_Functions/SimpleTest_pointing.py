@@ -1,3 +1,6 @@
+
+
+
 # -*- coding: utf-8 -*-
 """
 Created on Thu Feb 24 09:34:29 2022
@@ -21,39 +24,51 @@ import pandas as pd
 from matplotlib.pyplot import cm
 GUM=1
 MC=0
-PL=0
-Linear=1
+PL=1
+Linear=0
 #%% Define inputs
-theta =np.linspace(0,86,100)
+# theta =np.linspace(0,86,100)
 
 # alpha =np.round(np.linspace(.06,.2,.5),3)
-pointY=np.linspace(0,350,500)
-pointX=231*np.ones(len(pointY))
+pointZ=np.linspace(0,350,100)
+pointY=np.linspace(0,10,100)
+pointX=231*np.ones(len(pointZ))
+
 alpha=np.array([.03,.25,.134,.33]) # shear exponent
 N=2000#number of points for the MC simultion
 Vh   = 8.5
 stdv_X = .01
-stdv_Y = 0.58
+stdv_Y = 0
+stdv_Z=0.1
 pointX_noisy=[]
 pointY_noisy=[]
+pointZ_noisy=[]
 distance=[]
 distance_noisy=[]
 theta=[]
 theta_noisy=[]
+psi=[]
+psi_noisy=[]
 for ind_points in range(len(pointX)):
     pointX_noisy.append(np.random.normal(pointX[ind_points],stdv_X,N))
     pointY_noisy.append(np.random.normal(pointY[ind_points],stdv_Y,N))
+    pointZ_noisy.append(np.random.normal(pointZ[ind_points],stdv_Z,N))
     
     # Calculate distance and theta for the original and noisy points
     # original:
-    distance.append (np.sqrt(pointX[ind_points]**2+pointY[ind_points]**2))
-    theta.append(np.rad2deg(math.asin(pointY[ind_points]/distance[ind_points])))
+    distance.append (np.sqrt(pointX[ind_points]**2+pointY[ind_points]**2+pointZ[ind_points]**2))
+    theta.append(np.rad2deg(math.asin(pointZ[ind_points]/distance[ind_points])))
+    psi.append(np.rad2deg(math.asin(pointY[ind_points]/distance[ind_points])))
+    
     # noisy:
-    distance_noisy.append(np.sqrt(pointX_noisy[ind_points]**2+pointY_noisy[ind_points]**2))
-    argm=np.divide(pointY_noisy[ind_points],distance[ind_points])
-    theta_noisy.append([(np.rad2deg(math.asin(argm[ind_arg]))) for ind_arg in range(len(argm))])
+    distance_noisy.append(np.sqrt(pointX_noisy[ind_points]**2+pointY_noisy[ind_points]**2+pointZ_noisy[ind_points]**2))
+    argm_theta=np.divide(pointZ_noisy[ind_points],distance[ind_points])
+    argm_psi= np.divide(pointY_noisy[ind_points],distance[ind_points])
+    theta_noisy.append([(np.rad2deg(math.asin(argm_theta[ind_arg]))) for ind_arg in range(len(argm_theta))])
+    psi_noisy.append([(np.rad2deg(math.asin(argm_psi[ind_arg]))) for ind_arg in range(len(argm_psi))])
 
 stdv_theta=np.radians(np.round(np.mean([np.std(theta_noisy[ind_angle]) for ind_angle in range(len(theta_noisy))]),4))
+stdv_psi=np.radians(np.round(np.mean([np.std(psi_noisy[ind_angle]) for ind_angle in range(len(psi_noisy))]),4))
 
 #%% MONTECARLO METHOD
 # Define inputs
@@ -122,31 +137,38 @@ if MC==1:
 if GUM==1:
    
     # Homogeneous flow
-    U_Vrad,U_Vh=[],[]
-    U_Vrad.append([Vh*np.cos(np.radians(theta[ind_u]))*np.tan(np.radians(theta[ind_u]))*stdv_theta for ind_u in range(len(theta))])
+    U_Vrad,U_Vrad_theta,U_Vrad_psi,U_Vh=[],[],[],[]
+    U_Vrad_theta.append([Vh*np.cos(np.radians(theta[ind_u]))*np.cos(np.radians(psi[ind_u]))*np.tan(np.radians(theta[ind_u]))*stdv_theta for ind_u in range(len(theta))])
+    U_Vrad_psi.append([Vh*np.cos(np.radians(theta[ind_u]))*np.cos(np.radians(psi[ind_u]))*np.tan(np.radians(psi[ind_u]))*stdv_psi for ind_u in range(len(theta))])
+    U_Vrad.append([np.sqrt((U_Vrad_theta[0][ind_u]*stdv_theta)**2+(U_Vrad_psi[0][ind_u]*stdv_psi)**2) for ind_u in range(len(theta))])
+    
+    # U_Vrad_psi.append([Vh*np.cos(np.radians(psi[ind_u]))*np.tan(np.radians(psi[ind_u]))*stdv_theta for ind_u in range(len(theta))])
     # U_Vrad.append([np.tan(np.radians(theta[ind_u]))*stdv_theta for ind_u in range(len(theta))])
 
     # U_Vh.append([Vh*np.tan(np.radians(theta[ind_u]))*stdv_theta for ind_u in range(len(theta))])
     
     # Including shear:
-    U_Vrad_sh,U_Vh_sh = [],[]
+    U_Vrad_sh_theta,U_Vrad_sh_psi,U_Vh_sh,U_Vrad_sh= [],[],[],[]
     if PL==1:
        
-        for ind_alpha in alpha:
-            U_Vrad_sh.append([Vh*np.cos(np.radians(theta[ind_u]))*stdv_theta*abs((ind_alpha/math.tan(np.radians(theta[ind_u])))-np.tan(np.radians(theta[ind_u])) ) for ind_u in range(len(theta))])
-    
-            # U_Vrad_sh.append([Vh*np.cos(np.radians(theta[ind_u]))*stdv_theta*abs((ind_alpha/math.tan(np.radians(theta[ind_u])))-np.tan(np.radians(theta[ind_u])) ) for ind_u in range(len(theta))])
+        for ind_alpha in range(len( alpha)):
+            U_Vrad_sh_theta.append([Vh*np.cos(np.radians(psi[ind_u]))*np.cos(np.radians(theta[ind_u]))*stdv_theta*abs((alpha[ind_alpha]/math.tan(np.radians(theta[ind_u])))-np.tan(np.radians(theta[ind_u])) ) for ind_u in range(len(theta))])
+            U_Vrad_sh_psi.append([Vh*np.cos(np.radians(psi[ind_u]))*np.cos(np.radians(theta[ind_u]))*stdv_psi*abs(np.tan(np.radians(psi[ind_u]))) for ind_u in range(len(psi))])
+            U_Vrad_sh.append([np.sqrt((U_Vrad_sh_theta[ind_alpha][ind_u]*stdv_theta)**2+(U_Vrad_sh_psi[ind_alpha][ind_u]*stdv_psi)**2) for ind_u in range(len(psi)) ])
+            # pdb.set_trace()
+            # U_Vrad_sh_theta.append([Vh*np.cos(np.radians(theta[ind_u]))*stdv_theta*abs((ind_alpha/math.tan(np.radians(theta[ind_u])))-np.tan(np.radians(theta[ind_u])) ) for ind_u in range(len(theta))])
             # U_Vh_sh.append([Vh*stdv_theta*abs((ind_alpha/math.tan(np.radians(theta[ind_u])))-np.tan(np.radians(theta[ind_u])) ) for ind_u in range(len(theta))])
     elif Linear==1:
         m=1/10000
         for ind_alpha in alpha:
-                # U_Vrad_sh.append([Vh*np.cos(np.radians(theta[ind_u]))*((1/(np.cos(np.radians(theta[ind_u]))*np.sin(np.radians(theta[ind_u]))))-math.tan(np.radians(theta[ind_u]))) for ind_u in range(len(theta))])
-                U_Vrad_sh.append([distance[ind_u]*Vh*np.cos(np.radians(theta[ind_u]))*m*np.cos(np.radians(theta[ind_u]))*stdv_theta for ind_u in range(len(theta))])
+                # U_Vrad_sh_theta.append([Vh*np.cos(np.radians(theta[ind_u]))*((1/(np.cos(np.radians(theta[ind_u]))*np.sin(np.radians(theta[ind_u]))))-math.tan(np.radians(theta[ind_u]))) for ind_u in range(len(theta))])
+                U_Vrad_sh_theta.append([distance[ind_u]*Vh*np.cos(np.radians(theta[ind_u]))*m*np.cos(np.radians(theta[ind_u]))*stdv_theta for ind_u in range(len(theta))])
 
-                # U_Vrad_sh.append([Vh*np.cos(np.radians(theta[ind_u]))*stdv_theta*abs((ind_alpha/math.tan(np.radians(theta[ind_u])))-np.tan(np.radians(theta[ind_u])) ) for ind_u in range(len(theta))])
+                # U_Vrad_sh_theta.append([Vh*np.cos(np.radians(theta[ind_u]))*stdv_theta*abs((ind_alpha/math.tan(np.radians(theta[ind_u])))-np.tan(np.radians(theta[ind_u])) ) for ind_u in range(len(theta))])
                 # U_Vh_sh.append([Vh*stdv_theta*abs((ind_alpha/math.tan(np.radians(theta[ind_u])))-np.tan(np.radians(theta[ind_u])) ) for ind_u in range(len(theta))])
     
 #%% Plot errors
+pdb.set_trace()
 if GUM==1 and MC==0:
     # color=iter(cm.rainbow(np.linspace(0,1,len(alpha))))   
     # fig,ax1= plt.subplots()  
@@ -187,8 +209,8 @@ elif MC==1 and GUM==0:
     # plt.title('Vh Uncertainty')
     # pdb.set_trace()
     # fig,ax2=plt.subplots()
-    # ax2.plot(pointY,U_Vrad_homo[0],'-b' ,label='U_homo')
-    # ax2.plot(pointY,U_Vrad_PL[0],'-r' ,label='U_shear')
+    # ax2.plot(pointZ,U_Vrad_homo[0],'-b' ,label='U_homo')
+    # ax2.plot(pointZ,U_Vrad_PL[0],'-r' ,label='U_shear')
     # ax2.legend()
     # ax2.set_xlabel('Height [m]')
     # ax2.set_ylabel('Uncertainty')
@@ -221,8 +243,8 @@ if MC==1 and GUM==1:
     # plt.title('Vh Uncertainty')
     # pdb.set_trace()
     # fig,ax2=plt.subplots()
-    # ax2.plot(pointY,U_Vrad_homo[0],'-b' ,label='U_homo')
-    # ax2.plot(pointY,U_Vrad_PL[0],'-r' ,label='U_shear')
+    # ax2.plot(pointZ,U_Vrad_homo[0],'-b' ,label='U_homo')
+    # ax2.plot(pointZ,U_Vrad_PL[0],'-r' ,label='U_shear')
     # ax2.legend()
     # ax2.set_xlabel('Height [m]')
     # ax2.set_ylabel('Uncertainty')
