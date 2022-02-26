@@ -29,28 +29,29 @@ Linear=0
 #%% Define inputs
 
 
-pointX=np.linspace(150,150,1500)
-pointY=np.linspace(200,200,1500)
-pointZ=np.linspace(0,500,1500)
+pointX=np.linspace(150,150,300)
+pointY=np.linspace(100,100,300)
+pointZ=np.linspace(0,700,300)
 # pointZ=[1000]
 # pointY=[0]
 # pointX=[1000]
-alpha=np.array([.03,.1,.15,.2,.3]) # shear exponent
-N=2000#number of points for the MC simultion
-Vh   = 8.5
+alpha  = np.array([.2]) # shear exponent
+N      = 10000#number of points for the MC simulation
+Vh     = 8.5
 stdv_X = 0
-stdv_Y =0.5
-stdv_Z= .5
-pointX_noisy=[]
-pointY_noisy=[]
-pointZ_noisy=[]
-distance=[]
-distance_noisy=[]
-theta=[]
-theta_noisy=[]
-psi=[]
-psi_noisy=[]
-hipo=[]
+stdv_Y = 0
+stdv_Z = 0.21
+pointX_noisy   = []
+pointY_noisy   = []
+pointZ_noisy   = []
+distance       = []
+distance_noisy = []
+hipo_noisy     = []
+theta          = []
+theta_noisy    = []
+psi            = []
+psi_noisy      = []
+hipo           = []
 for ind_points in range(len(pointX)):
     pointX_noisy.append(np.random.normal(pointX[ind_points],stdv_X,N))
     pointY_noisy.append(np.random.normal(pointY[ind_points],stdv_Y,N))
@@ -65,6 +66,8 @@ for ind_points in range(len(pointX)):
     
     # noisy:
     distance_noisy.append(np.sqrt(pointX_noisy[ind_points]**2+pointY_noisy[ind_points]**2+pointZ_noisy[ind_points]**2))
+    hipo_noisy.append(np.sqrt(pointX_noisy[ind_points]**2+pointY_noisy[ind_points]**2))
+
     # pdb.set_trace()
 
     argm_theta = np.divide(pointZ_noisy[ind_points],distance[ind_points])
@@ -74,6 +77,8 @@ for ind_points in range(len(pointX)):
 
 stdv_theta = np.radians(np.round(np.nanmean([np.std(theta_noisy[ind_angle]) for ind_angle in range(len(theta_noisy))]),4))
 stdv_psi   = np.radians(np.round(np.nanmean([np.std(psi_noisy[ind_angle]) for ind_angle in range(len(psi_noisy))]),4))
+stdv_range = np.round(np.nanmean([np.std(hipo_noisy[ind_angle]) for ind_angle in range(len(distance_noisy))]),4)
+
 # stdv_theta=np.ones(100)*[np.radians(0.05)]
 # stdv_psi=np.ones(100)*[np.radians(0.05)]
 
@@ -145,10 +150,12 @@ if MC==1:
 if GUM==1:
    
     # Homogeneous flow
-    U_Vrad,U_Vrad_theta,U_Vrad_psi,U_Vh=[],[],[],[]
+    U_Vrad,U_Vrad_theta,U_Vrad_psi,U_Vh,U_Vrad_range=[],[],[],[],[]
     U_Vrad_theta.append([Vh*np.cos(np.radians(psi[ind_u]))*np.sin(np.radians(theta[ind_u]))*stdv_theta for ind_u in range(len(theta))])
     U_Vrad_psi.append([Vh*np.cos(np.radians(theta[ind_u]))*np.sin(np.radians(psi[ind_u]))*stdv_psi for ind_u in range(len(theta))])
-    U_Vrad.append([np.sqrt((U_Vrad_theta[0][ind_u])**2+(U_Vrad_psi[0][ind_u])**2) for ind_u in range(len(theta))])
+    U_Vrad_range.append([Vh*alpha*(1/hipo[ind_u])*np.cos(np.radians(theta[ind_u]))*np.cos(np.radians(psi[ind_u]))*stdv_range for ind_u in range(len(psi))])
+    
+    U_Vrad.append([np.sqrt((U_Vrad_theta[0][ind_u])**2+(U_Vrad_psi[0][ind_u])**2+(U_Vrad_range[0][ind_u])**2) for ind_u in range(len(theta))])
     
     # U_Vrad_psi.append([Vh*np.cos(np.radians(psi[ind_u]))*np.tan(np.radians(psi[ind_u]))*stdv_theta for ind_u in range(len(theta))])
     # U_Vrad.append([np.tan(np.radians(theta[ind_u]))*stdv_theta for ind_u in range(len(theta))])
@@ -156,13 +163,14 @@ if GUM==1:
     # U_Vh.append([Vh*np.tan(np.radians(theta[ind_u]))*stdv_theta for ind_u in range(len(theta))])
     
     # Including shear:
-    U_Vrad_sh_theta,U_Vrad_sh_psi,U_Vh_sh,U_Vrad_sh= [],[],[],[]
+    U_Vrad_sh_theta,U_Vrad_sh_psi,U_Vh_sh,U_Vrad_sh,U_Vrad_sh_range= [],[],[],[],[]
     if PL==1:
        
         for ind_alpha in range(len( alpha)):
             U_Vrad_sh_theta.append([Vh*np.cos(np.radians(psi[ind_u]))*np.cos(np.radians(theta[ind_u]))*stdv_theta*abs((alpha[ind_alpha]/math.tan(np.radians(theta[ind_u])))-np.tan(np.radians(theta[ind_u])) ) for ind_u in range(len(theta))])
             U_Vrad_sh_psi.append([Vh*np.cos(np.radians(theta[ind_u]))*np.sin(np.radians(psi[ind_u]))*stdv_psi for ind_u in range(len(psi))])            
-            U_Vrad_sh.append([np.sqrt((U_Vrad_sh_theta[ind_alpha][ind_u])**2+(U_Vrad_sh_psi[ind_alpha][ind_u])**2) for ind_u in range(len(psi)) ])
+            U_Vrad_sh_range.append([Vh*alpha*(1/hipo[ind_u])*np.cos(np.radians(theta[ind_u]))*np.cos(np.radians(psi[ind_u]))*stdv_range for ind_u in range(len(psi))])
+            U_Vrad_sh.append([np.sqrt((U_Vrad_sh_theta[ind_alpha][ind_u])**2+(U_Vrad_sh_psi[ind_alpha][ind_u])**2+(U_Vrad_sh_range[ind_alpha][ind_u])**2) for ind_u in range(len(distance)) ])
             # pdb.set_trace()
             # U_Vrad_sh_theta.append([Vh*np.cos(np.radians(theta[ind_u]))*stdv_theta*abs((ind_alpha/math.tan(np.radians(theta[ind_u])))-np.tan(np.radians(theta[ind_u])) ) for ind_u in range(len(theta))])
             # U_Vh_sh.append([Vh*stdv_theta*abs((ind_alpha/math.tan(np.radians(theta[ind_u])))-np.tan(np.radians(theta[ind_u])) ) for ind_u in range(len(theta))])
@@ -230,7 +238,7 @@ elif MC==1 and GUM==0:
     ax2.plot(theta,U_Vrad_PL[0],'+-r' ,label='U shear (MC)')
     ax2.legend()
     ax2.set_xlabel('Theta [°]')
-    ax2.set_ylabel('Uncertainty [%]')
+    ax2.set_ylabel('Uncertainty [m/s]')
     ax2.grid(axis='both')
     plt.title('Vrad Uncertainty')
 if MC==1 and GUM==1:
@@ -270,6 +278,23 @@ if MC==1 and GUM==1:
     ax2.plot(theta,U_Vrad_Sh[0],'or' , markerfacecolor=(1, 1, 0, 0.5),label='U shear MC')
     ax2.legend()
     ax2.set_xlabel('Theta [°]')
-    ax2.set_ylabel('Uncertainty [%]')
+    ax2.set_ylabel('Uncertainty [m/s]')
     ax2.grid(axis='both')
+    plt.title('Vrad Uncertainty')
+    
+    
+    
+    fig,ax3=plt.subplots()
+    ax3.plot(psi,U_Vrad[0],'b-',label='U Uniform flow (GUM)')
+    color=iter(cm.rainbow(np.linspace(0,1,len(alpha))))   
+    for ind_a in range(len(alpha)):
+        c=next(color)
+        ax3.plot(psi,U_Vrad_sh[ind_a],'r-',label='U Shear GUM  (\u03B1 = {})'.format(alpha[ind_a]),c=c)
+    
+    ax3.plot(psi,U_Vrad_homo[0],'ob' , markerfacecolor=(1, 1, 0, 0.5),label='U uniform MC')
+    ax3.plot(psi,U_Vrad_Sh[0],'or' , markerfacecolor=(1, 1, 0, 0.5),label='U shear MC')
+    ax3.legend()
+    ax3.set_xlabel('Psi [°]')
+    ax3.set_ylabel('Uncertainty [m/s]')
+    ax3.grid(axis='both')
     plt.title('Vrad Uncertainty')
