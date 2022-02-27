@@ -28,14 +28,14 @@ PL=1
 Linear=0
 #%% Define inputs
 
-alpha       = np.array([.15,.1,.2,.25]) # shear exponent
-N           = 50000 #number of points for the MC simulation
+alpha       = np.array([.20,.25]) # shear exponent
+N           = 80000 #number of points for the MC simulation
 Vh          = 8.5
-rho         = np.linspace(2000,2000,300)
-theta       = np.linspace(0,45,300)
-psi         = np.linspace(45,45,300)
+rho         = np.linspace(2000,2000,500)
+theta       = np.linspace(45,45,500)
+psi         = np.linspace(45,45,500)
 stdv_rho    = 0
-stdv_theta  = 0.5
+stdv_theta  = 0.05
 stdv_psi    = 0
 rho_noisy   = []
 theta_noisy = []
@@ -123,9 +123,10 @@ if GUM==1:
     if PL==1:
        
         for ind_alpha in range(len( alpha)):
+            # pdb.set_trace()
             U_Vrad_sh_theta.append([Vh*np.cos(np.radians(psi[ind_u]))*np.cos(np.radians(theta[ind_u]))*np.radians(stdv_theta)*abs((alpha[ind_alpha]/math.tan(np.radians(theta[ind_u])))-np.tan(np.radians(theta[ind_u])) ) for ind_u in range(len(theta))])
             U_Vrad_sh_psi.append([Vh*np.cos(np.radians(theta[ind_u]))*np.sin(np.radians(psi[ind_u]))*np.radians(stdv_psi) for ind_u in range(len(psi))])            
-            U_Vrad_sh_range.append([Vh*alpha*(1/rho[ind_u])*np.cos(np.radians(theta[ind_u]))*np.cos(np.radians(psi[ind_u]))*stdv_rho for ind_u in range(len(psi))])
+            U_Vrad_sh_range.append([Vh*alpha[ind_alpha]*(1/rho[ind_u])*np.cos(np.radians(theta[ind_u]))*np.cos(np.radians(psi[ind_u]))*stdv_rho for ind_u in range(len(psi))])
             U_Vrad_sh.append([np.sqrt((U_Vrad_sh_theta[ind_alpha][ind_u])**2+(U_Vrad_sh_psi[ind_alpha][ind_u])**2+(U_Vrad_sh_range[ind_alpha][ind_u])**2) for ind_u in range(len(rho)) ])
             # pdb.set_trace()
             # U_Vrad_sh_theta.append([Vh*np.cos(np.radians(theta[ind_u]))*stdv_theta*abs((ind_alpha/math.tan(np.radians(theta[ind_u])))-np.tan(np.radians(theta[ind_u])) ) for ind_u in range(len(theta))])
@@ -246,7 +247,8 @@ if MC==1 and GUM==1:
     for ind_a in range(len(alpha)):
         c=next(color)
         ax3.plot(psi,U_Vrad_sh[ind_a],'r-',label='U Shear GUM  (\u03B1 = {})'.format(alpha[ind_a]),c=c)
-    
+    # ax3.plot(psi,U_Vrad_sh,'r-',label='U Shear GUM  (\u03B1 = {})'.format(alpha),c=c)
+
     ax3.plot(psi,U_Vrad_homo[0],'ob' , markerfacecolor=(1, 1, 0, 0.5),label='U uniform MC')
     ax3.plot(psi,U_Vrad_Sh[0],'or' , markerfacecolor=(1, 1, 0, 0.5),label='U shear MC')
     ax3.legend()
