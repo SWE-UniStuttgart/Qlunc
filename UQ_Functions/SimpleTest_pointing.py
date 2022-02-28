@@ -19,14 +19,14 @@ MC     = 1
 #%% Define inputs
 Hh =100
 alpha       = np.array([.134]) # shear exponent
-N           = 80000 #number of points for the MC simulation
+N           = 2000 #number of points for the MC simulation
 Vh          = 8.5
-rho         = np.linspace(2000,2000,500)
-theta       = np.linspace(45,45,500)
-psi         = np.linspace(0,45,500)
-stdv_rho    = 0/100     #in percentage
+rho         = np.linspace(2010,2015,5)
+theta       = np.linspace(45,45,5)
+psi         = np.linspace(45,45,5)
+stdv_rho    = 0.9/100     #in percentage
 stdv_theta  = 0/100 #in percentage
-stdv_psi    = 0.9/100     #in percentage
+stdv_psi    = 0/100     #in percentage
 rho_noisy   = []
 theta_noisy = []
 psi_noisy   = []
@@ -47,7 +47,7 @@ if MC==1:
     # Calculate radial speed
     Vrad_homo = []
     Vrad_homo=([Vh*np.cos(np.radians(theta_noisy[ind_theta]))*np.cos(np.radians(psi_noisy[ind_theta])) for ind_theta in range (len(theta_noisy))])
-
+    pdb.set_trace()
     # simulation to get reconstructed Vh from the simulated points
     Vh_rec_homo_MC=[]
     for index_vrad in range(len(theta)):      
@@ -61,9 +61,9 @@ if MC==1:
     # Including shear model
     U_Vh_PL,U_Vrad_S_MC=[],[]
     # Calculate the hights
-    # H0 = [np.multiply(distance[ind_mul],np.sin(np.deg2rad(theta[ind_mul]))) for ind_mul in range(len(theta_noisy)) ] # Original heights
-    # H  = [np.multiply(distance[ind_mul],np.sin(np.deg2rad(theta_noisy[ind_mul]))) for ind_mul in range(len(theta_noisy))] # Noisy heights
-        
+    H0 = [np.multiply(rho[ind_mul],np.sin(np.deg2rad(theta[ind_mul]))) for ind_mul in range(len(theta_noisy)) ] # Original heights
+    H  = [np.multiply(rho_noisy[ind_mul],np.sin(np.deg2rad(theta_noisy[ind_mul]))) for ind_mul in range(len(theta_noisy))] # Noisy heights
+      
 
     # Power Law model        
     # Calculate radial speed
