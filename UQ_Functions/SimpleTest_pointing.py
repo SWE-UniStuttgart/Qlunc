@@ -22,11 +22,11 @@ alpha       = np.array([.134]) # shear exponent
 N           = 80000 #number of points for the MC simulation
 Vh          = 8.5
 rho         = np.linspace(2000,2000,500)
-theta       = np.linspace(0,45,500)
-psi         = np.linspace(45,45,500)
+theta       = np.linspace(45,45,500)
+psi         = np.linspace(0,45,500)
 stdv_rho    = 0/100     #in percentage
-stdv_theta  = .5/100 #in percentage
-stdv_psi    = 0/100     #in percentage
+stdv_theta  = 0/100 #in percentage
+stdv_psi    = 0.9/100     #in percentage
 rho_noisy   = []
 theta_noisy = []
 psi_noisy   = []
@@ -92,7 +92,7 @@ if GUM==1:
     for ind_alpha in range(len(alpha)):
         U_Vrad_sh_theta.append([Vh*(((np.sin(np.radians(theta_noisy[ind_u]))*rho_noisy[ind_u])/(np.sin(np.radians(theta[ind_u]))*rho[ind_u]))**alpha[ind_alpha])*np.cos(np.radians(psi[ind_u]))*np.cos(np.radians(theta[ind_u]))*np.radians(stdv_theta*theta[ind_u])*abs((alpha[ind_alpha]/math.tan(np.radians(theta[ind_u])))-np.tan(np.radians(theta[ind_u])) ) for ind_u in range(len(theta))])
         U_Vrad_sh_psi.append([Vh*(((np.sin(np.radians(theta_noisy[ind_u]))*rho_noisy[ind_u])/(np.sin(np.radians(theta[ind_u]))*rho[ind_u]))**alpha[ind_alpha])*np.cos(np.radians(theta[ind_u]))*np.sin(np.radians(psi[ind_u]))*np.radians(stdv_psi*psi[ind_u]) for ind_u in range(len(psi))])            
-        U_Vrad_sh_range.append([Vh*(((np.sin(np.radians(theta_noisy[ind_u]))*rho_noisy[ind_u])/(np.sin(np.radians(theta[ind_u]))*rho[ind_u]))**alpha[ind_alpha])*alpha[ind_alpha]*(1/rho[ind_u])*np.cos(np.radians(theta[ind_u]))*np.cos(np.radians(psi[ind_u]))*(stdv_rho*rho[ind_u]) for ind_u in range(len(rho))])
+        U_Vrad_sh_range.append([Vh*alpha[ind_alpha]*(1/rho[ind_u])*np.cos(np.radians(theta[ind_u]))*np.cos(np.radians(psi[ind_u]))*(stdv_rho*rho[ind_u]) for ind_u in range(len(rho))])
         U_Vrad_S_GUM.append([np.sqrt((np.mean(U_Vrad_sh_theta[ind_alpha][ind_u]))**2+(np.mean(U_Vrad_sh_psi[ind_alpha][ind_u]))**2+(np.mean(U_Vrad_sh_range[ind_alpha][ind_u]))**2) for ind_u in range(len(rho)) ])
             
        
