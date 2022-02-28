@@ -19,13 +19,13 @@ MC     = 1
 #%% Define inputs
 Hh =100
 alpha       = np.array([.134]) # shear exponent
-N           = 2000 #number of points for the MC simulation
+N           = np.round(50000) #number of points for the MC simulation
 Vh          = 8.5
-rho         = np.linspace(2010,2015,5)
-theta       = np.linspace(45,45,5)
-psi         = np.linspace(45,45,5)
-stdv_rho    = 0.9/100     #in percentage
-stdv_theta  = 0/100 #in percentage
+rho         = np.linspace(2000,2000,150)
+theta       = np.linspace(0,45,150)
+psi         = np.linspace(45,45,150)
+stdv_rho    = 0/100     #in percentage
+stdv_theta  = 0.1/100 #in percentage
 stdv_psi    = 0/100     #in percentage
 rho_noisy   = []
 theta_noisy = []
@@ -47,7 +47,7 @@ if MC==1:
     # Calculate radial speed
     Vrad_homo = []
     Vrad_homo=([Vh*np.cos(np.radians(theta_noisy[ind_theta]))*np.cos(np.radians(psi_noisy[ind_theta])) for ind_theta in range (len(theta_noisy))])
-    pdb.set_trace()
+    # pdb.set_trace()
     # simulation to get reconstructed Vh from the simulated points
     Vh_rec_homo_MC=[]
     for index_vrad in range(len(theta)):      
@@ -190,12 +190,23 @@ if MC==1 and GUM==1:
     ax2.plot(theta,U_Vrad_homo_MC[0],'ob' , markerfacecolor=(1, 1, 0, 0.5),label='U uniform MC')
     ax2.plot(theta,U_Vrad_S_MC[0],'or' , markerfacecolor=(1, 1, 0, 0.5),label='U shear MC')
     ax2.legend()
+    # these are matplotlib.patch.Patch properties
+    props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+    textstr = '\n'.join((
+    r'$\rho=%.2f$' % (rho[0], ),
+    r'$\psi=%.2f$' % (psi[0], ),
+    # r'$\stdv_t=%.2f$%' % (stdv_theta, ),
+    r'N=%.2f$' % (N, )))
+    
+    # place a text box in upper left in axes coords
+    ax2.text(0.05, 0.95, textstr, transform=ax2.transAxes, fontsize=14,horizontalalignment='left',verticalalignment='top', bbox=props)
     ax2.set_xlabel('Theta [°]',fontsize=25)
     ax2.set_ylabel('Uncertainty [m/s]',fontsize=25)
     ax2.grid(axis='both')
     plt.title('Vrad Uncertainty',fontsize=30)
-    
-    
+    plt.show()
+
+
     #Plot Uncertainty in Vrad with psi
     fig,ax3=plt.subplots()
     ax3.plot(psi,U_Vrad_homo_GUM[0],'b-',label='U Uniform flow GUM')
