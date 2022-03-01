@@ -24,15 +24,15 @@ Href          = 100
 Vref          = 8.5
 
 
-alpha       = np.array([.1]) # shear exponent
+alpha       = np.array([.3]) # shear exponent
 N           = np.round(50000) #number of points for the MC simulation
 
 rho         = np.linspace(1000,1000,250)
 theta       = np.linspace(0,0,250)
-psi         = np.linspace(0,45,250)
+psi         = np.linspace(0,0,250)
 stdv_rho    = 0/100     #in percentage
-stdv_theta  = 0/100     #in percentage
-stdv_psi    = 0.5/100     #in percentage
+stdv_theta  = 1/100     #in percentage
+stdv_psi    = 0/100     #in percentage
 rho_noisy   = []
 theta_noisy = []
 psi_noisy   = []
