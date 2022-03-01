@@ -20,15 +20,15 @@ GUM    = 1
 MC     = 1
 
 #%% Define inputs
-Hh          = 125
-alpha       = np.array([.001]) # shear exponent
+Hh          = 0
+alpha       = np.array([.1]) # shear exponent
 N           = np.round(50000) #number of points for the MC simulation
 Vh          = 8.5
 rho         = np.linspace(1000,1000,250)
-theta       = np.linspace(0,50,250)
+theta       = np.linspace(-50,50,250)
 psi         = np.linspace(13,13,250)
 stdv_rho    = 0/100     #in percentage
-stdv_theta  = 0.6/100 #in percentage
+stdv_theta  = 2/100 #in percentage
 stdv_psi    = 0/100     #in percentage
 rho_noisy   = []
 theta_noisy = []
@@ -38,15 +38,15 @@ for ind_noise in range(len(rho)):
     # theta_noisy.append(np.random.normal(theta[ind_noise],stdv_theta,N))
     # psi_noisy.append(np.random.normal(psi[ind_noise],stdv_psi,N))
     rho_noisy.append(np.random.normal(rho[ind_noise],stdv_rho*rho[ind_noise],N))
-    theta_noisy.append(np.random.normal(theta[ind_noise],stdv_theta*theta[ind_noise],N))
-    psi_noisy.append(np.random.normal(psi[ind_noise],stdv_psi*psi[ind_noise],N))
+    theta_noisy.append(np.random.normal(theta[ind_noise],stdv_theta*abs(theta[ind_noise]),N))
+    psi_noisy.append(np.random.normal(psi[ind_noise],stdv_psi*abs(psi[ind_noise]),N))
 
 # Weighting fucntion
 pulsed     = 1
 truncation = 1 # N° of Zr to truncate the WF
-tau_meas=265e-9
-tau=165e-9
-c_l=3e8
+tau_meas   = 265e-9
+tau        = 165e-9
+c_l        = 3e8
 
 # Impulse for the pulse
 
@@ -112,7 +112,7 @@ if MC==1:
     Vrad_PL,Vh_rec_shear,Vrad_PL_PB = [],[],[]
     
     for ind_npoints in range(len(rho)):
-        Vrad_PL.append (Vh*(np.cos(np.radians(psi_noisy[ind_npoints]))*np.cos(np.radians(theta_noisy[ind_npoints])))*(((Hh+np.sin(np.radians(theta_noisy[ind_npoints]))*rho_noisy[ind_npoints])/Hh)**alpha[0]))
+        Vrad_PL.append (Vh*(np.cos(np.radians(psi_noisy[ind_npoints]))*np.cos(np.radians(theta_noisy[ind_npoints])))*(((Hh+np.sin(np.radians(theta_noisy[ind_npoints]))*rho_noisy[ind_npoints])/(Hh))**alpha[0]))
 
         # for ind_pointsPB in range(len(H_lorentz)):
         #     Vrad_PL_PB.append(Vh*(np.cos(np.radians(psi_noisy[ind_npoints]))*np.cos(np.radians(theta_noisy[ind_npoints])))*(((np.sin(np.radians(theta_noisy[ind_npoints]))*rho_noisy[ind_npoints])/(np.sin(np.radians(theta[ind_npoints]))*rho[ind_npoints]))**alpha[0]))
