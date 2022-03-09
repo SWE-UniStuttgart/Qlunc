@@ -12,7 +12,9 @@ Created on Mon Feb 21 08:45:23 2022
 @author: fcosta
 
 """
-
+import scipy as sc
+from scipy.stats import norm
+from matplotlib.pyplot import cm
 import os
 os.chdir('C:/SWE_LOCAL/GIT_Qlunc/UnderDevelopment/')
 import numpy as np
@@ -35,7 +37,7 @@ class inputs ():
         self.Vref          = Vref
        
         self.alpha       = np.array([alpha]) # shear exponent
-        self.N_MC           = np.round(N_MC) #number of points for the MC simulation
+        self.N_MC        = np.round(N_MC) #number of points for the MC simulation
         self.Npoints     = Npoints #N° of measuring points
         self.rho         = np.linspace(rho[0],rho[1],Npoints)
         self.theta       = np.linspace(theta[0],theta[1],Npoints)
@@ -46,29 +48,29 @@ class inputs ():
 
 inputs=inputs(Href        = 100,
               Vref        = 8.5,      
-              alpha       =.1, # shear exponent
-              N_MC        = 50000, #number of points for the MC simulation for each points in Npoints
-              Npoints     = 100, #N° of measuring points 
-              rho         = [1000,1000],
-              theta       = [0,50],
+              alpha       =.04, # shear exponent
+              N_MC        = 600, #number of points for the MC simulation for each point in Npoints
+              Npoints     = 2, #N° of measuring points 
+              rho         = [500,600],
+              theta       = [15,15],
               psi         = [0,0],
-              stdv_rho    = 0 ,    #in percentage
-              stdv_theta  = 1,     #in percentage
+              stdv_rho    = 2 ,    #in percentage
+              stdv_theta  = 0,     #in percentage
               stdv_psi    = 0  )   #in percentage)
 
 # Weighting function
 class WF_param():
     def __init__(self,pulsed, truncation,tau_meas,tau,c_l):
         self.pulsed     = pulsed
-        self.truncation = truncation# N° of Zr to truncate the WF
+        self.truncation = truncation # N° of Zr to truncate the WF
         self.tau_meas   = tau_meas
         self.tau        = tau
         self.c_l        = c_l
-WF_param=WF_param(pulsed=1,
-                  truncation=1,
-                  tau_meas=265e-9,
-                  tau=165e-9,
-                  c_l=3e8)
+WF_param=WF_param(pulsed     = 1,
+                  truncation = 1,
+                  tau_meas   = 265e-9,
+                  tau        = 165e-9,
+                  c_l        = 3e8)
 
 # Calculate coordinates of the noisy opoints
 rho_noisy   = []
@@ -115,14 +117,26 @@ if MC==1:
     # Including shear model
     U_Vh_PL,U_Vrad_S_MC=[],[]
     # Calculate the hights
-    H0 = [inputs.Href+ np.multiply(inputs.rho[ind_mul],np.sin(np.deg2rad(inputs.theta[ind_mul]))) for ind_mul in range(len(theta_noisy)) ] # Original heights
+    H0 = [inputs.Href+ np.multiply(inputs.rho[ind_mul],np.sin(np.deg2rad(inputs.theta[ind_mul]))) for ind_mul in range(len(inputs.theta)) ] # Original heights
     H  = [inputs.Href+np.multiply(rho_noisy[ind_mul],np.sin(np.deg2rad(theta_noisy[ind_mul]))) for ind_mul in range(len(theta_noisy))] # Noisy heights
-    # pdb.set_trace()
+    
+    #Create the data to apply the wf to different heights
+    H_interp=[]
+    Vrad_interp=[]
+    rho_int=np.linspace(0,1000,10000)
+    for ind_int in range(len(inputs.theta)):
+        H_interp.append(inputs.Href+ np.multiply(rho_int,np.sin(np.deg2rad(inputs.theta[ind_int]))) )
+        
+        # Do I have to use theta , psi and rho here instead of noisy contributions????
+        Vrad_interp.append ([inputs.Vref*(np.cos(np.radians(inputs.psi[ind_int]))*np.cos(np.radians(inputs.theta[ind_int])))*((( inputs.Href+Hinterp_i)/inputs.Href)**inputs.alpha[0]) for Hinterp_i in H_interp[ind_int]])
+        
     Vrad_PL=[]
     for ind_npoints in range(len(inputs.rho)):
         Vrad_PL.append (inputs.Vref*(np.cos(np.radians(psi_noisy[ind_npoints]))*np.cos(np.radians(theta_noisy[ind_npoints])))*((( inputs.Href+np.sin(np.radians(theta_noisy[ind_npoints]))*rho_noisy[ind_npoints])/inputs.Href)**inputs.alpha[0]))
+
     # pdb.set_trace()
-    # Vrad_weighted=weightingFun(H,H0,Vrad_PL,rho_noisy,theta_noisy, psi_noisy,WF_param,inputs)
+    Vrad_weighted=weightingFun(H,H0,Vrad_PL,Vrad_interp,rho_noisy,theta_noisy, psi_noisy,WF_param,inputs,rho_int)
+    pdb.set_trace()
 #####################################################
     # Power Law model        
     # Calculate radial speed
@@ -191,7 +205,7 @@ if GUM==1:
 
         U_Vrad_sh_theta.append([inputs.Vref*(((inputs.Href+(np.sin(np.radians(inputs.theta[ind_u]))*inputs.rho[ind_u]))/inputs.Href)**inputs.alpha[ind_alpha])*np.cos(np.radians(inputs.psi[ind_u]))*np.cos(np.radians(inputs.theta[ind_u]))*np.radians(inputs.stdv_theta*inputs.theta[ind_u])*abs((inputs.alpha[ind_alpha]*(inputs.rho[ind_u]*np.cos(np.radians(inputs.theta[ind_u]))/(inputs.Href+inputs.rho[ind_u]*np.sin(np.radians(inputs.theta[ind_u])))))-np.tan(np.radians(inputs.theta[ind_u])) ) for ind_u in range(len(inputs.theta))])
         U_Vrad_sh_psi.append([inputs.Vref*(((inputs.Href+np.sin(np.radians(inputs.theta[ind_u]))*inputs.rho[ind_u])/(inputs.Href))**inputs.alpha[ind_alpha])*np.cos(np.radians(inputs.theta[ind_u]))*np.sin(np.radians(inputs.psi[ind_u]))*np.radians(inputs.stdv_psi*inputs.psi[ind_u]) for ind_u in range(len(inputs.psi))])            
-        U_Vrad_sh_range.append([inputs.Vref*inputs.alpha[ind_alpha]*(1/inputs.rho[ind_u])*np.cos(np.radians(inputs.theta[ind_u]))*np.cos(np.radians(inputs.psi[ind_u]))*(inputs.stdv_rho*inputs.rho[ind_u]) for ind_u in range(len(inputs.rho))])
+        U_Vrad_sh_range.append([inputs.Vref*(((inputs.Href+np.sin(np.radians(inputs.theta[ind_u]))*inputs.rho[ind_u])/(inputs.Href))**inputs.alpha[ind_alpha])*inputs.alpha[ind_alpha]*np.sin(np.radians(inputs.theta[ind_u]))/(inputs.Href+(np.sin(np.radians(inputs.theta[ind_u]))*inputs.rho[ind_u]))*np.cos(np.radians(inputs.theta[ind_u]))*np.cos(np.radians(inputs.psi[ind_u]))*(inputs.stdv_rho*inputs.rho[ind_u]) for ind_u in range(len(inputs.rho))])
         U_Vrad_S_GUM.append([np.sqrt((np.mean(U_Vrad_sh_theta[ind_alpha][ind_u]))**2+(np.mean(U_Vrad_sh_psi[ind_alpha][ind_u]))**2+(np.mean(U_Vrad_sh_range[ind_alpha][ind_u]))**2) for ind_u in range(len(inputs.rho)) ])
             
         
