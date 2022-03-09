@@ -49,9 +49,9 @@ class inputs ():
 inputs=inputs(Href        = 100,
               Vref        = 8.5,      
               alpha       =.04, # shear exponent
-              N_MC        = 600, #number of points for the MC simulation for each point in Npoints
-              Npoints     = 2, #N° of measuring points 
-              rho         = [500,600],
+              N_MC        = 500, #number of points for the MC simulation for each point in Npoints
+              Npoints     = 9, #N° of measuring points 
+              rho         = [100,900],
               theta       = [15,15],
               psi         = [0,0],
               stdv_rho    = 2 ,    #in percentage
@@ -72,7 +72,7 @@ WF_param=WF_param(pulsed     = 1,
                   tau        = 165e-9,
                   c_l        = 3e8)
 
-# Calculate coordinates of the noisy opoints
+# Calculate coordinates of the noisy points
 rho_noisy   = []
 theta_noisy = []
 psi_noisy   = []
@@ -122,20 +122,21 @@ if MC==1:
     
     #Create the data to apply the wf to different heights
     H_interp=[]
-    Vrad_interp=[]
+    Vrad_int=[]
     rho_int=np.linspace(0,1000,10000)
     for ind_int in range(len(inputs.theta)):
-        H_interp.append(inputs.Href+ np.multiply(rho_int,np.sin(np.deg2rad(inputs.theta[ind_int]))) )
+        H_interp.append(inputs.Href+np.multiply(rho_int,np.sin(np.deg2rad(inputs.theta[ind_int]))) )
         
-        # Do I have to use theta , psi and rho here instead of noisy contributions????
-        Vrad_interp.append ([inputs.Vref*(np.cos(np.radians(inputs.psi[ind_int]))*np.cos(np.radians(inputs.theta[ind_int])))*((( inputs.Href+Hinterp_i)/inputs.Href)**inputs.alpha[0]) for Hinterp_i in H_interp[ind_int]])
-        
+        # These are all the points along the probe volume. Do I have to use theta , psi and rho here instead of noisy contributions????
+        Vrad_int.append ([inputs.Vref*(np.cos(np.radians(inputs.psi[ind_int]))*np.cos(np.radians(inputs.theta[ind_int])))*((( inputs.Href+Hinterp_i)/inputs.Href)**inputs.alpha[0]) for Hinterp_i in H_interp[ind_int]])
+    
+    # Calculate the radial speed for the noisy points within the prove volume
     Vrad_PL=[]
     for ind_npoints in range(len(inputs.rho)):
         Vrad_PL.append (inputs.Vref*(np.cos(np.radians(psi_noisy[ind_npoints]))*np.cos(np.radians(theta_noisy[ind_npoints])))*((( inputs.Href+np.sin(np.radians(theta_noisy[ind_npoints]))*rho_noisy[ind_npoints])/inputs.Href)**inputs.alpha[0]))
 
     # pdb.set_trace()
-    Vrad_weighted=weightingFun(H,H0,Vrad_PL,Vrad_interp,rho_noisy,theta_noisy, psi_noisy,WF_param,inputs,rho_int)
+    Vrad_weighted=weightingFun(H,H0,Vrad_PL,Vrad_int,rho_noisy,theta_noisy, psi_noisy,WF_param,inputs,rho_int)
     pdb.set_trace()
 #####################################################
     # Power Law model        
