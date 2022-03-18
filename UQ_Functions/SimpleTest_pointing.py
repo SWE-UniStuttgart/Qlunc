@@ -48,13 +48,13 @@ class inputs ():
 
 inputs=inputs(Href        = 100,
               Vref        = 8.5,      
-              alpha       =.04, # shear exponent
-              N_MC        = 500, #number of points for the MC simulation for each point in Npoints
-              Npoints     = 9, #N° of measuring points 
-              rho         = [100,900],
-              theta       = [15,15],
+              alpha       =.5, # shear exponent
+              N_MC        = 100, #number of points for the MC simulation for each point in Npoints
+              Npoints     = 15, #N° of measuring points 
+              rho         = [100,250],
+              theta       = [0,0],
               psi         = [0,0],
-              stdv_rho    = 2 ,    #in percentage
+              stdv_rho    = 1 ,    #in percentage
               stdv_theta  = 0,     #in percentage
               stdv_psi    = 0  )   #in percentage)
 
@@ -68,8 +68,8 @@ class WF_param():
         self.c_l        = c_l
 WF_param=WF_param(pulsed     = 1,
                   truncation = 1,
-                  tau_meas   = 265e-9,
-                  tau        = 165e-9,
+                  tau_meas   = 365e-9,
+                  tau        = 265e-9,
                   c_l        = 3e8)
 
 # Calculate coordinates of the noisy points
@@ -120,10 +120,10 @@ if MC==1:
     H0 = [inputs.Href+ np.multiply(inputs.rho[ind_mul],np.sin(np.deg2rad(inputs.theta[ind_mul]))) for ind_mul in range(len(inputs.theta)) ] # Original heights
     H  = [inputs.Href+np.multiply(rho_noisy[ind_mul],np.sin(np.deg2rad(theta_noisy[ind_mul]))) for ind_mul in range(len(theta_noisy))] # Noisy heights
     
-    #Create the data to apply the wf to different heights
+    #Create the data to apply the weighting function to different heights
     H_interp=[]
     Vrad_int=[]
-    rho_int=np.linspace(0,1000,10000)
+    rho_int=np.linspace(0,700,1000)
     for ind_int in range(len(inputs.theta)):
         H_interp.append(inputs.Href+np.multiply(rho_int,np.sin(np.deg2rad(inputs.theta[ind_int]))) )
         
@@ -184,8 +184,10 @@ if MC==1:
     # for ind_npoints in range(len(rho)):
     #     Vrad_PL.append (Vref*(np.cos(np.radians(psi_noisy[ind_npoints]))*np.cos(np.radians(theta_noisy[ind_npoints])))*((( Href+np.sin(np.radians(theta_noisy[ind_npoints]))*rho_noisy[ind_npoints])/(Href))**alpha[0]))
 
-    # Uncertainty
-    U_Vrad_S_MC.append([np.nanstd(Vrad_PL[ind_stdv]) for ind_stdv in range(len(Vrad_PL))])           
+    # Uncertainty: For this to be compared with Vrad_weighted[1] I need to weight Vrad_PL 
+    U_Vrad_S_MC.append([np.nanstd(Vrad_PL[ind_stdv]) for ind_stdv in range(len(Vrad_PL))])
+    # U_Vrad_S_MC=Vrad_weighted[1]          
+           
     # U_Vh_PL.append([np.std(Vh_rec_shear[ind_stdv])*Vref for ind_stdv in range(len(Vh_rec_shear))])
     # g=np.digitize(WeightingFunction,np.linspace(np.min(WeightingFunction),np.max(WeightingFunction),500))
 
