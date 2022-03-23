@@ -274,7 +274,18 @@ def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             print('Error in optical amplifier uncertainty calculations!')
     else:
         print(colored('You didnt include an optical amplifier in the lidar,so that optical amplifier uncertainty contribution is not in lidar uncertainty estimations.','cyan', attrs=['bold']))
-    
+    # AOM
+    if Lidar.photonics.acousto_optic_modulator != 'None':
+        try: # each try/except evaluates wether the component is included in the module, therefore in the calculations
+            Photodetector_Uncertainty,DataFrame = Lidar.photonics.acousto_optic_modulator.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+            List_Unc_photonics.append(Photodetector_Uncertainty['Uncertainty_Photodetector'])
+            
+        except:
+            Photodetector_Uncertainty=None
+            print('Error in photodetector uncertainty calculations!','cyan', attrs=['bold'])
+    else:
+        print(colored('You didnt include a photodetector in the lidar, so that photodetector uncertainty contribution is not in lidar uncertainty estimations','cyan', attrs=['bold']))
+        
     # laser
     if Lidar.photonics.laser !='None':
         try:
