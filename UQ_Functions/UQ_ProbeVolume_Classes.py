@@ -31,8 +31,8 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,param1):
         Unc_wavelength            = Qlunc_yaml_inputs['Components']['Laser']['stdv Wavelength']
         Unc_eff_radius_telescope  = Qlunc_yaml_inputs['Components']['Telescope']['stdv Effective radius telescope']
         
-       
-        # Focus distance
+               # Focus distance
+
         # focus_distance = 1/((1/r)-(1/(a+a0))) # This parameters are complicated to know for users. Maybe it is easier to put just a simple parameter representing the focus distance(*)
         focus_distance = param1 #(*)
         
@@ -49,6 +49,7 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,param1):
         Unc_Rayleigh_length=[]
         for ind_focusdist in focus_distance:
             Rayleigh_length.append( (wavelength*(ind_focusdist**2))/(np.pi*(rad_eff)**2))# Rayleigh length  (considered as the probe length) # half-width of the weighting function --> FWHM = 2*zr
+            pdb.set_trace()
             # Uncertainty rayleigh length       
             Unc_Rayleigh_length.append( np.sqrt(((ind_focusdist**2)*Unc_wavelength/(np.pi*rad_eff))**2 + ((2*wavelength*ind_focusdist*Unc_focus_distance)/(np.pi*rad_eff**2))**2 + ((2*wavelength*(ind_focusdist**2)*Unc_eff_radius_telescope)/(np.pi*rad_eff**3))**2))
     
@@ -59,10 +60,8 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,param1):
         # vol_zr       = np.pi*(Qlunc_yaml_inputs['Components']['Telescope']['Output beam radius']**2)*(2*zr) # based on the definition of Rayleigh length in Liqin Jin notes (Focus calibration formula)
 
         # Lorentzian weighting function:
-        # phi = (Qlunc_yaml_inputs['Probe Volume']['Extinction coeficient']/np.pi)*(1/((1**2)+(36.55-focus_distance)**2))
-        # phi = (Qlunc_yaml_inputs['Probe Volume']['Extinction coeficient']/np.pi)*(1/((1**2)+(focus_distance)**2))
 
-        # F = (lamb/np.pi)/(a1**2+lamb**2)  # Lorentzian Weighting function 
+        # F = (lamb/np.pi)/(a1**2+lamb**2)
     
     elif Qlunc_yaml_inputs['Components']['Lidar general inputs']['Type']=="Pulsed":
         # Variables
