@@ -129,12 +129,13 @@ class optical_amplifier():
                  
 
 class analog2digital_converter():
-    def __init__(self,name,nbits,vref,vground,q_error,unc_func):
+    def __init__(self,name,nbits,vref,vground,q_error,ADC_bandwidth,unc_func):
                  self.ADCID = name
                  self.nbits =nbits
                  self.vref = vref
                  self.vground = vground
                  self.q_error = q_error
+                 self.BandWidth = ADC_bandwidth
                  self.Uncertainty = unc_func
                  print('Created new ADC: {}'.format(self.ADCID))
                  
@@ -174,7 +175,7 @@ class converter(): # Not included yet in Version Qlunc v-0.9 calculations
                  print('Created new converter: {}'.format(self.ConverterID))
 
 class scanner():
-    def __init__(self,name,time_pattern,time_point,scanner_type,pattern,lissajous_param,origin,sample_rate,focus_dist,cone_angle,azimuth,x,y,z,stdv_focus_dist,stdv_cone_angle,stdv_azimuth,unc_func):
+    def __init__(self,name,time_pattern,time_point,scanner_type,pattern,lissajous_param,origin,sample_rate,focus_dist,cone_angle,azimuth,x,y,z,stdv_location,stdv_focus_dist,stdv_cone_angle,stdv_azimuth,unc_func):
                  self.ScannerID       = name
                  self.time_pattern    = time_pattern
                  self.time_point      = time_point 
@@ -186,6 +187,7 @@ class scanner():
                  self.focus_dist      = focus_dist
                  self.cone_angle      = cone_angle
                  self.azimuth         = azimuth
+                 self.stdv_location= stdv_location
                  self.stdv_focus_dist = stdv_focus_dist
                  self.stdv_cone_angle = stdv_cone_angle
                  self.stdv_azimuth    = stdv_azimuth                 
@@ -254,15 +256,6 @@ class power(): # Not included yet in Version Qlunc v-0.9 calculations
                  self.Uncertainty   = unc_func  
                  print('Created new power module: {}'.format(self.PowerModuleID))
 
-# class optics():
-#     def __init__(self,name,scanner,optical_circulator,telescope,probe_volume,unc_func):
-#                  self.OpticsModuleID     = name
-#                  self.scanner            = scanner
-#                  self.optical_circulator = optical_circulator
-#                  self.telescope          = telescope
-#                  self.probe_volume       = probe_volume
-#                  self.Uncertainty        = unc_func 
-#                  print('Created new optic module: {}'.format(self.OpticsModuleID))
 class optics():
     def __init__(self,name,scanner,optical_circulator,telescope,unc_func):
                  self.OpticsModuleID     = name
@@ -279,6 +272,8 @@ class signal_processor():
                  # self.f_analyser =f_analyser
                  self.Uncertainty = unc_func
                  print('Created new signal processor module: {}'.format(self.SignalProcessorModuleID))
+
+
 #%% Atmosphere object:
 class atmosphere():
     def __init__(self,name,temperature):

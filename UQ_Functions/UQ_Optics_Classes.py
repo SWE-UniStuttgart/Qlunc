@@ -123,7 +123,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             # Create white noise with stdv selected by user:
             n=10000 # Number of cases to combine           
             # Position, due to pointing accuracy
-            del_param1 = np.array(np.random.normal(0,stdv_param1,n)) # why a normal distribution??Does it have sense, can be completely random?
+            del_param1 = np.array(np.random.normal(0,stdv_param1,n)) # why a normal distribution??Does it have sense, can be completely random? --> Because of the central limit theorem!
             del_param2 = np.array(np.random.normal(0,stdv_param2,n))
             del_param3 = np.array(np.random.normal(0,stdv_param3,n))                        
             
@@ -245,7 +245,7 @@ def UQ_Telescope(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
      #               for o_c_tele       in inputs.optics_inp.Telescope_uncertainty_inputs['OtherChanges_tele']]
      # Telescope_Losses =Lidar.optics.telescope.Mirror_losses
      # pdb.set_trace()
-     UQ_telescope=[-33]
+     UQ_telescope=[-100]
      Final_Output_UQ_Telescope={'Telescope_Uncertainty':UQ_telescope}
      Lidar.lidar_inputs.dataframe['Telescope']=Final_Output_UQ_Telescope['Telescope_Uncertainty']*np.linspace(1,1,len(Atmospheric_Scenario.temperature)) # linspace to create the appropriate length for the xarray. 
      return Final_Output_UQ_Telescope,Lidar.lidar_inputs.dataframe
@@ -262,6 +262,7 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
                 WFR_Uncertainty=Lidar.wfr_model.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scanner_Uncertainty)            
             else:            
                 Scanner_Uncertainty,DataFrame=Lidar.optics.scanner.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+                WFR_Uncertainty = None
         except:
             Scanner_Uncertainty=None
             print(colored('Error in scanner uncertainty calculations!','cyan', attrs=['bold']))
@@ -289,7 +290,8 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     else:
         print(colored('You didn´t include an optical circulator in the lidar,so that optical circulator uncertainty contribution is not in lidar uncertainty estimations.','cyan', attrs=['bold']))
     Uncertainty_Optics_Module=SA.unc_comb(List_Unc_optics)
-    Final_Output_UQ_Optics = {'Uncertainty_Optics':Uncertainty_Optics_Module,'Mean_error_PointingAccuracy':Scanner_Uncertainty['Simu_Mean_Distance_Error'],'Stdv_PointingAccuracy':Scanner_Uncertainty['STDV_Distance'], 'Rayleigh length':Scanner_Uncertainty['Rayleigh length'],'Rayleigh length uncertainty':Scanner_Uncertainty['Rayleigh length uncertainty']}
+    Final_Output_UQ_Optics = {'Uncertainty_Optics':Uncertainty_Optics_Module, 'Uncertainty_WFR':WFR_Uncertainty['WFR_Uncertainty'],'Mean_error_PointingAccuracy':Scanner_Uncertainty['Simu_Mean_Distance_Error'],'Stdv_PointingAccuracy':Scanner_Uncertainty['STDV_Distance'], 'Rayleigh length':Scanner_Uncertainty['Rayleigh length'],'Rayleigh length uncertainty':Scanner_Uncertainty['Rayleigh length uncertainty']}
+    # pdb.set_trace()
     Lidar.lidar_inputs.dataframe['Optics Module']=Final_Output_UQ_Optics['Uncertainty_Optics']*np.linspace(1,1,len(Atmospheric_Scenario.temperature))  # linspace to create the appropiate length for the xarray. 
     return Final_Output_UQ_Optics,Lidar.lidar_inputs.dataframe
 
