@@ -164,7 +164,7 @@ Photonics_Module = photonics(name                    = Qlunc_yaml_inputs['Module
                              photodetector           = eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['Photodetector']),             # Photodetector instance (in this example "Photodetector") or "None". "None" means that you don´t want to include photodetector in Photonics Module, either in uncertainty calculations.
                              optical_amplifier       = eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['Optical amplifier']),         # Scanner instance (in this example "OpticalAmplifier") or "None". "None" means that you don´t want to include Optical Amplifier in Photonics Module, either in uncertainty calculations.
                              laser                   = 'None', #Laser,
-                             acousto_optic_modulator = 'None', #AOM,
+                             acousto_optic_modulator = 'AOM',
                              unc_func                = uphc.sum_unc_photonics) #eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['Uncertainty function']))
 
 ## Signal processor components and module: ###########################################################
