@@ -140,9 +140,10 @@ class analog2digital_converter():
                  print('Created new ADC: {}'.format(self.ADCID))
                  
 class acousto_optic_modulator():
-    def __init__(self,name,insertion_loss):
+    def __init__(self,name,insertion_loss,unc_func):
                  self.AOMID          = name
                  self.insertion_loss = insertion_loss
+                 self.Uncertainty   = unc_func
                  print ('Created new AOM: {}'.format(self.AOMID))
         
 class power_source(): # Not included yet in Version Qlunc v-0.9 calculations
