@@ -36,7 +36,7 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # UQ_ADC.Thermal_noise =[]
     # UQ_ADC.ADC_quant_err =[]
     # UQ_ADC.ADC_resolution_V =[]
-    pdb.set_trace()
+    # pdb.set_trace()
     # Resolution:
     UQ_ADC.ADC_resolution_V  = (Lidar.signal_processor.analog2digital_converter.vref-Lidar.signal_processor.analog2digital_converter.vground)/(2**Lidar.signal_processor.analog2digital_converter.nbits)# =1LSB
     ADC_resolution_dB = 10**((Lidar.signal_processor.analog2digital_converter.vref-Lidar.signal_processor.analog2digital_converter.vground)/(2**Lidar.signal_processor.analog2digital_converter.nbits)/20 )# =1LSB
@@ -44,13 +44,16 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # ADC_DR_V          = 10**(ADC_DR_dB/20)
 
     # ADC_FS = Lidar.signal_processor.analog2digital_converter.vref-ADC_resolution# ADC full scale
-    pdb.set_trace()
-    ## Noise added by an ADC 
-    UQ_ADC.ADC_quant_err  = 0.5*UQ_ADC.ADC_resolution_V
-    UQ_ADC.Thermal_noise = cts.k*Atmospheric_Scenario.temperature[0]*Lidar.signal_processor.analog2digital_converter.BandWidth
-    UQ_ADC.UQ_ADC_Total =  np.sqrt(UQ_ADC.ADC_quant_err**2+UQ_ADC.Thermal_noise**2)
-    Final_Output_UQ_ADC = {'ADC_Noise':UQ_ADC.UQ_ADC_Total,'ADC_Resolution':UQ_ADC.ADC_resolution_V}
     
+    ## Noise added by an ADC 
+    UQ_ADC.ADC_quant_err  = 0.5*UQ_ADC.ADC_resolution_V # Maximum quantization error added by the ADC representing the worst case
+    # UQ_ADC.ADC_quant_err  = UQ_ADC.ADC_resolution_V/np.sqrt(12) # Analog-digital conversion - Marek Gasior - CERN Beam instrumentation Group
+
+    UQ_ADC.Thermal_noise = cts.k*Atmospheric_Scenario.temperature[0]*Lidar.signal_processor.analog2digital_converter.BandWidth
+    UQ_ADC.UQ_ADC_Total_W =  np.sqrt(UQ_ADC.ADC_quant_err**2+UQ_ADC.Thermal_noise**2)
+    UQ_ADC.UQ_ADC_Total_dB= 10*np.log10(UQ_ADC.UQ_ADC_Total_W)
+    Final_Output_UQ_ADC = {'ADC_Noise':UQ_ADC.UQ_ADC_Total_dB,'ADC_Resolution':UQ_ADC.ADC_resolution_V}
+    # pdb.set_trace()
     #Ideal ADC SNR
     SNR_ideal_dB = 6.02*Lidar.signal_processor.analog2digital_converter.nbits+1.76 # dB --> by definition
     SNR_ideal_watts = 10**(SNR_ideal_dB/10)
@@ -76,10 +79,10 @@ def sum_unc_signal_processor(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             print(colored('Error in ADC uncertainty calculations!','cyan', attrs=['bold']))
     else:
         print (colored('You didn´t include an analog to digital converter in the lidar.','cyan', attrs=['bold']))       
-    pdb.set_trace()
+    # pdb.set_trace()
     Uncertainty_SignalProcessor_Module=SA.unc_comb(List_Unc_signal_processor)
     Final_Output_UQ_SignalProcessor = {'Uncertainty_SignalProcessor':Uncertainty_SignalProcessor_Module}
     # 
     Lidar.lidar_inputs.dataframe['SignalProcessor Module']=Final_Output_UQ_SignalProcessor['Uncertainty_SignalProcessor']*np.linspace(1,1,len(Atmospheric_Scenario.temperature))  # linspace to create the appropiate length for the xarray. 
-    pdb.set_trace()
+    # pdb.set_trace()
     return Final_Output_UQ_SignalProcessor,Lidar.lidar_inputs.dataframe
