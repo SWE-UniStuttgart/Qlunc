@@ -125,7 +125,8 @@ Optics_Module =  optics (name               = Qlunc_yaml_inputs['Modules']['Opti
 # Here we create photonics components and photonics module. Users can create as many components as they want and combine them to create different module types.
 
 AOM = acousto_optic_modulator (name           = Qlunc_yaml_inputs['Components']['AOM']['Name'],
-                               insertion_loss = Qlunc_yaml_inputs['Components']['AOM']['Insertion loss'])
+                               insertion_loss = Qlunc_yaml_inputs['Components']['AOM']['Insertion loss'],
+                               unc_func        = uphc.UQ_AOM)
 
 Optical_Amplifier = optical_amplifier(name             = Qlunc_yaml_inputs['Components']['Optical Amplifier']['Name'],        # Introduce your scanner name.
                                       NoiseFig         = Qlunc_yaml_inputs['Components']['Optical Amplifier']['Optical amplifier noise figure'],          # In [dB]. Can introduce it as a table from manufactures (in this example the data is taken from Thorlabs.com, in section EDFA\Graps) or introduce a single well-known value
@@ -164,7 +165,7 @@ Photonics_Module = photonics(name                    = Qlunc_yaml_inputs['Module
                              photodetector           = eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['Photodetector']),             # Photodetector instance (in this example "Photodetector") or "None". "None" means that you don´t want to include photodetector in Photonics Module, either in uncertainty calculations.
                              optical_amplifier       = eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['Optical amplifier']),         # Scanner instance (in this example "OpticalAmplifier") or "None". "None" means that you don´t want to include Optical Amplifier in Photonics Module, either in uncertainty calculations.
                              laser                   = 'None', #Laser,
-                             acousto_optic_modulator = 'AOM',
+                             acousto_optic_modulator = eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['AOM']),
                              unc_func                = uphc.sum_unc_photonics) #eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['Uncertainty function']))
 
 ## Signal processor components and module: ###########################################################
