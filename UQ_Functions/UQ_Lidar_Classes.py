@@ -51,7 +51,12 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             try:
                 List_Unc_lidar.append(DataFrame['Optical Amplifier'])
             except:
-                 print(colored('Error appending optical amplifier for lidar uncertainty estimations.','cyan', attrs=['bold']))                  
+                print(colored('Error appending optical amplifier for lidar uncertainty estimations.','cyan', attrs=['bold']))                  
+            # try:
+            #     List_Unc_lidar.append(DataFrame['AOM'])
+            # except:
+            #     print(colored('Error appending AOM for lidar uncertainty estimations.','cyan', attrs=['bold']))                  
+        
         except:
             Photonics_Uncertainty = None
             print(colored('Error in photonics module calculations!','cyan', attrs=['bold']))
@@ -118,6 +123,7 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # Create Xarray to store data. Link with Mocalum and yaddum  ###########################################
     # READ netcdf FILE.
     # da=xr.open_dataarray('C:/SWE_LOCAL/GIT_Qlunc/Projects/' + 'Gandia.nc')
+    # pdb.set_trace()
     df=SA.to_netcdf(Lidar.lidar_inputs.dataframe,Qlunc_yaml_inputs,Lidar,Atmospheric_Scenario)
     ########################################################################################################
     ########################################################################################################
