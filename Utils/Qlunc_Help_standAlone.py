@@ -110,6 +110,7 @@ def unc_comb(data):
             except:
                 data_db=data[data_row][0]             
             data_watts.append(10**(data_db/10))
+        # pdb.set_trace()
         for i in range(len(data_watts[0])): # combining all uncertainties making sum of squares and the sqrt of the sum
             zipped_data.append(list(zip(*data_watts))[i])
             res_watts.append(np.sqrt(sum(map (lambda x: x**2,zipped_data[i])))) #  Combined stdv
