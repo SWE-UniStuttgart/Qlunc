@@ -48,13 +48,13 @@ class inputs ():
 
 inputs=inputs(Href        = 100,
               Vref        = 8.5,      
-              alpha       =.5, # shear exponent
-              N_MC        = 100, #number of points for the MC simulation for each point in Npoints
+              alpha       =.2, # shear exponent
+              N_MC        = 400, #number of points for the MC simulation for each point in Npoints
               Npoints     = 15, #N° of measuring points 
-              rho         = [100,250],
-              theta       = [0,0],
+              rho         = [500,2500],
+              theta       = [1,1],
               psi         = [0,0],
-              stdv_rho    = 1 ,    #in percentage
+              stdv_rho    = 1.2,    #in percentage
               stdv_theta  = 0,     #in percentage
               stdv_psi    = 0  )   #in percentage)
 
@@ -67,9 +67,9 @@ class WF_param():
         self.tau        = tau
         self.c_l        = c_l
 WF_param=WF_param(pulsed     = 1,
-                  truncation = 1,
-                  tau_meas   = 365e-9,
-                  tau        = 265e-9,
+                  truncation = 10,
+                  tau_meas   = 486.4e-9,
+                  tau        = 226e-9,
                   c_l        = 3e8)
 
 # Calculate coordinates of the noisy points
@@ -123,7 +123,7 @@ if MC==1:
     #Create the data to apply the weighting function to different heights
     H_interp=[]
     Vrad_int=[]
-    rho_int=np.linspace(0,700,1000)
+    rho_int=np.linspace(0,3000,5000)
     for ind_int in range(len(inputs.theta)):
         H_interp.append(inputs.Href+np.multiply(rho_int,np.sin(np.deg2rad(inputs.theta[ind_int]))) )
         
@@ -137,7 +137,7 @@ if MC==1:
 
     # pdb.set_trace()
     Vrad_weighted=weightingFun(H,H0,Vrad_PL,Vrad_int,rho_noisy,theta_noisy, psi_noisy,WF_param,inputs,rho_int)
-    pdb.set_trace()
+    # pdb.set_trace()
 #####################################################
     # Power Law model        
     # Calculate radial speed
@@ -302,18 +302,20 @@ if MC==1 and GUM==1:
     color=iter(cm.rainbow(np.linspace(0,1,len(inputs.alpha))))   
     for ind_a in range(len(inputs.alpha)):
         c=next(color)
-        ax2.plot(inputs.theta,U_Vrad_S_GUM[ind_a],'-',label='U Shear GUM  (\u03B1 = {})'.format(inputs.alpha[ind_a]),c=c)    
+        ax2.plot(inputs.theta,U_Vrad_S_GUM[ind_a],'-',label='U Shear GUM')    
     ax2.plot(inputs.theta,U_Vrad_homo_MC[0],'ob' , markerfacecolor=(1, 1, 0, 0.5),label='U uniform MC')
     ax2.plot(inputs.theta,U_Vrad_S_MC[0],'or' , markerfacecolor=(1, 1, 0, 0.5),label='U shear MC')
-    ax2.legend()
+    ax2.legend(loc=2, prop={'size': 15})
     # these are matplotlib.patch.Patch properties
     props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
     textstr = '\n'.join((
     r'$\rho=%.2f$' % (inputs.rho[0], ),
     r'$\psi=%.2f$' % (inputs.psi[0], ),
     r'N={}'.format(inputs.N_MC, ),
-    r'Href={}'.format(inputs.Href, )))
-    
+    r'Href={}'.format(inputs.Href, ),
+     r'$\alpha%.2f$={}'.format(inputs.alpha[ind_a] )))
+    ax2.tick_params(axis='x', labelsize=17)
+    ax2.tick_params(axis='y', labelsize=17)
     # place a tex1t box in upper left in axes coords
     ax2.text(0.5, 0.95, textstr, transform=ax2.transAxes, fontsize=14,horizontalalignment='left',verticalalignment='top', bbox=props)
     ax2.set_xlabel('Theta [°]',fontsize=25)
@@ -337,6 +339,9 @@ if MC==1 and GUM==1:
     ax3.set_ylabel('Uncertainty [m/s]',fontsize=25)
     ax3.grid(axis='both')
     plt.title('Vrad Uncertainty',fontsize=30)
+    ax3.tick_params(axis='x', labelsize=17)
+    ax3.tick_params(axis='y', labelsize=17)
+    
     
     #Plot Uncertainty in Vrad with rho
     fig,ax4=plt.subplots()
@@ -344,15 +349,27 @@ if MC==1 and GUM==1:
     color=iter(cm.rainbow(np.linspace(0,1,len(inputs.alpha))))   
     for ind_a in range(len(inputs.alpha)):
         c=next(color)
-        ax4.plot(inputs.rho,U_Vrad_S_GUM[ind_a],'r-',label='U Shear GUM  (\u03B1 = {})'.format(inputs.alpha[ind_a]),c=c)
+        ax4.plot(inputs.rho,U_Vrad_S_GUM[ind_a],'r-',label='U Shear GUM')
     ax4.plot(inputs.rho,U_Vrad_homo_MC[0],'ob' , markerfacecolor=(1, 1, 0, 0.5),label='U uniform MC')
     ax4.plot(inputs.rho,U_Vrad_S_MC[0],'or' , markerfacecolor=(1, 1, 0, 0.5),label='U shear MC')
-    ax4.legend()
+    ax4.legend(loc=2, prop={'size': 15})
     ax4.set_xlabel('rho [m]',fontsize=25)
     ax4.set_ylabel('Uncertainty [m/s]',fontsize=25)
     ax4.grid(axis='both')
     plt.title('Vrad Uncertainty',fontsize=30)
-   
+    props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+    textstr = '\n'.join((
+    r'$\theta=%.2f$' % (inputs.theta[0], ),
+    r'$\psi=%.2f$' % (inputs.psi[0], ),
+    r'N={}'.format(inputs.N_MC, ),
+    r'Href={}'.format(inputs.Href, ),
+    r'$\alpha%.2f$={}'.format(inputs.alpha[ind_a] )
+    ))
+    
+    ax4.tick_params(axis='x', labelsize=17)
+    ax4.tick_params(axis='y', labelsize=17)
+    # ax4.text(0.5, 0.95, textstr, transform=ax2.transAxes, fontsize=14,horizontalalignment='left',verticalalignment='top', bbox=props)
+    plt.show()
     # Histogram
     # plt.figure()
     # plt.hist(Vrad_PL[0],21)
