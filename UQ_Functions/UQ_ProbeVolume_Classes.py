@@ -49,7 +49,7 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,param1):
         Unc_Rayleigh_length=[]
         for ind_focusdist in focus_distance:
             Rayleigh_length.append( (wavelength*(ind_focusdist**2))/(np.pi*(rad_eff)**2))# Rayleigh length  (considered as the probe length) # half-width of the weighting function --> FWHM = 2*zr
-            pdb.set_trace()
+            # pdb.set_trace()
             # Uncertainty rayleigh length       
             Unc_Rayleigh_length.append( np.sqrt(((ind_focusdist**2)*Unc_wavelength/(np.pi*rad_eff))**2 + ((2*wavelength*ind_focusdist*Unc_focus_distance)/(np.pi*rad_eff**2))**2 + ((2*wavelength*(ind_focusdist**2)*Unc_eff_radius_telescope)/(np.pi*rad_eff**3))**2))
     
