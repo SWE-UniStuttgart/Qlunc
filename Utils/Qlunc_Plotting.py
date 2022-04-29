@@ -172,7 +172,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         axs1.set_title('OSNR - Optical Amplifier',fontsize=plot_param['title_fontsize'])
         axs1.grid(axis='both')
         axs1.text(.90,.05,plot_param['Qlunc_version'],transform=axs1.transAxes, fontsize=14,verticalalignment='top',bbox=dict(boxstyle='round', facecolor='white', alpha=0.5))
-        
+        # pdb.set_trace()
         
         
 
