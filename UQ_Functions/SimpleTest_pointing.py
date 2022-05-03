@@ -42,21 +42,21 @@ class inputs ():
         self.rho         = np.linspace(rho[0],rho[1],Npoints)
         self.theta       = np.linspace(theta[0],theta[1],Npoints)
         self.psi         = np.linspace(psi[0],psi[1],Npoints)
-        self.stdv_rho    = stdv_rho/100     #in percentage
-        self.stdv_theta  = stdv_theta/100     #in percentage
-        self.stdv_psi    = stdv_psi/100     #in percentage
+        self.stdv_rho    = stdv_rho
+        self.stdv_theta  = stdv_theta
+        self.stdv_psi    = stdv_psi
 
-inputs=inputs(Href        = 100,
+inputs=inputs(Href        = 120,
               Vref        = 8.5,      
-              alpha       =.2, # shear exponent
-              N_MC        = 400, #number of points for the MC simulation for each point in Npoints
-              Npoints     = 15, #N° of measuring points 
-              rho         = [500,2500],
-              theta       = [1,1],
-              psi         = [0,0],
-              stdv_rho    = 1.2,    #in percentage
-              stdv_theta  = 0,     #in percentage
-              stdv_psi    = 0  )   #in percentage)
+              alpha       = 0.11, # shear exponent
+              N_MC        = 50000, #number of points for the MC simulation for each point in Npoints
+              Npoints     = 150, #N° of measuring points 
+              rho         = [500,500],
+              theta       = [-90,90],
+              psi         = [10,10],
+              stdv_rho    = 0,    
+              stdv_theta  = 1,     
+              stdv_psi    = 0  )   
 
 # Weighting function
 class WF_param():
@@ -68,8 +68,8 @@ class WF_param():
         self.c_l        = c_l
 WF_param=WF_param(pulsed     = 1,
                   truncation = 10,
-                  tau_meas   = 486.4e-9,
-                  tau        = 226e-9,
+                  tau_meas   = 119.5e-9,
+                  tau        = 95e-9,
                   c_l        = 3e8)
 
 # Calculate coordinates of the noisy points
@@ -77,9 +77,9 @@ rho_noisy   = []
 theta_noisy = []
 psi_noisy   = []
 for ind_noise in range(inputs.Npoints):
-    rho_noisy.append(np.random.normal(inputs.rho[ind_noise],inputs.stdv_rho*inputs.rho[ind_noise],inputs.N_MC))
-    theta_noisy.append(np.random.normal(inputs.theta[ind_noise],inputs.stdv_theta*abs(inputs.theta[ind_noise]),inputs.N_MC))
-    psi_noisy.append(np.random.normal(inputs.psi[ind_noise],inputs.stdv_psi*abs(inputs.psi[ind_noise]),inputs.N_MC))
+    rho_noisy.append(np.random.normal(inputs.rho[ind_noise],inputs.stdv_rho,inputs.N_MC))
+    theta_noisy.append(np.random.normal(inputs.theta[ind_noise],inputs.stdv_theta,inputs.N_MC))
+    psi_noisy.append(np.random.normal(inputs.psi[ind_noise],inputs.stdv_psi,inputs.N_MC))
 
 # Cartesian Point coordinates
 # def polar2cart(r, theta, psi):
@@ -119,25 +119,30 @@ if MC==1:
     # Calculate the hights
     H0 = [inputs.Href+ np.multiply(inputs.rho[ind_mul],np.sin(np.deg2rad(inputs.theta[ind_mul]))) for ind_mul in range(len(inputs.theta)) ] # Original heights
     H  = [inputs.Href+np.multiply(rho_noisy[ind_mul],np.sin(np.deg2rad(theta_noisy[ind_mul]))) for ind_mul in range(len(theta_noisy))] # Noisy heights
-    
-    #Create the data to apply the weighting function to different heights
-    H_interp=[]
-    Vrad_int=[]
-    rho_int=np.linspace(0,3000,5000)
-    for ind_int in range(len(inputs.theta)):
-        H_interp.append(inputs.Href+np.multiply(rho_int,np.sin(np.deg2rad(inputs.theta[ind_int]))) )
-        
-        # These are all the points along the probe volume. Do I have to use theta , psi and rho here instead of noisy contributions????
-        Vrad_int.append ([inputs.Vref*(np.cos(np.radians(inputs.psi[ind_int]))*np.cos(np.radians(inputs.theta[ind_int])))*((( inputs.Href+Hinterp_i)/inputs.Href)**inputs.alpha[0]) for Hinterp_i in H_interp[ind_int]])
-    
-    # Calculate the radial speed for the noisy points within the prove volume
+    # Calculate the radial speed for the noisy points 
     Vrad_PL=[]
     for ind_npoints in range(len(inputs.rho)):
-        Vrad_PL.append (inputs.Vref*(np.cos(np.radians(psi_noisy[ind_npoints]))*np.cos(np.radians(theta_noisy[ind_npoints])))*((( inputs.Href+np.sin(np.radians(theta_noisy[ind_npoints]))*rho_noisy[ind_npoints])/inputs.Href)**inputs.alpha[0]))
+        Vrad_PL.append (inputs.Vref*(np.cos(np.radians(psi_noisy[ind_npoints]))*np.cos(np.radians(theta_noisy[ind_npoints])))*(((inputs.Href+np.sin(np.radians(theta_noisy[ind_npoints]))*rho_noisy[ind_npoints])/inputs.Href)**inputs.alpha[0]))
 
-    # pdb.set_trace()
-    Vrad_weighted=weightingFun(H,H0,Vrad_PL,Vrad_int,rho_noisy,theta_noisy, psi_noisy,WF_param,inputs,rho_int)
-    # pdb.set_trace()
+    # Uncertainty: For this to be compared with Vrad_weighted[1] I need to weight Vrad_PL 
+    U_Vrad_S_MC.append([np.nanstd(Vrad_PL[ind_stdv]) for ind_stdv in range(len(Vrad_PL))])
+    
+    
+    # U_Vrad_S_MC=Vrad_weighted[1]    
+    # #Create the data to apply the weighting function to different heights
+    # H_interp=[]
+    # Vrad_int=[]
+    # rho_int=np.linspace(0,3000,5000)
+    # for ind_int in range(len(inputs.theta)):
+    #     H_interp.append(inputs.Href+np.multiply(rho_int,np.sin(np.deg2rad(inputs.theta[ind_int]))) )
+    #     pdb.set_trace()
+    #     # These are all the points along the probe volume. Do I have to use theta , psi and rho here instead of noisy contributions????
+    #     Vrad_int.append ([inputs.Vref*(np.cos(np.radians(inputs.psi[ind_int]))*np.cos(np.radians(inputs.theta[ind_int])))*(((Hinterp_i)/inputs.Href)**inputs.alpha[0]) for Hinterp_i in H_interp[ind_int]])
+    # # Weighting function
+    # Vrad_weighted=weightingFun(H,H0,Vrad_PL,Vrad_int,rho_noisy,theta_noisy, psi_noisy,WF_param,inputs,rho_int)
+   
+    
+    
 #####################################################
     # Power Law model        
     # Calculate radial speed
@@ -154,7 +159,7 @@ if MC==1:
     # for vec_rho in range(Npoints):
     #     # Sort to apply the weighting function
     #     # index_sort=[list(enumerate(rho_noisy[vec_rho_sor])) for vec_rho_sor in range(np.shape(rho_noisy)[0])] #Get indexes
-    #     index_sort=[list(enumerate(rho_noisy[vec_rho])) for vec_rho_sor in range(np.shape(rho_noisy)[0])] #Get indexes
+    #       index_sort=[list(enumerate(rho_noisy[vec_rho])) for vec_rho_sor in range(np.shape(rho_noisy)[0])] #Get indexes
         
     #     # for ind2sort in range(len(rho)):
     #     index_sort[vec_rho].sort(key=lambda x:x[1])  # Sort by value. Ascendent
@@ -181,12 +186,7 @@ if MC==1:
     # fig,axs0=plt.subplots(), axs0.hist(WeightingFunction/z)
     # Vrad_PL,Vh_rec_shear,Vrad_PL_PB = [],[],[]
     
-    # for ind_npoints in range(len(rho)):
-    #     Vrad_PL.append (Vref*(np.cos(np.radians(psi_noisy[ind_npoints]))*np.cos(np.radians(theta_noisy[ind_npoints])))*((( Href+np.sin(np.radians(theta_noisy[ind_npoints]))*rho_noisy[ind_npoints])/(Href))**alpha[0]))
-
-    # Uncertainty: For this to be compared with Vrad_weighted[1] I need to weight Vrad_PL 
-    U_Vrad_S_MC.append([np.nanstd(Vrad_PL[ind_stdv]) for ind_stdv in range(len(Vrad_PL))])
-    # U_Vrad_S_MC=Vrad_weighted[1]          
+         
            
     # U_Vh_PL.append([np.std(Vh_rec_shear[ind_stdv])*Vref for ind_stdv in range(len(Vh_rec_shear))])
     # g=np.digitize(WeightingFunction,np.linspace(np.min(WeightingFunction),np.max(WeightingFunction),500))
@@ -197,18 +197,18 @@ if GUM==1:
    
     # Homogeneous flow
     U_Vrad_homo_GUM,U_Vrad_theta,U_Vrad_psi,U_Vh,U_Vrad_range=[],[],[],[],[]
-    U_Vrad_theta.append([inputs.Vref*np.cos(np.radians(inputs.psi[ind_u]))*np.sin(np.radians(inputs.theta[ind_u]))*np.radians(inputs.stdv_theta*inputs.theta[ind_u]) for ind_u in range(len(inputs.theta))])
-    U_Vrad_psi.append([inputs.Vref*np.cos(np.radians(inputs.theta[ind_u]))*np.sin(np.radians(inputs.psi[ind_u]))*np.radians(inputs.stdv_psi*inputs.psi[ind_u]) for ind_u in range(len(inputs.theta))])   
+    U_Vrad_theta.append([inputs.Vref*np.cos(np.radians(inputs.psi[ind_u]))*np.sin(np.radians(inputs.theta[ind_u]))*np.radians(inputs.stdv_theta) for ind_u in range(len(inputs.theta))])
+    U_Vrad_psi.append([inputs.Vref*np.cos(np.radians(inputs.theta[ind_u]))*np.sin(np.radians(inputs.psi[ind_u]))*np.radians(inputs.stdv_psi) for ind_u in range(len(inputs.theta))])   
     U_Vrad_homo_GUM.append([np.sqrt((U_Vrad_theta[0][ind_u])**2+(U_Vrad_psi[0][ind_u])**2) for ind_u in range(len(inputs.theta))])
     
     # Including shear:
     U_Vrad_sh_theta,U_Vrad_sh_psi,U_Vh_sh,U_Vrad_S_GUM,U_Vrad_sh_range= [],[],[],[],[]       
     for ind_alpha in range(len(inputs.alpha)):
-        # U_Vrad_sh_theta.append([Vref*(((np.sin(np.radians(theta_noisy[ind_u]))*rho_noisy[ind_u])/(np.sin(np.radians(theta[ind_u]))*rho[ind_u]))**alpha[ind_alpha])*np.cos(np.radians(psi[ind_u]))*np.cos(np.radians(theta[ind_u]))*np.radians(stdv_theta*theta[ind_u])*abs((alpha[ind_alpha]/math.tan(np.radians(theta[ind_u])))-np.tan(np.radians(theta[ind_u])) ) for ind_u in range(len(theta))])
+        # U_Vrad_sh_theta.append([inputs.Vref*(((np.sin(np.radians(theta_noisy[ind_u]))*rho_noisy[ind_u])/(np.sin(np.radians(inputs.theta[ind_u]))*inputs.rho[ind_u]))**inputs.alpha[ind_alpha])*np.cos(np.radians(inputs.psi[ind_u]))*np.cos(np.radians(inputs.theta[ind_u]))*np.radians(inputs.stdv_theta*inputs.theta[ind_u])*abs((inputs.alpha[ind_alpha]/math.tan(np.radians(inputs.theta[ind_u])))-np.tan(np.radians(inputs.theta[ind_u])) ) for ind_u in range(len(inputs.theta))])
 
-        U_Vrad_sh_theta.append([inputs.Vref*(((inputs.Href+(np.sin(np.radians(inputs.theta[ind_u]))*inputs.rho[ind_u]))/inputs.Href)**inputs.alpha[ind_alpha])*np.cos(np.radians(inputs.psi[ind_u]))*np.cos(np.radians(inputs.theta[ind_u]))*np.radians(inputs.stdv_theta*inputs.theta[ind_u])*abs((inputs.alpha[ind_alpha]*(inputs.rho[ind_u]*np.cos(np.radians(inputs.theta[ind_u]))/(inputs.Href+inputs.rho[ind_u]*np.sin(np.radians(inputs.theta[ind_u])))))-np.tan(np.radians(inputs.theta[ind_u])) ) for ind_u in range(len(inputs.theta))])
-        U_Vrad_sh_psi.append([inputs.Vref*(((inputs.Href+np.sin(np.radians(inputs.theta[ind_u]))*inputs.rho[ind_u])/(inputs.Href))**inputs.alpha[ind_alpha])*np.cos(np.radians(inputs.theta[ind_u]))*np.sin(np.radians(inputs.psi[ind_u]))*np.radians(inputs.stdv_psi*inputs.psi[ind_u]) for ind_u in range(len(inputs.psi))])            
-        U_Vrad_sh_range.append([inputs.Vref*(((inputs.Href+np.sin(np.radians(inputs.theta[ind_u]))*inputs.rho[ind_u])/(inputs.Href))**inputs.alpha[ind_alpha])*inputs.alpha[ind_alpha]*np.sin(np.radians(inputs.theta[ind_u]))/(inputs.Href+(np.sin(np.radians(inputs.theta[ind_u]))*inputs.rho[ind_u]))*np.cos(np.radians(inputs.theta[ind_u]))*np.cos(np.radians(inputs.psi[ind_u]))*(inputs.stdv_rho*inputs.rho[ind_u]) for ind_u in range(len(inputs.rho))])
+        U_Vrad_sh_theta.append([inputs.Vref*(((inputs.Href+(np.sin(np.radians(inputs.theta[ind_u]))*inputs.rho[ind_u]))/inputs.Href)**inputs.alpha[ind_alpha])*np.cos(np.radians(inputs.psi[ind_u]))*np.cos(np.radians(inputs.theta[ind_u]))*np.radians(inputs.stdv_theta)*((inputs.alpha[ind_alpha]*(inputs.rho[ind_u]*np.cos(np.radians(inputs.theta[ind_u]))/(inputs.Href+inputs.rho[ind_u]*np.sin(np.radians(inputs.theta[ind_u])))))-np.tan(np.radians(inputs.theta[ind_u])) ) for ind_u in range(len(inputs.theta))])
+        U_Vrad_sh_psi.append([inputs.Vref*(((inputs.Href+np.sin(np.radians(inputs.theta[ind_u]))*inputs.rho[ind_u])/(inputs.Href))**inputs.alpha[ind_alpha])*np.cos(np.radians(inputs.theta[ind_u]))*np.sin(np.radians(inputs.psi[ind_u]))*np.radians(inputs.stdv_psi) for ind_u in range(len(inputs.psi))])            
+        U_Vrad_sh_range.append([inputs.Vref*(((inputs.Href+np.sin(np.radians(inputs.theta[ind_u]))*inputs.rho[ind_u])/(inputs.Href))**inputs.alpha[ind_alpha])*inputs.alpha[ind_alpha]*np.sin(np.radians(inputs.theta[ind_u]))/(inputs.Href+(np.sin(np.radians(inputs.theta[ind_u]))*inputs.rho[ind_u]))*np.cos(np.radians(inputs.theta[ind_u]))*np.cos(np.radians(inputs.psi[ind_u]))*(inputs.stdv_rho) for ind_u in range(len(inputs.rho))])
         U_Vrad_S_GUM.append([np.sqrt((np.mean(U_Vrad_sh_theta[ind_alpha][ind_u]))**2+(np.mean(U_Vrad_sh_psi[ind_alpha][ind_u]))**2+(np.mean(U_Vrad_sh_range[ind_alpha][ind_u]))**2) for ind_u in range(len(inputs.rho)) ])
             
         
