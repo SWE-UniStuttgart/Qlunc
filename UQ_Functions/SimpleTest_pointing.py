@@ -46,17 +46,17 @@ class inputs ():
         self.stdv_theta  = stdv_theta
         self.stdv_psi    = stdv_psi
 
-inputs=inputs(Href        = 120,
-              Vref        = 8.5,      
-              alpha       = 0.11, # shear exponent
-              N_MC        = 50000, #number of points for the MC simulation for each point in Npoints
+inputs=inputs(Href        = 100e+2,
+              Vref        = 2,      
+              alpha       = 0.1, # shear exponent
+              N_MC        = 500, #number of points for the MC simulation for each point in Npoints
               Npoints     = 150, #N° of measuring points 
-              rho         = [500,500],
-              theta       = [-90,90],
-              psi         = [10,10],
-              stdv_rho    = 0,    
-              stdv_theta  = 1,     
-              stdv_psi    = 0  )   
+              rho         = [5000,5000],
+              theta       = [5.7,5.7],
+              psi         = [45,45],
+              stdv_rho    = 10,    
+              stdv_theta  = 2,     
+              stdv_psi    = 2 )   
 
 # Weighting function
 class WF_param():
@@ -102,7 +102,8 @@ if MC==1:
     
     # Calculate radial speed
     Vrad_homo = []
-    Vrad_homo=([inputs.Vref*np.cos(np.radians(theta_noisy[ind_theta]))*np.cos(np.radians(psi_noisy[ind_theta])) for ind_theta in range (len(theta_noisy))])
+    # Vrad_homo=([inputs.Vref*np.cos(np.radians(theta_noisy[ind_theta]))*np.cos(np.radians(psi_noisy[ind_theta])) for ind_theta in range (len(theta_noisy))])
+    Vrad_homo=([100*np.cos(np.radians(theta_noisy[ind_theta]))*np.cos(np.radians(psi_noisy[ind_theta]))/(np.cos(np.radians(inputs.theta[ind_theta]))*np.cos(np.radians(inputs.psi[ind_theta]))) for ind_theta in range (len(theta_noisy))])
 
     # simulation to get reconstructed Vref from the simulated points
     Vh_rec_homo_MC=[]
@@ -122,7 +123,10 @@ if MC==1:
     # Calculate the radial speed for the noisy points 
     Vrad_PL=[]
     for ind_npoints in range(len(inputs.rho)):
-        Vrad_PL.append (inputs.Vref*(np.cos(np.radians(psi_noisy[ind_npoints]))*np.cos(np.radians(theta_noisy[ind_npoints])))*(((inputs.Href+np.sin(np.radians(theta_noisy[ind_npoints]))*rho_noisy[ind_npoints])/inputs.Href)**inputs.alpha[0]))
+        #Vrad_PL.append (inputs.Vref*(np.cos(np.radians(psi_noisy[ind_npoints]))*np.cos(np.radians(theta_noisy[ind_npoints])))*(((inputs.Href+np.sin(np.radians(theta_noisy[ind_npoints]))*rho_noisy[ind_npoints])/inputs.Href)**inputs.alpha[0]))
+        
+        Vrad_PL.append (100*(np.cos(np.radians(psi_noisy[ind_npoints]))*np.cos(np.radians(theta_noisy[ind_npoints])))*(((inputs.Href+np.sin(np.radians(theta_noisy[ind_npoints]))*rho_noisy[ind_npoints])/inputs.Href)**inputs.alpha[0])\
+                           /((np.cos(np.radians(inputs.psi[ind_npoints]))*np.cos(np.radians(inputs.theta[ind_npoints])))*(((inputs.Href+np.sin(np.radians(inputs.theta[ind_npoints]))*inputs.rho[ind_npoints])/inputs.Href)**inputs.alpha[0])))
 
     # Uncertainty: For this to be compared with Vrad_weighted[1] I need to weight Vrad_PL 
     U_Vrad_S_MC.append([np.nanstd(Vrad_PL[ind_stdv]) for ind_stdv in range(len(Vrad_PL))])
@@ -197,19 +201,33 @@ if GUM==1:
    
     # Homogeneous flow
     U_Vrad_homo_GUM,U_Vrad_theta,U_Vrad_psi,U_Vh,U_Vrad_range=[],[],[],[],[]
-    U_Vrad_theta.append([inputs.Vref*np.cos(np.radians(inputs.psi[ind_u]))*np.sin(np.radians(inputs.theta[ind_u]))*np.radians(inputs.stdv_theta) for ind_u in range(len(inputs.theta))])
-    U_Vrad_psi.append([inputs.Vref*np.cos(np.radians(inputs.theta[ind_u]))*np.sin(np.radians(inputs.psi[ind_u]))*np.radians(inputs.stdv_psi) for ind_u in range(len(inputs.theta))])   
+    # U_Vrad_theta.append([inputs.Vref*np.cos(np.radians(inputs.psi[ind_u]))*np.sin(np.radians(inputs.theta[ind_u]))*np.radians(inputs.stdv_theta) for ind_u in range(len(inputs.theta))])
+    # U_Vrad_theta.append([inputs.Vref*np.cos(np.radians(inputs.psi[ind_u]))*np.sin(np.radians(inputs.theta[ind_u]))*np.radians(inputs.stdv_theta) for ind_u in range(len(inputs.theta))])
+    # U_Vrad_psi.append([inputs.Vref*np.cos(np.radians(inputs.theta[ind_u]))*np.sin(np.radians(inputs.psi[ind_u]))*np.radians(inputs.stdv_psi) for ind_u in range(len(inputs.theta))])
+    
+    # Unceratinty (%)
+    U_Vrad_theta.append([100*np.tan(np.radians(inputs.theta[ind_u]))*np.radians(inputs.stdv_theta) for ind_u in range(len(inputs.theta))])    
+    U_Vrad_psi.append([100*np.tan(np.radians(inputs.psi[ind_u]))*np.radians(inputs.stdv_psi) for ind_u in range(len(inputs.theta))])       
     U_Vrad_homo_GUM.append([np.sqrt((U_Vrad_theta[0][ind_u])**2+(U_Vrad_psi[0][ind_u])**2) for ind_u in range(len(inputs.theta))])
     
     # Including shear:
     U_Vrad_sh_theta,U_Vrad_sh_psi,U_Vh_sh,U_Vrad_S_GUM,U_Vrad_sh_range= [],[],[],[],[]       
     for ind_alpha in range(len(inputs.alpha)):
-        # U_Vrad_sh_theta.append([inputs.Vref*(((np.sin(np.radians(theta_noisy[ind_u]))*rho_noisy[ind_u])/(np.sin(np.radians(inputs.theta[ind_u]))*inputs.rho[ind_u]))**inputs.alpha[ind_alpha])*np.cos(np.radians(inputs.psi[ind_u]))*np.cos(np.radians(inputs.theta[ind_u]))*np.radians(inputs.stdv_theta*inputs.theta[ind_u])*abs((inputs.alpha[ind_alpha]/math.tan(np.radians(inputs.theta[ind_u])))-np.tan(np.radians(inputs.theta[ind_u])) ) for ind_u in range(len(inputs.theta))])
-
-        U_Vrad_sh_theta.append([inputs.Vref*(((inputs.Href+(np.sin(np.radians(inputs.theta[ind_u]))*inputs.rho[ind_u]))/inputs.Href)**inputs.alpha[ind_alpha])*np.cos(np.radians(inputs.psi[ind_u]))*np.cos(np.radians(inputs.theta[ind_u]))*np.radians(inputs.stdv_theta)*((inputs.alpha[ind_alpha]*(inputs.rho[ind_u]*np.cos(np.radians(inputs.theta[ind_u]))/(inputs.Href+inputs.rho[ind_u]*np.sin(np.radians(inputs.theta[ind_u])))))-np.tan(np.radians(inputs.theta[ind_u])) ) for ind_u in range(len(inputs.theta))])
-        U_Vrad_sh_psi.append([inputs.Vref*(((inputs.Href+np.sin(np.radians(inputs.theta[ind_u]))*inputs.rho[ind_u])/(inputs.Href))**inputs.alpha[ind_alpha])*np.cos(np.radians(inputs.theta[ind_u]))*np.sin(np.radians(inputs.psi[ind_u]))*np.radians(inputs.stdv_psi) for ind_u in range(len(inputs.psi))])            
-        U_Vrad_sh_range.append([inputs.Vref*(((inputs.Href+np.sin(np.radians(inputs.theta[ind_u]))*inputs.rho[ind_u])/(inputs.Href))**inputs.alpha[ind_alpha])*inputs.alpha[ind_alpha]*np.sin(np.radians(inputs.theta[ind_u]))/(inputs.Href+(np.sin(np.radians(inputs.theta[ind_u]))*inputs.rho[ind_u]))*np.cos(np.radians(inputs.theta[ind_u]))*np.cos(np.radians(inputs.psi[ind_u]))*(inputs.stdv_rho) for ind_u in range(len(inputs.rho))])
-        U_Vrad_S_GUM.append([np.sqrt((np.mean(U_Vrad_sh_theta[ind_alpha][ind_u]))**2+(np.mean(U_Vrad_sh_psi[ind_alpha][ind_u]))**2+(np.mean(U_Vrad_sh_range[ind_alpha][ind_u]))**2) for ind_u in range(len(inputs.rho)) ])
+        
+        
+       #U_Vrad_sh_theta.append([inputs.Vref*(((np.sin(np.radians(theta_noisy[ind_u]))*rho_noisy[ind_u])/(np.sin(np.radians(inputs.theta[ind_u]))*inputs.rho[ind_u]))**inputs.alpha[ind_alpha])*np.cos(np.radians(inputs.psi[ind_u]))*np.cos(np.radians(inputs.theta[ind_u]))*np.radians(inputs.stdv_theta*inputs.theta[ind_u])*abs((inputs.alpha[ind_alpha]/math.tan(np.radians(inputs.theta[ind_u])))-np.tan(np.radians(inputs.theta[ind_u])) ) for ind_u in range(len(inputs.theta))])
+       #U_Vrad_sh_theta.append([inputs.Vref*(((inputs.Href+(np.sin(np.radians(inputs.theta[ind_u]))*inputs.rho[ind_u]))/inputs.Href)**inputs.alpha[ind_alpha])*np.cos(np.radians(inputs.psi[ind_u]))*np.cos(np.radians(inputs.theta[ind_u]))*np.radians(inputs.stdv_theta)*((inputs.alpha[ind_alpha]*(inputs.rho[ind_u]*np.cos(np.radians(inputs.theta[ind_u]))/(inputs.Href+inputs.rho[ind_u]*np.sin(np.radians(inputs.theta[ind_u])))))-np.tan(np.radians(inputs.theta[ind_u])) ) for ind_u in range(len(inputs.theta))])
+       #U_Vrad_sh_psi.append([inputs.Vref*(((inputs.Href+np.sin(np.radians(inputs.theta[ind_u]))*inputs.rho[ind_u])/(inputs.Href))**inputs.alpha[ind_alpha])*np.cos(np.radians(inputs.theta[ind_u]))*np.sin(np.radians(inputs.psi[ind_u]))*np.radians(inputs.stdv_psi) for ind_u in range(len(inputs.psi))])            
+       # U_Vrad_sh_range.append([inputs.Vref*(((inputs.Href+np.sin(np.radians(inputs.theta[ind_u]))*inputs.rho[ind_u])/(inputs.Href))**inputs.alpha[ind_alpha])*inputs.alpha[ind_alpha]*np.sin(np.radians(inputs.theta[ind_u]))/(inputs.Href+(np.sin(np.radians(inputs.theta[ind_u]))*inputs.rho[ind_u]))*np.cos(np.radians(inputs.theta[ind_u]))*np.cos(np.radians(inputs.psi[ind_u]))*(inputs.stdv_rho) for ind_u in range(len(inputs.rho))])
+       # U_Vrad_S_GUM.append([np.sqrt((np.mean(U_Vrad_sh_theta[ind_alpha][ind_u]))**2+(np.mean(U_Vrad_sh_psi[ind_alpha][ind_u]))**2+(np.mean(U_Vrad_sh_range[ind_alpha][ind_u]))**2) for ind_u in range(len(inputs.rho)) ])    
+        
+       # Uncertainty in %:
+        U_Vrad_sh_theta.append([np.sqrt((100*np.radians(inputs.stdv_theta)*((inputs.alpha[ind_alpha]*(inputs.rho[ind_u]*np.cos(np.radians(inputs.theta[ind_u]))/(inputs.Href+inputs.rho[ind_u]*np.sin(np.radians(inputs.theta[ind_u])))))-np.tan(np.radians(inputs.theta[ind_u])) ))**2) for ind_u in range(len(inputs.theta))])
+        U_Vrad_sh_psi.append([np.sqrt((100*np.tan(np.radians(inputs.psi[ind_u]))*np.radians(inputs.stdv_psi))**2) for ind_u in range(len(inputs.psi))])            
+        U_Vrad_sh_range.append([np.sqrt((100*np.sin(np.radians(inputs.theta[ind_u]))*inputs.alpha[ind_alpha]/(inputs.rho[ind_u]*np.sin(np.radians(inputs.theta[ind_u]))+inputs.Href)*inputs.stdv_rho)**2) for ind_u in range(len(inputs.rho))])
+                    
+        
+        U_Vrad_S_GUM.append([np.sqrt(((U_Vrad_sh_theta[ind_alpha][ind_u]))**2+((U_Vrad_sh_psi[ind_alpha][ind_u]))**2+((U_Vrad_sh_range[ind_alpha][ind_u]))**2) for ind_u in range(len(inputs.rho)) ])
             
         
 #%% Plot errors
@@ -298,11 +316,11 @@ if MC==1 and GUM==1:
     
     #Plot Uncertainty in Vrad with theta
     fig,ax2=plt.subplots()
-    ax2.plot(inputs.theta,U_Vrad_homo_GUM[0],'b-',label='U Uniform flow GUM')
+    ax2.plot(inputs.theta,U_Vrad_theta[0],'b-',label='U Uniform flow GUM')
     color=iter(cm.rainbow(np.linspace(0,1,len(inputs.alpha))))   
     for ind_a in range(len(inputs.alpha)):
         c=next(color)
-        ax2.plot(inputs.theta,U_Vrad_S_GUM[ind_a],'-',label='U Shear GUM')    
+        ax2.plot(inputs.theta,U_Vrad_sh_theta[ind_a],'-',label='U Shear GUM')    
     ax2.plot(inputs.theta,U_Vrad_homo_MC[0],'ob' , markerfacecolor=(1, 1, 0, 0.5),label='U uniform MC')
     ax2.plot(inputs.theta,U_Vrad_S_MC[0],'or' , markerfacecolor=(1, 1, 0, 0.5),label='U shear MC')
     ax2.legend(loc=2, prop={'size': 15})
@@ -327,11 +345,11 @@ if MC==1 and GUM==1:
 
     #Plot Uncertainty in Vrad with psi
     fig,ax3=plt.subplots()
-    ax3.plot(inputs.psi,U_Vrad_homo_GUM[0],'b-',label='U Uniform flow GUM')
+    ax3.plot(inputs.psi,U_Vrad_psi[0],'b-',label='U Uniform flow GUM')
     color=iter(cm.rainbow(np.linspace(0,1,len(inputs.alpha))))   
     for ind_a in range(len(inputs.alpha)):
         c=next(color)
-        ax3.plot(inputs.psi,U_Vrad_S_GUM[ind_a],'r-',label='U Shear GUM  (\u03B1 = {})'.format(inputs.alpha[ind_a]),c=c)
+        ax3.plot(inputs.psi,U_Vrad_sh_psi[ind_a],'r-',label='U Shear GUM  (\u03B1 = {})'.format(inputs.alpha[ind_a]),c=c)
     ax3.plot(inputs.psi,U_Vrad_homo_MC[0],'ob' , markerfacecolor=(1, 1, 0, 0.5),label='U uniform MC')
     ax3.plot(inputs.psi,U_Vrad_S_MC[0],'or' , markerfacecolor=(1, 1, 0, 0.5),label='U shear MC')
     ax3.legend()
@@ -349,7 +367,7 @@ if MC==1 and GUM==1:
     color=iter(cm.rainbow(np.linspace(0,1,len(inputs.alpha))))   
     for ind_a in range(len(inputs.alpha)):
         c=next(color)
-        ax4.plot(inputs.rho,U_Vrad_S_GUM[ind_a],'r-',label='U Shear GUM')
+        ax4.plot(inputs.rho,U_Vrad_sh_range[ind_a],'r-',label='U Shear GUM')
     ax4.plot(inputs.rho,U_Vrad_homo_MC[0],'ob' , markerfacecolor=(1, 1, 0, 0.5),label='U uniform MC')
     ax4.plot(inputs.rho,U_Vrad_S_MC[0],'or' , markerfacecolor=(1, 1, 0, 0.5),label='U shear MC')
     ax4.legend(loc=2, prop={'size': 15})
@@ -370,6 +388,42 @@ if MC==1 and GUM==1:
     ax4.tick_params(axis='y', labelsize=17)
     # ax4.text(0.5, 0.95, textstr, transform=ax2.transAxes, fontsize=14,horizontalalignment='left',verticalalignment='top', bbox=props)
     plt.show()
+    
+    
+    #Plot Global Uncertainty
+    fig,ax1=plt.subplots()
+    ax1.plot(inputs.rho,U_Vrad_homo_GUM[0],'b-',label='U Uniform flow GUM')
+    color=iter(cm.rainbow(np.linspace(0,1,len(inputs.alpha))))   
+    for ind_a in range(len(inputs.alpha)):
+        c=next(color)
+        ax1.plot(inputs.rho,U_Vrad_S_GUM[ind_a],'-',label='U Shear GUM')    
+    ax1.plot(inputs.rho,U_Vrad_homo_MC[0],'ob' , markerfacecolor=(1, 1, 0, 0.5),label='U uniform MC')
+    ax1.plot(inputs.rho,U_Vrad_S_MC[0],'or' , markerfacecolor=(1, 1, 0, 0.5),label='U shear MC')
+    ax1.legend(loc=2, prop={'size': 15})
+    # these are matplotlib.patch.Patch properties
+    props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+    textstr = '\n'.join((
+    r'$\rho=%.2f$' % (inputs.rho[0], ),
+    r'$\psi=%.2f$' % (inputs.psi[0], ),
+    r'N={}'.format(inputs.N_MC, ),
+    r'Href={}'.format(inputs.Href, ),
+     r'$\alpha%.2f$={}'.format(inputs.alpha[ind_a] )))
+    ax1.tick_params(axis='x', labelsize=17)
+    ax1.tick_params(axis='y', labelsize=17)
+    # place a tex1t box in upper left in axes coords
+    ax1.text(0.5, 0.95, textstr, transform=ax2.transAxes, fontsize=14,horizontalalignment='left',verticalalignment='top', bbox=props)
+    ax1.set_xlabel('Theta [°]',fontsize=25)
+    ax1.set_ylabel('Uncertainty [m/s]',fontsize=25)
+    ax1.grid(axis='both')
+    plt.title('Vrad Global Uncertainty',fontsize=30)
+    plt.show()
+    
+    
+print('U_MCarlo(%): ',np.mean(U_Vrad_S_MC[0]))
+print('U_GUM(%)   : ',U_Vrad_S_GUM[0][0])
+    
+    
+    
     # Histogram
     # plt.figure()
     # plt.hist(Vrad_PL[0],21)
