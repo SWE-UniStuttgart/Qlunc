@@ -121,14 +121,14 @@ def UQ_WFR (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scan_Unc):
         xi0 = xi[p_sphere]
         yi0 = yi[p_sphere]
         zi0 = zi[p_sphere]
-        
+        pdb.set_trace()
         # Transform coordinates to spherical coordinate system
-        # rho1,phi1,theta1 = SA.cart2sph(xi0,yi0,zi0)       
-        # rho_point.append(rho1)
-        # phi_point.append(phi1)
-        # theta_point.append(theta1)
+        rho1,phi1,theta1 = SA.cart2sph(xi0,yi0,zi0)       
+        rho_point.append(rho1)
+        phi_point.append(phi1)
+        theta_point.append(theta1)
         
-        #Plot theoretical measuring points and random points on the sphere surface
+        # Plot theoretical measuring points and random points on the sphere surface
         ax.plot(Scan_Unc['MeasPoint_Coordinates'][0][p_sphere],Scan_Unc['MeasPoint_Coordinates'][1][p_sphere],Scan_Unc['MeasPoint_Coordinates'][2][p_sphere],'ob',markersize=7.8)
         ax.plot(xi0,yi0,zi0,'or',markersize=4)
         
