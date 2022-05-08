@@ -114,11 +114,11 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     #     # xc,yc,zc=SA.sph2cart(param1,param3,param2)
         
     
-    for ind_noise in range(150):
-        rho_noisy.append(np.random.normal(rho[ind_noise],stdv_rho,50000))
-        theta_noisy.append(np.random.normal(theta[ind_noise],stdv_theta,50000))
-        psi_noisy.append(np.random.normal(psi[ind_noise],stdv_psi,50000))
-    
+    for ind_noise in range(Lidar.optics.scanner.N_Points):
+        rho_noisy.append(np.random.normal(rho[ind_noise],stdv_rho,Lidar.optics.scanner.N_MC))
+        theta_noisy.append(np.random.normal(theta[ind_noise],stdv_theta,Lidar.optics.scanner.N_MC))
+        psi_noisy.append(np.random.normal(psi[ind_noise],stdv_psi,Lidar.optics.scanner.N_MC))
+        x_noisy, y_noisy,z_noisy = SA.sph2cart(rho_noisy,theta_noisy,psi_noisy)
     
     #%% MC Method 
     # Calculate radial speed uncertainty fo an homogeneous flow
@@ -171,7 +171,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
                     
         
         U_Vrad_S_GUM.append([np.sqrt(((U_Vrad_sh_theta[ind_alpha][ind_u]))**2+((U_Vrad_sh_psi[ind_alpha][ind_u]))**2+((U_Vrad_sh_range[ind_alpha][ind_u]))**2) for ind_u in range(len(rho)) ])
-    pdb.set_trace()
+    
     
     
     
@@ -181,7 +181,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     plt.plot(theta,U_Vrad_S_GUM[0])
     plt.plot(theta,U_Vrad_homo_GUM[0])    
     
-    
+    pdb.set_trace()
     
     for param1_or,param2_or,param3_or in zip(param1,param2,param3):# Take coordinates from inputs
         Mean_DISTANCE=[]
