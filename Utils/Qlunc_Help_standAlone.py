@@ -133,7 +133,7 @@ def sph2cart(rho,theta,phi):
         x.append(rho[i]*np.cos((theta[i]))*np.sin((phi[i])))
         y.append(rho[i]*np.sin((phi[i]))*np.sin((theta[i])) )
         z.append(rho[i]*np.cos((phi[i])) )
-    return(x,y,z)
+    return(np.around(x,5),np.around(y,5),np.around(z,5))
 
 def cart2sph(x,y,z): 
     rho=[]
