@@ -103,6 +103,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         # Calculating parameter1, parameter2 and parameter3 depending on the quadrant (https://es.wikipedia.org/wiki/Coordenadas_esf%C3%A9ricas):           
         param1,param3,param2=SA.cart2sph(x_init,y_init,z_init)
         # xc,yc,zc=SA.sph2cart(param1,param3,param2)
+        
     for param1_or,param2_or,param3_or in zip(param1,param2,param3):# Take coordinates from inputs
         Mean_DISTANCE=[]
         DISTANCE=[]        
@@ -117,7 +118,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         X0.append(x0)
         Y0.append(y0)
         Z0.append(z0)
-        
+        # pdb.set_trace()
         for trial in range(0,10):
             
             # Create white noise with stdv selected by user:
@@ -172,7 +173,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         coun+=1
     Noisy_Coord=[NoisyX,NoisyY,NoisyZ]
     Coord=[X0,Y0,Z0]
-    pdb.set_trace()
+    # pdb.set_trace()
+    SA.cart2sph(Coord[0],Coord[1],Coord[2])
+    
     #Call probe volume uncertainty function
     Probe_param = Lidar.probe_volume.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,param1)
 
