@@ -24,18 +24,19 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.pyplot import cm
 from DEMO_Mean_WF import weightingFun
+from numpy.linalg import norm
 # from Utils import Qlunc_Help_standAlone as SA
 
 GUM    = 1
 MC     = 1
 
-#%% Define inputs
+#%% 1. Define inputs
 
 class inputs ():
-    def __init__(self,Href,Vref,alpha,N_MC,Npoints,rho,theta,psi,wind_direction,stdv_rho,stdv_theta,stdv_psi):
+    def __init__(self,Href,Vref,Mode,alpha,N_MC,Npoints,rho,theta,psi,wind_direction,stdv_rho,stdv_theta,stdv_psi):
         self.Href          = Href
         self.Vref          = Vref
-       
+        self.Mode          = Mode
         self.alpha          = np.array([alpha]) # shear exponent
         self.N_MC           = np.round(N_MC) #number of points for the MC simulation
         self.Npoints        = Npoints #N° of measuring points
@@ -47,18 +48,7 @@ class inputs ():
         self.stdv_theta     = stdv_theta
         self.stdv_psi       = stdv_psi
 
-inputs=inputs(Href        = 1e-100,
-              Vref        = 2,      
-              alpha       = 0.2, # shear exponent
-              N_MC        = 50000, #number of points for the MC simulation for each point in Npoints
-              Npoints     = 150, #N° of measuring points 
-              rho         = [2000,2000],
-              theta       = [5.7,5.7],
-              wind_direction = 0,
-              psi         = [45,45],
-              stdv_rho    = 10,    
-              stdv_theta  = 0.0573,     
-              stdv_psi    = 0.0573 )   
+  
 
 # Weighting function
 class WF_param():
@@ -68,13 +58,55 @@ class WF_param():
         self.tau_meas   = tau_meas
         self.tau        = tau
         self.c_l        = c_l
+
+
+#%% 2. Instantiate inputs
+inputs=inputs(Href        = 1e-100,
+              Vref        = 2,  
+              Mode        = 'SCAN',
+              alpha       = 0.2, # shear exponent
+              N_MC        = 50000, #number of points for the MC simulation for each point in Npoints
+              Npoints     = 150, #N° of measuring points 
+              rho         = [2000,2000],
+              theta       = [1,89],
+              wind_direction = 0,
+              psi         = [45,45],
+              stdv_rho    = 0,    
+              stdv_theta  = 0.0573,     
+              stdv_psi    = 0 ) 
+
 WF_param=WF_param(pulsed     = 1,
                   truncation = 10,
                   tau_meas   = 119.5e-9,
                   tau        = 95e-9,
                   c_l        = 3e8)
+#%% This is an implementation for the Universal CS (avoid for now)
+# href=100
+# x_u=[1,0,0] 
+# # n=[1,0,0] # lidar longitudinal axis 
+# normal_u =[0,0,1] # normal vector plane xy
+# if inputs.Mode == 'SCAN':
+#     n=[1,0,0]
+# elif inputs.Mode =='VAD':
+#     n=[0,0,1]
+# phi0=[]
+# theta0=[]
+# height= []
+# # Projection of "n" onto the plane defined by the normal vector "normal_u"
+# v_pro= n-np.multiply(n,normal_u)*normal_u
 
-# Calculate coordinates of the noisy points
+# # Find the angles phi (between vector x_u defining the coordinate system and projection onto plane xy of the lidar longitudinal axis defined by n -->azimuth) 
+# # and theta (lidar longitudinal axis and its projection onto plane xy --> elevation angle)
+# phi0   = np.degrees(math.atan2(norm(np.cross(v_pro,x_u)),np.dot(v_pro,x_u)))
+# theta0 = np.degrees(math.atan2(norm(np.cross(v_pro,n)),np.dot(v_pro,n)))
+# for ind in range(len(elevation_angle_lidar)):   
+#     if n==normal_u: # vertical mode ("n" pointing 90° from the horizontal plane)   
+#         height.append( href+abs(np.cos(np.radians(theta+elevation_angle_lidar[ind]))*rho[ind]))
+#     else: 
+#         height.append( href+np.sin(np.radians(theta+elevation_angle_lidar[ind]))*rho[ind])
+            
+# pdb.set_trace()
+#%% 3. Calculate coordinates of the noisy points
 rho_noisy   = []
 theta_noisy = []
 psi_noisy   = []
@@ -96,7 +128,7 @@ for ind_noise in range(inputs.Npoints):
 #     [x,y,z].append([polar2cart(rho_i[ii],theta_i[ii],psi_i[ii]) for ii in range(len(rho_i))])
 
 
-#%% MONTECARLO METHOD
+#%% 4. MONTECARLO METHOD
 # Define inputs
 if MC==1:
 
@@ -197,7 +229,7 @@ if MC==1:
     # U_Vh_PL.append([np.std(Vh_rec_shear[ind_stdv])*Vref for ind_stdv in range(len(Vh_rec_shear))])
     # g=np.digitize(WeightingFunction,np.linspace(np.min(WeightingFunction),np.max(WeightingFunction),500))
 
-#%% GUM METHOD
+#%% 5. GUM METHOD
             
 if GUM==1:
    
@@ -232,7 +264,7 @@ if GUM==1:
         U_Vrad_S_GUM.append([np.sqrt(((U_Vrad_sh_theta[ind_alpha][ind_u]))**2+((U_Vrad_sh_psi[ind_alpha][ind_u]))**2+((U_Vrad_sh_range[ind_alpha][ind_u]))**2) for ind_u in range(len(inputs.rho)) ])
             
         
-#%% Plot errors
+#%% 6. Plot errors
 # pdb.set_trace()
 
 if MC==1 and GUM==1:
