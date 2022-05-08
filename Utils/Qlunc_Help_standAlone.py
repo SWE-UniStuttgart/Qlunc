@@ -138,27 +138,32 @@ def sph2cart(rho,theta,phi):
 def cart2sph(x,y,z): 
     rho=[]
     theta=[]
-    phi=[]    
+    phi=[]
+    rho=[]
+    theta2=[]
+    phi2=[]        
     for ind in range(len(z)):
         rho.append(np.sqrt(x[ind]**2+y[ind]**2+z[ind]**2))
-        
-        if z[ind]>0:
-                phi.append(np.arctan(np.sqrt(x[ind]**2+y[ind]**2)/z[ind]))
-        elif z[ind]==0:
-                phi.append(np.array(np.pi/2))
-        elif z[ind]<0:
-                phi.append((np.pi)+(np.arctan(np.sqrt(x[ind]**2+y[ind]**2)/z[ind])))
+        phi.append(math.atan2(np.sqrt(x[ind]**2+y[ind]**2),z[ind]))
+        theta.append(math.atan2(y[ind],x[ind]))
+        # if z[ind]>0:
+        #         phi.append(np.arctan(np.sqrt(x[ind]**2+y[ind]**2)/z[ind]))
+        # elif z[ind]==0:
+        #         phi.append(np.array(np.pi/2))
+        # elif z[ind]<0:
+        #         phi.append((np.pi)+(np.arctan(np.sqrt(x[ind]**2+y[ind]**2)/z[ind])))
 
-        if x[ind]>0:
-            if  y[ind]>=0:
-                theta.append(np.arctan(y[ind]/x[ind]))            
-            elif  y[ind]<0:
-                theta.append((2.0*np.pi)+(np.arctan(y[ind]/x[ind])))           
-        elif x[ind]<0:
-            theta.append((np.pi)+(np.arctan(y[ind]/x[ind])))            
-        elif x[ind]==0:
-                theta.append(np.pi/2.0*(np.sign(y[ind])))
-    return(np.array(rho),np.array(theta),np.array(phi))
+        # if x[ind]>0:
+        #     if  y[ind]>=0:
+        #         theta.append(np.arctan(y[ind]/x[ind]))            
+        #     elif  y[ind]<0:
+        #         theta.append((2.0*np.pi)+(np.arctan(y[ind]/x[ind])))           
+        # elif x[ind]<0:
+        #     theta.append((np.pi)+(np.arctan(y[ind]/x[ind])))            
+        # elif x[ind]==0:
+        #         theta.append(np.pi/2.0*(np.sign(y[ind])))
+    pdb.set_trace()
+    return(np.array(rho),np.array(np.degrees(phi)),np.array(np.degrees(theta))) # foc_dist, aperture angle, azimuth
 #%% NDF function
 
 def to_netcdf(DataXarray,Qlunc_yaml_inputs,Lidar,Atmospheric_Scenario):
