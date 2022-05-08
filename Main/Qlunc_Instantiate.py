@@ -74,11 +74,11 @@ Scanner           = scanner(name            = Qlunc_yaml_inputs['Components']['S
                             #                                        Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][1],
                             #                                        math.floor(Qlunc_yaml_inputs['Components']['Scanner']['Pattern time']/Qlunc_yaml_inputs['Components']['Scanner']['Single point measuring time'])))))[0],   # Cone angle in [degrees].
                             
-                            azimuth         = Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'],
-                            focus_dist      = Qlunc_yaml_inputs['Components']['Scanner']['Focus distance'],   # Focus distance in [meters]                                                                                                
-                            cone_angle      = Qlunc_yaml_inputs['Components']['Scanner']['Cone angle'],   # Cone angle in [degrees].
+                            azimuth         = np.linspace(Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][0],Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][1],150),
+                            focus_dist      = np.linspace(Qlunc_yaml_inputs['Components']['Scanner']['Focus distance'][0],Qlunc_yaml_inputs['Components']['Scanner']['Focus distance'][0],150),   # Focus distance in [meters]                                                                                                
+                            cone_angle      = np.linspace(Qlunc_yaml_inputs['Components']['Scanner']['Cone angle'][0],Qlunc_yaml_inputs['Components']['Scanner']['Cone angle'][1],150),   # Cone angle in [degrees].
                             
-                            
+                        
                           
                             stdv_location   = Qlunc_yaml_inputs['Components']['Scanner']['Error origin'],
                             stdv_focus_dist = Qlunc_yaml_inputs['Components']['Scanner']['stdv focus distance'],                 # Focus distance standard deviation in [meters].
