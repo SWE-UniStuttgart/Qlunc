@@ -32,31 +32,33 @@ MC     = 1
 #%% Define inputs
 
 class inputs ():
-    def __init__(self,Href,Vref,alpha,N_MC,Npoints,rho,theta,psi,stdv_rho,stdv_theta,stdv_psi):
+    def __init__(self,Href,Vref,alpha,N_MC,Npoints,rho,theta,psi,wind_direction,stdv_rho,stdv_theta,stdv_psi):
         self.Href          = Href
         self.Vref          = Vref
        
-        self.alpha       = np.array([alpha]) # shear exponent
-        self.N_MC        = np.round(N_MC) #number of points for the MC simulation
-        self.Npoints     = Npoints #N° of measuring points
-        self.rho         = np.linspace(rho[0],rho[1],Npoints)
-        self.theta       = np.linspace(theta[0],theta[1],Npoints)
-        self.psi         = np.linspace(psi[0],psi[1],Npoints)
-        self.stdv_rho    = stdv_rho
-        self.stdv_theta  = stdv_theta
-        self.stdv_psi    = stdv_psi
+        self.alpha          = np.array([alpha]) # shear exponent
+        self.N_MC           = np.round(N_MC) #number of points for the MC simulation
+        self.Npoints        = Npoints #N° of measuring points
+        self.rho            = np.linspace(rho[0],rho[1],Npoints)
+        self.theta          = np.linspace(theta[0],theta[1],Npoints)
+        self.psi            = np.linspace(psi[0],psi[1],Npoints)
+        self.wind_direction = wind_direction # direction from x axis
+        self.stdv_rho       = stdv_rho
+        self.stdv_theta     = stdv_theta
+        self.stdv_psi       = stdv_psi
 
-inputs=inputs(Href        = 100e+2,
+inputs=inputs(Href        = 1e-100,
               Vref        = 2,      
-              alpha       = 0.1, # shear exponent
-              N_MC        = 500, #number of points for the MC simulation for each point in Npoints
+              alpha       = 0.2, # shear exponent
+              N_MC        = 50000, #number of points for the MC simulation for each point in Npoints
               Npoints     = 150, #N° of measuring points 
-              rho         = [5000,5000],
+              rho         = [2000,2000],
               theta       = [5.7,5.7],
+              wind_direction = 0,
               psi         = [45,45],
               stdv_rho    = 10,    
-              stdv_theta  = 2,     
-              stdv_psi    = 2 )   
+              stdv_theta  = 0.0573,     
+              stdv_psi    = 0.0573 )   
 
 # Weighting function
 class WF_param():
@@ -232,62 +234,7 @@ if GUM==1:
         
 #%% Plot errors
 # pdb.set_trace()
-if GUM==1 and MC==0:
-    # color=iter(cm.rainbow(np.linspace(0,1,len(alpha))))   
-    # fig,ax1= plt.subplots()  
-    # ax1.plot(theta,U_Vh[0],'b-',label='U Uniform flow GUM')
-    # for ind_a in range(len(alpha)):
-    #     c=next(color)
-    #     ax1.plot(theta,U_Vh_sh[ind_a],'r-.',label='U Shear GUM (\u03B1 = {})'.format(alpha[ind_a]),c=c)
-    
-    # ax1.set_xlabel('theta [°]',fontsize=25)
-    # ax1.set_ylabel('U [%]',fontsize=25)
-    
-    # plt.title('Uncertainty in horizontal velocity (GUM)',fontsize=29)
-    # ax1.legend()
-    # ax1.grid(axis='both')
-    
-    color=iter(cm.rainbow(np.linspace(0,1,len(alpha))))
-    fig,ax2 = plt.subplots()  
-    ax2.plot(theta,U_Vrad_homo_GUM[0],'b-',label='U Uniform flow GUM')
-    for ind_a in range(len(alpha)):
-        c=next(color)
-        ax2.plot(theta,U_Vrad_S_GUM[ind_a],'r-.',label='U Shear GUM (\u03B1 = {})'.format(alpha[ind_a]),c=c)
-    
-    ax2.set_xlabel('theta [°]',fontsize=25)
-    ax2.set_ylabel('U [%]',fontsize=25)
-    plt.title('Uncertainty in radial velocity (GUM)',fontsize=29)
-    ax2.legend()
-    ax2.grid(axis='both')
-elif MC==1 and GUM==0:
-    fig,ax1=plt.subplots()
-    # for ind_al in range(len(alpha0)):
-    # pdb.set_trace()
-    # ax1.plot(theta,U_Vh_homo[0],'x-b' ,label='U Uniform flow')
-    # ax1.plot(theta,U_Vh_PL[0],'+-r' ,label='U shear')
-    # ax1.legend()
-    # ax1.set_xlabel('Theta [°]')
-    # ax1.set_ylabel('Uncertainty [%]')
-    # ax1.grid(axis='both')
-    # plt.title('Vref Uncertainty')
-    # pdb.set_trace()
-    # fig,ax2=plt.subplots()
-    # ax2.plot(pointZ,U_Vrad_homo[0],'-b' ,label='U_homo')
-    # ax2.plot(pointZ,U_Vrad_PL[0],'-r' ,label='U_shear')
-    # ax2.legend()
-    # ax2.set_xlabel('Height [m]')
-    # ax2.set_ylabel('Uncertainty')
-    # ax2.grid(axis='both')
-    # plt.title('Vrad Uncertainty')
-    
-    fig,ax2=plt.subplots()
-    ax2.plot(theta,U_Vrad_homo[0],'x-b' ,label='U Uniform flow (MC)')
-    ax2.plot(theta,U_Vrad_PL[0],'+-r' ,label='U shear (MC)')
-    ax2.legend()
-    ax2.set_xlabel('Theta [°]')
-    ax2.set_ylabel('Uncertainty [m/s]')
-    ax2.grid(axis='both')
-    plt.title('Vrad Uncertainty')
+
 if MC==1 and GUM==1:
     # fig,ax1=plt.subplots()
     # color=iter(cm.rainbow(np.linspace(0,1,len(alpha))))   
@@ -354,7 +301,7 @@ if MC==1 and GUM==1:
     ax3.plot(inputs.psi,U_Vrad_S_MC[0],'or' , markerfacecolor=(1, 1, 0, 0.5),label='U shear MC')
     ax3.legend()
     ax3.set_xlabel('Psi [°]',fontsize=25)
-    ax3.set_ylabel('Uncertainty [m/s]',fontsize=25)
+    ax3.set_ylabel('Uncertainty [%]',fontsize=25)
     ax3.grid(axis='both')
     plt.title('Vrad Uncertainty',fontsize=30)
     ax3.tick_params(axis='x', labelsize=17)
@@ -372,7 +319,7 @@ if MC==1 and GUM==1:
     ax4.plot(inputs.rho,U_Vrad_S_MC[0],'or' , markerfacecolor=(1, 1, 0, 0.5),label='U shear MC')
     ax4.legend(loc=2, prop={'size': 15})
     ax4.set_xlabel('rho [m]',fontsize=25)
-    ax4.set_ylabel('Uncertainty [m/s]',fontsize=25)
+    ax4.set_ylabel('Uncertainty [%]',fontsize=25)
     ax4.grid(axis='both')
     plt.title('Vrad Uncertainty',fontsize=30)
     props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
@@ -413,7 +360,7 @@ if MC==1 and GUM==1:
     # place a tex1t box in upper left in axes coords
     ax1.text(0.5, 0.95, textstr, transform=ax2.transAxes, fontsize=14,horizontalalignment='left',verticalalignment='top', bbox=props)
     ax1.set_xlabel('Theta [°]',fontsize=25)
-    ax1.set_ylabel('Uncertainty [m/s]',fontsize=25)
+    ax1.set_ylabel('Uncertainty [%]',fontsize=25)
     ax1.grid(axis='both')
     plt.title('Vrad Global Uncertainty',fontsize=30)
     plt.show()
@@ -432,6 +379,13 @@ print('U_GUM(%)   : ',U_Vrad_S_GUM[0][0])
     # plt.ylabel('Occurrences [-]',fontsize=25)
     
     
-    # fig,axs5 = plt.subplots()  
-    # axs5=plt.axes(projection='3d')
-    # axs5.plot(theta, psi,U_Vrad_S_MC[0])
+fig,axs5 = plt.subplots()  
+axs5=plt.axes(projection='3d')
+axs5.plot(inputs.theta, inputs.psi,U_Vrad_S_MC[0])
+axs5.plot(inputs.theta, inputs.psi,U_Vrad_S_GUM[0])
+axs5.set_xlabel('Theta [°]',fontsize=25)
+axs5.set_ylabel('Psi [°]',fontsize=25)
+axs5.set_zlabel('Uncertainty [%]',fontsize=25)
+
+    
+
