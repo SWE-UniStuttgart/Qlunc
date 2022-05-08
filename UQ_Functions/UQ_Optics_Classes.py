@@ -55,9 +55,12 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     NoisyX=[]
     NoisyY=[]
     NoisyZ=[]
+    rho_noisy,theta_noisy,psi_noisy   = [],[],[]
+
     coun=0
     sample_rate_count=0
-
+    Href=1e-100
+    alpha = [.2]
     # #Call probe volume uncertainty function. 
     # Probe_param = Lidar.probe_volume.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
 
@@ -67,43 +70,119 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     stdv_pitch  = np.array(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))
     stdv_roll   = np.array(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))
     
+    # Rho, theta and phi values
+    rho = Lidar.optics.scanner.focus_dist    
+    theta = Lidar.optics.scanner.cone_angle
+    psi = Lidar.optics.scanner.azimuth
+    
+    
     # stdv focus distance, cone angle and azimuth:
     # stdv_param1 = Probe_param['Focus Distance uncertainty']
-    stdv_param1 = Lidar.optics.scanner.stdv_focus_dist    
-    stdv_param2 = np.deg2rad(Lidar.optics.scanner.stdv_cone_angle)
-    stdv_param3 = np.deg2rad(Lidar.optics.scanner.stdv_azimuth)
+    stdv_rho   = Lidar.optics.scanner.stdv_focus_dist    
+    stdv_theta = Lidar.optics.scanner.stdv_cone_angle
+    stdv_psi   = Lidar.optics.scanner.stdv_azimuth
     
     # Differentiate between 'VAD' or 'Scanning' lidar depending on user's choice:
-    if Qlunc_yaml_inputs['Components']['Scanner']['Type']=='VAD':
-        param1=Lidar.optics.scanner.focus_dist
-        # param1 = [np.array(Probe_param['Focus Distance'])]
-        param2 = np.deg2rad(Lidar.optics.scanner.cone_angle)
-        param3 = np.deg2rad(Lidar.optics.scanner.azimuth)
+    # if Qlunc_yaml_inputs['Components']['Scanner']['Type']=='VAD':
+    #     param1=Lidar.optics.scanner.focus_dist
+    #     # param1 = [np.array(Probe_param['Focus Distance'])]
+    #     param2 = np.deg2rad(Lidar.optics.scanner.cone_angle)
+    #     param3 = np.deg2rad(Lidar.optics.scanner.azimuth)
         
-    elif Qlunc_yaml_inputs['Components']['Scanner']['Type']=='SCAN':
+    # elif Qlunc_yaml_inputs['Components']['Scanner']['Type']=='SCAN':
         
-        # 'Transform coordinates from cartesians to spherical'
-        param1=[]
-        param2=[]
-        param3=[]
+    #     # 'Transform coordinates from cartesians to spherical'
+    #     param1=[]
+    #     param2=[]
+    #     param3=[]
         
-        # When SCAN is selected user can choose specific patterns already implemented (./Qlunc/Utils/Scanning_patterns.py)
-        if Qlunc_yaml_inputs['Components']['Scanner']['Pattern']=='lissajous':
-            # x_init,y_init,z_init = SP.lissajous_pattern(Lidar.optics.scanner.lissajous_param[0],Lidar.optics.scanner.lissajous_param[1],Lidar.optics.scanner.lissajous_param[2],Lidar.optics.scanner.lissajous_param[3],Lidar.optics.scanner.lissajous_param[4])
+    #     # When SCAN is selected user can choose specific patterns already implemented (./Qlunc/Utils/Scanning_patterns.py)
+    #     if Qlunc_yaml_inputs['Components']['Scanner']['Pattern']=='lissajous':
+    #         # x_init,y_init,z_init = SP.lissajous_pattern(Lidar.optics.scanner.lissajous_param[0],Lidar.optics.scanner.lissajous_param[1],Lidar.optics.scanner.lissajous_param[2],Lidar.optics.scanner.lissajous_param[3],Lidar.optics.scanner.lissajous_param[4])
             
-            # x_init =np.array( [Probe_param['Focus Distance']])
-            x_init,y_init,z_init = SP.lissajous_pattern(Lidar,Lidar.optics.scanner.lissajous_param[0],Lidar.optics.scanner.lissajous_param[1],Lidar.optics.scanner.lissajous_param[2],Lidar.optics.scanner.lissajous_param[3],Lidar.optics.scanner.lissajous_param[4])
+    #         # x_init =np.array( [Probe_param['Focus Distance']])
+    #         x_init,y_init,z_init = SP.lissajous_pattern(Lidar,Lidar.optics.scanner.lissajous_param[0],Lidar.optics.scanner.lissajous_param[1],Lidar.optics.scanner.lissajous_param[2],Lidar.optics.scanner.lissajous_param[3],Lidar.optics.scanner.lissajous_param[4])
         
-        elif Qlunc_yaml_inputs['Components']['Scanner']['Pattern']=='None':
-            x_init = Lidar.optics.scanner.x
-            # x_init = np.array([Probe_param['Focus Distance']]) # This needs to be changed
-            y_init = Lidar.optics.scanner.y
-            z_init = Lidar.optics.scanner.z
+    #     elif Qlunc_yaml_inputs['Components']['Scanner']['Pattern']=='None':
+    #         x_init = Lidar.optics.scanner.x
+    #         # x_init = np.array([Probe_param['Focus Distance']]) # This needs to be changed
+    #         y_init = Lidar.optics.scanner.y
+    #         z_init = Lidar.optics.scanner.z
             
-        # Calculating parameter1, parameter2 and parameter3 depending on the quadrant (https://es.wikipedia.org/wiki/Coordenadas_esf%C3%A9ricas):           
-        param1,param3,param2=SA.cart2sph(x_init,y_init,z_init)
-        # xc,yc,zc=SA.sph2cart(param1,param3,param2)
+    #     # Calculating parameter1, parameter2 and parameter3 depending on the quadrant (https://es.wikipedia.org/wiki/Coordenadas_esf%C3%A9ricas):           
+    #     param1,param3,param2=SA.cart2sph(x_init,y_init,z_init)
+    #     # xc,yc,zc=SA.sph2cart(param1,param3,param2)
         
+    
+    for ind_noise in range(150):
+        rho_noisy.append(np.random.normal(rho[ind_noise],stdv_rho,50000))
+        theta_noisy.append(np.random.normal(theta[ind_noise],stdv_theta,50000))
+        psi_noisy.append(np.random.normal(psi[ind_noise],stdv_psi,50000))
+    
+    
+    #%% MC Method 
+    # Calculate radial speed uncertainty fo an homogeneous flow
+    Unc_Vrad_homo_MC = []
+    # Vrad_homo=([inputs.Vref*np.cos(np.radians(theta_noisy[ind_theta]))*np.cos(np.radians(psi_noisy[ind_theta])) for ind_theta in range (len(theta_noisy))])
+    U_Vrad_homo=([100*np.cos(np.radians(theta_noisy[ind_theta]))*np.cos(np.radians(psi_noisy[ind_theta]))/(np.cos(np.radians(theta[ind_theta]))*np.cos(np.radians(psi[ind_theta]))) for ind_theta in range (len(theta_noisy))])
+   
+    Unc_Vrad_homo_MC.append([np.std(U_Vrad_homo[ind_stdv])  for ind_stdv in range(len(U_Vrad_homo))])
+    
+    # Calculate radial speed uncertainty for a heterogeneous flow (power law)
+    U_Vh_PL,U_Vrad_S_MC,U_Vrad_PL=[],[],[]
+    
+    # Calculate the radial speed uncertainty for the noisy points 
+    for ind_npoints in range(len(rho)):        
+        U_Vrad_PL.append (100*(np.cos(np.radians(psi_noisy[ind_npoints]))*np.cos(np.radians(theta_noisy[ind_npoints])))*(((Href+np.sin(np.radians(theta_noisy[ind_npoints]))*rho_noisy[ind_npoints])/Href)**alpha)\
+                           /((np.cos(np.radians(psi[ind_npoints]))*np.cos(np.radians(theta[ind_npoints])))*(((Href+np.sin(np.radians(theta[ind_npoints]))*rho[ind_npoints])/Href)**alpha)))
+
+    # Uncertainty: For this to be compared with Vrad_weighted[1] I need to weight Vrad_PL 
+    U_Vrad_S_MC.append([np.nanstd(U_Vrad_PL[ind_stdv]) for ind_stdv in range(len(U_Vrad_PL))])
+    
+    
+    
+    #%% GUM method
+    # Homogeneous flow
+    U_Vrad_homo_GUM,U_Vrad_theta,U_Vrad_psi,U_Vh,U_Vrad_range=[],[],[],[],[]
+    # U_Vrad_theta.append([inputs.Vref*np.cos(np.radians(inputs.psi[ind_u]))*np.sin(np.radians(inputs.theta[ind_u]))*np.radians(inputs.stdv_theta) for ind_u in range(len(inputs.theta))])
+    # U_Vrad_theta.append([inputs.Vref*np.cos(np.radians(inputs.psi[ind_u]))*np.sin(np.radians(inputs.theta[ind_u]))*np.radians(inputs.stdv_theta) for ind_u in range(len(inputs.theta))])
+    # U_Vrad_psi.append([inputs.Vref*np.cos(np.radians(inputs.theta[ind_u]))*np.sin(np.radians(inputs.psi[ind_u]))*np.radians(inputs.stdv_psi) for ind_u in range(len(inputs.theta))])
+    
+    # Unceratinty (%)
+    U_Vrad_theta.append([100*np.tan(np.radians(theta[ind_u]))*np.radians(stdv_theta) for ind_u in range(len(theta))])    
+    U_Vrad_psi.append([100*np.tan(np.radians(psi[ind_u]))*np.radians(stdv_psi) for ind_u in range(len(theta))])       
+    U_Vrad_homo_GUM.append([np.sqrt((U_Vrad_theta[0][ind_u])**2+(U_Vrad_psi[0][ind_u])**2) for ind_u in range(len(theta))])
+    
+    # Including shear:
+    U_Vrad_sh_theta,U_Vrad_sh_psi,U_Vh_sh,U_Vrad_S_GUM,U_Vrad_sh_range= [],[],[],[],[]       
+    for ind_alpha in range(len(alpha)):
+        
+        
+       #U_Vrad_sh_theta.append([inputs.Vref*(((np.sin(np.radians(theta_noisy[ind_u]))*rho_noisy[ind_u])/(np.sin(np.radians(inputs.theta[ind_u]))*inputs.rho[ind_u]))**inputs.alpha[ind_alpha])*np.cos(np.radians(inputs.psi[ind_u]))*np.cos(np.radians(inputs.theta[ind_u]))*np.radians(inputs.stdv_theta*inputs.theta[ind_u])*abs((inputs.alpha[ind_alpha]/math.tan(np.radians(inputs.theta[ind_u])))-np.tan(np.radians(inputs.theta[ind_u])) ) for ind_u in range(len(inputs.theta))])
+       #U_Vrad_sh_theta.append([inputs.Vref*(((inputs.Href+(np.sin(np.radians(inputs.theta[ind_u]))*inputs.rho[ind_u]))/inputs.Href)**inputs.alpha[ind_alpha])*np.cos(np.radians(inputs.psi[ind_u]))*np.cos(np.radians(inputs.theta[ind_u]))*np.radians(inputs.stdv_theta)*((inputs.alpha[ind_alpha]*(inputs.rho[ind_u]*np.cos(np.radians(inputs.theta[ind_u]))/(inputs.Href+inputs.rho[ind_u]*np.sin(np.radians(inputs.theta[ind_u])))))-np.tan(np.radians(inputs.theta[ind_u])) ) for ind_u in range(len(inputs.theta))])
+       #U_Vrad_sh_psi.append([inputs.Vref*(((inputs.Href+np.sin(np.radians(inputs.theta[ind_u]))*inputs.rho[ind_u])/(inputs.Href))**inputs.alpha[ind_alpha])*np.cos(np.radians(inputs.theta[ind_u]))*np.sin(np.radians(inputs.psi[ind_u]))*np.radians(inputs.stdv_psi) for ind_u in range(len(inputs.psi))])            
+       # U_Vrad_sh_range.append([inputs.Vref*(((inputs.Href+np.sin(np.radians(inputs.theta[ind_u]))*inputs.rho[ind_u])/(inputs.Href))**inputs.alpha[ind_alpha])*inputs.alpha[ind_alpha]*np.sin(np.radians(inputs.theta[ind_u]))/(inputs.Href+(np.sin(np.radians(inputs.theta[ind_u]))*inputs.rho[ind_u]))*np.cos(np.radians(inputs.theta[ind_u]))*np.cos(np.radians(inputs.psi[ind_u]))*(inputs.stdv_rho) for ind_u in range(len(inputs.rho))])
+       # U_Vrad_S_GUM.append([np.sqrt((np.mean(U_Vrad_sh_theta[ind_alpha][ind_u]))**2+(np.mean(U_Vrad_sh_psi[ind_alpha][ind_u]))**2+(np.mean(U_Vrad_sh_range[ind_alpha][ind_u]))**2) for ind_u in range(len(inputs.rho)) ])    
+        
+       # Uncertainty in %:
+        U_Vrad_sh_theta.append([np.sqrt((100*np.radians(stdv_theta)*((alpha[ind_alpha]*(rho[ind_u]*np.cos(np.radians(theta[ind_u]))/(Href+rho[ind_u]*np.sin(np.radians(theta[ind_u])))))-np.tan(np.radians(theta[ind_u])) ))**2) for ind_u in range(len(theta))])
+        U_Vrad_sh_psi.append([np.sqrt((100*np.tan(np.radians(psi[ind_u]))*np.radians(stdv_psi))**2) for ind_u in range(len(psi))])            
+        U_Vrad_sh_range.append([np.sqrt((100*np.sin(np.radians(theta[ind_u]))*alpha[ind_alpha]/(rho[ind_u]*np.sin(np.radians(theta[ind_u]))+Href)*stdv_rho)**2) for ind_u in range(len(rho))])
+                    
+        
+        U_Vrad_S_GUM.append([np.sqrt(((U_Vrad_sh_theta[ind_alpha][ind_u]))**2+((U_Vrad_sh_psi[ind_alpha][ind_u]))**2+((U_Vrad_sh_range[ind_alpha][ind_u]))**2) for ind_u in range(len(rho)) ])
+    pdb.set_trace()
+    
+    
+    
+    
+    plt.plot(theta,U_Vrad_S_MC[0],'or')
+    plt.plot(theta,Unc_Vrad_homo_MC[0],'ob')
+    plt.plot(theta,U_Vrad_S_GUM[0])
+    plt.plot(theta,U_Vrad_homo_GUM[0])    
+    
+    
+    
     for param1_or,param2_or,param3_or in zip(param1,param2,param3):# Take coordinates from inputs
         Mean_DISTANCE=[]
         DISTANCE=[]        
