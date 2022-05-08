@@ -118,8 +118,20 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         rho_noisy.append(np.random.normal(rho[ind_noise],stdv_rho,Lidar.optics.scanner.N_MC))
         theta_noisy.append(np.random.normal(theta[ind_noise],stdv_theta,Lidar.optics.scanner.N_MC))
         psi_noisy.append(np.random.normal(psi[ind_noise],stdv_psi,Lidar.optics.scanner.N_MC))
-        x_noisy, y_noisy,z_noisy = SA.sph2cart(rho_noisy,theta_noisy,psi_noisy)
-    
+        x_noisy, y_noisy,z_noisy = SA.sph2cart(rho_noisy,np.radians(psi_noisy),np.radians(np.array(90)-theta_noisy))
+        x,y,z=SA.sph2cart(rho,np.radians(psi),np.radians(90-theta))
+    fig,axs0 = plt.subplots()  
+    axs0=plt.axes(projection='3d')
+    axs0.plot([Lidar.optics.scanner.origin[0]],[Lidar.optics.scanner.origin[1]],[Lidar.optics.scanner.origin[2]],'og')
+    for in_1 in range( len(x_noisy)):
+        axs0.plot((x_noisy[in_1]),(y_noisy[in_1]),(z_noisy[in_1]),'ro')
+    axs0.plot(x,y,z,'bo')
+    axs0.set_xlim3d(-2500,2500)
+    axs0.set_ylim3d(-2500,2500)
+    axs0.set_zlim3d(-2500,2500)
+       
+    # axs0.plot(x_noisy[43], y_noisy[43],z_noisy[43],'ro')
+    # pdb.set_trace()
     #%% MC Method 
     # Calculate radial speed uncertainty fo an homogeneous flow
     Unc_Vrad_homo_MC = []
@@ -176,11 +188,13 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     
     
-    plt.plot(theta,U_Vrad_S_MC[0],'or')
-    plt.plot(theta,Unc_Vrad_homo_MC[0],'ob')
-    plt.plot(theta,U_Vrad_S_GUM[0])
-    plt.plot(theta,U_Vrad_homo_GUM[0])    
+    fig,axs1 = plt.subplots() 
+    axs1.plot(theta,U_Vrad_S_MC[0],'or')
+    axs1.plot(theta,Unc_Vrad_homo_MC[0],'ob')
+    axs1.plot(theta,U_Vrad_S_GUM[0])
+    axs1.plot(theta,U_Vrad_homo_GUM[0])    
     
+    axs1.set_ylim(0,80)    
     pdb.set_trace()
     
     for param1_or,param2_or,param3_or in zip(param1,param2,param3):# Take coordinates from inputs
