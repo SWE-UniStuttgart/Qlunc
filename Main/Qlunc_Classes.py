@@ -277,9 +277,10 @@ class signal_processor():
 
 #%% Atmosphere object:
 class atmosphere():
-    def __init__(self,name,temperature):
+    def __init__(self,name,temperature,PL_exp):
                  self.AtmosphereID = name
                  self.temperature  = temperature
+                 self.PL_exp       = PL_exp
                  
                  print('Created new atmosphere: {}'.format(self.AtmosphereID))
 
