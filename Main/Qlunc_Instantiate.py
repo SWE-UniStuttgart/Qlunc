@@ -242,8 +242,10 @@ if Atmospheric_TimeSeries:
                           'time'        : list(AtmosphericScenarios_TS.loc[:,'t'])     #for rain and fog intensity intervals might be introduced [none,low, medium high]
                           } 
     Atmospheric_Scenario = atmosphere(name        = Qlunc_yaml_inputs['Atmospheric_inputs']['Name'],
-                                      temperature = Atmospheric_inputs['temperature'])
+                                      temperature = Atmospheric_inputs['temperature'],
+                                      PL_exp      = Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp'])
 else:    
 
     Atmospheric_Scenario = atmosphere(name        = Qlunc_yaml_inputs['Atmospheric_inputs']['Name'],
-                                      temperature = Qlunc_yaml_inputs['Atmospheric_inputs']['Temperature'])
+                                      temperature = Qlunc_yaml_inputs['Atmospheric_inputs']['Temperature'],
+                                      PL_exp      = Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp'])
