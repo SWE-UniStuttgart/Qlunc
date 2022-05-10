@@ -162,7 +162,7 @@ def cart2sph(x,y,z):
         #     theta.append((np.pi)+(np.arctan(y[ind]/x[ind])))            
         # elif x[ind]==0:
         #         theta.append(np.pi/2.0*(np.sign(y[ind])))
-    pdb.set_trace()
+    # pdb.set_trace()
     return(np.array(rho),np.array(np.degrees(phi)),np.array(np.degrees(theta))) # foc_dist, aperture angle, azimuth
 #%% NDF function
 
