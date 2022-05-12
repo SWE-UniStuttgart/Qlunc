@@ -1,4 +1,10 @@
 # -*- coding: utf-8 -*-
+"""
+Created on Mon May  9 16:04:17 2022
+
+@author: fcosta
+"""
+# -*- coding: utf-8 -*-
 
 """.
 
@@ -50,31 +56,34 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     Coord=[]
     StdvMean_DISTANCE=[]  
     SimMean_DISTANCE=[]
-    X,Y,Z,X0,Y0,Z0=[],[],[],[],[],[]
+    X,Y,Z,X0,Y0,Z0,R=[],[],[],[],[],[],[]
     Noisy_Coord=[]
     NoisyX=[]
     NoisyY=[]
     NoisyZ=[]
-    rho_noisy,theta_noisy,psi_noisy   = [],[],[]
-
+    coorFinal_noisy=[]
+    rho_noisy0,theta_noisy0,psi_noisy0,rho_noisy,theta_noisy,psi_noisy,rho_noisy1, theta_noisy,psi_noisy1    = [],[],[],[],[],[],[],[],[]
+    Coordfinal_noisy,Coordfinal=[],[]
     coun=0
     sample_rate_count=0
-    Href=1e-100
-    alpha = [.2]
+    Href= 1e2
+    Vref=8.5
+    alpha =  Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp']
     # #Call probe volume uncertainty function. 
     # Probe_param = Lidar.probe_volume.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
 
     
     # R: Implement error in deployment of the tripod as a rotation over yaw, pitch and roll
-    stdv_yaw    = np.array(np.deg2rad(Lidar.lidar_inputs.yaw_error_dep))
-    stdv_pitch  = np.array(np.deg2rad(Lidar.lidar_inputs.pitch_error_dep))
-    stdv_roll   = np.array(np.deg2rad(Lidar.lidar_inputs.roll_error_dep))
+    stdv_yaw    = np.array(np.radians(Lidar.lidar_inputs.yaw_error_dep))
+    stdv_pitch  = np.array(np.radians(Lidar.lidar_inputs.pitch_error_dep))
+    stdv_roll   = np.array(np.radians(Lidar.lidar_inputs.roll_error_dep))
     
     # Rho, theta and phi values
     rho = Lidar.optics.scanner.focus_dist    
     theta = Lidar.optics.scanner.cone_angle
     psi = Lidar.optics.scanner.azimuth
-    
+    # In cartesian coordinates
+    x,y,z=SA.sph2cart(rho,np.radians(psi),np.radians(np.array(90)-theta)) 
     
     # stdv focus distance, cone angle and azimuth:
     # stdv_param1 = Probe_param['Focus Distance uncertainty']
@@ -115,32 +124,71 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         
     
     for ind_noise in range(Lidar.optics.scanner.N_Points):
-        rho_noisy.append(np.random.normal(rho[ind_noise],stdv_rho,Lidar.optics.scanner.N_MC))
-        theta_noisy.append(np.random.normal(theta[ind_noise],stdv_theta,Lidar.optics.scanner.N_MC))
-        psi_noisy.append(np.random.normal(psi[ind_noise],stdv_psi,Lidar.optics.scanner.N_MC))
-        x_noisy, y_noisy,z_noisy = SA.sph2cart(rho_noisy,np.radians(psi_noisy),np.radians(np.array(90)-theta_noisy))
-        x,y,z=SA.sph2cart(rho,np.radians(psi),np.radians(90-theta))
+        rho_noisy0.append(np.random.normal(rho[ind_noise],stdv_rho,Lidar.optics.scanner.N_MC))
+        theta_noisy0.append(np.random.normal(theta[ind_noise],stdv_theta,Lidar.optics.scanner.N_MC))
+        psi_noisy0.append(np.random.normal(psi[ind_noise],stdv_psi,Lidar.optics.scanner.N_MC))
+        
+        # Apply error in inclinometers   
+        # Rotation, due to inclinometers
+        noisy_yaw     = np.random.normal(0,stdv_yaw,Lidar.optics.scanner.N_MC)
+        noisy_pitch   = np.random.normal(0,stdv_pitch,Lidar.optics.scanner.N_MC)
+        noisy_roll    = np.random.normal(0,stdv_roll,Lidar.optics.scanner.N_MC)
+        
+        
+        # Convert noisy coordinates into cartesians to apply the rotation matrices
+        x_noisy, y_noisy,z_noisy = SA.sph2cart(rho_noisy0[ind_noise],np.radians(psi_noisy0[ind_noise]),np.radians(np.array(90)-theta_noisy0[ind_noise]))
+        
+        # Create the rotate matrix to apply the error in inclinometers
+        for ind_inclinometer in range(len(noisy_yaw)):
+            R=(np.array([[np.cos(noisy_yaw[ind_inclinometer])*np.cos(noisy_pitch[ind_inclinometer])  ,  np.cos(noisy_yaw[ind_inclinometer])*np.sin(noisy_pitch[ind_inclinometer])*np.sin(noisy_roll[ind_inclinometer])-np.sin(noisy_yaw[ind_inclinometer])*np.cos(noisy_roll[ind_inclinometer])  ,  np.cos(noisy_yaw[ind_inclinometer])*np.sin(noisy_pitch[ind_inclinometer])*np.cos(noisy_roll[ind_inclinometer])+np.sin(noisy_yaw[ind_inclinometer])*np.sin(noisy_roll[ind_inclinometer])],
+                      [np.sin(noisy_yaw[ind_inclinometer])*np.cos(noisy_pitch[ind_inclinometer])  ,  np.sin(noisy_yaw[ind_inclinometer])*np.sin(noisy_pitch[ind_inclinometer])*np.sin(noisy_roll[ind_inclinometer])+np.cos(noisy_yaw[ind_inclinometer])*np.cos(noisy_roll[ind_inclinometer])  ,  np.sin(noisy_yaw[ind_inclinometer])*np.sin(noisy_pitch[ind_inclinometer])*np.cos(noisy_roll[ind_inclinometer])-np.cos(noisy_yaw[ind_inclinometer])*np.sin(noisy_roll[ind_inclinometer])],
+                      [       -np.sin(noisy_pitch[ind_inclinometer])               ,  np.cos(noisy_pitch[ind_inclinometer])*np.sin(noisy_roll[ind_inclinometer])                                                                  ,  np.cos(noisy_pitch[ind_inclinometer])*np.cos(noisy_roll[ind_inclinometer])]]))
+            
+            # Rotation                    
+            Coordfinal_noisy.append(np.matmul(R, np.array([x_noisy[ind_inclinometer],y_noisy[ind_inclinometer],z_noisy[ind_inclinometer]])))
+            
+        xx_noisy,yy_noisy,zz_noisy=[],[],[]
+        # pdb.set_trace()
+        # Apply the rotation to the original points
+        # Coordfinal.append(np.matmul(R, np.array([x[ind_noise],y[ind_noise],z[ind_noise]])))
+        coorFinal_noisy.append(Coordfinal_noisy)   
+        for ix in range(len(Coordfinal_noisy)):
+            xx_noisy.append(Coordfinal_noisy[ix][0])
+            yy_noisy.append(Coordfinal_noisy[ix][1])
+            zz_noisy.append(Coordfinal_noisy[ix][2])
+        
+        rho_noisy1, theta_noisy1,psi_noisy1 = SA.cart2sph(xx_noisy,yy_noisy,zz_noisy)
+        
+        # Store the noisy spherical coordinates including the error in inclinometers
+        rho_noisy.append(rho_noisy1)
+        theta_noisy.append(np.array(90)-theta_noisy1)
+        psi_noisy.append(psi_noisy1)
+        Coordfinal_noisy=[]      
+    
+    # plotting
+    
     fig,axs0 = plt.subplots()  
     axs0=plt.axes(projection='3d')
     axs0.plot([Lidar.optics.scanner.origin[0]],[Lidar.optics.scanner.origin[1]],[Lidar.optics.scanner.origin[2]],'og')
-    for in_1 in range( len(x_noisy)):
-        axs0.plot((x_noisy[in_1]),(y_noisy[in_1]),(z_noisy[in_1]),'ro')
+    for in_1 in range( len(coorFinal_noisy)):
+        for in_2 in range(len(coorFinal_noisy[in_1])):
+            axs0.plot((coorFinal_noisy[in_1][in_2][0]),(coorFinal_noisy[in_1][in_2][1]),(coorFinal_noisy[in_1][in_2][2]),'ro')
     axs0.plot(x,y,z,'bo')
     axs0.set_xlim3d(-2500,2500)
     axs0.set_ylim3d(-2500,2500)
     axs0.set_zlim3d(-2500,2500)
        
-    # axs0.plot(x_noisy[43], y_noisy[43],z_noisy[43],'ro')
-    # pdb.set_trace()
+    axs0.plot(x_noisy[43], y_noisy[43],z_noisy[43],'ro')
+    pdb.set_trace()
     #%% MC Method 
-    # Calculate radial speed uncertainty fo an homogeneous flow
+    # Calculate radial speed uncertainty for an homogeneous flow
     Unc_Vrad_homo_MC = []
-    # Vrad_homo=([inputs.Vref*np.cos(np.radians(theta_noisy[ind_theta]))*np.cos(np.radians(psi_noisy[ind_theta])) for ind_theta in range (len(theta_noisy))])
-    U_Vrad_homo=([100*np.cos(np.radians(theta_noisy[ind_theta]))*np.cos(np.radians(psi_noisy[ind_theta]))/(np.cos(np.radians(theta[ind_theta]))*np.cos(np.radians(psi[ind_theta]))) for ind_theta in range (len(theta_noisy))])
+    U_Vrad_homo=([Vref*np.cos(np.radians(theta_noisy[ind_theta]))*np.cos(np.radians(psi_noisy[ind_theta])) for ind_theta in range (len(theta_noisy))])
+    # U_Vrad_homo=([100*np.cos(np.radians(theta_noisy[ind_theta]))*np.cos(np.radians(psi_noisy[ind_theta]))/(np.cos(np.radians(theta[ind_theta]))*np.cos(np.radians(psi[ind_theta]))) for ind_theta in range (len(theta_noisy))])
    
     Unc_Vrad_homo_MC.append([np.std(U_Vrad_homo[ind_stdv])  for ind_stdv in range(len(U_Vrad_homo))])
-    
-    # Calculate radial speed uncertainty for a heterogeneous flow (power law)
+    pdb.set_trace()
+    # Calculate radial speed uncertainty for an heterogeneous flow (power law)
     U_Vh_PL,U_Vrad_S_MC,U_Vrad_PL=[],[],[]
     
     # Calculate the radial speed uncertainty for the noisy points 
@@ -182,7 +230,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         U_Vrad_sh_range.append([np.sqrt((100*np.sin(np.radians(theta[ind_u]))*alpha[ind_alpha]/(rho[ind_u]*np.sin(np.radians(theta[ind_u]))+Href)*stdv_rho)**2) for ind_u in range(len(rho))])
                     
         
-        U_Vrad_S_GUM.append([np.sqrt(((U_Vrad_sh_theta[ind_alpha][ind_u]))**2+((U_Vrad_sh_psi[ind_alpha][ind_u]))**2+((U_Vrad_sh_range[ind_alpha][ind_u]))**2) for ind_u in range(len(rho)) ])
+        U_Vrad_S_GUM.append([(stdv_yaw)+(stdv_pitch)+(stdv_roll)+np.sqrt(((U_Vrad_sh_theta[ind_alpha][ind_u]))**2+((U_Vrad_sh_psi[ind_alpha][ind_u]))**2+((U_Vrad_sh_range[ind_alpha][ind_u]))**2) for ind_u in range(len(rho)) ])
     
     
     
@@ -197,80 +245,80 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     axs1.set_ylim(0,80)    
     pdb.set_trace()
     
-    for param1_or,param2_or,param3_or in zip(param1,param2,param3):# Take coordinates from inputs
-        Mean_DISTANCE=[]
-        DISTANCE=[]        
-        stdv_DISTANCE=[]  
+    # for param1_or,param2_or,param3_or in zip(param1,param2,param3):# Take coordinates from inputs
+    #     Mean_DISTANCE=[]
+    #     DISTANCE=[]        
+    #     stdv_DISTANCE=[]  
         
-        # Coordinates of the original points:
-        # Calculating the theoretical point coordinate transformation + lidar origin + sample rate  (conversion from spherical to cartesians):
-        x0 = (param1_or)*np.cos(param3_or)*np.sin(param2_or) + Lidar.optics.scanner.origin[0]
-        y0 = (param1_or)*np.sin(param3_or)*np.sin(param2_or) + Lidar.optics.scanner.origin[1]
-        z0 = (param1_or)*np.cos(param2_or) + Lidar.optics.scanner.origin[2] + sample_rate_count
-        # Storing coordinates
-        X0.append(x0)
-        Y0.append(y0)
-        Z0.append(z0)
-        # pdb.set_trace()
-        for trial in range(0,10):
+    #     # Coordinates of the original points:
+    #     # Calculating the theoretical point coordinate transformation + lidar origin + sample rate  (conversion from spherical to cartesians):
+    #     x0 = (param1_or)*np.cos(param3_or)*np.sin(param2_or) + Lidar.optics.scanner.origin[0]
+    #     y0 = (param1_or)*np.sin(param3_or)*np.sin(param2_or) + Lidar.optics.scanner.origin[1]
+    #     z0 = (param1_or)*np.cos(param2_or) + Lidar.optics.scanner.origin[2] + sample_rate_count
+    #     # Storing coordinates
+    #     X0.append(x0)
+    #     Y0.append(y0)
+    #     Z0.append(z0)
+    #     # pdb.set_trace()
+    #     for trial in range(0,10):
             
-            # Create white noise with stdv selected by user:
-            n=10000 # Number of cases to combine           
-            # Position, due to pointing accuracy
-            del_param1 = np.array(np.random.normal(0,stdv_param1,n)) # why a normal distribution??Does it have sense, can be completely random? --> Because of the central limit theorem!
-            del_param2 = np.array(np.random.normal(0,stdv_param2,n))
-            del_param3 = np.array(np.random.normal(0,stdv_param3,n))                        
+    #         # Create white noise with stdv selected by user:
+    #         n=10000 # Number of cases to combine           
+    #         # Position, due to pointing accuracy
+    #         del_param1 = np.array(np.random.normal(0,stdv_param1,n)) # why a normal distribution??Does it have sense, can be completely random? --> Because of the central limit theorem!
+    #         del_param2 = np.array(np.random.normal(0,stdv_param2,n))
+    #         del_param3 = np.array(np.random.normal(0,stdv_param3,n))                        
             
-            # Adding noise to the theoretical position:
-            noisy_param1 = param1_or + del_param1
-            noisy_param2 = param2_or + del_param2 
-            noisy_param3 = param3_or + del_param3 
-            # Coordinates of the noisy points:            
-            x = noisy_param1*np.cos(noisy_param3)*np.sin(noisy_param2)
-            y = noisy_param1*np.sin(noisy_param3)*np.sin(noisy_param2) 
-            z = noisy_param1*np.cos(noisy_param2) + sample_rate_count
+    #         # Adding noise to the theoretical position:
+    #         noisy_param1 = param1_or + del_param1
+    #         noisy_param2 = param2_or + del_param2 
+    #         noisy_param3 = param3_or + del_param3 
+    #         # Coordinates of the noisy points:            
+    #         x = noisy_param1*np.cos(noisy_param3)*np.sin(noisy_param2)
+    #         y = noisy_param1*np.sin(noisy_param3)*np.sin(noisy_param2) 
+    #         z = noisy_param1*np.cos(noisy_param2) + sample_rate_count
             
-            # Apply error in inclinometers   
-            # Rotation, due to inclinometers
-            del_yaw     = np.random.normal(0,stdv_yaw,n)
-            del_pitch   = np.random.normal(0,stdv_pitch,n)
-            del_roll    = np.random.normal(0,stdv_roll,n)
+    #         # Apply error in inclinometers   
+    #         # Rotation, due to inclinometers
+    #         del_yaw     = np.random.normal(0,stdv_yaw,n)
+    #         del_pitch   = np.random.normal(0,stdv_pitch,n)
+    #         del_roll    = np.random.normal(0,stdv_roll,n)
             
-            # Adding noise to the inclinometer stdv
-            noisy_yaw   = stdv_yaw + del_yaw
-            noisy_pitch = stdv_pitch + del_pitch
-            noisy_roll  = stdv_roll + del_roll
+    #         # Adding noise to the inclinometer stdv
+    #         noisy_yaw   = stdv_yaw + del_yaw
+    #         noisy_pitch = stdv_pitch + del_pitch
+    #         noisy_roll  = stdv_roll + del_roll
             
-            R = SA.sum_mat(noisy_yaw,noisy_pitch,noisy_roll)
+    #         R = SA.sum_mat(noisy_yaw,noisy_pitch,noisy_roll)
                            
-            xfinal = np.matmul(R,[x,y,z])[0] + Lidar.optics.scanner.origin[0] # Rotation
-            yfinal = np.matmul(R,[x,y,z])[1] + Lidar.optics.scanner.origin[1]
-            zfinal = np.matmul(R,[x,y,z])[2] + Lidar.optics.scanner.origin[2]
+    #         xfinal_noisy = np.matmul(R,[x,y,z])[0] + Lidar.optics.scanner.origin[0] # Rotation
+    #         yfinal = np.matmul(R,[x,y,z])[1] + Lidar.optics.scanner.origin[1]
+    #         xfinal_noisy = np.matmul(R,[x,y,z])[2] + Lidar.optics.scanner.origin[2]
 
-            # Distance between theoretical measured points and noisy points:
-            DISTANCE.append(np.sqrt((xfinal-x0)**2+(yfinal-y0)**2+(zfinal-z0)**2))
-            Mean_DISTANCE.append(np.mean(DISTANCE[trial]))    
-            stdv_DISTANCE.append(np.std(DISTANCE[trial]))
+    #         # Distance between theoretical measured points and noisy points:
+    #         DISTANCE.append(np.sqrt((xfinal_noisy-x0)**2+(yfinal-y0)**2+(xfinal_noisy-z0)**2))
+    #         Mean_DISTANCE.append(np.mean(DISTANCE[trial]))    
+    #         stdv_DISTANCE.append(np.std(DISTANCE[trial]))
 
-        sample_rate_count+=Lidar.optics.scanner.sample_rate    
-        SimMean_DISTANCE.append(np.mean(Mean_DISTANCE))        # Mean error distance of each point in the pattern  
-        StdvMean_DISTANCE.append(np.mean(stdv_DISTANCE)) # Mean error distance stdv for each point in the pattern
+    #     sample_rate_count+=Lidar.optics.scanner.sample_rate    
+    #     SimMean_DISTANCE.append(np.mean(Mean_DISTANCE))        # Mean error distance of each point in the pattern  
+    #     StdvMean_DISTANCE.append(np.mean(stdv_DISTANCE)) # Mean error distance stdv for each point in the pattern
         
-        # Storing coordinates:
-        X.append(xfinal)
-        Y.append(yfinal)
-        Z.append(zfinal)
-        NoisyX.append(X[coun][0])
-        NoisyY.append(Y[coun][0])
-        NoisyZ.append(Z[coun][0])
-        coun+=1
-    Noisy_Coord=[NoisyX,NoisyY,NoisyZ]
-    Coord=[X0,Y0,Z0]
-    # pdb.set_trace()
-    SA.cart2sph(Coord[0],Coord[1],Coord[2])
+    #     # Storing coordinates:
+    #     X.append(xfinal_noisy)
+    #     Y.append(yfinal)
+    #     Z.append(xfinal_noisy)
+    #     NoisyX.append(X[coun][0])
+    #     NoisyY.append(Y[coun][0])
+    #     NoisyZ.append(Z[coun][0])
+    #     coun+=1
+    # Noisy_Coord=[NoisyX,NoisyY,NoisyZ]
+    # Coord=[X0,Y0,Z0]
+    # # pdb.set_trace()
+    # SA.cart2sph(Coord[0],Coord[1],Coord[2])
     
     #Call probe volume uncertainty function
-    Probe_param = Lidar.probe_volume.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,param1)
+    # Probe_param = Lidar.probe_volume.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,param1)
 
     # Saving coordenates to a file in desktop
     # file=open('C:/Users/fcosta/Desktop/data_'+Qlunc_yaml_inputs['Components']['Scanner']['Type']+'.txt','w')
@@ -349,6 +397,7 @@ def UQ_Telescope(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
 #%% Sum of uncertainties in `optics` module: 
 def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     List_Unc_optics = []
+    
     # Scanner
     if Lidar.optics.scanner != None:
         try: # ecah try/except evaluates wether the component is included in the module, therefore in the calculations            
@@ -364,6 +413,7 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             print(colored('Error in scanner uncertainty calculations!','cyan', attrs=['bold']))
     else:
         print (colored('You didn´t include a head scanner in the lidar.','cyan', attrs=['bold']))       
+    
     # Telescope
     if Lidar.optics.telescope != 'None':
         try:
