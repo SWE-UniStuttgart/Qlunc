@@ -79,14 +79,13 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         ax.set_xlabel('X [m]')
         ax.set_ylabel('Y [m]')
         ax.set_zlabel('Z [m]')
-        ax.set_xlim(0,2000)
-        ax.set_ylim(-1000,1000)
-        ax.set_zlim(0,1000)
+        ax.set_xlim(-2000,2000)
+        ax.set_ylim(-2000,2000)
+        ax.set_zlim(0,2000)
         ax.set_title('Relative Uncertainty (MC)',fontsize=plot_param['title_fontsize'])
         scalarMap.set_array(Data['Vr Uncertainty MC [%]'][0])
         fig.colorbar(scalarMap,label='$V_{rad} ~ Uncertainty ~(\%)$',shrink=0.5)                
         plt.show()
-        pdb.set_trace()
         
         # Plot Uncertainty in Vrad with theta
         fig,ax2=plt.subplots()
