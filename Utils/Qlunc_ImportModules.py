@@ -34,3 +34,7 @@ from termcolor import colored, cprint
 import random
 import matplotlib
 import matplotlib.cm as cmx
+import scipy as sc
+from scipy.stats import norm
+from scipy.stats import norm
+from matplotlib.pyplot import cm
