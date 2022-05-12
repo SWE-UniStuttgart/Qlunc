@@ -64,7 +64,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         # axs0.set_xlim3d(plot_param['xlim'][0],plot_param['xlim'][1])
         # axs0.set_ylim3d(plot_param['ylim'][0],plot_param['ylim'][1])
         # axs0.set_zlim3d(plot_param['zlim'][0],plot_param['zlim'][1])
-        pdb.set_trace()
+        
         cm = plt.get_cmap('jet')
         cNorm = matplotlib.colors.Normalize(vmin=min(Data['Vr Uncertainty MC [%]'][0]), vmax=max(Data['Vr Uncertainty MC [%]'][0]))
         scalarMap = cmx.ScalarMappable(norm=cNorm, cmap=cm)
@@ -77,21 +77,40 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         ax.set_zlabel('Z [m]')
         ax.set_title('U Vr MonteCarlo simulation',fontsize=plot_param['title_fontsize'])
         scalarMap.set_array(Data['Vr Uncertainty MC [%]'][0])
-        fig.colorbar(scalarMap,label='$V_{rad} ~ Uncertainty ~(\%)$')
-        
-        
+        fig.colorbar(scalarMap,label='$V_{rad} ~ Uncertainty ~(\%)$')                
         plt.show()
-        # fig,axs1 = plt.subplots() 
-        # axs1.plot(theta,U_Vrad_S_MC[0],'or')
-        # axs1.plot(theta,Unc_Vrad_homo_MC[0],'ob')
-        # axs1.plot(theta,U_Vrad_S_GUM[0])
-        # axs1.plot(theta,U_Vrad_homo_GUM[0]) 
+        pdb.set_trace()
+        # Plot Uncertainty in Vrad with theta
+        fig,ax2=plt.subplots()
+        ax2.plot(Data['theta'],Data['Vr Uncertainty homo GUM [%]'][0],'b-',label='U Uniform flow GUM')
+        # color=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp']))))   
+        for ind_a in range(len(Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp'])):
+            # c=next(color)
+            ax2.plot(Data['theta'],Data['Vr Uncertainty GUM [%]'][0],'-',label='U Shear GUM')    
+        ax2.plot(Data['theta'],Data['Vr Uncertainty homo MC [%]'][0],'ob' , markerfacecolor=(1, 1, 0, 0.5),label='U uniform MC')
+        ax2.plot(Data['theta'],Data['Vr Uncertainty MC [%]'][0],'or' , markerfacecolor=(1, 1, 0, 0.5),label='U shear MC')
+        ax2.legend(loc=2, prop={'size': 15})
+       
+        # these are matplotlib.patch.Patch properties
+        props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+        textstr = '\n'.join((
+        r'$\rho=%.2f$' % (Data['rho'][0], ),
+        r'$\psi=%.2f$' % (Data['psi'][0], ),
+        r'N={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['N_MC'], ),
+        r'Href={}'.format(100, ),
+         r'$\alpha%.2f$={}'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp'][ind_a] )))
+        ax2.tick_params(axis='x', labelsize=17)
+        ax2.tick_params(axis='y', labelsize=17)
+        ax2.set_xlim(0,50)
+        ax2.set_ylim(0,90)
+        # place a tex1t box in upper left in axes coords
+        ax2.text(0.5, 0.95, textstr, transform=ax2.transAxes, fontsize=14,horizontalalignment='left',verticalalignment='top', bbox=props)
+        ax2.set_xlabel('Theta [°]',fontsize=25)
+        ax2.set_ylabel('Uncertainty [m/s]',fontsize=25)
+        ax2.grid(axis='both')
+        plt.title('Vrad Uncertainty',fontsize=30)
+        plt.show()
         
-        
-##################    Scatter of measuring points pattern with uncertainty #######################
-
-
-
 
 ###############   Plot photodetector noise   #############################       
     if flag_plot_photodetector_noise:
@@ -203,6 +222,48 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         # pdb.set_trace()
         
         
+
+
+#%% Testing plotting the scatter of the pattern with the uncertainty 
+    # def scatter3d(x,y,z, Vrad_homo,colorsMap='jet'):
+    #     cm = plt.get_cmap(colorsMap)
+    #     cNorm = matplotlib.colors.Normalize(vmin=min(Vrad_homo), vmax=max(Vrad_homo))
+    #     scalarMap = cmx.ScalarMappable(norm=cNorm, cmap=cm)
+    #     fig = plt.figure()
+    #     ax = Axes3D(fig)
+    #     ax.plot(0,0,0,'og')
+    #     ax.scatter(x, y, z, Vrad_homo, c=scalarMap.to_rgba(Vrad_homo))
+    #     ax.set_xlabel('X [m]')
+    #     ax.set_ylabel('Y [m]')
+    #     ax.set_zlabel('Z [m]')
+    #     scalarMap.set_array(Vrad_homo)
+    #     fig.colorbar(scalarMap,label='V_Rad Uncertainty (%)')
+        
+    #     plt.show()
+    
+
+
+
+
+
+
+    # pdb.set_trace()
+    # scatter3d(x,y,z,(U_Vrad_S_MC[0])) 
+    # pdb.set_trace()
+        # plotting
+        
+    # fig,axs0 = plt.subplots()  
+    # axs0=plt.axes(projection='3d')
+    # axs0.plot([Lidar.optics.scanner.origin[0]],[Lidar.optics.scanner.origin[1]],[Lidar.optics.scanner.origin[2]],'og')
+    # for in_1 in range( len(coorFinal_noisy)):
+    #     for in_2 in range(len(coorFinal_noisy[in_1])):
+    #         axs0.plot((coorFinal_noisy[in_1][in_2][0]),(coorFinal_noisy[in_1][in_2][1]),(coorFinal_noisy[in_1][in_2][2]),'ro')
+    # axs0.plot(x,y,z,'bo')
+    # axs0.set_xlim3d(-2500,2500)
+    # axs0.set_ylim3d(-2500,2500)
+    # axs0.set_zlim3d(-2500,2500)
+    # plt.title('fsgs')
+
 
         
         
