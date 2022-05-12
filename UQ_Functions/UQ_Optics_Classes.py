@@ -27,22 +27,6 @@ from Utils.Qlunc_ImportModules import *
 from Utils import Qlunc_Help_standAlone as SA
 from Utils import Scanning_patterns as SP
 from Utils import Qlunc_Plotting as QPlot
-# from Functions import UQ_ProbeVolume_Classes as upbc
-import numpy as np
-import pdb
-import scipy as sc
-from scipy.stats import norm
-from matplotlib.pyplot import cm
-
-from mpl_toolkits.mplot3d import Axes3D
-import math
-import matplotlib.cm as cmx
-import pdb
-import matplotlib.pyplot as plt
-import matplotlib
-import pandas as pd
-from matplotlib.pyplot import cm
-from numpy.linalg import norm
 
 #%% SCANNER:
 def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
@@ -79,13 +63,15 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     Coordfinal_noisy,Coordfinal=[],[]
     coun=0
     sample_rate_count=0
-    Href= 1e0
-    Vref=8.5
+    Href= Qlunc_yaml_inputs['Components']['Scanner']['Href'],
+    Vref= Qlunc_yaml_inputs['Atmospheric_inputs']['Vref']
     alpha =  Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp']
+    
+    
     # #Call probe volume uncertainty function. 
     # Probe_param = Lidar.probe_volume.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
 
-    
+
     # R: Implement error in deployment of the tripod as a rotation over yaw, pitch and roll
     stdv_yaw    = np.array(np.radians(Lidar.lidar_inputs.yaw_error_dep))
     stdv_pitch  = np.array(np.radians(Lidar.lidar_inputs.pitch_error_dep))
@@ -95,6 +81,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     rho = Lidar.optics.scanner.focus_dist    
     theta = Lidar.optics.scanner.cone_angle
     psi = Lidar.optics.scanner.azimuth
+    
     # In cartesian coordinates
     x,y,z=SA.sph2cart(rho,np.radians(psi),np.radians(np.array(90)-theta)) 
     
@@ -136,10 +123,16 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     #     # xc,yc,zc=SA.sph2cart(param1,param3,param2)
         
     
+    # Find the noisy points for the initial coordinates:
     for ind_noise in range(Lidar.optics.scanner.N_Points):
         rho_noisy.append(np.random.normal(rho[ind_noise],stdv_rho,Lidar.optics.scanner.N_MC))
         theta_noisy.append(np.random.normal(theta[ind_noise],stdv_theta,Lidar.optics.scanner.N_MC))
         psi_noisy.append(np.random.normal(psi[ind_noise],stdv_psi,Lidar.optics.scanner.N_MC))
+        
+        
+        
+        # This part commented for now id to calculate the error due to the inclinomenters:
+            
         # rho_noisy0.append(np.random.normal(rho[ind_noise],stdv_rho,Lidar.optics.scanner.N_MC))
         # theta_noisy0.append(np.random.normal(theta[ind_noise],stdv_theta,Lidar.optics.scanner.N_MC))
         # psi_noisy0.append(np.random.normal(psi[ind_noise],stdv_psi,Lidar.optics.scanner.N_MC))
@@ -185,12 +178,14 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
        
 
     #%% MC Method 
+    
     # Calculate radial speed uncertainty for an homogeneous flow
     U_Vrad_homo_MC = []
     # U_Vrad_homo=([Vref*np.cos(np.radians(theta_noisy[ind_theta]))*np.cos(np.radians(psi_noisy[ind_theta])) for ind_theta in range (len(theta_noisy))])
-    U_Vrad_homo=([100*np.cos(np.radians(theta_noisy[ind_theta]))*np.cos(np.radians(psi_noisy[ind_theta]))/(np.cos(np.radians(theta[ind_theta]))*np.cos(np.radians(psi[ind_theta]))) for ind_theta in range (len(theta_noisy))])
-   
+    U_Vrad_homo=([100*np.cos(np.radians(theta_noisy[ind_theta]))*np.cos(np.radians(psi_noisy[ind_theta]))/(np.cos(np.radians(theta[ind_theta]))*np.cos(np.radians(psi[ind_theta]))) for ind_theta in range (len(theta_noisy))])    
+    # Vrad Uncertainty in an homogeneous flow
     U_Vrad_homo_MC.append([np.std(U_Vrad_homo[ind_stdv])  for ind_stdv in range(len(U_Vrad_homo))])
+    
     
     # Calculate radial speed uncertainty for an heterogeneous flow (power law)
     U_Vh_PL,U_Vrad_S_MC,U_Vrad_PL=[],[],[]
@@ -202,50 +197,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
 
     # Uncertainty: For this to be compared with Vrad_weighted[1] I need to weight Vrad_PL 
     U_Vrad_S_MC.append([np.nanstd(U_Vrad_PL[ind_stdv]) for ind_stdv in range(len(U_Vrad_PL))])
-    # pdb.set_trace()
     
-#%% Testing plotting the scatter of the pattern with the uncertainty 
-    # def scatter3d(x,y,z, Vrad_homo,colorsMap='jet'):
-    #     cm = plt.get_cmap(colorsMap)
-    #     cNorm = matplotlib.colors.Normalize(vmin=min(Vrad_homo), vmax=max(Vrad_homo))
-    #     scalarMap = cmx.ScalarMappable(norm=cNorm, cmap=cm)
-    #     fig = plt.figure()
-    #     ax = Axes3D(fig)
-    #     ax.plot(0,0,0,'og')
-    #     ax.scatter(x, y, z, Vrad_homo, c=scalarMap.to_rgba(Vrad_homo))
-    #     ax.set_xlabel('X [m]')
-    #     ax.set_ylabel('Y [m]')
-    #     ax.set_zlabel('Z [m]')
-    #     scalarMap.set_array(Vrad_homo)
-    #     fig.colorbar(scalarMap,label='V_Rad Uncertainty (%)')
-        
-    #     plt.show()
-    
-
-
-
-
-
-
-    # pdb.set_trace()
-    # scatter3d(x,y,z,(U_Vrad_S_MC[0])) 
-    # pdb.set_trace()
-        # plotting
-        
-    # fig,axs0 = plt.subplots()  
-    # axs0=plt.axes(projection='3d')
-    # axs0.plot([Lidar.optics.scanner.origin[0]],[Lidar.optics.scanner.origin[1]],[Lidar.optics.scanner.origin[2]],'og')
-    # for in_1 in range( len(coorFinal_noisy)):
-    #     for in_2 in range(len(coorFinal_noisy[in_1])):
-    #         axs0.plot((coorFinal_noisy[in_1][in_2][0]),(coorFinal_noisy[in_1][in_2][1]),(coorFinal_noisy[in_1][in_2][2]),'ro')
-    # axs0.plot(x,y,z,'bo')
-    # axs0.set_xlim3d(-2500,2500)
-    # axs0.set_ylim3d(-2500,2500)
-    # axs0.set_zlim3d(-2500,2500)
-    # plt.title('fsgs')
-
-
-
     
     #%% GUM method
     # Homogeneous flow
@@ -275,21 +227,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         U_Vrad_sh_psi.append([np.sqrt((100*np.tan(np.radians(psi[ind_u]))*np.radians(stdv_psi))**2) for ind_u in range(len(psi))])            
         U_Vrad_sh_range.append([np.sqrt((100*np.sin(np.radians(theta[ind_u]))*alpha[ind_alpha]/(rho[ind_u]*np.sin(np.radians(theta[ind_u]))+Href)*stdv_rho)**2) for ind_u in range(len(rho))])
                     
-        
+        # Global uncertainty with contributions of theta, psi and rho
         U_Vrad_S_GUM.append([(stdv_yaw)+(stdv_pitch)+(stdv_roll)+np.sqrt(((U_Vrad_sh_theta[ind_alpha][ind_u]))**2+((U_Vrad_sh_psi[ind_alpha][ind_u]))**2+((U_Vrad_sh_range[ind_alpha][ind_u]))**2) for ind_u in range(len(rho)) ])
-    
-    
-    
-    
-    # scatter3d(x,y,z,(U_Vrad_S_GUM[0])) 
-    # fig,axs1 = plt.subplots() 
-    # axs1.plot(theta,U_Vrad_S_MC[0],'or')
-    # axs1.plot(theta,Unc_Vrad_homo_MC[0],'ob')
-    # axs1.plot(theta,U_Vrad_S_GUM[0])
-    # axs1.plot(theta,U_Vrad_homo_GUM[0])    
-    
-    # axs1.set_ylim(0,80)    
-    # pdb.set_trace()
+
     
     # for param1_or,param2_or,param3_or in zip(param1,param2,param3):# Take coordinates from inputs
     #     Mean_DISTANCE=[]
@@ -380,7 +320,10 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     # Final_Output_UQ_Scanner                 = {'Simu_Mean_Distance_Error':SimMean_DISTANCE,'STDV_Distance':StdvMean_DISTANCE,'MeasPoint_Coordinates':Coord,'NoisyMeasPoint_Coordinates':Noisy_Coord,'Rayleigh length':Probe_param['Rayleigh Length'],'Rayleigh length uncertainty':Probe_param['Rayleigh Length uncertainty']}
     # Lidar.lidar_inputs.dataframe['Scanner'] = ([np.mean(Final_Output_UQ_Scanner['Simu_Mean_Distance_Error'])])*len(Atmospheric_Scenario.temperature)  
-    Final_Output_UQ_Scanner                 = {'Vr Uncertainty homo MC [%]':U_Vrad_homo_MC,'Vr Uncertainty homo GUM [%]':U_Vrad_homo_GUM,'Vr Uncertainty MC [%]':U_Vrad_S_MC,'Vr Uncertainty GUM [%]':U_Vrad_S_GUM,'x':x,'y':y,'z':z} #, 'Rayleigh length':Probe_param['Rayleigh Length'],'Rayleigh length uncertainty':Probe_param['Rayleigh Length uncertainty']}
+    
+    
+    # Storing data
+    Final_Output_UQ_Scanner                 = {'Vr Uncertainty homo MC [%]':U_Vrad_homo_MC,'Vr Uncertainty homo GUM [%]':U_Vrad_homo_GUM,'Vr Uncertainty MC [%]':U_Vrad_S_MC,'Vr Uncertainty GUM [%]':U_Vrad_S_GUM,'x':x,'y':y,'z':z,'rho':rho,'theta':theta,'psi':psi} #, 'Rayleigh length':Probe_param['Rayleigh Length'],'Rayleigh length uncertainty':Probe_param['Rayleigh Length uncertainty']}
     Lidar.lidar_inputs.dataframe['Scanner'] = (Final_Output_UQ_Scanner['Vr Uncertainty MC [%]'])*len(Atmospheric_Scenario.temperature)  
 
     # Plotting
