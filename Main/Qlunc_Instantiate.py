@@ -57,7 +57,8 @@ Scanner           = scanner(name            = Qlunc_yaml_inputs['Components']['S
                             lissajous_param = Qlunc_yaml_inputs['Components']['Scanner']['Lissajous parameters'],
                             sample_rate     = Qlunc_yaml_inputs['Components']['Scanner']['Sample rate'],    # for now introduce it in [degrees].
                             time_pattern    = Qlunc_yaml_inputs['Components']['Scanner']['Pattern time'],
-                            time_point      = Qlunc_yaml_inputs['Components']['Scanner']['Single point measuring time'],      
+                            time_point      = Qlunc_yaml_inputs['Components']['Scanner']['Single point measuring time'], 
+                            Href            = Qlunc_yaml_inputs['Components']['Scanner']['Href'],
                            # This values for focus distance, cone_angle and azimuth define a typical VAD scanning sequence:
                                # I changed azimuth calculations because with "np.arange" we do not capture the last point in the pattern. "np.arange does not include the last point"; np.linspace capture all the points.
                                # Furthermore, once the time of the pattern is included in the pattern, we will do calculations based on the n° of points yielded by the ratio: time_pattern[sec]/time_point[sec/point]
@@ -243,9 +244,12 @@ if Atmospheric_TimeSeries:
                           } 
     Atmospheric_Scenario = atmosphere(name        = Qlunc_yaml_inputs['Atmospheric_inputs']['Name'],
                                       temperature = Atmospheric_inputs['temperature'],
-                                      PL_exp      = Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp'])
+                                      PL_exp      = Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp'],
+                                      Vref        = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref']
+                                      )
 else:    
 
     Atmospheric_Scenario = atmosphere(name        = Qlunc_yaml_inputs['Atmospheric_inputs']['Name'],
                                       temperature = Qlunc_yaml_inputs['Atmospheric_inputs']['Temperature'],
-                                      PL_exp      = Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp'])
+                                      PL_exp      = Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp'],
+                                      Vref        = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref'])
