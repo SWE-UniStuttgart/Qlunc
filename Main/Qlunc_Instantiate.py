@@ -77,7 +77,7 @@ Scanner           = scanner(name            = Qlunc_yaml_inputs['Components']['S
                             #                                        math.floor(Qlunc_yaml_inputs['Components']['Scanner']['Pattern time']/Qlunc_yaml_inputs['Components']['Scanner']['Single point measuring time'])))))[0],   # Cone angle in [degrees].
                             
                             azimuth         = np.linspace(Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][0],Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][1],Qlunc_yaml_inputs['Components']['Scanner']['N_Points']),
-                            focus_dist      = np.linspace(Qlunc_yaml_inputs['Components']['Scanner']['Focus distance'][0],Qlunc_yaml_inputs['Components']['Scanner']['Focus distance'][0],Qlunc_yaml_inputs['Components']['Scanner']['N_Points']),   # Focus distance in [meters]                                                                                                
+                            focus_dist      = np.linspace(Qlunc_yaml_inputs['Components']['Scanner']['Focus distance'][0],Qlunc_yaml_inputs['Components']['Scanner']['Focus distance'][1],Qlunc_yaml_inputs['Components']['Scanner']['N_Points']),   # Focus distance in [meters]                                                                                                
                             cone_angle      = np.linspace(Qlunc_yaml_inputs['Components']['Scanner']['Cone angle'][0],Qlunc_yaml_inputs['Components']['Scanner']['Cone angle'][1],Qlunc_yaml_inputs['Components']['Scanner']['N_Points']),   # Cone angle in [degrees].
                             
                         
