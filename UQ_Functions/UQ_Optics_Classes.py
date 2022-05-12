@@ -77,13 +77,22 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     stdv_pitch  = np.array(np.radians(Lidar.lidar_inputs.pitch_error_dep))
     stdv_roll   = np.array(np.radians(Lidar.lidar_inputs.roll_error_dep))
     
+    # Lidar position:
+    x_Lidar = Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0]
+    y_Lidar = Qlunc_yaml_inputs['Components']['Scanner']['Origin'][1]
+    z_Lidar = Qlunc_yaml_inputs['Components']['Scanner']['Origin'][2]
+    
     # Rho, theta and phi values
     rho = Lidar.optics.scanner.focus_dist    
     theta = Lidar.optics.scanner.cone_angle
     psi = Lidar.optics.scanner.azimuth
     
     # In cartesian coordinates
-    x,y,z=SA.sph2cart(rho,np.radians(psi),np.radians(np.array(90)-theta)) 
+    x,y,z=SA.sph2cart(rho,np.radians(psi),np.radians(np.array(90)-theta))
+    # Add lidar position:
+    x=x+x_Lidar
+    y=y+y_Lidar
+    z=z+z_Lidar
     
     # stdv focus distance, cone angle and azimuth:
     # stdv_param1 = Probe_param['Focus Distance uncertainty']
@@ -125,54 +134,54 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     # Find the noisy points for the initial coordinates:
     for ind_noise in range(Lidar.optics.scanner.N_Points):
-        rho_noisy.append(np.random.normal(rho[ind_noise],stdv_rho,Lidar.optics.scanner.N_MC))
-        theta_noisy.append(np.random.normal(theta[ind_noise],stdv_theta,Lidar.optics.scanner.N_MC))
-        psi_noisy.append(np.random.normal(psi[ind_noise],stdv_psi,Lidar.optics.scanner.N_MC))
+        # rho_noisy.append(np.random.normal(rho[ind_noise],stdv_rho,Lidar.optics.scanner.N_MC))
+        # theta_noisy.append(np.random.normal(theta[ind_noise],stdv_theta,Lidar.optics.scanner.N_MC))
+        # psi_noisy.append(np.random.normal(psi[ind_noise],stdv_psi,Lidar.optics.scanner.N_MC))
         
         
         
         # This part commented for now id to calculate the error due to the inclinomenters:
             
-        # rho_noisy0.append(np.random.normal(rho[ind_noise],stdv_rho,Lidar.optics.scanner.N_MC))
-        # theta_noisy0.append(np.random.normal(theta[ind_noise],stdv_theta,Lidar.optics.scanner.N_MC))
-        # psi_noisy0.append(np.random.normal(psi[ind_noise],stdv_psi,Lidar.optics.scanner.N_MC))
+        rho_noisy0.append(np.random.normal(rho[ind_noise],stdv_rho,Lidar.optics.scanner.N_MC))
+        theta_noisy0.append(np.random.normal(theta[ind_noise],stdv_theta,Lidar.optics.scanner.N_MC))
+        psi_noisy0.append(np.random.normal(psi[ind_noise],stdv_psi,Lidar.optics.scanner.N_MC))
         
-        # # Apply error in inclinometers   
-        # # Rotation, due to inclinometers
-        # noisy_yaw     = np.random.normal(0,stdv_yaw,Lidar.optics.scanner.N_MC)
-        # noisy_pitch   = np.random.normal(0,stdv_pitch,Lidar.optics.scanner.N_MC)
-        # noisy_roll    = np.random.normal(0,stdv_roll,Lidar.optics.scanner.N_MC)
+        # Apply error in inclinometers   
+        # Rotation, due to inclinometers
+        noisy_yaw     = np.random.normal(0,stdv_yaw,Lidar.optics.scanner.N_MC)
+        noisy_pitch   = np.random.normal(0,stdv_pitch,Lidar.optics.scanner.N_MC)
+        noisy_roll    = np.random.normal(0,stdv_roll,Lidar.optics.scanner.N_MC)
         
         
-        # # Convert noisy coordinates into cartesians to apply the rotation matrices
-        # x_noisy, y_noisy,z_noisy = SA.sph2cart(rho_noisy0[ind_noise],np.radians(psi_noisy0[ind_noise]),np.radians(np.array(90)-theta_noisy0[ind_noise]))
+        # Convert noisy coordinates into cartesians to apply the rotation matrices
+        x_noisy, y_noisy,z_noisy = SA.sph2cart(rho_noisy0[ind_noise],np.radians(psi_noisy0[ind_noise]),np.radians(np.array(90)-theta_noisy0[ind_noise]))
         
-        # # Create the rotate matrix to apply the error in inclinometers
-        # for ind_inclinometer in range(len(noisy_yaw)):
-        #     R=(np.array([[np.cos(noisy_yaw[ind_inclinometer])*np.cos(noisy_pitch[ind_inclinometer])  ,  np.cos(noisy_yaw[ind_inclinometer])*np.sin(noisy_pitch[ind_inclinometer])*np.sin(noisy_roll[ind_inclinometer])-np.sin(noisy_yaw[ind_inclinometer])*np.cos(noisy_roll[ind_inclinometer])  ,  np.cos(noisy_yaw[ind_inclinometer])*np.sin(noisy_pitch[ind_inclinometer])*np.cos(noisy_roll[ind_inclinometer])+np.sin(noisy_yaw[ind_inclinometer])*np.sin(noisy_roll[ind_inclinometer])],
-        #               [np.sin(noisy_yaw[ind_inclinometer])*np.cos(noisy_pitch[ind_inclinometer])  ,  np.sin(noisy_yaw[ind_inclinometer])*np.sin(noisy_pitch[ind_inclinometer])*np.sin(noisy_roll[ind_inclinometer])+np.cos(noisy_yaw[ind_inclinometer])*np.cos(noisy_roll[ind_inclinometer])  ,  np.sin(noisy_yaw[ind_inclinometer])*np.sin(noisy_pitch[ind_inclinometer])*np.cos(noisy_roll[ind_inclinometer])-np.cos(noisy_yaw[ind_inclinometer])*np.sin(noisy_roll[ind_inclinometer])],
-        #               [       -np.sin(noisy_pitch[ind_inclinometer])               ,  np.cos(noisy_pitch[ind_inclinometer])*np.sin(noisy_roll[ind_inclinometer])                                                                  ,  np.cos(noisy_pitch[ind_inclinometer])*np.cos(noisy_roll[ind_inclinometer])]]))
+        # Create the rotate matrix to apply the error in inclinometers
+        for ind_inclinometer in range(len(noisy_yaw)):
+            R=(np.array([[np.cos(noisy_yaw[ind_inclinometer])*np.cos(noisy_pitch[ind_inclinometer])  ,  np.cos(noisy_yaw[ind_inclinometer])*np.sin(noisy_pitch[ind_inclinometer])*np.sin(noisy_roll[ind_inclinometer])-np.sin(noisy_yaw[ind_inclinometer])*np.cos(noisy_roll[ind_inclinometer])  ,  np.cos(noisy_yaw[ind_inclinometer])*np.sin(noisy_pitch[ind_inclinometer])*np.cos(noisy_roll[ind_inclinometer])+np.sin(noisy_yaw[ind_inclinometer])*np.sin(noisy_roll[ind_inclinometer])],
+                      [np.sin(noisy_yaw[ind_inclinometer])*np.cos(noisy_pitch[ind_inclinometer])  ,  np.sin(noisy_yaw[ind_inclinometer])*np.sin(noisy_pitch[ind_inclinometer])*np.sin(noisy_roll[ind_inclinometer])+np.cos(noisy_yaw[ind_inclinometer])*np.cos(noisy_roll[ind_inclinometer])  ,  np.sin(noisy_yaw[ind_inclinometer])*np.sin(noisy_pitch[ind_inclinometer])*np.cos(noisy_roll[ind_inclinometer])-np.cos(noisy_yaw[ind_inclinometer])*np.sin(noisy_roll[ind_inclinometer])],
+                      [       -np.sin(noisy_pitch[ind_inclinometer])               ,  np.cos(noisy_pitch[ind_inclinometer])*np.sin(noisy_roll[ind_inclinometer])                                                                  ,  np.cos(noisy_pitch[ind_inclinometer])*np.cos(noisy_roll[ind_inclinometer])]]))
             
-        #     # Rotation                    
-        #     Coordfinal_noisy.append(np.matmul(R, np.array([x_noisy[ind_inclinometer],y_noisy[ind_inclinometer],z_noisy[ind_inclinometer]])))
+            # Rotation                    
+            Coordfinal_noisy.append(np.matmul(R, np.array([x_noisy[ind_inclinometer],y_noisy[ind_inclinometer],z_noisy[ind_inclinometer]])))
             
-        # xx_noisy,yy_noisy,zz_noisy=[],[],[]
-        # # pdb.set_trace()
-        # # Apply the rotation to the original points
-        # # Coordfinal.append(np.matmul(R, np.array([x[ind_noise],y[ind_noise],z[ind_noise]])))
-        # coorFinal_noisy.append(Coordfinal_noisy)   
-        # for ix in range(len(Coordfinal_noisy)):
-        #     xx_noisy.append(Coordfinal_noisy[ix][0])
-        #     yy_noisy.append(Coordfinal_noisy[ix][1])
-        #     zz_noisy.append(Coordfinal_noisy[ix][2])
+        xx_noisy,yy_noisy,zz_noisy=[],[],[]
+        # pdb.set_trace()
+        # Apply the rotation to the original points
+        # Coordfinal.append(np.matmul(R, np.array([x[ind_noise],y[ind_noise],z[ind_noise]])))
+        coorFinal_noisy.append(Coordfinal_noisy)   
+        for ix in range(len(Coordfinal_noisy)):
+            xx_noisy.append(Coordfinal_noisy[ix][0])
+            yy_noisy.append(Coordfinal_noisy[ix][1])
+            zz_noisy.append(Coordfinal_noisy[ix][2])
         
-        # rho_noisy1, theta_noisy1,psi_noisy1 = SA.cart2sph(xx_noisy,yy_noisy,zz_noisy)
+        rho_noisy1, theta_noisy1,psi_noisy1 = SA.cart2sph(xx_noisy,yy_noisy,zz_noisy)
         
-        # # Store the noisy spherical coordinates including the error in inclinometers
-        # rho_noisy.append(rho_noisy1)
-        # theta_noisy.append(np.array(90)-theta_noisy1)
-        # psi_noisy.append(psi_noisy1)
-        # Coordfinal_noisy=[]      
+        # Store the noisy spherical coordinates including the error in inclinometers
+        rho_noisy.append(rho_noisy1)
+        theta_noisy.append(np.array(90)-theta_noisy1)
+        psi_noisy.append(psi_noisy1)
+        Coordfinal_noisy=[]      
     
 
        
@@ -192,8 +201,8 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     # Calculate the radial speed uncertainty for the noisy points 
     for ind_npoints in range(len(rho)):        
-        U_Vrad_PL.append (100*(np.cos(np.radians(psi_noisy[ind_npoints]))*np.cos(np.radians(theta_noisy[ind_npoints])))*(((Href+np.sin(np.radians(theta_noisy[ind_npoints]))*rho_noisy[ind_npoints])/Href)**alpha)\
-                           /((np.cos(np.radians(psi[ind_npoints]))*np.cos(np.radians(theta[ind_npoints])))*(((Href+np.sin(np.radians(theta[ind_npoints]))*rho[ind_npoints])/Href)**alpha)))
+        U_Vrad_PL.append (100*(np.cos(np.radians(psi_noisy[ind_npoints]))*np.cos(np.radians(theta_noisy[ind_npoints])))*(((z_Lidar+np.sin(np.radians(theta_noisy[ind_npoints]))*rho_noisy[ind_npoints])/Href)**alpha)\
+                           /((np.cos(np.radians(psi[ind_npoints]))*np.cos(np.radians(theta[ind_npoints])))*(((z_Lidar+np.sin(np.radians(theta[ind_npoints]))*rho[ind_npoints])/Href)**alpha)))
 
     # Uncertainty: For this to be compared with Vrad_weighted[1] I need to weight Vrad_PL 
     U_Vrad_S_MC.append([np.nanstd(U_Vrad_PL[ind_stdv]) for ind_stdv in range(len(U_Vrad_PL))])
@@ -223,12 +232,12 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
        # U_Vrad_S_GUM.append([np.sqrt((np.mean(U_Vrad_sh_theta[ind_alpha][ind_u]))**2+(np.mean(U_Vrad_sh_psi[ind_alpha][ind_u]))**2+(np.mean(U_Vrad_sh_range[ind_alpha][ind_u]))**2) for ind_u in range(len(inputs.rho)) ])    
         
        # Uncertainty in %:
-        U_Vrad_sh_theta.append([np.sqrt((100*np.radians(stdv_theta)*((alpha[ind_alpha]*(rho[ind_u]*np.cos(np.radians(theta[ind_u]))/(Href+rho[ind_u]*np.sin(np.radians(theta[ind_u])))))-np.tan(np.radians(theta[ind_u])) ))**2) for ind_u in range(len(theta))])
+        U_Vrad_sh_theta.append([np.sqrt((100*np.radians(stdv_theta)*((alpha[ind_alpha]*(rho[ind_u]*np.cos(np.radians(theta[ind_u]))/(z_Lidar+rho[ind_u]*np.sin(np.radians(theta[ind_u])))))-np.tan(np.radians(theta[ind_u])) ))**2) for ind_u in range(len(theta))])
         U_Vrad_sh_psi.append([np.sqrt((100*np.tan(np.radians(psi[ind_u]))*np.radians(stdv_psi))**2) for ind_u in range(len(psi))])            
-        U_Vrad_sh_range.append([np.sqrt((100*np.sin(np.radians(theta[ind_u]))*alpha[ind_alpha]/(rho[ind_u]*np.sin(np.radians(theta[ind_u]))+Href)*stdv_rho)**2) for ind_u in range(len(rho))])
+        U_Vrad_sh_range.append([np.sqrt((100*np.sin(np.radians(theta[ind_u]))*alpha[ind_alpha]/(rho[ind_u]*np.sin(np.radians(theta[ind_u]))+z_Lidar)*stdv_rho)**2) for ind_u in range(len(rho))])
                     
         # Global uncertainty with contributions of theta, psi and rho
-        U_Vrad_S_GUM.append([(stdv_yaw)+(stdv_pitch)+(stdv_roll)+np.sqrt(((U_Vrad_sh_theta[ind_alpha][ind_u]))**2+((U_Vrad_sh_psi[ind_alpha][ind_u]))**2+((U_Vrad_sh_range[ind_alpha][ind_u]))**2) for ind_u in range(len(rho)) ])
+        U_Vrad_S_GUM.append([(stdv_yaw)**2+(stdv_pitch)**2+(stdv_roll)**2+np.sqrt(((U_Vrad_sh_theta[ind_alpha][ind_u]))**2+((U_Vrad_sh_psi[ind_alpha][ind_u]))**2+((U_Vrad_sh_range[ind_alpha][ind_u]))**2) for ind_u in range(len(rho)) ])
 
     
     # for param1_or,param2_or,param3_or in zip(param1,param2,param3):# Take coordinates from inputs
