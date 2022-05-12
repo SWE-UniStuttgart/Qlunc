@@ -49,22 +49,50 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
 ##################    Ploting scanner measuring points pattern #######################
     if flag_plot_measuring_points_pattern:              
         # Plotting
-        fig,axs0 = plt.subplots()  
-        axs0=plt.axes(projection='3d')
-        axs0.plot([Lidar.optics.scanner.origin[0]],[Lidar.optics.scanner.origin[1]],[Lidar.optics.scanner.origin[2]],'ob',label='{} coordinates [{},{},{}]'.format(Lidar.LidarID,Lidar.optics.scanner.origin[0],Lidar.optics.scanner.origin[1],Lidar.optics.scanner.origin[2]),markersize=plot_param['markersize_lidar'])
-        axs0.plot(Data['MeasPoint_Coordinates'][0],Data['MeasPoint_Coordinates'][1],Data['MeasPoint_Coordinates'][2],plot_param['markerTheo'],markersize=plot_param['markersize'],label='Theoretical measuring point')
-        axs0.plot(Data['NoisyMeasPoint_Coordinates'][0],Data['NoisyMeasPoint_Coordinates'][1],Data['NoisyMeasPoint_Coordinates'][2],plot_param['marker'],markersize=plot_param['markersize'],label='Distance error [m] = {0:.3g}$\pm${1:.3g}'.format(np.mean(Data['Simu_Mean_Distance_Error']),np.mean(Data['STDV_Distance'])))
+        # fig,axs0 = plt.subplots()  
+        # axs0=plt.axes(projection='3d')
+        # axs0.plot([Lidar.optics.scanner.origin[0]],[Lidar.optics.scanner.origin[1]],[Lidar.optics.scanner.origin[2]],'ob',label='{} coordinates [{},{},{}]'.format(Lidar.LidarID,Lidar.optics.scanner.origin[0],Lidar.optics.scanner.origin[1],Lidar.optics.scanner.origin[2]),markersize=plot_param['markersize_lidar'])
+        # axs0.plot(Data['MeasPoint_Coordinates'][0],Data['MeasPoint_Coordinates'][1],Data['MeasPoint_Coordinates'][2],plot_param['markerTheo'],markersize=plot_param['markersize'],label='Theoretical measuring point')
+        # axs0.plot(Data['NoisyMeasPoint_Coordinates'][0],Data['NoisyMeasPoint_Coordinates'][1],Data['NoisyMeasPoint_Coordinates'][2],plot_param['marker'],markersize=plot_param['markersize'],label='Distance error [m] = {0:.3g}$\pm${1:.3g}'.format(np.mean(Data['Simu_Mean_Distance_Error']),np.mean(Data['STDV_Distance'])))
         
-        # Setting labels, legend, title and axes limits:
-        axs0.set_xlabel('x [m]',fontsize=plot_param['axes_label_fontsize'])#,orientation=plot_param['tick_labelrotation'])
-        axs0.set_ylabel('y [m]',fontsize=plot_param['axes_label_fontsize'])#,orientation=plot_param['tick_labelrotation'])
-        axs0.set_zlabel('z [m]',fontsize=plot_param['axes_label_fontsize'])        
-        axs0.set_title('Lidar pointing accuracy ['+Qlunc_yaml_inputs['Components']['Scanner']['Type']+']',fontsize=plot_param['title_fontsize'])
-        axs0.legend()
-        axs0.set_xlim3d(plot_param['xlim'][0],plot_param['xlim'][1])
-        axs0.set_ylim3d(plot_param['ylim'][0],plot_param['ylim'][1])
-        axs0.set_zlim3d(plot_param['zlim'][0],plot_param['zlim'][1])
-       
+        # # Setting labels, legend, title and axes limits:
+        # axs0.set_xlabel('x [m]',fontsize=plot_param['axes_label_fontsize'])#,orientation=plot_param['tick_labelrotation'])
+        # axs0.set_ylabel('y [m]',fontsize=plot_param['axes_label_fontsize'])#,orientation=plot_param['tick_labelrotation'])
+        # axs0.set_zlabel('z [m]',fontsize=plot_param['axes_label_fontsize'])        
+        # axs0.set_title('Lidar pointing accuracy ['+Qlunc_yaml_inputs['Components']['Scanner']['Type']+']',fontsize=plot_param['title_fontsize'])
+        # axs0.legend()
+        # axs0.set_xlim3d(plot_param['xlim'][0],plot_param['xlim'][1])
+        # axs0.set_ylim3d(plot_param['ylim'][0],plot_param['ylim'][1])
+        # axs0.set_zlim3d(plot_param['zlim'][0],plot_param['zlim'][1])
+        pdb.set_trace()
+        cm = plt.get_cmap('jet')
+        cNorm = matplotlib.colors.Normalize(vmin=min(Data['Vr Uncertainty MC [%]'][0]), vmax=max(Data['Vr Uncertainty MC [%]'][0]))
+        scalarMap = cmx.ScalarMappable(norm=cNorm, cmap=cm)
+        fig = plt.figure()
+        ax = Axes3D(fig)
+        ax.plot([Lidar.optics.scanner.origin[0]],[Lidar.optics.scanner.origin[1]],[Lidar.optics.scanner.origin[2]],'ob')
+        ax.scatter(Data['x'],Data['y'] , Data['z'], Data['Vr Uncertainty MC [%]'][0], c=scalarMap.to_rgba(Data['Vr Uncertainty MC [%]'][0]))
+        ax.set_xlabel('X [m]')
+        ax.set_ylabel('Y [m]')
+        ax.set_zlabel('Z [m]')
+        ax.set_title('U Vr MonteCarlo simulation',fontsize=plot_param['title_fontsize'])
+        scalarMap.set_array(Data['Vr Uncertainty MC [%]'][0])
+        fig.colorbar(scalarMap,label='$V_{rad} ~ Uncertainty ~(\%)$')
+        
+        
+        plt.show()
+        # fig,axs1 = plt.subplots() 
+        # axs1.plot(theta,U_Vrad_S_MC[0],'or')
+        # axs1.plot(theta,Unc_Vrad_homo_MC[0],'ob')
+        # axs1.plot(theta,U_Vrad_S_GUM[0])
+        # axs1.plot(theta,U_Vrad_homo_GUM[0]) 
+        
+        
+##################    Scatter of measuring points pattern with uncertainty #######################
+
+
+
+
 ###############   Plot photodetector noise   #############################       
     if flag_plot_photodetector_noise:
         # Quantifying uncertainty from photodetector and interval domain for the plot Psax is define in the photodetector class properties)
