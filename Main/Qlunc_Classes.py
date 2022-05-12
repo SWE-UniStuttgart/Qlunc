@@ -176,10 +176,11 @@ class converter(): # Not included yet in Version Qlunc v-0.9 calculations
                  print('Created new converter: {}'.format(self.ConverterID))
 
 class scanner():
-    def __init__(self,name,time_pattern,N_Points,N_MC,time_point,scanner_type,pattern,lissajous_param,origin,sample_rate,focus_dist,cone_angle,azimuth,stdv_location,stdv_focus_dist,stdv_cone_angle,stdv_azimuth,unc_func):
+    def __init__(self,name,Href,time_pattern,N_Points,N_MC,time_point,scanner_type,pattern,lissajous_param,origin,sample_rate,focus_dist,cone_angle,azimuth,stdv_location,stdv_focus_dist,stdv_cone_angle,stdv_azimuth,unc_func):
                  self.ScannerID       = name
                  self.time_pattern    = time_pattern
                  self.N_Points        = N_Points
+                 self.Href            = Href
                  self.N_MC            = N_MC
                  self.time_point      = time_point 
                  self.scanner_type    = scanner_type
@@ -277,10 +278,11 @@ class signal_processor():
 
 #%% Atmosphere object:
 class atmosphere():
-    def __init__(self,name,temperature,PL_exp):
+    def __init__(self,name,temperature,PL_exp,Vref):
                  self.AtmosphereID = name
                  self.temperature  = temperature
                  self.PL_exp       = PL_exp
+                 self.Vref         = Vref 
                  
                  print('Created new atmosphere: {}'.format(self.AtmosphereID))
 
