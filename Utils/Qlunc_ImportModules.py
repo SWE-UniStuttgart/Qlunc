@@ -38,3 +38,4 @@ import scipy as sc
 from scipy.stats import norm
 from scipy.stats import norm
 from matplotlib.pyplot import cm
+from mpl_toolkits.axes_grid1 import make_axes_locatable
