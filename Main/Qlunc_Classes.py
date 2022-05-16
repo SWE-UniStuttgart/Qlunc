@@ -198,7 +198,10 @@ class scanner():
               
                  self.Uncertainty     = unc_func      
                  print('Created new scanner: {}'.format(self.ScannerID))
-        
+class measurement_points ():
+    def __init__(self,coord_meas_point):
+        self.coord_meas_point=coord_meas_point
+            
 class optical_circulator():
     def __init__(self,name, insertion_loss,SNR,unc_func):#,isolation,return_loss): 
                  self.Optical_CirculatorID = name

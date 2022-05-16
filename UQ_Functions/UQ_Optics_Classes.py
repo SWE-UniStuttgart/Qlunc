@@ -82,6 +82,19 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     y_Lidar = Qlunc_yaml_inputs['Components']['Scanner']['Origin'][1]
     z_Lidar = Qlunc_yaml_inputs['Components']['Scanner']['Origin'][2]
     
+    #Coordenates of the measured points
+    x_meas_point=Meas_points.coord_meas_point[0]
+    y_meas_point=Meas_points.coord_meas_point[1]
+    z_meas_point=Meas_points.coord_meas_point[2]
+    
+    # distance between the lidar and the measuring points    
+    
+    distance_xyz =(np.array(Qlunc_yaml_inputs['Components']['Scanner']['Origin'])-np.array(Meas_points.coord_meas_point))
+    d_lidar_meas_point = np.sqrt(np.sum(distance_xyz**2))
+    LOS_Proj= np.sqrt(np.sum((distance_xyz-np.multiply(distance_xyz,[0,0,1])*[0,0,1])**2))
+    # elevation angle Angle be
+    
+    
     # Rho, theta and phi values
     rho = Lidar.optics.scanner.focus_dist    
     theta = Lidar.optics.scanner.cone_angle
