@@ -108,8 +108,8 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
          r'$\alpha%.2f$={}'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp'][ind_a] )))
         ax2.tick_params(axis='x', labelsize=17)
         ax2.tick_params(axis='y', labelsize=17)
-        ax2.set_xlim(0,50)
-        ax2.set_ylim(0,90)
+        ax2.set_xlim(0,90)
+        ax2.set_ylim(0,30)
         
         # place a tex1t box in upper left in axes coords
         ax2.text(0.5, 0.95, textstr, transform=ax2.transAxes, fontsize=14,horizontalalignment='left',verticalalignment='top', bbox=props)
