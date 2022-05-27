@@ -198,10 +198,13 @@ class scanner():
               
                  self.Uncertainty     = unc_func      
                  print('Created new scanner: {}'.format(self.ScannerID))
-class measurement_points ():
+
+class measurement_points():
     def __init__(self,coord_meas_point):
         self.coord_meas_point=coord_meas_point
+        print('Measurement points created')
             
+
 class optical_circulator():
     def __init__(self,name, insertion_loss,SNR,unc_func):#,isolation,return_loss): 
                  self.Optical_CirculatorID = name
@@ -281,11 +284,13 @@ class signal_processor():
 
 #%% Atmosphere object:
 class atmosphere():
-    def __init__(self,name,temperature,PL_exp,Vref):
+    def __init__(self,name,temperature,PL_exp,wind_direction, wind_pitch, Vref):
                  self.AtmosphereID = name
                  self.temperature  = temperature
                  self.PL_exp       = PL_exp
-                 self.Vref         = Vref 
+                 self.Vref         = Vref
+                 self.wind_direction = wind_direction
+                 self.wind_pitch =wind_pitch
                  
                  print('Created new atmosphere: {}'.format(self.AtmosphereID))
 

@@ -89,7 +89,7 @@ Scanner           = scanner(name            = Qlunc_yaml_inputs['Components']['S
                             stdv_azimuth    = Qlunc_yaml_inputs['Components']['Scanner']['stdv Azimuth'],                 # Azimuth angle standard deviation in [degrees].
                             unc_func        = uopc.UQ_Scanner) #eval(Qlunc_yaml_inputs['Components']['Scanner']['Uncertainty function']) )    # here you put the function describing your scanner uncertainty. 
 # Measurement points
-Meas_points = measurement_points (coord_meas_point=Qlunc_yaml_inputs['Components']['Scanner']['Measuring point'])
+Meas_points = measurement_points (coord_meas_point = Qlunc_yaml_inputs['Components']['Scanner']['Measuring point'])
 
 #Optical Circulator:
 Optical_circulator = optical_circulator (name           = Qlunc_yaml_inputs['Components']['Optical Circulator']['Name'],       # Introduce your Optical circulator name.
@@ -211,7 +211,7 @@ Lidar_inputs     = lidar_gral_inp(name        = Qlunc_yaml_inputs['Components'][
 WFR_M = wfr (name                 = Qlunc_yaml_inputs['WFR model']['Name'],
              reconstruction_model = Qlunc_yaml_inputs['WFR model']['Model'],
              unc_func             = uprm.UQ_WFR)
-
+# pdb.set_trace()
 # Data filtering method
 Filt_M = filtering_method (name        = Qlunc_yaml_inputs['Filtering method']['Name'],
                            filt_method = Qlunc_yaml_inputs['Filtering method']['Method'],
@@ -247,11 +247,14 @@ if Atmospheric_TimeSeries:
     Atmospheric_Scenario = atmosphere(name        = Qlunc_yaml_inputs['Atmospheric_inputs']['Name'],
                                       temperature = Atmospheric_inputs['temperature'],
                                       PL_exp      = Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp'],
-                                      Vref        = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref']
-                                      )
+                                      Vref        = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref'],
+                                      wind_direction = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind_direction'],
+                                      wind_pitch = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind_pitch'])
 else:    
 
     Atmospheric_Scenario = atmosphere(name        = Qlunc_yaml_inputs['Atmospheric_inputs']['Name'],
                                       temperature = Qlunc_yaml_inputs['Atmospheric_inputs']['Temperature'],
                                       PL_exp      = Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp'],
-                                      Vref        = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref'])
+                                      Vref        = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref'],
+                                      wind_direction = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind_direction'],
+                                      wind_pitch = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind_pitch'])

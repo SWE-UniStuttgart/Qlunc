@@ -70,12 +70,12 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
 
         # Plotting scanning points with uncertainty
         cm = plt.get_cmap('jet')
-        cNorm = matplotlib.colors.Normalize(vmin=min(Data['Vr Uncertainty MC [%]'][0]), vmax=max(Data['Vr Uncertainty MC [%]'][0]))
+        cNorm = matplotlib.colors.Normalize(vmin=min(Data['Vr Uncertainty MC [m/s]'][0]), vmax=max(Data['Vr Uncertainty MC [m/s]'][0]))
         scalarMap = cmx.ScalarMappable(norm=cNorm, cmap=cm)
         fig = plt.figure()
         ax = Axes3D(fig)
         ax.plot([Lidar.optics.scanner.origin[0]],[Lidar.optics.scanner.origin[1]],[Lidar.optics.scanner.origin[2]],'ob')
-        ax.scatter(Data['x'],Data['y'] , Data['z'], Data['Vr Uncertainty MC [%]'][0], c=scalarMap.to_rgba(Data['Vr Uncertainty MC [%]'][0]))
+        ax.scatter(Data['x'],Data['y'] , Data['z'], Data['Vr Uncertainty MC [m/s]'][0], c=scalarMap.to_rgba(Data['Vr Uncertainty MC [m/s]'][0]))
         ax.set_xlabel('X [m]')
         ax.set_ylabel('Y [m]')
         ax.set_zlabel('Z [m]')
@@ -83,19 +83,19 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         ax.set_ylim(-2000,2000)
         ax.set_zlim(0,2000)
         ax.set_title('Relative Uncertainty (MC)',fontsize=plot_param['title_fontsize'])
-        scalarMap.set_array(Data['Vr Uncertainty MC [%]'][0])
-        fig.colorbar(scalarMap,label='$V_{rad} ~ Uncertainty ~(\%)$',shrink=0.5)                
+        scalarMap.set_array(Data['Vr Uncertainty MC [m/s]'][0])
+        fig.colorbar(scalarMap,label='$V_{rad} ~ Uncertainty ~(m/s)$',shrink=0.5)                
         plt.show()
         
         # Plot Uncertainty in Vrad with theta
         fig,ax2=plt.subplots()
-        ax2.plot(Data['theta'],Data['Vr Uncertainty homo GUM [%]'][0],'b-',label='U Uniform flow GUM')
+        ax2.plot(Data['theta'],Data['Vr Uncertainty homo GUM [m/s]'][0],'b-',label='U Uniform flow GUM')
         # color=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp']))))   
         for ind_a in range(len(Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp'])):
             # c=next(color)
-            ax2.plot(Data['theta'],Data['Vr Uncertainty GUM [%]'][0],'-',label='U Shear GUM')    
-        ax2.plot(Data['theta'],Data['Vr Uncertainty homo MC [%]'][0],'ob' , markerfacecolor=(1, 1, 0, 0.5),label='U uniform MC')
-        ax2.plot(Data['theta'],Data['Vr Uncertainty MC [%]'][0],'or' , markerfacecolor=(1, 1, 0, 0.5),label='U shear MC')
+            ax2.plot(Data['theta'],Data['Vr Uncertainty GUM [m/s]'][0],'-',label='U Shear GUM')    
+        ax2.plot(Data['theta'],Data['Vr Uncertainty homo MC [m/s]'][0],'ob' , markerfacecolor=(1, 1, 0, 0.5),label='U uniform MC')
+        ax2.plot(Data['theta'],Data['Vr Uncertainty MC [m/s]'][0],'or' , markerfacecolor=(1, 1, 0, 0.5),label='U shear MC')
         ax2.legend(loc=2, prop={'size': 15})
        
         # these are matplotlib.patch.Patch properties
@@ -108,7 +108,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
          r'$\alpha%.2f$={}'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp'][ind_a] )))
         ax2.tick_params(axis='x', labelsize=17)
         ax2.tick_params(axis='y', labelsize=17)
-        ax2.set_xlim(0,90)
+        ax2.set_xlim(0,200)
         ax2.set_ylim(0,30)
         
         # place a tex1t box in upper left in axes coords
