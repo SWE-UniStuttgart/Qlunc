@@ -19,12 +19,13 @@ def scatter3d(x,y,z, Vrad_homo, colorsMap='jet'):
     fig = plt.figure()
     ax = Axes3D(fig)
     # pdb.set_trace()
-    ax.scatter(x, y, z, Vrad_homo, c=scalarMap.to_rgba(Vrad_homo))
-    # ax.set_xlabel('theta')
-    # ax.set_ylabel('psi')
-    # ax.set_zlabel('rho')
+    ax.scatter(x, y, z, Vrad_homo, s=75, c=scalarMap.to_rgba(Vrad_homo))
+    ax.set_xlabel('theta')
+    ax.set_ylabel('psi')
+    ax.set_zlabel('rho')
     scalarMap.set_array(Vrad_homo)
-    fig.colorbar(scalarMap,label='V_Rad Uncertainty (m/s)')
+    fig.colorbar(scalarMap,label='V_Rad Uncertainty (m/s)',shrink=0.5)
+    # plt.colorbar(fig,fraction=0.046, pad=0.04)
     plt.show()
     
 
