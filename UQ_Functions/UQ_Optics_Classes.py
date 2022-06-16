@@ -232,13 +232,14 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         U_Vrad_S_MC.append([np.nanstd(Vrad_PL[ind_stdv]) for ind_stdv in range(len(Vrad_PL))])
         Vrad_PL=[]
     
-    Vrad0_PL,U_Vrad0_S_MC=[],[]
-    for ind_npoints in range(len(rho_noisy)):
-        Vrad0_PL.append ([Vref*(np.cos(np.radians(psi_noisy[ind_npoints][ind_theta]))*np.cos(np.radians(theta_noisy[ind_npoints][ind_theta])))*(((Href+np.sin(np.radians(theta_noisy[ind_npoints][ind_theta]))*rho_noisy[ind_npoints])/Href)**alpha[0]) for ind_theta in range (len(theta_noisy[0]))])
-        
-        U_Vrad0_S_MC.append(np.nanstd(Vrad0_PL[ind_npoints]))
     
-    
+    # Scatter plot: calculating all values among the range of theta, psi and rho
+    Vrad0_PL,U_Vrad0_S_MC=[],[]   
+    Vrad0_PL_T= ([Vref*(np.cos(np.radians(psi_noisy0))*np.cos(np.radians(theta_noisy0)))*(((Href+np.sin(np.radians(theta_noisy0))*rho_noisy0)/Href)**alpha[0])  for theta_noisy0 in theta_noisy  for rho_noisy0 in rho_noisy for psi_noisy0 in psi_noisy])   
+    # rfr= ([(theta_noisy0,psi_noisy0,rho_noisy0) for theta_noisy0 in theta_noisy for psi_noisy0 in psi_noisy for rho_noisy0 in rho_noisy])   
+
+    U_Vrad0_S_MC.append([np.nanstd(Vrad0_PL_T[ind_T]) for ind_T in range(len(Vrad0_PL_T))])
+    # pdb.set_trace()
     #%% GUM method
     
     # 1. Calculate radial speed uncertainty for an homogeneous flow
@@ -388,11 +389,15 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # Storing data
     Final_Output_UQ_Scanner                 = {'Vr Uncertainty homo MC [m/s]':U_Vrad_homo_MC,'Vr Uncertainty homo GUM [m/s]':U_Vrad_homo_GUM,'Vr Uncertainty MC [m/s]':U_Vrad_S_MC,'Vr Uncertainty GUM [m/s]':U_Vrad_S_GUM,'x':x,'y':y,'z':z,'rho':rho,'theta':theta,'psi':psi} #, 'Rayleigh length':Probe_param['Rayleigh Length'],'Rayleigh length uncertainty':Probe_param['Rayleigh Length uncertainty']}
     Lidar.lidar_inputs.dataframe['Scanner'] = (Final_Output_UQ_Scanner['Vr Uncertainty MC [m/s]'])*len(Atmospheric_Scenario.temperature)  
-    # pdb.set_trace()
+    
     # Plotting
     QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,Qlunc_yaml_inputs['Flags']['Scanning Pattern'],False,False,False)
-    pdb.set_trace()
-    QPlot.scatter3d(theta,psi,rho,U_Vrad0_S_MC)
+    
+    
+    # Scatter plot
+    # pdb.set_trace()
+    rho_scat,theta_scat,psi_scat,box=SA.mesh(rho,theta,psi)
+    QPlot.scatter3d(theta_scat,psi_scat,rho_scat,U_Vrad0_S_MC[0])
     
     pdb.set_trace()
     return Final_Output_UQ_Scanner,Lidar.lidar_inputs.dataframe
