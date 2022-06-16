@@ -235,7 +235,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     # Scatter plot: calculating all values among the range of theta, psi and rho
     Vrad0_PL,U_Vrad0_S_MC=[],[]   
-    Vrad0_PL_T= ([Vref*(np.cos(np.radians(psi_noisy0))*np.cos(np.radians(theta_noisy0)))*(((Href+np.sin(np.radians(theta_noisy0))*rho_noisy0)/Href)**alpha[0])  for theta_noisy0 in theta_noisy  for rho_noisy0 in rho_noisy for psi_noisy0 in psi_noisy])   
+    Vrad0_PL_T= ([Vref*(((Href+(np.sin(np.radians(theta_noisy0))*rho_noisy0))/Href)**alpha[0])*(-np.cos(np.radians(theta_noisy0))*np.cos(np.radians(psi_noisy0))*np.cos(np.radians(0))-np.cos(np.radians(theta_noisy0))*np.sin(np.radians(psi_noisy0))*np.sin(np.radians(0))+np.sin(np.radians(theta_noisy0))*np.tan(np.radians(0)))  for theta_noisy0 in theta_noisy  for rho_noisy0 in rho_noisy for psi_noisy0 in psi_noisy])   
     # rfr= ([(theta_noisy0,psi_noisy0,rho_noisy0) for theta_noisy0 in theta_noisy for psi_noisy0 in psi_noisy for rho_noisy0 in rho_noisy])   
 
     U_Vrad0_S_MC.append([np.nanstd(Vrad0_PL_T[ind_T]) for ind_T in range(len(Vrad0_PL_T))])
