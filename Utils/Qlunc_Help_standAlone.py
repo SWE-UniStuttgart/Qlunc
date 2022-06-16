@@ -262,3 +262,24 @@ def rmse(f,ff):
     # ind_rm=ind_rm+1
     # pdb.set_trace()
     return np.array(rms)
+
+#%% Define meshgrid for the errors in pointing accuracy and focus range
+def mesh (theta,psi,rho):
+    # pdb.set_trace()
+    box=np.meshgrid(theta,psi,rho)
+    # Get coordinates of the points on the grid
+    box_positions = np.vstack(map(np.ravel, box))
+    theta=box_positions[0]
+    psi=box_positions[1]
+    rho=box_positions[2]
+    # fig = plt.figure()
+
+    # ax = fig.add_subplot(111, projection='3d')
+
+    # ax.scatter(theta, psi, rho)
+
+    # ax.set_xlabel('theta')
+    # ax.set_ylabel('psi')
+    # ax.set_zlabel('rho')
+    # plt.show()
+    return theta,psi,rho,box
