@@ -86,9 +86,10 @@ def scatter3d(x,y,z, Vrad_homo, colorsMap='jet'):
     fig = plt.figure()
     ax = Axes3D(fig)
     ax.scatter(x, y, z, Vrad_homo, c=scalarMap.to_rgba(Vrad_homo))
-    ax.set_xlabel('theta')
+    ax.set_xlabel('rho')
     ax.set_ylabel('psi')
-    ax.set_zlabel('rho')
+    ax.set_zlabel('theta')
+
     scalarMap.set_array(Vrad_homo)
     fig.colorbar(scalarMap,label='V_Rad Uncertainty (m/s)')
     plt.show()
@@ -100,14 +101,14 @@ inputs=inputs(Href        = 100,
               Mode        = 'SCAN',
               alpha       = 0.2, # shear exponent
               N_MC        = 500, #number of points for the MC simulation for each point in Npoints
-              Npoints     = 11, #N° of measuring points 
-              rho         = [1000,6000],
-              theta       = [4,89],
+              Npoints     = 7, #N° of measuring points 
+              rho         = [1000,3000],
+              theta       = [1,89],
               wind_direction = 0,
               psi         = [-45,45],
-              stdv_rho    = 10,    
-              stdv_theta  = 0.0573,     
-              stdv_psi    = 0.0573) 
+              stdv_rho    = 0,    
+              stdv_theta  = 0,     
+              stdv_psi    = 0.573) 
 
 # Create the grid of psi,theta and rho:
 theta,psi,rho,box=inputs.mesh()
@@ -164,20 +165,6 @@ for ind_noise in range(len(theta)):
 # pdb.set_trace()
 
 
-
-
-
-# fig = plt.figure()
-
-# ax = fig.add_subplot(111, projection='3d')
-# for in_t in range(len(theta_noisy)):
-#     ax.scatter(theta_noisy[in_t], psi_noisy[in_t], rho_noisy[in_t])
-
-# ax.set_xlabel('theta')
-# ax.set_ylabel('psi')
-# ax.set_zlabel('rho')
-# plt.show()
-# pdb.set_trace()
 # Cartesian Point coordinates
 # def polar2cart(r, theta, psi):
 #     return [
@@ -206,7 +193,7 @@ if MC==1:
         # Vrad_homoP.append([100*np.cos(np.radians(theta_noisy[ind_theta0][ind_theta]))*np.cos(np.radians(psi_noisy[ind_theta0][ind_theta]))/(np.cos(np.radians(theta[ind_theta0][ind_theta]))*np.cos(np.radians(psi[ind_theta0][ind_theta]))) for ind_theta in range (len(theta_noisy[0]))])
         U_Vrad_homo_MC.append(np.std(Vrad_homo[ind_theta0]))
     # pdb.set_trace()
-    scatter3d(theta,psi,rho,U_Vrad_homo_MC)  
+    # scatter3d(theta,psi,rho,U_Vrad_homo_MC)  
     # pdb.set_trace()  
     
 
@@ -231,14 +218,15 @@ if MC==1:
     # Calculate the radial speed for the noisy points 
     
     for ind_npoints in range(len(rho_noisy)):
-        Vrad_PL.append ([inputs.Vref*(np.cos(np.radians(psi_noisy[ind_npoints][ind_theta]))*np.cos(np.radians(theta_noisy[ind_npoints][ind_theta])))*(((inputs.Href+np.sin(np.radians(theta_noisy[ind_npoints][ind_theta]))*rho_noisy[ind_npoints])/inputs.Href)**inputs.alpha[0]) for ind_theta in range (len(theta_noisy[0]))])
+        Vrad_PL.append ([inputs.Vref*(np.cos(np.radians(psi_noisy[ind_npoints][ind_theta]))*np.cos(np.radians(theta_noisy[ind_npoints][ind_theta])))*(((inputs.Href+np.sin(np.radians(theta_noisy[ind_npoints][ind_theta]))*rho_noisy[ind_npoints][ind_theta])/inputs.Href)**inputs.alpha[0]) for ind_theta in range (len(theta_noisy[0]))])
         
         # Vrad_PLP.append (100*(np.cos(np.radians(psi_noisy[ind_npoints]))*np.cos(np.radians(theta_noisy[ind_npoints])))*(((inputs.Href+np.sin(np.radians(theta_noisy[ind_npoints]))*rho_noisy[ind_npoints])/inputs.Href)**inputs.alpha[0])\
         #                     /((np.cos(np.radians(inputs.psi[ind_npoints]))*np.cos(np.radians(inputs.theta[ind_npoints])))*(((inputs.Href+np.sin(np.radians(inputs.theta[ind_npoints]))*inputs.rho[ind_npoints])/inputs.Href)**inputs.alpha[0])))
 
     # Uncertainty: For this to be compared with Vrad_weighted[1] I need to weight Vrad_PL 
         U_Vrad_S_MC.append(np.nanstd(Vrad_PL[ind_npoints]))
-    scatter3d(theta,psi,rho,U_Vrad_S_MC)
+    pdb.set_trace()
+    scatter3d(rho,psi,theta,U_Vrad_S_MC)
     # plt.contour([theta,psi], U_Vrad_homo_MCSimple, levels=levels0,
     # colors=['#808080', '#A0A0A0', '#C0C0C0'], extend='both')
     # cs.cmap.set_over('red')
