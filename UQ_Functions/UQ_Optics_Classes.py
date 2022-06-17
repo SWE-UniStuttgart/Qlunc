@@ -234,11 +234,12 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     
     # Scatter plot: calculating all values among the range of theta, psi and rho
-    Vrad0_PL,U_Vrad0_S_MC=[],[]   
-    Vrad0_PL_T= ([Vref*(((Href+(np.sin(np.radians(theta_noisy0))*rho_noisy0))/Href)**alpha[0])*(-np.cos(np.radians(theta_noisy0))*np.cos(np.radians(psi_noisy0))*np.cos(np.radians(0))-np.cos(np.radians(theta_noisy0))*np.sin(np.radians(psi_noisy0))*np.sin(np.radians(0))+np.sin(np.radians(theta_noisy0))*np.tan(np.radians(0)))  for theta_noisy0 in theta_noisy  for rho_noisy0 in rho_noisy for psi_noisy0 in psi_noisy])   
+    Vrad0_PL,U_Vrad_PL_MC_Total=[],[]   
+    Vrad_PL_Total= ([Vref*(((Href+(np.sin(np.radians(theta_noisy0))*rho_noisy0))/Href)**alpha[0])*(-np.cos(np.radians(theta_noisy0))*np.cos(np.radians(psi_noisy0))*np.cos(np.radians(wind_direction_noisy[0][0]))-np.cos(np.radians(theta_noisy0))*np.sin(np.radians(psi_noisy0))*np.sin(np.radians(wind_direction_noisy[0][0]))+np.sin(np.radians(theta_noisy0))*np.tan(np.radians(wind_pitch_noisy[0][0])))  for theta_noisy0 in theta_noisy  for rho_noisy0 in rho_noisy for psi_noisy0 in psi_noisy])   
     # rfr= ([(theta_noisy0,psi_noisy0,rho_noisy0) for theta_noisy0 in theta_noisy for psi_noisy0 in psi_noisy for rho_noisy0 in rho_noisy])   
-
-    U_Vrad0_S_MC.append([np.nanstd(Vrad0_PL_T[ind_T]) for ind_T in range(len(Vrad0_PL_T))])
+    
+    U_Vrad_PL_MC_Total.append([np.nanstd(Vrad_PL_Total[ind_T]) for ind_T in range(len(Vrad_PL_Total))])
+    # U_Vrad_S_MC=np.reshape(U_Vrad_PL_MC_Total[0],(11,11,11))
     # pdb.set_trace()
     #%% GUM method
     
@@ -397,7 +398,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # Scatter plot
     # pdb.set_trace()
     rho_scat,theta_scat,psi_scat,box=SA.mesh(rho,theta,psi)
-    QPlot.scatter3d(theta_scat,psi_scat,rho_scat,U_Vrad0_S_MC[0])
+    QPlot.scatter3d(theta_scat,psi_scat,rho_scat,U_Vrad_PL_MC_Total[0])
     
     pdb.set_trace()
     return Final_Output_UQ_Scanner,Lidar.lidar_inputs.dataframe
