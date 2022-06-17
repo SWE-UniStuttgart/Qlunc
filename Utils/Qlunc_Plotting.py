@@ -18,14 +18,12 @@ def scatter3d(x,y,z, Vrad_homo, colorsMap='jet'):
     scalarMap = cmx.ScalarMappable(norm=cNorm, cmap=cm)
     fig = plt.figure()
     ax = Axes3D(fig)
-    # pdb.set_trace()
     ax.scatter(x, y, z, Vrad_homo, s=75, c=scalarMap.to_rgba(Vrad_homo))
     ax.set_xlabel('theta')
     ax.set_ylabel('psi')
     ax.set_zlabel('rho')
     scalarMap.set_array(Vrad_homo)
     fig.colorbar(scalarMap,label='V_Rad Uncertainty (m/s)',shrink=0.5)
-    # plt.colorbar(fig,fraction=0.046, pad=0.04)
     plt.show()
     
 
@@ -86,7 +84,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
 # =============================================================================
         
 
-        # Plotting scanning points with uncertainty
+        # 1. Plotting scanning points with uncertainty
         cm = plt.get_cmap('jet')
         cNorm = matplotlib.colors.Normalize(vmin=min(Data['Vr Uncertainty MC [m/s]'][0]), vmax=max(Data['Vr Uncertainty MC [m/s]'][0]))
         scalarMap = cmx.ScalarMappable(norm=cNorm, cmap=cm)
@@ -105,7 +103,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         fig.colorbar(scalarMap,label='$V_{rad} ~ Uncertainty ~(m/s)$',shrink=0.5)                
         plt.show()
         
-        # Plot Uncertainty in Vrad with theta
+        # 2. Plot Uncertainty in Vrad with theta
         
         fig,ax2=plt.subplots()
         ax2.plot(Data['theta'],Data['Vr Uncertainty homo GUM [m/s]'][0],'b-',label='U Uniform flow GUM')
@@ -120,18 +118,61 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
     
          
         ax2.legend(loc=2, prop={'size': 15})
+        ax2.tick_params(axis='x', labelsize=17)
+        ax2.tick_params(axis='y', labelsize=17)
+        ax2.set_xlim(0,200)
+        ax2.set_ylim(0,30)
+        
+        
+        
+        #3.  Plot Uncertainty in Vrad with psi
+        
+        fig,ax3=plt.subplots()
+        ax3.plot(Data['psi'],Data['Vr Uncertainty homo GUM [m/s]'][0],'b-',label='U Uniform flow GUM')
+        ax3.plot(Data['psi'],Data['Vr Uncertainty homo MC [m/s]'][0],'ob' , markerfacecolor=(1, 1, 0, 0.5),label='U uniform MC')
+        # color=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp']))))   
+        
+        for ind_a in range(len(Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp'])):
+            # c=next(color)
+            ax3.plot(Data['psi'],Data['Vr Uncertainty GUM [m/s]'][ind_a],'-',label='U Shear GUM (alpha={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp'][ind_a] ))
+            ax3.plot(Data['psi'],Data['Vr Uncertainty MC [m/s]'][ind_a],'or' , markerfacecolor=(1, 1, 0, 0.5),label='U shear MC')
+            
+    
+         
+        ax3.legend(loc=2, prop={'size': 15})
+        ax3.tick_params(axis='x', labelsize=17)
+        ax3.tick_params(axis='y', labelsize=17)
+        ax3.set_xlim(-200,200)
+        ax3.set_ylim(0,30)
        
-        # these are matplotlib.patch.Patch properties
+        #3.  Plot Uncertainty in Vrad with rho
+        
+        fig,ax4=plt.subplots()
+        ax4.plot(Data['rho'],Data['Vr Uncertainty homo GUM [m/s]'][0],'b-',label='U Uniform flow GUM')
+        ax4.plot(Data['rho'],Data['Vr Uncertainty homo MC [m/s]'][0],'ob' , markerfacecolor=(1, 1, 0, 0.5),label='U uniform MC')
+        # color=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp']))))   
+        
+        for ind_a in range(len(Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp'])):
+            # c=next(color)
+            ax4.plot(Data['rho'],Data['Vr Uncertainty GUM [m/s]'][ind_a],'-',label='U Shear GUM (alpha={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp'][ind_a] ))
+            ax4.plot(Data['rho'],Data['Vr Uncertainty MC [m/s]'][ind_a],'or' , markerfacecolor=(1, 1, 0, 0.5),label='U shear MC')
+            
+    
+         
+        ax4.legend(loc=2, prop={'size': 15})
+        ax4.tick_params(axis='x', labelsize=17)
+        ax4.tick_params(axis='y', labelsize=17)
+        ax4.set_xlim(0,5000)
+        ax4.set_ylim(0,30) 
+        
+       # these are matplotlib.patch.Patch properties
         props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
         textstr = '\n'.join((
         r'$\rho=%.2f$' % (Data['rho'][0], ),
         r'$\psi=%.2f$' % (Data['psi'][0], ),
         r'N={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['N_MC'], ),
         r'Href={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['Href'], )))
-        ax2.tick_params(axis='x', labelsize=17)
-        ax2.tick_params(axis='y', labelsize=17)
-        ax2.set_xlim(0,200)
-        ax2.set_ylim(0,30)
+
         
         # place a tex1t box in upper left in axes coords
         ax2.text(0.5, 0.95, textstr, transform=ax2.transAxes, fontsize=14,horizontalalignment='left',verticalalignment='top', bbox=props)
@@ -141,6 +182,19 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         plt.title('Vrad Relative Uncertainty',fontsize=30)
         plt.show()
         
+        ax3.text(0.5, 0.95, textstr, transform=ax3.transAxes, fontsize=14,horizontalalignment='left',verticalalignment='top', bbox=props)
+        ax3.set_xlabel('Psi [°]',fontsize=25)
+        ax3.set_ylabel('Uncertainty [m/s]',fontsize=25)
+        ax3.grid(axis='both')
+        plt.title('Vrad Relative Uncertainty',fontsize=30)
+        plt.show()
+        
+        ax4.text(0.5, 0.95, textstr, transform=ax3.transAxes, fontsize=14,horizontalalignment='left',verticalalignment='top', bbox=props)
+        ax4.set_xlabel('Rho [m]',fontsize=25)
+        ax4.set_ylabel('Uncertainty [m/s]',fontsize=25)
+        ax4.grid(axis='both')
+        plt.title('Vrad Relative Uncertainty',fontsize=30)
+        plt.show()
 
 ###############   Plot photodetector noise   #############################       
     if flag_plot_photodetector_noise:
@@ -237,17 +291,17 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         
         # Plotting:
         fig=plt.figure()
-        axs1=fig.subplots()
+        axs=fig.subplots()
         label0=['Optical amplifier OSNR']
-        axs1.plot(Lidar.photonics.optical_amplifier.Power_interval,Data['OSNR'],label=label0[0])  
+        axs.plot(Lidar.photonics.optical_amplifier.Power_interval,Data['OSNR'],label=label0[0])  
         # axs1.plot(Lidar.photonics.optical_amplifier.Power_interval,Data['OSNR'],label=label0[0],marker='o')  
 
-        axs1.set_xlabel('Input Signal optical power [W]',fontsize=plot_param['axes_label_fontsize'])
-        axs1.set_ylabel('OSNR [dB]',fontsize=plot_param['axes_label_fontsize'])
-        axs1.legend(fontsize=plot_param['legend_fontsize'])
-        axs1.set_title('OSNR - Optical Amplifier',fontsize=plot_param['title_fontsize'])
-        axs1.grid(axis='both')
-        axs1.text(.90,.05,plot_param['Qlunc_version'],transform=axs1.transAxes, fontsize=14,verticalalignment='top',bbox=dict(boxstyle='round', facecolor='white', alpha=0.5))
+        axs.set_xlabel('Input Signal optical power [W]',fontsize=plot_param['axes_label_fontsize'])
+        axs.set_ylabel('OSNR [dB]',fontsize=plot_param['axes_label_fontsize'])
+        axs.legend(fontsize=plot_param['legend_fontsize'])
+        axs.set_title('OSNR - Optical Amplifier',fontsize=plot_param['title_fontsize'])
+        axs.grid(axis='both')
+        axs.text(.90,.05,plot_param['Qlunc_version'],transform=axs1.transAxes, fontsize=14,verticalalignment='top',bbox=dict(boxstyle='round', facecolor='white', alpha=0.5))
         # pdb.set_trace()
         
         
