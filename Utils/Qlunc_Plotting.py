@@ -14,16 +14,17 @@ from Utils.Qlunc_ImportModules import *
 
 def scatter3d(x,y,z, Vrad_homo, colorsMap='jet'):
     cm = plt.get_cmap(colorsMap)
-    cNorm = matplotlib.colors.Normalize(vmin=min(Vrad_homo), vmax=max(Vrad_homo))
+    cNorm = matplotlib.colors.Normalize(vmin=min(Vrad_homo), vmax=max(Vrad_homo)) #Normalize(vmin=0.005, vmax=.045) # 
     scalarMap = cmx.ScalarMappable(norm=cNorm, cmap=cm)
     fig = plt.figure()
     ax = Axes3D(fig)
     ax.scatter(x, y, z, Vrad_homo, s=75, c=scalarMap.to_rgba(Vrad_homo))
-    ax.set_xlabel('theta')
-    ax.set_ylabel('psi')
-    ax.set_zlabel('rho')
+    ax.set_xlabel('theta [°]',fontsize=15)
+    ax.set_ylabel('psi [°]',fontsize=15)
+    ax.set_zlabel('rho [m]',fontsize=15)
     scalarMap.set_array(Vrad_homo)
-    fig.colorbar(scalarMap,label='V_Rad Uncertainty (m/s)',shrink=0.5)
+    fig.colorbar(scalarMap,label='V_Rad Uncertainty [m/s]',shrink=0.7)
+    # fig.colorbar.tick_params(labelsize=10)
     plt.show()
     
 
@@ -121,7 +122,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         ax2.tick_params(axis='x', labelsize=17)
         ax2.tick_params(axis='y', labelsize=17)
         ax2.set_xlim(0,200)
-        ax2.set_ylim(0,30)
+        ax2.set_ylim(0,1)
         
         
         
@@ -143,7 +144,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         ax3.tick_params(axis='x', labelsize=17)
         ax3.tick_params(axis='y', labelsize=17)
         ax3.set_xlim(-200,200)
-        ax3.set_ylim(0,30)
+        ax3.set_ylim(0,1)
        
         #3.  Plot Uncertainty in Vrad with rho
         
@@ -163,37 +164,57 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         ax4.tick_params(axis='x', labelsize=17)
         ax4.tick_params(axis='y', labelsize=17)
         ax4.set_xlim(0,5000)
-        ax4.set_ylim(0,30) 
+        ax4.set_ylim(0,1) 
         
        # these are matplotlib.patch.Patch properties
         props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
         textstr = '\n'.join((
-        r'$\rho=%.2f$' % (Data['rho'][0], ),
-        r'$\psi=%.2f$' % (Data['psi'][0], ),
+        r'$\rho~ [m]=%.2f$' % (Data['rho'][0], ),
+        r'$\psi~ [°]=%.2f$' % (Data['psi'][0], ),
         r'N={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['N_MC'], ),
-        r'Href={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['Href'], )))
+        r'Href [m]={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['Href'], )))
 
         
         # place a tex1t box in upper left in axes coords
         ax2.text(0.5, 0.95, textstr, transform=ax2.transAxes, fontsize=14,horizontalalignment='left',verticalalignment='top', bbox=props)
-        ax2.set_xlabel('Theta [°]',fontsize=25)
+        ax2.set_xlabel('elevation [°]',fontsize=25)
         ax2.set_ylabel('Uncertainty [m/s]',fontsize=25)
         ax2.grid(axis='both')
-        plt.title('Vrad Relative Uncertainty',fontsize=30)
+        plt.title('Vrad Uncertainty',fontsize=30)
         plt.show()
         
-        ax3.text(0.5, 0.95, textstr, transform=ax3.transAxes, fontsize=14,horizontalalignment='left',verticalalignment='top', bbox=props)
-        ax3.set_xlabel('Psi [°]',fontsize=25)
+
+
+        # these are matplotlib.patch.Patch properties
+        props3 = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+        textstr3 = '\n'.join((
+        r'$\rho ~[°]=%.2f$' % (Data['rho'][0], ),
+        r'$\theta~ [°]=%.2f$' % (Data['theta'][0], ),
+        r'N={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['N_MC'], ),
+        r'Href [m]={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['Href'], )))
+
+        ax3.text(0.5, 0.95, textstr3, transform=ax3.transAxes, fontsize=14,horizontalalignment='left',verticalalignment='top', bbox=props3)
+        ax3.set_xlabel('Azimuth [°]',fontsize=25)
         ax3.set_ylabel('Uncertainty [m/s]',fontsize=25)
         ax3.grid(axis='both')
-        plt.title('Vrad Relative Uncertainty',fontsize=30)
+        plt.title('Vrad Uncertainty',fontsize=30)
         plt.show()
         
-        ax4.text(0.5, 0.95, textstr, transform=ax3.transAxes, fontsize=14,horizontalalignment='left',verticalalignment='top', bbox=props)
-        ax4.set_xlabel('Rho [m]',fontsize=25)
+        
+        
+        # these are matplotlib.patch.Patch properties
+        props4 = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+        textstr4 = '\n'.join((
+        r'$\theta~ [°]=%.2f$' % (Data['theta'][0], ),
+        r'$\psi~ [°]=%.2f$' % (Data['psi'][0], ),
+        r'N={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['N_MC'], ),
+        r'Href [m]={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['Href'], )))
+        
+        ax4.text(0.5, 0.95, textstr4, transform=ax3.transAxes, fontsize=14,horizontalalignment='left',verticalalignment='top', bbox=props4)
+        ax4.set_xlabel('range [m]',fontsize=25)
         ax4.set_ylabel('Uncertainty [m/s]',fontsize=25)
         ax4.grid(axis='both')
-        plt.title('Vrad Relative Uncertainty',fontsize=30)
+        plt.title('Vrad Uncertainty',fontsize=30)
         plt.show()
 
 ###############   Plot photodetector noise   #############################       
