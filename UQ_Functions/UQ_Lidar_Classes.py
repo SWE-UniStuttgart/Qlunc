@@ -113,7 +113,7 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     #         print(colored('Error in wfr model','cyan', attrs=['bold']))
     
     Uncertainty_Lidar                     = SA.unc_comb(List_Unc_lidar)[0]
-    pdb.set_trace()
+    
     Final_Output_Lidar_Uncertainty        = {'Hardware_Lidar_Uncertainty_combination':Uncertainty_Lidar}#,'WFR_Uncertainty':Optics_Uncertainty['Uncertainty_WFR']}    
     
     Lidar.lidar_inputs.dataframe['Lidar'] = Final_Output_Lidar_Uncertainty['Hardware_Lidar_Uncertainty_combination']*np.linspace(1,1,len(Atmospheric_Scenario.temperature))
@@ -124,7 +124,7 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # Create Xarray to store data. Link with Mocalum and yaddum  ###########################################
     # READ netcdf FILE.
     # da=xr.open_dataarray('C:/SWE_LOCAL/GIT_Qlunc/Projects/' + 'Gandia.nc')
-    # pdb.set_trace()
+    pdb.set_trace()
     df=SA.to_netcdf(Lidar.lidar_inputs.dataframe,Qlunc_yaml_inputs,Lidar,Atmospheric_Scenario)
     ########################################################################################################
     ########################################################################################################
