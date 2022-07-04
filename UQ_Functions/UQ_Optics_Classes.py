@@ -403,7 +403,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     rho_scat,theta_scat,psi_scat,box=SA.mesh(rho,theta,psi)
     # QPlot.scatter3d(theta_scat,psi_scat,rho_scat,U_Vrad_PL_MC_Total[0])
     
-    pdb.set_trace()
+    # pdb.set_trace()
     return Final_Output_UQ_Scanner,Lidar.lidar_inputs.dataframe
 
 #%% Optical circulator:
@@ -469,12 +469,17 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     if Lidar.optics.scanner != None:
         try: # ecah try/except evaluates wether the component is included in the module, therefore in the calculations            
             if Lidar.wfr_model.reconstruction_model != 'None':
-                # pdb.set_trace()    
+                   
                 Scanner_Uncertainty,DataFrame=Lidar.optics.scanner.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+                # pdb.set_trace() 
                 WFR_Uncertainty=None#Lidar.wfr_model.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scanner_Uncertainty)            
-            else:            
+            
+            else:  
+                
                 Scanner_Uncertainty,DataFrame=Lidar.optics.scanner.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+                # pdb.set_trace()
                 WFR_Uncertainty = None
+                # pdb.set_trace()
         except:
             Scanner_Uncertainty=None
             print(colored('Error in scanner uncertainty calculations!','cyan', attrs=['bold']))
@@ -502,9 +507,13 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             print(colored('Error in optical circulator uncertainty calculations!','cyan', attrs=['bold']))    
     else:
         print(colored('You didn´t include an optical circulator in the lidar,so that optical circulator uncertainty contribution is not in lidar uncertainty estimations.','cyan', attrs=['bold']))
+    
     Uncertainty_Optics_Module=SA.unc_comb(List_Unc_optics)
-    Final_Output_UQ_Optics = {'Uncertainty_Optics':Uncertainty_Optics_Module, 'Uncertainty_WFR':WFR_Uncertainty['WFR_Uncertainty'],'Mean_error_PointingAccuracy':Scanner_Uncertainty['Simu_Mean_Distance_Error'],'Stdv_PointingAccuracy':Scanner_Uncertainty['STDV_Distance'], 'Rayleigh length':Scanner_Uncertainty['Rayleigh length'],'Rayleigh length uncertainty':Scanner_Uncertainty['Rayleigh length uncertainty']}
-    pdb.set_trace()
+    
+    # Final_Output_UQ_Optics = {'Uncertainty_Optics':Uncertainty_Optics_Module, 'Uncertainty_WFR':WFR_Uncertainty['WFR_Uncertainty'],'Mean_error_PointingAccuracy':Scanner_Uncertainty['Simu_Mean_Distance_Error'],'Stdv_PointingAccuracy':Scanner_Uncertainty['STDV_Distance'], 'Rayleigh length':Scanner_Uncertainty['Rayleigh length'],'Rayleigh length uncertainty':Scanner_Uncertainty['Rayleigh length uncertainty']}
+    Final_Output_UQ_Optics = {'Uncertainty_Optics':Uncertainty_Optics_Module,'Uncertainty ': Scanner_Uncertainty}
+    
     Lidar.lidar_inputs.dataframe['Optics Module']=Final_Output_UQ_Optics['Uncertainty_Optics']*np.linspace(1,1,len(Atmospheric_Scenario.temperature))  # linspace to create the appropiate length for the xarray. 
+    # pdb.set_trace()
     return Final_Output_UQ_Optics,Lidar.lidar_inputs.dataframe
 
