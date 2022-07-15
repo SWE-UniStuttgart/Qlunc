@@ -220,7 +220,8 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             
             # 2.3 New approach (Absolute uncertainty):
             Vrad_PL_ABS.append((Vref*(((Href+(np.sin(np.radians(theta_noisy[ind_npoints]))*rho_noisy[ind_npoints]))/Href)**alpha[in_alpha])*(-np.cos(np.radians(theta_noisy[ind_npoints]))*np.cos(np.radians(psi_noisy[ind_npoints]))*np.cos(np.radians(wind_direction_noisy[ind_npoints]))-np.cos(np.radians(theta_noisy[ind_npoints]))*np.sin(np.radians(psi_noisy[ind_npoints]))*np.sin(np.radians(wind_direction_noisy[ind_npoints]))-np.sin(np.radians(theta_noisy[ind_npoints]))*np.tan(np.radians(wind_pitch_noisy[ind_npoints])))))
-            
+            # Vrad_PL_ABS.append((Vref*(((Href+(np.sin(np.radians(theta_noisy[ind_npoints]))*rho_noisy[ind_npoints]))/Href)**alpha[in_alpha])*(-np.cos(np.radians(theta_noisy[ind_npoints]))*np.cos(np.radians(psi_noisy[ind_npoints]))*np.cos(np.radians(wind_direction_noisy[ind_npoints]))-np.cos(np.radians(theta_noisy[ind_npoints]))*np.sin(np.radians(psi_noisy[ind_npoints]))*np.sin(np.radians(wind_direction_noisy[ind_npoints]))-np.sin(np.radians(theta_noisy[ind_npoints]))*((np.sin(np.radians(wind_pitch_noisy[ind_npoints]-theta_noisy[ind_npoints]))/np.sin(np.radians(90+wind_pitch_noisy[ind_npoints]))))*1/np.cos(np.radians(wind_pitch_noisy[ind_npoints])))))
+
             # 2.4 New approach (Relative uncertainty)
             # Vrad_PL_REL.append(100*((((Href+(np.sin(np.radians(theta_noisy[ind_npoints]))*rho_noisy[ind_npoints]))/Href)**alpha[in_alpha])*(-np.cos(np.radians(theta_noisy[ind_npoints]))*np.cos(np.radians(psi_noisy[ind_npoints]))*np.cos(np.radians(wind_direction_noisy[ind_npoints]))-np.cos(np.radians(theta_noisy[ind_npoints]))*np.sin(np.radians(psi_noisy[ind_npoints]))*np.sin(np.radians(wind_direction_noisy[ind_npoints]))+np.sin(np.radians(theta_noisy[ind_npoints]))*np.tan(np.radians(wind_pitch_noisy[ind_npoints]))))\
                               # /((((Href+(np.sin(np.radians(theta[ind_npoints]))*rho[ind_npoints]))/Href)**alpha[in_alpha])*(-np.cos(np.radians(theta[ind_npoints]))*np.cos(np.radians(psi[ind_npoints]))*np.cos(np.radians(wind_direction[ind_npoints]))-np.cos(np.radians(theta[ind_npoints]))*np.sin(np.radians(psi[ind_npoints]))*np.sin(np.radians(wind_direction[ind_npoints]))+np.sin(np.radians(theta[ind_npoints]))*np.tan(np.radians(wind_pitch[ind_npoints])))))
@@ -265,8 +266,8 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     
     # 1.3 New approach (Absolute uncertainty):   
-    U_Vrad_theta.append([Vref*(np.cos(np.radians(psi[ind_u]))*np.sin(np.radians(theta[ind_u]))*np.cos(np.radians(wind_direction[ind_u]))+np.sin(np.radians(psi[ind_u]))*np.sin(np.radians(theta[ind_u]))*np.sin(np.radians(wind_direction[ind_u]))+np.cos(np.radians(theta[ind_u]))*np.tan(np.radians(wind_pitch[ind_u])))*np.radians(stdv_theta) for ind_u in range(len(theta))])
-    U_Vrad_psi.append([Vref*(np.sin(np.radians(psi[ind_u]))*np.cos(np.radians(theta[ind_u]))*np.cos(np.radians(wind_direction[ind_u]))-np.cos(np.radians(psi[ind_u]))*np.cos(np.radians(theta[ind_u]))*np.sin(np.radians(wind_direction[ind_u])))*np.radians(stdv_psi) for ind_u in range(len(theta))])        
+    U_Vrad_theta.append([Vref*(np.cos(np.radians(theta[ind_u]))*(np.tan(np.radians(wind_pitch[ind_u]))-np.tan(np.radians(theta[ind_u]))*np.cos(np.radians(psi[ind_u]-wind_direction[ind_u]))))*np.radians(stdv_theta) for ind_u in range(len(theta))])
+    U_Vrad_psi.append([Vref*(np.cos(np.radians(theta[ind_u]))*np.sin(np.radians(psi[ind_u]-wind_direction[ind_u])))*np.radians(stdv_psi) for ind_u in range(len(theta))])        
         
              
     # 1.4 Expanded uncertainty
