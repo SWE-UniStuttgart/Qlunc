@@ -110,6 +110,7 @@ def unc_comb(data):
             except:
                 data_db=data[data_row][0]             
             data_watts.append(10**(data_db/10))
+        # pdb.set_trace()
         for i in range(len(data_watts[0])): # combining all uncertainties making sum of squares and the sqrt of the sum
             zipped_data.append(list(zip(*data_watts))[i])
             res_watts.append(np.sqrt(sum(map (lambda x: x**2,zipped_data[i])))) #  Combined stdv
@@ -132,32 +133,37 @@ def sph2cart(rho,theta,phi):
         x.append(rho[i]*np.cos((theta[i]))*np.sin((phi[i])))
         y.append(rho[i]*np.sin((phi[i]))*np.sin((theta[i])) )
         z.append(rho[i]*np.cos((phi[i])) )
-    return(x,y,z)
+    return(np.around(x,5),np.around(y,5),np.around(z,5))
 
 def cart2sph(x,y,z): 
     rho=[]
     theta=[]
-    phi=[]    
+    phi=[]
+    rho=[]
+    theta2=[]
+    phi2=[]        
     for ind in range(len(z)):
         rho.append(np.sqrt(x[ind]**2+y[ind]**2+z[ind]**2))
-        
-        if z[ind]>0:
-                phi.append(np.arctan(np.sqrt(x[ind]**2+y[ind]**2)/z[ind]))
-        elif z[ind]==0:
-                phi.append(np.array(np.pi/2))
-        elif z[ind]<0:
-                phi.append((np.pi)+(np.arctan(np.sqrt(x[ind]**2+y[ind]**2)/z[ind])))
+        phi.append(math.atan2(np.sqrt(x[ind]**2+y[ind]**2),z[ind]))
+        theta.append(math.atan2(y[ind],x[ind]))
+        # if z[ind]>0:
+        #         phi.append(np.arctan(np.sqrt(x[ind]**2+y[ind]**2)/z[ind]))
+        # elif z[ind]==0:
+        #         phi.append(np.array(np.pi/2))
+        # elif z[ind]<0:
+        #         phi.append((np.pi)+(np.arctan(np.sqrt(x[ind]**2+y[ind]**2)/z[ind])))
 
-        if x[ind]>0:
-            if  y[ind]>=0:
-                theta.append(np.arctan(y[ind]/x[ind]))            
-            elif  y[ind]<0:
-                theta.append((2.0*np.pi)+(np.arctan(y[ind]/x[ind])))           
-        elif x[ind]<0:
-            theta.append((np.pi)+(np.arctan(y[ind]/x[ind])))            
-        elif x[ind]==0:
-                theta.append(np.pi/2.0*(np.sign(y[ind])))
-    return(np.array(rho),np.array(theta),np.array(phi))
+        # if x[ind]>0:
+        #     if  y[ind]>=0:
+        #         theta.append(np.arctan(y[ind]/x[ind]))            
+        #     elif  y[ind]<0:
+        #         theta.append((2.0*np.pi)+(np.arctan(y[ind]/x[ind])))           
+        # elif x[ind]<0:
+        #     theta.append((np.pi)+(np.arctan(y[ind]/x[ind])))            
+        # elif x[ind]==0:
+        #         theta.append(np.pi/2.0*(np.sign(y[ind])))
+    # pdb.set_trace()
+    return(np.array(rho),np.array(np.degrees(phi)),np.array(np.degrees(theta))) # foc_dist, aperture angle, azimuth
 #%% NDF function
 
 def to_netcdf(DataXarray,Qlunc_yaml_inputs,Lidar,Atmospheric_Scenario):
@@ -256,3 +262,24 @@ def rmse(f,ff):
     # ind_rm=ind_rm+1
     # pdb.set_trace()
     return np.array(rms)
+
+#%% Define meshgrid for the errors in pointing accuracy and focus range
+def mesh (theta,psi,rho):
+    # pdb.set_trace()
+    box=np.meshgrid(theta,psi,rho)
+    # Get coordinates of the points on the grid
+    box_positions = np.vstack(map(np.ravel, box))
+    theta=box_positions[0]
+    psi=box_positions[1]
+    rho=box_positions[2]
+    # fig = plt.figure()
+
+    # ax = fig.add_subplot(111, projection='3d')
+
+    # ax.scatter(theta, psi, rho)
+
+    # ax.set_xlabel('theta')
+    # ax.set_ylabel('psi')
+    # ax.set_zlabel('rho')
+    # plt.show()
+    return theta,psi,rho,box
