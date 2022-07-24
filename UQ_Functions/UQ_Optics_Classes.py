@@ -86,10 +86,12 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     x,y,z=SA.sph2cart(rho,np.radians(psi),np.radians(np.array(90)-theta))
     
     # Add lidar position:
+    vector_pos
     x=x+x_Lidar
     y=y+y_Lidar
     z=z+z_Lidar
-    
+    pdb.set_trace()
+    rho1,theta1,psi1 =SA.cart2sph(x,y,z)
     # stdv focus distance, cone angle and azimuth:
     # stdv_param1 = Probe_param['Focus Distance uncertainty']
     stdv_rho   = Lidar.optics.scanner.stdv_focus_dist    
