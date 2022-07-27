@@ -106,7 +106,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         
         # 2. Plot Uncertainty in Vrad with theta
         
-        fig,ax2=plt.subplots()
+        fig,ax2=plt.subplots()        
         ax2.plot(Data['theta'],Data['Vr Uncertainty homo GUM [m/s]'][0],'b-',label='U Uniform flow GUM')
         ax2.plot(Data['theta'],Data['Vr Uncertainty homo MC [m/s]'][0],'ob' , markerfacecolor=(1, 1, 0, 0.5),label='U uniform MC')
         # color=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp']))))   
@@ -121,7 +121,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         ax2.legend(loc=2, prop={'size': 15})
         ax2.tick_params(axis='x', labelsize=17)
         ax2.tick_params(axis='y', labelsize=17)
-        ax2.set_xlim(0,200)
+        ax2.set_xlim(-270,270)
         ax2.set_ylim(0,1)
         
         
@@ -143,7 +143,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         ax3.legend(loc=2, prop={'size': 15})
         ax3.tick_params(axis='x', labelsize=17)
         ax3.tick_params(axis='y', labelsize=17)
-        ax3.set_xlim(-200,200)
+        ax3.set_xlim(-270,270)
         ax3.set_ylim(0,1)
        
         #3.  Plot Uncertainty in Vrad with rho
