@@ -99,7 +99,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     stdv_theta = np.radians(Lidar.optics.scanner.stdv_cone_angle)
     stdv_psi   = np.radians(Lidar.optics.scanner.stdv_azimuth)
     stdv_wind_direction =np.radians(0)
-    stdv_wind_pitch = np.radians(0)
+    stdv_wind_tilt = np.radians(0)
 
     # Differentiate between 'VAD' or 'Scanning' lidar depending on user's choice:
     # if Qlunc_yaml_inputs['Components']['Scanner']['Type']=='VAD':
@@ -150,10 +150,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     theta_noisy_deg = np.degrees(theta_noisy)
     psi_noisy_deg = np.degrees(psi_noisy)
     wind_direction_noisy_deg = np.degrees(wind_direction_noisy)
-    wind_pitch_noisy_deg = np.radians(wind_pitch_noisy)
+    wind_tilt_noisy_deg = np.radians(wind_tilt_noisy)
     stdv_theta_deg  = np.degrees(stdv_theta)
     stdv_psi_deg    = np.degrees(stdv_psi)
-    # pdb.set_trace()
 
         # # This part commented out for now aim to calculate the error due to the inclinomenters:
             
@@ -200,7 +199,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
 
        
-    # pdb.set_trace()
+    
     #%% MC Method 
     
     
@@ -216,7 +215,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     # 1.3 New approach(Absolute uncertainty):
 
-    Vrad_homo = ([Vref*(-np.cos(theta_noisy[ind_theta])*np.cos(psi_noisy[ind_theta])*np.cos(wind_direction_noisy[ind_theta])-np.cos(theta_noisy[ind_theta])*np.sin(psi_noisy[ind_theta])*np.sin(wind_direction_noisy[ind_theta])-np.sin(theta_noisy[ind_theta])*np.tan(wind_pitch_noisy[ind_theta])) for ind_theta in range (len(theta_noisy))])
+    Vrad_homo = ([Vref*(-np.cos(theta_noisy[ind_theta])*np.cos(psi_noisy[ind_theta])*np.cos(wind_direction_noisy[ind_theta])-np.cos(theta_noisy[ind_theta])*np.sin(psi_noisy[ind_theta])*np.sin(wind_direction_noisy[ind_theta])-np.sin(theta_noisy[ind_theta])*np.tan(wind_tilt_noisy[ind_theta])) for ind_theta in range (len(theta_noisy))])
           
 
     # 1.4 Uncertainty (stdv):
@@ -237,10 +236,10 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             # Vrad_PL_ABS1.append (Vref*(np.cos((psi_noisy[ind_npoints]))*np.cos((theta_noisy[ind_npoints])))*(((Href+np.sin((theta_noisy[ind_npoints]))*rho_noisy[ind_npoints])/Href)**alpha[0]))
             
             # 2.3 New approach (Absolute uncertainty):
-            Vrad_PL_ABS.append((Vref*((((z_Lidar-Hg)+(np.sin(theta_noisy[ind_npoints])*rho_noisy[ind_npoints]))/Href)**alpha[in_alpha])*(-np.cos(theta_noisy[ind_npoints])*np.cos(psi_noisy[ind_npoints])*np.cos(wind_direction_noisy[ind_npoints])-np.cos(theta_noisy[ind_npoints])*np.sin(psi_noisy[ind_npoints])*np.sin(wind_direction_noisy[ind_npoints])-np.sin(theta_noisy[ind_npoints])*np.tan(wind_pitch_noisy[ind_npoints]))))
+            Vrad_PL_ABS.append((Vref*((((z_Lidar-Hg)+(np.sin(theta_noisy[ind_npoints])*rho_noisy[ind_npoints]))/Href)**alpha[in_alpha])*(-np.cos(theta_noisy[ind_npoints])*np.cos(psi_noisy[ind_npoints])*np.cos(wind_direction_noisy[ind_npoints])-np.cos(theta_noisy[ind_npoints])*np.sin(psi_noisy[ind_npoints])*np.sin(wind_direction_noisy[ind_npoints])-np.sin(theta_noisy[ind_npoints])*np.tan(wind_tilt_noisy[ind_npoints]))))
 
             # 2.4 New approach (Relative uncertainty)
-            Vrad_PL_REL.append(100*(((((z_Lidar-Hg)+(np.sin((theta_noisy[ind_npoints]))*rho_noisy[ind_npoints]))/Href)**alpha[in_alpha])*(-np.cos((theta_noisy[ind_npoints]))*np.cos((psi_noisy[ind_npoints]))*np.cos((wind_direction_noisy[ind_npoints]))-np.cos((theta_noisy[ind_npoints]))*np.sin((psi_noisy[ind_npoints]))*np.sin((wind_direction_noisy[ind_npoints]))+np.sin((theta_noisy[ind_npoints]))*np.tan((wind_pitch_noisy[ind_npoints]))))\
+            Vrad_PL_REL.append(100*(((((z_Lidar-Hg)+(np.sin((theta_noisy[ind_npoints]))*rho_noisy[ind_npoints]))/Href)**alpha[in_alpha])*(-np.cos((theta_noisy[ind_npoints]))*np.cos((psi_noisy[ind_npoints]))*np.cos((wind_direction_noisy[ind_npoints]))-np.cos((theta_noisy[ind_npoints]))*np.sin((psi_noisy[ind_npoints]))*np.sin((wind_direction_noisy[ind_npoints]))+np.sin((theta_noisy[ind_npoints]))*np.tan((wind_tilt_noisy[ind_npoints]))))\
                                 /(((((z_Lidar-Hg)+(np.sin((theta[ind_npoints]))*rho[ind_npoints]))/Href)**alpha[in_alpha])*(-np.cos((theta[ind_npoints]))*np.cos((psi[ind_npoints]))*np.cos((wind_direction[ind_npoints]))-np.cos((theta[ind_npoints]))*np.sin((psi[ind_npoints]))*np.sin((wind_direction[ind_npoints]))+np.sin((theta[ind_npoints]))*np.tan((wind_tilt[ind_npoints])))))
 
             
@@ -262,13 +261,15 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # pdb.set_trace()
     # Scatter plot: calculating all values among the range of theta, psi and rho
     Vrad0_PL,U_Vrad_PL_REL_MC_Total=[],[]   
-    Vrad_PL_REL_Total= ([Vref*((((z_Lidar-Hg)+(np.sin((theta_noisy0))*rho_noisy0))/Href)**alpha[0])*(-np.cos((theta_noisy0))*np.cos((psi_noisy0))*np.cos((wind_direction_noisy[0][0]))-np.cos((theta_noisy0))*np.sin((psi_noisy0))*np.sin((wind_direction_noisy[0][0]))+np.sin((theta_noisy0))*np.tan((wind_pitch_noisy[0][0])))  for theta_noisy0 in theta_noisy  for rho_noisy0 in rho_noisy for psi_noisy0 in psi_noisy])   
+    Vrad_PL_REL_Total= ([Vref*((((z_Lidar-Hg)+(np.sin((theta_noisy0))*rho_noisy0))/Href)**alpha[0])*(-np.cos((theta_noisy0))*np.cos((psi_noisy0))*np.cos((wind_direction_noisy[0][0]))-np.cos((theta_noisy0))*np.sin((psi_noisy0))*np.sin((wind_direction_noisy[0][0]))+np.sin((theta_noisy0))*np.tan((wind_tilt_noisy[0][0])))  for theta_noisy0 in theta_noisy  for rho_noisy0 in rho_noisy for psi_noisy0 in psi_noisy])   
 
     # rfr= ([(theta_noisy0,psi_noisy0,rho_noisy0) for theta_noisy0 in theta_noisy for psi_noisy0 in psi_noisy for rho_noisy0 in rho_noisy])   
     
     U_Vrad_PL_REL_MC_Total.append([np.nanstd(Vrad_PL_REL_Total[ind_T]) for ind_T in range(len(Vrad_PL_REL_Total))])
     # U_Vrad_S_MC_REL=np.reshape(U_Vrad_PL_REL_MC_Total[0],(11,11,11))
-    
+
+
+
     #%% GUM method
     
     # 1. Calculate radial speed uncertainty for an homogeneous flow
