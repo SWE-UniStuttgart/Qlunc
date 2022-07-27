@@ -89,7 +89,7 @@ Scanner           = scanner(name            = Qlunc_yaml_inputs['Components']['S
                             stdv_azimuth    = Qlunc_yaml_inputs['Components']['Scanner']['stdv Azimuth'],                 # Azimuth angle standard deviation in [degrees].
                             unc_func        = uopc.UQ_Scanner) #eval(Qlunc_yaml_inputs['Components']['Scanner']['Uncertainty function']) )    # here you put the function describing your scanner uncertainty. 
 # Measurement points
-Meas_points = measurement_points (coord_meas_point = Qlunc_yaml_inputs['Components']['Scanner']['Measuring point'])
+# Meas_points = measurement_points (coord_meas_point = Qlunc_yaml_inputs['Components']['Scanner']['Measuring point'])
 
 #Optical Circulator:
 Optical_circulator = optical_circulator (name           = Qlunc_yaml_inputs['Components']['Optical Circulator']['Name'],       # Introduce your Optical circulator name.
@@ -249,7 +249,7 @@ if Atmospheric_TimeSeries:
                                       PL_exp         = Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp'],
                                       Vref           = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref'],
                                       wind_direction = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind_direction'],
-                                      wind_pitch     = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind_pitch'],
+                                      wind_tilt      = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind_tilt'],
                                       Hg             = Qlunc_yaml_inputs['Atmospheric_inputs']['Height_ground'])
 else:    
 
@@ -258,5 +258,5 @@ else:
                                       PL_exp         = Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp'],
                                       Vref           = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref'],
                                       wind_direction = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind_direction'],
-                                      wind_pitch     = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind_pitch'],
+                                      wind_tilt     = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind_tilt'],
                                       Hg             = Qlunc_yaml_inputs['Atmospheric_inputs']['Height_ground'])
