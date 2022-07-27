@@ -244,17 +244,27 @@ if Atmospheric_TimeSeries:
                           'fog'         : list(AtmosphericScenarios_TS.loc[:,'fog']),
                           'time'        : list(AtmosphericScenarios_TS.loc[:,'t'])     #for rain and fog intensity intervals might be introduced [none,low, medium high]
                           } 
-    Atmospheric_Scenario = atmosphere(name        = Qlunc_yaml_inputs['Atmospheric_inputs']['Name'],
-                                      temperature = Atmospheric_inputs['temperature'],
-                                      PL_exp      = Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp'],
-                                      Vref        = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref'],
+    Atmospheric_Scenario = atmosphere(name           = Qlunc_yaml_inputs['Atmospheric_inputs']['Name'],
+                                      temperature    = Atmospheric_inputs['temperature'],
+                                      PL_exp         = Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp'],
+                                      Vref           = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref'],
                                       wind_direction = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind_direction'],
+<<<<<<< HEAD
+                                      wind_tilt      = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind_tilt'],
+                                      Hg             = Qlunc_yaml_inputs['Atmospheric_inputs']['Height_ground'])
+=======
                                       wind_tilt = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind_tilt'])
+>>>>>>> 121d68510c56992a9723ca05aee9470b9bfa49db
 else:    
 
-    Atmospheric_Scenario = atmosphere(name        = Qlunc_yaml_inputs['Atmospheric_inputs']['Name'],
-                                      temperature = Qlunc_yaml_inputs['Atmospheric_inputs']['Temperature'],
-                                      PL_exp      = Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp'],
-                                      Vref        = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref'],
+    Atmospheric_Scenario = atmosphere(name           = Qlunc_yaml_inputs['Atmospheric_inputs']['Name'],
+                                      temperature    = Qlunc_yaml_inputs['Atmospheric_inputs']['Temperature'],
+                                      PL_exp         = Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp'],
+                                      Vref           = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref'],
                                       wind_direction = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind_direction'],
+<<<<<<< HEAD
+                                      wind_tilt     = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind_tilt'],
+                                      Hg             = Qlunc_yaml_inputs['Atmospheric_inputs']['Height_ground'])
+=======
                                       wind_tilt = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind_tilt'])
+>>>>>>> 121d68510c56992a9723ca05aee9470b9bfa49db
