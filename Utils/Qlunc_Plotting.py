@@ -107,21 +107,21 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         # 2. Plot Uncertainty in Vrad with theta
         
         fig,ax2=plt.subplots()        
-        ax2.plot(Data['theta'],Data['Vr Uncertainty homo GUM [m/s]'][0],'b-',label='U Uniform flow GUM')
-        ax2.plot(Data['theta'],Data['Vr Uncertainty homo MC [m/s]'][0],'ob' , markerfacecolor=(1, 1, 0, 0.5),label='U uniform MC')
+        ax2.plot(np.degrees(Data['theta']),Data['Vr Uncertainty homo GUM [m/s]'][0],'b-',label='U Uniform flow GUM')
+        ax2.plot(np.degrees(Data['theta']),Data['Vr Uncertainty homo MC [m/s]'][0],'ob' , markerfacecolor=(1, 1, 0, 0.5),label='U uniform MC')
         # color=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp']))))   
         
         for ind_a in range(len(Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp'])):
             # c=next(color)
-            ax2.plot(Data['theta'],Data['Vr Uncertainty GUM [m/s]'][ind_a],'-',label='U Shear GUM (alpha={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp'][ind_a] ))
-            ax2.plot(Data['theta'],Data['Vr Uncertainty MC [m/s]'][ind_a],'or' , markerfacecolor=(1, 1, 0, 0.5),label='U shear MC')
+            ax2.plot(np.degrees(Data['theta']),Data['Vr Uncertainty GUM [m/s]'][ind_a],'-',label='U Shear GUM (alpha={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp'][ind_a] ))
+            ax2.plot(np.degrees(Data['theta']),Data['Vr Uncertainty MC [m/s]'][ind_a],'or' , markerfacecolor=(1, 1, 0, 0.5),label='U shear MC')
             
     
          
         ax2.legend(loc=2, prop={'size': 15})
         ax2.tick_params(axis='x', labelsize=17)
         ax2.tick_params(axis='y', labelsize=17)
-        ax2.set_xlim(-270,270)
+        ax2.set_xlim(0,90)
         ax2.set_ylim(0,1)
         
         
@@ -129,21 +129,21 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         #3.  Plot Uncertainty in Vrad with psi
         
         fig,ax3=plt.subplots()
-        ax3.plot(Data['psi'],Data['Vr Uncertainty homo GUM [m/s]'][0],'b-',label='U Uniform flow GUM')
-        ax3.plot(Data['psi'],Data['Vr Uncertainty homo MC [m/s]'][0],'ob' , markerfacecolor=(1, 1, 0, 0.5),label='U uniform MC')
+        ax3.plot(np.degrees(Data['psi']),Data['Vr Uncertainty homo GUM [m/s]'][0],'b-',label='U Uniform flow GUM')
+        ax3.plot(np.degrees(Data['psi']),Data['Vr Uncertainty homo MC [m/s]'][0],'ob' , markerfacecolor=(1, 1, 0, 0.5),label='U uniform MC')
         # color=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp']))))   
         
         for ind_a in range(len(Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp'])):
             # c=next(color)
-            ax3.plot(Data['psi'],Data['Vr Uncertainty GUM [m/s]'][ind_a],'-',label='U Shear GUM (alpha={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp'][ind_a] ))
-            ax3.plot(Data['psi'],Data['Vr Uncertainty MC [m/s]'][ind_a],'or' , markerfacecolor=(1, 1, 0, 0.5),label='U shear MC')
+            ax3.plot(np.degrees(Data['psi']),Data['Vr Uncertainty GUM [m/s]'][ind_a],'-',label='U Shear GUM (alpha={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp'][ind_a] ))
+            ax3.plot(np.degrees(Data['psi']),Data['Vr Uncertainty MC [m/s]'][ind_a],'or' , markerfacecolor=(1, 1, 0, 0.5),label='U shear MC')
             
     
          
         ax3.legend(loc=2, prop={'size': 15})
         ax3.tick_params(axis='x', labelsize=17)
         ax3.tick_params(axis='y', labelsize=17)
-        ax3.set_xlim(-270,270)
+        ax3.set_xlim(-90,90)
         ax3.set_ylim(0,1)
        
         #3.  Plot Uncertainty in Vrad with rho
@@ -170,7 +170,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
         textstr = '\n'.join((
         r'$\rho~ [m]=%.2f$' % (Data['rho'][0], ),
-        r'$\psi~ [°]=%.2f$' % (Data['psi'][0], ),
+        r'$\varphi~ [°]=%.2f$' % (np.degrees(Data['psi'][0]), ),
         r'N={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['N_MC'], ),
         r'Href [m]={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['Href'], )))
 
@@ -189,7 +189,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         props3 = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
         textstr3 = '\n'.join((
         r'$\rho ~[°]=%.2f$' % (Data['rho'][0], ),
-        r'$\theta~ [°]=%.2f$' % (Data['theta'][0], ),
+        r'$\theta~ [°]=%.2f$' % (np.degrees(Data['theta'][0]), ),
         r'N={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['N_MC'], ),
         r'Href [m]={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['Href'], )))
 
@@ -205,8 +205,8 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         # these are matplotlib.patch.Patch properties
         props4 = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
         textstr4 = '\n'.join((
-        r'$\theta~ [°]=%.2f$' % (Data['theta'][0], ),
-        r'$\psi~ [°]=%.2f$' % (Data['psi'][0], ),
+        r'$\theta~ [°]=%.2f$' % (np.degrees(Data['theta'][0]), ),
+        r'$\varphi~ [°]=%.2f$' % (np.degrees(Data['psi'][0]), ),
         r'N={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['N_MC'], ),
         r'Href [m]={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['Href'], )))
         

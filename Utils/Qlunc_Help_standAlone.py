@@ -133,7 +133,7 @@ def sph2cart(rho,theta,phi):
         x.append(rho[i]*np.cos((theta[i]))*np.cos((phi[i])))
         y.append(rho[i]*np.sin((phi[i]))*np.cos((theta[i])) )
         z.append(rho[i]*np.sin((theta[i])) )
-    pdb.set_trace()
+    # pdb.set_trace()
     return(np.around(x,5),np.around(y,5),np.around(z,5))
 
 def cart2sph(x,y,z): 
@@ -145,7 +145,7 @@ def cart2sph(x,y,z):
     phi2=[]        
     for ind in range(len(z)):
         rho.append(np.sqrt(x[ind]**2+y[ind]**2+z[ind]**2))
-        theta.append(math.acos((np.sqrt(x[ind]**2+y[ind]**2))/(np.sqrt(x[ind]**2+y[ind]**2+z[ind]**2))))
+        theta.append(math.asin(z[ind]/np.sqrt(x[ind]**2+y[ind]**2+z[ind]**2)))
         phi.append(math.atan2(y[ind],x[ind]))
         # if z[ind]>0:
         #         phi.append(np.arctan(np.sqrt(x[ind]**2+y[ind]**2)/z[ind]))
@@ -163,7 +163,9 @@ def cart2sph(x,y,z):
         #     theta.append((np.pi)+(np.arctan(y[ind]/x[ind])))            
         # elif x[ind]==0:
         #         theta.append(np.pi/2.0*(np.sign(y[ind])))
-    pdb.set_trace()
+    # print(np.degrees(theta))
+    # pdb.set_trace()
+    
     return(np.array(rho),np.array(theta),np.array(phi)) # foc_dist, aperture angle, azimuth
 #%% NDF function
 
@@ -171,7 +173,7 @@ def to_netcdf(DataXarray,Qlunc_yaml_inputs,Lidar,Atmospheric_Scenario):
     #DataXarray=Lidar.lidar_inputs.dataframe
     """.
     
-    Save the project to an netndf file - Location: Qlunc_Help_standAlone.py
+    Save the project to an netcdf file - Location: Qlunc_Help_standAlone.py
     
     Parameters
     ----------    

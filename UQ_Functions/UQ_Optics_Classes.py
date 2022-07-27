@@ -76,29 +76,29 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     z_Lidar = Qlunc_yaml_inputs['Components']['Scanner']['Origin'][2]
     
     # Rho, theta and phi values
-    rho0 = Lidar.optics.scanner.focus_dist    
-    theta0 = Lidar.optics.scanner.cone_angle
-    psi0 = Lidar.optics.scanner.azimuth
-    wind_direction = np.array([Atmospheric_Scenario.wind_direction]*len(psi0))
-    wind_tilt = np.array([Atmospheric_Scenario.wind_tilt]*len(psi0))
+    rho0 = Lidar.optics.scanner.focus_dist  
+    theta0 = np.radians(Lidar.optics.scanner.cone_angle)
+    psi0 = np.radians(Lidar.optics.scanner.azimuth)
+    wind_direction = np.radians(np.array([Atmospheric_Scenario.wind_direction]*len(psi0)))
+    wind_tilt =np.radians( np.array([Atmospheric_Scenario.wind_tilt]*len(psi0)))
     
     # In cartesian coordinates
-    x,y,z=SA.sph2cart(rho0,np.radians(psi0),np.radians(np.array(90)-theta0))
+    x,y,z=SA.sph2cart(rho0,theta0,psi0)
     
     # Add lidar position:
     vector_pos = x-x_Lidar,y-y_Lidar,z-z_Lidar
 
     rho1,theta1,psi1 =SA.cart2sph(vector_pos[0],vector_pos[1],vector_pos[2])
-    rho,theta,psi=np.round([rho1,90-theta1,psi1 ], 4)
+    rho,theta,psi=np.round([rho1,theta1,psi1],4)
 
     
     # stdv focus distance, cone angle and azimuth:
     # stdv_param1 = Probe_param['Focus Distance uncertainty']
     stdv_rho   = Lidar.optics.scanner.stdv_focus_dist    
-    stdv_theta = (Lidar.optics.scanner.stdv_cone_angle)
-    stdv_psi   = (Lidar.optics.scanner.stdv_azimuth)
-    stdv_wind_direction =0
-    stdv_wind_pitch = 0
+    stdv_theta = np.radians(Lidar.optics.scanner.stdv_cone_angle)
+    stdv_psi   = np.radians(Lidar.optics.scanner.stdv_azimuth)
+    stdv_wind_direction =np.radians(0)
+    stdv_wind_pitch = np.radians(0)
     # Differentiate between 'VAD' or 'Scanning' lidar depending on user's choice:
     # if Qlunc_yaml_inputs['Components']['Scanner']['Type']=='VAD':
     #     param1=Lidar.optics.scanner.focus_dist
@@ -140,17 +140,18 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         wind_pitch_noisy.append(np.random.normal(wind_tilt[ind_noise],stdv_wind_pitch,Lidar.optics.scanner.N_MC))
     
     # Convert angles to radians (just for calculations)
-    theta      = np.radians(theta)
-    psi        = np.radians(psi)  
-    wind_direction = np.radians(wind_direction)
-    wind_tilt = np.radians(wind_tilt)
-    theta_noisy= np.radians(theta_noisy)
-    psi_noisy= np.radians(psi_noisy)
-    wind_direction_noisy= np.radians(wind_direction_noisy)
-    wind_pitch_noisy= np.radians(wind_pitch_noisy)
-    stdv_theta = np.radians(stdv_theta)
-    stdv_psi   = np.radians(stdv_psi)
-    pdb.set_trace()
+    # pdb.set_trace()
+    theta_deg     = np.degrees(theta)
+    psi_deg        = np.degrees(psi)  
+    wind_direction_deg  = np.degrees(wind_direction)
+    wind_tilt_deg  = np.degrees(wind_tilt)
+    theta_noisy_deg = np.degrees(theta_noisy)
+    psi_noisy_deg = np.degrees(psi_noisy)
+    wind_direction_noisy_deg = np.degrees(wind_direction_noisy)
+    wind_pitch_noisy_deg = np.radians(wind_pitch_noisy)
+    stdv_theta_deg  = np.degrees(stdv_theta)
+    stdv_psi_deg    = np.degrees(stdv_psi)
+    # pdb.set_trace()
         # # This part commented out for now aim to calculate the error due to the inclinomenters:
             
         # rho_noisy0.append(np.random.normal(rho[ind_noise],stdv_rho,Lidar.optics.scanner.N_MC))
@@ -253,7 +254,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         
         # Vrad_PL_REL,Vrad_PL_ABS=[],[]
     
-    pdb.set_trace()
+    # pdb.set_trace()
     # Scatter plot: calculating all values among the range of theta, psi and rho
     Vrad0_PL,U_Vrad_PL_REL_MC_Total=[],[]   
     Vrad_PL_REL_Total= ([Vref*((((z_Lidar-Hg)+(np.sin((theta_noisy0))*rho_noisy0))/Href)**alpha[0])*(-np.cos((theta_noisy0))*np.cos((psi_noisy0))*np.cos((wind_direction_noisy[0][0]))-np.cos((theta_noisy0))*np.sin((psi_noisy0))*np.sin((wind_direction_noisy[0][0]))+np.sin((theta_noisy0))*np.tan((wind_pitch_noisy[0][0])))  for theta_noisy0 in theta_noisy  for rho_noisy0 in rho_noisy for psi_noisy0 in psi_noisy])   
@@ -278,8 +279,8 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     
     # 1.3 New approach (Absolute uncertainty):   
-    U_Vrad_theta.append([Vref*(np.cos((theta[ind_u]))*(np.tan((wind_tilt[ind_u]))-np.tan((theta[ind_u]))*np.cos((psi[ind_u]-wind_direction[ind_u]))))*(stdv_theta) for ind_u in range(len(theta))])
-    U_Vrad_psi.append([Vref*(np.cos((theta[ind_u]))*np.sin((psi[ind_u]-wind_direction[ind_u])))*(stdv_psi) for ind_u in range(len(theta))])        
+    U_Vrad_theta.append([Vref*(np.cos(theta[ind_u])*(np.tan(wind_tilt[ind_u])-np.tan(theta[ind_u])*np.cos(psi[ind_u]-wind_direction[ind_u])))*stdv_theta for ind_u in range(len(theta))])
+    U_Vrad_psi.append([Vref*(np.cos(theta[ind_u]))*np.sin(psi[ind_u]-wind_direction[ind_u])*stdv_psi for ind_u in range(len(theta))])        
         
              
     # 1.4 Expanded uncertainty
