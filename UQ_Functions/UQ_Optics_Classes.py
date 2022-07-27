@@ -53,7 +53,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     NoisyY=[]
     NoisyZ=[]
     coorFinal_noisy=[]
-    rho_noisy0,theta_noisy0,psi_noisy0,rho_noisy,theta_noisy,psi_noisy,rho_noisy1, theta_noisy,psi_noisy1,wind_direction_noisy ,wind_pitch_noisy   = [],[],[],[],[],[],[],[],[],[],[]
+    rho_noisy0,theta_noisy0,psi_noisy0,rho_noisy,theta_noisy,psi_noisy,rho_noisy1, theta_noisy,psi_noisy1,wind_direction_noisy ,wind_tilt_noisy   = [],[],[],[],[],[],[],[],[],[],[]
     Coordfinal_noisy,Coordfinal=[],[]
     coun=0
     sample_rate_count=0
@@ -80,7 +80,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     theta = Lidar.optics.scanner.cone_angle
     psi = Lidar.optics.scanner.azimuth
     wind_direction = np.array([Atmospheric_Scenario.wind_direction]*len(psi))
-    wind_pitch = np.array([Atmospheric_Scenario.wind_pitch]*len(psi))
+    wind_tilt = np.array([Atmospheric_Scenario.wind_tilt]*len(psi))
     
     # In cartesian coordinates
     x,y,z=SA.sph2cart(rho,np.radians(psi),np.radians(np.array(90)-theta))
@@ -96,7 +96,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     stdv_theta = Lidar.optics.scanner.stdv_cone_angle
     stdv_psi   = Lidar.optics.scanner.stdv_azimuth
     stdv_wind_direction =0
-    stdv_wind_pitch = 0
+    stdv_wind_tilt = 0
     # Differentiate between 'VAD' or 'Scanning' lidar depending on user's choice:
     # if Qlunc_yaml_inputs['Components']['Scanner']['Type']=='VAD':
     #     param1=Lidar.optics.scanner.focus_dist
@@ -135,7 +135,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         theta_noisy.append(np.random.normal(theta[ind_noise],stdv_theta,Lidar.optics.scanner.N_MC))
         psi_noisy.append(np.random.normal(psi[ind_noise],stdv_psi,Lidar.optics.scanner.N_MC))
         wind_direction_noisy.append(np.random.normal(wind_direction[ind_noise],stdv_wind_direction,Lidar.optics.scanner.N_MC))
-        wind_pitch_noisy.append(np.random.normal(wind_pitch[ind_noise],stdv_wind_pitch,Lidar.optics.scanner.N_MC))
+        wind_tilt_noisy.append(np.random.normal(wind_tilt[ind_noise],stdv_wind_tilt,Lidar.optics.scanner.N_MC))
         
         
         # # This part commented out for now aim to calculate the error due to the inclinomenters:
@@ -183,7 +183,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
 
        
-
+    # pdb.set_trace()
     #%% MC Method 
     
     
@@ -198,9 +198,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # Vrad_homo2 = ([Vref*np.cos(np.radians(theta_noisy[ind_theta]))*np.cos(np.radians(psi_noisy[ind_theta])) for ind_theta in range (len(theta_noisy))])
     
     # 1.3 New approach(Absolute uncertainty):
-    Vrad_homo = ([Vref*(-np.cos(np.radians(theta_noisy[ind_theta]))*np.cos(np.radians(psi_noisy[ind_theta]))*np.cos(np.radians(wind_direction_noisy[ind_theta]))-np.cos(np.radians(theta_noisy[ind_theta]))*np.sin(np.radians(psi_noisy[ind_theta]))*np.sin(np.radians(wind_direction_noisy[ind_theta]))-np.sin(np.radians(theta_noisy[ind_theta]))*np.tan(np.radians(wind_pitch_noisy[ind_theta]))) for ind_theta in range (len(theta_noisy))])
+    Vrad_homo = ([Vref*(-np.cos(np.radians(theta_noisy[ind_theta]))*np.cos(np.radians(psi_noisy[ind_theta]))*np.cos(np.radians(wind_direction_noisy[ind_theta]))-np.cos(np.radians(theta_noisy[ind_theta]))*np.sin(np.radians(psi_noisy[ind_theta]))*np.sin(np.radians(wind_direction_noisy[ind_theta]))-np.sin(np.radians(theta_noisy[ind_theta]))*np.tan(np.radians(wind_tilt_noisy[ind_theta]))) for ind_theta in range (len(theta_noisy))])
             
-    
+
     # 1.4 Uncertainty (stdv):
     U_Vrad_homo_MC.append([np.std(Vrad_homo[ind_stdv])  for ind_stdv in range(len(Vrad_homo))])
     # U_Vrad_homo_MC2.append([np.std(Vrad_homo2[ind_stdv2])  for ind_stdv2 in range(len(Vrad_homo2))])
@@ -219,12 +219,12 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             # Vrad_PL_ABS1.append (Vref*(np.cos(np.radians(psi_noisy[ind_npoints]))*np.cos(np.radians(theta_noisy[ind_npoints])))*(((Href+np.sin(np.radians(theta_noisy[ind_npoints]))*rho_noisy[ind_npoints])/Href)**alpha[0]))
             
             # 2.3 New approach (Absolute uncertainty):
-            Vrad_PL_ABS.append((Vref*(((Href+(np.sin(np.radians(theta_noisy[ind_npoints]))*rho_noisy[ind_npoints]))/Href)**alpha[in_alpha])*(-np.cos(np.radians(theta_noisy[ind_npoints]))*np.cos(np.radians(psi_noisy[ind_npoints]))*np.cos(np.radians(wind_direction_noisy[ind_npoints]))-np.cos(np.radians(theta_noisy[ind_npoints]))*np.sin(np.radians(psi_noisy[ind_npoints]))*np.sin(np.radians(wind_direction_noisy[ind_npoints]))-np.sin(np.radians(theta_noisy[ind_npoints]))*np.tan(np.radians(wind_pitch_noisy[ind_npoints])))))
-            # Vrad_PL_ABS.append((Vref*(((Href+(np.sin(np.radians(theta_noisy[ind_npoints]))*rho_noisy[ind_npoints]))/Href)**alpha[in_alpha])*(-np.cos(np.radians(theta_noisy[ind_npoints]))*np.cos(np.radians(psi_noisy[ind_npoints]))*np.cos(np.radians(wind_direction_noisy[ind_npoints]))-np.cos(np.radians(theta_noisy[ind_npoints]))*np.sin(np.radians(psi_noisy[ind_npoints]))*np.sin(np.radians(wind_direction_noisy[ind_npoints]))-np.sin(np.radians(theta_noisy[ind_npoints]))*((np.sin(np.radians(wind_pitch_noisy[ind_npoints]-theta_noisy[ind_npoints]))/np.sin(np.radians(90+wind_pitch_noisy[ind_npoints]))))*1/np.cos(np.radians(wind_pitch_noisy[ind_npoints])))))
+            Vrad_PL_ABS.append((Vref*(((Href+(np.sin(np.radians(theta_noisy[ind_npoints]))*rho_noisy[ind_npoints]))/Href)**alpha[in_alpha])*(-np.cos(np.radians(theta_noisy[ind_npoints]))*np.cos(np.radians(psi_noisy[ind_npoints]))*np.cos(np.radians(wind_direction_noisy[ind_npoints]))-np.cos(np.radians(theta_noisy[ind_npoints]))*np.sin(np.radians(psi_noisy[ind_npoints]))*np.sin(np.radians(wind_direction_noisy[ind_npoints]))-np.sin(np.radians(theta_noisy[ind_npoints]))*np.tan(np.radians(wind_tilt_noisy[ind_npoints])))))
+            # Vrad_PL_ABS.append((Vref*(((Href+(np.sin(np.radians(theta_noisy[ind_npoints]))*rho_noisy[ind_npoints]))/Href)**alpha[in_alpha])*(-np.cos(np.radians(theta_noisy[ind_npoints]))*np.cos(np.radians(psi_noisy[ind_npoints]))*np.cos(np.radians(wind_direction_noisy[ind_npoints]))-np.cos(np.radians(theta_noisy[ind_npoints]))*np.sin(np.radians(psi_noisy[ind_npoints]))*np.sin(np.radians(wind_direction_noisy[ind_npoints]))-np.sin(np.radians(theta_noisy[ind_npoints]))*((np.sin(np.radians(wind_tilt_noisy[ind_npoints]-theta_noisy[ind_npoints]))/np.sin(np.radians(90+wind_tilt_noisy[ind_npoints]))))*1/np.cos(np.radians(wind_tilt_noisy[ind_npoints])))))
 
             # 2.4 New approach (Relative uncertainty)
-            # Vrad_PL_REL.append(100*((((Href+(np.sin(np.radians(theta_noisy[ind_npoints]))*rho_noisy[ind_npoints]))/Href)**alpha[in_alpha])*(-np.cos(np.radians(theta_noisy[ind_npoints]))*np.cos(np.radians(psi_noisy[ind_npoints]))*np.cos(np.radians(wind_direction_noisy[ind_npoints]))-np.cos(np.radians(theta_noisy[ind_npoints]))*np.sin(np.radians(psi_noisy[ind_npoints]))*np.sin(np.radians(wind_direction_noisy[ind_npoints]))+np.sin(np.radians(theta_noisy[ind_npoints]))*np.tan(np.radians(wind_pitch_noisy[ind_npoints]))))\
-                              # /((((Href+(np.sin(np.radians(theta[ind_npoints]))*rho[ind_npoints]))/Href)**alpha[in_alpha])*(-np.cos(np.radians(theta[ind_npoints]))*np.cos(np.radians(psi[ind_npoints]))*np.cos(np.radians(wind_direction[ind_npoints]))-np.cos(np.radians(theta[ind_npoints]))*np.sin(np.radians(psi[ind_npoints]))*np.sin(np.radians(wind_direction[ind_npoints]))+np.sin(np.radians(theta[ind_npoints]))*np.tan(np.radians(wind_pitch[ind_npoints])))))
+            # Vrad_PL_REL.append(100*((((Href+(np.sin(np.radians(theta_noisy[ind_npoints]))*rho_noisy[ind_npoints]))/Href)**alpha[in_alpha])*(-np.cos(np.radians(theta_noisy[ind_npoints]))*np.cos(np.radians(psi_noisy[ind_npoints]))*np.cos(np.radians(wind_direction_noisy[ind_npoints]))-np.cos(np.radians(theta_noisy[ind_npoints]))*np.sin(np.radians(psi_noisy[ind_npoints]))*np.sin(np.radians(wind_direction_noisy[ind_npoints]))+np.sin(np.radians(theta_noisy[ind_npoints]))*np.tan(np.radians(wind_tilt_noisy[ind_npoints]))))\
+                              # /((((Href+(np.sin(np.radians(theta[ind_npoints]))*rho[ind_npoints]))/Href)**alpha[in_alpha])*(-np.cos(np.radians(theta[ind_npoints]))*np.cos(np.radians(psi[ind_npoints]))*np.cos(np.radians(wind_direction[ind_npoints]))-np.cos(np.radians(theta[ind_npoints]))*np.sin(np.radians(psi[ind_npoints]))*np.sin(np.radians(wind_direction[ind_npoints]))+np.sin(np.radians(theta[ind_npoints]))*np.tan(np.radians(wind_tilt[ind_npoints])))))
             
         
         # 2.4 Uncertainty (stdv): For this to be compared with Vrad_weighted[1] I need to weight Vrad_PL_REL
@@ -244,7 +244,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     # Scatter plot: calculating all values among the range of theta, psi and rho
     Vrad0_PL,U_Vrad_PL_REL_MC_Total=[],[]   
-    Vrad_PL_REL_Total= ([Vref*(((Href+(np.sin(np.radians(theta_noisy0))*rho_noisy0))/Href)**alpha[0])*(-np.cos(np.radians(theta_noisy0))*np.cos(np.radians(psi_noisy0))*np.cos(np.radians(wind_direction_noisy[0][0]))-np.cos(np.radians(theta_noisy0))*np.sin(np.radians(psi_noisy0))*np.sin(np.radians(wind_direction_noisy[0][0]))+np.sin(np.radians(theta_noisy0))*np.tan(np.radians(wind_pitch_noisy[0][0])))  for theta_noisy0 in theta_noisy  for rho_noisy0 in rho_noisy for psi_noisy0 in psi_noisy])   
+    Vrad_PL_REL_Total= ([Vref*(((Href+(np.sin(np.radians(theta_noisy0))*rho_noisy0))/Href)**alpha[0])*(-np.cos(np.radians(theta_noisy0))*np.cos(np.radians(psi_noisy0))*np.cos(np.radians(wind_direction_noisy[0][0]))-np.cos(np.radians(theta_noisy0))*np.sin(np.radians(psi_noisy0))*np.sin(np.radians(wind_direction_noisy[0][0]))+np.sin(np.radians(theta_noisy0))*np.tan(np.radians(wind_tilt_noisy[0][0])))  for theta_noisy0 in theta_noisy  for rho_noisy0 in rho_noisy for psi_noisy0 in psi_noisy])   
     # rfr= ([(theta_noisy0,psi_noisy0,rho_noisy0) for theta_noisy0 in theta_noisy for psi_noisy0 in psi_noisy for rho_noisy0 in rho_noisy])   
     
     U_Vrad_PL_REL_MC_Total.append([np.nanstd(Vrad_PL_REL_Total[ind_T]) for ind_T in range(len(Vrad_PL_REL_Total))])
@@ -266,7 +266,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     
     # 1.3 New approach (Absolute uncertainty):   
-    U_Vrad_theta.append([Vref*(np.cos(np.radians(theta[ind_u]))*(np.tan(np.radians(wind_pitch[ind_u]))-np.tan(np.radians(theta[ind_u]))*np.cos(np.radians(psi[ind_u]-wind_direction[ind_u]))))*np.radians(stdv_theta) for ind_u in range(len(theta))])
+    U_Vrad_theta.append([Vref*(np.cos(np.radians(theta[ind_u]))*(np.tan(np.radians(wind_tilt[ind_u]))-np.tan(np.radians(theta[ind_u]))*np.cos(np.radians(psi[ind_u]-wind_direction[ind_u]))))*np.radians(stdv_theta) for ind_u in range(len(theta))])
     U_Vrad_psi.append([Vref*(np.cos(np.radians(theta[ind_u]))*np.sin(np.radians(psi[ind_u]-wind_direction[ind_u])))*np.radians(stdv_psi) for ind_u in range(len(theta))])        
         
              
@@ -295,11 +295,11 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         
         # 2.3 New approach (Absolute uncertainty):
         # pdb.set_trace()
-        # This is another approach for theta uncertainty: U_Vrad_sh_theta.append([Vref*np.cos(np.radians(theta[ind_u]))*(((Href+(np.sin(np.radians(theta[ind_u]))*rho[ind_u]))/Href)**alpha[ind_alpha])*((alpha[ind_alpha]*(np.tan(np.radians(theta[ind_u]))*np.tan(np.radians(wind_pitch[ind_u]))-np.cos(np.radians(psi[ind_u]-wind_direction[ind_u])))*(rho[ind_u]*((np.cos(np.radians(theta[ind_u]))))/(Href+(np.sin(np.radians(theta[ind_u]))*rho[ind_u]))))+((np.cos(np.radians(psi[ind_u]-wind_direction[ind_u]))*np.tan(np.radians(theta[ind_u])))+np.tan(np.radians(wind_pitch[ind_u]))))*np.radians(stdv_theta)  for ind_u in range(len(theta))])
+        # This is another approach for theta uncertainty: U_Vrad_sh_theta.append([Vref*np.cos(np.radians(theta[ind_u]))*(((Href+(np.sin(np.radians(theta[ind_u]))*rho[ind_u]))/Href)**alpha[ind_alpha])*((alpha[ind_alpha]*(np.tan(np.radians(theta[ind_u]))*np.tan(np.radians(wind_tilt[ind_u]))-np.cos(np.radians(psi[ind_u]-wind_direction[ind_u])))*(rho[ind_u]*((np.cos(np.radians(theta[ind_u]))))/(Href+(np.sin(np.radians(theta[ind_u]))*rho[ind_u]))))+((np.cos(np.radians(psi[ind_u]-wind_direction[ind_u]))*np.tan(np.radians(theta[ind_u])))+np.tan(np.radians(wind_tilt[ind_u]))))*np.radians(stdv_theta)  for ind_u in range(len(theta))])
 
-        U_Vrad_sh_theta.append([(Vref*(((Href+(np.sin(np.radians(theta[ind_u]))*rho[ind_u]))/Href)**alpha[ind_alpha])*np.cos(np.radians(theta[ind_u]))*(np.tan(np.radians(wind_pitch[ind_u]))*(1+(np.tan(np.radians(theta[ind_u]))*alpha[ind_alpha]*rho[ind_u]*np.cos(np.radians(theta[ind_u]))/(Href+(np.sin(np.radians(theta[ind_u]))*rho[ind_u]))))+(np.cos(np.radians(psi[ind_u]-wind_direction[ind_u]))*(-np.tan(np.radians(theta[ind_u]))+((alpha[ind_alpha]*rho[ind_u]*np.cos(np.radians(theta[ind_u]))/(Href+(np.sin(np.radians(theta[ind_u]))*rho[ind_u])))))))*np.radians(stdv_theta)) for ind_u in range(len(theta))])        
+        U_Vrad_sh_theta.append([(Vref*(((Href+(np.sin(np.radians(theta[ind_u]))*rho[ind_u]))/Href)**alpha[ind_alpha])*np.cos(np.radians(theta[ind_u]))*(np.tan(np.radians(wind_tilt[ind_u]))*(1+(np.tan(np.radians(theta[ind_u]))*alpha[ind_alpha]*rho[ind_u]*np.cos(np.radians(theta[ind_u]))/(Href+(np.sin(np.radians(theta[ind_u]))*rho[ind_u]))))+(np.cos(np.radians(psi[ind_u]-wind_direction[ind_u]))*(-np.tan(np.radians(theta[ind_u]))+((alpha[ind_alpha]*rho[ind_u]*np.cos(np.radians(theta[ind_u]))/(Href+(np.sin(np.radians(theta[ind_u]))*rho[ind_u])))))))*np.radians(stdv_theta)) for ind_u in range(len(theta))])        
         U_Vrad_sh_psi.append([  Vref*np.cos(np.radians(theta[ind_u]))*(((Href+(np.sin(np.radians(theta[ind_u]))*rho[ind_u]))/Href)**alpha[ind_alpha])*np.sin(np.radians(psi[ind_u]-wind_direction[ind_u]))*np.radians(stdv_psi)  for ind_u in range(len(theta))])
-        U_Vrad_sh_range.append([Vref*np.cos(np.radians(theta[ind_u]))*(((Href+(np.sin(np.radians(theta[ind_u]))*rho[ind_u]))/Href)**alpha[ind_alpha])*alpha[ind_alpha]*(np.sin(np.radians(theta[ind_u]))/(Href+(np.sin(np.radians(theta[ind_u]))*rho[ind_u])))*(-np.cos(np.radians(psi[ind_u]-wind_direction[ind_u]))+(np.tan(np.radians(theta[ind_u]))*np.tan(np.radians(wind_pitch[ind_u]))))*(stdv_rho) for ind_u in range(len(theta))])
+        U_Vrad_sh_range.append([Vref*np.cos(np.radians(theta[ind_u]))*(((Href+(np.sin(np.radians(theta[ind_u]))*rho[ind_u]))/Href)**alpha[ind_alpha])*alpha[ind_alpha]*(np.sin(np.radians(theta[ind_u]))/(Href+(np.sin(np.radians(theta[ind_u]))*rho[ind_u])))*(-np.cos(np.radians(psi[ind_u]-wind_direction[ind_u]))+(np.tan(np.radians(theta[ind_u]))*np.tan(np.radians(wind_tilt[ind_u]))))*(stdv_rho) for ind_u in range(len(theta))])
     
     
         # 2.4 Expanded uncertainty with contributions of theta, psi and rho
