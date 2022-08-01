@@ -143,7 +143,7 @@ def cart2sph(x,y,z):
      
     for ind in range(len(z)):
         rho.append(np.sqrt(x[ind]**2+y[ind]**2+z[ind]**2))
-        theta.append(math.asin(z[ind]/np.sqrt(x[ind]**2+y[ind]**2+z[ind]**2)))
+        theta.append(math.acos(np.sqrt(x[ind]**2+y[ind]**2)/np.sqrt(x[ind]**2+y[ind]**2+z[ind]**2)))
         phi.append(math.atan2(y[ind],x[ind]))
         # if z[ind]>0:
         #         phi.append(np.arctan(np.sqrt(x[ind]**2+y[ind]**2)/z[ind]))
