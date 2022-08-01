@@ -133,16 +133,14 @@ def sph2cart(rho,theta,phi):
         x.append(rho[i]*np.cos((theta[i]))*np.cos((phi[i])))
         y.append(rho[i]*np.sin((phi[i]))*np.cos((theta[i])) )
         z.append(rho[i]*np.sin((theta[i])) )
-    # pdb.set_trace()
+    pdb.set_trace()
     return(np.around(x,5),np.around(y,5),np.around(z,5))
 
 def cart2sph(x,y,z): 
     rho=[]
     theta=[]
     phi=[]
-    rho=[]
-    theta2=[]
-    phi2=[]        
+     
     for ind in range(len(z)):
         rho.append(np.sqrt(x[ind]**2+y[ind]**2+z[ind]**2))
         theta.append(math.asin(z[ind]/np.sqrt(x[ind]**2+y[ind]**2+z[ind]**2)))
@@ -164,7 +162,7 @@ def cart2sph(x,y,z):
         # elif x[ind]==0:
         #         theta.append(np.pi/2.0*(np.sign(y[ind])))
     # print(np.degrees(theta))
-    # pdb.set_trace()
+    pdb.set_trace()
     
     return(np.array(rho),np.array(theta),np.array(phi)) # foc_dist, aperture angle, azimuth
 #%% NDF function
