@@ -87,8 +87,8 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     x,y,z=SA.sph2cart(rho0,theta0,psi0)
     
     # Add lidar position:
-    vector_pos = x+x_Lidar,y+y_Lidar,z+z_Lidar
-
+    vector_pos = x-x_Lidar,y-y_Lidar,z-z_Lidar
+    
     rho1,theta1,psi1 =SA.cart2sph(vector_pos[0],vector_pos[1],vector_pos[2])
     rho,theta,psi=np.round([rho1,theta1,psi1],4)
     # MEasurement point in cartesian coordinates before applying lidar position
