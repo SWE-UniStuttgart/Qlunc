@@ -130,9 +130,9 @@ def sph2cart(rho,theta,phi):
     y=[]
     z=[]    
     for i in range(len(rho)):
-        x.append(rho[i]*np.cos((theta[i]))*np.cos((phi[i])))
-        y.append(rho[i]*np.sin((phi[i]))*np.cos((theta[i])) )
-        z.append(rho[i]*np.sin((theta[i])) )
+        x.append(rho[i]*np.cos(theta[i])*np.cos(phi[i]))
+        y.append(rho[i]*np.cos(theta[i])*np.sin(phi[i]) )
+        z.append(rho[i]*np.sin(theta[i]) )
     # pdb.set_trace()
     return(np.around(x,5),np.around(y,5),np.around(z,5))
 
@@ -140,12 +140,10 @@ def cart2sph(x,y,z):
     rho=[]
     theta=[]
     phi=[]
-    rho=[]
-    theta2=[]
-    phi2=[]        
+     
     for ind in range(len(z)):
         rho.append(np.sqrt(x[ind]**2+y[ind]**2+z[ind]**2))
-        theta.append(math.asin(z[ind]/np.sqrt(x[ind]**2+y[ind]**2+z[ind]**2)))
+        theta.append(math.acos(np.sqrt(x[ind]**2+y[ind]**2)/np.sqrt(x[ind]**2+y[ind]**2+z[ind]**2)))
         phi.append(math.atan2(y[ind],x[ind]))
         # if z[ind]>0:
         #         phi.append(np.arctan(np.sqrt(x[ind]**2+y[ind]**2)/z[ind]))
