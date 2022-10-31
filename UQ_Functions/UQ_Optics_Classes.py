@@ -134,27 +134,27 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # stdv_wind_tilt = np.radians(0)
     ##################################################################################################################################################
     ##################################################################################################################################################
-    theta1,U_theta1 = lidars['Lidar1_Spherical']['theta'],np.radians(Lidar.optics.scanner.stdv_cone_angle)
-    theta2,U_theta2 = lidars['Lidar2_Spherical']['theta'],np.radians(Lidar.optics.scanner.stdv_cone_angle)
-    psi1  ,U_psi1   = lidars['Lidar1_Spherical']['psi'],np.radians(Lidar.optics.scanner.stdv_azimuth)
-    psi2  ,U_psi2   = lidars['Lidar2_Spherical']['psi'],np.radians(Lidar.optics.scanner.stdv_azimuth)
-    rho1  ,U_rho1   = lidars['Lidar1_Spherical']['rho'],Lidar.optics.scanner.stdv_focus_dist 
-    rho2  ,U_rho2   = lidars['Lidar2_Spherical']['rho'],Lidar.optics.scanner.stdv_focus_dist 
+    theta1,U_theta1 = lidars['Lidar1_Spherical']['theta'],np.radians(Lidar.optics.scanner.stdv_cone_angle[0])
+    theta2,U_theta2 = lidars['Lidar2_Spherical']['theta'],np.radians(Lidar.optics.scanner.stdv_cone_angle[1])
+    psi1  ,U_psi1   = lidars['Lidar1_Spherical']['psi'],np.radians(Lidar.optics.scanner.stdv_azimuth[0])
+    psi2  ,U_psi2   = lidars['Lidar2_Spherical']['psi'],np.radians(Lidar.optics.scanner.stdv_azimuth[1])
+    rho1  ,U_rho1   = lidars['Lidar1_Spherical']['rho'],Lidar.optics.scanner.stdv_focus_dist [0]
+    rho2  ,U_rho2   = lidars['Lidar2_Spherical']['rho'],Lidar.optics.scanner.stdv_focus_dist[1] 
     # wind_direction = np.radians(np.array([180]))*len(psi1)
     
 
     #%% 2) State the correlations to calculate the correlation in the different VLOS:
     # VLOS1_VLOS2_corr_n = 1 # correlation betweem Vlos1 and Vlos2
     
-    psi1_psi2_corr_n     = 0.5  # correlation between psi1 and psi2
-    theta1_theta2_corr_n = 0.5  # correlation Theta1 and Theta2
-    rho1_rho2_corr_n     = 0.5  # correlation Rho1 and Rho2
+    psi1_psi2_corr_n     = 0  # correlation between psi1 and psi2
+    theta1_theta2_corr_n = 0  # correlation Theta1 and Theta2
+    rho1_rho2_corr_n     = 0  # correlation Rho1 and Rho2
     
     # Cross correlations:
-    psi1_theta1_corr_n  = 0.5
-    psi1_theta2_corr_n  = 0.5
-    psi2_theta1_corr_n  = 0.5
-    psi2_theta2_corr_n  = 0.5
+    psi1_theta1_corr_n  = 1
+    psi1_theta2_corr_n  = 0
+    psi2_theta1_corr_n  = 0
+    psi2_theta2_corr_n  = 1
         
     # There are no correlation between range and angles since the range is determined by the AOM (at least in pulsed lidars) and the angles accuracy is related to the alignment of the telescope mirrors, to the position of the lense and also to the servos orienting the scanner
     psi1_rho1_corr_n    = 0
@@ -245,16 +245,16 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         rho_stds  = [rho1_noisy.std(), rho2_noisy.std()]
         
         # Covariance Matrix:
-        # cov_MAT=[[              theta_stds[0]**2,                     theta_stds[1]*theta_stds[0]*theta1_theta2_corr_n,   psi_stds[0]*theta_stds[0]*psi1_theta1_corr_n,   psi_stds[1]*theta_stds[0]*psi2_theta1_corr_n,   rho_stds[0]*theta_stds[0]*theta1_rho1_corr_n,  rho_stds[1]*theta_stds[0]*theta1_rho2_corr_n],
-        #           [theta_stds[0]*theta_stds[1]*theta1_theta2_corr_n,                 theta_stds[1]**2,                     psi_stds[0]*theta_stds[1]*psi1_theta2_corr_n,   psi_stds[1]*theta_stds[1]*psi2_theta2_corr_n,   rho_stds[0]*theta_stds[1]*theta2_rho1_corr_n,  rho_stds[1]*theta_stds[1]*theta2_rho2_corr_n],
-        #           [theta_stds[0]*psi_stds[0]*psi1_theta1_corr_n ,      theta_stds[1]*psi_stds[0]*psi1_theta2_corr_n,                   psi_stds[0]**2,                     psi_stds[1]*psi_stds[0]*psi1_psi2_corr_n,       rho_stds[0]*psi_stds[0]*psi1_rho1_corr_n,      rho_stds[1]*psi_stds[0]*psi1_rho2_corr_n],
-        #           [theta_stds[0]*psi_stds[1]*psi2_theta1_corr_n,       theta_stds[1]*psi_stds[1]*psi2_theta2_corr_n,       psi_stds[0]*psi_stds[1]*psi1_psi2_corr_n,                   psi_stds[1]**2,                     rho_stds[0]*psi_stds[1]*psi2_rho1_corr_n,      rho_stds[1]*psi_stds[1]*psi2_rho2_corr_n],
-        #           [theta_stds[0]*rho_stds[0]*theta1_rho1_corr_n,       theta_stds[1]*rho_stds[0]*theta2_rho1_corr_n,       psi_stds[0]*rho_stds[0]*psi1_rho1_corr_n,       psi_stds[1]*rho_stds[0]*psi2_rho1_corr_n,                   rho_stds[0]**2,                    rho_stds[1]*rho_stds[0]*rho1_rho2_corr_n],
-        #           [theta_stds[0]*rho_stds[1]*theta1_rho2_corr_n,       theta_stds[1]*rho_stds[1]*theta2_rho2_corr_n,       psi_stds[0]*rho_stds[1]*psi1_rho2_corr_n,       psi_stds[1]*rho_stds[1]*psi2_rho2_corr_n,       rho_stds[0]*rho_stds[1]*rho1_rho2_corr_n,                  rho_stds[1]**2]]
-        cov_MAT=[[              theta_stds[0]**2,                     theta_stds[1]*theta_stds[0]*theta1_theta2_corr_n,   psi_stds[0]*theta_stds[0]*psi1_theta1_corr_n,   psi_stds[1]*theta_stds[0]*psi2_theta1_corr_n  ],
-                  [theta_stds[0]*theta_stds[1]*theta1_theta2_corr_n,                 theta_stds[1]**2,                     psi_stds[0]*theta_stds[1]*psi1_theta2_corr_n,   psi_stds[1]*theta_stds[1]*psi2_theta2_corr_n],
-                  [theta_stds[0]*psi_stds[0]*psi1_theta1_corr_n ,      theta_stds[1]*psi_stds[0]*psi1_theta2_corr_n,                   psi_stds[0]**2,                     psi_stds[1]*psi_stds[0]*psi1_psi2_corr_n],
-                  [theta_stds[0]*psi_stds[1]*psi2_theta1_corr_n,       theta_stds[1]*psi_stds[1]*psi2_theta2_corr_n,       psi_stds[0]*psi_stds[1]*psi1_psi2_corr_n,                   psi_stds[1]**2]]
+        cov_MAT=[[              theta_stds[0]**2,                     theta_stds[1]*theta_stds[0]*theta1_theta2_corr_n,   psi_stds[0]*theta_stds[0]*psi1_theta1_corr_n,   psi_stds[1]*theta_stds[0]*psi2_theta1_corr_n,   rho_stds[0]*theta_stds[0]*theta1_rho1_corr_n,  rho_stds[1]*theta_stds[0]*theta1_rho2_corr_n],
+                  [theta_stds[0]*theta_stds[1]*theta1_theta2_corr_n,                 theta_stds[1]**2,                     psi_stds[0]*theta_stds[1]*psi1_theta2_corr_n,   psi_stds[1]*theta_stds[1]*psi2_theta2_corr_n,   rho_stds[0]*theta_stds[1]*theta2_rho1_corr_n,  rho_stds[1]*theta_stds[1]*theta2_rho2_corr_n],
+                  [theta_stds[0]*psi_stds[0]*psi1_theta1_corr_n ,      theta_stds[1]*psi_stds[0]*psi1_theta2_corr_n,                   psi_stds[0]**2,                     psi_stds[1]*psi_stds[0]*psi1_psi2_corr_n,       rho_stds[0]*psi_stds[0]*psi1_rho1_corr_n,      rho_stds[1]*psi_stds[0]*psi1_rho2_corr_n],
+                  [theta_stds[0]*psi_stds[1]*psi2_theta1_corr_n,       theta_stds[1]*psi_stds[1]*psi2_theta2_corr_n,       psi_stds[0]*psi_stds[1]*psi1_psi2_corr_n,                   psi_stds[1]**2,                     rho_stds[0]*psi_stds[1]*psi2_rho1_corr_n,      rho_stds[1]*psi_stds[1]*psi2_rho2_corr_n],
+                  [theta_stds[0]*rho_stds[0]*theta1_rho1_corr_n,       theta_stds[1]*rho_stds[0]*theta2_rho1_corr_n,       psi_stds[0]*rho_stds[0]*psi1_rho1_corr_n,       psi_stds[1]*rho_stds[0]*psi2_rho1_corr_n,                   rho_stds[0]**2,                    rho_stds[1]*rho_stds[0]*rho1_rho2_corr_n],
+                  [theta_stds[0]*rho_stds[1]*theta1_rho2_corr_n,       theta_stds[1]*rho_stds[1]*theta2_rho2_corr_n,       psi_stds[0]*rho_stds[1]*psi1_rho2_corr_n,       psi_stds[1]*rho_stds[1]*psi2_rho2_corr_n,       rho_stds[0]*rho_stds[1]*rho1_rho2_corr_n,                  rho_stds[1]**2]]
+        # cov_MAT=[[              theta_stds[0]**2,                     theta_stds[1]*theta_stds[0]*theta1_theta2_corr_n,   psi_stds[0]*theta_stds[0]*psi1_theta1_corr_n,   psi_stds[1]*theta_stds[0]*psi2_theta1_corr_n  ],
+        #           [theta_stds[0]*theta_stds[1]*theta1_theta2_corr_n,                 theta_stds[1]**2,                     psi_stds[0]*theta_stds[1]*psi1_theta2_corr_n,   psi_stds[1]*theta_stds[1]*psi2_theta2_corr_n],
+        #           [theta_stds[0]*psi_stds[0]*psi1_theta1_corr_n ,      theta_stds[1]*psi_stds[0]*psi1_theta2_corr_n,                   psi_stds[0]**2,                     psi_stds[1]*psi_stds[0]*psi1_psi2_corr_n],
+        #           [theta_stds[0]*psi_stds[1]*psi2_theta1_corr_n,       theta_stds[1]*psi_stds[1]*psi2_theta2_corr_n,       psi_stds[0]*psi_stds[1]*psi1_psi2_corr_n,                   psi_stds[1]**2]]
           
         # cov_MAT = np.cov([theta1_noisy,theta2_noisy,psi1_noisy,psi2_noisy,rho1_noisy,rho2_noisy])
         
