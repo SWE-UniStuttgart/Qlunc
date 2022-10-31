@@ -286,7 +286,7 @@ def mesh (theta,psi,rho):
     return theta,psi,rho,box
 
 
-def coefficients(theta_c, psi_c,rho_c,wind_direction,ind_wind_dir,Href,Vref,alpha,Hl):
+def U_Vh_MC(theta_c, psi_c,rho_c,wind_direction,ind_wind_dir,Href,Vref,alpha,Hl):
     # u
     A0 = Vref*(((Hl+(rho_c[1]*np.sin(theta_c[1])))/Href)**alpha)
     B0 = np.cos(theta_c[1])*np.cos(psi_c[1]-wind_direction[ind_wind_dir])#np.cos(theta_c[1])*np.cos(psi_c[1])*np.cos(wind_direction[ind_wind_dir])+np.cos(theta_c[1])*np.sin(psi_c[1])*np.sin(wind_direction[ind_wind_dir])#+np.sin(theta_c[0])*np.tan(wind_tilt)
@@ -311,7 +311,7 @@ def coefficients(theta_c, psi_c,rho_c,wind_direction,ind_wind_dir,Href,Vref,alph
 
 
 
-def coefficients_GUM(theta_c, psi_c,rho_c,wind_direction,ind_wind_dir,Href,Vref,alpha,Hl):
+def U_Vh_GUM(theta_c, psi_c,rho_c,wind_direction,ind_wind_dir,Href,Vref,alpha,Hl):
       #Vh
     
     A = Vref*(((Hl+(rho_c[0]*np.sin(theta_c[0])))/Href)**alpha)
@@ -359,16 +359,17 @@ def U_VLOS_MC(theta_corr,psi_corr,rho_corr,theta1_noisy,Hl,Href,alpha,wind_direc
      VLOS01,U_VLOS1,VLOS02,U_VLOS2=[],[],[],[]
      
        
-     A1=Vref*((Hl+(np.sin(theta_corr[0])*rho_corr[0]))/Href)**alpha[0]
-     A2=Vref*((Hl+(np.sin(theta_corr[1])*rho_corr[1]))/Href)**alpha[0]
-     VLOS1=A1*(np.cos(theta_corr[0])*np.cos(psi_corr[0]-wind_direction[ind_wind_dir])) #-np.sin(theta_corr[0][ind_npoints])*np.tan(wind_tilt[ind_npoints])
-     VLOS2=A2*(np.cos(theta_corr[1])*np.cos(psi_corr[1]-wind_direction[ind_wind_dir])) #-np.sin(theta_corr[1][ind_npoints])*np.tan(wind_tilt[ind_npoints])
+     A1    = Vref*((Hl+(np.sin(theta_corr[0])*rho_corr[0]))/Href)**alpha[0]
+     A2    = Vref*((Hl+(np.sin(theta_corr[1])*rho_corr[1]))/Href)**alpha[0]
+     VLOS1 = A1*(np.cos(theta_corr[0])*np.cos(psi_corr[0]-wind_direction[ind_wind_dir])) #-np.sin(theta_corr[0][ind_npoints])*np.tan(wind_tilt[ind_npoints])
+     VLOS2 = A2*(np.cos(theta_corr[1])*np.cos(psi_corr[1]-wind_direction[ind_wind_dir])) #-np.sin(theta_corr[1][ind_npoints])*np.tan(wind_tilt[ind_npoints])
+     
      VLOS1_list.append(np.mean(VLOS1))
      VLOS2_list.append(np.mean(VLOS2))
     
-     U_VLOS1=np.nanstd(VLOS1)
-     U_VLOS2=np.nanstd(VLOS2)
-     CORR_COEF=np.corrcoef(VLOS1,VLOS2)
+     U_VLOS1   = np.nanstd(VLOS1)
+     U_VLOS2   = np.nanstd(VLOS2)
+     CORR_COEF = np.corrcoef(VLOS1,VLOS2)
      # pdb.set_trace()
      return(VLOS1,VLOS2,U_VLOS1,U_VLOS2,CORR_COEF[0][1],VLOS1_list,VLOS2_list)
 CCC1=[]
