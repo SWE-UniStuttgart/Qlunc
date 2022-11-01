@@ -87,6 +87,7 @@ Scanner           = scanner(name            = Qlunc_yaml_inputs['Components']['S
                             stdv_focus_dist = Qlunc_yaml_inputs['Components']['Scanner']['stdv focus distance'],                 # Focus distance standard deviation in [meters].
                             stdv_cone_angle = Qlunc_yaml_inputs['Components']['Scanner']['stdv Cone angle'],                 # Cone angle standard deviation in [degrees].
                             stdv_azimuth    = Qlunc_yaml_inputs['Components']['Scanner']['stdv Azimuth'],                 # Azimuth angle standard deviation in [degrees].
+                            correlations    = Qlunc_yaml_inputs['Components']['Scanner']['correlations'],
                             unc_func        = uopc.UQ_Scanner) #eval(Qlunc_yaml_inputs['Components']['Scanner']['Uncertainty function']) )    # here you put the function describing your scanner uncertainty. 
 # Measurement points
 # Meas_points = measurement_points (coord_meas_point = Qlunc_yaml_inputs['Components']['Scanner']['Measuring point'])

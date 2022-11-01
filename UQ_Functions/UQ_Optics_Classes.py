@@ -145,16 +145,16 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
 
     #%% 2) State the correlations to calculate the correlation in the different VLOS:
     # VLOS1_VLOS2_corr_n = 1 # correlation betweem Vlos1 and Vlos2
-    
-    psi1_psi2_corr_n     = 0  # correlation between psi1 and psi2
-    theta1_theta2_corr_n = 0  # correlation Theta1 and Theta2
-    rho1_rho2_corr_n     = 0  # correlation Rho1 and Rho2
+    # pdb.set_trace()
+    psi1_psi2_corr_n     = Lidar.optics.scanner.correlations[0]  # correlation between psi1 and psi2
+    theta1_theta2_corr_n = Lidar.optics.scanner.correlations[1] # correlation Theta1 and Theta2
+    rho1_rho2_corr_n     = Lidar.optics.scanner.correlations[2]  # correlation Rho1 and Rho2
     
     # Cross correlations:
-    psi1_theta1_corr_n  = 1
-    psi1_theta2_corr_n  = 0
-    psi2_theta1_corr_n  = 0
-    psi2_theta2_corr_n  = 1
+    psi1_theta1_corr_n  = Lidar.optics.scanner.correlations[3]
+    psi1_theta2_corr_n  = Lidar.optics.scanner.correlations[4]
+    psi2_theta1_corr_n  = Lidar.optics.scanner.correlations[5]
+    psi2_theta2_corr_n  = Lidar.optics.scanner.correlations[6]
         
     # There are no correlation between range and angles since the range is determined by the AOM (at least in pulsed lidars) and the angles accuracy is related to the alignment of the telescope mirrors, to the position of the lense and also to the servos orienting the scanner
     psi1_rho1_corr_n    = 0
