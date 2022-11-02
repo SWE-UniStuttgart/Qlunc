@@ -176,7 +176,7 @@ class converter(): # Not included yet in Version Qlunc v-0.9 calculations
                  print('Created new converter: {}'.format(self.ConverterID))
 
 class scanner():
-    def __init__(self,name,Href,time_pattern,N_Points,N_MC,time_point,scanner_type,pattern,lissajous_param,origin,sample_rate,focus_dist,cone_angle,azimuth,stdv_location,stdv_focus_dist,stdv_cone_angle,stdv_azimuth,unc_func):
+    def __init__(self,name,Href,time_pattern,N_Points,N_MC,time_point,scanner_type,pattern,lissajous_param,origin,sample_rate,focus_dist,cone_angle,azimuth,stdv_location,stdv_focus_dist,stdv_cone_angle,stdv_azimuth,correlations,unc_func):
                  self.ScannerID       = name
                  self.time_pattern    = time_pattern
                  self.N_Points        = N_Points
@@ -195,7 +195,7 @@ class scanner():
                  self.stdv_focus_dist = stdv_focus_dist
                  self.stdv_cone_angle = stdv_cone_angle
                  self.stdv_azimuth    = stdv_azimuth                 
-              
+                 self.correlations    = correlations
                  self.Uncertainty     = unc_func      
                  print('Created new scanner: {}'.format(self.ScannerID))
 
@@ -336,3 +336,26 @@ class filtering_method():
         self.filt_method = filt_method
         self.Uncertainty=unc_func
         print('Selected filtering model: {} '.format(self.filt_method))
+
+        
+#%% Create the lidar objects for pointing accuracy (called in 'UQ_Optics_Classes.py')
+# class lidar_pointing():
+#     def __init__(self, x,y,z,x_Lidar,y_Lidar,z_Lidar):
+#         self.x_Lidar=x_Lidar
+#         self.y_Lidar=y_Lidar
+#         self.z_Lidar=z_Lidar
+#         self.x=x
+#         self.y=y
+#         self.z=z
+#     @classmethod
+#     def vector_pos(cls,x,y,z,x_Lidar,y_Lidar,z_Lidar):
+#         fx=(x-x_Lidar)
+#         fy=(y-y_Lidar)
+#         fz=(z-z_Lidar)
+#         return(cls,fx,fy,fz)
+#     @classmethod
+#     def Cart2Sph (cls, x_vector_pos,y_vector_pos,z_vector_pos):
+#         rho1,theta1,psi1 =SA.cart2sph(x_vector_pos,y_vector_pos,z_vector_pos)
+#         return (cls,rho1,theta1,psi1)
+        
+    
