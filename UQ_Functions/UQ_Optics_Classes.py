@@ -118,7 +118,8 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         lidars['Lidar'+str(ind_origin+1)+'_Spherical']={'rho':np.round((lidar.Cart2Sph(lidars['Lidar'+str(ind_origin+1)+'_Rectangular']['x'],lidars['Lidar'+str(ind_origin+1)+'_Rectangular']['y'],lidars['Lidar'+str(ind_origin+1)+'_Rectangular']['z']))[1],4),
                                                       'theta':np.round((lidar.Cart2Sph(lidars['Lidar'+str(ind_origin+1)+'_Rectangular']['x'],lidars['Lidar'+str(ind_origin+1)+'_Rectangular']['y'],lidars['Lidar'+str(ind_origin+1)+'_Rectangular']['z']))[2],4),
                                                       'psi':np.round((lidar.Cart2Sph(lidars['Lidar'+str(ind_origin+1)+'_Rectangular']['x'],lidars['Lidar'+str(ind_origin+1)+'_Rectangular']['y'],lidars['Lidar'+str(ind_origin+1)+'_Rectangular']['z']))[3],4)}
-        
+        # if lidars['Lidar'+str(ind_origin+1)+'_Spherical']['psi']<0:
+        #     lidars['Lidar'+str(ind_origin+1)+'_Spherical']['psi']=np.pi+lidars['Lidar'+str(ind_origin+1)+'_Spherical']['psi']
         
         x_Lidar1.append(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_origin][0])
         y_Lidar1.append(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_origin][1])
@@ -156,7 +157,8 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     psi2_theta1_corr_n  = Lidar.optics.scanner.correlations[5]
     psi2_theta2_corr_n  = Lidar.optics.scanner.correlations[6]
         
-    # There are no correlation between range and angles since the range is determined by the AOM (at least in pulsed lidars) and the angles accuracy is related to the alignment of the telescope mirrors, to the position of the lense and also to the servos orienting the scanner
+    # There is NO correlation between range and angles since the range is determined by the AOM (at least in pulsed lidars) and the angles accuracy is related to the alignment of the telescope mirrors,
+    # to the position of the lense and also to the servos orienting the scanner
     psi1_rho1_corr_n    = 0
     psi1_rho2_corr_n    = 0
     psi2_rho1_corr_n    = 0
@@ -304,10 +306,10 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         Corr_coef_rho2_psi1   = np.corrcoef(Rho2_cr,Psi1_cr)
         
         # Cross correlations
-        # CROS_CORR = [Corr_coef_theta1_psi1[0][1],Corr_coef_theta1_rho1[0][1],Corr_coef_rho1_psi1[0][1],Corr_coef_theta2_psi2[0][1],
-        #               Corr_coef_theta2_rho2[0][1],Corr_coef_rho2_psi2[0][1],Corr_coef_psi[0][1],Corr_coef_theta[0][1],Corr_coef_rho[0][1]]
-        CROS_CORR = [psi1_theta1_corr_n,theta1_rho1_corr_n,psi1_rho1_corr_n,psi2_theta2_corr_n,theta2_rho2_corr_n,
-                      psi2_rho2_corr_n,  psi1_psi2_corr_n,theta1_theta2_corr_n,rho1_rho2_corr_n]
+        CROS_CORR = [Corr_coef_theta1_psi1[0][1],Corr_coef_theta1_rho1[0][1],Corr_coef_rho1_psi1[0][1],Corr_coef_theta2_psi2[0][1],
+                      Corr_coef_theta2_rho2[0][1],Corr_coef_rho2_psi2[0][1],Corr_coef_psi[0][1],Corr_coef_theta[0][1],Corr_coef_rho[0][1]]
+        # CROS_CORR = [psi1_theta1_corr_n,theta1_rho1_corr_n,psi1_rho1_corr_n,psi2_theta2_corr_n,theta2_rho2_corr_n,
+        #               psi2_rho2_corr_n,  psi1_psi2_corr_n,theta1_theta2_corr_n,rho1_rho2_corr_n]
         
         
         #%% 5) VLOS uncertainty

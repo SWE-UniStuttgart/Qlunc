@@ -357,8 +357,7 @@ def U_Vh_GUM(theta_c, psi_c,rho_c,wind_direction,ind_wind_dir,Href,Vref,alpha,Hl
 
 def U_VLOS_MC(theta_corr,psi_corr,rho_corr,theta1_noisy,Hl,Href,alpha,wind_direction,Vref,ind_wind_dir,VLOS1_list,VLOS2_list):
      VLOS01,U_VLOS1,VLOS02,U_VLOS2=[],[],[],[]
-     
-       
+            
      A1    = Vref*((Hl+(np.sin(theta_corr[0])*rho_corr[0]))/Href)**alpha[0]
      A2    = Vref*((Hl+(np.sin(theta_corr[1])*rho_corr[1]))/Href)**alpha[0]
      VLOS1 = A1*(np.cos(theta_corr[0])*np.cos(psi_corr[0]-wind_direction[ind_wind_dir])) #-np.sin(theta_corr[0][ind_npoints])*np.tan(wind_tilt[ind_npoints])
@@ -370,8 +369,9 @@ def U_VLOS_MC(theta_corr,psi_corr,rho_corr,theta1_noisy,Hl,Href,alpha,wind_direc
      U_VLOS1   = np.nanstd(VLOS1)
      U_VLOS2   = np.nanstd(VLOS2)
      CORR_COEF = np.corrcoef(VLOS1,VLOS2)
-     # pdb.set_trace()
+    
      return(VLOS1,VLOS2,U_VLOS1,U_VLOS2,CORR_COEF[0][1],VLOS1_list,VLOS2_list)
+
 CCC1=[]
 CCC2=[]
 CCC3=[]
@@ -417,6 +417,5 @@ def U_VLOS_GUM (theta1,theta2,psi1,psi2,rho1,rho2,U_theta1,U_theta2,U_psi1,U_psi
     CC_P2_R2 = U_Vrad_sh_range2*U_Vrad_sh_psi2*CROS_CORR[5]
     
     U_Vrad2_GUM=np.sqrt(((U_Vrad_sh_theta2)**2+(U_Vrad_sh_psi2)**2+(U_Vrad_sh_range2)**2)+2*(CC_T2_P2+CC_T2_R2+CC_P2_R2+CC_VLOS))
-    # pdb.set_trace()
     return(U_Vrad1_GUM,U_Vrad2_GUM)
 
