@@ -83,7 +83,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
 #         # axs0.set_ylim3d(plot_param['ylim'][0],plot_param['ylim'][1])
 #         # axs0.set_zlim3d(plot_param['zlim'][0],plot_param['zlim'][1])
 # =============================================================================
-        
+        pdb.set_trace()
 
         # 1. Plotting scanning points with uncertainty
         cm = plt.get_cmap('jet')
@@ -327,23 +327,23 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         
     if flag_plot_pointing_unc:
         plt.figure()
-        
-        # plt.plot(np.degrees(wind_direction),u_wind_GUM,'-g', label='Uncertainty u component - GUM')
-        # plt.plot(np.degrees(wind_direction),v_wind_GUM,'-b', label='Uncertainty v component - GUM')
+        pdb.set_trace()
+        # plt.plot(np.degrees(wind_direction_TEST),u_wind_GUM,'-g', label='Uncertainty u component - GUM')
+        # plt.plot(np.degrees(wind_direction_TEST),v_wind_GUM,'-b', label='Uncertainty v component - GUM')
         
         # plt.annotate('psi1_psi2_corr_n='+str(psi1_psi2_corr_n)+'\n'+'theta1_theta2_corr_n='+str(theta1_theta2_corr_n)+'\nrho1_rho2_corr_n='+str(rho1_rho2_corr_n)+'\nU_psi='+str(rho1_rho2_corr_n), xy=(0.05, 0.9), xycoords='axes fraction')
         # pdb.set_trace()
-        plt.plot(np.degrees(wind_direction),Uncertainty_Vh_GUM,'-r', label='Uncertgainty Vh - GUM')
+        plt.plot(np.degrees(wind_direction_TEST),Uncertainty_Vh_GUM,'-r', label='Uncertgainty Vh - GUM')
         plt.annotate('psi1_psi2_corr_n='+str(psi1_psi2_corr_n)+'\n'+'theta1_theta2_corr_n='+str(theta1_theta2_corr_n)+'\nrho1_rho2_corr_n='+str(rho1_rho2_corr_n), xy=(0.05, 0.9), xycoords='axes fraction')
         
         
-        plt.plot(np.degrees(wind_direction),Uncertainty_U,'og',alpha=0.3,label=' Uncertainty u component - MC')
+        plt.plot(np.degrees(wind_direction_TEST),Uncertainty_U,'og',alpha=0.3,label=' Uncertainty u component - MC')
         # plt.annotate('Uncertainty U', xy=(0.05, 0.9), xycoords='axes fraction')
         
         # plt.figure()
-        plt.plot(np.degrees(wind_direction),Uncertainty_V,'ob',alpha=0.3,label='Uncertainty v component - MC')
+        plt.plot(np.degrees(wind_direction_TEST),Uncertainty_V,'ob',alpha=0.3,label='Uncertainty v component - MC')
         # plt.annotate('Uncertainty V', xy=(0.05, 0.9), xycoords='axes fraction')
-        plt.plot(np.degrees(wind_direction),Uncertainty_Vh_MC,'or',alpha=0.3, label='Uncertainty Vh - MC')
+        plt.plot(np.degrees(wind_direction_TEST),Uncertainty_Vh_MC,'or',alpha=0.3, label='Uncertainty Vh - MC')
         plt.xlabel('Wind Direction (°)')
         plt.ylabel('Vh uncertainty [m/s]')
         
@@ -351,8 +351,8 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         
         
         plt.figure()
-        plt.plot(np.degrees(wind_direction),U_VLOS1_MC,'.k',np.degrees(wind_direction),U_VLOS1_GUM,'-k',label='VLOS1')
-        plt.plot(np.degrees(wind_direction),U_VLOS2_MC,'.b',np.degrees(wind_direction),U_VLOS2_GUM,'-b',label='VLOS2')
+        plt.plot(np.degrees(wind_direction_TEST),U_VLOS1_MC,'.k',np.degrees(wind_direction_TEST),U_VLOS1_GUM,'-k',label='VLOS1')
+        plt.plot(np.degrees(wind_direction_TEST),U_VLOS2_MC,'.b',np.degrees(wind_direction_TEST),U_VLOS2_GUM,'-b',label='VLOS2')
         plt.title(['Correlations = ['+str(psi1_theta1_corr_n)+', '+str(psi1_rho1_corr_n)+', '+str(theta1_rho1_corr_n)+']'])
         plt.xlabel('Wind Direction (°)')
         plt.ylabel('Vlos uncertainty [m/s]')
