@@ -311,111 +311,141 @@ def U_Vh_MC(theta_c, psi_c,rho_c,wind_direction,ind_wind_dir,Href,Vref,alpha,Hl)
 
 
 
-def U_Vh_GUM(theta_c, psi_c,rho_c,wind_direction,ind_wind_dir,Href,Vref,alpha,Hl):
+def U_Vh_GUM(theta1,theta2,psi1,psi2,rho1,rho2,wind_direction,ind_wind_dir,Href,Vref,alpha,Hl,U,CROS_CORR3):
       #Vh
     
-    A = Vref*(((Hl+(rho_c[0]*np.sin(theta_c[0])))/Href)**alpha)
-    B = np.cos(theta_c[0])*np.cos(psi_c[0]-wind_direction[ind_wind_dir])#np.cos(theta_c[0])*np.cos(psi_c[0])*np.cos(wind_direction[ind_wind_dir])+np.cos(theta_c[0])*np.sin(psi_c[0])*(np.sin(wind_direction[ind_wind_dir]))
-    C = Vref*(((Hl+(rho_c[1]*np.sin(theta_c[1])))/Href)**alpha)
-    D = np.cos(theta_c[1])*np.cos(psi_c[1]-wind_direction[ind_wind_dir])#np.cos(theta_c[1])*np.cos(psi_c[1])*np.cos(wind_direction[ind_wind_dir])+np.cos(theta_c[1])*np.sin(psi_c[1])*(np.sin(wind_direction[ind_wind_dir]))
-    E = np.cos(theta_c[0])*np.cos(theta_c[1])*np.cos(psi_c[0]-psi_c[1])
-    F = np.cos(theta_c[0])*np.cos(theta_c[1])*(np.sin(psi_c[0]-psi_c[1]))
+    A = Vref*(((Hl+(rho1*np.sin(theta1)))/Href)**alpha)
+    B = np.cos(theta1)*np.cos(psi1-wind_direction[ind_wind_dir])#np.cos(theta1)*np.cos(psi1)*np.cos(wind_direction[ind_wind_dir])+np.cos(theta1)*np.sin(psi1)*(np.sin(wind_direction[ind_wind_dir]))
+    C = Vref*(((Hl+(rho2*np.sin(theta2)))/Href)**alpha)
+    D = np.cos(theta2)*np.cos(psi2-wind_direction[ind_wind_dir])#np.cos(theta2)*np.cos(psi2)*np.cos(wind_direction[ind_wind_dir])+np.cos(theta2)*np.sin(psi2)*(np.sin(wind_direction[ind_wind_dir]))
+    E = np.cos(theta1)*np.cos(theta2)*np.cos(psi1-psi2)
+    F = np.cos(theta1)*np.cos(theta2)*(np.sin(psi1-psi2))
     
-    numerator = np.sqrt((A*B*np.cos(theta_c[1]))**2 + (C*D*np.cos(theta_c[0]))**2 - 2*(A*C*B*D*E))    
+    numerator = np.sqrt((A*B*np.cos(theta2))**2 + (C*D*np.cos(theta1))**2 - 2*(A*C*B*D*E))    
     dernumerator = 1/(2*numerator) 
-    sh_term1 = Vref*alpha[0]*(((rho_c[0]*np.sin(theta_c[0])+Hl)/(Href))**(alpha[0]-1))
-    sh_term2 = Vref*alpha[0]*(((rho_c[1]*np.sin(theta_c[1])+Hl)/(Href))**(alpha[0]-1))
+    sh_term1 = Vref*alpha[0]*(((rho1*np.sin(theta1)+Hl)/(Href))**(alpha[0]-1))
+    sh_term2 = Vref*alpha[0]*(((rho2*np.sin(theta2)+Hl)/(Href))**(alpha[0]-1))
     
     # Derivatives
     #Theta
-    dert11 =  2*A*B*(np.cos(theta_c[1])**2)*((sh_term1*rho_c[0]*np.cos(theta_c[0])*B/Href)-np.sin(theta_c[0])*A*(np.cos(psi_c[0]-wind_direction[ind_wind_dir])))#2*A*B*(np.cos(theta_c[1])**2)*((sh_term1*rho_c[0]*np.cos(theta_c[0])*B/Href)+(A*(-np.sin(theta_c[0])*np.cos(psi_c[0])*np.cos(wind_direction[ind_wind_dir])-np.sin(theta_c[0])*np.sin(psi_c[0])*np.sin(wind_direction[ind_wind_dir]))))
-    dert12 = -2*(C**2)*(D**2)*np.cos(theta_c[0])*(np.sin(theta_c[0]))
-    dert13 = -2*C*D*((sh_term1*rho_c[0]*np.cos(theta_c[0])*B*E/Href)-np.sin(theta_c[0])*A*E*np.cos(psi_c[0]-wind_direction[ind_wind_dir])-A*B*(np.sin(theta_c[0])*np.cos(theta_c[1])*np.cos(psi_c[0]-psi_c[1])))#-2*((sh_term1*rho_c[0]*np.cos(theta_c[0])*C*B*D*E/Href)+A*C*(-np.sin(theta_c[0])*np.cos(psi_c[0])*np.cos(wind_direction[ind_wind_dir])-np.sin(theta_c[0])*np.sin(psi_c[0])*np.sin(wind_direction[ind_wind_dir]))*D*E+A*C*B*D*(-np.sin(theta_c[0])*np.cos(theta_c[1])*np.cos(psi_c[0]-psi_c[1])))
+    dert11 =  2*A*B*(np.cos(theta2)**2)*((sh_term1*rho1*np.cos(theta1)*B/Href)-np.sin(theta1)*A*(np.cos(psi1-wind_direction[ind_wind_dir])))#2*A*B*(np.cos(theta2)**2)*((sh_term1*rho1*np.cos(theta1)*B/Href)+(A*(-np.sin(theta1)*np.cos(psi1)*np.cos(wind_direction[ind_wind_dir])-np.sin(theta1)*np.sin(psi1)*np.sin(wind_direction[ind_wind_dir]))))
+    dert12 = -2*(C**2)*(D**2)*np.cos(theta1)*(np.sin(theta1))
+    dert13 = -2*C*D*((sh_term1*rho1*np.cos(theta1)*B*E/Href)-np.sin(theta1)*A*E*np.cos(psi1-wind_direction[ind_wind_dir])-A*B*(np.sin(theta1)*np.cos(theta2)*np.cos(psi1-psi2)))#-2*((sh_term1*rho1*np.cos(theta1)*C*B*D*E/Href)+A*C*(-np.sin(theta1)*np.cos(psi1)*np.cos(wind_direction[ind_wind_dir])-np.sin(theta1)*np.sin(psi1)*np.sin(wind_direction[ind_wind_dir]))*D*E+A*C*B*D*(-np.sin(theta1)*np.cos(theta2)*np.cos(psi1-psi2)))
     
-    dert21 = -2*(A**2)*(B**2)*np.cos(theta_c[1])*(np.sin(theta_c[1]))
-    dert22 =  2*C*D*(np.cos(theta_c[0])**2)*(sh_term2*rho_c[1]*np.cos(theta_c[1])*D/Href-C*np.sin(theta_c[1])*np.cos(psi_c[1]-wind_direction[ind_wind_dir]))#2*C*D*(np.cos(theta_c[0])**2)*((sh_term2*rho_c[1]*np.cos(theta_c[1])*D/Href)+(C*(-np.sin(theta_c[1])*np.cos(psi_c[1])*np.cos(wind_direction[ind_wind_dir])-np.sin(theta_c[1])*np.sin(psi_c[1])*np.sin(wind_direction[ind_wind_dir]))))
-    dert23 = -2*A*B*((sh_term2*rho_c[1]*np.cos(theta_c[1])*D*E/Href)-E*C*np.sin(theta_c[1])*np.cos(psi_c[1]-wind_direction[ind_wind_dir])-C*D*(np.sin(theta_c[1])*np.cos(theta_c[0])*np.cos(psi_c[0]-psi_c[1])))#-2*((sh_term2*rho_c[1]*np.cos(theta_c[1])*A*B*D*E/Href)+A*C*(-np.sin(theta_c[1])*np.cos(psi_c[1])*np.cos(wind_direction[ind_wind_dir])-np.sin(theta_c[1])*np.sin(psi_c[1])*np.sin(wind_direction[ind_wind_dir]))*B*E+A*C*B*D*(-np.sin(theta_c[1])*np.cos(theta_c[0])*np.cos(psi_c[0]-psi_c[1])))
+    dert21 = -2*(A**2)*(B**2)*np.cos(theta2)*(np.sin(theta2))
+    dert22 =  2*C*D*(np.cos(theta1)**2)*(sh_term2*rho2*np.cos(theta2)*D/Href-C*np.sin(theta2)*np.cos(psi2-wind_direction[ind_wind_dir]))#2*C*D*(np.cos(theta1)**2)*((sh_term2*rho2*np.cos(theta2)*D/Href)+(C*(-np.sin(theta2)*np.cos(psi2)*np.cos(wind_direction[ind_wind_dir])-np.sin(theta2)*np.sin(psi2)*np.sin(wind_direction[ind_wind_dir]))))
+    dert23 = -2*A*B*((sh_term2*rho2*np.cos(theta2)*D*E/Href)-E*C*np.sin(theta2)*np.cos(psi2-wind_direction[ind_wind_dir])-C*D*(np.sin(theta2)*np.cos(theta1)*np.cos(psi1-psi2)))#-2*((sh_term2*rho2*np.cos(theta2)*A*B*D*E/Href)+A*C*(-np.sin(theta2)*np.cos(psi2)*np.cos(wind_direction[ind_wind_dir])-np.sin(theta2)*np.sin(psi2)*np.sin(wind_direction[ind_wind_dir]))*B*E+A*C*B*D*(-np.sin(theta2)*np.cos(theta1)*np.cos(psi1-psi2)))
     # pdb.set_trace()
     
     #Psi
-    derp11 =  2*(A**2)*B*(np.cos(theta_c[1])**2)*np.cos(theta_c[0])*(np.sin(wind_direction[ind_wind_dir]-psi_c[0]))#(2*A*B*np.cos(theta_c[1])*A*(-np.cos(theta_c[0])*np.sin(psi_c[0])*np.cos(wind_direction[ind_wind_dir])+np.cos(theta_c[0])*np.cos(psi_c[0])*np.sin(wind_direction[ind_wind_dir])))*np.cos(theta_c[1])
-    derp12 = -2*A*C*D*np.cos(theta_c[0])*(E*(np.sin(wind_direction[ind_wind_dir]-psi_c[0]))-B*np.cos(theta_c[1])*(np.sin(psi_c[0]-psi_c[1])))#-2*(A*C*D*E*(-np.cos(theta_c[0])*np.sin(psi_c[0])*np.cos(wind_direction[ind_wind_dir])+np.cos(theta_c[0])*np.cos(psi_c[0])*np.sin(wind_direction[ind_wind_dir]))+A*B*C*D*np.cos(theta_c[0])*np.cos(theta_c[1])*(-np.sin(psi_c[0]-psi_c[1])))
+    derp11 =  2*(A**2)*B*(np.cos(theta2)**2)*np.cos(theta1)*(np.sin(wind_direction[ind_wind_dir]-psi1))#(2*A*B*np.cos(theta2)*A*(-np.cos(theta1)*np.sin(psi1)*np.cos(wind_direction[ind_wind_dir])+np.cos(theta1)*np.cos(psi1)*np.sin(wind_direction[ind_wind_dir])))*np.cos(theta2)
+    derp12 = -2*A*C*D*np.cos(theta1)*(E*(np.sin(wind_direction[ind_wind_dir]-psi1))-B*np.cos(theta2)*(np.sin(psi1-psi2)))#-2*(A*C*D*E*(-np.cos(theta1)*np.sin(psi1)*np.cos(wind_direction[ind_wind_dir])+np.cos(theta1)*np.cos(psi1)*np.sin(wind_direction[ind_wind_dir]))+A*B*C*D*np.cos(theta1)*np.cos(theta2)*(-np.sin(psi1-psi2)))
     
-    derp21 =  2*(C**2)*D*(np.cos(theta_c[0])**2)*np.cos(theta_c[1])*(np.sin(-psi_c[1]+wind_direction[ind_wind_dir]))#(2*C*D*np.cos(theta_c[0])*C*(-np.cos(theta_c[1])*np.sin(psi_c[1])*np.cos(wind_direction[ind_wind_dir])+np.cos(theta_c[1])*np.cos(psi_c[1])*np.sin(wind_direction[ind_wind_dir])))*np.cos(theta_c[0])
-    derp22 = -2*A*C*B*np.cos(theta_c[1])*(E*(np.sin(wind_direction[ind_wind_dir]-psi_c[1]))+D*np.cos(theta_c[0])*(np.sin(psi_c[0]-psi_c[1])))#-2*(A*C*B*E*(-np.cos(theta_c[1])*np.sin(theta_c[1])*np.cos(wind_direction[ind_wind_dir])+np.cos(theta_c[1])*np.cos(psi_c[1])*np.sin(wind_direction[ind_wind_dir]))+A*B*C*D*np.cos(theta_c[0])*np.cos(theta_c[1])*(np.sin(psi_c[0]-psi_c[1])))
+    derp21 =  2*(C**2)*D*(np.cos(theta1)**2)*np.cos(theta2)*(np.sin(-psi2+wind_direction[ind_wind_dir]))#(2*C*D*np.cos(theta1)*C*(-np.cos(theta2)*np.sin(psi2)*np.cos(wind_direction[ind_wind_dir])+np.cos(theta2)*np.cos(psi2)*np.sin(wind_direction[ind_wind_dir])))*np.cos(theta1)
+    derp22 = -2*A*C*B*np.cos(theta2)*(E*(np.sin(wind_direction[ind_wind_dir]-psi2))+D*np.cos(theta1)*(np.sin(psi1-psi2)))#-2*(A*C*B*E*(-np.cos(theta2)*np.sin(theta2)*np.cos(wind_direction[ind_wind_dir])+np.cos(theta2)*np.cos(psi2)*np.sin(wind_direction[ind_wind_dir]))+A*B*C*D*np.cos(theta1)*np.cos(theta2)*(np.sin(psi1-psi2)))
     
     #rho
-    derr11 = (2*A*(B**2)*(np.cos(theta_c[1]))**2)*sh_term1*np.sin(theta_c[0])/Href
-    derr12 = -2*C*B*D*E*sh_term1*np.sin(theta_c[0])/Href
+    derr11 = (2*A*(B**2)*(np.cos(theta2))**2)*sh_term1*np.sin(theta1)/Href
+    derr12 = -2*C*B*D*E*sh_term1*np.sin(theta1)/Href
               
-    derr21 = (2*C*(D**2)*(np.cos(theta_c[0]))**2)*sh_term2*np.sin(theta_c[1])/Href
-    derr22 = -2*A*B*D*E*sh_term2*np.sin(theta_c[1])/Href
-              
-    return (F,dert11,dert12,dert13,dert21, dert22, dert23,derp11,derp12,derp21,derp22,derr11,derr12,derr21,derr22,numerator,dernumerator)
+    derr21 = (2*C*(D**2)*(np.cos(theta1))**2)*sh_term2*np.sin(theta2)/Href
+    derr22 = -2*A*B*D*E*sh_term2*np.sin(theta2)/Href
+     # With the coefficients we calculate the partial derivatives: 
+    dVh_dTheta1 = (dernumerator*(dert11+dert12+dert13)*F +numerator*np.cos(theta2)*np.sin(theta2)*(np.sin(psi1-psi2)))/F**2
+    dVh_dTheta2 = (dernumerator*(dert21+dert22+dert23)*F +numerator*np.cos(theta1)*np.sin(theta2)*(np.sin(psi1-psi2)))/F**2
+    
+    dVh_dPsi1   = (dernumerator*(derp11+derp12)*F-numerator*np.cos(theta2)*np.cos(theta1)*np.cos(psi1-psi2))/F**2
+    dVh_dPsi2   = (dernumerator*(derp21+derp22)*F+numerator*np.cos(theta2)*np.cos(theta1)*np.cos(psi1-psi2))/F**2
+    
+    dVh_dRho1   = (dernumerator*(derr11+derr12))/F
+    dVh_dRho2   = (dernumerator*(derr21+derr22))/F
+    
+    # Correlation terms:
+        
+    R = (dVh_dTheta1*dVh_dTheta2*U[0]*U[1]*CROS_CORR3[12]+
+         dVh_dPsi1*dVh_dPsi2*U[2]*U[3]*CROS_CORR3[13]+
+         dVh_dRho1*dVh_dRho2*U[4]*U[5]*CROS_CORR3[14]+
+         
+            # dVh_dTheta1*dVh_dPsi1*U[0]*U[2]*psi1_theta1_corr_n+
+            # dVh_dTheta2*dVh_dPsi1*U[1]*U[2]*psi1_theta2_corr_n+
+            # dVh_dTheta1*dVh_dPsi2*U[0]*U[3]*psi2_theta1_corr_n+
+            # dVh_dTheta2*dVh_dPsi2*U[1]*U[3]*psi2_theta2_corr_n+
+         
+            # dVh_dTheta1*dVh_dRho1*U[0]*U[4]*theta1_rho1_corr_n+
+            # dVh_dTheta2*dVh_dRho1*U[1]*U[4]*theta2_rho1_corr_n+
+            # dVh_dTheta1*dVh_dRho2*U[0]*U[5]*theta1_rho2_corr_n+
+            # dVh_dTheta2*dVh_dRho2*U[1]*U[5]*theta2_rho2_corr_n+
+         
+            # dVh_dPsi1*dVh_dRho1*U[2]*U[4]*psi1_rho1_corr_n+
+            # dVh_dPsi2*dVh_dRho1*U[3]*U[4]*psi2_rho1_corr_n+
+            # dVh_dPsi1*dVh_dRho2*U[2]*U[5]*psi1_rho2_corr_n+
+            # dVh_dPsi2*dVh_dRho2*U[3]*U[5]*psi2_rho2_corr_n
+            # U[0]*U[1]*CORRCOEF_T[0][1]+U[2]*U[3]*CORRCOEF_P[0][1]+U[4]*U[5]*CORRCOEF_R[0][1]
+          
+            dVh_dTheta1*dVh_dPsi1*U[0]*U[2]*CROS_CORR3[0]+
+            dVh_dTheta2*dVh_dPsi1*U[1]*U[2]*CROS_CORR3[1]+
+            dVh_dTheta1*dVh_dPsi2*U[0]*U[3]*CROS_CORR3[2]+
+            dVh_dTheta2*dVh_dPsi2*U[1]*U[3]*CROS_CORR3[3]+
+         
+            dVh_dTheta1*dVh_dRho1*U[0]*U[4]*CROS_CORR3[4]+
+            dVh_dTheta2*dVh_dRho1*U[1]*U[2]*CROS_CORR3[5]+
+            dVh_dTheta1*dVh_dRho2*U[0]*U[3]*CROS_CORR3[6]+
+            dVh_dTheta2*dVh_dRho2*U[1]*U[3]*CROS_CORR3[7]+
+         
+            dVh_dPsi1*dVh_dRho1*U[2]*U[4]*CROS_CORR3[8]+
+            dVh_dPsi2*dVh_dRho1*U[3]*U[4]*CROS_CORR3[8]+
+            dVh_dPsi1*dVh_dRho2*U[2]*U[5]*CROS_CORR3[10]+
+            dVh_dPsi2*dVh_dRho2*U[3]*U[5]*CROS_CORR3[11])
+    Uncertainty_Vh_GUM = (np.sqrt((dVh_dTheta1*U[0])**2+(dVh_dTheta2*U[1])**2+(dVh_dPsi1*U[2])**2+(dVh_dPsi2*U[3])**2+(dVh_dRho1*U[4])**2+(dVh_dRho2*U[5])**2+2*R)[0])         
+    return (Uncertainty_Vh_GUM)
     # return (A,B,C,D,E,F,Vh)
 
 
-def U_VLOS_MC(theta_corr,psi_corr,rho_corr,theta1_noisy,Hl,Href,alpha,wind_direction,Vref,ind_wind_dir,VLOS1_list,VLOS2_list):
-     VLOS01,U_VLOS1,VLOS02,U_VLOS2=[],[],[],[]
-            
-     A1    = Vref*((Hl+(np.sin(theta_corr[0])*rho_corr[0]))/Href)**alpha[0]
-     A2    = Vref*((Hl+(np.sin(theta_corr[1])*rho_corr[1]))/Href)**alpha[0]
-     VLOS1 = A1*(np.cos(theta_corr[0])*np.cos(psi_corr[0]-wind_direction[ind_wind_dir])) #-np.sin(theta_corr[0][ind_npoints])*np.tan(wind_tilt[ind_npoints])
-     VLOS2 = A2*(np.cos(theta_corr[1])*np.cos(psi_corr[1]-wind_direction[ind_wind_dir])) #-np.sin(theta_corr[1][ind_npoints])*np.tan(wind_tilt[ind_npoints])
-     
-     VLOS1_list.append(np.mean(VLOS1))
-     VLOS2_list.append(np.mean(VLOS2))
-    
-     U_VLOS1   = np.nanstd(VLOS1)
-     U_VLOS2   = np.nanstd(VLOS2)
-     CORR_COEF = np.corrcoef(VLOS1,VLOS2)
-    
-     return(VLOS1,VLOS2,U_VLOS1,U_VLOS2,CORR_COEF[0][1],VLOS1_list,VLOS2_list)
+def U_VLOS_MC(theta,psi,rho,theta1_noisy,Hl,Href,alpha,wind_direction,Vref,ind_wind_dir,VLOS_list):
+     VLOS0,U_VLOS=[],[]            
+     A    = Vref*((Hl+(np.sin(theta)*rho))/Href)**alpha[0]
+     VLOS = A*(np.cos(theta)*np.cos(psi-wind_direction[ind_wind_dir])) #-np.sin(theta_corr[0][ind_npoints])*np.tan(wind_tilt[ind_npoints])     
+     VLOS_list.append(np.mean(VLOS))    
+     U_VLOS   = np.nanstd(VLOS)    
+     return(VLOS,U_VLOS,VLOS_list)
 
-CCC1=[]
-CCC2=[]
-CCC3=[]
-def U_VLOS_GUM (theta1,theta2,psi1,psi2,rho1,rho2,U_theta1,U_theta2,U_psi1,U_psi2,U_rho1,U_rho2,U_VLOS1,U_VLOS2,Hl,Vref,Href,alpha,wind_direction,ind_wind_dir,CROS_CORR,CORR_COEF):
-    U_Vrad_sh_theta1,U_Vrad_sh_psi1,U_Vrad_sh_range1,U_Vrad1_GUM=[],[],[],[]
-    U_Vrad_sh_theta2,U_Vrad_sh_psi2,U_Vrad_sh_range2,U_Vrad2_GUM=[],[],[],[]
-    
-    
+# CCC1=[]
+# CCC2=[]
+# CCC3=[]
+def U_VLOS_GUM (theta,psi,rho,U_theta1,U_psi1,U_rho1,U_VLOS1,Hl,Vref,Href,alpha,wind_direction,ind_wind_dir,CROS_CORR):
+        
     # VLOS1
     # pdb.set_trace()
-    U_Vrad_sh_theta1 = Vref*(((Hl+(np.sin(theta1)*rho1))/Href)**alpha[0])*np.cos(psi1-wind_direction[ind_wind_dir])*(alpha[0]*((rho1*(np.cos(theta1)**2)/(Hl+(np.sin(theta1)*rho1))))-np.sin(theta1))*U_theta1    
-    U_Vrad_sh_psi1   = Vref*np.cos((theta1))*((((Hl)+(np.sin(theta1)*rho1))/Href)**alpha[0])*(np.sin(-psi1[0]+wind_direction[ind_wind_dir]))*U_psi1
-    U_Vrad_sh_range1 = Vref*alpha[0]*(((Hl+(np.sin(theta1)*rho1))/Href)**alpha[0])*np.cos(theta1)*np.cos(psi1-wind_direction[ind_wind_dir])*(np.sin(theta1)/(Hl+(np.sin(theta1)*rho1)))*U_rho1
-    # VLOS2
-    U_Vrad_sh_theta2 = Vref*(((Hl+(np.sin(theta2)*rho2))/Href)**alpha[0])*np.cos(psi2-wind_direction[ind_wind_dir])*(alpha[0]*((rho2*(np.cos(theta2)**2)/(Hl+(np.sin(theta2)*rho2))))-np.sin(theta2))*U_theta2    
-    U_Vrad_sh_psi2   = Vref*np.cos((theta2))*((((Hl)+(np.sin(theta2)*rho2))/Href)**alpha[0])*(np.sin(-psi2[0]+wind_direction[ind_wind_dir]))*(U_psi2) 
-    U_Vrad_sh_range2 = Vref*alpha[0]*(((Hl+(np.sin(theta2)*rho2))/Href)**alpha[0])*np.cos(theta2)*np.cos(psi2-wind_direction[ind_wind_dir])*(np.sin(theta2)/(Hl+(np.sin(theta2)*rho2)))*U_rho2
-    
+    U_Vrad_sh_theta = Vref*(((Hl+(np.sin(theta)*rho))/Href)**alpha[0])*np.cos(psi-wind_direction[ind_wind_dir])*(alpha[0]*((rho*(np.cos(theta)**2)/(Hl+(np.sin(theta)*rho))))-np.sin(theta))*U_theta1    
+    U_Vrad_sh_psi   = Vref*np.cos((theta))*((((Hl)+(np.sin(theta)*rho))/Href)**alpha[0])*(np.sin(-psi[0]+wind_direction[ind_wind_dir]))*U_psi1
+    U_Vrad_sh_range = Vref*alpha[0]*(((Hl+(np.sin(theta)*rho))/Href)**alpha[0])*np.cos(theta)*np.cos(psi-wind_direction[ind_wind_dir])*(np.sin(theta)/(Hl+(np.sin(theta)*rho)))*U_rho1
+   
     # pdb.set_trace()
     # 2.4 Expanded uncertainty with contributions of theta, psi and rho
 
-    # Correlation terms corresponding to the relation between same angles of different lidars ([theta1,theta2],[psi1,psi2],[rho1,rho2])
-    CC_P1_P2 = U_Vrad_sh_psi2*U_Vrad_sh_psi1*CROS_CORR[6]
-    CC_T1_T2 = U_Vrad_sh_theta2*U_Vrad_sh_theta1*CROS_CORR[7]
-    CC_R1_R2 = U_Vrad_sh_range2*U_Vrad_sh_range1*CROS_CORR[8]
+    # Correlation terms corresponding to the relation between same angles of different lidars ([theta,theta2],[psi,psi2],[rho,rho2])
+    # CC_P1_P2 = U_Vrad_sh_psi2*U_Vrad_sh_psi*CROS_CORR[6]
+    # CC_T1_T2 = U_Vrad_sh_theta2*U_Vrad_sh_theta*CROS_CORR[7]
+    # CC_R1_R2 = U_Vrad_sh_range2*U_Vrad_sh_range*CROS_CORR[8]
     
-    # Correlations terms LOS1 (theta1, rho1 and psi1)
-    CC_T1_P1 = U_Vrad_sh_theta1*U_Vrad_sh_psi1*CROS_CORR[0]
-    CC_T1_R1 = U_Vrad_sh_theta1*U_Vrad_sh_range1*CROS_CORR[1]
-    CC_P1_R1 = U_Vrad_sh_range1*U_Vrad_sh_psi1*CROS_CORR[2]
-    CC_VLOS  = 0#U_VLOS1*U_VLOS2*CORR_COEF
+    # Correlations terms LOS1 (theta, rho and psi)
+    CC_T1_P1 = U_Vrad_sh_theta*U_Vrad_sh_psi*CROS_CORR[0]
+    CC_T1_R1 = 0#U_Vrad_sh_theta*U_Vrad_sh_range*CROS_CORR[1]
+    CC_P1_R1 = 0#U_Vrad_sh_range*U_Vrad_sh_psi*CROS_CORR[2]
+    # CC_VLOS  = 0#U_VLOS1*U_VLOS2*CORR_COEF
     
-    CCC1.append(CC_T1_P1)
-    CCC2.append(CC_P1_R1)
-    CCC3.append(CC_T1_R1)
+    # CCC1.append(CC_T1_P1)
+    # CCC2.append(CC_P1_R1)
+    # CCC3.append(CC_T1_R1)
     # pdb.set_trace()
 
-    U_Vrad1_GUM=np.sqrt(((U_Vrad_sh_theta1)**2+(U_Vrad_sh_psi1)**2+(U_Vrad_sh_range1)**2)+2*(CC_T1_P1+CC_T1_R1+CC_P1_R1+CC_VLOS)) 
+    U_Vrad_GUM=np.sqrt(((U_Vrad_sh_theta)**2+(U_Vrad_sh_psi)**2+(U_Vrad_sh_range)**2)+2*(CC_T1_P1+CC_T1_R1+CC_P1_R1))#+CC_VLOS)) 
     
     # Correlations variables LOS2 (theta2, rho2 and psi2)
-    CC_T2_P2 = U_Vrad_sh_theta2*U_Vrad_sh_psi2*CROS_CORR[3]
-    CC_T2_R2 =U_Vrad_sh_theta2*U_Vrad_sh_range2*CROS_CORR[4]
-    CC_P2_R2 = U_Vrad_sh_range2*U_Vrad_sh_psi2*CROS_CORR[5]
+    # CC_T2_P2 = U_Vrad_sh_theta2*U_Vrad_sh_psi2*CROS_CORR[3]
+    # CC_T2_R2 =U_Vrad_sh_theta2*U_Vrad_sh_range2*CROS_CORR[4]
+    # CC_P2_R2 = U_Vrad_sh_range2*U_Vrad_sh_psi2*CROS_CORR[5]
     
-    U_Vrad2_GUM=np.sqrt(((U_Vrad_sh_theta2)**2+(U_Vrad_sh_psi2)**2+(U_Vrad_sh_range2)**2)+2*(CC_T2_P2+CC_T2_R2+CC_P2_R2+CC_VLOS))
-    return(U_Vrad1_GUM,U_Vrad2_GUM)
+    # U_Vrad2_GUM=np.sqrt(((U_Vrad_sh_theta2)**2+(U_Vrad_sh_psi2)**2+(U_Vrad_sh_range2)**2)+2*(CC_T2_P2+CC_T2_R2+CC_P2_R2+CC_VLOS))
+    return(U_Vrad_GUM)
 
