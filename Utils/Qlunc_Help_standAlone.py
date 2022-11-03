@@ -342,7 +342,7 @@ def U_Vh_GUM(theta_c, psi_c,rho_c,wind_direction,ind_wind_dir,Href,Vref,alpha,Hl
     derp12 = -2*A*C*D*np.cos(theta_c[0])*(E*(np.sin(wind_direction[ind_wind_dir]-psi_c[0]))-B*np.cos(theta_c[1])*(np.sin(psi_c[0]-psi_c[1])))#-2*(A*C*D*E*(-np.cos(theta_c[0])*np.sin(psi_c[0])*np.cos(wind_direction[ind_wind_dir])+np.cos(theta_c[0])*np.cos(psi_c[0])*np.sin(wind_direction[ind_wind_dir]))+A*B*C*D*np.cos(theta_c[0])*np.cos(theta_c[1])*(-np.sin(psi_c[0]-psi_c[1])))
     
     derp21 =  2*(C**2)*D*(np.cos(theta_c[0])**2)*np.cos(theta_c[1])*(np.sin(-psi_c[1]+wind_direction[ind_wind_dir]))#(2*C*D*np.cos(theta_c[0])*C*(-np.cos(theta_c[1])*np.sin(psi_c[1])*np.cos(wind_direction[ind_wind_dir])+np.cos(theta_c[1])*np.cos(psi_c[1])*np.sin(wind_direction[ind_wind_dir])))*np.cos(theta_c[0])
-    derp22 = -2*A*C*B*np.cos(theta_c[1])*(E*(np.sin(wind_direction[ind_wind_dir]-theta_c[1]))+D*np.cos(theta_c[0])*(np.sin(psi_c[0]-psi_c[1])))#-2*(A*C*B*E*(-np.cos(theta_c[1])*np.sin(theta_c[1])*np.cos(wind_direction[ind_wind_dir])+np.cos(theta_c[1])*np.cos(psi_c[1])*np.sin(wind_direction[ind_wind_dir]))+A*B*C*D*np.cos(theta_c[0])*np.cos(theta_c[1])*(np.sin(psi_c[0]-psi_c[1])))
+    derp22 = -2*A*C*B*np.cos(theta_c[1])*(E*(np.sin(wind_direction[ind_wind_dir]-psi_c[1]))+D*np.cos(theta_c[0])*(np.sin(psi_c[0]-psi_c[1])))#-2*(A*C*B*E*(-np.cos(theta_c[1])*np.sin(theta_c[1])*np.cos(wind_direction[ind_wind_dir])+np.cos(theta_c[1])*np.cos(psi_c[1])*np.sin(wind_direction[ind_wind_dir]))+A*B*C*D*np.cos(theta_c[0])*np.cos(theta_c[1])*(np.sin(psi_c[0]-psi_c[1])))
     
     #rho
     derr11 = (2*A*(B**2)*(np.cos(theta_c[1]))**2)*sh_term1*np.sin(theta_c[0])/Href

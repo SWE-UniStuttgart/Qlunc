@@ -124,7 +124,8 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         x_Lidar1.append(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_origin][0])
         y_Lidar1.append(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_origin][1])
         z_Lidar1.append(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_origin][2])
-    
+        print(['Lidar'+str(ind_origin+1)+'_Spherical_psi'], '=' ,np.degrees(lidars['Lidar'+str(ind_origin+1)+'_Spherical']['psi']))
+        print(['Lidar'+str(ind_origin+1)+'_Spherical_theta'], '=' ,np.degrees(lidars['Lidar'+str(ind_origin+1)+'_Spherical']['theta']))
     # pdb.set_trace()
         # stdv focus distance, cone angle and azimuth:
     # stdv_param1 = Probe_param['Focus Distance uncertainty']
@@ -306,10 +307,10 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         Corr_coef_rho2_psi1   = np.corrcoef(Rho2_cr,Psi1_cr)
         
         # Cross correlations
-        CROS_CORR = [Corr_coef_theta1_psi1[0][1],Corr_coef_theta1_rho1[0][1],Corr_coef_rho1_psi1[0][1],Corr_coef_theta2_psi2[0][1],
-                      Corr_coef_theta2_rho2[0][1],Corr_coef_rho2_psi2[0][1],Corr_coef_psi[0][1],Corr_coef_theta[0][1],Corr_coef_rho[0][1]]
-        # CROS_CORR = [psi1_theta1_corr_n,theta1_rho1_corr_n,psi1_rho1_corr_n,psi2_theta2_corr_n,theta2_rho2_corr_n,
-        #               psi2_rho2_corr_n,  psi1_psi2_corr_n,theta1_theta2_corr_n,rho1_rho2_corr_n]
+        # CROS_CORR = [Corr_coef_theta1_psi1[0][1],Corr_coef_theta1_rho1[0][1],Corr_coef_rho1_psi1[0][1],Corr_coef_theta2_psi2[0][1],
+        #               Corr_coef_theta2_rho2[0][1],Corr_coef_rho2_psi2[0][1],Corr_coef_psi[0][1],Corr_coef_theta[0][1],Corr_coef_rho[0][1]]
+        CROS_CORR = [psi1_theta1_corr_n,theta1_rho1_corr_n,psi1_rho1_corr_n,psi2_theta2_corr_n,theta2_rho2_corr_n,
+                      psi2_rho2_corr_n,  psi1_psi2_corr_n,theta1_theta2_corr_n,rho1_rho2_corr_n]
         
         
         #%% 5) VLOS uncertainty
