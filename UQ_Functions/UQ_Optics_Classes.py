@@ -309,7 +309,6 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         # pdb.set_trace()
         VLOS01,U_VLOS01,VLOS1_list = SA.U_VLOS_MC(Theta1_cr,Psi1_cr,Rho1_cr,theta1_noisy,Hl,Href,alpha,wind_direction,Vref,ind_wind_dir,VLOS1_list)
         VLOS02,U_VLOS02,VLOS2_list = SA.U_VLOS_MC(Theta2_cr,Psi2_cr,Rho2_cr,theta1_noisy,Hl,Href,alpha,wind_direction,Vref,ind_wind_dir,VLOS2_list)
-        # CORR_COEF_VLOS.append(CORR_COEF)
         U_VLOS1_MC.append(U_VLOS01)
         U_VLOS2_MC.append(U_VLOS02)
         
@@ -325,16 +324,16 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         # Calculate the u and v wind components and their uncertainties
         
         # Break down large equations
-        A0,B0,C0,D0,E0,F0,G,H0 = SA.U_Vh_MC([Theta1_cr,Theta2_cr],[Psi1_cr,Psi2_cr],[Rho1_cr,Rho2_cr],wind_direction,ind_wind_dir,Href,Vref,alpha,Hl)   
+        u_wind,v_wind = SA.U_Vh_MC([Theta1_cr,Theta2_cr],[Psi1_cr,Psi2_cr],[Rho1_cr,Rho2_cr],wind_direction,ind_wind_dir,Href,Vref,alpha,Hl)   
         
         # ucomponent estimation
-        u_wind = (H0[0]/G)
+        # u_wind = (H0[0]/G)
         Uwind_MC.append(np.mean(u_wind))
         # Uncertainty as standard deviation (k=1) in the u wind velocity component estimation
         Uncertainty_U.append(np.std(u_wind))
         
         # v component estimation
-        v_wind = (H0[1]/G)
+        # v_wind = (H0[1]/G)
         Vwind_MC.append(np.mean(v_wind))
         # Uncertainty as standard deviation (k=1) in the v wind velocity component estimation
         Uncertainty_V.append(np.std(v_wind))

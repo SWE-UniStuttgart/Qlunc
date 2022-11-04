@@ -305,9 +305,9 @@ def U_Vh_MC(theta_c, psi_c,rho_c,wind_direction,ind_wind_dir,Href,Vref,alpha,Hl)
     M0 = np.cos(theta_c[1])*np.cos(psi_c[1]-wind_direction[ind_wind_dir])#np.cos(theta_c[1])*np.cos(psi_c[1])*np.cos(wind_direction[ind_wind_dir])+np.cos(theta_c[1])*np.sin(psi_c[1])*np.sin(wind_direction[ind_wind_dir])#+np.sin(Theta1_cr)*np.tan(wind_tilt)
     N0 = np.cos(theta_c[0])*np.cos(psi_c[0])   
     O0 = (I0*J0*K0)-(L0*M0*N0)
-    
-  
-    return ([A0,I0],[B0,J0],[C0,K0],[D0,L0],[E0,M0],[F0,N0],G,[H0,O0])
+    u_wind = (H0/G)
+    v_wind = (O0/G)
+    return (u_wind,v_wind)
 
 
 
