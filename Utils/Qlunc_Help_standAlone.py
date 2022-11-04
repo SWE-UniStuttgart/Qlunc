@@ -350,8 +350,18 @@ def U_Vh_GUM(theta_c, psi_c,rho_c,wind_direction,ind_wind_dir,Href,Vref,alpha,Hl
               
     derr21 = (2*C*(D**2)*(np.cos(theta_c[0]))**2)*sh_term2*np.sin(theta_c[1])/Href
     derr22 = -2*A*B*D*E*sh_term2*np.sin(theta_c[1])/Href
-              
-    return (F,dert11,dert12,dert13,dert21, dert22, dert23,derp11,derp12,derp21,derp22,derr11,derr12,derr21,derr22,numerator,dernumerator)
+    
+    # With the coefficients we calculate the partial derivatives:
+    dVh_dTheta1 = (dernumerator*(dert11+dert12+dert13)*F +numerator*np.cos(theta_c[1])*np.sin(theta_c[0])*(np.sin(psi_c[0]-psi_c[1])))/F**2
+    dVh_dTheta2 = (dernumerator*(dert21+dert22+dert23)*F +numerator*np.cos(theta_c[0])*np.sin(theta_c[1])*(np.sin(psi_c[0]-psi_c[1])))/F**2
+        
+    dVh_dPsi1   = (dernumerator*(derp11+derp12)*F-numerator*np.cos(theta_c[1])*np.cos(theta_c[0])*np.cos(psi_c[0]-psi_c[1]))/F**2
+    dVh_dPsi2   = (dernumerator*(derp21+derp22)*F+numerator*np.cos(theta_c[1])*np.cos(theta_c[0])*np.cos(psi_c[0]-psi_c[1]))/F**2
+        
+    dVh_dRho1   = (dernumerator*(derr11+derr12))/F
+    dVh_dRho2   = (dernumerator*(derr21+derr22))/F
+                 
+    return (dVh_dTheta1,dVh_dTheta2,dVh_dPsi1,dVh_dPsi2,dVh_dRho1,dVh_dRho2)
     # return (A,B,C,D,E,F,Vh)
 
 

@@ -347,17 +347,17 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         # VH GUM uncertainty#####################
         
         # Calculate coefficients for the GUM approach
-        F,dert11,dert12,dert13,dert21, dert22, dert23,derp11,derp12,derp21,derp22,derr11,derr12,derr21,derr22, numerator,dernumerator = SA.U_Vh_GUM([theta1,theta2],[psi1[0],psi2[0]],[rho1,rho2],wind_direction,ind_wind_dir,Href,Vref,alpha,Hl)   
+        dVh_dTheta1,dVh_dTheta2,dVh_dPsi1,dVh_dPsi2,dVh_dRho1,dVh_dRho2 = SA.U_Vh_GUM([theta1,theta2],[psi1[0],psi2[0]],[rho1,rho2],wind_direction,ind_wind_dir,Href,Vref,alpha,Hl)   
         
         # With the coefficients we calculate the partial derivatives: 
-        dVh_dTheta1 = (dernumerator*(dert11+dert12+dert13)*F +numerator*np.cos(theta2)*np.sin(theta1)*(np.sin(psi1[0]-psi2[0])))/F**2
-        dVh_dTheta2 = (dernumerator*(dert21+dert22+dert23)*F +numerator*np.cos(theta1)*np.sin(theta2)*(np.sin(psi1[0]-psi2[0])))/F**2
+        # dVh_dTheta1 = (dernumerator*(dert11+dert12+dert13)*F +numerator*np.cos(theta2)*np.sin(theta1)*(np.sin(psi1[0]-psi2[0])))/F**2
+        # dVh_dTheta2 = (dernumerator*(dert21+dert22+dert23)*F +numerator*np.cos(theta1)*np.sin(theta2)*(np.sin(psi1[0]-psi2[0])))/F**2
         
-        dVh_dPsi1   = (dernumerator*(derp11+derp12)*F-numerator*np.cos(theta2)*np.cos(theta1)*np.cos(psi1[0]-psi2[0]))/F**2
-        dVh_dPsi2   = (dernumerator*(derp21+derp22)*F+numerator*np.cos(theta2)*np.cos(theta1)*np.cos(psi1[0]-psi2[0]))/F**2
+        # dVh_dPsi1   = (dernumerator*(derp11+derp12)*F-numerator*np.cos(theta2)*np.cos(theta1)*np.cos(psi1[0]-psi2[0]))/F**2
+        # dVh_dPsi2   = (dernumerator*(derp21+derp22)*F+numerator*np.cos(theta2)*np.cos(theta1)*np.cos(psi1[0]-psi2[0]))/F**2
         
-        dVh_dRho1   = (dernumerator*(derr11+derr12))/F
-        dVh_dRho2   = (dernumerator*(derr21+derr22))/F
+        # dVh_dRho1   = (dernumerator*(derr11+derr12))/F
+        # dVh_dRho2   = (dernumerator*(derr21+derr22))/F
         
         # Correlation terms:
             
@@ -436,6 +436,8 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     plt.legend()
 
     pdb.set_trace()
+    
+    #########################################################################################################################
     # Differentiate between 'VAD' or 'Scanning' lidar depending on user's choice:
     # if Qlunc_yaml_inputs['Components']['Scanner']['Type']=='VAD':
     #     param1=Lidar.optics.scanner.focus_dist
@@ -510,8 +512,47 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         # theta_noisy.append(np.array(90)-theta_noisy1)
         # psi_noisy.append(psi_noisy1)
         # Coordfinal_noisy=[]      
-        
+     #########################################################################################################################
+       
     #%% MC Method for uncertainty when varying theta, psi OR rho
+      #%% Uncertainty  when varying theta, psi OR rho
+    # pdb.set_trace()
+    wind_direction_TEST = np.radians([180])
+    wind_tilt_TEST      = np.radians([0])
+    theta_TEST = np.radians(np.linspace(1,1,500))
+    psi_TEST   = np.radians(np.linspace(-45,45,500))
+    rho_TEST   = np.linspace(1000,1000,500)
+    
+    
+    # 1. Calculate radial speed uncertainty for an heterogeneous flow
+    
+    
+    U_Vrad_homo_MC,U_Vrad_homo_MC_LOS1,U_Vrad_homo_MC_LOS2 = [],[],[]
+    VLOS_list_T,U_VLOS_T_MC,U_VLOS_T_GUM,U_VLOS_THomo_MC=[],[],[],[]
+    for ind_0 in range(len(theta_TEST)):
+        # 1.1 MC method
+        VLOS_T_MC1=[]
+        theta1_T_noisy = np.random.normal(theta_TEST[ind_0],U_theta1,Lidar.optics.scanner.N_MC)
+        # theta2_noisy = np.random.normal(theta2[ind_0],U_theta2,Lidar.optics.scanner.N_MC)
+        psi1_T_noisy   = np.random.normal(psi_TEST[ind_0],U_psi1,Lidar.optics.scanner.N_MC)
+        # psi2_noisy   = np.random.normal(psi2[ind_0],U_psi2,Lidar.optics.scanner.N_MC)
+        rho1_T_noisy   = np.random.normal(rho_TEST[ind_0],U_rho1,Lidar.optics.scanner.N_MC)
+        # rho2_noisy   = np.random.normal(rho2[ind_0],U_rho2,Lidar.optics.scanner.N_MC)
+
+        VLOS_T_MC,U_VLOS_T,VLOS_LIST_T=SA.U_VLOS_MC(theta1_T_noisy,psi1_T_noisy,rho1_T_noisy,Hl,Href,alpha,wind_direction_TEST,Vref,0,VLOS_list_T)
+        VLOS_THomo_MC,U_VLOS_THomo,VLOS_LIST_T=SA.U_VLOS_MC(theta1_T_noisy,psi1_T_noisy,rho1_T_noisy,Hl,Href,[0],wind_direction_TEST,Vref,0,VLOS_list_T)
+        
+        U_VLOS_T_MC.append(U_VLOS_T)
+        U_VLOS_THomo_MC.append(U_VLOS_THomo)
+    
+        # 1.2 GUM method
+    # pdb.set_trace()    
+    U_VLOS_T_GUM=(SA.U_VLOS_GUM (theta_TEST,psi_TEST,rho_TEST,U_theta1,U_psi1,U_rho1,U_VLOS1,Hl,Vref,Href,alpha,wind_direction_TEST,0,[0])) 
+    U_VLOS_THomo_GUM=(SA.U_VLOS_GUM (theta_TEST,psi_TEST,rho_TEST,U_theta1,U_psi1,U_rho1,U_VLOS1,Hl,Vref,Href,[0],wind_direction_TEST,0,[0]))        
+            
+ 
+    
+    
     # pdb.set_trace()
     wind_direction_TEST = 0
     wind_tilt_TEST      = 0
