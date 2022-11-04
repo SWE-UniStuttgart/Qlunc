@@ -401,12 +401,14 @@ def U_Vh_GUM(theta1,theta2,psi1,psi2,rho1,rho2,wind_direction,ind_wind_dir,Href,
     # return (A,B,C,D,E,F,Vh)
 
 
-def U_VLOS_MC(theta,psi,rho,theta1_noisy,Hl,Href,alpha,wind_direction,Vref,ind_wind_dir,VLOS_list):
+def U_VLOS_MC(theta,psi,rho,Hl,Href,alpha,wind_direction,Vref,ind_wind_dir,VLOS_list):
+     # pdb.set_trace()
      VLOS0,U_VLOS=[],[]            
      A    = Vref*((Hl+(np.sin(theta)*rho))/Href)**alpha[0]
      VLOS = A*(np.cos(theta)*np.cos(psi-wind_direction[ind_wind_dir])) #-np.sin(theta_corr[0][ind_npoints])*np.tan(wind_tilt[ind_npoints])     
      VLOS_list.append(np.mean(VLOS))    
      U_VLOS   = np.nanstd(VLOS)    
+     # pdb.set_trace()
      return(VLOS,U_VLOS,VLOS_list)
 
 # CCC1=[]
@@ -417,7 +419,7 @@ def U_VLOS_GUM (theta,psi,rho,U_theta1,U_psi1,U_rho1,U_VLOS1,Hl,Vref,Href,alpha,
     # VLOS1
     # pdb.set_trace()
     U_Vrad_sh_theta = Vref*(((Hl+(np.sin(theta)*rho))/Href)**alpha[0])*np.cos(psi-wind_direction[ind_wind_dir])*(alpha[0]*((rho*(np.cos(theta)**2)/(Hl+(np.sin(theta)*rho))))-np.sin(theta))*U_theta1    
-    U_Vrad_sh_psi   = Vref*np.cos((theta))*((((Hl)+(np.sin(theta)*rho))/Href)**alpha[0])*(np.sin(-psi[0]+wind_direction[ind_wind_dir]))*U_psi1
+    U_Vrad_sh_psi   = Vref*np.cos((theta))*((((Hl)+(np.sin(theta)*rho))/Href)**alpha[0])*(np.sin(-psi+wind_direction[ind_wind_dir]))*U_psi1
     U_Vrad_sh_range = Vref*alpha[0]*(((Hl+(np.sin(theta)*rho))/Href)**alpha[0])*np.cos(theta)*np.cos(psi-wind_direction[ind_wind_dir])*(np.sin(theta)/(Hl+(np.sin(theta)*rho)))*U_rho1
    
     # pdb.set_trace()
@@ -439,7 +441,7 @@ def U_VLOS_GUM (theta,psi,rho,U_theta1,U_psi1,U_rho1,U_VLOS1,Hl,Vref,Href,alpha,
     # CCC3.append(CC_T1_R1)
     # pdb.set_trace()
 
-    U_Vrad_GUM=np.sqrt(((U_Vrad_sh_theta)**2+(U_Vrad_sh_psi)**2+(U_Vrad_sh_range)**2)+2*(CC_T1_P1+CC_T1_R1+CC_P1_R1))#+CC_VLOS)) 
+    U_Vrad_GUM=np.sqrt(((U_Vrad_sh_theta)**2+(U_Vrad_sh_psi)**2+(U_Vrad_sh_range)**2)+2*(CC_T1_P1))#+CC_T1_R1+CC_P1_R1+CC_VLOS)) 
     
     # Correlations variables LOS2 (theta2, rho2 and psi2)
     # CC_T2_P2 = U_Vrad_sh_theta2*U_Vrad_sh_psi2*CROS_CORR[3]
