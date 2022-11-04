@@ -355,29 +355,24 @@ def U_Vh_GUM(theta_c, psi_c,rho_c,wind_direction,ind_wind_dir,Href,Vref,alpha,Hl
     # return (A,B,C,D,E,F,Vh)
 
 
-def U_VLOS_MC(theta_corr,psi_corr,rho_corr,theta1_noisy,Hl,Href,alpha,wind_direction,Vref,ind_wind_dir,VLOS1_list,VLOS2_list):
-     VLOS01,U_VLOS1,VLOS02,U_VLOS2=[],[],[],[]
+def U_VLOS_MC(theta,psi,rho,theta1_noisy,Hl,Href,alpha,wind_direction,Vref,ind_wind_dir,VLOS1_list):
+     VLOS01,U_VLOS1,=[],[]
             
-     A1    = Vref*((Hl+(np.sin(theta_corr[0])*rho_corr[0]))/Href)**alpha[0]
-     A2    = Vref*((Hl+(np.sin(theta_corr[1])*rho_corr[1]))/Href)**alpha[0]
-     VLOS1 = A1*(np.cos(theta_corr[0])*np.cos(psi_corr[0]-wind_direction[ind_wind_dir])) #-np.sin(theta_corr[0][ind_npoints])*np.tan(wind_tilt[ind_npoints])
-     VLOS2 = A2*(np.cos(theta_corr[1])*np.cos(psi_corr[1]-wind_direction[ind_wind_dir])) #-np.sin(theta_corr[1][ind_npoints])*np.tan(wind_tilt[ind_npoints])
+     A1    = Vref*((Hl+(np.sin(theta)*rho))/Href)**alpha[0]
+     VLOS1 = A1*(np.cos(theta)*np.cos(psi-wind_direction[ind_wind_dir])) #-np.sin(theta_corr[0][ind_npoints])*np.tan(wind_tilt[ind_npoints])
      
      VLOS1_list.append(np.mean(VLOS1))
-     VLOS2_list.append(np.mean(VLOS2))
     
      U_VLOS1   = np.nanstd(VLOS1)
-     U_VLOS2   = np.nanstd(VLOS2)
-     CORR_COEF = np.corrcoef(VLOS1,VLOS2)
     
-     return(VLOS1,VLOS2,U_VLOS1,U_VLOS2,CORR_COEF[0][1],VLOS1_list,VLOS2_list)
+     return(VLOS1,U_VLOS1,VLOS1_list)
 
-CCC1=[]
-CCC2=[]
-CCC3=[]
-def U_VLOS_GUM (theta1,theta2,psi1,psi2,rho1,rho2,U_theta1,U_theta2,U_psi1,U_psi2,U_rho1,U_rho2,U_VLOS1,U_VLOS2,Hl,Vref,Href,alpha,wind_direction,ind_wind_dir,CROS_CORR,CORR_COEF):
+# CCC1=[]
+# CCC2=[]
+# CCC3=[]
+def U_VLOS_GUM (theta1,psi1,rho1,U_theta1,U_psi1,U_rho1,U_VLOS1,Hl,Vref,Href,alpha,wind_direction,ind_wind_dir,CROS_CORR):
     U_Vrad_sh_theta1,U_Vrad_sh_psi1,U_Vrad_sh_range1,U_Vrad1_GUM=[],[],[],[]
-    U_Vrad_sh_theta2,U_Vrad_sh_psi2,U_Vrad_sh_range2,U_Vrad2_GUM=[],[],[],[]
+    # U_Vrad_sh_theta2,U_Vrad_sh_psi2,U_Vrad_sh_range2,U_Vrad2_GUM=[],[],[],[]
     
     
     # VLOS1
@@ -386,17 +381,17 @@ def U_VLOS_GUM (theta1,theta2,psi1,psi2,rho1,rho2,U_theta1,U_theta2,U_psi1,U_psi
     U_Vrad_sh_psi1   = Vref*np.cos((theta1))*((((Hl)+(np.sin(theta1)*rho1))/Href)**alpha[0])*(np.sin(-psi1[0]+wind_direction[ind_wind_dir]))*U_psi1
     U_Vrad_sh_range1 = Vref*alpha[0]*(((Hl+(np.sin(theta1)*rho1))/Href)**alpha[0])*np.cos(theta1)*np.cos(psi1-wind_direction[ind_wind_dir])*(np.sin(theta1)/(Hl+(np.sin(theta1)*rho1)))*U_rho1
     # VLOS2
-    U_Vrad_sh_theta2 = Vref*(((Hl+(np.sin(theta2)*rho2))/Href)**alpha[0])*np.cos(psi2-wind_direction[ind_wind_dir])*(alpha[0]*((rho2*(np.cos(theta2)**2)/(Hl+(np.sin(theta2)*rho2))))-np.sin(theta2))*U_theta2    
-    U_Vrad_sh_psi2   = Vref*np.cos((theta2))*((((Hl)+(np.sin(theta2)*rho2))/Href)**alpha[0])*(np.sin(-psi2[0]+wind_direction[ind_wind_dir]))*(U_psi2) 
-    U_Vrad_sh_range2 = Vref*alpha[0]*(((Hl+(np.sin(theta2)*rho2))/Href)**alpha[0])*np.cos(theta2)*np.cos(psi2-wind_direction[ind_wind_dir])*(np.sin(theta2)/(Hl+(np.sin(theta2)*rho2)))*U_rho2
+    # U_Vrad_sh_theta2 = Vref*(((Hl+(np.sin(theta2)*rho2))/Href)**alpha[0])*np.cos(psi2-wind_direction[ind_wind_dir])*(alpha[0]*((rho2*(np.cos(theta2)**2)/(Hl+(np.sin(theta2)*rho2))))-np.sin(theta2))*U_theta2    
+    # U_Vrad_sh_psi2   = Vref*np.cos((theta2))*((((Hl)+(np.sin(theta2)*rho2))/Href)**alpha[0])*(np.sin(-psi2[0]+wind_direction[ind_wind_dir]))*(U_psi2) 
+    # U_Vrad_sh_range2 = Vref*alpha[0]*(((Hl+(np.sin(theta2)*rho2))/Href)**alpha[0])*np.cos(theta2)*np.cos(psi2-wind_direction[ind_wind_dir])*(np.sin(theta2)/(Hl+(np.sin(theta2)*rho2)))*U_rho2
     
     # pdb.set_trace()
     # 2.4 Expanded uncertainty with contributions of theta, psi and rho
 
     # Correlation terms corresponding to the relation between same angles of different lidars ([theta1,theta2],[psi1,psi2],[rho1,rho2])
-    CC_P1_P2 = U_Vrad_sh_psi2*U_Vrad_sh_psi1*CROS_CORR[6]
-    CC_T1_T2 = U_Vrad_sh_theta2*U_Vrad_sh_theta1*CROS_CORR[7]
-    CC_R1_R2 = U_Vrad_sh_range2*U_Vrad_sh_range1*CROS_CORR[8]
+    # CC_P1_P2 = U_Vrad_sh_psi2*U_Vrad_sh_psi1*CROS_CORR[6]
+    # CC_T1_T2 = U_Vrad_sh_theta2*U_Vrad_sh_theta1*CROS_CORR[7]
+    # CC_R1_R2 = U_Vrad_sh_range2*U_Vrad_sh_range1*CROS_CORR[8]
     
     # Correlations terms LOS1 (theta1, rho1 and psi1)
     CC_T1_P1 = U_Vrad_sh_theta1*U_Vrad_sh_psi1*CROS_CORR[0]
@@ -404,18 +399,18 @@ def U_VLOS_GUM (theta1,theta2,psi1,psi2,rho1,rho2,U_theta1,U_theta2,U_psi1,U_psi
     CC_P1_R1 = U_Vrad_sh_range1*U_Vrad_sh_psi1*CROS_CORR[2]
     CC_VLOS  = 0#U_VLOS1*U_VLOS2*CORR_COEF
     
-    CCC1.append(CC_T1_P1)
-    CCC2.append(CC_P1_R1)
-    CCC3.append(CC_T1_R1)
+    # CCC1.append(CC_T1_P1)
+    # CCC2.append(CC_P1_R1)
+    # CCC3.append(CC_T1_R1)
     # pdb.set_trace()
 
     U_Vrad1_GUM=np.sqrt(((U_Vrad_sh_theta1)**2+(U_Vrad_sh_psi1)**2+(U_Vrad_sh_range1)**2)+2*(CC_T1_P1+CC_T1_R1+CC_P1_R1+CC_VLOS)) 
     
     # Correlations variables LOS2 (theta2, rho2 and psi2)
-    CC_T2_P2 = U_Vrad_sh_theta2*U_Vrad_sh_psi2*CROS_CORR[3]
-    CC_T2_R2 =U_Vrad_sh_theta2*U_Vrad_sh_range2*CROS_CORR[4]
-    CC_P2_R2 = U_Vrad_sh_range2*U_Vrad_sh_psi2*CROS_CORR[5]
+    # CC_T2_P2 = U_Vrad_sh_theta2*U_Vrad_sh_psi2*CROS_CORR[3]
+    # CC_T2_R2 =U_Vrad_sh_theta2*U_Vrad_sh_range2*CROS_CORR[4]
+    # CC_P2_R2 = U_Vrad_sh_range2*U_Vrad_sh_psi2*CROS_CORR[5]
     
-    U_Vrad2_GUM=np.sqrt(((U_Vrad_sh_theta2)**2+(U_Vrad_sh_psi2)**2+(U_Vrad_sh_range2)**2)+2*(CC_T2_P2+CC_T2_R2+CC_P2_R2+CC_VLOS))
-    return(U_Vrad1_GUM,U_Vrad2_GUM)
+    # U_Vrad2_GUM=np.sqrt(((U_Vrad_sh_theta2)**2+(U_Vrad_sh_psi2)**2+(U_Vrad_sh_range2)**2)+2*(CC_T2_P2+CC_T2_R2+CC_P2_R2+CC_VLOS))
+    return(U_Vrad1_GUM)
 

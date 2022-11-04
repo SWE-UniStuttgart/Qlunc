@@ -306,15 +306,18 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         
         
         #%% 5) VLOS uncertainty
-        VLOS01,VLOS02,U_VLOS01,U_VLOS02,CORR_COEF,VLOS1_list,VLOS2_list = SA.U_VLOS_MC([Theta1_cr,Theta2_cr],[Psi1_cr,Psi2_cr],[Rho1_cr,Rho2_cr],theta1_noisy,Hl,Href,alpha,wind_direction,Vref,ind_wind_dir,VLOS1_list,VLOS2_list)
-        CORR_COEF_VLOS.append(CORR_COEF)
+        # pdb.set_trace()
+        VLOS01,U_VLOS01,VLOS1_list = SA.U_VLOS_MC(Theta1_cr,Psi1_cr,Rho1_cr,theta1_noisy,Hl,Href,alpha,wind_direction,Vref,ind_wind_dir,VLOS1_list)
+        VLOS02,U_VLOS02,VLOS2_list = SA.U_VLOS_MC(Theta2_cr,Psi2_cr,Rho2_cr,theta1_noisy,Hl,Href,alpha,wind_direction,Vref,ind_wind_dir,VLOS2_list)
+        # CORR_COEF_VLOS.append(CORR_COEF)
         U_VLOS1_MC.append(U_VLOS01)
         U_VLOS2_MC.append(U_VLOS02)
         
         # Function calculating the uncertainties in VLOS:
-        U_VLOS = SA.U_VLOS_GUM (theta1,theta2,psi1,psi2,rho1,rho2,U_theta1,U_theta2,U_psi1,U_psi2,U_rho1,U_rho2,U_VLOS01,U_VLOS02,Hl,Vref,Href,alpha,wind_direction,ind_wind_dir,CROS_CORR,CORR_COEF)
-        U_VLOS1_GUM.append(U_VLOS[0][0])
-        U_VLOS2_GUM.append(U_VLOS[1][0])
+        U_VLOS1 = SA.U_VLOS_GUM (theta1,psi1,rho1,U_theta1,U_psi1,U_rho1,U_VLOS01,Hl,Vref,Href,alpha,wind_direction,ind_wind_dir,CROS_CORR)
+        U_VLOS2 = SA.U_VLOS_GUM (theta2,psi2,rho2,U_theta2,U_psi2,U_rho2,U_VLOS02,Hl,Vref,Href,alpha,wind_direction,ind_wind_dir,CROS_CORR)
+        U_VLOS1_GUM.append(U_VLOS1)
+        U_VLOS2_GUM.append(U_VLOS2)
         
         
     
