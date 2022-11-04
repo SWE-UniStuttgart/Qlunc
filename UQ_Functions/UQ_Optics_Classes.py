@@ -345,9 +345,13 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         Uncertainty_Vh_MC.append(np.std(Vh_MC))
     
         # VH GUM uncertainty#####################
-        
+        U = [U_theta1,U_theta2,U_psi1,U_psi2,U_rho1,U_rho2]
+        Coef = [theta1_theta2_corr_n,psi1_psi2_corr_n,rho1_rho2_corr_n,
+                Corr_coef_theta1_psi1[0][1],Corr_coef_theta2_psi1[0][1],Corr_coef_theta1_psi2[0][1],Corr_coef_theta2_psi2[0][1],
+                Corr_coef_theta1_rho1[0][1],Corr_coef_theta2_rho1[0][1],Corr_coef_theta1_rho2[0][1],Corr_coef_theta2_rho2[0][1],
+                Corr_coef_rho1_psi1[0][1],Corr_coef_rho1_psi2[0][1],Corr_coef_rho2_psi1[0][1],Corr_coef_rho2_psi2[0][1]]
         # Calculate coefficients for the GUM approach
-        dVh_dTheta1,dVh_dTheta2,dVh_dPsi1,dVh_dPsi2,dVh_dRho1,dVh_dRho2 = SA.U_Vh_GUM([theta1,theta2],[psi1[0],psi2[0]],[rho1,rho2],wind_direction,ind_wind_dir,Href,Vref,alpha,Hl)   
+        V = SA.U_Vh_GUM([theta1,theta2],[psi1[0],psi2[0]],[rho1,rho2],wind_direction,ind_wind_dir,Href,Vref,alpha,Hl,U,Coef)   
         
         # With the coefficients we calculate the partial derivatives: 
         # dVh_dTheta1 = (dernumerator*(dert11+dert12+dert13)*F +numerator*np.cos(theta2)*np.sin(theta1)*(np.sin(psi1[0]-psi2[0])))/F**2
@@ -360,43 +364,12 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         # dVh_dRho2   = (dernumerator*(derr21+derr22))/F
         
         # Correlation terms:
-            
-        R = (dVh_dTheta1*dVh_dTheta2*U_theta1*U_theta2*theta1_theta2_corr_n+
-             dVh_dPsi1*dVh_dPsi2*U_psi1*U_psi2*psi1_psi2_corr_n+
-             dVh_dRho1*dVh_dRho2*U_rho1*U_rho2*rho1_rho2_corr_n+
-             
-                # dVh_dTheta1*dVh_dPsi1*U_theta1*U_psi1*psi1_theta1_corr_n+
-                # dVh_dTheta2*dVh_dPsi1*U_theta2*U_psi1*psi1_theta2_corr_n+
-                # dVh_dTheta1*dVh_dPsi2*U_theta1*U_psi2*psi2_theta1_corr_n+
-                # dVh_dTheta2*dVh_dPsi2*U_theta2*U_psi2*psi2_theta2_corr_n+
-             
-                # dVh_dTheta1*dVh_dRho1*U_theta1*U_rho1*theta1_rho1_corr_n+
-                # dVh_dTheta2*dVh_dRho1*U_theta2*U_rho1*theta2_rho1_corr_n+
-                # dVh_dTheta1*dVh_dRho2*U_theta1*U_rho2*theta1_rho2_corr_n+
-                # dVh_dTheta2*dVh_dRho2*U_theta2*U_rho2*theta2_rho2_corr_n+
-             
-                # dVh_dPsi1*dVh_dRho1*U_psi1*U_rho1*psi1_rho1_corr_n+
-                # dVh_dPsi2*dVh_dRho1*U_psi2*U_rho1*psi2_rho1_corr_n+
-                # dVh_dPsi1*dVh_dRho2*U_psi1*U_rho2*psi1_rho2_corr_n+
-                # dVh_dPsi2*dVh_dRho2*U_psi2*U_rho2*psi2_rho2_corr_n
-                # U_theta1*U_theta2*CORRCOEF_T[0][1]+U_psi1*U_psi2*CORRCOEF_P[0][1]+U_rho1*U_rho2*CORRCOEF_R[0][1]
-              
-                dVh_dTheta1*dVh_dPsi1*U_theta1*U_psi1*Corr_coef_theta1_psi1[0][1]+
-                dVh_dTheta2*dVh_dPsi1*U_theta2*U_psi1*Corr_coef_theta2_psi1[0][1]+
-                dVh_dTheta1*dVh_dPsi2*U_theta1*U_psi2*Corr_coef_theta1_psi2[0][1]+
-                dVh_dTheta2*dVh_dPsi2*U_theta2*U_psi2*Corr_coef_theta2_psi2[0][1]+
-             
-                dVh_dTheta1*dVh_dRho1*U_theta1*U_rho1*Corr_coef_theta1_rho1[0][1]+
-                dVh_dTheta2*dVh_dRho1*U_theta2*U_psi1*Corr_coef_theta2_rho1[0][1]+
-                dVh_dTheta1*dVh_dRho2*U_theta1*U_psi2*Corr_coef_theta1_rho2[0][1]+
-                dVh_dTheta2*dVh_dRho2*U_theta2*U_psi2*Corr_coef_theta2_rho2[0][1]+
-             
-                dVh_dPsi1*dVh_dRho1*U_psi1*U_rho1*Corr_coef_rho1_psi1[0][1]+
-                dVh_dPsi2*dVh_dRho1*U_psi2*U_rho1*Corr_coef_rho1_psi2[0][1]+
-                dVh_dPsi1*dVh_dRho2*U_psi1*U_rho2*Corr_coef_rho2_psi1[0][1]+
-                dVh_dPsi2*dVh_dRho2*U_psi2*U_rho2*Corr_coef_rho2_psi2[0][1])
         
-        Uncertainty_Vh_GUM.append(np.sqrt((dVh_dTheta1*U_theta1)**2+(dVh_dTheta2*U_theta2)**2+(dVh_dPsi1*U_psi1)**2+(dVh_dPsi2*U_psi2)**2+(dVh_dRho1*U_rho1)**2+(dVh_dRho2*U_rho2)**2+2*R)[0])
+        
+        
+
+        
+        Uncertainty_Vh_GUM.append(V)
 
     
 #%% Print

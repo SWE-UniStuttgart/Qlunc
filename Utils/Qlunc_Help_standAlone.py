@@ -311,7 +311,7 @@ def U_Vh_MC(theta_c, psi_c,rho_c,wind_direction,ind_wind_dir,Href,Vref,alpha,Hl)
 
 
 
-def U_Vh_GUM(theta_c, psi_c,rho_c,wind_direction,ind_wind_dir,Href,Vref,alpha,Hl):
+def U_Vh_GUM(theta_c, psi_c,rho_c,wind_direction,ind_wind_dir,Href,Vref,alpha,Hl,U,Coef):
       #Vh
     
     A = Vref*(((Hl+(rho_c[0]*np.sin(theta_c[0])))/Href)**alpha)
@@ -360,8 +360,44 @@ def U_Vh_GUM(theta_c, psi_c,rho_c,wind_direction,ind_wind_dir,Href,Vref,alpha,Hl
         
     dVh_dRho1   = (dernumerator*(derr11+derr12))/F
     dVh_dRho2   = (dernumerator*(derr21+derr22))/F
-                 
-    return (dVh_dTheta1,dVh_dTheta2,dVh_dPsi1,dVh_dPsi2,dVh_dRho1,dVh_dRho2)
+    
+    
+    R = (dVh_dTheta1*dVh_dTheta2*U[0]*U[1]*Coef[0]+
+     dVh_dPsi1*dVh_dPsi2*U[2]*U[3]*Coef[1]+
+     dVh_dRho1*dVh_dRho2*U[4]*U[5]*Coef[2]+
+     
+        # dVh_dTheta1*dVh_dPsi1*U[0]*U[2]*psi1_theta1_corr_n+
+        # dVh_dTheta2*dVh_dPsi1*U[1]*U[2]*psi1_theta2_corr_n+
+        # dVh_dTheta1*dVh_dPsi2*U[0]*U[3]*psi2_theta1_corr_n+
+        # dVh_dTheta2*dVh_dPsi2*U[1]*U[3]*psi2_theta2_corr_n+
+     
+        # dVh_dTheta1*dVh_dRho1*U[0]*U[4]*theta1_rho1_corr_n+
+        # dVh_dTheta2*dVh_dRho1*U[1]*U[4]*theta2_rho1_corr_n+
+        # dVh_dTheta1*dVh_dRho2*U[0]*U[5]*theta1_rho2_corr_n+
+        # dVh_dTheta2*dVh_dRho2*U[1]*U[5]*theta2_rho2_corr_n+
+     
+        # dVh_dPsi1*dVh_dRho1*U[2]*U[4]*psi1_rho1_corr_n+
+        # dVh_dPsi2*dVh_dRho1*U[3]*U[4]*psi2_rho1_corr_n+
+        # dVh_dPsi1*dVh_dRho2*U[2]*U[5]*psi1_rho2_corr_n+
+        # dVh_dPsi2*dVh_dRho2*U[3]*U[5]*psi2_rho2_corr_n
+        # U[0]*U[1]*CORRCOEF_T[0][1]+U[2]*U[3]*CORRCOEF_P[0][1]+U[4]*U[5]*CORRCOEF_R[0][1]
+      
+        dVh_dTheta1*dVh_dPsi1*U[0]*U[2]*Coef[3]+
+        dVh_dTheta2*dVh_dPsi1*U[1]*U[2]*Coef[4]+
+        dVh_dTheta1*dVh_dPsi2*U[0]*U[3]*Coef[5]+
+        dVh_dTheta2*dVh_dPsi2*U[1]*U[3]*Coef[6]+
+     
+        dVh_dTheta1*dVh_dRho1*U[0]*U[4]*Coef[7]+
+        dVh_dTheta2*dVh_dRho1*U[1]*U[2]*Coef[8]+
+        dVh_dTheta1*dVh_dRho2*U[0]*U[3]*Coef[9]+
+        dVh_dTheta2*dVh_dRho2*U[1]*U[3]*Coef[10]+
+     
+        dVh_dPsi1*dVh_dRho1*U[2]*U[4]*Coef[11]+
+        dVh_dPsi2*dVh_dRho1*U[3]*U[4]*Coef[12]+
+        dVh_dPsi1*dVh_dRho2*U[2]*U[5]*Coef[13]+
+        dVh_dPsi2*dVh_dRho2*U[3]*U[5]*Coef[14])       
+    V=np.sqrt((dVh_dTheta1*U[0])**2+(dVh_dTheta2*U[1])**2+(dVh_dPsi1*U[2])**2+(dVh_dPsi2*U[3])**2+(dVh_dRho1*U[4])**2+(dVh_dRho2*U[5])**2+2*R)[0]
+    return (V)
     # return (A,B,C,D,E,F,Vh)
 
 
