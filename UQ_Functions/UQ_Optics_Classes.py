@@ -53,6 +53,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     NoisyY=[]
     NoisyZ=[]
     coorFinal_noisy=[]
+    Dict_Vh ={}
     rho_noisy0,theta_noisy0,psi_noisy0,rho_noisy,theta_noisy1,theta_noisy2,psi_noisy,rho_noisy1,rho_noisy2, theta_noisy,psi_noisy1,psi_noisy2,wind_direction_TEST ,wind_tilt_TEST   = [],[],[],[],[],[],[],[],[],[],[],[],[],[]
     Coordfinal_noisy,Coordfinal=[],[]
     coun=0
@@ -317,8 +318,8 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         # Function calculating the uncertainties in VLOS:
         U_VLOS1 = SA.U_VLOS_GUM (theta1,psi1,rho1,U_theta1,U_psi1,U_rho1,U_VLOS01,Hl,Vref,Href,alpha,wind_direction,ind_wind_dir,CROS_CORR)
         U_VLOS2 = SA.U_VLOS_GUM (theta2,psi2,rho2,U_theta2,U_psi2,U_rho2,U_VLOS02,Hl,Vref,Href,alpha,wind_direction,ind_wind_dir,CROS_CORR)
-        U_VLOS1_GUM.append(U_VLOS1)
-        U_VLOS2_GUM.append(U_VLOS2)
+        U_VLOS1_GUM.append(U_VLOS1[0])
+        U_VLOS2_GUM.append(U_VLOS2[0])
         
         
     
@@ -615,14 +616,17 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
 ####################################################################################    
     
     #%% Storing data
-    Final_Output_UQ_Scanner                 = {'VLOS1 Uncertainty MC [m/s]':U_VLOS1_MC,'VLOS2 Uncertainty MC [m/s]':U_VLOS2_MC,'VLOS1 Uncertainty GUM [m/s]':U_VLOS1_GUM,'VLOS2 Uncertainty GUM [m/s]':U_VLOS2_GUM,'Vr Uncertainty homo MC [m/s]':U_VLOS_THomo_MC,'Vr Uncertainty homo GUM [m/s]':U_VLOS_THomo_GUM,
-                                               'Vr Uncertainty MC [m/s]':U_VLOS_T_MC,'Vr Uncertainty GUM [m/s]':U_VLOS_T_GUM,'Vh Uncertainty GUM [m/s]':Uncertainty_Vh_GUM,'u Uncertainty [m/s]':Uncertainty_U,'v Uncertainty [m/s]':Uncertainty_V,'Vh Uncertainty MC [m/s]':Uncertainty_Vh_MC,
-                                               'x':x,'y':y,'z':z,'rho':rho_TEST,'theta':theta_TEST,'psi':psi_TEST,'wind direction':wind_direction} #, 'Rayleigh length':Probe_param['Rayleigh Length'],'Rayleigh length uncertainty':Probe_param['Rayleigh Length uncertainty']}
+    pdb.set_trace()
+    Final_Output_UQ_Scanner                 = {'VLOS1 Uncertainty MC [m/s]':U_VLOS1_MC,'VLOS2 Uncertainty MC [m/s]':U_VLOS2_MC,'VLOS1 Uncertainty GUM [m/s]':U_VLOS1_GUM,'VLOS2 Uncertainty GUM [m/s]':U_VLOS2_GUM,
+                                               'Vr Uncertainty homo MC [m/s]':U_VLOS_THomo_MC,'Vr Uncertainty homo GUM [m/s]':U_VLOS_THomo_GUM,'Vr Uncertainty MC [m/s]':U_VLOS_T_MC,'Vr Uncertainty GUM [m/s]':U_VLOS_T_GUM,
+                                               'Vh Uncertainty GUM [m/s]':Uncertainty_Vh_GUM,'u Uncertainty [m/s]':Uncertainty_U,'v Uncertainty [m/s]':Uncertainty_V,'Vh Uncertainty MC [m/s]':Uncertainty_Vh_MC,
+                                               'x':x,'y':y,'z':z,'rho':rho_TEST,'theta':theta_TEST,'psi':psi_TEST,'wind direction':wind_direction,'STDV':U, 'Correlation coefficients':Coef} #, 'Rayleigh length':Probe_param['Rayleigh Length'],'Rayleigh length uncertainty':Probe_param['Rayleigh Length uncertainty']}
+    
     Lidar.lidar_inputs.dataframe['Scanner'] = (Final_Output_UQ_Scanner['Vr Uncertainty MC [m/s]'])*len(Atmospheric_Scenario.temperature)
     Lidar.lidar_inputs.dataframe['Probe Volume'] = Probe_param
-    # pdb.set_trace()
+    
     # Plotting
-    QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,True,False,False,False,True)  #Qlunc_yaml_inputs['Flags']['Scanning Pattern']
+    QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,True,False,False,False,False)  #Qlunc_yaml_inputs['Flags']['Scanning Pattern']
     
     
     # Scatter plot
