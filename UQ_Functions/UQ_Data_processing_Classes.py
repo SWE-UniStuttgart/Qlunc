@@ -121,7 +121,7 @@ def UQ_WFR (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scan_Unc):
         xi0 = xi[p_sphere]
         yi0 = yi[p_sphere]
         zi0 = zi[p_sphere]
-        pdb.set_trace()
+        # pdb.set_trace()
         # Transform coordinates to spherical coordinate system
         rho1,phi1,theta1 = SA.cart2sph(xi0,yi0,zi0)       
         rho_point.append(rho1)

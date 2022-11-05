@@ -138,7 +138,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     #Uncertainty in the probe volume    
     Probe_param = Lidar.probe_volume.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,lidars)
-    pdb.set_trace()
+    # pdb.set_trace()
     #%% 2) State the correlations to calculate the correlation in the different VLOS:
     # VLOS1_VLOS2_corr_n = 1 # correlation betweem Vlos1 and Vlos2
     # pdb.set_trace()
@@ -696,7 +696,7 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # Scanner
     if Lidar.optics.scanner != None:
         try: # ecah try/except evaluates wether the component is included in the module, therefore in the calculations            
-            pdb.set_trace()     
+            # pdb.set_trace()     
         
             if Lidar.wfr_model.reconstruction_model != 'None':
                    
@@ -707,9 +707,9 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             else:  
                 
                 Scanner_Uncertainty,DataFrame=Lidar.optics.scanner.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
-                pdb.set_trace()
+                # pdb.set_trace()
                 WFR_Uncertainty = None
-                pdb.set_trace()
+                # pdb.set_trace()
         except:
             Scanner_Uncertainty=None
             print(colored('Error in scanner uncertainty calculations!','cyan', attrs=['bold']))

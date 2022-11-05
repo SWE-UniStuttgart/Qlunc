@@ -103,7 +103,7 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     ### Signal processor
     if Lidar.signal_processor != None:   
-        pdb.set_trace()
+        # pdb.set_trace()
         try:
             # pdb.set_trace()
             SignalProcessor_Uncertainty,DataFrame = Lidar.signal_processor.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
@@ -117,7 +117,7 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         print(colored('You didn´t include a signal processor module in  the lidar','cyan', attrs=['bold']))    
     
     
-    pdb.set_trace()
+    
     # if Lidar.wfr_model != None:
     #     try:
     #         pdb.set_trace()
@@ -130,7 +130,7 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     Final_Output_Lidar_Uncertainty        = {'Hardware_Lidar_Uncertainty_combination':Uncertainty_Lidar}#,'WFR_Uncertainty':Optics_Uncertainty['Uncertainty_WFR']}    
     
     Lidar.lidar_inputs.dataframe['Lidar'] = Final_Output_Lidar_Uncertainty['Hardware_Lidar_Uncertainty_combination']*np.linspace(1,1,len(Atmospheric_Scenario.temperature))
-    
+    # pdb.set_trace()
     # Include time in the dataframe:
     # Lidar.lidar_inputs.dataframe['Time']=Atmospheric_Scenario.time
     ########################################################################################################

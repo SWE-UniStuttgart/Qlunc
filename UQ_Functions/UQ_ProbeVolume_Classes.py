@@ -16,7 +16,7 @@ from Utils import Qlunc_Plotting as QPlot
 
 def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,lidars):
     # Liqin jin model
-    pdb.set_trace()
+    # pdb.set_trace()
     if Qlunc_yaml_inputs['Components']['Lidar general inputs']['Type']=="CW":
         # The focus distance varies with the focal length and the distance between the fiber-end and the telescope lens as well. So that, also the probe length varies with such distance.
         # Calculating focus distance depending on the distance between the fiber-end and the telescope lens:
