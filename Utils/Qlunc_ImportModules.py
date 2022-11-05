@@ -16,7 +16,6 @@ import pandas as pd
 import numbers
 import pdb
 from scipy.optimize import curve_fit
-#import pickle # for GUI
 import itertools
 import functools
 from mpl_toolkits.mplot3d import Axes3D
@@ -40,3 +39,4 @@ from scipy.stats import norm
 from matplotlib.pyplot import cm
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from scipy.stats import multivariate_normal
+import pickle

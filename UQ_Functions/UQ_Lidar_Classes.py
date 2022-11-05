@@ -130,6 +130,7 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     Final_Output_Lidar_Uncertainty        = {'Hardware_Lidar_Uncertainty_combination':Uncertainty_Lidar}#,'WFR_Uncertainty':Optics_Uncertainty['Uncertainty_WFR']}    
     
     Lidar.lidar_inputs.dataframe['Lidar'] = Final_Output_Lidar_Uncertainty['Hardware_Lidar_Uncertainty_combination']*np.linspace(1,1,len(Atmospheric_Scenario.temperature))
+    
     # pdb.set_trace()
     # Include time in the dataframe:
     # Lidar.lidar_inputs.dataframe['Time']=Atmospheric_Scenario.time
@@ -141,6 +142,16 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # df=SA.to_netcdf(Lidar.lidar_inputs.dataframe,Qlunc_yaml_inputs,Lidar,Atmospheric_Scenario)
     ########################################################################################################
     ########################################################################################################
+    # pdb.set_trace()
+    
+    # Save the dictionary --> Lidar.lidar_inputs.dataframe
+    with open('./Projects/'+Lidar.LidarID, 'wb') as f:
+        pickle.dump(Lidar.lidar_inputs.dataframe, f)
+    # Read the saved dictionary
+    with open('./Projects/'+Lidar.LidarID, 'rb') as f:
+        loaded_dict = pickle.load(f)
         
-    print(colored('...Lidar uncertainty done','magenta', attrs=['bold']))
+        
+        
+    print(colored('...Lidar uncertainty done. Lidar saved in folder "Projects"','magenta', attrs=['bold']))
     return Final_Output_Lidar_Uncertainty,Lidar.lidar_inputs.dataframe
