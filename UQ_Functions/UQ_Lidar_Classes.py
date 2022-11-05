@@ -90,7 +90,8 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             print(colored('No power module in calculations!','cyan', attrs=['bold']))
     else:
         print(colored('You didn´t include a power module in  the lidar','cyan', attrs=['bold']))
-    if Lidar.signal_processor != None:        
+    if Lidar.signal_processor != None:   
+        pdb.set_trace()
         try:
             # pdb.set_trace()
             SignalProcessor_Uncertainty,DataFrame = Lidar.signal_processor.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
@@ -124,10 +125,10 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # Create Xarray to store data. Link with Mocalum and yaddum  ###########################################
     # READ netcdf FILE.
     # da=xr.open_dataarray('C:/SWE_LOCAL/GIT_Qlunc/Projects/' + 'Gandia.nc')
-    pdb.set_trace()
-    df=SA.to_netcdf(Lidar.lidar_inputs.dataframe,Qlunc_yaml_inputs,Lidar,Atmospheric_Scenario)
+    # pdb.set_trace()
+    # df=SA.to_netcdf(Lidar.lidar_inputs.dataframe,Qlunc_yaml_inputs,Lidar,Atmospheric_Scenario)
     ########################################################################################################
     ########################################################################################################
         
     print(colored('...Lidar uncertainty done','magenta', attrs=['bold']))
-    return Final_Output_Lidar_Uncertainty,Lidar.lidar_inputs.dataframe,df
+    return Final_Output_Lidar_Uncertainty,Lidar.lidar_inputs.dataframe
