@@ -401,7 +401,7 @@ def U_Vh_GUM(theta_c, psi_c,rho_c,wind_direction,ind_wind_dir,Href,Vref,alpha,Hl
     # return (A,B,C,D,E,F,Vh)
 
 
-def U_VLOS_MC(theta,psi,rho,theta1_noisy,Hl,Href,alpha,wind_direction,Vref,ind_wind_dir,VLOS1_list):
+def U_VLOS_MC(theta,psi,rho,Hl,Href,alpha,wind_direction,Vref,ind_wind_dir,VLOS1_list):
      VLOS01,U_VLOS1,=[],[]
             
      A1    = Vref*((Hl+(np.sin(theta)*rho))/Href)**alpha[0]
