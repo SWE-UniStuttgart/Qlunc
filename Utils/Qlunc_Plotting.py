@@ -353,7 +353,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         ax1.tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
         plt.title('Vh Uncertainty',fontsize=plot_param['title_fontsize'])
         ax1.legend(loc=2, prop={'size': plot_param['legend_fontsize']})
-        
+        ax1.grid(axis='both')
     
         
         

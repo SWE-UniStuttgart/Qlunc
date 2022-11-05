@@ -60,7 +60,7 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     
     Lidar.lidar_inputs.dataframe['ADC_Noise']=Final_Output_UQ_ADC['ADC_Noise']*np.linspace(1,1,len(Atmospheric_Scenario.temperature)) # linspace to create the appropriate length for the xarray.
-    # pdb.set_trace()
+    pdb.set_trace()
     return Final_Output_UQ_ADC,Lidar.lidar_inputs.dataframe
 
 #%% Frequency analyser

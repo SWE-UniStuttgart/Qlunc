@@ -39,6 +39,9 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     """ 
     List_Unc_lidar = []
     print(colored('Processing lidar uncertainties...','magenta', attrs=['bold']))
+    
+    
+    ### Photoniccs
     if Lidar.photonics != None:
         try: # each try/except evaluates whether the component is included in the module, therefore in the calculations
             # pdb.set_trace()
@@ -62,6 +65,9 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             print(colored('Error in photonics module calculations!','cyan', attrs=['bold']))
     else:
         print(colored('You didn´t include a photonics module in the lidar','cyan', attrs=['bold']))
+    
+    
+    ### Optics
     if Lidar.optics != None:
         try:
             Optics_Uncertainty,DataFrame = Lidar.optics.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
@@ -81,6 +87,9 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             print(colored('Error in optics module calculations!','cyan', attrs=['bold']))
     else:
         print(colored('You didn´t include an optics module in the lidar','cyan', attrs=['bold']))
+    
+    
+    ### Power
     if Lidar.power != None:        
         try:
             Power_Uncertainty,DataFrame = Lidar.power.Uncertainty(Lidar,Atmospheric_Scenario,cts)
@@ -90,6 +99,9 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             print(colored('No power module in calculations!','cyan', attrs=['bold']))
     else:
         print(colored('You didn´t include a power module in  the lidar','cyan', attrs=['bold']))
+    
+    
+    ### Signal processor
     if Lidar.signal_processor != None:   
         pdb.set_trace()
         try:
@@ -105,7 +117,7 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         print(colored('You didn´t include a signal processor module in  the lidar','cyan', attrs=['bold']))    
     
     
-    # pdb.set_trace()
+    pdb.set_trace()
     # if Lidar.wfr_model != None:
     #     try:
     #         pdb.set_trace()

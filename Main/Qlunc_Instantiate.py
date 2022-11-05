@@ -128,7 +128,7 @@ Optics_Module =  optics (name               = Qlunc_yaml_inputs['Modules']['Opti
                          scanner            = eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Scanner']),             # Scanner instance (in this example "Scanner") or "None". "None" means that you don´t want to include Scanner in Optics Module, either in uncertainty calculations.
                          optical_circulator = eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Optical circulator']),  # Optical Circulator instance (in this example "Optical_circulator") or "None". "None" means that you don´t want to include Optical circulator in Optics Module, either in uncertainty calculations.
                          telescope          = eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Telescope']), #Telescope,#
-                         # probe_volume       = None,#Probe_Volume,
+                         probe_volume       = Probe_Volume,#None,#
                          unc_func           = uopc.sum_unc_optics) #eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Uncertainty function']))
 
 
@@ -210,8 +210,8 @@ Lidar_inputs     = lidar_gral_inp(name        = Qlunc_yaml_inputs['Components'][
 
 # Wind field reconstruction model
 WFR_M = wfr (name                 = Qlunc_yaml_inputs['WFR model']['Name'],
-             reconstruction_model = Qlunc_yaml_inputs['WFR model']['Model'],
-             unc_func             = uprm.UQ_WFR)
+              reconstruction_model = Qlunc_yaml_inputs['WFR model']['Model'],
+              unc_func             = uprm.UQ_WFR)
 # pdb.set_trace()
 # Data filtering method
 Filt_M = filtering_method (name        = Qlunc_yaml_inputs['Filtering method']['Name'],

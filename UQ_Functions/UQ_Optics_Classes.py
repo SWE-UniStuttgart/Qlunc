@@ -63,7 +63,8 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     Hg    = Qlunc_yaml_inputs['Atmospheric_inputs']['Height_ground'] 
     Hl    = Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0][2]
     # #Call probe volume uncertainty function. 
-    # Probe_param = Lidar.probe_volume.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+    
+    
 
 
     # R: Implement error in deployment of the tripod as a rotation over yaw, pitch and roll
@@ -88,7 +89,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     
      # Lidars' position:
-    class lidar:
+    class lidar_coor:
         def __init__(self, x,y,z,x_Lidar,y_Lidar,z_Lidar):
             self.x_Lidar=x_Lidar
             self.y_Lidar=y_Lidar
@@ -112,12 +113,12 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     lidars={}
     for ind_origin in range(np.shape(Qlunc_yaml_inputs['Components']['Scanner']['Origin'])[0]):
         
-        lidars['Lidar'+str(ind_origin+1)+'_Rectangular']={'x':(lidar.vector_pos(x,y,z,x_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_origin][0],y_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_origin][1],z_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_origin][2])[1]),
-                                                        'y':(lidar.vector_pos(x,y,z,x_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_origin][0],y_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_origin][1],z_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_origin][2])[2]),
-                                                        'z':(lidar.vector_pos(x,y,z,x_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_origin][0],y_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_origin][1],z_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_origin][2])[3])}
-        lidars['Lidar'+str(ind_origin+1)+'_Spherical']={'rho':np.round((lidar.Cart2Sph(lidars['Lidar'+str(ind_origin+1)+'_Rectangular']['x'],lidars['Lidar'+str(ind_origin+1)+'_Rectangular']['y'],lidars['Lidar'+str(ind_origin+1)+'_Rectangular']['z']))[1],4),
-                                                      'theta':np.round((lidar.Cart2Sph(lidars['Lidar'+str(ind_origin+1)+'_Rectangular']['x'],lidars['Lidar'+str(ind_origin+1)+'_Rectangular']['y'],lidars['Lidar'+str(ind_origin+1)+'_Rectangular']['z']))[2],4),
-                                                      'psi':np.round((lidar.Cart2Sph(lidars['Lidar'+str(ind_origin+1)+'_Rectangular']['x'],lidars['Lidar'+str(ind_origin+1)+'_Rectangular']['y'],lidars['Lidar'+str(ind_origin+1)+'_Rectangular']['z']))[3],4)}
+        lidars['Lidar'+str(ind_origin+1)+'_Rectangular']={'x':(lidar_coor.vector_pos(x,y,z,x_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_origin][0],y_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_origin][1],z_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_origin][2])[1]),
+                                                        'y':(lidar_coor.vector_pos(x,y,z,x_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_origin][0],y_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_origin][1],z_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_origin][2])[2]),
+                                                        'z':(lidar_coor.vector_pos(x,y,z,x_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_origin][0],y_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_origin][1],z_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_origin][2])[3])}
+        lidars['Lidar'+str(ind_origin+1)+'_Spherical']={'rho':np.round((lidar_coor.Cart2Sph(lidars['Lidar'+str(ind_origin+1)+'_Rectangular']['x'],lidars['Lidar'+str(ind_origin+1)+'_Rectangular']['y'],lidars['Lidar'+str(ind_origin+1)+'_Rectangular']['z']))[1],4),
+                                                      'theta':np.round((lidar_coor.Cart2Sph(lidars['Lidar'+str(ind_origin+1)+'_Rectangular']['x'],lidars['Lidar'+str(ind_origin+1)+'_Rectangular']['y'],lidars['Lidar'+str(ind_origin+1)+'_Rectangular']['z']))[2],4),
+                                                      'psi':np.round((lidar_coor.Cart2Sph(lidars['Lidar'+str(ind_origin+1)+'_Rectangular']['x'],lidars['Lidar'+str(ind_origin+1)+'_Rectangular']['y'],lidars['Lidar'+str(ind_origin+1)+'_Rectangular']['z']))[3],4)}
         # if lidars['Lidar'+str(ind_origin+1)+'_Spherical']['psi']<0:
         #     lidars['Lidar'+str(ind_origin+1)+'_Spherical']['psi']=np.pi+lidars['Lidar'+str(ind_origin+1)+'_Spherical']['psi']
         
@@ -135,8 +136,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     rho1  ,U_rho1   = lidars['Lidar1_Spherical']['rho'],Lidar.optics.scanner.stdv_focus_dist [0]
     rho2  ,U_rho2   = lidars['Lidar2_Spherical']['rho'],Lidar.optics.scanner.stdv_focus_dist[1] 
     
-    
-
+    #Uncertainty in the probe volume    
+    Probe_param = Lidar.probe_volume.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,lidars)
+    pdb.set_trace()
     #%% 2) State the correlations to calculate the correlation in the different VLOS:
     # VLOS1_VLOS2_corr_n = 1 # correlation betweem Vlos1 and Vlos2
     # pdb.set_trace()
@@ -326,14 +328,12 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         # Break down large equations
         u_wind,v_wind = SA.U_Vh_MC([Theta1_cr,Theta2_cr],[Psi1_cr,Psi2_cr],[Rho1_cr,Rho2_cr],wind_direction,ind_wind_dir,Href,Vref,alpha,Hl)   
         
-        # ucomponent estimation
-        # u_wind = (H0[0]/G)
+        # ucomponent estimation        
         Uwind_MC.append(np.mean(u_wind))
         # Uncertainty as standard deviation (k=1) in the u wind velocity component estimation
         Uncertainty_U.append(np.std(u_wind))
         
-        # v component estimation
-        # v_wind = (H0[1]/G)
+        # v component estimation        
         Vwind_MC.append(np.mean(v_wind))
         # Uncertainty as standard deviation (k=1) in the v wind velocity component estimation
         Uncertainty_V.append(np.std(v_wind))
@@ -618,7 +618,8 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     Final_Output_UQ_Scanner                 = {'VLOS1 Uncertainty MC [m/s]':U_VLOS1_MC,'VLOS2 Uncertainty MC [m/s]':U_VLOS2_MC,'VLOS1 Uncertainty GUM [m/s]':U_VLOS1_GUM,'VLOS2 Uncertainty GUM [m/s]':U_VLOS2_GUM,'Vr Uncertainty homo MC [m/s]':U_VLOS_THomo_MC,'Vr Uncertainty homo GUM [m/s]':U_VLOS_THomo_GUM,
                                                'Vr Uncertainty MC [m/s]':U_VLOS_T_MC,'Vr Uncertainty GUM [m/s]':U_VLOS_T_GUM,'Vh Uncertainty GUM [m/s]':Uncertainty_Vh_GUM,'u Uncertainty [m/s]':Uncertainty_U,'v Uncertainty [m/s]':Uncertainty_V,'Vh Uncertainty MC [m/s]':Uncertainty_Vh_MC,
                                                'x':x,'y':y,'z':z,'rho':rho_TEST,'theta':theta_TEST,'psi':psi_TEST,'wind direction':wind_direction} #, 'Rayleigh length':Probe_param['Rayleigh Length'],'Rayleigh length uncertainty':Probe_param['Rayleigh Length uncertainty']}
-    Lidar.lidar_inputs.dataframe['Scanner'] = (Final_Output_UQ_Scanner['Vr Uncertainty MC [m/s]'])*len(Atmospheric_Scenario.temperature)  
+    Lidar.lidar_inputs.dataframe['Scanner'] = (Final_Output_UQ_Scanner['Vr Uncertainty MC [m/s]'])*len(Atmospheric_Scenario.temperature)
+    Lidar.lidar_inputs.dataframe['Probe Volume'] = Probe_param
     # pdb.set_trace()
     # Plotting
     QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,True,False,False,False,True)  #Qlunc_yaml_inputs['Flags']['Scanning Pattern']
@@ -695,7 +696,7 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # Scanner
     if Lidar.optics.scanner != None:
         try: # ecah try/except evaluates wether the component is included in the module, therefore in the calculations            
-            # pdb.set_trace()     
+            pdb.set_trace()     
         
             if Lidar.wfr_model.reconstruction_model != 'None':
                    

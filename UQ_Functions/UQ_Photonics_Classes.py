@@ -194,7 +194,7 @@ def UQ_Laser(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     """ 
     # STDV of the laser due to the wavelength error and the confidence interval, assuming a normal distribution. "JCGM 100:2008 GUM 1995 with minor changes", Anxex G, Table G1
 
-    pdb.set_trace()
+    
     if Lidar.photonics.laser.conf_int==1:
         u_fact = 1
     elif Lidar.photonics.laser.conf_int==2:
@@ -207,13 +207,13 @@ def UQ_Laser(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         u_fact = 2.576
     elif Lidar.photonics.laser.conf_int==6:
         u_fact = 3        
-        
+    pdb.set_trace()   
     # UQ_Laser = np.array([( Lidar.photonics.laser.stdv_wavelength/u_fact)])    
-    U_Laser = [np.array(10*np.log10(10**(Lidar.photonics.laser.RIN/10)*Lidar.photonics.laser.BandWidth*Lidar.photonics.laser.Output_power))]
+    UQ_Laser.U_Laser = [np.array(10*np.log10(10**(Lidar.photonics.laser.RIN/10)*Lidar.photonics.laser.BandWidth*Lidar.photonics.laser.Output_power))]
     
     
-    Final_Output_UQ_Laser = {'Uncertainty_Laser':U_Laser}
-    pdb.set_trace()
+    Final_Output_UQ_Laser = {'Uncertainty_Laser':UQ_Laser.U_Laser}
+    
     Lidar.lidar_inputs.dataframe['Laser'] = Final_Output_UQ_Laser['Uncertainty_Laser']
     # pdb.set_trace()
 
