@@ -19,7 +19,7 @@ def UQ_Vh(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     Hg    = Qlunc_yaml_inputs['Atmospheric_inputs']['Height_ground'] 
     Hl    = Qlunc_yaml_inputs['Components']['Scanner']['Origin'][2]
     
-    Lidars = ['Caixa1','Caixa2']
+    Lidars = ['Caixa3','Caixa4']
         # Read the saved dictionary
     loaded_dict=[]
     for ind in Lidars:
