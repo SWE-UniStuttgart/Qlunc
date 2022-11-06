@@ -86,7 +86,7 @@ Components:
     # with the lidar nominal wavelength. Interpolation param. could 
     # be tunned in Qlunc_Photonics_Classes --> UQ_Optical_amplifier
     Optical amplifier BW: 12.5e+12 # [Hz] Bandwidth optical amplifier (Hz)
-    Optical amplifier noise figure: metadata/NoiseFigure.csv  #6# [dB] Relative Directory to where Noise figure data is. Either a well-known value or the directory where the file is.   
+    Optical amplifier noise figure: 3.4 # metadata/NoiseFigure.csv [dB] Relative Directory to where Noise figure data is. Either a well-known value or the directory where the file is.   
     Optical amplifier gain: 30 # [dB] Optical amplifier gain
     Power interval: [0,1,.001]       # [mW]
     Uncertainty function: uphc.UQ_Optical_amplifier # Python module! (You develop a function and save it as a python module)
