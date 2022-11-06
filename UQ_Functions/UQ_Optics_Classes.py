@@ -59,8 +59,8 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     sample_rate_count=0
     Href  = Qlunc_yaml_inputs['Components']['Scanner']['Href'],
     Vref  = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref']
-    alpha = Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp']    
-    Hg    = Qlunc_yaml_inputs['Atmospheric_inputs']['Height_ground'] 
+    alpha = Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']    
+    Hg    = Qlunc_yaml_inputs['Atmospheric_inputs']['Height ground'] 
     Hl    = Qlunc_yaml_inputs['Components']['Scanner']['Origin'][2]
     # #Call probe volume uncertainty function. 
     
@@ -316,7 +316,6 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         U_VLOS1 = SA.U_VLOS_GUM (theta1,psi1,rho1,U_theta1,U_psi1,U_rho1,U_VLOS01,Hl,Vref,Href,alpha,wind_direction,ind_wind_dir,CROS_CORR)
         U_VLOS1_GUM.append(U_VLOS1[0])
         
-        
     
         # #%% 6) VH Uncertainty
         # # Calculate the u and v wind components and their uncertainties
@@ -433,9 +432,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     wind_direction_TEST = np.radians([180])
     wind_tilt_TEST      = np.radians([0])
-    theta_TEST = np.radians(np.linspace(1,89,500))
-    psi_TEST   = np.radians(np.linspace(0,0,500))
-    rho_TEST   = np.linspace(1000,1000,500)
+    theta_TEST = np.radians(np.linspace(1,89,5))
+    psi_TEST   = np.radians(np.linspace(0,0,5))
+    rho_TEST   = np.linspace(1000,1000,5)
     
     
     # 1. Calculate radial speed uncertainty for an heterogeneous flow
@@ -620,7 +619,8 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     Lidar.lidar_inputs.dataframe['Probe Volume'] = Probe_param
     
     # Plotting
-    QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,True,False,False,False,False)  #Qlunc_yaml_inputs['Flags']['Scanning Pattern']
+    pdb.set_trace()
+    QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,Qlunc_yaml_inputs['Flags']['Line of sight Velocity Uncertainty'],False,False,False,False)  #Qlunc_yaml_inputs['Flags']['Scanning Pattern']
     
     
     # Scatter plot

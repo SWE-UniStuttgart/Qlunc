@@ -26,7 +26,7 @@ could be done by instantiating their python classes:
 import os
 os.chdir('../')
 # importing  uncertainty functions
-import UQ_Functions.UQ_Photonics_Classes as uphc,UQ_Functions.UQ_Optics_Classes as uopc, UQ_Functions.UQ_Power_Classes as upwc,UQ_Functions.UQ_Lidar_Classes as ulc, UQ_Functions.UQ_ProbeVolume_Classes as upbc,UQ_Functions.UQ_Data_processing_Classes as uprm, UQ_Functions.UQ_SignalProcessor_Classes as uspc
+import UQ_Functions.UQ_Vhorizontal_Classes as uVhc, UQ_Functions.UQ_Photonics_Classes as uphc,UQ_Functions.UQ_Optics_Classes as uopc, UQ_Functions.UQ_Power_Classes as upwc,UQ_Functions.UQ_Lidar_Classes as ulc, UQ_Functions.UQ_ProbeVolume_Classes as upbc,UQ_Functions.UQ_Data_processing_Classes as uprm, UQ_Functions.UQ_SignalProcessor_Classes as uspc
 from Utils.Qlunc_ImportModules import *
 
 #%% Running Qlunc_Classes.py:
@@ -38,7 +38,7 @@ with open (r'./Main/Qlunc_inputs.yml') as file: # WHere the yaml file is in orde
             Qlunc_yaml_inputs.setdefault(k,v)  # save a dictionary with the data coming from yaml file 
 
 # Execute Qlunc_Classes.py (creating classes for lidar 'objects')
-exec(open(Qlunc_yaml_inputs['Main_directory']+'/Main/Qlunc_Classes.py').read())   
+exec(open(Qlunc_yaml_inputs['Main directory']+'/Main/Qlunc_Classes.py').read())   
 #%%%%%%%%%%%%%%%%% INPUTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 ## Optics components and Module: ##############################################
@@ -79,13 +79,13 @@ Scanner           = scanner(name            = Qlunc_yaml_inputs['Components']['S
                             
                             azimuth         = Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][0],
                             focus_dist      = Qlunc_yaml_inputs['Components']['Scanner']['Focus distance'][0],   # Focus distance in [meters]                                                                                                
-                            cone_angle      = Qlunc_yaml_inputs['Components']['Scanner']['Cone angle'][0],   # Cone angle in [degrees].
+                            cone_angle      = Qlunc_yaml_inputs['Components']['Scanner']['Elevation angle'][0],   # Elevation angle in [degrees].
                             
                         
                           
                             stdv_location   = Qlunc_yaml_inputs['Components']['Scanner']['Error origin'],
                             stdv_focus_dist = Qlunc_yaml_inputs['Components']['Scanner']['stdv focus distance'],                 # Focus distance standard deviation in [meters].
-                            stdv_cone_angle = Qlunc_yaml_inputs['Components']['Scanner']['stdv Cone angle'],                 # Cone angle standard deviation in [degrees].
+                            stdv_cone_angle = Qlunc_yaml_inputs['Components']['Scanner']['stdv Elevation angle'],                 # Elevation angle standard deviation in [degrees].
                             stdv_azimuth    = Qlunc_yaml_inputs['Components']['Scanner']['stdv Azimuth'],                 # Azimuth angle standard deviation in [degrees].
                             correlations    = Qlunc_yaml_inputs['Components']['Scanner']['correlations'],
                             unc_func        = uopc.UQ_Scanner) #eval(Qlunc_yaml_inputs['Components']['Scanner']['Uncertainty function']) )    # here you put the function describing your scanner uncertainty. 
@@ -101,7 +101,7 @@ Optical_circulator = optical_circulator (name           = Qlunc_yaml_inputs['Com
 
 Telescope = telescope (name                       = Qlunc_yaml_inputs['Components']['Telescope']['Name'],
                        stdv_aperture              = Qlunc_yaml_inputs['Components']['Telescope']['Stdv Aperture'],
-                       aperture                   = Qlunc_yaml_inputs['Components']['Telescope']['Aperture'],                       
+                       aperture                   = Qlunc_yaml_inputs['Components']['Telescope']['Aperture diameter'],                       
                        focal_length               = Qlunc_yaml_inputs['Components']['Telescope']['Focal length'],
                        fiber_lens_d               = Qlunc_yaml_inputs['Components']['Telescope']['Fiber-lens distance'],
                        fiber_lens_offset          = Qlunc_yaml_inputs['Components']['Telescope']['Fiber-lens offset'],
@@ -157,7 +157,7 @@ Photodetector    = photodetector(name             = Qlunc_yaml_inputs['Component
                                  Power_interval   = np.array(np.arange(Qlunc_yaml_inputs['Components']['Photodetector']['Power interval'][0],
                                                                        Qlunc_yaml_inputs['Components']['Photodetector']['Power interval'][1],
                                                                        Qlunc_yaml_inputs['Components']['Photodetector']['Power interval'][2])),#np.arange(Qlunc_yaml_inputs['Components']['Photodetector']['Power interval']), # In [w]. Power interval for the photodetector domain in photodetector SNR plot. 
-                                 Active_Surf      = Qlunc_yaml_inputs['Components']['Photodetector']['Active Surface'],
+                                 Active_Surf      = Qlunc_yaml_inputs['Components']['Photodetector']['Active area'],
                                  Gain_TIA         = Qlunc_yaml_inputs['Components']['Photodetector']['Gain TIA'],                    # In [dB]. If there is a transimpedance amplifier.
                                  V_Noise_TIA      = Qlunc_yaml_inputs['Components']['Photodetector']['V Noise TIA'],                 # In [V]. If there is a transimpedance amplifier.
                                  
@@ -182,7 +182,7 @@ Photonics_Module = photonics(name                    = Qlunc_yaml_inputs['Module
 ## Signal processor components and module: ###########################################################
 
 ADC = analog2digital_converter (name     = Qlunc_yaml_inputs['Components']['ADC']['Name'],
-                                nbits    = Qlunc_yaml_inputs['Components']['ADC']['N bits'],
+                                nbits    = Qlunc_yaml_inputs['Components']['ADC']['Number of bits'],
                                 vref     = Qlunc_yaml_inputs['Components']['ADC']['Reference voltage'],
                                 vground  = Qlunc_yaml_inputs['Components']['ADC']['Ground voltage'],
                                 q_error  = Qlunc_yaml_inputs['Components']['ADC']['Quantization error'],
@@ -197,12 +197,12 @@ Signal_processor_Module = signal_processor(name                     = Qlunc_yaml
 
 
 ## Lidar general inputs: ######################################################
-Lidar_inputs     = lidar_gral_inp(name        = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Name'],      # Introduce the name of your lidar data folder.
-                                  wave        = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Wavelength'],                    # In [m]. Lidar wavelength.
+Lidar_inputs     = lidar_gral_inp(name        = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Name'],          # Introduce the name of your lidar data folder.
+                                  wave        = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Wavelength'],    # In [m]. Lidar wavelength.
                                   ltype       = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Type'],
-                                  yaw_error   = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Yaw error'],                          # In [°]. Degrees of rotation around z axis because of inclinometer errors
-                                  pitch_error = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Pitch error'],                          # In [°]. Degrees of rotation around y axis
-                                  roll_error  = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Roll error'],                        # In [°]. Degrees of rotation around z axis.
+                                  yaw_error   = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Yaw error'],     # In [°]. Degrees of rotation around z axis because of inclinometer errors
+                                  pitch_error = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Pitch error'],   # In [°]. Degrees of rotation around y axis
+                                  roll_error  = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Roll error'],    # In [°]. Degrees of rotation around z axis.
                                   dataframe   = { })  # Final dataframe
 
 
@@ -229,7 +229,8 @@ Lidar = lidar(name           = Qlunc_yaml_inputs['Lidar']['Name'],              
               filt_method    = None,
               probe_volume   = Probe_Volume, 
               lidar_inputs   = Lidar_inputs, #eval(Qlunc_yaml_inputs['Lidar']['Lidar inputs']),         # Introduce lidar general inputs
-              unc_func       = ulc.sum_unc_lidar) #eval(Qlunc_yaml_inputs['Lidar']['Uncertainty function'])) # Function estimating lidar global uncertainty
+              unc_func       = ulc.sum_unc_lidar,
+              unc_Vh         = uVhc.UQ_Vh) #eval(Qlunc_yaml_inputs['Lidar']['Uncertainty function'])) 
 
 
 #%% Creating atmospheric scenarios: ############################################
@@ -247,19 +248,19 @@ if Atmospheric_TimeSeries:
                           } 
     Atmospheric_Scenario = atmosphere(name           = Qlunc_yaml_inputs['Atmospheric_inputs']['Name'],
                                       temperature    = Atmospheric_inputs['temperature'],
-                                      PL_exp         = Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp'],
+                                      PL_exp         = Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'],
                                       Vref           = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref'],
-                                      wind_direction = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind_direction'],
-                                      wind_tilt      = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind_tilt'],
-                                      Hg             = Qlunc_yaml_inputs['Atmospheric_inputs']['Height_ground'])
+                                      wind_direction = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind direction'],
+                                      wind_tilt      = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind tilt'],
+                                      Hg             = Qlunc_yaml_inputs['Atmospheric_inputs']['Height ground'])
 
 else:    
 
     Atmospheric_Scenario = atmosphere(name           = Qlunc_yaml_inputs['Atmospheric_inputs']['Name'],
                                       temperature    = Qlunc_yaml_inputs['Atmospheric_inputs']['Temperature'],
-                                      PL_exp         = Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp'],
+                                      PL_exp         = Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'],
                                       Vref           = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref'],
-                                      wind_direction = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind_direction'],
-                                      wind_tilt     = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind_tilt'],
-                                      Hg             = Qlunc_yaml_inputs['Atmospheric_inputs']['Height_ground'])
+                                      wind_direction = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind direction'],
+                                      wind_tilt     = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind tilt'],
+                                      Hg             = Qlunc_yaml_inputs['Atmospheric_inputs']['Height ground'])
 
