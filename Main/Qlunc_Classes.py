@@ -311,17 +311,17 @@ class lidar_gral_inp():
 #%% Lidar class:
 class lidar():
     def __init__(self,name,photonics,optics,power,signal_processor,wfr_model,filt_method,probe_volume,lidar_inputs,unc_func,unc_Vh):
-                 self.LidarID      = name
-                 self.photonics    = photonics
-                 self.optics       = optics
-                 self.power        = power # Not included yet in Version Qlunc v-0.9 calculations
+                 self.LidarID          = name
+                 self.photonics        = photonics
+                 self.optics           = optics
+                 self.power            = power # Not included yet in Version Qlunc v-0.9 calculations
                  self.signal_processor = signal_processor
-                 self.wfr_model          = wfr_model
-                 self.filt_method  = filt_method
-                 self.probe_volume = probe_volume
-                 self.lidar_inputs = lidar_inputs
-                 self.Uncertainty  = unc_func
-                 self.Uncertainty_Vh = unc_Vh
+                 self.wfr_model        = wfr_model
+                 self.filt_method      = filt_method
+                 self.probe_volume     = probe_volume
+                 self.lidar_inputs     = lidar_inputs
+                 self.Uncertainty      = unc_func
+                 self.Uncertainty_Vh   = unc_Vh
                  print('Created new lidar device: {}'.format(self.LidarID))
 
 #%% Wind field recondtruction method

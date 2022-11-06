@@ -432,8 +432,8 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     wind_direction_TEST = np.radians([180])
     wind_tilt_TEST      = np.radians([0])
-    theta_TEST = np.radians(np.linspace(1,1,500))
-    psi_TEST   = np.radians(np.linspace(0,359,500))
+    theta_TEST = np.radians(np.linspace(1,89,500))
+    psi_TEST   = np.radians(np.linspace(45,45,500))
     rho_TEST   = np.linspace(1000,1000,500)
     
     
