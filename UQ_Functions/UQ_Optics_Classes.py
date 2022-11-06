@@ -53,7 +53,6 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     NoisyY=[]
     NoisyZ=[]
     coorFinal_noisy=[]
-    Dict_Vh ={}
     rho_noisy0,theta_noisy0,psi_noisy0,rho_noisy,theta_noisy1,theta_noisy2,psi_noisy,rho_noisy1,rho_noisy2, theta_noisy,psi_noisy1,psi_noisy2,wind_direction_TEST ,wind_tilt_TEST   = [],[],[],[],[],[],[],[],[],[],[],[],[],[]
     Coordfinal_noisy,Coordfinal=[],[]
     coun=0
@@ -128,8 +127,6 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # print(['Lidar'+str(ind_origin+1)+'_Spherical_psi'], '=' ,np.degrees(lidars['Lidar'+str(ind_origin+1)+'_Spherical']['psi']))
     # print(['Lidar'+str(ind_origin+1)+'_Spherical_theta'], '=' ,np.degrees(lidars['Lidar'+str(ind_origin+1)+'_Spherical']['theta']))
     
-    Dict_Vh['Lidar Coordinates'] = lidars
-    Dict_Vh['STDVs']=[np.radians(Lidar.optics.scanner.stdv_cone_angle[0]),np.radians(Lidar.optics.scanner.stdv_azimuth[0]),Lidar.optics.scanner.stdv_focus_dist [0]]
     # Rho, theta and psi inputs and their uncertainties
     theta1,U_theta1 = lidars['Lidar_Spherical']['theta'],np.radians(Lidar.optics.scanner.stdv_cone_angle[0])
     # theta2,U_theta2 = lidars['Lidar2_Spherical']['theta'],np.radians(Lidar.optics.scanner.stdv_cone_angle[1])
@@ -436,9 +433,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     wind_direction_TEST = np.radians([180])
     wind_tilt_TEST      = np.radians([0])
-    theta_TEST = np.radians(np.linspace(1,89,5))
-    psi_TEST   = np.radians(np.linspace(0,0,5))
-    rho_TEST   = np.linspace(1000,1000,5)
+    theta_TEST = np.radians(np.linspace(1,89,500))
+    psi_TEST   = np.radians(np.linspace(0,0,500))
+    rho_TEST   = np.linspace(1000,1000,500)
     
     
     # 1. Calculate radial speed uncertainty for an heterogeneous flow
