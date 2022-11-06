@@ -194,6 +194,7 @@ Lidar = lidar(name           = Qlunc_yaml_inputs['Lidar']['Name'],              
               photonics      = Photonics_Module, #eval(Qlunc_yaml_inputs['Lidar']['Photonics module']),     # Introduce the name of your photonics module.
               optics         = Optics_Module, #eval(Qlunc_yaml_inputs['Lidar']['Optics module']),        # Introduce the name of your optics module.
               power          = None, #eval(Qlunc_yaml_inputs['Lidar']['Power module']),         # Introduce the name of your power module. NOT IMPLEMENTED YET!
+              signal_processor = None,
               wfr_model      = WFR_M,
               filt_method    = Filt_M,
               probe_volume   = Probe_Volume, 
