@@ -27,8 +27,8 @@ The next step is to ask for the uncertainty we are interested in, either coming 
 
 #### Plots
  - Can draw photodetector uncertainties comparison including shot noise, thermal noise, dark current noise and, if needed, trans-impedance amplifier noise.
- - Scanning points and their uncertainty in meters (VAD and Scanning lidar).
  - Optical signal to noise ration from the optical amplifier
+ - Uncertainties in $V_{LOS}$ (line of sight velocity) and $V_{h}$ (horizontal velocity) 
 
 ## How to use `Qlunc`
 
