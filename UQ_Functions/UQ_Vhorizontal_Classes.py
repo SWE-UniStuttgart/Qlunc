@@ -15,8 +15,8 @@ def UQ_Vh(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Lidars):
 
     Href  = Qlunc_yaml_inputs['Components']['Scanner']['Href'],
     Vref  = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref']
-    alpha = Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp']    
-    Hg    = Qlunc_yaml_inputs['Atmospheric_inputs']['Height_ground'] 
+    alpha = Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']    
+    Hg    = Qlunc_yaml_inputs['Atmospheric_inputs']['Height ground'] 
     Hl    = Qlunc_yaml_inputs['Components']['Scanner']['Origin'][2]
     
     Lids = Lidars
@@ -205,4 +205,4 @@ def UQ_Vh(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Lidars):
         
         
     # Plotting
-    QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_Vh_Uncertainty,False,False,False,False,True)  #Qlunc_yaml_inputs['Flags']['Scanning Pattern']
+    QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_Vh_Uncertainty,False,False,False,False,Qlunc_yaml_inputs['Flags']['Horizontal Velocity Uncertainty'])  #Qlunc_yaml_inputs['Flags']['Scanning Pattern']
