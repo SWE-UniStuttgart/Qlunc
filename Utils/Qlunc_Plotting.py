@@ -213,7 +213,6 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         # 5.  Plot Uncertainty in VLOS with wind direction 
         fig,ax5=plt.subplots()
         ax5.plot(np.degrees(Data['wind direction']),Data['VLOS1 Uncertainty MC [m/s]'],'.k',np.degrees(Data['wind direction']),Data['VLOS1 Uncertainty GUM [m/s]'],'-k',label='$V_{LOS_{1}}$')
-        ax5.plot(np.degrees(Data['wind direction']),Data['VLOS2 Uncertainty MC [m/s]'],'.b',np.degrees(Data['wind direction']),Data['VLOS2 Uncertainty GUM [m/s]'],'-b',label='$V_{LOS_{2}}$')
         plt.title('$V_{LOS}$ uncertainty $vs$ wind direction',fontsize=plot_param['title_fontsize'])
         ax5.set_xlabel('Wind Direction (°)',fontsize=plot_param['axes_label_fontsize'])
         ax5.set_ylabel('Vlos uncertainty [m/s]',fontsize=plot_param['axes_label_fontsize'])
@@ -324,7 +323,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         axs.legend(fontsize=plot_param['legend_fontsize'])
         axs.set_title('OSNR - Optical Amplifier',fontsize=plot_param['title_fontsize'])
         axs.grid(axis='both')
-        axs.text(.90,.05,plot_param['Qlunc_version'],transform=axs1.transAxes, fontsize=14,verticalalignment='top',bbox=dict(boxstyle='round', facecolor='white', alpha=0.5))
+        axs.text(.90,.05,plot_param['Qlunc_version'],transform=axs.transAxes, fontsize=14,verticalalignment='top',bbox=dict(boxstyle='round', facecolor='white', alpha=0.5))
         # pdb.set_trace()
         
     if flag_plot_pointing_unc:

@@ -71,6 +71,9 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     if Lidar.optics != None:
         try:
             Optics_Uncertainty,DataFrame = Lidar.optics.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+            # Save the dictionary --> Optics_Uncertainty to pass it to the function UQ_Pointing_Classes to calculate the Vh uncertainty
+            with open('./Projects/'+Lidar.LidarID, 'wb') as f:
+                pickle.dump(Optics_Uncertainty, f)
             # pdb.set_trace()
             # Optics_Uncertainty           = np.ndarray.tolist(Optics_Uncertainty['Uncertainty_Optics'])*len(Atmospheric_Scenario.temperature)
             # List_Unc_lidar.append(np.array([Optics_Uncertainty]))
@@ -103,7 +106,7 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     ### Signal processor
     if Lidar.signal_processor != None:   
-        pdb.set_trace()
+        # pdb.set_trace()
         try:
             # pdb.set_trace()
             SignalProcessor_Uncertainty,DataFrame = Lidar.signal_processor.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
@@ -117,7 +120,7 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         print(colored('You didn´t include a signal processor module in  the lidar','cyan', attrs=['bold']))    
     
     
-    pdb.set_trace()
+    
     # if Lidar.wfr_model != None:
     #     try:
     #         pdb.set_trace()
@@ -131,6 +134,7 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     Lidar.lidar_inputs.dataframe['Lidar'] = Final_Output_Lidar_Uncertainty['Hardware_Lidar_Uncertainty_combination']*np.linspace(1,1,len(Atmospheric_Scenario.temperature))
     
+    # pdb.set_trace()
     # Include time in the dataframe:
     # Lidar.lidar_inputs.dataframe['Time']=Atmospheric_Scenario.time
     ########################################################################################################
@@ -141,6 +145,11 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # df=SA.to_netcdf(Lidar.lidar_inputs.dataframe,Qlunc_yaml_inputs,Lidar,Atmospheric_Scenario)
     ########################################################################################################
     ########################################################################################################
+    # pdb.set_trace()
+    
+    
+
         
-    print(colored('...Lidar uncertainty done','magenta', attrs=['bold']))
+        
+    print(colored('...Lidar uncertainty done. Lidar saved in folder "Projects"','magenta', attrs=['bold']))
     return Final_Output_Lidar_Uncertainty,Lidar.lidar_inputs.dataframe

@@ -16,7 +16,7 @@ from Utils import Qlunc_Plotting as QPlot
 
 def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,lidars):
     # Liqin jin model
-    pdb.set_trace()
+    # pdb.set_trace()
     if Qlunc_yaml_inputs['Components']['Lidar general inputs']['Type']=="CW":
         # The focus distance varies with the focal length and the distance between the fiber-end and the telescope lens as well. So that, also the probe length varies with such distance.
         # Calculating focus distance depending on the distance between the fiber-end and the telescope lens:
@@ -35,8 +35,8 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,lidars):
                # Focus distance
 
         # focus_distance = 1/((1/r)-(1/(a+a0))) # This parameters are complicated to know for users. Maybe it is easier to put just a simple parameter representing the focus distance(*)
-        focus_distance = lidars['Lidar1_Spherical']['rho']
-        
+        focus_distance = lidars['Lidar_Spherical']['rho']
+        pdb.set_trace()
         # Uncertainty in focus distance
         # Unc_focus_distance = np.sqrt((((1/r**2)/(((1/r)-(1/(a+a0)))**2))*Unc_r)**2 + (((1/(a+a0)**2)/(((1/r)-(1/(a+a0)))**2))*Unc_a)**2 + (((1/(a+a0)**2)/(((1/r)-(1/(a+a0)))**2))*Unc_a0)**2) # This parameters are complicated to know for users. Maybe it is easier to put just a simple parameter representing the focus distance(**)
         Unc_focus_distance = Qlunc_yaml_inputs['Components']['Scanner']['stdv focus distance'] #(**)
