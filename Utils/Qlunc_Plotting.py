@@ -138,7 +138,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         ax3.legend(loc=2, prop={'size': plot_param['legend_fontsize']})
         ax3.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
         ax3.tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
-        ax3.set_xlim(-90,90)
+        ax3.set_xlim(0,359)
         ax3.set_ylim(0,1)
         plt.title('$V_{LOS}$ Uncertainty',fontsize=plot_param['title_fontsize'])
         

@@ -432,9 +432,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     wind_direction_TEST = np.radians([180])
     wind_tilt_TEST      = np.radians([0])
-    theta_TEST = np.radians(np.linspace(1,89,5))
-    psi_TEST   = np.radians(np.linspace(0,0,5))
-    rho_TEST   = np.linspace(1000,1000,5)
+    theta_TEST = np.radians(np.linspace(1,1,500))
+    psi_TEST   = np.radians(np.linspace(0,359,500))
+    rho_TEST   = np.linspace(1000,1000,500)
     
     
     # 1. Calculate radial speed uncertainty for an heterogeneous flow
@@ -619,7 +619,6 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     Lidar.lidar_inputs.dataframe['Probe Volume'] = Probe_param
     
     # Plotting
-    pdb.set_trace()
     QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,Qlunc_yaml_inputs['Flags']['Line of sight Velocity Uncertainty'],False,False,False,False)  #Qlunc_yaml_inputs['Flags']['Scanning Pattern']
     
     
