@@ -230,7 +230,7 @@ Lidar = lidar(name           = Qlunc_yaml_inputs['Lidar']['Name'],              
               probe_volume   = Probe_Volume, 
               lidar_inputs   = Lidar_inputs, #eval(Qlunc_yaml_inputs['Lidar']['Lidar inputs']),         # Introduce lidar general inputs
               unc_func       = ulc.sum_unc_lidar,
-              unc_Vh         = uVhc.UQ_Vh) #eval(Qlunc_yaml_inputs['Lidar']['Uncertainty function'])) # Function estimating lidar global uncertainty
+              unc_Vh         = uVhc.UQ_Vh) #eval(Qlunc_yaml_inputs['Lidar']['Uncertainty function'])) 
 
 
 #%% Creating atmospheric scenarios: ############################################
