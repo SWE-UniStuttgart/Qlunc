@@ -310,7 +310,7 @@ class lidar_gral_inp():
 
 #%% Lidar class:
 class lidar():
-    def __init__(self,name,photonics,optics,power,signal_processor,wfr_model,filt_method,probe_volume,lidar_inputs,unc_func):
+    def __init__(self,name,photonics,optics,power,signal_processor,wfr_model,filt_method,probe_volume,lidar_inputs,unc_func,unc_Vh):
                  self.LidarID      = name
                  self.photonics    = photonics
                  self.optics       = optics
@@ -321,6 +321,7 @@ class lidar():
                  self.probe_volume = probe_volume
                  self.lidar_inputs = lidar_inputs
                  self.Uncertainty  = unc_func
+                 self.Uncertainty_Vh = unc_Vh
                  print('Created new lidar device: {}'.format(self.LidarID))
 
 #%% Wind field recondtruction method

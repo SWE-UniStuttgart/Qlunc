@@ -11,23 +11,23 @@ from Utils.Qlunc_ImportModules import *
 import Utils.Qlunc_Help_standAlone as SA
 from Utils import Qlunc_Plotting as QPlot
 import pickle
-def UQ_Vh(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
-    
+def UQ_Vh(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Lidars):
+
     Href  = Qlunc_yaml_inputs['Components']['Scanner']['Href'],
     Vref  = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref']
     alpha = Qlunc_yaml_inputs['Atmospheric_inputs']['PL_exp']    
     Hg    = Qlunc_yaml_inputs['Atmospheric_inputs']['Height_ground'] 
     Hl    = Qlunc_yaml_inputs['Components']['Scanner']['Origin'][2]
     
-    Lidars = ['Caixa3','Caixa4']
+    Lids = Lidars
         # Read the saved dictionary
     loaded_dict=[]
-    for ind in Lidars:
+    for ind in Lids:
         with open('./Projects/'+ind, 'rb') as f:
             loaded_dict.append( pickle.load(f))
     wind_direction =   loaded_dict[0]['Uncertainty']['wind direction']  
     
-    if len (Lidars)==2:
+    if len (Lids)==2:
               
         Uncertainty_V,Uncertainty_U,Uncertainty_Vh_MC,Uncertainty_Vh_GUM=[],[],[],[]
         u_wind_GUM, v_wind_GUM=[],[]
