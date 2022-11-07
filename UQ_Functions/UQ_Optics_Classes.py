@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 """.
 
 Created on Sat May 16 14:58:24 2020
@@ -106,7 +105,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             rho1,theta1,psi1 =SA.cart2sph(x_vector_pos,y_vector_pos,z_vector_pos)
             return (cls,rho1,theta1,psi1)
         
-    
+    pdb.set_trace()
     x_Lidar1,y_Lidar1,z_Lidar1,lidars=[],[],[],[]
     lidars={}
     
@@ -125,7 +124,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # z_Lidar1.append(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][2])
     # print(['Lidar_Spherical_psi'], '=' ,np.degrees(lidars['Lidar_Spherical']['psi']))
     # print(['Lidar_Spherical_theta'], '=' ,np.degrees(lidars['Lidar_Spherical']['theta']))
-    pdb.set_trace()
+    # pdb.set_trace()
 
     # Rho, theta and psi inputs and their uncertainties
     theta1,U_theta1 = lidars['Lidar_Spherical']['theta'],np.radians(Lidar.optics.scanner.stdv_cone_angle[0])
@@ -473,7 +472,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     # 1. Calculate radial speed uncertainty for an heterogeneous flow
     
-    
+    # pdb.set_trace()
     U_Vrad_homo_MC,U_Vrad_homo_MC_LOS1,U_Vrad_homo_MC_LOS2 = [],[],[]
     VLOS_list_T,U_VLOS_T_MC,U_VLOS_T_GUM,U_VLOS_THomo_MC=[],[],[],[]
     for ind_0 in range(len(theta_TEST)):
@@ -644,12 +643,14 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
 ####################################################################################    
     
     #%% Storing data
-    
+    # pdb.set_trace()
     Final_Output_UQ_Scanner                 = {'VLOS1 Uncertainty MC [m/s]':U_VLOS1_MC,'VLOS1 Uncertainty GUM [m/s]':U_VLOS1_GUM,
                                                'Vr Uncertainty homo MC [m/s]':U_VLOS_THomo_MC,'Vr Uncertainty homo GUM [m/s]':U_VLOS_THomo_GUM,'Vr Uncertainty MC [m/s]':U_VLOS_T_MC,'Vr Uncertainty GUM [m/s]':U_VLOS_T_GUM,
-                                               'x':x,'y':y,'z':z,'rho':rho_TEST,'theta':theta_TEST,'psi':psi_TEST,'wind direction':wind_direction,'rho_Vh':rho1,'theta_Vh':theta1,'psi_Vh':psi1,'STDVs':[U_theta1,U_psi1,U_rho1]} #, 'Rayleigh length':Probe_param['Rayleigh Length'],'Rayleigh length uncertainty':Probe_param['Rayleigh Length uncertainty']}
+                                               'x':x,'y':y,'z':z,'rho':rho_TEST,'theta':theta_TEST,'psi':psi_TEST,'wind direction':wind_direction,'Focus distance':rho1,'Elevation angle':theta1,'Azimuth':psi1,'STDVs':[U_theta1,U_psi1,U_rho1]} #, 'Rayleigh length':Probe_param['Rayleigh Length'],'Rayleigh length uncertainty':Probe_param['Rayleigh Length uncertainty']}
     
-    Lidar.lidar_inputs.dataframe['Scanner'] = (Final_Output_UQ_Scanner['Vr Uncertainty MC [m/s]'])*len(Atmospheric_Scenario.temperature)
+    Lidar.lidar_inputs.dataframe['Scanner'] = {'Focus distance':Final_Output_UQ_Scanner['Focus distance'][0],'Elevation angle':Final_Output_UQ_Scanner['Elevation angle'][0],'Azimuth':Final_Output_UQ_Scanner['Azimuth'][0]}
+    # Lidar.lidar_inputs.dataframe['Scanner'] = (Final_Output_UQ_Scanner['Vr Uncertainty MC [m/s]'])*len(Atmospheric_Scenario.temperature)
+
     Lidar.lidar_inputs.dataframe['Probe Volume'] = Probe_param
     
     # Plotting
