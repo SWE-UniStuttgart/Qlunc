@@ -13,7 +13,7 @@ Now, imagine we want to create a lidar object made up with one single module. Th
  5) Ask for the uncertainties we are interested in by using _dot notation_
 
 ### 1. Fill up the inputs yaml file
-Before creating the classes for the different components we will fill in the yaml file with the corresponding values for the components and decide the components and the modules that we want to include in the lidar device for uncertainty calculations. Users have a [yaml template for Qlunc inputs](https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Main/Template_yaml_inputs_file.yml) in the repository.
+Before creating the classes for the different components we will fill in the yaml file with the corresponding values for the components and decide the components and the modules that we want to include in the lidar device for uncertainty calculations. Users have a [yaml template for Qlunc inputs](https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Main/Template_yaml_inputs_file.yml) in the repository. Rename it to *Qlunc_inputs.yml*.
 
 The minimum information defining your component might be:
  - Name: Provide an ID to our object
