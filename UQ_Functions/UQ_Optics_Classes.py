@@ -133,7 +133,8 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # psi2  ,U_psi2   = np.array([0.0873]),0.026179938779914945  #lidars['Lidar2_Spherical']['psi'],np.radians(Lidar.optics.scanner.stdv_azimuth[1])
     rho1  ,U_rho1   = lidars['Lidar_Spherical']['rho'],Lidar.optics.scanner.stdv_focus_dist [0]
     # rho2  ,U_rho2   = np.array([1000.]),1   #lidars['Lidar2_Spherical']['rho'],Lidar.optics.scanner.stdv_focus_dist[1] 
-    #Uncertainty in the probe volume    
+    #Uncertainty in the probe volume 
+    pdb.set_trace()
     Probe_param = Lidar.probe_volume.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,lidars)
     
     #%% 2) State the correlations to calculate the correlation in the different VLOS:

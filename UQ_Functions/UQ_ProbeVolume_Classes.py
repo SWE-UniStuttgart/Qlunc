@@ -66,11 +66,11 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,lidars):
     
     elif Qlunc_yaml_inputs['Components']['Lidar general inputs']['Type']=="Pulsed":
         # Variables
-        
-        tau_meas      = Qlunc_yaml_inputs['Components']['Telescope']['Gate length']
-        tau           = Qlunc_yaml_inputs['Components']['Telescope']['Pulse shape']
-        stdv_tau_meas = Lidar.optics.telescope.stdv_tau_meas
-        stdv_tau      = Lidar.optics.telescope.stdv_tau
+        pdb.set_trace()
+        tau_meas      = Qlunc_yaml_inputs['Components']['AOM']['Gate length']
+        tau           = Qlunc_yaml_inputs['Components']['AOM']['Pulse shape']
+        stdv_tau_meas = Qlunc_yaml_inputs['Components']['AOM']['stdv Gate length'] #Lidar.photonics.acousto_optic_modulator.stdv_tau_meas
+        stdv_tau      = Qlunc_yaml_inputs['Components']['AOM']['stdv Pulse shape'] #Lidar.photonics.acousto_optic_modulator.stdv_tau
         
         
         # Definition from "LEOSPHERE pulsed lidar principles" -->  Theory from Banakh and Smalikho 1994: “Estimation of the turbulence energy dissipation rate from the pulsed Doppler lidar data”.

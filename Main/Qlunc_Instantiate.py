@@ -111,15 +111,11 @@ Telescope = telescope (name                       = Qlunc_yaml_inputs['Component
                        stdv_fiber_lens_d          = Qlunc_yaml_inputs['Components']['Telescope']['stdv Fiber-lens distance'],
                        stdv_fiber_lens_offset     = Qlunc_yaml_inputs['Components']['Telescope']['stdv Fiber-lens offset'], 
                        stdv_eff_radius_telescope  = Qlunc_yaml_inputs['Components']['Telescope']['stdv Effective radius telescope'],
-                       tau                        = Qlunc_yaml_inputs['Components']['Telescope']['Pulse shape'],
-                       tau_meas                   = Qlunc_yaml_inputs['Components']['Telescope']['Gate length'], 
-                       stdv_tau                   = Qlunc_yaml_inputs['Components']['Telescope']['stdv Pulse shape'],
-                       stdv_tau_meas              = Qlunc_yaml_inputs['Components']['Telescope']['stdv Gate length'], 
                        unc_func                   = uopc.UQ_Telescope)
 
 
 Probe_Volume = probe_volume (name                       = Qlunc_yaml_inputs['Probe Volume']['Name'],
-                             extinction_coef            = Qlunc_yaml_inputs['Probe Volume']['Extinction coeficient'],
+                             extinction_coef            = Qlunc_yaml_inputs['Probe Volume']['Extinction coefficient'],
                              unc_func                   = upbc.UQ_Probe_volume)
 
 
@@ -137,7 +133,11 @@ Optics_Module =  optics (name               = Qlunc_yaml_inputs['Modules']['Opti
 
 AOM = acousto_optic_modulator (name           = Qlunc_yaml_inputs['Components']['AOM']['Name'],
                                insertion_loss = Qlunc_yaml_inputs['Components']['AOM']['Insertion loss'],
-                               unc_func        = uphc.UQ_AOM)
+                               tau            = Qlunc_yaml_inputs['Components']['AOM']['Pulse shape'],
+                               tau_meas       = Qlunc_yaml_inputs['Components']['AOM']['Gate length'], 
+                               stdv_tau       = Qlunc_yaml_inputs['Components']['AOM']['stdv Pulse shape'],
+                               stdv_tau_meas  = Qlunc_yaml_inputs['Components']['AOM']['stdv Gate length'],                                
+                               unc_func       = uphc.UQ_AOM)
 
 Optical_Amplifier = optical_amplifier(name             = Qlunc_yaml_inputs['Components']['Optical Amplifier']['Name'],        # Introduce your scanner name.
                                       NoiseFig         = Qlunc_yaml_inputs['Components']['Optical Amplifier']['Optical amplifier noise figure'],          # In [dB]. Can introduce it as a table from manufactures (in this example the data is taken from Thorlabs.com, in section EDFA\Graps) or introduce a single well-known value
@@ -228,7 +228,7 @@ Lidar = lidar(name             = Qlunc_yaml_inputs['Lidar']['Name'],            
               wfr_model        = WFR_M,
               filt_method      = None,
               probe_volume     = Probe_Volume, 
-              lidar_inputs     = Lidar_inputs, #eval(Qlunc_yaml_inputs['Lidar']['Lidar inputs']),         # Introduce lidar general inputs
+              lidar_inputs     = eval(Qlunc_yaml_inputs['Lidar']['Lidar inputs']), #  Lidar_inputs, #      # Introduce lidar general inputs
               unc_func         = ulc.sum_unc_lidar,
               unc_Vh           = uVhc.UQ_Vh) #eval(Qlunc_yaml_inputs['Lidar']['Uncertainty function'])) 
 
