@@ -97,7 +97,6 @@ def unc_comb(data):
     res_dB      = []
     res_watts   = []
     zipped_data = []
-    # pdb.set_trace()
     if not isinstance (data,np.ndarray):
         data=np.array(data)    
     
@@ -110,16 +109,13 @@ def unc_comb(data):
             except:
                 data_db=data[data_row][0]             
             data_watts.append(10**(data_db/10))
-        # pdb.set_trace()
         for i in range(len(data_watts[0])): # combining all uncertainties making sum of squares and the sqrt of the sum
             zipped_data.append(list(zip(*data_watts))[i])
             res_watts.append(np.sqrt(sum(map (lambda x: x**2,zipped_data[i])))) #  Combined stdv
             # res_watts.append(sum(map (lambda x: x**2,zipped_data[i]))) #   Combined Variance
             
             res_dB=10*np.log10(res_watts) #Convert into dB 
-        # pdb.set_trace()
         del data_db
-    # pdb.set_trace()
     return np.array(res_dB)
 
 #%% System coordinates transformation
@@ -133,7 +129,6 @@ def sph2cart(rho,theta,phi):
         x.append(rho[i]*np.cos(theta[i])*np.cos(phi[i]))
         y.append(rho[i]*np.cos(theta[i])*np.sin(phi[i]) )
         z.append(rho[i]*np.sin(theta[i]) )
-    # pdb.set_trace()
     return(np.around(x,5),np.around(y,5),np.around(z,5))
 
 def cart2sph(x,y,z): 
@@ -162,7 +157,6 @@ def cart2sph(x,y,z):
         # elif x[ind]==0:
         #         theta.append(np.pi/2.0*(np.sign(y[ind])))
     # print(np.degrees(theta))
-    # pdb.set_trace()
     
     return(np.array(rho),np.array(theta),np.array(phi)) # foc_dist, aperture angle, azimuth
 #%% NDF function
@@ -189,7 +183,6 @@ def to_netcdf(DataXarray,Qlunc_yaml_inputs,Lidar,Atmospheric_Scenario):
     if os.path.isfile('./Projects/' + Qlunc_yaml_inputs['Project']+ '.nc'):
         # Read the new lidar data
         Lidar.lidar_inputs.dataframe['Lidar']
-        # pdb.set_trace()
         # time      = Atmospheric_Scenario.time 
         names     = [Lidar.LidarID]
         component = [i for i in DataXarray.keys()]
@@ -251,22 +244,18 @@ def sample_sphere(r,npoints, ndim=3):
 #%% RMSE
 
 def rmse(f,ff):
-    # pdb.set_trace()
     rm=[]
     rms=[]
     # ind_rm=0
     sum_rm=[]
     # for ffi,fi in zip(ff,f):
-    # pdb.set_trace()
     rm=([(np.array(ff)-np.array(f))**2])
     rms=(np.sqrt(np.sum(rm)/len(ff)))
     # ind_rm=ind_rm+1
-    # pdb.set_trace()
     return np.array(rms)
 
 #%% Define meshgrid for the errors in pointing accuracy and focus range
 def mesh (theta,psi,rho):
-    # pdb.set_trace()
     box=np.meshgrid(theta,psi,rho)
     # Get coordinates of the points on the grid
     box_positions = np.vstack(map(np.ravel, box))
@@ -482,7 +471,6 @@ def U_VLOS_MC(theta,psi,rho,Hl,Href,alpha,wind_direction,Vref,ind_wind_dir,VLOS1
      """
      
      VLOS01,U_VLOS1,=[],[]            
-     # pdb.set_trace()
      VLOS1 = Vref*(((Hl+(np.sin(theta)*rho))/Href)**alpha[0])*(np.cos(theta)*np.cos(psi-wind_direction[ind_wind_dir])) #-np.sin(theta_corr[0][ind_npoints])*np.tan(wind_tilt[ind_npoints])
      VLOS1_list.append(np.mean(VLOS1))
      U_VLOS1   = np.nanstd(VLOS1)   
@@ -531,7 +519,6 @@ def U_VLOS_GUM (theta1,psi1,rho1,U_theta1,U_psi1,U_rho1,U_VLOS1,Hl,Vref,Href,alp
     # U_VLOS_sh_psi2   = Vref*np.cos((theta2))*((((Hl)+(np.sin(theta2)*rho2))/Href)**alpha[0])*(np.sin(-psi2[0]+wind_direction[ind_wind_dir]))*(U_psi2) 
     # U_VLOS_sh_range2 = Vref*alpha[0]*(((Hl+(np.sin(theta2)*rho2))/Href)**alpha[0])*np.cos(theta2)*np.cos(psi2-wind_direction[ind_wind_dir])*(np.sin(theta2)/(Hl+(np.sin(theta2)*rho2)))*U_rho2
     
-    # pdb.set_trace()
     # 2.4 Expanded uncertainty with contributions of theta, psi and rho
 
     # Correlation terms corresponding to the relation between same angles of different lidars ([theta1,theta2],[psi1,psi2],[rho1,rho2])
@@ -552,7 +539,6 @@ def U_VLOS_GUM (theta1,psi1,rho1,U_theta1,U_psi1,U_rho1,U_VLOS1,Hl,Vref,Href,alp
     # CC_T2_P2 = U_VLOS_sh_theta2*U_VLOS_sh_psi2*CROS_CORR[3]
     # CC_T2_R2 =U_VLOS_sh_theta2*U_VLOS_sh_range2*CROS_CORR[4]
     # CC_P2_R2 = U_VLOS_sh_range2*U_VLOS_sh_psi2*CROS_CORR[5]
-    # pdb.set_trace()
     # U_VLOS2_GUM=np.sqrt(((U_VLOS_sh_theta2)**2+(U_VLOS_sh_psi2)**2+(U_VLOS_sh_range2)**2)+2*(CC_T2_P2+CC_T2_R2+CC_P2_R2+CC_VLOS))
     return(U_VLOS1_GUM)
 

@@ -44,7 +44,6 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     ### Photoniccs
     if Lidar.photonics != None:
         try: # each try/except evaluates whether the component is included in the module, therefore in the calculations
-            # pdb.set_trace()
             Photonics_Uncertainty,DataFrame = Lidar.photonics.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
             # List_Unc_lidar.append(Photonics_Uncertainty['Uncertainty_Photonics'])
             try:
@@ -74,7 +73,6 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             # Save the dictionary --> Optics_Uncertainty to pass it to the function UQ_Pointing_Classes to calculate the Vh uncertainty
             with open('./Projects/'+Lidar.LidarID, 'wb') as f:
                 pickle.dump(Optics_Uncertainty, f)
-            # pdb.set_trace()
             # Optics_Uncertainty           = np.ndarray.tolist(Optics_Uncertainty['Uncertainty_Optics'])*len(Atmospheric_Scenario.temperature)
             # List_Unc_lidar.append(np.array([Optics_Uncertainty]))
             try:
@@ -106,11 +104,8 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     ### Signal processor
     if Lidar.signal_processor != None:   
-        # pdb.set_trace()
         try:
-            # pdb.set_trace()
             SignalProcessor_Uncertainty,DataFrame = Lidar.signal_processor.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
-            # pdb.set_trace()
             List_Unc_lidar.append(SignalProcessor_Uncertainty['Uncertainty_SignalProcessor']*len(Atmospheric_Scenario.temperature))
         
         except:
@@ -123,7 +118,6 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     # if Lidar.wfr_model != None:
     #     try:
-    #         pdb.set_trace()
     #         WindFieldReconstruction_Uncertainty = Lidar.wfr_model.Uncertainty(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scanner_Uncertainty)
     #     except:
     #         print(colored('Error in wfr model','cyan', attrs=['bold']))
@@ -134,18 +128,15 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     Lidar.lidar_inputs.dataframe['Lidar'] = Final_Output_Lidar_Uncertainty['Hardware_Lidar_Uncertainty_combination']*np.linspace(1,1,len(Atmospheric_Scenario.temperature))
     
-    # pdb.set_trace()
     # Include time in the dataframe:
     # Lidar.lidar_inputs.dataframe['Time']=Atmospheric_Scenario.time
     ########################################################################################################
     # Create Xarray to store data. Link with Mocalum and yaddum  ###########################################
     # READ netcdf FILE.
     # da=xr.open_dataarray('C:/SWE_LOCAL/GIT_Qlunc/Projects/' + 'Gandia.nc')
-    # pdb.set_trace()
     # df=SA.to_netcdf(Lidar.lidar_inputs.dataframe,Qlunc_yaml_inputs,Lidar,Atmospheric_Scenario)
     ########################################################################################################
     ########################################################################################################
-    # pdb.set_trace()
     
     
 

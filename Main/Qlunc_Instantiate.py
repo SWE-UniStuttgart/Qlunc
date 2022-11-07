@@ -47,7 +47,6 @@ exec(open(Qlunc_yaml_inputs['Main directory']+'/Main/Qlunc_Classes.py').read())
 # Each module/component is a python object with their own technical characteristics and can be flexible combined to assess different use cases. 
 
 # Scanner:
-# pdb.set_trace()
 Scanner           = scanner(name            = Qlunc_yaml_inputs['Components']['Scanner']['Name'],           # Introduce your scanner name.
                             scanner_type    = Qlunc_yaml_inputs['Components']['Scanner']['Type'],
                             origin          = Qlunc_yaml_inputs['Components']['Scanner']['Origin'],         # Origin (coordinates of the lidar deployment).
@@ -111,15 +110,11 @@ Telescope = telescope (name                       = Qlunc_yaml_inputs['Component
                        stdv_fiber_lens_d          = Qlunc_yaml_inputs['Components']['Telescope']['stdv Fiber-lens distance'],
                        stdv_fiber_lens_offset     = Qlunc_yaml_inputs['Components']['Telescope']['stdv Fiber-lens offset'], 
                        stdv_eff_radius_telescope  = Qlunc_yaml_inputs['Components']['Telescope']['stdv Effective radius telescope'],
-                       tau                        = Qlunc_yaml_inputs['Components']['Telescope']['Pulse shape'],
-                       tau_meas                   = Qlunc_yaml_inputs['Components']['Telescope']['Gate length'], 
-                       stdv_tau                   = Qlunc_yaml_inputs['Components']['Telescope']['stdv Pulse shape'],
-                       stdv_tau_meas              = Qlunc_yaml_inputs['Components']['Telescope']['stdv Gate length'], 
                        unc_func                   = uopc.UQ_Telescope)
 
 
 Probe_Volume = probe_volume (name                       = Qlunc_yaml_inputs['Probe Volume']['Name'],
-                             extinction_coef            = Qlunc_yaml_inputs['Probe Volume']['Extinction coeficient'],
+                             extinction_coef            = Qlunc_yaml_inputs['Probe Volume']['Extinction coefficient'],
                              unc_func                   = upbc.UQ_Probe_volume)
 
 
@@ -137,7 +132,11 @@ Optics_Module =  optics (name               = Qlunc_yaml_inputs['Modules']['Opti
 
 AOM = acousto_optic_modulator (name           = Qlunc_yaml_inputs['Components']['AOM']['Name'],
                                insertion_loss = Qlunc_yaml_inputs['Components']['AOM']['Insertion loss'],
-                               unc_func        = uphc.UQ_AOM)
+                               tau            = Qlunc_yaml_inputs['Components']['AOM']['Pulse shape'],
+                               tau_meas       = Qlunc_yaml_inputs['Components']['AOM']['Gate length'], 
+                               stdv_tau       = Qlunc_yaml_inputs['Components']['AOM']['stdv Pulse shape'],
+                               stdv_tau_meas  = Qlunc_yaml_inputs['Components']['AOM']['stdv Gate length'],                                
+                               unc_func       = uphc.UQ_AOM)
 
 Optical_Amplifier = optical_amplifier(name             = Qlunc_yaml_inputs['Components']['Optical Amplifier']['Name'],        # Introduce your scanner name.
                                       NoiseFig         = Qlunc_yaml_inputs['Components']['Optical Amplifier']['Optical amplifier noise figure'],          # In [dB]. Can introduce it as a table from manufactures (in this example the data is taken from Thorlabs.com, in section EDFA\Graps) or introduce a single well-known value
@@ -212,7 +211,7 @@ Lidar_inputs     = lidar_gral_inp(name        = Qlunc_yaml_inputs['Components'][
 WFR_M = wfr (name                 = Qlunc_yaml_inputs['WFR model']['Name'],
               reconstruction_model = Qlunc_yaml_inputs['WFR model']['Model'],
               unc_func             = uprm.UQ_WFR)
-# pdb.set_trace()
+
 # Data filtering method
 Filt_M = filtering_method (name        = Qlunc_yaml_inputs['Filtering method']['Name'],
                            filt_method = Qlunc_yaml_inputs['Filtering method']['Method'],
@@ -228,11 +227,10 @@ Lidar = lidar(name             = Qlunc_yaml_inputs['Lidar']['Name'],            
               wfr_model        = WFR_M,
               filt_method      = None,
               probe_volume     = Probe_Volume, 
-              lidar_inputs     = Lidar_inputs, #eval(Qlunc_yaml_inputs['Lidar']['Lidar inputs']),         # Introduce lidar general inputs
+              lidar_inputs     = eval(Qlunc_yaml_inputs['Lidar']['Lidar inputs']), #  Lidar_inputs, #      # Introduce lidar general inputs
               unc_func         = ulc.sum_unc_lidar,
               unc_Vh           = uVhc.UQ_Vh) #eval(Qlunc_yaml_inputs['Lidar']['Uncertainty function'])) 
 
-# pdb.set_trace()
 #%% Creating atmospheric scenarios: ############################################
 Atmospheric_TimeSeries = Qlunc_yaml_inputs['Atmospheric_inputs']['TimeSeries'] # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere (T, H, rain and fog) 
                                                                            # If so we obtain a time series describing the noise implemented in the measurement.

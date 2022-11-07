@@ -72,13 +72,6 @@ Components:
     stdv Fiber-lens distance:        x.x             
     stdv Fiber-lens offset:          x.x             
     stdv Effective radius telescope: x.x  
-    
-    # Pulsed lidar: This is how the pulse is defined and the rayleigh distance calculated 
-    Pulse shape:                     x.x  # Pulse shape (tau) (only for pulsed lidar) - Defined as the FWHM of the pulse shape
-    Gate length:                     x.x  # Gate length   (tau_meas)
-    stdv Pulse shape:                x.x  #(stdv_tau)
-    stdv Gate length:                x.x  # (stdv tau_meas)
-    
     Uncertainty function: uopc.UQ_Telescope
     
 # Photonics  
@@ -119,8 +112,12 @@ Components:
     Uncertainty function: X
 
   AOM:
-    Name:                 X  # String
-    Insertion loss:       x  # dB
+    Name:                 X   # String
+    Insertion loss:       x.x # dB
+    Pulse shape:          x   # Pulse shape (tau) (only for pulsed lidar) - Defined as the FWHM of the pulse shape
+    Gate length:          x.x # Gate length   (tau_meas)
+    stdv Pulse shape:     x.x #(stdv_tau)
+    stdv Gate length:     x.x # (stdv tau_meas)
     Uncertainty function: x  # Python module! (You develop a function and save it as a python module)
 
 # Analog to digital converter
@@ -141,6 +138,7 @@ Components:
     Yaw error:   x.x  # [deg]
     Pitch error: x.x  # [deg]
     Roll error:  x.x  # [deg]
+    DataFrame:   {}   # Leave empty
 ---
 # Modules:
 Modules:
