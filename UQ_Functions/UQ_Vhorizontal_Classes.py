@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-"""
+""".
+
 Created on Sat Nov  5 19:04:36 2022
 
 @author: fcosta
@@ -11,7 +12,27 @@ from Utils.Qlunc_ImportModules import *
 import Utils.Qlunc_Help_standAlone as SA
 from Utils import Qlunc_Plotting as QPlot
 def UQ_Vh(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Lidars):
-
+    """.
+    
+    Estimates the uncertainty in the horizontal wind speed $V_{h}$ by using the Guide to the expression of Uncertainty in Measurements (GUM). Location: Qlunc_Help_standAlone.py
+    
+    Parameters
+    ----------    
+    * Lidar: Lidar object
+    
+    * Atomspheric_Scenario
+    
+    * cts: constants for calculations (don't need inputs from user)
+    
+    * Qlunc_yaml_inputs: inputs from yaml file. Lidar characteristics and measuring setup
+    
+    * Lidars: ID of the lidars meant to be compared
+  
+    Returns
+    -------    
+    Estimated uncertainty in horizontal wind speed
+    
+    """
     Href  = Qlunc_yaml_inputs['Components']['Scanner']['Href'],
     Vref  = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref']
     alpha = Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']    
@@ -72,12 +93,12 @@ def UQ_Vh(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Lidars):
             # Vlos1_noisy  = np.random.normal(Vlos1[0],u_Vlos1,N_MC)
             # Vlos2_noisy  = np.random.normal(Vlos2[0],u_Vlos2,N_MC) 
             # pdb.set_trace()
-            theta1_noisy = np.random.normal(loaded_dict[0]['Uncertainty']['theta_Vh'],loaded_dict[0]['Uncertainty']['STDVs'][0],Lidar.optics.scanner.N_MC)
-            theta2_noisy = np.random.normal(loaded_dict[1]['Uncertainty']['theta_Vh'],loaded_dict[1]['Uncertainty']['STDVs'][0],Lidar.optics.scanner.N_MC)
-            psi1_noisy   = np.random.normal(loaded_dict[0]['Uncertainty']['psi_Vh'],loaded_dict[0]['Uncertainty']['STDVs'][1],Lidar.optics.scanner.N_MC)
-            psi2_noisy   = np.random.normal(loaded_dict[1]['Uncertainty']['psi_Vh'],loaded_dict[1]['Uncertainty']['STDVs'][1],Lidar.optics.scanner.N_MC)
-            rho1_noisy   = np.random.normal(loaded_dict[0]['Uncertainty']['rho_Vh'],loaded_dict[0]['Uncertainty']['STDVs'][2],Lidar.optics.scanner.N_MC)
-            rho2_noisy   = np.random.normal(loaded_dict[1]['Uncertainty']['rho_Vh'],loaded_dict[1]['Uncertainty']['STDVs'][2],Lidar.optics.scanner.N_MC)
+            theta1_noisy = np.random.normal(loaded_dict[0]['Uncertainty']['Elevation angle'],loaded_dict[0]['Uncertainty']['STDVs'][0],Lidar.optics.scanner.N_MC)
+            theta2_noisy = np.random.normal(loaded_dict[1]['Uncertainty']['Elevation angle'],loaded_dict[1]['Uncertainty']['STDVs'][0],Lidar.optics.scanner.N_MC)
+            psi1_noisy   = np.random.normal(loaded_dict[0]['Uncertainty']['Azimuth'],loaded_dict[0]['Uncertainty']['STDVs'][1],Lidar.optics.scanner.N_MC)
+            psi2_noisy   = np.random.normal(loaded_dict[1]['Uncertainty']['Azimuth'],loaded_dict[1]['Uncertainty']['STDVs'][1],Lidar.optics.scanner.N_MC)
+            rho1_noisy   = np.random.normal(loaded_dict[0]['Uncertainty']['Focus distance'],loaded_dict[0]['Uncertainty']['STDVs'][2],Lidar.optics.scanner.N_MC)
+            rho2_noisy   = np.random.normal(loaded_dict[1]['Uncertainty']['Focus distance'],loaded_dict[1]['Uncertainty']['STDVs'][2],Lidar.optics.scanner.N_MC)
             
             
             CORRCOEF_T=np.corrcoef(theta1_noisy,theta2_noisy)
@@ -169,7 +190,7 @@ def UQ_Vh(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Lidars):
             
             # Break down large equations
             u_wind,v_wind = SA.U_Vh_MC([Theta1_cr,Theta2_cr],[Psi1_cr,Psi2_cr],[Rho1_cr,Rho2_cr],wind_direction,ind_wind_dir,Href,Vref,alpha,Hl)   
-            
+            # pdb.set_trace()
             # ucomponent estimation        
             Uwind_MC.append(np.mean(u_wind))
             # Uncertainty as standard deviation (k=1) in the u wind velocity component estimation
@@ -193,7 +214,7 @@ def UQ_Vh(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Lidars):
                     Corr_coef_theta1_rho1[0][1],Corr_coef_theta2_rho1[0][1],Corr_coef_theta1_rho2[0][1],Corr_coef_theta2_rho2[0][1],
                     Corr_coef_rho1_psi1[0][1],Corr_coef_rho1_psi2[0][1],Corr_coef_rho2_psi1[0][1],Corr_coef_rho2_psi2[0][1]]
             # Calculate coefficients for the GUM approach
-            Uncertainty_Vh_GUM_F = SA.U_Vh_GUM([loaded_dict[0]['Uncertainty']['theta_Vh'],loaded_dict[1]['Uncertainty']['theta_Vh']],[loaded_dict[0]['Uncertainty']['psi_Vh'][0],loaded_dict[1]['Uncertainty']['psi_Vh'][0]],[loaded_dict[0]['Uncertainty']['rho_Vh'],loaded_dict[1]['Uncertainty']['rho_Vh']],wind_direction,ind_wind_dir,Href,Vref,alpha,Hl,U,Coef)   
+            Uncertainty_Vh_GUM_F = SA.U_Vh_GUM([loaded_dict[0]['Uncertainty']['Elevation angle'],loaded_dict[1]['Uncertainty']['Elevation angle']],[loaded_dict[0]['Uncertainty']['Azimuth'][0],loaded_dict[1]['Uncertainty']['Azimuth'][0]],[loaded_dict[0]['Uncertainty']['Focus distance'],loaded_dict[1]['Uncertainty']['Focus distance']],wind_direction,ind_wind_dir,Href,Vref,alpha,Hl,U,Coef)   
     
             Uncertainty_Vh_GUM.append(Uncertainty_Vh_GUM_F)
         
