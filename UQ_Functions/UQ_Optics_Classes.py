@@ -105,7 +105,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             rho1,theta1,psi1 =SA.cart2sph(x_vector_pos,y_vector_pos,z_vector_pos)
             return (cls,rho1,theta1,psi1)
         
-    pdb.set_trace()
+    # pdb.set_trace()
     x_Lidar1,y_Lidar1,z_Lidar1,lidars=[],[],[],[]
     lidars={}
     

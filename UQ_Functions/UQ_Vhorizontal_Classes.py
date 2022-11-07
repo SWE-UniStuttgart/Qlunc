@@ -97,8 +97,8 @@ def UQ_Vh(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Lidars):
             theta2_noisy = np.random.normal(loaded_dict[1]['Uncertainty']['Elevation angle'],loaded_dict[1]['Uncertainty']['STDVs'][0],Lidar.optics.scanner.N_MC)
             psi1_noisy   = np.random.normal(loaded_dict[0]['Uncertainty']['Azimuth'],loaded_dict[0]['Uncertainty']['STDVs'][1],Lidar.optics.scanner.N_MC)
             psi2_noisy   = np.random.normal(loaded_dict[1]['Uncertainty']['Azimuth'],loaded_dict[1]['Uncertainty']['STDVs'][1],Lidar.optics.scanner.N_MC)
-            rho1_noisy   = np.random.normal(loaded_dict[0]['Uncertainty']['Focus distance'],loaded_dict[0]['Uncertainty']['STDVs'][2],Lidar.optics.scanner.N_MC)
-            rho2_noisy   = np.random.normal(loaded_dict[1]['Uncertainty']['Focus distance'],loaded_dict[1]['Uncertainty']['STDVs'][2],Lidar.optics.scanner.N_MC)
+            rho1_noisy   = np.random.normal(loaded_dict[0]['Uncertainty']['Focus distance'][0],loaded_dict[0]['Uncertainty']['STDVs'][2],Lidar.optics.scanner.N_MC)
+            rho2_noisy   = np.random.normal(loaded_dict[1]['Uncertainty']['Focus distance'][0],loaded_dict[1]['Uncertainty']['STDVs'][2],Lidar.optics.scanner.N_MC)
             
             
             CORRCOEF_T=np.corrcoef(theta1_noisy,theta2_noisy)
