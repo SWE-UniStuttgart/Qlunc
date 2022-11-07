@@ -25,7 +25,7 @@ Components:
     
     
     # Montecarlo n° of points
-    N_MC: 50000 # N° of points for the Montecarlo simulation
+    N_MC: 5000 # N° of points for the Montecarlo simulation
     
     # Lissajous patterns:
     Lissajous parameters: [100,50,50,3,3] # [x_dim,y_dim,z_dim,q,p]
@@ -35,8 +35,8 @@ Components:
   
     # STDV in lidar angles and focus distance
     stdv focus distance: [2] # [m] One value for each lidar (this will be removed since the error in focus distance is calculated using telescope parameters (see Telescope section))
-    stdv Elevation angle: [1.1] # [deg]
-    stdv Azimuth: [1.1] # [deg]   
+    stdv Elevation angle: [.1] # [deg]
+    stdv Azimuth: [.1] # [deg]   
     
     # Correlations betwen the lidars 1 and 2, and elevation-azimuth correlations of each lidar
     correlations: [0,0,0,0,0,0,0] # [Psi1Psi2, Theta1Theta2, Rho1Rho2, Psi1Theta1,Psi1Theta2,Psi2Theta1,Psi2Theta2]
@@ -44,9 +44,9 @@ Components:
     # Measuring pattern (pointing and range) from origin: 
     # (Represents the points where we want to measure)
     N_Points: 1
-    Focus distance: [1000]   # [m]
-    Elevation angle: [15] # [deg] 
-    Azimuth: [-22]     # [deg] [origin,end]    # Scanning Lidar Pattern:
+    Rho: [1000]   # [m] 
+    Theta: [45] # [deg] - Theta increases from the ground (elevation angle)
+    Psi: [0]     # [deg] 
     # Measuring point: [20,20,20]
     Href: 1.0e+2 # Meters
     
@@ -169,7 +169,7 @@ Modules:
 ---  
 # Lidar:
 Lidar:
-  Name: Caixa2
+  Name: CaixaT2
   Photonics module: Photonics_Module       # Has to be the same name as the instance
   Optics module: Optics_Module             # Has to be the same name as the instance
   Power module: None                       # Has to be the same name as the instance

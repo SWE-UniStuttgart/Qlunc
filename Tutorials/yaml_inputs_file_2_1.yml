@@ -18,14 +18,14 @@ Components:
   Scanner:
     
     Name: Scanner_Yaml1 # Provide an ID to your lidar:    
-    Origin: [751,422,0]  # Lidar position in meters (each vector is one lidar): [x,y,z]
+    Origin: [1000,1000,0]  # Lidar position in meters (each vector is one lidar): [x,y,z]
     Error origin: [0,0,0] # [m] Error in the location of the lidar (GPS error)
     Pattern time: 20 # Time lidar takes to complete a measuring pattern
     Single point measuring time: 5 # time lidar spans in one single measurement of a pattern
     
     
     # Montecarlo n° of points
-    N_MC: 50000 # N° of points for the Montecarlo simulation
+    N_MC: 5000 # N° of points for the Montecarlo simulation
     
     # Lissajous patterns:
     Lissajous parameters: [100,50,50,3,3] # [x_dim,y_dim,z_dim,q,p]
@@ -34,7 +34,7 @@ Components:
     Pattern: 'None' # 'lissajous', user defined pattern or 'None' in case none predefined pattern is used - Only with SCAN type
   
     # STDV in lidar angles and focus distance
-    stdv focus distance: [1] # [m] One value for each lidar (this will be removed since the error in focus distance is calculated using telescope parameters (see Telescope section))
+    stdv focus distance: [5] # [m] One value for each lidar (this will be removed since the error in focus distance is calculated using telescope parameters (see Telescope section))
     stdv Elevation angle: [.1] # [deg]
     stdv Azimuth: [.1] # [deg]   
     
@@ -44,9 +44,9 @@ Components:
     # Measuring pattern (pointing and range) from origin: 
     # (Represents the points where we want to measure)
     N_Points: 1
-    Focus distance: [1000]   # [m]
-    Elevation angle: [15] # [deg] 
-    Azimuth: [-22]     # [deg] [origin,end]    # Scanning Lidar Pattern:
+    Rho: [1000]   # [m] 
+    Theta: [45] # [deg] - Theta increases from the ground (elevation angle)
+    Psi: [0]     # [deg] 
     # Measuring point: [20,20,20]
     Href: 1.0e+2 # Meters
     
@@ -169,7 +169,7 @@ Modules:
 ---  
 # Lidar:
 Lidar:
-  Name: Caixa1
+  Name: CaixaT1
   Photonics module: Photonics_Module       # Has to be the same name as the instance
   Optics module: Optics_Module             # Has to be the same name as the instance
   Power module: None                       # Has to be the same name as the instance
