@@ -214,7 +214,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         theta1_noisy = np.random.normal(theta1[0],U_theta1,Lidar.optics.scanner.N_MC)
         psi1_noisy   = np.random.normal(psi1[0],U_psi1,Lidar.optics.scanner.N_MC)
         rho1_noisy   = np.random.normal(rho1[0],U_rho1,Lidar.optics.scanner.N_MC)
-        
+        # pdb.set_trace()
         
         # CORRCOEF_T=np.corrcoef(theta1_noisy,theta2_noisy)
         # CORRCOEF_P=np.corrcoef(psi1_noisy,psi2_noisy)
@@ -241,7 +241,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
                   
                   [theta_stds[0]*psi_stds[0]*psi1_theta1_corr_n ,                        psi_stds[0]**2,                   rho_stds[0]*psi_stds[0]*psi1_rho1_corr_n],
                   
-                  [rho_stds[0]*theta_stds[0]*theta1_rho1_corr_n,         rho_stds[0]*psi_stds[0]*psi1_rho1_corr_n,                     rho_stds[0]**2]]
+                  [theta_stds[0]*rho_stds[0]*theta1_rho1_corr_n,         psi_stds[0]*rho_stds[0]*psi1_rho1_corr_n,                     rho_stds[0]**2]]
                   
                   
         # cov_MAT=[[              theta_stds[0]**2,                     theta_stds[1]*theta_stds[0]*theta1_theta2_corr_n,   psi_stds[0]*theta_stds[0]*psi1_theta1_corr_n,   psi_stds[1]*theta_stds[0]*psi2_theta1_corr_n  ],
@@ -432,8 +432,8 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     wind_direction_TEST = np.radians([180])
     wind_tilt_TEST      = np.radians([0])
-    theta_TEST = np.radians(np.linspace(1,1,500))
-    psi_TEST   = np.radians(np.linspace(0,359,500))
+    theta_TEST = np.radians(np.linspace(1,89,500))
+    psi_TEST   = np.radians(np.linspace(45,45,500))
     rho_TEST   = np.linspace(1000,1000,500)
     
     
@@ -467,7 +467,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
 ####################################################################################    
     
 ####################################################################################    
-   #  # pdb.set_trace()
+    # pdb.set_trace()
    #  wind_direction_TEST = 0
    #  wind_tilt_TEST      = 0
    #  theta_TEST = np.linspace(1,89,100)
@@ -619,7 +619,6 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     Lidar.lidar_inputs.dataframe['Probe Volume'] = Probe_param
     
     # Plotting
-    # pdb.set_trace()
     QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,Qlunc_yaml_inputs['Flags']['Line of sight Velocity Uncertainty'],False,False,False,False)  #Qlunc_yaml_inputs['Flags']['Scanning Pattern']
     
     

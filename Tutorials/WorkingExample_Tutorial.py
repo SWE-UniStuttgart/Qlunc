@@ -163,9 +163,12 @@ class converter(): # Not included yet in Version Qlunc v-0.9 calculations
                  print('Created new converter: {}'.format(self.ConverterID))
 
 class scanner():
-    def __init__(self,name,time_pattern,time_point,scanner_type,pattern,lissajous_param,origin,sample_rate,focus_dist,cone_angle,azimuth,x,y,z,stdv_focus_dist,stdv_cone_angle,stdv_azimuth,unc_func):
+    def __init__(self,name,Href,time_pattern,N_Points,N_MC,time_point,scanner_type,pattern,lissajous_param,origin,sample_rate,focus_dist,cone_angle,azimuth,stdv_location,stdv_focus_dist,stdv_cone_angle,stdv_azimuth,correlations,unc_func):
                  self.ScannerID       = name
                  self.time_pattern    = time_pattern
+                 self.N_Points        = N_Points
+                 self.Href            = Href
+                 self.N_MC            = N_MC
                  self.time_point      = time_point 
                  self.scanner_type    = scanner_type
                  self.origin          = origin
@@ -175,15 +178,14 @@ class scanner():
                  self.focus_dist      = focus_dist
                  self.cone_angle      = cone_angle
                  self.azimuth         = azimuth
+                 self.stdv_location= stdv_location
                  self.stdv_focus_dist = stdv_focus_dist
                  self.stdv_cone_angle = stdv_cone_angle
                  self.stdv_azimuth    = stdv_azimuth                 
-                 self.x               = x
-                 self.y               = y
-                 self.z               = z               
+                 self.correlations    = correlations
                  self.Uncertainty     = unc_func      
                  print('Created new scanner: {}'.format(self.ScannerID))
-        
+
 class optical_circulator():
     def __init__(self,name, insertion_loss,SNR,unc_func):#,isolation,return_loss): 
                  self.Optical_CirculatorID = name
@@ -195,7 +197,7 @@ class optical_circulator():
                  print ('Created new optical circulator: {}'.format(self.Optical_CirculatorID))
 
 class telescope():
-    def __init__(self,name,aperture,stdv_aperture,focal_length,fiber_lens_d,fiber_lens_offset,effective_radius_telescope,output_beam_radius,stdv_fiber_lens_d,stdv_fiber_lens_offset,stdv_focal_length,stdv_eff_radius_telescope,tau,tau_meas,unc_func):
+    def __init__(self,name,aperture,stdv_aperture,focal_length,fiber_lens_d,fiber_lens_offset,effective_radius_telescope,output_beam_radius,stdv_fiber_lens_d,stdv_fiber_lens_offset,stdv_focal_length,stdv_eff_radius_telescope,tau,tau_meas,stdv_tau, stdv_tau_meas,unc_func):
                 self.TelescopeID                = name
                 self.aperture                   = aperture
                 self.stdv_aperture              = stdv_aperture
@@ -210,6 +212,8 @@ class telescope():
                 self.stdv_eff_radius_telescope  = stdv_eff_radius_telescope
                 self.tau                        = tau
                 self.tau_meas                   = tau_meas
+                self.stdv_tau                   = stdv_tau
+                self.stdv_tau_meas              = stdv_tau_meas                
                 self.Uncertainty                = unc_func
                 print('Created new telescope: {}'.format(self.TelescopeID))
 
@@ -281,11 +285,12 @@ class lidar_gral_inp():
 
 #%% Lidar class:
 class lidar():
-    def __init__(self,name,photonics,optics,power,lidar_inputs,probe_volume,wfr_model,filt_method,unc_func):
+    def __init__(self,name,photonics,optics,power,signal_processor,lidar_inputs,probe_volume,wfr_model,filt_method,unc_func):
                  self.LidarID      = name
                  self.photonics    = photonics
                  self.optics       = optics
                  self.power        = power # Not included yet in Version Qlunc v-0.9 calculations
+                 self.signal_processor = signal_processor
                  self.probe_volume = probe_volume
                  self.wfr_model          = wfr_model
                  self.filt_method  = filt_method

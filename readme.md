@@ -27,8 +27,8 @@ The next step is to ask for the uncertainty we are interested in, either coming 
 
 #### Plots
  - Can draw photodetector uncertainties comparison including shot noise, thermal noise, dark current noise and, if needed, trans-impedance amplifier noise.
- - Scanning points and their uncertainty in meters (VAD and Scanning lidar).
  - Optical signal to noise ration from the optical amplifier
+ - Uncertainties in line of sight velocity ( $V_{LOS}$ ) and horizontal wind velocity ( $V_{h}$ )
 
 ## How to use `Qlunc`
 
@@ -65,7 +65,7 @@ This is the core of `Qlunc`. Here the user creates the classes describing the co
 ###  TestFile_Qlunc
  - A working example is provided to show how the process looks like. In this test case, a lidar is built up with its modules and components, puting all together to set up a lidar device. User can find more information on how to run this test file in the `readme.md` file dropped in this folder.
 ### Tutorials
-- Containing 3 [Jupyter Notebook-based tutorials](https://github.com/SWE-UniStuttgart/Qlunc/tree/Qlunc-V0.9/Tutorials); `Turial0.ipynb`, `Tutorial1.ipynb` and `Tutorial2.ipynb` with their corresponding yaml files. The tutorials are also available through the Binder service to ease accessibility and reproducibility. Users can find more information about these tutorials in the corresponding `readme.md` file dropped in this folder.
+- Containing 3 [Jupyter Notebook-based tutorials](https://github.com/SWE-UniStuttgart/Qlunc/tree/Qlunc-V0.9/Tutorials); `Turial0.ipynb`, `Tutorial1.ipynb` and `Tutorial2.ipynb` with their corresponding yaml files. The tutorials are also available through the Binder service to ease accessibility and reproducibility. Users can find more information about these tutorials in the corresponding `readme.md` file dropped in the folder `Tutorials`.
 ## Requirements
 The following python libraries and tools should be installed beforehand and are included in the `environment.yml` file:
 
