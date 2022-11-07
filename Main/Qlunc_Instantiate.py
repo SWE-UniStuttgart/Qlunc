@@ -77,9 +77,9 @@ Scanner           = scanner(name            = Qlunc_yaml_inputs['Components']['S
                             #                                        Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][1],
                             #                                        math.floor(Qlunc_yaml_inputs['Components']['Scanner']['Pattern time']/Qlunc_yaml_inputs['Components']['Scanner']['Single point measuring time'])))))[0],   # Cone angle in [degrees].
                             
-                            azimuth         = Qlunc_yaml_inputs['Components']['Scanner']['Azimuth'][0],
-                            focus_dist      = Qlunc_yaml_inputs['Components']['Scanner']['Focus distance'][0],   # Focus distance in [meters]                                                                                                
-                            cone_angle      = Qlunc_yaml_inputs['Components']['Scanner']['Elevation angle'][0],   # Elevation angle in [degrees].
+                            azimuth         = Qlunc_yaml_inputs['Components']['Scanner']['Psi'],   # Azimuth in [degrees]
+                            focus_dist      = Qlunc_yaml_inputs['Components']['Scanner']['Rho'],   # Focus distance in [meters]                                                                                              
+                            cone_angle      = Qlunc_yaml_inputs['Components']['Scanner']['Theta'], # Elevation angle in [degrees]
                             
                         
                           
