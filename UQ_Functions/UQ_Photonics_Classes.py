@@ -80,7 +80,6 @@ def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     # Photodetector dark current noise:
     UQ_Photodetector.Dark_current_noise = [(2*cts.e*Lidar.photonics.photodetector.DarkCurrent*Lidar.photonics.photodetector.BandWidth)]*len(Atmospheric_Scenario.temperature) 
-    # pdb.set_trace()
       
     if any(TIA_val == 'None' for TIA_val in [Lidar.photonics.photodetector.Gain_TIA,Lidar.photonics.photodetector.V_Noise_TIA]): # If any value of TIA is None dont include TIA noise in estimations :
         UQ_Photodetector.UQ_Photo    = [ np.array([10*np.log10(np.sum([UQ_Photodetector.Thermal_noise,UQ_Photodetector.Shot_noise,UQ_Photodetector.Dark_current_noise]))])]
@@ -141,7 +140,6 @@ def UQ_Optical_amplifier(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     """ 
     
     # Obtain SNR from figure noise or pass directly numerical value:
-    # pdb.set_trace()
     if isinstance (Lidar.photonics.optical_amplifier.NoiseFig, numbers.Number): #If user introduces a number or a table of values
         FigureNoise=[(Lidar.photonics.optical_amplifier.NoiseFig)]*len(Atmospheric_Scenario.temperature) #Figure noise vector
         NF_w = 10**(FigureNoise[0]/10) # Noise figure in watts
@@ -154,7 +152,7 @@ def UQ_Optical_amplifier(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         FigureNoise       = (NoiseFigure_VALUE.tolist())
         NF_w = 10**(FigureNoise/10) # Noise figure in watts
     G_w  = 10**(Lidar.photonics.optical_amplifier.OA_Gain/10) # Gain in Watts        
-    # pdb.set_trace()
+
     # ASE noise:
     UQ_Optical_amplifier    = [np.array([10*np.log10((NF_w-(1/G_w))*cts.h*(cts.c/Lidar.lidar_inputs.Wavelength)*Lidar.photonics.optical_amplifier.OA_BW*G_w)]*len(Atmospheric_Scenario.temperature))] 
 
@@ -163,7 +161,7 @@ def UQ_Optical_amplifier(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     OSNR_plot = 10*np.log10(((Lidar.photonics.optical_amplifier.Power_interval)/(NF_w*cts.h*(cts.c/Lidar.lidar_inputs.Wavelength)*Lidar.photonics.optical_amplifier.OA_BW))/1000)
     Final_Output_UQ_Optical_Amplifier = {'Uncertainty_OpticalAmp':UQ_Optical_amplifier, 'OSNR': OSNR_plot}
     Lidar.lidar_inputs.dataframe['Optical Amplifier'] = Final_Output_UQ_Optical_Amplifier['Uncertainty_OpticalAmp'][0]
-    # pdb.set_trace()
+    
     # Plotting:
     QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Optical_Amplifier,False,False,False,Qlunc_yaml_inputs['Flags']['Optical_amplifier_noise'],False)
     return Final_Output_UQ_Optical_Amplifier,Lidar.lidar_inputs.dataframe
@@ -207,15 +205,11 @@ def UQ_Laser(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         u_fact = 2.576
     elif Lidar.photonics.laser.conf_int==6:
         u_fact = 3        
-    # pdb.set_trace()   
     # UQ_Laser = np.array([( Lidar.photonics.laser.stdv_wavelength/u_fact)])    
     UQ_Laser.U_Laser = [np.array(10*np.log10(10**(Lidar.photonics.laser.RIN/10)*Lidar.photonics.laser.BandWidth*Lidar.photonics.laser.Output_power))]
     
-    
     Final_Output_UQ_Laser = {'Uncertainty_Laser':UQ_Laser.U_Laser}
-    
     Lidar.lidar_inputs.dataframe['Laser'] = Final_Output_UQ_Laser['Uncertainty_Laser']
-    # pdb.set_trace()
 
     return Final_Output_UQ_Laser,Lidar.lidar_inputs.dataframe
 
@@ -243,25 +237,19 @@ def UQ_AOM(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     AOM losses
     
     """ 
-    # pdb.set_trace()
     if Lidar.lidar_inputs.LidarType=='Pulsed':
-        # pdb.set_trace()
         UQ_AOM = np.array([Lidar.photonics.acousto_optic_modulator.insertion_loss]) # in dB
         P_il   = Lidar.photonics.photodetector.Power_interval/(10**(Lidar.photonics.acousto_optic_modulator.insertion_loss/10))
         Final_Output_UQ_AOM = {'Uncertainty_AOM':UQ_AOM}
-        # pdb.set_trace()
         Lidar.lidar_inputs.dataframe['AOM'] = Final_Output_UQ_AOM['Uncertainty_AOM']
     else: 
-        # pdb.set_trace()
         UQ_AOM=np.array([0])
         Final_Output_UQ_AOM={'Uncertainty_AOM':UQ_AOM}
         Lidar.lidar_inputs.dataframe['AOM'] =Final_Output_UQ_AOM['Uncertainty_AOM']
-    # pdb.set_trace()
     return Final_Output_UQ_AOM,Lidar.lidar_inputs.dataframe
 #%% Sum of uncertainties in photonics module: 
 def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs): 
     List_Unc_photonics = []
-    # pdb.set_trace()
     
     ###############
     # Photodetector
@@ -294,14 +282,10 @@ def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # AOM
     #####
     if Lidar.photonics.acousto_optic_modulator != 'None':
-        try: # each try/except evaluates wether the component is included in the module, therefore in the calculations
-                
+        try: # each try/except evaluates wether the component is included in the module, therefore in the calculations                
             AOM_Uncertainty,DataFrame = Lidar.photonics.acousto_optic_modulator.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
-            # pdb.set_trace()
-            List_Unc_photonics.append(AOM_Uncertainty['Uncertainty_AOM'])
-            
+            List_Unc_photonics.append(AOM_Uncertainty['Uncertainty_AOM'])           
         except:
-            # pdb.set_trace()
             AOM_Uncertainty=None
             print('Error in AOM uncertainty calculations!','cyan', attrs=['bold'])
     else:
@@ -320,7 +304,6 @@ def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             print(colored('Error in laser uncertainty calculations!','cyan', attrs=['bold']))
     else:
         print(colored('You didn´t include a laser in the lidar,so that laser uncertainty contribution is not in lidar uncertainty estimations.','cyan', attrs=['bold']))
-    # pdb.set_trace()
     Uncertainty_Photonics_Module                     = SA.unc_comb(List_Unc_photonics)
     Final_Output_UQ_Photonics                        = {'Uncertainty_Photonics':Uncertainty_Photonics_Module}
     Lidar.lidar_inputs.dataframe['Photonics Module'] = Final_Output_UQ_Photonics['Uncertainty_Photonics'][0]

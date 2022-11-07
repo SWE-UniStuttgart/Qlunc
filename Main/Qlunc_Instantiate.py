@@ -47,7 +47,6 @@ exec(open(Qlunc_yaml_inputs['Main directory']+'/Main/Qlunc_Classes.py').read())
 # Each module/component is a python object with their own technical characteristics and can be flexible combined to assess different use cases. 
 
 # Scanner:
-# pdb.set_trace()
 Scanner           = scanner(name            = Qlunc_yaml_inputs['Components']['Scanner']['Name'],           # Introduce your scanner name.
                             scanner_type    = Qlunc_yaml_inputs['Components']['Scanner']['Type'],
                             origin          = Qlunc_yaml_inputs['Components']['Scanner']['Origin'],         # Origin (coordinates of the lidar deployment).
@@ -212,7 +211,7 @@ Lidar_inputs     = lidar_gral_inp(name        = Qlunc_yaml_inputs['Components'][
 WFR_M = wfr (name                 = Qlunc_yaml_inputs['WFR model']['Name'],
               reconstruction_model = Qlunc_yaml_inputs['WFR model']['Model'],
               unc_func             = uprm.UQ_WFR)
-# pdb.set_trace()
+
 # Data filtering method
 Filt_M = filtering_method (name        = Qlunc_yaml_inputs['Filtering method']['Name'],
                            filt_method = Qlunc_yaml_inputs['Filtering method']['Method'],
@@ -232,7 +231,6 @@ Lidar = lidar(name             = Qlunc_yaml_inputs['Lidar']['Name'],            
               unc_func         = ulc.sum_unc_lidar,
               unc_Vh           = uVhc.UQ_Vh) #eval(Qlunc_yaml_inputs['Lidar']['Uncertainty function'])) 
 
-# pdb.set_trace()
 #%% Creating atmospheric scenarios: ############################################
 Atmospheric_TimeSeries = Qlunc_yaml_inputs['Atmospheric_inputs']['TimeSeries'] # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere (T, H, rain and fog) 
                                                                            # If so we obtain a time series describing the noise implemented in the measurement.

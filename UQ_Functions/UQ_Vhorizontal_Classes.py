@@ -92,7 +92,6 @@ def UQ_Vh(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Lidars):
         for ind_wind_dir in range(len(wind_direction)):  
             # Vlos1_noisy  = np.random.normal(Vlos1[0],u_Vlos1,N_MC)
             # Vlos2_noisy  = np.random.normal(Vlos2[0],u_Vlos2,N_MC) 
-            # pdb.set_trace()
             theta1_noisy = np.random.normal(loaded_dict[0]['Uncertainty']['Elevation angle'],loaded_dict[0]['Uncertainty']['STDVs'][0],Lidar.optics.scanner.N_MC)
             theta2_noisy = np.random.normal(loaded_dict[1]['Uncertainty']['Elevation angle'],loaded_dict[1]['Uncertainty']['STDVs'][0],Lidar.optics.scanner.N_MC)
             psi1_noisy   = np.random.normal(loaded_dict[0]['Uncertainty']['Azimuth'],loaded_dict[0]['Uncertainty']['STDVs'][1],Lidar.optics.scanner.N_MC)
@@ -190,7 +189,7 @@ def UQ_Vh(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Lidars):
             
             # Break down large equations
             u_wind,v_wind = SA.U_Vh_MC([Theta1_cr,Theta2_cr],[Psi1_cr,Psi2_cr],[Rho1_cr,Rho2_cr],wind_direction,ind_wind_dir,Href,Vref,alpha,Hl)   
-            # pdb.set_trace()
+
             # ucomponent estimation        
             Uwind_MC.append(np.mean(u_wind))
             # Uncertainty as standard deviation (k=1) in the u wind velocity component estimation

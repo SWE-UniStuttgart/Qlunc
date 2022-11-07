@@ -16,7 +16,6 @@ from Utils import Qlunc_Plotting as QPlot
 
 def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,lidars):
     # Liqin jin model
-    # pdb.set_trace()
     if Qlunc_yaml_inputs['Components']['Lidar general inputs']['Type']=="CW":
         # The focus distance varies with the focal length and the distance between the fiber-end and the telescope lens as well. So that, also the probe length varies with such distance.
         # Calculating focus distance depending on the distance between the fiber-end and the telescope lens:
@@ -36,7 +35,6 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,lidars):
 
         # focus_distance = 1/((1/r)-(1/(a+a0))) # This parameters are complicated to know for users. Maybe it is easier to put just a simple parameter representing the focus distance(*)
         focus_distance = lidars['Lidar_Spherical']['rho']
-        # pdb.set_trace()
         # Uncertainty in focus distance
         # Unc_focus_distance = np.sqrt((((1/r**2)/(((1/r)-(1/(a+a0)))**2))*Unc_r)**2 + (((1/(a+a0)**2)/(((1/r)-(1/(a+a0)))**2))*Unc_a)**2 + (((1/(a+a0)**2)/(((1/r)-(1/(a+a0)))**2))*Unc_a0)**2) # This parameters are complicated to know for users. Maybe it is easier to put just a simple parameter representing the focus distance(**)
         Unc_focus_distance = Qlunc_yaml_inputs['Components']['Scanner']['stdv focus distance'] #(**)
@@ -50,7 +48,6 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,lidars):
         Unc_Rayleigh_length=[]
         for ind_focusdist in focus_distance:
             Rayleigh_length.append( (wavelength*(ind_focusdist**2))/(np.pi*(rad_eff)**2))# Rayleigh length  (considered as the probe length) # half-width of the weighting function --> FWHM = 2*zr
-            # pdb.set_trace()
             # Uncertainty rayleigh length       
             Unc_Rayleigh_length.append( np.sqrt(((ind_focusdist**2)*Unc_wavelength/(np.pi*rad_eff))**2 + ((2*wavelength*ind_focusdist*Unc_focus_distance)/(np.pi*rad_eff**2))**2 + ((2*wavelength*(ind_focusdist**2)*Unc_eff_radius_telescope)/(np.pi*rad_eff**3))**2))
     
@@ -66,7 +63,6 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,lidars):
     
     elif Qlunc_yaml_inputs['Components']['Lidar general inputs']['Type']=="Pulsed":
         # Variables
-        pdb.set_trace()
         tau_meas      = Qlunc_yaml_inputs['Components']['AOM']['Gate length']
         tau           = Qlunc_yaml_inputs['Components']['AOM']['Pulse shape']
         stdv_tau_meas = Qlunc_yaml_inputs['Components']['AOM']['stdv Gate length'] #Lidar.photonics.acousto_optic_modulator.stdv_tau_meas
@@ -96,7 +92,6 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,lidars):
         # Rayleigh_length = (hmx[1] - hmx[0])/2
         # print("Rayleigh distance1:{:.3f}".format(zr))
         # print("Rayleigh distance2:{:.3f}".format(Rayleigh_length))
-        # pdb.set_trace()  
         # print("Zr uncertainty:{:.3f}".format(Unc_zr))
     
     # Saving rayleigh length to a file in ./metadata to be read by matlab

@@ -45,7 +45,6 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
     
     
     """
-    # pdb.set_trace()
     # Ploting general parameters:
     plot_param={'axes_label_fontsize' : 25,
                 'textbox_fontsize'    : 14,
@@ -111,7 +110,6 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         ax2.plot(np.degrees(Data['theta']),Data['Vr Uncertainty homo GUM [m/s]'],'b-',label='Homogeneous flow - GUM')
         ax2.plot(np.degrees(Data['theta']),Data['Vr Uncertainty homo MC [m/s]'],'ob' , markerfacecolor=(1, 1, 0, 0.5),label='Homogeneous flow - MC')
         # color=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))   
-        # pdb.set_trace()
         for ind_a in range(len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'])):
             # c=next(color)
             ax2.plot(np.degrees(Data['theta']),Data['Vr Uncertainty GUM [m/s]'],'-',label='Shear - GUM (alpha={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_a] ))
@@ -247,7 +245,6 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
 
 ###############   Plot Probe Volume parameters    ############################
     if flag_probe_volume_param: 
-        # pdb.set_trace()
         # typeLidar ="CW"
         wave      = Qlunc_yaml_inputs['Components']['Laser']['Wavelength']  # wavelength
         f_length  = Qlunc_yaml_inputs['Components']['Telescope']['Focal length'] # focal length
@@ -261,7 +258,6 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         #Calculating focus distance depending on the distance between the fiber-end and the telescope lens:
         focus_distance = 1/((1/f_length)-(1/(a+a0))) # Focus distance
         dist =(np.linspace(0,80,len(a)))  # distance from the focus position along the beam direction
-        # pdb.set_trace()
         # Rayleigh length variation due to focus_distance variations (due to the distance between fiber-end and telescope lens)
         zr = (wave*(focus_distance**2))/(np.pi*(Qlunc_yaml_inputs['Components']['Telescope']['Effective radius telescope'])**2)# Rayleigh length  (considered as the probe length) # half-width of the weighting function --> FWHM = 2*zr
     
@@ -273,7 +269,6 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         
         phi = (ext_coef/np.pi)*(zr/((zr**2)+(s-focus_distance)**2))
         # phi = (ext_coef/np.pi)*(zr/((zr**2)))
-        # pdb.set_trace()
         # Plotting
         fig=plt.figure()
         axs2=fig.add_subplot(2,2,1)
@@ -331,21 +326,13 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         axs.set_title('OSNR - Optical Amplifier',fontsize=plot_param['title_fontsize'])
         axs.grid(axis='both')
         axs.text(.90,.05,plot_param['Qlunc_version'],transform=axs.transAxes, fontsize=14,verticalalignment='top',bbox=dict(boxstyle='round', facecolor='white', alpha=0.5))
-        # pdb.set_trace()
 
 
 ###############   Plot Vh uncertainty   #############################           
     if flag_plot_pointing_unc:
-        # pdb.set_trace()
         fig,ax1=plt.subplots()       
         # plt.plot(np.degrees(wind_direction),u_wind_GUM,'-g', label='Uncertainty u component - GUM')
         # plt.plot(np.degrees(wind_direction),v_wind_GUM,'-b', label='Uncertainty v component - GUM')
-        
-        # plt.annotate('psi1_psi2_corr_n='+str(psi1_psi2_corr_n)+'\n'+'theta1_theta2_corr_n='+str(theta1_theta2_corr_n)+'\nrho1_rho2_corr_n='+str(rho1_rho2_corr_n)+'\nU_psi='+str(rho1_rho2_corr_n), xy=(0.05, 0.9), xycoords='axes fraction')
-        # pdb.set_trace()
-        
-        # plt.annotate('psi1_psi2_corr_n='+str(psi1_psi2_corr_n)+'\n'+'theta1_theta2_corr_n='+str(theta1_theta2_corr_n)+'\nrho1_rho2_corr_n='+str(rho1_rho2_corr_n), xy=(0.05, 0.9), xycoords='axes fraction')
-        
         
         ax1.plot(np.degrees(Data['wind direction']),Data['u Uncertainty [m/s]'],'og',alpha=0.3,label= 'Uncertainty u component - MC')
         # plt.annotate('Uncertainty U', xy=(0.05, 0.9), xycoords='axes fraction')
