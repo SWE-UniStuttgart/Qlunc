@@ -7,7 +7,7 @@ In the following lines it is shown the `Qlunc`'s workflow and the code structure
 Now, imagine we want to create a lidar object made up with one single module. This module will contain one single component with properties Property_1 and Property_2. The steps we have to follow are: 
 
  1) Fill up yaml file with inputs
- 2) Create a component with its propertie(s)
+ 2) Create a component with its properties
  3) Create a module containing the component(s)
  4) Create a lidar containing the module(s)
  5) Ask for the uncertainties we are interested in by using _dot notation_
