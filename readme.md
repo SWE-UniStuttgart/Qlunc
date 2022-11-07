@@ -52,6 +52,7 @@ conda activate <envname>
 ### Download or [clone](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository) the repository to a local directory
 
 By downloading or cloning the repository you will get several folders within which `Qlunc` is organized. 
+
 :warning: Remember to change the name of the yaml template in `Main` from Template_yaml_inputs_file.yaml to Qlunc_inputs.yml
 
 The most importants to know are:
