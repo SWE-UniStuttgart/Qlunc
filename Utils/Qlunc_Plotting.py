@@ -210,11 +210,11 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         plt.title('$V_{LOS}$ Uncertainty',fontsize=plot_param['title_fontsize'])
         plt.show()
         
+
         # 5.  Plot Uncertainty in VLOS with wind direction 
         fig,ax5=plt.subplots()
         ax5.plot(np.degrees(Data['wind direction']),Data['VLOS1 Uncertainty MC [m/s]'],'ok',alpha=0.3,label='Montecarlo')
         ax5.plot(np.degrees(Data['wind direction']),Data['VLOS1 Uncertainty GUM [m/s]'],'-k',label='GUM')
-
 
         plt.title('$V_{LOS}$ uncertainty $vs$ wind direction',fontsize=plot_param['title_fontsize'])
         ax5.set_xlabel('Wind Direction [°]',fontsize=plot_param['axes_label_fontsize'])

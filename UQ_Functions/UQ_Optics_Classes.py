@@ -81,7 +81,6 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     wind_direction = np.radians(np.linspace(0,359,360))
     # wind_tilt      = np.radians( np.array([Atmospheric_Scenario.wind_tilt]*len(psi0)))
 
-    # pdb.set_trace()
    
     # MEasurement point in cartesian coordinates before applying lidar position
     x,y,z=SA.sph2cart(rho0,theta0,psi0)
@@ -121,45 +120,46 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # if lidars['Lidar'+str(ind_origin+1)+'_Spherical']['psi']<0:
     #     lidars['Lidar'+str(ind_origin+1)+'_Spherical']['psi']=np.pi+lidars['Lidar'+str(ind_origin+1)+'_Spherical']['psi']
     
-    # x_Lidar1.append(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_origin][0])
-    # y_Lidar1.append(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_origin][1])
-    # z_Lidar1.append(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_origin][2])
-    # print(['Lidar'+str(ind_origin+1)+'_Spherical_psi'], '=' ,np.degrees(lidars['Lidar'+str(ind_origin+1)+'_Spherical']['psi']))
-    # print(['Lidar'+str(ind_origin+1)+'_Spherical_theta'], '=' ,np.degrees(lidars['Lidar'+str(ind_origin+1)+'_Spherical']['theta']))
-    
+    # x_Lidar1.append(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0])
+    # y_Lidar1.append(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][1])
+    # z_Lidar1.append(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][2])
+    # print(['Lidar_Spherical_psi'], '=' ,np.degrees(lidars['Lidar_Spherical']['psi']))
+    # print(['Lidar_Spherical_theta'], '=' ,np.degrees(lidars['Lidar_Spherical']['theta']))
+    pdb.set_trace()
+
     # Rho, theta and psi inputs and their uncertainties
     theta1,U_theta1 = lidars['Lidar_Spherical']['theta'],np.radians(Lidar.optics.scanner.stdv_cone_angle[0])
-    # theta2,U_theta2 = lidars['Lidar2_Spherical']['theta'],np.radians(Lidar.optics.scanner.stdv_cone_angle[1])
+    # theta2,U_theta2 = np.array([0.0873]),0.026179938779914945      #   lidars['Lidar2_Spherical']['theta'],np.radians(Lidar.optics.scanner.stdv_cone_angle[1])
     psi1  ,U_psi1   = lidars['Lidar_Spherical']['psi'],np.radians(Lidar.optics.scanner.stdv_azimuth[0])
-    # psi2  ,U_psi2   = lidars['Lidar2_Spherical']['psi'],np.radians(Lidar.optics.scanner.stdv_azimuth[1])
+    # psi2  ,U_psi2   = np.array([0.0873]),0.026179938779914945  #lidars['Lidar2_Spherical']['psi'],np.radians(Lidar.optics.scanner.stdv_azimuth[1])
     rho1  ,U_rho1   = lidars['Lidar_Spherical']['rho'],Lidar.optics.scanner.stdv_focus_dist [0]
-    # rho2  ,U_rho2   = lidars['Lidar2_Spherical']['rho'],Lidar.optics.scanner.stdv_focus_dist[1] 
+    # rho2  ,U_rho2   = np.array([1000.]),1   #lidars['Lidar2_Spherical']['rho'],Lidar.optics.scanner.stdv_focus_dist[1] 
     #Uncertainty in the probe volume    
     Probe_param = Lidar.probe_volume.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,lidars)
     
     #%% 2) State the correlations to calculate the correlation in the different VLOS:
     # VLOS1_VLOS2_corr_n = 1 # correlation betweem Vlos1 and Vlos2
     # pdb.set_trace()
-    # psi1_psi2_corr_n     = Lidar.optics.scanner.correlations[0]  # correlation between psi1 and psi2
-    # theta1_theta2_corr_n = Lidar.optics.scanner.correlations[1] # correlation Theta1 and Theta2
-    # rho1_rho2_corr_n     = Lidar.optics.scanner.correlations[2]  # correlation Rho1 and Rho2
+    psi1_psi2_corr_n     = Lidar.optics.scanner.correlations[0]  # correlation between psi1 and psi2
+    theta1_theta2_corr_n = Lidar.optics.scanner.correlations[1] # correlation Theta1 and Theta2
+    rho1_rho2_corr_n     = Lidar.optics.scanner.correlations[2]  # correlation Rho1 and Rho2
     
     # Cross correlations:
     psi1_theta1_corr_n  = Lidar.optics.scanner.correlations[3]
-    # psi1_theta2_corr_n  = Lidar.optics.scanner.correlations[4]
-    # psi2_theta1_corr_n  = Lidar.optics.scanner.correlations[5]
+    psi1_theta2_corr_n  = Lidar.optics.scanner.correlations[4]
+    psi2_theta1_corr_n  = Lidar.optics.scanner.correlations[5]
     psi2_theta2_corr_n  = Lidar.optics.scanner.correlations[6]
         
     # There is NO correlation between range and angles since the range is determined by the AOM (at least in pulsed lidars) and the angles accuracy is related to the alignment of the telescope mirrors,
     # to the position of the lense and also to the servos orienting the scanner
     psi1_rho1_corr_n    = 0
-    # psi1_rho2_corr_n    = 0
-    # psi2_rho1_corr_n    = 0
+    psi1_rho2_corr_n    = 0
+    psi2_rho1_corr_n    = 0
     psi2_rho2_corr_n    = 0
     
     theta1_rho1_corr_n  = 0 
-    # theta1_rho2_corr_n  = 0
-    # theta2_rho1_corr_n  = 0
+    theta1_rho2_corr_n  = 0
+    theta2_rho1_corr_n  = 0
     theta2_rho2_corr_n  = 0
     
     # VLOS1_psi1_corr_n   = 0
@@ -214,7 +214,10 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         theta1_noisy = np.random.normal(theta1[0],U_theta1,Lidar.optics.scanner.N_MC)
         psi1_noisy   = np.random.normal(psi1[0],U_psi1,Lidar.optics.scanner.N_MC)
         rho1_noisy   = np.random.normal(rho1[0],U_rho1,Lidar.optics.scanner.N_MC)
-        # pdb.set_trace()
+        # theta2_noisy = np.random.normal(theta2[0],U_theta2,Lidar.optics.scanner.N_MC)
+        # psi2_noisy   = np.random.normal(psi2[0],U_psi2,Lidar.optics.scanner.N_MC)
+        # rho2_noisy   = np.random.normal(rho2[0],U_rho2,Lidar.optics.scanner.N_MC)
+        # # pdb.set_trace()
         
         # CORRCOEF_T=np.corrcoef(theta1_noisy,theta2_noisy)
         # CORRCOEF_P=np.corrcoef(psi1_noisy,psi2_noisy)
@@ -227,14 +230,14 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         # VLOS_means = [Vlos1_noisy.mean(), Vlos2_noisy.mean()]  
         # VLOS_stds  = [Vlos1_noisy.std(), Vlos2_noisy.std()]
         
-        theta_means = [theta1_noisy.mean()]  
-        theta_stds  = [theta1_noisy.std()]
+        theta_means = [theta1_noisy.mean()]#,theta2_noisy.mean()]  
+        theta_stds  = [theta1_noisy.std()]#,theta2_noisy.std()]
         
-        psi_means = [psi1_noisy.mean()]  
-        psi_stds  = [psi1_noisy.std()]
+        psi_means = [psi1_noisy.mean()]#,psi2_noisy.mean()]  
+        psi_stds  = [psi1_noisy.std()]#,psi2_noisy.std()]
         
-        rho_means = [rho1_noisy.mean()]  
-        rho_stds  = [rho1_noisy.std()]
+        rho_means = [rho1_noisy.mean()]#,rho2_noisy.mean()]  
+        rho_stds  = [rho1_noisy.std()]#,rho2_noisy.std()]
         
         # Covariance Matrix:
         cov_MAT=[[              theta_stds[0]**2,                        psi_stds[0]*theta_stds[0]*psi1_theta1_corr_n,     rho_stds[0]*theta_stds[0]*theta1_rho1_corr_n  ],
@@ -242,18 +245,43 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
                   [theta_stds[0]*psi_stds[0]*psi1_theta1_corr_n ,                        psi_stds[0]**2,                   rho_stds[0]*psi_stds[0]*psi1_rho1_corr_n],
                   
                   [theta_stds[0]*rho_stds[0]*theta1_rho1_corr_n,         psi_stds[0]*rho_stds[0]*psi1_rho1_corr_n,                     rho_stds[0]**2]]
-                  
-                  
-        # cov_MAT=[[              theta_stds[0]**2,                     theta_stds[1]*theta_stds[0]*theta1_theta2_corr_n,   psi_stds[0]*theta_stds[0]*psi1_theta1_corr_n,   psi_stds[1]*theta_stds[0]*psi2_theta1_corr_n  ],
-        #           [theta_stds[0]*theta_stds[1]*theta1_theta2_corr_n,                 theta_stds[1]**2,                     psi_stds[0]*theta_stds[1]*psi1_theta2_corr_n,   psi_stds[1]*theta_stds[1]*psi2_theta2_corr_n],
-        #           [theta_stds[0]*psi_stds[0]*psi1_theta1_corr_n ,      theta_stds[1]*psi_stds[0]*psi1_theta2_corr_n,                   psi_stds[0]**2,                     psi_stds[1]*psi_stds[0]*psi1_psi2_corr_n],
-        #           [theta_stds[0]*psi_stds[1]*psi2_theta1_corr_n,       theta_stds[1]*psi_stds[1]*psi2_theta2_corr_n,       psi_stds[0]*psi_stds[1]*psi1_psi2_corr_n,                   psi_stds[1]**2]]
-          
-        # cov_MAT = np.cov([theta1_noisy,theta2_noisy,psi1_noisy,psi2_noisy,rho1_noisy,rho2_noisy])
-        
+        # cov_MAT=[[              theta_stds[0]**2,                     theta_stds[1]*theta_stds[0]*theta1_theta2_corr_n,   psi_stds[0]*theta_stds[0]*psi1_theta1_corr_n,   psi_stds[1]*theta_stds[0]*psi2_theta1_corr_n,   rho_stds[0]*theta_stds[0]*theta1_rho1_corr_n,  rho_stds[1]*theta_stds[0]*theta1_rho2_corr_n],
+        #               [theta_stds[0]*theta_stds[1]*theta1_theta2_corr_n,                 theta_stds[1]**2,                     psi_stds[0]*theta_stds[1]*psi1_theta2_corr_n,   psi_stds[1]*theta_stds[1]*psi2_theta2_corr_n,   rho_stds[0]*theta_stds[1]*theta2_rho1_corr_n,  rho_stds[1]*theta_stds[1]*theta2_rho2_corr_n],
+        #               [theta_stds[0]*psi_stds[0]*psi1_theta1_corr_n ,      theta_stds[1]*psi_stds[0]*psi1_theta2_corr_n,                   psi_stds[0]**2,                     psi_stds[1]*psi_stds[0]*psi1_psi2_corr_n,       rho_stds[0]*psi_stds[0]*psi1_rho1_corr_n,      rho_stds[1]*psi_stds[0]*psi1_rho2_corr_n],
+        #               [theta_stds[0]*psi_stds[1]*psi2_theta1_corr_n,       theta_stds[1]*psi_stds[1]*psi2_theta2_corr_n,       psi_stds[0]*psi_stds[1]*psi1_psi2_corr_n,                   psi_stds[1]**2,                     rho_stds[0]*psi_stds[1]*psi2_rho1_corr_n,      rho_stds[1]*psi_stds[1]*psi2_rho2_corr_n],
+        #               [theta_stds[0]*rho_stds[0]*theta1_rho1_corr_n,       theta_stds[1]*rho_stds[0]*theta2_rho1_corr_n,       psi_stds[0]*rho_stds[0]*psi1_rho1_corr_n,       psi_stds[1]*rho_stds[0]*psi2_rho1_corr_n,                   rho_stds[0]**2,                    rho_stds[1]*rho_stds[0]*rho1_rho2_corr_n],
+        #               [theta_stds[0]*rho_stds[1]*theta1_rho2_corr_n,       theta_stds[1]*rho_stds[1]*theta2_rho2_corr_n,       psi_stds[0]*rho_stds[1]*psi1_rho2_corr_n,       psi_stds[1]*rho_stds[1]*psi2_rho2_corr_n,       rho_stds[0]*rho_stds[1]*rho1_rho2_corr_n,                  rho_stds[1]**2]]
+                    
+        # pdb.set_trace()          
+     
         # # Multivariate distributions:
-        Theta1_cr,Psi1_cr,Rho1_cr = multivariate_normal.rvs([theta_means[0],psi_means[0],rho_means[0]], cov_MAT,Lidar.optics.scanner.N_MC).T
+        # Theta1_cr,Theta2_cr,Psi1_cr,Psi2_cr,Rho1_cr,Rho2_cr = multivariate_normal.rvs([theta_means[0],theta_means[1],psi_means[0],psi_means[1],rho_means[0],rho_means[1]], cov_MAT,Lidar.optics.scanner.N_MC).T
         
+        Theta1_cr,Psi1_cr,Rho1_cr = multivariate_normal.rvs([theta_means[0],psi_means[0],rho_means[0]], cov_MAT,Lidar.optics.scanner.N_MC).T
+
+          # Theta - Psi
+        #Covariance (theta1, psi1) as defined in GUM
+        theta_psi_covariance = 1/(Lidar.optics.scanner.N_MC-1)*sum((Theta1_cr-theta_means[0])*(Psi1_cr-psi_means[0]))
+        # Correlation coefficients Theta - Psi
+        C_theta_psi = theta_psi_covariance/(theta_stds[0]*psi_stds[0])
+        Corr_coef_theta_psi=np.corrcoef(Theta1_cr,Psi1_cr)
+        
+          # Theta - Rho
+        #Covariance (theta1, rho1) as defined in GUM
+        theta_rho_covariance = 1/(Lidar.optics.scanner.N_MC-1)*sum((Theta1_cr-theta_means[0])*(Rho1_cr-rho_means[0]))
+        # Correlation coefficients Theta - Rho
+        C_theta_rho = theta_rho_covariance/(theta_stds[0]*rho_stds[0])
+        Corr_coef_theta_rho=np.corrcoef(Theta1_cr,Psi1_cr)        
+        
+       
+           # Psi - Rho
+        #Covariance (psi1, rho1) as defined in GUM
+        psi_rho_covariance = 1/(Lidar.optics.scanner.N_MC-1)*sum((Psi1_cr-psi_means[0])*(Rho1_cr-rho_means[0]))
+        # Correlation coefficients Theta - Rho
+        C_psi_rho = psi_rho_covariance/(psi_stds[0]*rho_stds[0])
+        Corr_coef_theta_rho=np.corrcoef(Psi1_cr,Rho1_cr)        
+       
+        #############
        
         # # Theta
         # #Covariance (theta1, theta2) as defined in GUM
@@ -277,6 +305,12 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         # # Correlation coefficients PSi
         # C_rho=rho_covariance/(rho_stds[0]*rho_stds[1])
         # Corr_coef_rho=np.corrcoef(Rho1_cr, Rho2_cr)
+        
+        ################################
+        
+        
+        
+        
         
         
         # Cross correlations
@@ -305,8 +339,8 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         
         # CROS_CORR = [psi1_theta1_corr_n,theta1_rho1_corr_n,psi1_rho1_corr_n,psi2_theta2_corr_n,theta2_rho2_corr_n,
         #               psi2_rho2_corr_n,  psi1_psi2_corr_n,theta1_theta2_corr_n,rho1_rho2_corr_n]
+        # CROS_CORR = [C_theta_psi,C_theta_rho,C_psi_rho]
         CROS_CORR = [psi1_theta1_corr_n,theta1_rho1_corr_n,psi1_rho1_corr_n]
-        
         #%% 5) VLOS uncertainty
         # pdb.set_trace()
         VLOS01,U_VLOS01,VLOS1_list = SA.U_VLOS_MC(Theta1_cr,Psi1_cr,Rho1_cr,Hl,Href,alpha,wind_direction,Vref,ind_wind_dir,VLOS1_list)
@@ -315,7 +349,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         # Function calculating the uncertainties in VLOS:
         U_VLOS1 = SA.U_VLOS_GUM (theta1,psi1,rho1,U_theta1,U_psi1,U_rho1,U_VLOS01,Hl,Vref,Href,alpha,wind_direction,ind_wind_dir,CROS_CORR)
         U_VLOS1_GUM.append(U_VLOS1[0])
-        
+        # pdb.set_trace()
     
         # #%% 6) VH Uncertainty
         # # Calculate the u and v wind components and their uncertainties
@@ -619,6 +653,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     Lidar.lidar_inputs.dataframe['Probe Volume'] = Probe_param
     
     # Plotting
+    # pdb.set_trace()
     QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,Qlunc_yaml_inputs['Flags']['Line of sight Velocity Uncertainty'],False,False,False,False)  #Qlunc_yaml_inputs['Flags']['Scanning Pattern']
     
     

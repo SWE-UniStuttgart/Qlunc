@@ -45,7 +45,7 @@ Components:
     # (Represents the points where we want to measure)
     N_Points: 1
     Focus distance: [1000]   # [m]
-    Elevation angle: [10] # [deg] 
+    Elevation angle: [15] # [deg] 
     Azimuth: [-22]     # [deg] [origin,end]    # Scanning Lidar Pattern:
     # Measuring point: [20,20,20]
     Href: 1.0e+2 # Meters
