@@ -189,7 +189,7 @@ ADC = analog2digital_converter (name     = Qlunc_yaml_inputs['Components']['ADC'
                                 ADC_bandwidth = Qlunc_yaml_inputs['Components']['ADC']['ADC Bandwidth'],
                                 unc_func = uspc.UQ_ADC)
 
-Signal_processor_Module = signal_processor(name                     = Qlunc_yaml_inputs['Modules']['Signal processor Module']['Name'],
+Signal_processor = signal_processor(name                     = Qlunc_yaml_inputs['Modules']['Signal processor Module']['Name'],
                                            analog2digital_converter = eval(Qlunc_yaml_inputs['Modules']['Signal processor Module']['ADC']),
                                            # f_analyser             = Qlunc_yaml_inputs['Modules']['Signal processor Module']['Frequency analyser'],
                                            unc_func                 = uspc.sum_unc_signal_processor)
@@ -220,19 +220,19 @@ Filt_M = filtering_method (name        = Qlunc_yaml_inputs['Filtering method']['
 
 #%% LIDAR device
 
-Lidar = lidar(name           = Qlunc_yaml_inputs['Lidar']['Name'],                       # Introduce the name of your lidar device.
-              photonics      = Photonics_Module, #eval(Qlunc_yaml_inputs['Lidar']['Photonics module']),     # Introduce the name of your photonics module.
-              optics         = Optics_Module, #eval(Qlunc_yaml_inputs['Lidar']['Optics module']),        # Introduce the name of your optics module.
-              power          = None, #eval(Qlunc_yaml_inputs['Lidar']['Power module']),         # Introduce the name of your power module. NOT IMPLEMENTED YET!
-              signal_processor = Signal_processor_Module,
-              wfr_model      = WFR_M,
-              filt_method    = None,
-              probe_volume   = Probe_Volume, 
-              lidar_inputs   = Lidar_inputs, #eval(Qlunc_yaml_inputs['Lidar']['Lidar inputs']),         # Introduce lidar general inputs
-              unc_func       = ulc.sum_unc_lidar,
-              unc_Vh         = uVhc.UQ_Vh) #eval(Qlunc_yaml_inputs['Lidar']['Uncertainty function'])) 
+Lidar = lidar(name             = Qlunc_yaml_inputs['Lidar']['Name'],                       # Introduce the name of your lidar device.
+              photonics        = eval(Qlunc_yaml_inputs['Lidar']['Photonics module']),#Photonics_Module, #     # Introduce the name of your photonics module.
+              optics           = eval(Qlunc_yaml_inputs['Lidar']['Optics module']), # Optics_Module, #      # Introduce the name of your optics module.
+              power            = eval(Qlunc_yaml_inputs['Lidar']['Power module']),#None, #         # Introduce the name of your power module. NOT IMPLEMENTED YET!
+              signal_processor = eval(Qlunc_yaml_inputs['Lidar']['Signal processor']),#None, #Signal_processor_Module,
+              wfr_model        = WFR_M,
+              filt_method      = None,
+              probe_volume     = Probe_Volume, 
+              lidar_inputs     = Lidar_inputs, #eval(Qlunc_yaml_inputs['Lidar']['Lidar inputs']),         # Introduce lidar general inputs
+              unc_func         = ulc.sum_unc_lidar,
+              unc_Vh           = uVhc.UQ_Vh) #eval(Qlunc_yaml_inputs['Lidar']['Uncertainty function'])) 
 
-
+# pdb.set_trace()
 #%% Creating atmospheric scenarios: ############################################
 Atmospheric_TimeSeries = Qlunc_yaml_inputs['Atmospheric_inputs']['TimeSeries'] # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere (T, H, rain and fog) 
                                                                            # If so we obtain a time series describing the noise implemented in the measurement.
