@@ -111,7 +111,7 @@ def UQ_Probe_volume (Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,lidars):
        file.write(repr(Rayleigh_length))
        file.close()      
     
-    Final_Output_UQ_ProbeVolume = {'Rayleigh Length':Rayleigh_length,'Rayleigh Length uncertainty':Unc_Rayleigh_length}
+    Final_Output_UQ_ProbeVolume = {'Rayleigh Length [m]':Rayleigh_length,'Rayleigh Length uncertainty [m]':Unc_Rayleigh_length}
     
     
     
