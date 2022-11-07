@@ -406,7 +406,7 @@ def U_VLOS_MC(theta,psi,rho,Hl,Href,alpha,wind_direction,Vref,ind_wind_dir,VLOS1
             
      # A1    = Vref*(((Hl+(np.sin(theta)*rho))/Href)**alpha[0])
      VLOS1 = Vref*(((Hl+(np.sin(theta)*rho))/Href)**alpha[0])*(np.cos(theta)*np.cos(psi-wind_direction[ind_wind_dir])) #-np.sin(theta_corr[0][ind_npoints])*np.tan(wind_tilt[ind_npoints])
-     pdb.set_trace()
+     # pdb.set_trace()
      VLOS1_list.append(np.mean(VLOS1))
     
      U_VLOS1   = np.nanstd(VLOS1)
