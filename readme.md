@@ -58,7 +58,7 @@ conda activate <envname>
 By downloading or cloning the repository you will get several folders within which `Qlunc` is organized. 
  
 The most importants to know are:
-1) Create a folder named `Projects` in the main directory. Here the created lidar object(s) will be saved. 
+1) Create a folder named `Lidar_Projects` in the main directory. Here the created lidar object(s) will be saved. 
 2) Copyand paste the file `Qlunc_inputs.yml` in `TestFiles_Qlunc` into `Main` for a quick start/test. Otherwise, fill in the template in the same folder (`TestFiles_Qlunc`) and rename it to `Qlunc_inputs.yml`. Copy and paste this file into the `Main` folder.
 3) The content of each folder in the repository is breafly explained here below. Further information can be found in the `readme` in the corresponding folder. 
  
