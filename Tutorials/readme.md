@@ -1,3 +1,6 @@
+
+:warning: Binder badges might not work properly. If you encounter  any issue, please try cloning/downloading the repository and opening the jupyter notebook locally.
+
 ## Tutorial0:
 
 Qlunc's presentation and basics. What's Qlunc and how does it work.
