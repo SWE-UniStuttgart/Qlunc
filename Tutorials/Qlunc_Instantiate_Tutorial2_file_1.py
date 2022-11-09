@@ -135,10 +135,10 @@ Optics_Module =  optics (name               = Qlunc_yaml_inputs1['Modules']['Opt
 
 AOM = acousto_optic_modulator (name           = Qlunc_yaml_inputs1['Components']['AOM']['Name'],
                                insertion_loss = Qlunc_yaml_inputs1['Components']['AOM']['Insertion loss'],
-                               tau                        = Qlunc_yaml_inputs1['Components']['Telescope']['Pulse shape'],
-                               tau_meas                   = Qlunc_yaml_inputs1['Components']['Telescope']['Gate length'], 
-                               stdv_tau                   = Qlunc_yaml_inputs1['Components']['Telescope']['stdv Pulse shape'],
-                               stdv_tau_meas              = Qlunc_yaml_inputs1['Components']['Telescope']['stdv Gate length'],                                                                       
+                               tau                        = Qlunc_yaml_inputs1['Components']['AOM']['Pulse shape'],
+                               tau_meas                   = Qlunc_yaml_inputs1['Components']['AOM']['Gate length'], 
+                               stdv_tau                   = Qlunc_yaml_inputs1['Components']['AOM']['stdv Pulse shape'],
+                               stdv_tau_meas              = Qlunc_yaml_inputs1['Components']['AOM']['stdv Gate length'],                                                                       
                                unc_func        = uphc.UQ_AOM)
 
 Optical_Amplifier = optical_amplifier(name             = Qlunc_yaml_inputs1['Components']['Optical Amplifier']['Name'],        # Introduce your scanner name.
