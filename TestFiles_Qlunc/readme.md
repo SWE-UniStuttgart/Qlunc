@@ -3,9 +3,11 @@ This folder contains the yaml file where we define the characteristics and the m
 Before creating the classes for the different components we will fill in the yaml file with the corresponding values for the components and decide the components and the modules that we want to include in the lidar device. 
 Use *Qlunc_inputs.yml* file already filled for a quick start, or fill in the template and rename it as *Qlunc_inputs.yml*. Copy/paste the file in the `Main` folder.
 
-:warning:  The name of the instance of each lidar component/module hs tp be the same that the one in the yaml file. For example, if you create an Optics module in the yaml file, and want to include a component called 'Telescope',  the instance of this component must be called 'Telescope':
+:warning:  The name of the instance of each lidar component/module *must* be the same that the one in the yaml file i.e., if you create an Optics module in the yaml file, and want to include a component called 'Telescope',  the instance of this component *must* be called 'Telescope'.
 
-1) Create the Optics module with the Telescope component, among others:
+# Example
+
+1) Create the Optics module with a Telescope component, among others:
 
 Modules:
   Optics Module:
@@ -15,7 +17,7 @@ Modules:
     Telescope: **Telescope**               # Has to be the same name as the instance
     Uncertainty function: uopc.sum_unc_optics # Python module! (You develop a function and save it as a python module)
     
-2) Then, when creating the instance for the components, it must be called:
+2) Then, when instantiating the Telescope component, the instance *must* be called **Telescope**:
 
 **Telescope** = telescope (name           = Telesc1,
                            stdv_aperture  = 1,       # [mm]
