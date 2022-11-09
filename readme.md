@@ -29,11 +29,11 @@ Considered as the major contributors to the uncertainty in lidar estimations, th
 #### Plots
  - Can draw photodetector uncertainties comparison including shot noise, thermal noise, dark current noise and, if needed, trans-impedance amplifier noise.
  - Optical signal to noise ration from the optical amplifier
- - Uncertainties in line-of-sight velocity ( $V_{LOS}$ ) and horizontal wind velocity ( $V_{h}$ )
+ - 🆕 Uncertainties in line-of-sight velocity ( $V_{LOS}$ ) and horizontal wind velocity ( $V_{h}$ ) 🆕 
 
 ## How to use `Qlunc`
 
-:warning: **Please downolad the latest release (V0.91).**
+:warning: **Please downolad the latest release (V1.0).**
 
 ### Create an environment and install dependencies
 
@@ -57,13 +57,14 @@ By downloading or cloning the repository you will get several folders within whi
 The most importants to know are:
 1) Create a folder named `Projects` in the main directory. Here the created lidar objext will be saved. 
 2) Copy/paste the file `Qlunc_inputs.yml` into `Main` for a quick start/test
-3) The content of each folder in the repository is breafly explained here below. Further information can bwe found in the `readme` in the corresponding folder.  
+3) The content of each folder in the repository is breafly explained here below. Further information can be found in the `readme` in the corresponding folder. 
+ 
 ### Main
 This is the core of `Qlunc`. Here the user creates the classes describing the components, modules and general inputs of the lidar device and instantiate the classes.
  - `Qlunc_Classes.py` contains the code which _creates_ all the lidar digital twins. Each lidar module/component is assigned to a python class.
  - `Qlunc_Instantiate.py` instantiate the lidar classes taking the values from `Qlunc_inputs.yml`.
 ### UQ_Functions
- - Contains the functions that compute the uncertainties coming from different devices, calculting also the uncertainty propagation corresponding to the different      modules and lidar uncertainty as well. Users can define their own functions to calculate specific module uncertainties, and combined/expanded uncertainties as well. 
+ - Contains the functions that compute the uncertainties from different devices, calculting also the uncertainty propagation corresponding to the different      modules and lidar uncertainty as well. Users can define their own functions to calculate specific module uncertainties, and combined/expanded uncertainties as well. 
 ### Lidar_Projects
 When a lidar object is created, data from its characteristics and measuring configuration are stored here.
 ### Utils
