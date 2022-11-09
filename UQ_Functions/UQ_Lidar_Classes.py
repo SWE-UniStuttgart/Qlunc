@@ -71,7 +71,7 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         try:
             Optics_Uncertainty,DataFrame = Lidar.optics.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
             # Save the dictionary --> Optics_Uncertainty to pass it to the function UQ_Pointing_Classes to calculate the Vh uncertainty
-            with open('./Projects/'+Lidar.LidarID, 'wb') as f:
+            with open('./Lidar_Projects/'+Lidar.LidarID, 'wb') as f:
                 pickle.dump(Optics_Uncertainty, f)
             # Optics_Uncertainty           = np.ndarray.tolist(Optics_Uncertainty['Uncertainty_Optics'])*len(Atmospheric_Scenario.temperature)
             # List_Unc_lidar.append(np.array([Optics_Uncertainty]))
