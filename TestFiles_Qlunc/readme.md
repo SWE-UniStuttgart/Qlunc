@@ -8,7 +8,7 @@ Use *Qlunc_inputs.yml* file already filled for a quick start, or fill in the tem
 # Example
 
 1) Create the Optics module with a Telescope component, among others:
-
+```
 Modules:
   Optics Module:
     Name: Optics_module
@@ -16,16 +16,16 @@ Modules:
     Optical circulator: Optical_circulator # Has to be the same name as the instance
     Telescope: **Telescope**               # Has to be the same name as the instance
     Uncertainty function: uopc.sum_unc_optics # Python module! (You develop a function and save it as a python module)
-    
+```    
 2) Then, when instantiating the Telescope component, the instance *must* be called **Telescope**:
-
+```
 **Telescope** = telescope (name           = Telesc1,
                            stdv_aperture  = 1,       # [mm]
                            stdv_aperture  = 1e-5,    # [mm]                       
                            focal_length   = 200,      # [m]                      
                            (...)
                            unc_func       = Unc_function_Telescope)
-
+```
 and the same for the rest of the components and modules.
     
 ![Uncertainty_WF](https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Pictures_repo_/FlowChartUnc.JPG)
