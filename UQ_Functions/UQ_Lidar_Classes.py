@@ -142,5 +142,5 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
 
         
         
-    print(colored('...Lidar uncertainty done. Lidar saved in folder "Projects"','magenta', attrs=['bold']))
+    print(colored('...Lidar uncertainty done. Lidar saved in folder "Lidar_Projects"','magenta', attrs=['bold']))
     return Final_Output_Lidar_Uncertainty,Lidar.lidar_inputs.dataframe
