@@ -57,7 +57,6 @@ The most importants to know are:
 
 ### Main
 This is the core of `Qlunc`. Here the user creates the classes describing the components, modules and general inputs of the lidar device and instantiate the classes.
- - `Template_yaml_inputs_file.yml`. Rename it to *Qlunc_inputs.yml* and fill it in with the required lidar and measuring configuration parameters.
  - `Qlunc_Classes.py` contains the code which _creates_ all the lidar digital twins. Each lidar module/component is assigned to a python `class`.
  - `Qlunc_Instantiate.py` instantiate the lidar classes taking the values from `Qlunc_inputs.yml`.
 ### UQ_Functions
@@ -65,7 +64,8 @@ This is the core of `Qlunc`. Here the user creates the classes describing the co
 ### Utils
  - Contains scripts meant to do different tasks. Importing packages and stand alone funtions which don´t interface directly with `Qlunc` but are necessary to compute calculations. Also contains a `Qlunc_Plotting.py` script to automate plots and `Scanning_patterns.py` to introduce users' pre-defined scanning patterns.
 ###  TestFile_Qlunc
- - A working example is provided to show how the process looks like. In this test case, a lidar is built up with its modules and components, puting all together to set up a lidar device. User can find more information on how to run this test file in the `readme.md` file dropped in this folder.
+ - `Qlunc_inputs.yml`: Copy and paste in `Main` or
+ - Use `Template_yaml_inputs_file.yml` to create your own use case
 ### Tutorials
 - Containing 3 [Jupyter Notebook-based tutorials](https://github.com/SWE-UniStuttgart/Qlunc/tree/Qlunc-V0.9/Tutorials); `Turial0.ipynb`, `Tutorial1.ipynb` and `Tutorial2.ipynb` with their corresponding yaml files. These tutorials are meant to serve as a guide to the user and show the current capabilities of the Qlunc framework. The tutorials are also available through the Binder service to ease accessibility and reproducibility. Users can find more information about these tutorials in the corresponding `readme.md` file dropped in the folder `Tutorials`.
 ## Requirements
