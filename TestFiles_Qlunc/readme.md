@@ -9,6 +9,7 @@ Use *Qlunc_inputs.yml* file already filled for a quick start, or fill in the tem
 
 1) Create the Optics module with a Telescope component, among others:
 ```
+# This is in the yaml file
 Modules:
   Optics Module:
     Name: Optics_module
@@ -19,6 +20,7 @@ Modules:
 ```    
 2) Then, when instantiating the Telescope component, the instance *must* be called **Telescope**:
 ```
+# This is in the pyhthon script
 **Telescope** = telescope (name           = Telesc1,
                            stdv_aperture  = 1,       # [mm]
                            stdv_aperture  = 1e-5,    # [mm]                       
