@@ -112,11 +112,7 @@ Telescope = telescope (name                       = Qlunc_yaml_inputs1['Componen
                        stdv_focal_length          = Qlunc_yaml_inputs1['Components']['Telescope']['stdv Focal length'],
                        stdv_fiber_lens_d          = Qlunc_yaml_inputs1['Components']['Telescope']['stdv Fiber-lens distance'],
                        stdv_fiber_lens_offset     = Qlunc_yaml_inputs1['Components']['Telescope']['stdv Fiber-lens offset'], 
-                       stdv_eff_radius_telescope  = Qlunc_yaml_inputs1['Components']['Telescope']['stdv Effective radius telescope'],
-                       tau                        = Qlunc_yaml_inputs1['Components']['Telescope']['Pulse shape'],
-                       tau_meas                   = Qlunc_yaml_inputs1['Components']['Telescope']['Gate length'], 
-                       stdv_tau                   = Qlunc_yaml_inputs1['Components']['Telescope']['stdv Pulse shape'],
-                       stdv_tau_meas              = Qlunc_yaml_inputs1['Components']['Telescope']['stdv Gate length'], 
+                       stdv_eff_radius_telescope  = Qlunc_yaml_inputs1['Components']['Telescope']['stdv Effective radius telescope'], 
                        unc_func                   = uopc.UQ_Telescope)
 
 
@@ -139,6 +135,10 @@ Optics_Module =  optics (name               = Qlunc_yaml_inputs1['Modules']['Opt
 
 AOM = acousto_optic_modulator (name           = Qlunc_yaml_inputs1['Components']['AOM']['Name'],
                                insertion_loss = Qlunc_yaml_inputs1['Components']['AOM']['Insertion loss'],
+                               tau                        = Qlunc_yaml_inputs1['Components']['Telescope']['Pulse shape'],
+                               tau_meas                   = Qlunc_yaml_inputs1['Components']['Telescope']['Gate length'], 
+                               stdv_tau                   = Qlunc_yaml_inputs1['Components']['Telescope']['stdv Pulse shape'],
+                               stdv_tau_meas              = Qlunc_yaml_inputs1['Components']['Telescope']['stdv Gate length'],                                                                       
                                unc_func        = uphc.UQ_AOM)
 
 Optical_Amplifier = optical_amplifier(name             = Qlunc_yaml_inputs1['Components']['Optical Amplifier']['Name'],        # Introduce your scanner name.
