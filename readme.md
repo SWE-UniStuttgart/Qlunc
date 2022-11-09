@@ -20,11 +20,12 @@ The user creates the different lidar components by instantiating python classes,
 The user creates also atmospheric scenarios to account for the different atmospheric conditions the lidar has to deal with. Atmospheric inputs, basically temperature 
 and humidity, either single values or time series coming from peripherals are both accepted.
 
-### `Qlunc` available capabilities
+### `Qlunc` (NEW!) available capabilities
 
-#### Uncertainties
-The next step is to ask for the uncertainty we are interested in, either coming from a component, module or lidar object. Indeed, the flexibility of the code allows the user not just to assess global lidar uncertainty, but also to query uncertainties coming from specific modules or even single components.
-
+#### Uncertainties in hardware
+The flexibility of the code allows the user not just to assess global lidar uncertainty due to the noise in the signal, but also to query uncertainties coming from the noise added to the signal by specific modules or even single components.
+#### 🆕 Uncertainties due to errors in pointing accuracy and range 🆕
+Considered as the major contributors to the uncertainty in lidar estimations, the new Qlunc's add-on is capable of estimating the uncertainty in the lidar line-of-sight and horizontal wind speeds due to errors in pointing accuracy and range. It also offers the possibility of accounting for the correlations between the measuring angles and the correlation between different lidars when mesuring together.
 #### Plots
  - Can draw photodetector uncertainties comparison including shot noise, thermal noise, dark current noise and, if needed, trans-impedance amplifier noise.
  - Optical signal to noise ration from the optical amplifier
@@ -66,7 +67,8 @@ This is the core of `Qlunc`. Here the user creates the classes describing the co
 ### Lidar_Projects
 When a lidar object is created, data from its characteristics and measuring configuration are stored here.
 ### Utils
- - Contains scripts meant to do different tasks. Importing packages and stand alone funtions which don´t interface directly with `Qlunc` but are necessary to compute calculations. Also contains a `Qlunc_Plotting.py` script to automate plots and `Qlunc_ImportModules.py` to import necessary python packages.
+ - Contains scripts meant to do different tasks. Importing packages and stand alone funtions which don´t interface directly with `Qlunc` but are necessary to compute calculations. Also contains `Qlunc_Plotting.py`, a script to automate plots and `Qlunc_ImportModules.py` to import the necessary python packages. 
+ - The new functions implemented for this release estimating the uncertainty in $V_{LOS}$ and $V_{h}$ are allocated here.
 ###  TestFile_Qlunc
  - `Qlunc_inputs.yml`: Copy and paste in `Main` or
  - Use `Template_yaml_inputs_file.yml` to create your own use case
