@@ -7,7 +7,7 @@
 
 
 ## What is `Qlunc`?
-`Qlunc` is a python-based, open, freely available software that aims to estimate errors when measuring with a lidar device. The code has an objected-oriented structure; by using python objects and simulating real lidar components the code puts all together in modules to eventually build up a lidar [digital twin](https://en.wikipedia.org/wiki/Digital_twin). The code is meant to be as modular as possible and offers the possibility of creating different lidar objects on parallel (see [Tutorial2.ipynb](https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Tutorials/Tutorial2.ipynb)), with different components at the same time. This allows to easily combine lidar modules with different characteristics, simulating different lidar devices.
+Qlunc is a python-based, open, freely available software that aims to estimate errors when measuring with a lidar device. The code has an objected-oriented structure; by using python objects and simulating real lidar components the code puts all together in modules to eventually build up a lidar [digital twin](https://en.wikipedia.org/wiki/Digital_twin). The code is meant to be as modular as possible and offers the possibility of creating different lidar objects on parallel (see [Tutorial2.ipynb](https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Tutorials/Tutorial2.ipynb)), with different components at the same time. This allows to easily combine lidar modules with different characteristics, simulating different lidar devices.
 <p align="center">
   <img src="https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Pictures_repo_/Qlunc_GralStructure.JPG" />
 </p>
@@ -20,7 +20,7 @@ The user creates the different lidar components by instantiating python classes,
 ### Creating atmospheric conditions
 The user creates also atmospheric scenarios to account for the different atmospheric conditions the lidar has to deal with. Atmospheric inputs, basically temperature and humidity are accepted, either single values or time-dependent variabilities of these inputs, taken from peripherals.
 
-### `Qlunc` (NEW!) available capabilities
+### Qlunc (NEW!) available capabilities
 
 #### Uncertainties in hardware
 The flexibility of the code allows the user not just to assess global lidar uncertainty due to the noise in the signal, but also to query uncertainties coming from the noise added to the signal by specific modules or even single components.
