@@ -160,8 +160,8 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
        # these are matplotlib.patch.Patch properties
         props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
         textstr = '\n'.join((
-        r'$\rho~ [m]=%.2f$' % (Data['rho'][0], ),
-        r'$\varphi~ [°]=%.2f$' % (np.degrees(Data['psi'][0]), ),
+        r'$\rho~ [m]=%.2f$' % (Data['Focus distance'][0], ),
+        r'$\varphi~ [°]=%.2f$' % (np.degrees(Data['Azimuth'][0]), ),
         r'N={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['N_MC'], ),
         r'Href [m]={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['Href'], )))
 
@@ -179,8 +179,8 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         # these are matplotlib.patch.Patch properties
         props3 = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
         textstr3 = '\n'.join((
-        r'$\rho ~[°]=%.2f$' % (Data['rho'][0], ),
-        r'$\theta~ [°]=%.2f$' % (np.degrees(Data['theta'][0]), ),
+        r'$\rho ~[°]=%.2f$' % (Data['Focus distance'][0], ),
+        r'$\theta~ [°]=%.2f$' % (np.degrees(Data['Elevation angle'][0]), ),
         r'N={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['N_MC'], ),
         r'Href [m]={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['Href'], )))
 
@@ -196,13 +196,13 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         # these are matplotlib.patch.Patch properties
         props4 = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
         textstr4 = '\n'.join((
-        r'$\theta~ [°]=%.2f$' % (np.degrees(Data['theta'][0]), ),
-        r'$\varphi~ [°]=%.2f$' % (np.degrees(Data['psi'][0]), ),
+        r'$\theta~ [°]=%.2f$' % (np.degrees(Data['Elevation angle'][0]), ),
+        r'$\varphi~ [°]=%.2f$' % (np.degrees(Data['Azimuth'][0]), ),
         r'N={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['N_MC'], ),
         r'Href [m]={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['Href'], )))
         
         ax4.text(0.5, 0.95, textstr4, transform=ax3.transAxes, fontsize=14,horizontalalignment='left',verticalalignment='top', bbox=props4)
-        ax4.set_xlabel('Range [m]',fontsize=25)
+        ax4.set_xlabel('Focus distance [m]',fontsize=25)
         ax4.set_ylabel('Uncertainty [m/s]',fontsize=25)
         ax4.grid(axis='both')
         plt.title('$V_{LOS}$ Uncertainty',fontsize=plot_param['title_fontsize'])
