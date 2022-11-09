@@ -203,7 +203,7 @@ Atmospheric_inputs:
   Height ground: 0 # [m] Ground height
   Power law exponent: [.2] #power law exponent
   Vref: 18 # [m/s]
-  Wind direction:  180 # degrees
+  Wind direction:  [0 359] # degrees
   Wind tilt: 180 # degrees
   
 ---
