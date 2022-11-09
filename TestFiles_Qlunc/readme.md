@@ -14,9 +14,9 @@ Modules:
   Optics Module:
     Name: Optics_module
     Scanner: Scanner
-    Optical circulator: Optical_circulator # Has to be the same name as the instance
-    Telescope: **Telescope**               # Has to be the same name as the instance
-    Uncertainty function: uopc.sum_unc_optics # Python module! (You develop a function and save it as a python module)
+    Optical circulator: Optical_circulator     # Has to be the same name as the instance
+    Telescope: **Telescope**                   # Has to be the same name as the instance
+    Uncertainty function: uopc.sum_unc_optics  # Python module! (You develop a function and save it as a python module)
 ```    
 2) Then, when instantiating the Telescope component, the instance *must* be called **Telescope**:
 ```
