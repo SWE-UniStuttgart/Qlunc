@@ -62,7 +62,7 @@ This is the core of `Qlunc`. Here the user creates the classes describing the co
 ### UQ_Functions
  - Contains the functions that compute the uncertainties coming from different devices, calculting also the uncertainty propagation corresponding to the different      modules and lidar uncertainty as well. Users can define their own functions to calculate specific module uncertainties, and combined/expanded uncertainties as well. 
 ### Lidar_Projects
-When a lidar object is created, data from ists characteristics is stored here.
+When a lidar object is created, data from its characteristics and measuring configuration are stored here.
 ### Utils
  - Contains scripts meant to do different tasks. Importing packages and stand alone funtions which don´t interface directly with `Qlunc` but are necessary to compute calculations. Also contains a `Qlunc_Plotting.py` script to automate plots and `Qlunc_ImportModules.py` to import necessary python packages.
 ###  TestFile_Qlunc
