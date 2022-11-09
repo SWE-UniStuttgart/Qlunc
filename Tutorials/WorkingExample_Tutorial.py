@@ -128,9 +128,14 @@ class optical_amplifier():
                  print('Created new optical amplifier: {}'.format(self.Optical_AmplifierID))
 
 class acousto_optic_modulator():
-    def __init__(self,name,insertion_loss):
+    def __init__(self,name,insertion_loss,tau,tau_meas,stdv_tau,stdv_tau_meas,unc_fun):
                  self.AOMID          = name
                  self.insertion_loss = insertion_loss
+                 self.tau                        = tau
+                 self.tau_meas                   = tau_meas
+                 self.stdv_tau                   = stdv_tau
+                 self.stdv_tau_meas              = stdv_tau_meas
+                 unc_func       = uphc.UQ_AOM
                  print ('Created new AOM: {}'.format(self.AOMID))
         
 class power_source(): # Not included yet in Version Qlunc v-0.9 calculations
@@ -210,10 +215,7 @@ class telescope():
                 self.stdv_fiber_lens_offset     = stdv_fiber_lens_offset
                 self.stdv_focal_length          = stdv_focal_length
                 self.stdv_eff_radius_telescope  = stdv_eff_radius_telescope
-                self.tau                        = tau
-                self.tau_meas                   = tau_meas
-                self.stdv_tau                   = stdv_tau
-                self.stdv_tau_meas              = stdv_tau_meas                
+                
                 self.Uncertainty                = unc_func
                 print('Created new telescope: {}'.format(self.TelescopeID))
 
