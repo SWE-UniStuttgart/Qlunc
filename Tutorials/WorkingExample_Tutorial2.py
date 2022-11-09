@@ -140,9 +140,13 @@ class analog2digital_converter():
                  print('Created new ADC: {}'.format(self.ADCID))
                  
 class acousto_optic_modulator():
-    def __init__(self,name,insertion_loss,unc_func):
+    def __init__(self,name,insertion_loss,tau,tau_meas,stdv_tau,stdv_tau_meas,unc_func):
                  self.AOMID          = name
                  self.insertion_loss = insertion_loss
+                 self.tau                        = tau
+                 self.tau_meas                   = tau_meas
+                 self.stdv_tau                   = stdv_tau
+                 self.stdv_tau_meas              = stdv_tau_meas     
                  self.Uncertainty   = unc_func
                  print ('Created new AOM: {}'.format(self.AOMID))
         
@@ -216,7 +220,7 @@ class optical_circulator():
                  print ('Created new optical circulator: {}'.format(self.Optical_CirculatorID))
 
 class telescope():
-    def __init__(self,name,aperture,stdv_aperture,focal_length,fiber_lens_d,fiber_lens_offset,effective_radius_telescope,output_beam_radius,stdv_fiber_lens_d,stdv_fiber_lens_offset,stdv_focal_length,stdv_eff_radius_telescope,tau,tau_meas,stdv_tau, stdv_tau_meas,unc_func):
+    def __init__(self,name,aperture,stdv_aperture,focal_length,fiber_lens_d,fiber_lens_offset,effective_radius_telescope,output_beam_radius,stdv_fiber_lens_d,stdv_fiber_lens_offset,stdv_focal_length,stdv_eff_radius_telescope,unc_func):
                 self.TelescopeID                = name
                 self.aperture                   = aperture
                 self.stdv_aperture              = stdv_aperture
@@ -229,10 +233,7 @@ class telescope():
                 self.stdv_fiber_lens_offset     = stdv_fiber_lens_offset
                 self.stdv_focal_length          = stdv_focal_length
                 self.stdv_eff_radius_telescope  = stdv_eff_radius_telescope
-                self.tau                        = tau
-                self.tau_meas                   = tau_meas
-                self.stdv_tau                   = stdv_tau
-                self.stdv_tau_meas              = stdv_tau_meas                
+           
                 self.Uncertainty                = unc_func
                 print('Created new telescope: {}'.format(self.TelescopeID))
 
