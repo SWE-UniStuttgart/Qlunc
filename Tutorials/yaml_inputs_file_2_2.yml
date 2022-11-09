@@ -76,14 +76,7 @@ Components:
     stdv Focal length: 1.e-6                    # (*)  
     stdv Fiber-lens distance: 1.e-6             # (*)
     stdv Fiber-lens offset: 1.e-6               # (*)
-    stdv Effective radius telescope: 1.e-6      # (*)
-    
-    # Pulsed lidar: This is how the pulse is defined and the rayleigh distance calculated 
-    Pulse shape: 219.e-9 # Pulse shape (tau) (only for pulsed lidar) - Defined as the FWHM of the pulse shape
-    Gate length: 311.8e-9 # Gate length   (tau_meas)
-    stdv Pulse shape: 0.e-9 #(stdv_tau)
-    stdv Gate length: 0.e-9 # (stdv tau_meas)
-    
+    stdv Effective radius telescope: 1.e-6      # (*) 
     Uncertainty function: uopc.UQ_Telescope
     
 # Photonics  
@@ -126,6 +119,12 @@ Components:
   AOM:
     Name: AOM_YAML2
     Insertion loss: 0.5 # dB
+    # Pulsed lidar: This is how the pulse is defined and the rayleigh distance calculated 
+    Pulse shape: 219.e-9 # Pulse shape (tau) (only for pulsed lidar) - Defined as the FWHM of the pulse shape
+    Gate length: 311.8e-9 # Gate length   (tau_meas)
+    stdv Pulse shape: 0.e-9 #(stdv_tau)
+    stdv Gate length: 0.e-9 # (stdv tau_meas)
+   
     Uncertainty function: uphc.UQ_AOM
 
 # Analog to digital converter
