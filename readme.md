@@ -42,20 +42,20 @@ Considered as the major contributors to the uncertainty in lidar estimations, th
 
 1) Having [Anaconda](https://docs.anaconda.com) installed is a prerequisite if we want to work in a different environment than `base`, and it is recommended. Then, based on the requirements added to the ``environment.yaml`` file on the repository, where are included the name of the environment and the tools/packages we want to install, we build the new environment. 
 
-2) In the Anaconda prompt, go to the directory where you have clone/download `Qlunc` and type:
+2) In the Anaconda prompt, go to the directory where you have clone/download Qlunc and type:
 
 ```
 conda env create -f environment.yml 
 conda activate <envname>
 ```
 
-3) Your environment is ready to rumble. You have now a new environment, called `Qlunc_Env` by default, with all the packages needed to run `Qlunc`.
+3) Your environment is ready to rumble. You have now a new environment, called `Qlunc_Env` by default, with all the packages needed to run Qlunc.
 
 4) In case you don't want to create a new environment, just install the requirements listed in the *Requirements* section below.
 
 ### Download or [clone](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository) the repository to a local directory.
 
-By downloading or cloning the repository you will get several folders within which `Qlunc` is organized. 
+By downloading or cloning the repository you will get several folders within which Qlunc is organized. 
  
 The most importants to know are:
 1) Create a folder named `Lidar_Projects` in the main directory. Here the created lidar object(s) will be saved. 
@@ -63,7 +63,7 @@ The most importants to know are:
 3) The content of each folder in the repository is breafly explained here below. Further information can be found in the `readme` in the corresponding folder. 
  
 ### Main
-This is the core of `Qlunc`. Here the user creates the classes describing the components, modules and general inputs of the lidar device and instantiate the classes.
+This is the core of Qlunc. Here the user creates the classes describing the components, modules and general inputs of the lidar device and instantiate the classes.
  - `Qlunc_Classes.py` contains the code which creates the lidar digital twin. Each lidar module/component is assigned to a python class.
  - `Qlunc_Instantiate.py` instantiate the lidar classes taking the values from `Qlunc_inputs.yml`.
 
@@ -74,7 +74,7 @@ This is the core of `Qlunc`. Here the user creates the classes describing the co
 When a lidar object is created, data from its characteristics and measuring configuration are stored here.
 
 ### Utils
- - Contains scripts meant to do different tasks. Importing packages and stand alone funtions which don´t interface directly with `Qlunc` but are necessary to compute calculations. Also contains `Qlunc_Plotting.py`, a script to automate plots and `Qlunc_ImportModules.py` to import the necessary python packages. 
+ - Contains scripts meant to do different tasks. Importing packages and stand alone funtions which don´t interface directly with Qlunc but are necessary to compute calculations. Also contains `Qlunc_Plotting.py`, a script to automate plots and `Qlunc_ImportModules.py` to import the necessary python packages. 
  - The new functions implemented for this release estimating the uncertainty in $V_{LOS}$ and $V_{h}$ are allocated here.
 
 ###  TestFile_Qlunc
@@ -113,7 +113,7 @@ If you wish to:
 - Seek for support: please contact the author
 
 ## License
-`Qlunc` is licensed under **[SD 3-Clause License](https://github.com/SWE-UniStuttgart/Qlunc/blob/main/LICENSE)**
+Qlunc is licensed under **[SD 3-Clause License](https://github.com/SWE-UniStuttgart/Qlunc/blob/main/LICENSE)**
 
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
