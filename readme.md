@@ -49,12 +49,14 @@ conda activate <envname>
 
 4) In case you don't want to create a new environment, just install the requirements listed in the *Requirements* section below.
 
-### Download or [clone](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository) the repository to a local directory
+### Download or [clone](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository) the repository to a local directory.
 
 By downloading or cloning the repository you will get several folders within which `Qlunc` is organized. 
  
 The most importants to know are:
-
+1) Create a folder named `Projects` in the main directory. Here the created lidar objext will be saved. 
+2) Copy/paste the file `Qlunc_inputs.yml` into `Main` for a quick start/test
+3) The content of each folder in the repository is breafly explained here below. Further information can bwe found in the `readme` in the corresponding folder.  
 ### Main
 This is the core of `Qlunc`. Here the user creates the classes describing the components, modules and general inputs of the lidar device and instantiate the classes.
  - `Qlunc_Classes.py` contains the code which _creates_ all the lidar digital twins. Each lidar module/component is assigned to a python class.
