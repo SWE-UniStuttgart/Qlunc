@@ -11,25 +11,26 @@
 
 ![Qlunc basic structure image](https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Pictures_repo_/Qlunc_GralStructure.JPG)
 
-Currently, Qlunc's framework can calculate uncertainties coming from photonics, including photodetector and optical amplifier uncertainties, as well as optics module uncertainty including scanner pointing accuracy, probe volume assessment for both continuous wave and pulsed lidars, and optical circulator uncertainties. For each module the Guide to the Expression of Uncertainty in Measurement ([GUM](http://www.bipm.org/en/publications/guides/gum.html)) is applied to calculate uncertainty expansion, taking into account that the components are considered uncorrelated. Qlunc also offers the possibility of estimating the uncertainty of the line-of-sight velocity and horizontal velocity, and make a comparison between the developed analytical model and Montecarlo simulations. The possibility to consider the correlations between lidar measurement angles and also between different devices is available.
+Currently, Qlunc's framework can calculate uncertainties coming from photonics, including photodetector and optical amplifier uncertainties, as well as optics module uncertainty including scanner pointing accuracy, probe volume assessment for both continuous wave and pulsed lidars, and optical circulator uncertainties. For each module the Guide to the Expression of Uncertainty in Measurement ([GUM](http://www.bipm.org/en/publications/guides/gum.html)) is applied to calculate uncertainty propagation along the modules, taking into account that the components are considered uncorrelated. 
+Qlunc also offers the possibility of estimating the uncertainties of the line-of-sight wind velocity ( $V_{LOS}$ ) and the horizontal wind velocity ( $V_{h}$ ), and make a comparison between the developed analytical model and Montecarlo simulations. The possibility to consider the correlations between lidar measurement angles and also between different devices is available.
 
 ### Creating a lidar device
-The user creates the different lidar components by instantiating python classes, including its functional parameters and defining the function that is used to obtain the specific component uncertainty. Then, each module (also python objects) is "filled" with the corresponding components and their uncertainties are computed following uncertainty expansion method according to the GUM model. Once each component is 'ensembled' building up the different modules, the lidar object is created and the modules included. As a result, the desired lidar digital twin is created, the uncertainty of which is computed again by following [GUM](http://www.bipm.org/en/publications/guides/gum.html) suggestions about uncertainty expansion.
+The user creates the different lidar components by instantiating python classes, including its functional parameters and defining the function that is used to obtain the specific component uncertainty. Then, each module (also python objects) is "filled" with the corresponding components and their uncertainties are computed following uncertainty propagation method according to the GUM model. Once each component is 'ensembled', building up the different modules, the lidar object is created and the modules included. As a result, the desired lidar digital twin is created.
 
 ### Creating atmospheric conditions
-The user creates also atmospheric scenarios to account for the different atmospheric conditions the lidar has to deal with. Atmospheric inputs, basically temperature 
-and humidity, either single values or time series coming from peripherals are both accepted.
+The user creates also atmospheric scenarios to account for the different atmospheric conditions the lidar has to deal with. Atmospheric inputs, basically temperature and humidity are accepted, either single values or time-dependent variabilities of these inputs, taken from peripherals.
 
 ### `Qlunc` (NEW!) available capabilities
 
 #### Uncertainties in hardware
 The flexibility of the code allows the user not just to assess global lidar uncertainty due to the noise in the signal, but also to query uncertainties coming from the noise added to the signal by specific modules or even single components.
-#### 🆕 Uncertainties due to errors in pointing accuracy and range 🆕
-Considered as the major contributors to the uncertainty in lidar estimations, the new Qlunc's add-on is capable of estimating the uncertainty in the lidar line-of-sight and horizontal wind speeds due to errors in pointing accuracy and range. It also offers the possibility of accounting for the correlations between the measuring angles and the correlation between different lidars when mesuring together.
+#### 🆕 Estimated Uncertainties in $V_{LOS}$ and $V_{h}$ due to errors in pointing accuracy and focus distance 🆕
+Considered as the major contributors to the uncertainty in lidar estimations, the new Qlunc's add-on is capable of estimating the uncertainty in the lidar line-of-sight and horizontal wind speeds due to errors in pointing accuracy and focus distance. It also offers the possibility of accounting for the correlations between the measuring angles and the correlation between two different lidars when mesuring together.
 #### Plots
- - Can draw photodetector uncertainties comparison including shot noise, thermal noise, dark current noise and, if needed, trans-impedance amplifier noise.
- - Optical signal to noise ration from the optical amplifier
- - 🆕 Uncertainties in line-of-sight velocity ( $V_{LOS}$ ) and horizontal wind velocity ( $V_{h}$ ) 🆕 
+ - Photodetector total signal-to-noise ratio and separate contributions due to shot noise, thermal noise, dark current noise and, if needed, trans-impedance amplifier noise.
+ - Optical signal-to-noise ratio from the optical amplifier
+ - 🆕 Uncertainties in $V_{LOS}$ and $V_{h}$ with the wind direction 🆕 
+ - 🆕 Uncertainties in $V_{LOS}$ and $V_{h}$ with against focus distance, elevation angle and/or azimuth angle for a fixed wind direction 🆕 
 
 ## How to use `Qlunc`
 
@@ -55,28 +56,28 @@ conda activate <envname>
 By downloading or cloning the repository you will get several folders within which `Qlunc` is organized. 
  
 The most importants to know are:
-1) Create a folder named `Projects` in the main directory. Here the created lidar objext will be saved. 
-2) Copy/paste the file `Qlunc_inputs.yml` into `Main` for a quick start/test
+1) Create a folder named `Projects` in the main directory. Here the created lidar object(s) will be saved. 
+2) Copyand paste the file `Qlunc_inputs.yml` in `TestFiles_Qlunc` into `Main` for a quick start/test. Otherwise, fill in the template in the same folder (`TestFiles_Qlunc`) and rename it to `Qlunc_inputs.yml`. Copy and paste this file into the `Main` folder.
 3) The content of each folder in the repository is breafly explained here below. Further information can be found in the `readme` in the corresponding folder. 
  
 ### Main
 This is the core of `Qlunc`. Here the user creates the classes describing the components, modules and general inputs of the lidar device and instantiate the classes.
- - `Qlunc_Classes.py` contains the code which _creates_ all the lidar digital twins. Each lidar module/component is assigned to a python class.
+ - `Qlunc_Classes.py` contains the code which creates the lidar digital twin. Each lidar module/component is assigned to a python class.
  - `Qlunc_Instantiate.py` instantiate the lidar classes taking the values from `Qlunc_inputs.yml`.
 ### UQ_Functions
- - Contains the functions that compute the uncertainties from different devices, calculting also the uncertainty propagation corresponding to the different      modules and lidar uncertainty as well. Users can define their own functions to calculate specific module uncertainties, and combined/expanded uncertainties as well. 
+ - Contains the functions that compute the uncertainties from different devices, calculting also the uncertainty propagation corresponding to the different      modules and the lidar uncertainty as well. Users can define their own functions to calculate specific module uncertainties, and combined/expanded uncertainties as well. 
 ### Lidar_Projects
 When a lidar object is created, data from its characteristics and measuring configuration are stored here.
 ### Utils
  - Contains scripts meant to do different tasks. Importing packages and stand alone funtions which don´t interface directly with `Qlunc` but are necessary to compute calculations. Also contains `Qlunc_Plotting.py`, a script to automate plots and `Qlunc_ImportModules.py` to import the necessary python packages. 
  - The new functions implemented for this release estimating the uncertainty in $V_{LOS}$ and $V_{h}$ are allocated here.
 ###  TestFile_Qlunc
- - `Qlunc_inputs.yml`: Copy and paste in `Main` or
- - Use `Template_yaml_inputs_file.yml` to create your own use case
+ - `Qlunc_inputs.yml`: Human-friendly data file used as input to Qlunc. Copy and paste it into `Main` or
+ - `Template_yaml_inputs_file.yml` to create your own use case
 ### Tutorials
-- Containing 3 [Jupyter Notebook-based tutorials](https://github.com/SWE-UniStuttgart/Qlunc/tree/Qlunc-V0.9/Tutorials); `Turial0.ipynb`, `Tutorial1.ipynb` and `Tutorial2.ipynb` with their corresponding yaml files. These tutorials are meant to serve as a guide to the user and show the current capabilities of the Qlunc framework. The tutorials are also available through the Binder service to ease accessibility and reproducibility. Users can find more information about these tutorials in the corresponding `readme.md` file dropped in the folder `Tutorials`.
+- Contains 3 [Jupyter Notebook-based tutorials](https://github.com/SWE-UniStuttgart/Qlunc/tree/Qlunc-V0.9/Tutorials); `Turial0.ipynb`, `Tutorial1.ipynb` and `Tutorial2.ipynb` with their corresponding yaml files and working examples. These tutorials are meant to serve as a guide for the user to get familiar with the Qlunc's routines, and show the current capabilities of the framework. The tutorials are also available through the Binder service to ease accessibility and reproducibility. Users can find more information about these tutorials in the corresponding `readme` in the folder `Tutorials`.
 ## Requirements
-The following python libraries and tools should be installed beforehand and are included in the `environment.yml` file:
+The following python packages should be installed beforehand and are included in the `environment.yml` file:
 
 - matplotlib==3.2.1
 - numpy==1.18.5 
@@ -98,9 +99,9 @@ The following python libraries and tools should be installed beforehand and are 
 
 ## Contributions
 Contributions are very welcome!
-If you are wishing to:
+If you wish to:
 - Colaborate: please contact the author
-- Report problems or enhance the code: post an [issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/quickstart) or make a [pull request](https://docs.github.com/en/github/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request)
+- Report issues or enhance the code: post an [issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/quickstart) or make a [pull request](https://docs.github.com/en/github/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request)
 - Seek for support: please contact the author
 
 ## License
