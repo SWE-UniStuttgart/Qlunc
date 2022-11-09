@@ -214,10 +214,10 @@ Probe Volume:
 
 # Plotting:------------------------------------------------------------
 Flags:
-  Line of sight Velocity Uncertainty: True
+  Line of sight Velocity Uncertainty: False
   Scanning Pattern: False
   Photodetector noise: False
   Save Scanning Coordinates: False
   Probe Volume parameters: False
   Optical_amplifier_noise: False
-  Horizontal Velocity Uncertainty: True
+  Horizontal Velocity Uncertainty: False

@@ -45,7 +45,6 @@ def UQ_Vh(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Lidars):
     for ind in Lids:
         with open('./Lidar_Projects/'+ind, 'rb') as f:
             loaded_dict.append( pickle.load(f))
-            pdb.set_trace()
     wind_direction =   loaded_dict[0]['Uncertainty']['wind direction']  
     
     if len (Lids)==2:
