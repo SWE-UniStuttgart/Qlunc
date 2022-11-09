@@ -542,3 +542,53 @@ def U_VLOS_GUM (theta1,psi1,rho1,U_theta1,U_psi1,U_rho1,U_VLOS1,Hl,Vref,Href,alp
     # U_VLOS2_GUM=np.sqrt(((U_VLOS_sh_theta2)**2+(U_VLOS_sh_psi2)**2+(U_VLOS_sh_range2)**2)+2*(CC_T2_P2+CC_T2_R2+CC_P2_R2+CC_VLOS))
     return(U_VLOS1_GUM)
 
+def VLOS_param (rho,theta,psi,U_theta1,U_psi1,U_rho1,N_MC,U_VLOS1,Hl,Vref,Href,alpha,wind_direction_TEST,ind_wind_dir,CROS_CORR):
+    wind_direction_TEST = np.radians([44])
+    # wind_tilt_TEST      = np.radians([0])
+    #If want to vary range
+    
+    
+    if len (rho) !=1:
+        rho_TEST   = rho
+        theta_TEST = theta*np.ones(len(rho_TEST))
+        psi_TEST   = psi*np.ones(len(rho_TEST))
+        U_theta1   = 0
+        U_psi1   = 0
+        # pdb.set_trace()
+        ind_i = theta_TEST
+    elif len(theta)!=1:
+        theta_TEST = theta
+        rho_TEST   = rho[0]*np.ones(len(theta_TEST))
+        psi_TEST   = psi*np.ones(len(theta_TEST))
+        U_rho1   = 0
+        U_psi1   = 0
+        ind_i = rho_TEST
+    elif len(psi)!=1:
+        psi_TEST   = psi
+        rho_TEST   = rho[0]*np.ones(len(psi_TEST))
+        theta_TEST = theta*np.ones(len(psi_TEST))
+        U_rho1   = 0
+        U_theta1  = 0
+        ind_i = rho_TEST
+    # pdb.set_trace()        
+    # Calculate radial speed uncertainty for an heterogeneous flow
+    U_Vrad_homo_MC,U_Vrad_homo_MC_LOS1,U_Vrad_homo_MC_LOS2 = [],[],[]
+    VLOS_list_T,U_VLOS_T_MC,U_VLOS_T_GUM,U_VLOS_THomo_MC=[],[],[],[]
+    for ind_0 in range(len(ind_i)):
+        # MC method
+        VLOS_T_MC1=[]
+        theta1_T_noisy = np.random.normal(theta_TEST[ind_0],U_theta1,N_MC)
+        psi1_T_noisy   = np.random.normal(psi_TEST[ind_0],U_psi1,N_MC)
+        rho1_T_noisy   = np.random.normal(rho_TEST[ind_0],U_rho1,N_MC)
+
+        VLOS_T_MC,U_VLOS_T,VLOS_LIST_T         = U_VLOS_MC(theta1_T_noisy,psi1_T_noisy,rho1_T_noisy,Hl,Href,alpha,wind_direction_TEST,Vref,0,VLOS_list_T)
+        VLOS_THomo_MC,U_VLOS_THomo,VLOS_LIST_T = U_VLOS_MC(theta1_T_noisy,psi1_T_noisy,rho1_T_noisy,Hl,Href, [0], wind_direction_TEST,Vref,0,VLOS_list_T)
+        
+        U_VLOS_T_MC.append(U_VLOS_T)         # For an heterogeneous flow in the z direction (shear)
+        U_VLOS_THomo_MC.append(U_VLOS_THomo) # For an homogeneous flow
+    
+    # GUM method
+    U_VLOS_T_GUM     = U_VLOS_GUM (theta_TEST,psi_TEST,rho_TEST,U_theta1,U_psi1,U_rho1,U_VLOS1,Hl,Vref,Href,alpha,wind_direction_TEST,0,[0,0,0])  # For an heterogeneous flow in the z direction (shear)
+    U_VLOS_THomo_GUM = U_VLOS_GUM (theta_TEST,psi_TEST,rho_TEST,U_theta1,U_psi1,U_rho1,U_VLOS1,Hl,Vref,Href,[0],wind_direction_TEST,0,[0,0,0])    # For an homogeneous flow
+    # pdb.set_trace()
+    return (U_VLOS_T_MC,U_VLOS_THomo_MC,U_VLOS_T_GUM,U_VLOS_THomo_GUM,rho_TEST,theta_TEST,psi_TEST,)        

@@ -73,7 +73,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     rho0           = [Lidar.optics.scanner.focus_dist]  
     theta0         = [np.radians(Lidar.optics.scanner.cone_angle)]
     psi0           = [np.radians(Lidar.optics.scanner.azimuth)]
-    wind_direction = np.radians(np.linspace(0,359,360))
+    wind_direction = np.radians(np.linspace(Atmospheric_Scenario.wind_direction[0],Atmospheric_Scenario.wind_direction[1],360))
 
    
     # Measurement point in cartesian coordinates before applying lidar position
@@ -111,7 +111,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
 
     
-    # Rho, theta and psi inputs and their uncertainties
+    # Rho, theta and psi lidar inputs and their uncertainties
     theta1,U_theta1 = lidars['Lidar_Spherical']['theta'],np.radians(Lidar.optics.scanner.stdv_cone_angle[0])
     psi1  ,U_psi1   = lidars['Lidar_Spherical']['psi'],np.radians(Lidar.optics.scanner.stdv_azimuth[0])
     rho1  ,U_rho1   = lidars['Lidar_Spherical']['rho'],Lidar.optics.scanner.stdv_focus_dist [0]
@@ -227,39 +227,20 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         U_VLOS1_GUM.append(U_VLOS1[0])
     
        
-    #%% 5) Method for uncertainty when varying theta, psi OR rho    
-    wind_direction_TEST = np.radians([180])
-    wind_tilt_TEST      = np.radians([0])
-    theta_TEST = np.radians(np.linspace(1,89,500))
-    psi_TEST   = np.radians(np.linspace(45,45,500))
-    rho_TEST   = np.linspace(1000,1000,500)
+    #%% 5) Method for uncertainty when varying theta, psi OR rho   
     
+    # Want to vary rho
+    U_VLOS_T_MC_rho,U_VLOS_THomo_MC_rho,U_VLOS_T_GUM_rho,U_VLOS_THomo_GUM_rho,rho_TESTr,thata_TESTr,psi_TESTr          =  SA.VLOS_param(np.linspace(1000,5000,500),theta1,psi1,U_theta1,U_psi1,U_rho1,Lidar.optics.scanner.N_MC,U_VLOS1,Hl,Vref,Href,alpha,wind_direction_TEST,0,[0,0,0])
+    U_VLOS_T_MC_theta,U_VLOS_THomo_MC_theta,U_VLOS_T_GUM_theta,U_VLOS_THomo_GUM_theta,rho_TESTt,theta_TESTt,psi_TESTt  =  SA.VLOS_param(rho1,np.radians(np.linspace(1,89,500)),psi1,U_theta1,U_psi1,U_rho1,Lidar.optics.scanner.N_MC,U_VLOS1,Hl,Vref,Href,alpha,wind_direction_TEST,0,[0,0,0])    
+    U_VLOS_T_MC_psi,U_VLOS_THomo_MC_psi,U_VLOS_T_GUM_psi,U_VLOS_THomo_GUM_psi,rho_TESTp,theta_TESTp,psi_TESTp          =  SA.VLOS_param(rho1,theta1,np.radians(np.linspace(-90,90,500)),U_theta1,U_psi1,U_rho1,Lidar.optics.scanner.N_MC,U_VLOS1,Hl,Vref,Href,alpha,wind_direction_TEST,0,[0,0,0])
     
-    # Calculate radial speed uncertainty for an heterogeneous flow
-    U_Vrad_homo_MC,U_Vrad_homo_MC_LOS1,U_Vrad_homo_MC_LOS2 = [],[],[]
-    VLOS_list_T,U_VLOS_T_MC,U_VLOS_T_GUM,U_VLOS_THomo_MC=[],[],[],[]
-    for ind_0 in range(len(theta_TEST)):
-        # MC method
-        VLOS_T_MC1=[]
-        theta1_T_noisy = np.random.normal(theta_TEST[ind_0],U_theta1,Lidar.optics.scanner.N_MC)
-        psi1_T_noisy   = np.random.normal(psi_TEST[ind_0],U_psi1,Lidar.optics.scanner.N_MC)
-        rho1_T_noisy   = np.random.normal(rho_TEST[ind_0],U_rho1,Lidar.optics.scanner.N_MC)
-
-        VLOS_T_MC,U_VLOS_T,VLOS_LIST_T         = SA.U_VLOS_MC(theta1_T_noisy,psi1_T_noisy,rho1_T_noisy,Hl,Href,alpha,wind_direction_TEST,Vref,0,VLOS_list_T)
-        VLOS_THomo_MC,U_VLOS_THomo,VLOS_LIST_T = SA.U_VLOS_MC(theta1_T_noisy,psi1_T_noisy,rho1_T_noisy,Hl,Href, [0], wind_direction_TEST,Vref,0,VLOS_list_T)
-        
-        U_VLOS_T_MC.append(U_VLOS_T)         # For an heterogeneous flow in the z direction (shear)
-        U_VLOS_THomo_MC.append(U_VLOS_THomo) # For an homogeneous flow
-    
-    # GUM method
-    U_VLOS_T_GUM     = SA.U_VLOS_GUM (theta_TEST,psi_TEST,rho_TEST,U_theta1,U_psi1,U_rho1,U_VLOS1,Hl,Vref,Href,alpha,wind_direction_TEST,0,[0,0,0])  # For an heterogeneous flow in the z direction (shear)
-    U_VLOS_THomo_GUM = SA.U_VLOS_GUM (theta_TEST,psi_TEST,rho_TEST,U_theta1,U_psi1,U_rho1,U_VLOS1,Hl,Vref,Href,[0],wind_direction_TEST,0,[0,0,0])    # For an homogeneous flow
-            
     
     #%% Storing data
     Final_Output_UQ_Scanner                 = {'VLOS1 Uncertainty MC [m/s]':U_VLOS1_MC,'VLOS1 Uncertainty GUM [m/s]':U_VLOS1_GUM,
-                                               'Vr Uncertainty homo MC [m/s]':U_VLOS_THomo_MC,'Vr Uncertainty homo GUM [m/s]':U_VLOS_THomo_GUM,'Vr Uncertainty MC [m/s]':U_VLOS_T_MC,'Vr Uncertainty GUM [m/s]':U_VLOS_T_GUM,
-                                               'x':x,'y':y,'z':z,'rho':rho_TEST,'theta':theta_TEST,'psi':psi_TEST,'wind direction':wind_direction,'Focus distance':rho1,'Elevation angle':theta1,'Azimuth':psi1,'STDVs':[U_theta1,U_psi1,U_rho1]} #, 'Rayleigh length':Probe_param['Rayleigh Length'],'Rayleigh length uncertainty':Probe_param['Rayleigh Length uncertainty']}
+                                               'Vr Uncertainty homo MC rho [m/s]':U_VLOS_THomo_MC_rho,'Vr Uncertainty homo GUM rho [m/s]':U_VLOS_THomo_GUM_rho,'Vr Uncertainty MC rho [m/s]':U_VLOS_T_MC_rho,'Vr Uncertainty GUM rho [m/s]':U_VLOS_T_GUM_rho,
+                                               'Vr Uncertainty homo MC theta [m/s]':U_VLOS_THomo_MC_theta,'Vr Uncertainty homo GUM theta [m/s]':U_VLOS_THomo_GUM_theta,'Vr Uncertainty MC theta [m/s]':U_VLOS_T_MC_theta,'Vr Uncertainty GUM theta [m/s]':U_VLOS_T_GUM_theta,
+                                               'Vr Uncertainty homo MC psi [m/s]':U_VLOS_THomo_MC_psi,'Vr Uncertainty homo GUM psi [m/s]':U_VLOS_THomo_GUM_psi,'Vr Uncertainty MC psi [m/s]':U_VLOS_T_MC_psi,'Vr Uncertainty GUM psi [m/s]':U_VLOS_T_GUM_psi,
+                                               'x':x,'y':y,'z':z,'rho':rho_TESTr,'theta':theta_TESTt,'psi':psi_TESTp,'wind direction':wind_direction,'Focus distance':rho1,'Elevation angle':theta1,'Azimuth':psi1,'STDVs':[U_theta1,U_psi1,U_rho1]} #, 'Rayleigh length':Probe_param['Rayleigh Length'],'Rayleigh length uncertainty':Probe_param['Rayleigh Length uncertainty']}
     
     Lidar.lidar_inputs.dataframe['Scanner'] = {'Focus distance':Final_Output_UQ_Scanner['Focus distance'][0],'Elevation angle':Final_Output_UQ_Scanner['Elevation angle'][0],'Azimuth':Final_Output_UQ_Scanner['Azimuth'][0]}
     
