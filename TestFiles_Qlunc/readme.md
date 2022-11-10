@@ -29,3 +29,9 @@ Modules:
                            unc_func       = Unc_function_Telescope)
 ```
 and the same for the rest of the components and modules.
+
+
+
+<p align="center">
+  <img src="https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Pictures_repo_/Plan_Side_view_conv.png" />
+</p>
