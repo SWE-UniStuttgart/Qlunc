@@ -30,8 +30,29 @@ Modules:
 ```
 and the same for the rest of the components and modules.
 
-
+# Coordinate system
 
 <p align="center">
   <img src="https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Pictures_repo_/Plan_Side_view_conv.png" />
 </p>
+
+where
+
+$\vec{v}_{wind} ~ =  ~ wind ~ velocity~3D ~ vector $
+
+$&#952;  ~ = ~ elevation~angle$
+
+$&#968;  ~ = ~ azimuth~angle$
+
+$r ~ = ~ focus ~ distance$
+
+$&#969;  ~ = ~ wind ~ direction$
+
+$&#946;  ~ = ~ wind ~ tilt ~ angle$
+
+$u,~ v,~ w ~ = ~ longitudinal, ~transversal ~ and ~ vertical ~ wind ~ velocity ~ components$
+
+$H_{l} ~ = ~ lidar ~ height ~ above ~ mean ~ sea ~ level$
+
+$H_{g} ~ = ~ height ~ above ~ mean ~ sea ~ level$
+
