@@ -274,7 +274,7 @@ def mesh (theta,psi,rho):
     # plt.show()
     return theta,psi,rho,box
 
-
+#%% Wind velocity ucertainties
 def U_Vh_MC(theta_c, psi_c,rho_c,wind_direction,ind_wind_dir,Href,Vref,alpha,Hl):
     """.
     
@@ -592,3 +592,149 @@ def VLOS_param (rho,theta,psi,U_theta1,U_psi1,U_rho1,N_MC,U_VLOS1,Hl,Vref,Href,a
     U_VLOS_THomo_GUM = U_VLOS_GUM (theta_TEST,psi_TEST,rho_TEST,U_theta1,U_psi1,U_rho1,U_VLOS1,Hl,Vref,Href,[0],wind_direction_TEST,0,[0,0,0])    # For an homogeneous flow
     # pdb.set_trace()
     return (U_VLOS_T_MC,U_VLOS_THomo_MC,U_VLOS_T_GUM,U_VLOS_THomo_GUM,rho_TEST,theta_TEST,psi_TEST)        
+
+#%% Wind direction uncertainties
+def U_WindDir_MC(theta_c, psi_c,rho_c,wind_direction,ind_wind_dir,Href,Vref,alpha,Hl):
+    """.
+    
+    Calculates wind direction. Location: Qlunc_Help_standAlone.py
+    
+    Parameters
+    ----------    
+    * correlated distributions theta, psi and rho
+    
+    * wind direction [degrees]
+     
+    * ind_wind_dir: index for looping
+    
+    * $H_{ref}$: Reference height  at which $V_{ref}$ is taken [m]
+    
+    * $V_{ref}$: reference velocity taken from an external sensor (e.g. cup anemometer) [m/s]
+    
+    * alpha: power law exponent [-] 
+    
+    * Hl: Lidar height [m]
+  
+    Returns
+    -------    
+    u and v wind speed components 
+    """
+    #Wind direction
+    # pdb.set_trace()
+    A = (((Hl+(rho_c[0]*np.sin(theta_c[0])))/Href)**alpha)*np.cos(psi_c[0]-wind_direction[ind_wind_dir])*np.cos(psi_c[1])
+    B = (((Hl+(rho_c[1]*np.sin(theta_c[1])))/Href)**alpha)*np.cos(psi_c[1]-wind_direction[ind_wind_dir])*np.cos(psi_c[0])
+    C = (((Hl+(rho_c[1]*np.sin(theta_c[1])))/Href)**alpha)*np.cos(psi_c[1]-wind_direction[ind_wind_dir])*np.sin(psi_c[0])
+    D = (((Hl+(rho_c[0]*np.sin(theta_c[0])))/Href)**alpha)*np.cos(psi_c[0]-wind_direction[ind_wind_dir])*np.cos(psi_c[1])    
+    # P=(A-B)/(C-D)
+    wind_dir = np.arctan((A-B)/(C-D))
+    return (wind_dir)
+
+def U_WindDir_GUM(theta_c, psi_c,rho_c,wind_direction,ind_wind_dir,Href,Vref,alpha,Hl,U,Coef):
+    """.
+    
+    Calculates wind direction. Location: Qlunc_Help_standAlone.py
+    
+    Parameters
+    ----------    
+    * correlated distributions theta, psi and rho
+    
+    * wind direction [degrees]
+     
+    * ind_wind_dir: index for looping
+    
+    * $H_{ref}$: Reference height  at which $V_{ref}$ is taken [m]
+    
+    * $V_{ref}$: reference velocity taken from an external sensor (e.g. cup anemometer) [m/s]
+    
+    * alpha: power law exponent [-] 
+    
+    * Hl: Lidar height [m]
+  
+    Returns
+    -------    
+    u and v wind speed components 
+    """
+    # Wind direction uncertainty
+    # pdb.set_trace()
+    A = (((Hl+(rho_c[0]*np.sin(theta_c[0])))/Href)**alpha)*np.cos(psi_c[0]-wind_direction[ind_wind_dir])*np.cos(psi_c[1])
+    B = (((Hl+(rho_c[1]*np.sin(theta_c[1])))/Href)**alpha)*np.cos(psi_c[1]-wind_direction[ind_wind_dir])*np.cos(psi_c[0])
+    C = (((Hl+(rho_c[1]*np.sin(theta_c[1])))/Href)**alpha)*np.cos(psi_c[1]-wind_direction[ind_wind_dir])*np.sin(psi_c[0])
+    D = (((Hl+(rho_c[0]*np.sin(theta_c[0])))/Href)**alpha)*np.cos(psi_c[0]-wind_direction[ind_wind_dir])*np.cos(psi_c[1])    
+    X = ((A-B)/(C-D))
+    P = 1/(1+X**2) 
+    
+    sh_term1 = alpha[0]*(((rho_c[0]*np.sin(theta_c[0])+Hl)/(Href))**(alpha[0]-1))
+    sh_term2 = alpha[0]*(((rho_c[1]*np.sin(theta_c[1])+Hl)/(Href))**(alpha[0]-1))
+    
+    A0 = Vref*(((Hl+(rho_c[1]*np.sin(theta_c[1])))/Href)**alpha)
+    B0 = np.cos(theta_c[1])*np.cos(psi_c[1]-wind_direction[ind_wind_dir])#np.cos(theta_c[1])*np.cos(psi_c[1])*np.cos(wind_direction[ind_wind_dir])+np.cos(theta_c[1])*np.sin(psi_c[1])*np.sin(wind_direction[ind_wind_dir])#+np.sin(theta_c[0])*np.tan(wind_tilt)
+    C0 = np.cos(theta_c[0])*np.sin(psi_c[0])
+    D0 = Vref*(((Hl+(rho_c[0]*np.sin(theta_c[0])))/Href)**alpha)
+    E0 = np.cos(theta_c[0])*np.cos(psi_c[0]-wind_direction[ind_wind_dir])#np.cos(theta_c[0])*np.cos(psi_c[0])*np.cos(wind_direction[ind_wind_dir])+np.cos(theta_c[0])*np.sin(psi_c[0])*np.sin(wind_direction[ind_wind_dir])#+np.sin(theta_c[1])*np.tan(wind_tilt)
+    F0 = np.cos(theta_c[1])*np.sin(psi_c[1])
+    G  = np.cos(theta_c[0])*np.cos(theta_c[1])*(np.sin(psi_c[0]-psi_c[1])  )  
+    H0 = (A0*B0*C0)-(D0*E0*F0)
+    
+    # # v
+    I0 = Vref*(((Hl+(rho_c[0]*np.sin(theta_c[0])))/Href)**alpha)
+    J0 = np.cos(theta_c[0])*np.cos(psi_c[0]-wind_direction[ind_wind_dir])#np.cos(theta_c[0])*np.cos(psi_c[0])*np.cos(wind_direction[ind_wind_dir])+np.cos(theta_c[0])*np.sin(psi_c[0])*np.sin(wind_direction[ind_wind_dir])#+np.sin(Theta2_cr)*np.tan(wind_tilt)
+    K0 = np.cos(theta_c[1])*np.cos(psi_c[1])
+    L0 = Vref*(((Hl+(rho_c[1]*np.sin(theta_c[1])))/Href)**alpha)
+    M0 = np.cos(theta_c[1])*np.cos(psi_c[1]-wind_direction[ind_wind_dir])#np.cos(theta_c[1])*np.cos(psi_c[1])*np.cos(wind_direction[ind_wind_dir])+np.cos(theta_c[1])*np.sin(psi_c[1])*np.sin(wind_direction[ind_wind_dir])#+np.sin(Theta1_cr)*np.tan(wind_tilt)
+    N0 = np.cos(theta_c[0])*np.cos(psi_c[0])   
+    O0 = (I0*J0*K0)-(L0*M0*N0)
+    u_wind = (H0/G)
+    v_wind = (O0/G)
+    
+    # dWindDir_dtheta1 =  - v_wind/(u_wind**2+v_wind**2)
+    # dWindDir_dtheta2 =  u_wind/(u_wind**2+v_wind**2)
+
+    dWindDir_dtheta1 =  P*(1/(C-D)**2)*sh_term1*np.cos(theta_c[0])*(rho_c[0]/Href)*np.cos(psi_c[0]-wind_direction[ind_wind_dir])*((C-D)*np.cos(psi_c[1])+(A-B)*np.sin(psi_c[1]))
+    dWindDir_dtheta2 = -P*(1/(C-D)**2)*sh_term2*np.cos(theta_c[1])*(rho_c[1]/Href)*np.cos(psi_c[1]-wind_direction[ind_wind_dir])*((C-D)*np.cos(psi_c[0])+(A-B)*np.sin(psi_c[0]))
+    
+    dWindDir_dpsi1 = 0# P*(1/(C-D)**2)*sh_term1*np.cos(theta_c[0])*np.cos(psi_c[0]-wind_direction[ind_wind_dir])((C-D)*np.cos(psi_c[1])+(A-B)*np.sin(psi_c[1]))
+    dWindDir_dpsi2 = 0#-P*(1/(C-D)**2)*sh_term2*np.cos(theta_c[1])*np.cos(psi_c[1]-wind_direction[ind_wind_dir])((C-D)*np.cos(psi_c[0])+(A-B)*np.sin(psi_c[0]))
+    
+    dWindDir_drho1 = 0#P*(1/(C-D)**2)*sh_term1*np.cos(theta_c[0])*np.cos(psi_c[0]-wind_direction[ind_wind_dir])((C-D)*np.cos(psi_c[1])+(A-B)*np.sin(psi_c[1]))
+    dWindDir_drho2 = 0#-P*(1/(C-D)**2)*sh_term2*np.cos(theta_c[1])*np.cos(psi_c[1]-wind_direction[ind_wind_dir])((C-D)*np.cos(psi_c[0])+(A-B)*np.sin(psi_c[0]))
+    
+    ## Correlation terms:
+    R = 0#(dVh_dTheta1*dVh_dTheta2*U[0]*U[1]*Coef[0]+
+    #      dVh_dPsi1*dVh_dPsi2*U[2]*U[3]*Coef[1]+
+    #      dVh_dRho1*dVh_dRho2*U[4]*U[5]*Coef[2]+
+     
+        # dVh_dTheta1*dVh_dPsi1*U[0]*U[2]*psi1_theta1_corr_n+
+        # dVh_dTheta2*dVh_dPsi1*U[1]*U[2]*psi1_theta2_corr_n+
+        # dVh_dTheta1*dVh_dPsi2*U[0]*U[3]*psi2_theta1_corr_n+
+        # dVh_dTheta2*dVh_dPsi2*U[1]*U[3]*psi2_theta2_corr_n+
+     
+        # dVh_dTheta1*dVh_dRho1*U[0]*U[4]*theta1_rho1_corr_n+
+        # dVh_dTheta2*dVh_dRho1*U[1]*U[4]*theta2_rho1_corr_n+
+        # dVh_dTheta1*dVh_dRho2*U[0]*U[5]*theta1_rho2_corr_n+
+        # dVh_dTheta2*dVh_dRho2*U[1]*U[5]*theta2_rho2_corr_n+
+     
+        # dVh_dPsi1*dVh_dRho1*U[2]*U[4]*psi1_rho1_corr_n+
+        # dVh_dPsi2*dVh_dRho1*U[3]*U[4]*psi2_rho1_corr_n+
+        # dVh_dPsi1*dVh_dRho2*U[2]*U[5]*psi1_rho2_corr_n+
+        # dVh_dPsi2*dVh_dRho2*U[3]*U[5]*psi2_rho2_corr_n
+        # U[0]*U[1]*CORRCOEF_T[0][1]+U[2]*U[3]*CORRCOEF_P[0][1]+U[4]*U[5]*CORRCOEF_R[0][1]
+      
+        # dVh_dTheta1*dVh_dPsi1*U[0]*U[2]*Coef[3]+
+        # dVh_dTheta2*dVh_dPsi1*U[1]*U[2]*Coef[4]+
+        # dVh_dTheta1*dVh_dPsi2*U[0]*U[3]*Coef[5]+
+        # dVh_dTheta2*dVh_dPsi2*U[1]*U[3]*Coef[6]+
+     
+        # dVh_dTheta1*dVh_dRho1*U[0]*U[4]*Coef[7]+
+        # dVh_dTheta2*dVh_dRho1*U[1]*U[2]*Coef[8]+
+        # dVh_dTheta1*dVh_dRho2*U[0]*U[3]*Coef[9]+
+        # dVh_dTheta2*dVh_dRho2*U[1]*U[3]*Coef[10]+
+     
+        # dVh_dPsi1*dVh_dRho1*U[2]*U[4]*Coef[11]+
+        # dVh_dPsi2*dVh_dRho1*U[3]*U[4]*Coef[12]+
+        # dVh_dPsi1*dVh_dRho2*U[2]*U[5]*Coef[13]+
+        # dVh_dPsi2*dVh_dRho2*U[3]*U[5]*Coef[14])  
+    
+    # With the partial derivatives and the correlation term R we calculate the uncertainty in Vh    
+    U_wind_dir=np.sqrt((dWindDir_dtheta1*U[0])**2+(dWindDir_dtheta2*U[1])**2+(0*U[2])**2+(0*U[3])**2+(0*U[4])**2+(0*U[5])**2+2*R)[0]    
+     
+    return (U_wind_dir)
