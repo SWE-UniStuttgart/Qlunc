@@ -153,7 +153,6 @@ def UQ_WinDir(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Lidars):
             C_psi=psi_covariance/(psi_stds[0]*psi_stds[1])
             Corr_coef_psi=np.corrcoef(Psi1_cr,Psi2_cr)
             
-            
             # Rho
             #Covariance(psi1, psi2) as defined in GUM
             rho_covariance = 1/(Lidar.optics.scanner.N_MC-1)*sum((Rho1_cr-rho_means[0])*(Rho2_cr-rho_means[1]))
@@ -199,6 +198,7 @@ def UQ_WinDir(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Lidars):
             # Vwind_MC.append(np.mean(v_wind))
             # # Uncertainty as standard deviation (k=1) in the v wind velocity component estimation
             # Uncertainty_V.append(np.std(v_wind))
+            # pdb.set_trace()
     
             #%% VH Montecarlo uncertainy ##############
             # Horizontal velocity estimation
