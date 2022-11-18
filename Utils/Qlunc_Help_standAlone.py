@@ -675,18 +675,18 @@ def U_WindDir_GUM(theta_c, psi_c,rho_c,wind_direction,ind_wind_dir,Href,Vref,alp
                                      ((A-B)*((((Hl+(rho_c[1]*np.sin(theta_c[1])))/Href)**alpha)*np.cos(psi_c[1]-wind_direction[ind_wind_dir])*np.cos(psi_c[0])+\
                                               (((Hl+(rho_c[0]*np.sin(theta_c[0])))/Href)**alpha)*np.sin(psi_c[0]-wind_direction[ind_wind_dir])*np.sin(psi_c[1]))))
     
-    dWindDir_dpsi2 =  dWindDir_dpsi1 = P*(1/(C-D)**2)*(((C-D)*(-(((Hl+(rho_c[0]*np.sin(theta_c[0])))/Href)**alpha)*np.cos(psi_c[0]-wind_direction[ind_wind_dir])*np.sin(psi_c[1])+\
+    dWindDir_dpsi2 =  P*(1/(C-D)**2)*(((C-D)*(-(((Hl+(rho_c[0]*np.sin(theta_c[0])))/Href)**alpha)*np.cos(psi_c[0]-wind_direction[ind_wind_dir])*np.sin(psi_c[1])+\
                                               (((Hl+(rho_c[1]*np.sin(theta_c[1])))/Href)**alpha)*np.sin(psi_c[1]-wind_direction[ind_wind_dir])*np.cos(psi_c[0])))-\
-                                     ((A-B)*((-((Hl+(rho_c[1]*np.sin(theta_c[1])))/Href)**alpha)*np.sin(psi_c[1]-wind_direction[ind_wind_dir])*np.sin(psi_c[0])-\
+                                     ((A-B)*(-(((Hl+(rho_c[1]*np.sin(theta_c[1])))/Href)**alpha)*np.sin(psi_c[1]-wind_direction[ind_wind_dir])*np.sin(psi_c[0])-\
                                               (((Hl+(rho_c[0]*np.sin(theta_c[0])))/Href)**alpha)*np.cos(psi_c[0]-wind_direction[ind_wind_dir])*np.cos(psi_c[1]))))
     
-    dWindDir_drho1 = 0#P*(1/(C-D)**2)*sh_term1*np.cos(theta_c[0])*np.cos(psi_c[0]-wind_direction[ind_wind_dir])((C-D)*np.cos(psi_c[1])+(A-B)*np.sin(psi_c[1]))
-    dWindDir_drho2 = 0#-P*(1/(C-D)**2)*sh_term2*np.cos(theta_c[1])*np.cos(psi_c[1]-wind_direction[ind_wind_dir])((C-D)*np.cos(psi_c[0])+(A-B)*np.sin(psi_c[0]))
+    dWindDir_drho1 =  P*(1/(C-D)**2)*sh_term1*(np.sin(theta_c[0])/Href)*np.cos(psi_c[0]-wind_direction[ind_wind_dir])*((C-D)*np.cos(psi_c[1])+(A-B)*np.sin(psi_c[1]))
+    dWindDir_drho2 = -P*(1/(C-D)**2)*sh_term2*(np.sin(theta_c[1])/Href)*np.cos(psi_c[1]-wind_direction[ind_wind_dir])*((C-D)*np.cos(psi_c[0])+(A-B)*np.sin(psi_c[0]))
     
     ## Correlation terms:
-    R = 0#(dVh_dTheta1*dVh_dTheta2*U[0]*U[1]*Coef[0]+
-    #      dVh_dPsi1*dVh_dPsi2*U[2]*U[3]*Coef[1]+
-    #      dVh_dRho1*dVh_dRho2*U[4]*U[5]*Coef[2]+
+    R = (dWindDir_dtheta1*dWindDir_dtheta2*U[0]*U[1]*Coef[0]+
+          dWindDir_dpsi1*dWindDir_dpsi2*U[2]*U[3]*Coef[1]+
+          dWindDir_drho1*dWindDir_drho2*U[4]*U[5]*Coef[2]+
      
         # dVh_dTheta1*dVh_dPsi1*U[0]*U[2]*psi1_theta1_corr_n+
         # dVh_dTheta2*dVh_dPsi1*U[1]*U[2]*psi1_theta2_corr_n+
@@ -704,22 +704,22 @@ def U_WindDir_GUM(theta_c, psi_c,rho_c,wind_direction,ind_wind_dir,Href,Vref,alp
         # dVh_dPsi2*dVh_dRho2*U[3]*U[5]*psi2_rho2_corr_n
         # U[0]*U[1]*CORRCOEF_T[0][1]+U[2]*U[3]*CORRCOEF_P[0][1]+U[4]*U[5]*CORRCOEF_R[0][1]
       
-        # dVh_dTheta1*dVh_dPsi1*U[0]*U[2]*Coef[3]+
-        # dVh_dTheta2*dVh_dPsi1*U[1]*U[2]*Coef[4]+
-        # dVh_dTheta1*dVh_dPsi2*U[0]*U[3]*Coef[5]+
-        # dVh_dTheta2*dVh_dPsi2*U[1]*U[3]*Coef[6]+
+        dWindDir_dtheta1*dWindDir_dpsi1*U[0]*U[2]*Coef[3]+
+        dWindDir_dtheta2*dWindDir_dpsi1*U[1]*U[2]*Coef[4]+
+        dWindDir_dtheta1*dWindDir_dpsi2*U[0]*U[3]*Coef[5]+
+        dWindDir_dtheta2*dWindDir_dpsi2*U[1]*U[3]*Coef[6]+
      
-        # dVh_dTheta1*dVh_dRho1*U[0]*U[4]*Coef[7]+
-        # dVh_dTheta2*dVh_dRho1*U[1]*U[2]*Coef[8]+
-        # dVh_dTheta1*dVh_dRho2*U[0]*U[3]*Coef[9]+
-        # dVh_dTheta2*dVh_dRho2*U[1]*U[3]*Coef[10]+
+        dWindDir_dtheta1*dWindDir_drho1*U[0]*U[4]*Coef[7]+
+        dWindDir_dtheta2*dWindDir_drho1*U[1]*U[2]*Coef[8]+
+        dWindDir_dtheta1*dWindDir_drho2*U[0]*U[3]*Coef[9]+
+        dWindDir_dtheta2*dWindDir_drho2*U[1]*U[3]*Coef[10]+
      
-        # dVh_dPsi1*dVh_dRho1*U[2]*U[4]*Coef[11]+
-        # dVh_dPsi2*dVh_dRho1*U[3]*U[4]*Coef[12]+
-        # dVh_dPsi1*dVh_dRho2*U[2]*U[5]*Coef[13]+
-        # dVh_dPsi2*dVh_dRho2*U[3]*U[5]*Coef[14])  
+        dWindDir_dpsi1*dWindDir_drho1*U[2]*U[4]*Coef[11]+
+        dWindDir_dpsi2*dWindDir_drho1*U[3]*U[4]*Coef[12]+
+        dWindDir_dpsi1*dWindDir_drho2*U[2]*U[5]*Coef[13]+
+        dWindDir_dpsi2*dWindDir_drho2*U[3]*U[5]*Coef[14])  
     
     # With the partial derivatives and the correlation term R we calculate the uncertainty in Vh    
-    U_wind_dir=np.sqrt((dWindDir_dtheta1*U[0])**2+(dWindDir_dtheta2*U[1])**2+(dWindDir_dpsi1*U[2])**2+(dWindDir_dpsi2*U[3])**2+(0*U[4])**2+(0*U[5])**2+2*R)[0]    
+    U_wind_dir=np.sqrt((dWindDir_dtheta1*U[0])**2+(dWindDir_dtheta2*U[1])**2+(dWindDir_dpsi1*U[2])**2+(dWindDir_dpsi2*U[3])**2+(dWindDir_drho1*U[4])**2+(dWindDir_drho2*U[5])**2+2*R)[0]    
      
     return (U_wind_dir)
