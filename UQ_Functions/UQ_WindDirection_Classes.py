@@ -193,10 +193,11 @@ def UQ_WinDir(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Lidars):
             Uncertainty_WinDir_GUM_F = SA.U_WindDir_GUM([loaded_dict[0]['Uncertainty']['Elevation angle'],loaded_dict[1]['Uncertainty']['Elevation angle']],[loaded_dict[0]['Uncertainty']['Azimuth'][0],loaded_dict[1]['Uncertainty']['Azimuth'][0]],[loaded_dict[0]['Uncertainty']['Focus distance'],loaded_dict[1]['Uncertainty']['Focus distance']],wind_direction,ind_wind_dir,Href,Vref,alpha,Hl,U,Coef)   
     
             Uncertainty_WindDir_GUM.append(Uncertainty_WinDir_GUM_F)
-        
-        Final_Output_WindDir_Uncertainty = {'Wind direction Uncertainty GUM [m/s]':Uncertainty_WindDir_GUM,'Wind direction Uncertainty MC [m/s]':Uncertainty_WindDir_MC,'wind direction':wind_direction}
+        D=[loaded_dict[0]['Uncertainty']['Elevation angle'],loaded_dict[1]['Uncertainty']['Elevation angle'],loaded_dict[0]['Uncertainty']['Azimuth'],loaded_dict[1]['Uncertainty']['Azimuth'],loaded_dict[0]['Uncertainty']['Focus distance'],loaded_dict[1]['Uncertainty']['Focus distance']]
+        pdb.set_trace()
+        Final_Output_WindDir_Uncertainty = {'Wind direction Uncertainty GUM [m/s]':Uncertainty_WindDir_GUM,'Wind direction Uncertainty MC [m/s]':Uncertainty_WindDir_MC,'wind direction':wind_direction,'Coord':D}
         
         
     #%% Plotting
-    pdb.set_trace()
-    QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_WindDir_Uncertainty,False,False,False,False,Qlunc_yaml_inputs['Flags']['Horizontal Velocity Uncertainty'])  #Qlunc_yaml_inputs['Flags']['Scanning Pattern']
+    # pdb.set_trace()
+    QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_WindDir_Uncertainty,False,False,False,False,False,Qlunc_yaml_inputs['Flags']['Wind direction Uncertainty'])
