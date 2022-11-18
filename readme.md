@@ -31,8 +31,8 @@ Considered as the major contributors to the uncertainty in lidar estimations, th
 #### Plots
  - Photodetector total signal-to-noise ratio and separate contributions due to shot noise, thermal noise, dark current noise and, if needed, trans-impedance amplifier noise.
  - Optical signal-to-noise ratio from the optical amplifier
- - 🆕 Uncertainties in $V_{LOS}$ and $V_{h}$ with the wind direction 🆕 
- - 🆕 Uncertainties in $V_{LOS}$ and $V_{h}$ against focus distance, elevation angle and/or azimuth angle for a fixed wind direction 🆕 
+ - 🆕 Uncertainties in $V_{LOS}$ and $V_{h}$ with the wind direction 
+ - 🆕 Uncertainties in $V_{LOS}$ and $V_{h}$ against focus distance, elevation angle and/or azimuth angle for a fixed wind direction 
 
 ## How to use `Qlunc`
 
