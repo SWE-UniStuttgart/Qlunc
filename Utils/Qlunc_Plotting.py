@@ -375,12 +375,12 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
          # these are matplotlib.patch.Patch properties
         props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
         textstr = '\n'.join((
-        r'$Elevation angle - Lidar1 ~ [°]=%.2f$' % (Data['Coord'][0], ),
-        r'$Elevation angle - Lidar2 ~ [°]=%.2f$' % (Data['Coord'][1], ),
-        r'$Azimuth - Lidar 1 ~ [°]=%.2f$' % (np.degrees(Data['Coord'][2]), ),
-        r'$Azimuth - Lidar 2 ~ [°]=%.2f$' % (np.degrees(Data['Coord'][3]), ),
-        r'$Focus distance - Lidar 1 ~ [°]=%.2f$' % (np.degrees(Data['Coord'][4]), ),
-        r'$Focus distance - Lidar 2 ~ [°]=%.2f$' % (np.degrees(Data['Coord'][5]), ),
+        r'$Elevation~angle~[°] - Lidar1 ~ =%.2f$' % (np.degrees(Data['Coord'][0]), ),
+        r'$Elevation~angle~[°] - Lidar2 ~ =%.2f$' % (np.degrees(Data['Coord'][1]), ),
+        r'$Azimuth~[°] - Lidar 1 ~ =%.2f$' % (np.degrees(Data['Coord'][2]), ),
+        r'$Azimuth~[°] - Lidar 2 ~ =%.2f$' % (np.degrees(Data['Coord'][3]), ),
+        r'$Focus~distance~ [m] - Lidar 1 ~=%.2f$' % (Data['Coord'][4], ),
+        r'$Focus~distance~ [m] - Lidar 2 ~=%.2f$' % (Data['Coord'][5], ),
         r'N={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['N_MC'], ),
         r'Href [m]={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['Href'], )))
 
