@@ -194,7 +194,7 @@ def UQ_WinDir(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Lidars):
     
             Uncertainty_WindDir_GUM.append(Uncertainty_WinDir_GUM_F)
         D=[loaded_dict[0]['Uncertainty']['Elevation angle'],loaded_dict[1]['Uncertainty']['Elevation angle'],loaded_dict[0]['Uncertainty']['Azimuth'],loaded_dict[1]['Uncertainty']['Azimuth'],loaded_dict[0]['Uncertainty']['Focus distance'],loaded_dict[1]['Uncertainty']['Focus distance']]
-        pdb.set_trace()
+        # pdb.set_trace()
         Final_Output_WindDir_Uncertainty = {'Wind direction Uncertainty GUM [m/s]':Uncertainty_WindDir_GUM,'Wind direction Uncertainty MC [m/s]':Uncertainty_WindDir_MC,'wind direction':wind_direction,'Coord':D}
         
         
