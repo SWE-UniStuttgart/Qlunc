@@ -723,3 +723,4 @@ def U_WindDir_GUM(theta_c, psi_c,rho_c,wind_direction,ind_wind_dir,Href,Vref,alp
     U_wind_dir=np.sqrt((dWindDir_dtheta1*U[0])**2+(dWindDir_dtheta2*U[1])**2+(dWindDir_dpsi1*U[2])**2+(dWindDir_dpsi2*U[3])**2+(dWindDir_drho1*U[4])**2+(dWindDir_drho2*U[5])**2+2*R)[0]    
      
     return (U_wind_dir)
+    

@@ -390,8 +390,3 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
 
         plt.show()
         
-        
-        
-        
-        
-        

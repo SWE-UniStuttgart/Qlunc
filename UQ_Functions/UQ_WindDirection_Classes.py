@@ -48,6 +48,7 @@ def UQ_WinDir(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Lidars):
     wind_direction =   loaded_dict[0]['Uncertainty'][0]['wind direction']  
     
     if len (Lids)==2:
+        Windir_U,Coord4plot=[],[]
         for n_pp in range(len(loaded_dict[0]['Uncertainty']))      :      
             Uncertainty_WindDir_MC,Uncertainty_WindDir_GUM=[],[]
      
@@ -104,7 +105,7 @@ def UQ_WinDir(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Lidars):
                 CORRCOEF_P=np.corrcoef(psi1_noisy,psi2_noisy)
                 CORRCOEF_R=np.corrcoef(rho1_noisy,rho2_noisy)
                 
-                
+                # pdb.set_trace()
                 
                 #%% 4) Obtain the Correlated distributions:
                 
@@ -194,10 +195,15 @@ def UQ_WinDir(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Lidars):
         
                 Uncertainty_WindDir_GUM.append(Uncertainty_WinDir_GUM_F)
             D=[loaded_dict[0]['Uncertainty'][n_pp]['Elevation angle'],loaded_dict[1]['Uncertainty'][n_pp]['Elevation angle'],loaded_dict[0]['Uncertainty'][n_pp]['Azimuth'],loaded_dict[1]['Uncertainty'][n_pp]['Azimuth'],loaded_dict[0]['Uncertainty'][n_pp]['Focus distance'],loaded_dict[1]['Uncertainty'][n_pp]['Focus distance']]
-            # pdb.set_trace()
+
             Final_Output_WindDir_Uncertainty = {'Wind direction Uncertainty GUM [m/s]':Uncertainty_WindDir_GUM,'Wind direction Uncertainty MC [m/s]':Uncertainty_WindDir_MC,'wind direction':wind_direction,'Coord':D}
-            
+            Windir_U.append((Final_Output_WindDir_Uncertainty['Wind direction Uncertainty GUM [m/s]'][0]))
+            Coord4plot.append([loaded_dict[0]['Uncertainty'][n_pp]['Lidar position'],loaded_dict[0]['Uncertainty'][n_pp]['x'],loaded_dict[0]['Uncertainty'][n_pp]['y'],loaded_dict[0]['Uncertainty'][n_pp]['z'],loaded_dict[1]['Uncertainty'][n_pp]['Lidar position'],loaded_dict[1]['Uncertainty'][n_pp]['x'],loaded_dict[1]['Uncertainty'][n_pp]['y'],loaded_dict[1]['Uncertainty'][n_pp]['z']])
+
+# pdb.set_trace()
             
             #%% Plotting
-            # pdb.set_trace()
+            
             QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_WindDir_Uncertainty,False,False,False,False,False,Qlunc_yaml_inputs['Flags']['Wind direction Uncertainty'])
+ 
+        return(Windir_U,Coord4plot)
