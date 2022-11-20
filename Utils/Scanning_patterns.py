@@ -29,7 +29,7 @@ def lissajous_pattern(Lidar,size_x,size_y,size_z,q,p):
     # t   = np.arange(0,2*np.pi,.01)
     t=np.linspace(0,2*np.pi,math.floor(Lidar.optics.scanner.time_pattern/Lidar.optics.scanner.time_point))
     phi = np.linspace(0,2*np.pi,len(t))
-    pdb.set_trace()
+    
     # lissajous transformation
     z = size_x*np.sin((p*t+phi))
     y = size_y*np.sin((q*t))
@@ -50,5 +50,5 @@ def lissajous_pattern(Lidar,size_x,size_y,size_z,q,p):
     # ax.set_xlim3d(-30,30)
     # ax.set_ylim3d(-30,30)
     # ax.set_zlim3d(-30,30)
-  
+    # pdb.set_trace()
     return x,y,z

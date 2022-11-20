@@ -45,11 +45,11 @@ def UQ_Vh(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Lidars):
     for ind in Lids:
         with open('./Lidar_Projects/'+ind, 'rb') as f:
             loaded_dict.append( pickle.load(f))
-    # pdb.set_trace()
+    pdb.set_trace()
     wind_direction =   loaded_dict[0]['Uncertainty'][0]['wind direction']  
     
     if len (Lids)==2:
-        Vh_UU=[]
+        Vh_U=[]
         for n_pp in range(len(loaded_dict[0]['Uncertainty'])):
             Uncertainty_V,Uncertainty_U,Uncertainty_Vh_MC,Uncertainty_Vh_GUM=[],[],[],[]
             u_wind_GUM, v_wind_GUM=[],[]
@@ -219,8 +219,9 @@ def UQ_Vh(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Lidars):
                 Uncertainty_Vh_GUM.append(Uncertainty_Vh_GUM_F)
             
             Final_Output_Vh_Uncertainty = {'Vh Uncertainty GUM [m/s]':Uncertainty_Vh_GUM,'u Uncertainty [m/s]':Uncertainty_U,'v Uncertainty [m/s]':Uncertainty_V,'Vh Uncertainty MC [m/s]':Uncertainty_Vh_MC,'wind direction':wind_direction}
-            # Vh_UU.append(Final_Output_Vh_Uncertainty)
+            Vh_U.append(Final_Output_Vh_Uncertainty['Vh Uncertainty GUM [m/s]'][0])
         
             #%% Plotting
             # pdb.set_trace()
             QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_Vh_Uncertainty,False,False,False,False,Qlunc_yaml_inputs['Flags']['Horizontal Velocity Uncertainty'],False)  #Qlunc_yaml_inputs['Flags']['Scanning Pattern']
+        return(Vh_U)
