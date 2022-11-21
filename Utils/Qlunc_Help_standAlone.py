@@ -135,11 +135,14 @@ def cart2sph(x,y,z):
     rho=[]
     theta=[]
     phi=[]
-     
     for ind in range(len(z)):
         rho.append(np.sqrt(x[ind]**2+y[ind]**2+z[ind]**2))
-        theta.append(math.acos(np.sqrt(x[ind]**2+y[ind]**2)/np.sqrt(x[ind]**2+y[ind]**2+z[ind]**2)))
+        if z[ind]<0:
+            theta.append(-math.acos(np.sqrt(x[ind]**2+y[ind]**2)/np.sqrt(x[ind]**2+y[ind]**2+z[ind]**2)))
+        elif z[ind]>=0:
+            theta.append(math.acos(np.sqrt(x[ind]**2+y[ind]**2)/np.sqrt(x[ind]**2+y[ind]**2+z[ind]**2)))
         phi.append(math.atan2(y[ind],x[ind]))
+        
         # if z[ind]>0:
         #         phi.append(np.arctan(np.sqrt(x[ind]**2+y[ind]**2)/z[ind]))
         # elif z[ind]==0:
@@ -157,7 +160,6 @@ def cart2sph(x,y,z):
         # elif x[ind]==0:
         #         theta.append(np.pi/2.0*(np.sign(y[ind])))
     # print(np.degrees(theta))
-    
     return(np.array(rho),np.array(theta),np.array(phi)) # foc_dist, aperture angle, azimuth
 #%% NDF function
 
