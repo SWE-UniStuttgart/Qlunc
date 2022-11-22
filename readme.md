@@ -34,6 +34,14 @@ Considered as the major contributors to the uncertainty in lidar estimations, th
  - 🆕 Uncertainties in $V_{LOS}$ and $V_{h}$ with the wind direction 
  - 🆕 Uncertainties in $V_{LOS}$ and $V_{h}$ against focus distance, elevation angle and/or azimuth angle for a fixed wind direction 
  - 🆕 Uncertainty in wind direction estimation
+
+
+<p align="center">
+  <img src="https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Lidar_Projects/Unc100P.gif" />
+</p>
+
+
+
 ## How to use `Qlunc`
 
 :warning: **Please downolad the latest release (V1.0).**
