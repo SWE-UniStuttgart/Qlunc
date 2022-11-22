@@ -43,6 +43,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     Dictionary with information about...
     
     """
+    iiiop=0
     X,Y,Z,R=[],[],[],[]
     Scan_unc=[]
     rho_noisy0,theta_noisy0,psi_noisy0,rho_noisy,theta_noisy1,theta_noisy2,psi_noisy,rho_noisy1,rho_noisy2, theta_noisy,psi_noisy1,psi_noisy2,wind_direction_TEST ,wind_tilt_TEST   = [],[],[],[],[],[],[],[],[],[],[],[],[],[]
@@ -58,19 +59,33 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     stdv_pitch  = np.array(np.radians(Lidar.lidar_inputs.pitch_error_dep))
     stdv_roll   = np.array(np.radians(Lidar.lidar_inputs.roll_error_dep))
     
-    for meas_param in range(len(Lidar.optics.scanner.focus_dist)):
-            # Rho, theta and psi values of the measuring point    
+    if Lidar.optics.scanner.pattern=='lissajous':
+        xx,yy,zz=SP.lissajous_pattern(Lidar,Lidar.optics.scanner.lissajous_param[0],Lidar.optics.scanner.lissajous_param[1],Lidar.optics.scanner.lissajous_param[2],Lidar.optics.scanner.lissajous_param[3],Lidar.optics.scanner.lissajous_param[4])
+        L=len(xx)
+    else:
+        L=len(Lidar.optics.scanner.focus_dist)
+        # rho,theta,psi=SA.cart2sph(xx,yy,zz)
+    for meas_param in range(L):
+
+        iiiop+=1
+        # Rho, theta and psi values of the measuring point    
         rho0           = [Lidar.optics.scanner.focus_dist[meas_param]]  
-        theta0         = [np.radians(Lidar.optics.scanner.cone_angle[meas_param])]
-        psi0           = [np.radians(Lidar.optics.scanner.azimuth[meas_param])]
+        theta0         = [np.radians(Lidar.optics.scanner.cone_angle[meas_param])] % np.radians(360) # %(360) converts negative angles to [0,360] positive angles
+        psi0           = [np.radians(Lidar.optics.scanner.azimuth[meas_param])] % np.radians(360)
         # pdb.set_trace()
         wind_direction = np.radians(np.linspace(Atmospheric_Scenario.wind_direction[0],Atmospheric_Scenario.wind_direction[1],360))
         
+        
        
         # Measurement point in cartesian coordinates before applying lidar position
-        x,y,z=SA.sph2cart(rho0,theta0,psi0)
-        
-        
+        # x,y,z=SA.sph2cart(rho0,theta0,psi0)
+        if Lidar.optics.scanner.pattern=='lissajous':
+            x=np.array([xx[meas_param]])
+            y=np.array([yy[meas_param]])
+            z=np.array([zz[meas_param]])
+            
+        else:
+            x,y,z=SA.sph2cart(rho0,theta0,psi0)
          # Lidars' position:
         class lidar_coor:
             def __init__(self, x,y,z,x_Lidar,y_Lidar,z_Lidar):
@@ -103,8 +118,8 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         
         # Rho, theta and psi lidar inputs and their uncertainties
         theta1,U_theta1 = lidars['Lidar_Spherical']['theta'],np.radians(Lidar.optics.scanner.stdv_cone_angle[0])
-        psi1  ,U_psi1   = lidars['Lidar_Spherical']['psi'],np.radians(Lidar.optics.scanner.stdv_azimuth[0])
-        rho1  ,U_rho1   = lidars['Lidar_Spherical']['rho'],Lidar.optics.scanner.stdv_focus_dist [0]
+        psi1  ,U_psi1   = lidars['Lidar_Spherical']['psi'] ,np.radians(Lidar.optics.scanner.stdv_azimuth[0])
+        rho1  ,U_rho1   = lidars['Lidar_Spherical']['rho'] ,Lidar.optics.scanner.stdv_focus_dist [0]
         
         #Uncertainty in the probe volume (This call needs to be changed!)
         Probe_param = Lidar.probe_volume.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,lidars)
@@ -208,6 +223,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             
         #%% 4) VLOS uncertainty
             # Function calculating the uncertainties in VLOS following Montecarlo simulation:
+            # pdb.set_trace()
             VLOS01,U_VLOS01,VLOS1_list = SA.U_VLOS_MC(Theta1_cr,Psi1_cr,Rho1_cr,Hl,Href,alpha,wind_direction,Vref,ind_wind_dir,VLOS1_list)
             U_VLOS1_MC.append(U_VLOS01)
             
@@ -235,6 +251,8 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         # pdb.set_trace()
         # Plotting
         QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,Qlunc_yaml_inputs['Flags']['Line of sight Velocity Uncertainty'],False,False,False,False,False)  #Qlunc_yaml_inputs['Flags']['Scanning Pattern']  
+        print(iiiop)
+        # pdb.set_trace()
     return Scan_unc,Lidar.lidar_inputs.dataframe
 
 #%% Optical circulator:

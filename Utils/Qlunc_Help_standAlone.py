@@ -302,21 +302,25 @@ def U_Vh_MC(theta_c, psi_c,rho_c,wind_direction,ind_wind_dir,Href,Vref,alpha,Hl)
     -------    
     u and v wind speed components 
     """
+    
     # u
-    A0 = Vref*(((Hl+(rho_c[1]*np.sin(theta_c[1])))/Href)**alpha)
+    C_t1=(Hl+(rho_c[1]*np.sin(theta_c[1])))/Href
+    C_t2=(Hl+(rho_c[0]*np.sin(theta_c[0])))/Href
+    
+    A0 = Vref*(np.sign(C_t1)*((abs(C_t1))**alpha))
     B0 = np.cos(theta_c[1])*np.cos(psi_c[1]-wind_direction[ind_wind_dir])#np.cos(theta_c[1])*np.cos(psi_c[1])*np.cos(wind_direction[ind_wind_dir])+np.cos(theta_c[1])*np.sin(psi_c[1])*np.sin(wind_direction[ind_wind_dir])#+np.sin(theta_c[0])*np.tan(wind_tilt)
     C0 = np.cos(theta_c[0])*np.sin(psi_c[0])
-    D0 = Vref*(((Hl+(rho_c[0]*np.sin(theta_c[0])))/Href)**alpha)
+    D0 = Vref*(np.sign(C_t2)*((abs(C_t2))**alpha))
     E0 = np.cos(theta_c[0])*np.cos(psi_c[0]-wind_direction[ind_wind_dir])#np.cos(theta_c[0])*np.cos(psi_c[0])*np.cos(wind_direction[ind_wind_dir])+np.cos(theta_c[0])*np.sin(psi_c[0])*np.sin(wind_direction[ind_wind_dir])#+np.sin(theta_c[1])*np.tan(wind_tilt)
     F0 = np.cos(theta_c[1])*np.sin(psi_c[1])
     G  = np.cos(theta_c[0])*np.cos(theta_c[1])*(np.sin(psi_c[0]-psi_c[1])  )  
     H0 = (A0*B0*C0)-(D0*E0*F0)
     
     # # v
-    I0 = Vref*(((Hl+(rho_c[0]*np.sin(theta_c[0])))/Href)**alpha)
+    I0 = Vref*(np.sign(C_t2)*((abs(C_t2))**alpha))
     J0 = np.cos(theta_c[0])*np.cos(psi_c[0]-wind_direction[ind_wind_dir])#np.cos(theta_c[0])*np.cos(psi_c[0])*np.cos(wind_direction[ind_wind_dir])+np.cos(theta_c[0])*np.sin(psi_c[0])*np.sin(wind_direction[ind_wind_dir])#+np.sin(Theta2_cr)*np.tan(wind_tilt)
     K0 = np.cos(theta_c[1])*np.cos(psi_c[1])
-    L0 = Vref*(((Hl+(rho_c[1]*np.sin(theta_c[1])))/Href)**alpha)
+    L0 = Vref*(np.sign(C_t1)*((abs(C_t1))**alpha))
     M0 = np.cos(theta_c[1])*np.cos(psi_c[1]-wind_direction[ind_wind_dir])#np.cos(theta_c[1])*np.cos(psi_c[1])*np.cos(wind_direction[ind_wind_dir])+np.cos(theta_c[1])*np.sin(psi_c[1])*np.sin(wind_direction[ind_wind_dir])#+np.sin(Theta1_cr)*np.tan(wind_tilt)
     N0 = np.cos(theta_c[0])*np.cos(psi_c[0])   
     O0 = (I0*J0*K0)-(L0*M0*N0)
@@ -353,19 +357,24 @@ def U_Vh_GUM(theta_c, psi_c,rho_c,wind_direction,ind_wind_dir,Href,Vref,alpha,Hl
     Estimated uncertainty in horizontal wind speed
     
     """
- 
+    #Avoid nans due to (-x)**alpha
+    C_t1=(rho_c[0]*np.sin(theta_c[0])+Hl)/(Href)
+    C_t2=(rho_c[1]*np.sin(theta_c[1])+Hl)/(Href)
     
-    A = Vref*(((Hl+(rho_c[0]*np.sin(theta_c[0])))/Href)**alpha)
+    A = Vref*(np.sign(C_t1)*((abs(C_t1))**alpha))
     B = np.cos(theta_c[0])*np.cos(psi_c[0]-wind_direction[ind_wind_dir])#np.cos(theta_c[0])*np.cos(psi_c[0])*np.cos(wind_direction[ind_wind_dir])+np.cos(theta_c[0])*np.sin(psi_c[0])*(np.sin(wind_direction[ind_wind_dir]))
-    C = Vref*(((Hl+(rho_c[1]*np.sin(theta_c[1])))/Href)**alpha)
+    C = Vref*(np.sign(C_t2)*((abs(C_t2))**alpha))
     D = np.cos(theta_c[1])*np.cos(psi_c[1]-wind_direction[ind_wind_dir])#np.cos(theta_c[1])*np.cos(psi_c[1])*np.cos(wind_direction[ind_wind_dir])+np.cos(theta_c[1])*np.sin(psi_c[1])*(np.sin(wind_direction[ind_wind_dir]))
     E = np.cos(theta_c[0])*np.cos(theta_c[1])*np.cos(psi_c[0]-psi_c[1])
     F = np.cos(theta_c[0])*np.cos(theta_c[1])*(np.sin(psi_c[0]-psi_c[1]))
     
     numerator = np.sqrt((A*B*np.cos(theta_c[1]))**2 + (C*D*np.cos(theta_c[0]))**2 - 2*(A*C*B*D*E))    
     dernumerator = 1/(2*numerator) 
-    sh_term1 = Vref*alpha[0]*(((rho_c[0]*np.sin(theta_c[0])+Hl)/(Href))**(alpha[0]-1))
-    sh_term2 = Vref*alpha[0]*(((rho_c[1]*np.sin(theta_c[1])+Hl)/(Href))**(alpha[0]-1))
+    # pdb.set_trace()
+
+    
+    sh_term1 = Vref*alpha[0]*(np.sign(C_t1)*((abs(C_t1))**(alpha[0]-1)))
+    sh_term2 = Vref*alpha[0]*(np.sign(C_t2)*((abs(C_t2))**(alpha[0]-1)))
     
     # Coefficients to calculate the partial derivatives
     
@@ -471,9 +480,10 @@ def U_VLOS_MC(theta,psi,rho,Hl,Href,alpha,wind_direction,Vref,ind_wind_dir,VLOS1
      * Estimated average of the $V_{LOS}$
      * Estimated uncertainty in the $V_{LOS}$ [int]
      """
-     
-     VLOS01,U_VLOS1,=[],[]            
-     VLOS1 = Vref*(((Hl+(np.sin(theta)*rho))/Href)**alpha[0])*(np.cos(theta)*np.cos(psi-wind_direction[ind_wind_dir])) #-np.sin(theta_corr[0][ind_npoints])*np.tan(wind_tilt[ind_npoints])
+     # pdb.set_trace()
+     VLOS01,U_VLOS1,=[],[]      
+     A=((Hl+(np.sin(theta)*rho))/Href)      
+     VLOS1 = Vref*(np.sign(A)*(abs(A)**alpha[0]))*(np.cos(theta)*np.cos(psi-wind_direction[ind_wind_dir])) #-np.sin(theta_corr[0][ind_npoints])*np.tan(wind_tilt[ind_npoints])
      VLOS1_list.append(np.mean(VLOS1))
      U_VLOS1   = np.nanstd(VLOS1)   
      return(VLOS1,U_VLOS1,VLOS1_list)
@@ -509,13 +519,13 @@ def U_VLOS_GUM (theta1,psi1,rho1,U_theta1,U_psi1,U_rho1,U_VLOS1,Hl,Vref,Href,alp
     """
     U_VLOS_sh_theta1,U_VLOS_sh_psi1,U_VLOS_sh_range1,U_VLOS1_GUM=[],[],[],[]
     # U_VLOS_sh_theta2,U_VLOS_sh_psi2,U_VLOS_sh_range2,U_VLOS2_GUM=[],[],[],[]
-    
+    B=((Hl+(np.sin(theta1)*rho1))/Href) 
     
     # VLOS1
     
-    U_VLOS_sh_theta1 = Vref*(((Hl+(np.sin(theta1)*rho1))/Href)**alpha[0])*np.cos(psi1-wind_direction[ind_wind_dir])*(alpha[0]*((rho1*(np.cos(theta1)**2)/(Hl+(np.sin(theta1)*rho1))))-np.sin(theta1))*U_theta1    
-    U_VLOS_sh_psi1   = Vref*np.cos((theta1))*((((Hl)+(np.sin(theta1)*rho1))/Href)**alpha[0])*(np.sin(-psi1+wind_direction[ind_wind_dir]))*U_psi1
-    U_VLOS_sh_range1 = Vref*alpha[0]*(((Hl+(np.sin(theta1)*rho1))/Href)**alpha[0])*np.cos(theta1)*np.cos(psi1-wind_direction[ind_wind_dir])*(np.sin(theta1)/(Hl+(np.sin(theta1)*rho1)))*U_rho1
+    U_VLOS_sh_theta1 = Vref*(np.sign(B)*(abs(B)**alpha[0]))*np.cos(psi1-wind_direction[ind_wind_dir])*(alpha[0]*((rho1*(np.cos(theta1)**2)/(Hl+(np.sin(theta1)*rho1))))-np.sin(theta1))*U_theta1    
+    U_VLOS_sh_psi1   = Vref*np.cos((theta1))*(np.sign(B)*(abs(B)**alpha[0]))*(np.sin(-psi1+wind_direction[ind_wind_dir]))*U_psi1
+    U_VLOS_sh_range1 = Vref*alpha[0]*(np.sign(B)*(abs(B)**alpha[0]))*np.cos(theta1)*np.cos(psi1-wind_direction[ind_wind_dir])*(np.sin(theta1)/(Hl+(np.sin(theta1)*rho1)))*U_rho1
     # VLOS2
     # U_VLOS_sh_theta2 = Vref*(((Hl+(np.sin(theta2)*rho2))/Href)**alpha[0])*np.cos(psi2-wind_direction[ind_wind_dir])*(alpha[0]*((rho2*(np.cos(theta2)**2)/(Hl+(np.sin(theta2)*rho2))))-np.sin(theta2))*U_theta2    
     # U_VLOS_sh_psi2   = Vref*np.cos((theta2))*((((Hl)+(np.sin(theta2)*rho2))/Href)**alpha[0])*(np.sin(-psi2[0]+wind_direction[ind_wind_dir]))*(U_psi2) 
@@ -623,10 +633,13 @@ def U_WindDir_MC(theta_c, psi_c,rho_c,wind_direction,ind_wind_dir,Href,Vref,alph
     """
     #Wind direction
     # pdb.set_trace()
-    A = (((Hl+(rho_c[0]*np.sin(theta_c[0])))/Href)**alpha)*np.cos(psi_c[0]-wind_direction[ind_wind_dir])*np.cos(psi_c[1])
-    B = (((Hl+(rho_c[1]*np.sin(theta_c[1])))/Href)**alpha)*np.cos(psi_c[1]-wind_direction[ind_wind_dir])*np.cos(psi_c[0])
-    C = (((Hl+(rho_c[1]*np.sin(theta_c[1])))/Href)**alpha)*np.cos(psi_c[1]-wind_direction[ind_wind_dir])*np.sin(psi_c[0])
-    D = (((Hl+(rho_c[0]*np.sin(theta_c[0])))/Href)**alpha)*np.cos(psi_c[0]-wind_direction[ind_wind_dir])*np.sin(psi_c[1])    
+    
+    C_t1 = ((Hl+(rho_c[0]*np.sin(theta_c[0])))/Href)
+    C_t2 = ((Hl+(rho_c[1]*np.sin(theta_c[1])))/Href)
+    A = (np.sign(C_t1)*((abs(C_t1))**alpha))*np.cos(psi_c[0]-wind_direction[ind_wind_dir])*np.cos(psi_c[1])
+    B = (np.sign(C_t2)*((abs(C_t2))**alpha))*np.cos(psi_c[1]-wind_direction[ind_wind_dir])*np.cos(psi_c[0])
+    C = (np.sign(C_t2)*((abs(C_t2))**alpha))*np.cos(psi_c[1]-wind_direction[ind_wind_dir])*np.sin(psi_c[0])
+    D = (np.sign(C_t1)*((abs(C_t1))**alpha))*np.cos(psi_c[0]-wind_direction[ind_wind_dir])*np.sin(psi_c[1])    
     # P=(A-B)/(C-D)
     wind_dir = np.arctan((A-B)/(C-D))
     return (wind_dir)
@@ -658,29 +671,34 @@ def U_WindDir_GUM(theta_c, psi_c,rho_c,wind_direction,ind_wind_dir,Href,Vref,alp
     """
     # Wind direction uncertainty
     # pdb.set_trace()
-    A = (((Hl+(rho_c[0]*np.sin(theta_c[0])))/Href)**alpha)*np.cos(psi_c[0]-wind_direction[ind_wind_dir])*np.cos(psi_c[1])
-    B = (((Hl+(rho_c[1]*np.sin(theta_c[1])))/Href)**alpha)*np.cos(psi_c[1]-wind_direction[ind_wind_dir])*np.cos(psi_c[0])
-    C = (((Hl+(rho_c[1]*np.sin(theta_c[1])))/Href)**alpha)*np.cos(psi_c[1]-wind_direction[ind_wind_dir])*np.sin(psi_c[0])
-    D = (((Hl+(rho_c[0]*np.sin(theta_c[0])))/Href)**alpha)*np.cos(psi_c[0]-wind_direction[ind_wind_dir])*np.sin(psi_c[1])    
+    
+    C_t1 = ((Hl+(rho_c[0]*np.sin(theta_c[0])))/Href)
+    C_t2 = ((Hl+(rho_c[1]*np.sin(theta_c[1])))/Href)
+    
+    
+    A = (np.sign(C_t1)*((abs(C_t1))**alpha))*np.cos(psi_c[0]-wind_direction[ind_wind_dir])*np.cos(psi_c[1])
+    B = (np.sign(C_t2)*((abs(C_t2))**alpha))*np.cos(psi_c[1]-wind_direction[ind_wind_dir])*np.cos(psi_c[0])
+    C = (np.sign(C_t2)*((abs(C_t2))**alpha))*np.cos(psi_c[1]-wind_direction[ind_wind_dir])*np.sin(psi_c[0])
+    D = (np.sign(C_t1)*((abs(C_t1))**alpha))*np.cos(psi_c[0]-wind_direction[ind_wind_dir])*np.sin(psi_c[1])    
     X = ((A-B)/(C-D))
     P = 1/(1+X**2) 
     
-    sh_term1 = alpha[0]*(((rho_c[0]*np.sin(theta_c[0])+Hl)/(Href))**(alpha[0]-1))
-    sh_term2 = alpha[0]*(((rho_c[1]*np.sin(theta_c[1])+Hl)/(Href))**(alpha[0]-1))
+    sh_term1 = alpha[0]*(np.sign(C_t1)*(abs(C_t1))**(alpha[0]-1))
+    sh_term2 = alpha[0]*(np.sign(C_t2)*(abs(C_t2))**(alpha[0]-1))
     
 
     dWindDir_dtheta1 =  P*(1/(C-D)**2)*sh_term1*np.cos(theta_c[0])*(rho_c[0]/Href)*np.cos(psi_c[0]-wind_direction[ind_wind_dir])*((C-D)*np.cos(psi_c[1])+(A-B)*np.sin(psi_c[1]))
     dWindDir_dtheta2 = -P*(1/(C-D)**2)*sh_term2*np.cos(theta_c[1])*(rho_c[1]/Href)*np.cos(psi_c[1]-wind_direction[ind_wind_dir])*((C-D)*np.cos(psi_c[0])+(A-B)*np.sin(psi_c[0]))
     
-    dWindDir_dpsi1 = P*(1/(C-D)**2)*(((C-D)*(-(((Hl+(rho_c[0]*np.sin(theta_c[0])))/Href)**alpha)*np.sin(psi_c[0]-wind_direction[ind_wind_dir])*np.cos(psi_c[1])+\
-                                              (((Hl+(rho_c[1]*np.sin(theta_c[1])))/Href)**alpha)*np.cos(psi_c[1]-wind_direction[ind_wind_dir])*np.sin(psi_c[0])))-\
-                                     ((A-B)*((((Hl+(rho_c[1]*np.sin(theta_c[1])))/Href)**alpha)*np.cos(psi_c[1]-wind_direction[ind_wind_dir])*np.cos(psi_c[0])+\
-                                              (((Hl+(rho_c[0]*np.sin(theta_c[0])))/Href)**alpha)*np.sin(psi_c[0]-wind_direction[ind_wind_dir])*np.sin(psi_c[1]))))
+    dWindDir_dpsi1 = P*(1/(C-D)**2)*(((C-D)*(-(np.sign(C_t1)*((abs(C_t1))**alpha))*np.sin(psi_c[0]-wind_direction[ind_wind_dir])*np.cos(psi_c[1])+\
+                                              (np.sign(C_t2)*((abs(C_t2))**alpha))*np.cos(psi_c[1]-wind_direction[ind_wind_dir])*np.sin(psi_c[0])))-\
+                                     ((A-B)*((np.sign(C_t2)*((abs(C_t2))**alpha))*np.cos(psi_c[1]-wind_direction[ind_wind_dir])*np.cos(psi_c[0])+\
+                                              (np.sign(C_t1)*((abs(C_t1))**alpha))*np.sin(psi_c[0]-wind_direction[ind_wind_dir])*np.sin(psi_c[1]))))
     
-    dWindDir_dpsi2 =  P*(1/(C-D)**2)*(((C-D)*(-(((Hl+(rho_c[0]*np.sin(theta_c[0])))/Href)**alpha)*np.cos(psi_c[0]-wind_direction[ind_wind_dir])*np.sin(psi_c[1])+\
-                                              (((Hl+(rho_c[1]*np.sin(theta_c[1])))/Href)**alpha)*np.sin(psi_c[1]-wind_direction[ind_wind_dir])*np.cos(psi_c[0])))-\
-                                     ((A-B)*(-(((Hl+(rho_c[1]*np.sin(theta_c[1])))/Href)**alpha)*np.sin(psi_c[1]-wind_direction[ind_wind_dir])*np.sin(psi_c[0])-\
-                                              (((Hl+(rho_c[0]*np.sin(theta_c[0])))/Href)**alpha)*np.cos(psi_c[0]-wind_direction[ind_wind_dir])*np.cos(psi_c[1]))))
+    dWindDir_dpsi2 =  P*(1/(C-D)**2)*(((C-D)*(-(np.sign(C_t1)*((abs(C_t1))**alpha))*np.cos(psi_c[0]-wind_direction[ind_wind_dir])*np.sin(psi_c[1])+\
+                                              (np.sign(C_t2)*((abs(C_t2))**alpha))*np.sin(psi_c[1]-wind_direction[ind_wind_dir])*np.cos(psi_c[0])))-\
+                                     ((A-B)*(-(np.sign(C_t2)*((abs(C_t2))**alpha))*np.sin(psi_c[1]-wind_direction[ind_wind_dir])*np.sin(psi_c[0])-\
+                                              (np.sign(C_t1)*((abs(C_t1))**alpha))*np.cos(psi_c[0]-wind_direction[ind_wind_dir])*np.cos(psi_c[1]))))
     
     dWindDir_drho1 =  P*(1/(C-D)**2)*sh_term1*(np.sin(theta_c[0])/Href)*np.cos(psi_c[0]-wind_direction[ind_wind_dir])*((C-D)*np.cos(psi_c[1])+(A-B)*np.sin(psi_c[1]))
     dWindDir_drho2 = -P*(1/(C-D)**2)*sh_term2*(np.sin(theta_c[1])/Href)*np.cos(psi_c[1]-wind_direction[ind_wind_dir])*((C-D)*np.cos(psi_c[0])+(A-B)*np.sin(psi_c[0]))

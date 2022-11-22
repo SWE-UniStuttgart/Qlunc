@@ -93,10 +93,10 @@ def UQ_WinDir(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Lidars):
             for ind_wind_dir in range(len(wind_direction)):  
                 # Vlos1_noisy  = np.random.normal(Vlos1[0],u_Vlos1,N_MC)
                 # Vlos2_noisy  = np.random.normal(Vlos2[0],u_Vlos2,N_MC) 
-                theta1_noisy = np.random.normal(loaded_dict[0]['Uncertainty'][n_pp]['Elevation angle'],loaded_dict[0]['Uncertainty'][n_pp]['STDVs'][0],Lidar.optics.scanner.N_MC)
-                theta2_noisy = np.random.normal(loaded_dict[1]['Uncertainty'][n_pp]['Elevation angle'],loaded_dict[1]['Uncertainty'][n_pp]['STDVs'][0],Lidar.optics.scanner.N_MC)
-                psi1_noisy   = np.random.normal(loaded_dict[0]['Uncertainty'][n_pp]['Azimuth'],loaded_dict[0]['Uncertainty'][n_pp]['STDVs'][1],Lidar.optics.scanner.N_MC)
-                psi2_noisy   = np.random.normal(loaded_dict[1]['Uncertainty'][n_pp]['Azimuth'],loaded_dict[1]['Uncertainty'][n_pp]['STDVs'][1],Lidar.optics.scanner.N_MC)
+                theta1_noisy = np.random.normal(loaded_dict[0]['Uncertainty'][n_pp]['Elevation angle']%np.radians(360),loaded_dict[0]['Uncertainty'][n_pp]['STDVs'][0],Lidar.optics.scanner.N_MC)
+                theta2_noisy = np.random.normal(loaded_dict[1]['Uncertainty'][n_pp]['Elevation angle']%np.radians(360),loaded_dict[1]['Uncertainty'][n_pp]['STDVs'][0],Lidar.optics.scanner.N_MC)
+                psi1_noisy   = np.random.normal(loaded_dict[0]['Uncertainty'][n_pp]['Azimuth']%np.radians(360),loaded_dict[0]['Uncertainty'][n_pp]['STDVs'][1],Lidar.optics.scanner.N_MC)
+                psi2_noisy   = np.random.normal(loaded_dict[1]['Uncertainty'][n_pp]['Azimuth']%np.radians(360),loaded_dict[1]['Uncertainty'][n_pp]['STDVs'][1],Lidar.optics.scanner.N_MC)
                 rho1_noisy   = np.random.normal(loaded_dict[0]['Uncertainty'][n_pp]['Focus distance'][0],loaded_dict[0]['Uncertainty'][n_pp]['STDVs'][2],Lidar.optics.scanner.N_MC)
                 rho2_noisy   = np.random.normal(loaded_dict[1]['Uncertainty'][n_pp]['Focus distance'][0],loaded_dict[1]['Uncertainty'][n_pp]['STDVs'][2],Lidar.optics.scanner.N_MC)
                 
@@ -191,7 +191,7 @@ def UQ_WinDir(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Lidars):
                         Corr_coef_rho1_psi1[0][1],Corr_coef_rho1_psi2[0][1],Corr_coef_rho2_psi1[0][1],Corr_coef_rho2_psi2[0][1]]
                
                 # Calculate coefficients for the GUM approach
-                Uncertainty_WinDir_GUM_F = SA.U_WindDir_GUM([loaded_dict[0]['Uncertainty'][n_pp]['Elevation angle'],loaded_dict[1]['Uncertainty'][n_pp]['Elevation angle']],[loaded_dict[0]['Uncertainty'][n_pp]['Azimuth'][0],loaded_dict[1]['Uncertainty'][n_pp]['Azimuth'][0]],[loaded_dict[0]['Uncertainty'][n_pp]['Focus distance'],loaded_dict[1]['Uncertainty'][n_pp]['Focus distance']],wind_direction,ind_wind_dir,Href,Vref,alpha,Hl,U,Coef)   
+                Uncertainty_WinDir_GUM_F = SA.U_WindDir_GUM([loaded_dict[0]['Uncertainty'][n_pp]['Elevation angle']%np.radians(360),loaded_dict[1]['Uncertainty'][n_pp]['Elevation angle']%np.radians(360)],[loaded_dict[0]['Uncertainty'][n_pp]['Azimuth'][0]%np.radians(360),loaded_dict[1]['Uncertainty'][n_pp]['Azimuth'][0]%np.radians(360)],[loaded_dict[0]['Uncertainty'][n_pp]['Focus distance'],loaded_dict[1]['Uncertainty'][n_pp]['Focus distance']],wind_direction,ind_wind_dir,Href,Vref,alpha,Hl,U,Coef)   
         
                 Uncertainty_WindDir_GUM.append(Uncertainty_WinDir_GUM_F)
             D=[loaded_dict[0]['Uncertainty'][n_pp]['Elevation angle'],loaded_dict[1]['Uncertainty'][n_pp]['Elevation angle'],loaded_dict[0]['Uncertainty'][n_pp]['Azimuth'],loaded_dict[1]['Uncertainty'][n_pp]['Azimuth'],loaded_dict[0]['Uncertainty'][n_pp]['Focus distance'],loaded_dict[1]['Uncertainty'][n_pp]['Focus distance']]
