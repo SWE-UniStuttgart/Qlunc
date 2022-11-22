@@ -221,7 +221,15 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         ax5.legend(loc=2, prop={'size': plot_param['legend_fontsize']})  
         ax5.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
         ax5.tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
-
+        props5 = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+        textstr5 = '\n'.join((
+        r'$\rho ~[°]=%.2f$' % (Data['Focus distance'][0], ),
+        r'$\theta~ [°]=%.2f$' % (np.degrees(Data['Elevation angle'][0]), ),
+        r'$\varphi~ [°]=%.2f$' % (np.degrees(Data['Azimuth'][0]), ),
+        r'N={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['N_MC'], ),
+        r'Href [m]={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['Href'], )))
+        
+        ax5.text(0.5, 0.95, textstr5, transform=ax5.transAxes, fontsize=14,horizontalalignment='left',verticalalignment='top', bbox=props5)
 
 ###############   Plot photodetector noise   #############################       
     if flag_plot_photodetector_noise:
