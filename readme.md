@@ -25,15 +25,15 @@ The user creates also atmospheric scenarios to account for the different atmosph
 #### Uncertainties in hardware
 The flexibility of the code allows the user not just to assess global lidar uncertainty due to the noise in the signal, but also to query uncertainties coming from the noise added to the signal by specific modules or even single components.
 
-#### 🆕 Estimated Uncertainties in $V_{LOS}$ and $V_{h}$ due to errors in pointing accuracy and focus distance 🆕
-Considered as the major contributors to the uncertainty in lidar estimations, the new Qlunc's add-on is capable of estimating the uncertainty in the lidar line-of-sight and horizontal wind speeds due to errors in pointing accuracy and focus distance. It also offers the possibility of accounting for the correlations between the measuring angles and the correlation between two different lidars when mesuring together.
+#### 🆕 Estimated Uncertainties in $V_{LOS}$, $V_{h}$ and wind direction due to errors in pointing accuracy and focus distance 🆕
+Considered as the major contributors to the uncertainty in lidar estimations, the new Qlunc's add-on is capable of estimating the uncertainty in the lidar line-of-sight and horizontal wind speeds, as well as the uncertainty in the wind direction, all due to errors in pointing accuracy and focus distance. It also offers the possibility of accounting for the correlations between the measuring angles and the correlation between two different lidars when mesuring together.
 
 #### Plots
  - Photodetector total signal-to-noise ratio and separate contributions due to shot noise, thermal noise, dark current noise and, if needed, trans-impedance amplifier noise.
  - Optical signal-to-noise ratio from the optical amplifier
  - 🆕 Uncertainties in $V_{LOS}$ and $V_{h}$ with the wind direction 
  - 🆕 Uncertainties in $V_{LOS}$ and $V_{h}$ against focus distance, elevation angle and/or azimuth angle for a fixed wind direction 
-
+ - 🆕 Uncertainties in wind direction estimations 
 ## How to use `Qlunc`
 
 :warning: **Please downolad the latest release (V1.0).**
