@@ -339,7 +339,7 @@ class filtering_method():
         self.filt_method = filt_method
         self.Uncertainty=unc_func
         print('Selected filtering model: {} '.format(self.filt_method))
-
+        # LOVE U Caixa!!
         
 #%% Create the lidar objects for pointing accuracy (called in 'UQ_Optics_Classes.py')
 # class lidar_pointing():
