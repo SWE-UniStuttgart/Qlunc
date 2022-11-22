@@ -64,10 +64,11 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         L=len(xx)
     else:
         L=len(Lidar.optics.scanner.focus_dist)
-        # rho,theta,psi=SA.cart2sph(xx,yy,zz)
+    # rho9,theta9,psi9=SA.cart2sph(xx,yy,zz+70)
+    # pdb.set_trace()
     for meas_param in range(L):
-
-        iiiop+=1
+        # LOVE U MAMA!!
+        
         # Rho, theta and psi values of the measuring point    
         rho0           = [Lidar.optics.scanner.focus_dist[meas_param]]  
         theta0         = [np.radians(Lidar.optics.scanner.cone_angle[meas_param])] % np.radians(360) # %(360) converts negative angles to [0,360] positive angles
@@ -244,15 +245,14 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
                                                    'Vr Uncertainty homo MC rho [m/s]':U_VLOS_THomo_MC_rho,'Vr Uncertainty homo GUM rho [m/s]':U_VLOS_THomo_GUM_rho,'Vr Uncertainty MC rho [m/s]':U_VLOS_T_MC_rho,'Vr Uncertainty GUM rho [m/s]':U_VLOS_T_GUM_rho,
                                                    'Vr Uncertainty homo MC theta [m/s]':U_VLOS_THomo_MC_theta,'Vr Uncertainty homo GUM theta [m/s]':U_VLOS_THomo_GUM_theta,'Vr Uncertainty MC theta [m/s]':U_VLOS_T_MC_theta,'Vr Uncertainty GUM theta [m/s]':U_VLOS_T_GUM_theta,
                                                    'Vr Uncertainty homo MC psi [m/s]':U_VLOS_THomo_MC_psi,'Vr Uncertainty homo GUM psi [m/s]':U_VLOS_THomo_GUM_psi,'Vr Uncertainty MC psi [m/s]':U_VLOS_T_MC_psi,'Vr Uncertainty GUM psi [m/s]':U_VLOS_T_GUM_psi,
-                                                   'x':x,'y':y,'z':z,'rho':rho_TESTr,'theta':theta_TESTt,'psi':psi_TESTp,'wind direction':wind_direction,'Focus distance':rho1,'Elevation angle':theta1,'Azimuth':psi1,'STDVs':[U_theta1,U_psi1,U_rho1],'Lidar position':[Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][1],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][2]]} #, 'Rayleigh length':Probe_param['Rayleigh Length'],'Rayleigh length uncertainty':Probe_param['Rayleigh Length uncertainty']}
+                                                   'x':x,'y':y,'z':z,'rho':rho_TESTr,'theta':theta_TESTt,'psi':psi_TESTp,'wind direction':wind_direction,'Focus distance':rho1,'Elevation angle':theta1,'Azimuth':psi1,'STDVs':[U_theta1,U_psi1,U_rho1],
+                                                   'Lidar position':[Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][1],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][2]]} #, 'Rayleigh length':Probe_param['Rayleigh Length'],'Rayleigh length uncertainty':Probe_param['Rayleigh Length uncertainty']}
         
         Lidar.lidar_inputs.dataframe['Scanner'] = {'Focus distance':Final_Output_UQ_Scanner['Focus distance'][0],'Elevation angle':Final_Output_UQ_Scanner['Elevation angle'][0],'Azimuth':Final_Output_UQ_Scanner['Azimuth'][0]}
         Scan_unc.append(Final_Output_UQ_Scanner)
-        # pdb.set_trace()
         # Plotting
         QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,Qlunc_yaml_inputs['Flags']['Line of sight Velocity Uncertainty'],False,False,False,False,False)  #Qlunc_yaml_inputs['Flags']['Scanning Pattern']  
-        print(iiiop)
-        # pdb.set_trace()
+
     return Scan_unc,Lidar.lidar_inputs.dataframe
 
 #%% Optical circulator:

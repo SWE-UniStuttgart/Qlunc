@@ -149,7 +149,7 @@ def cart2sph(x,y,z):
         #         phi.append(np.array(np.pi/2))
         # elif z[ind]<0:
         #         phi.append((np.pi)+(np.arctan(np.sqrt(x[ind]**2+y[ind]**2)/z[ind])))
-
+        # LOVE U Lucia!!
         # if x[ind]>0:
         #     if  y[ind]>=0:
         #         theta.append(np.arctan(y[ind]/x[ind]))            

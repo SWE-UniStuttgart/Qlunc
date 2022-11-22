@@ -213,7 +213,7 @@ def UQ_Vh(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Lidars):
                         Corr_coef_theta1_psi1[0][1],Corr_coef_theta2_psi1[0][1],Corr_coef_theta1_psi2[0][1],Corr_coef_theta2_psi2[0][1],
                         Corr_coef_theta1_rho1[0][1],Corr_coef_theta2_rho1[0][1],Corr_coef_theta1_rho2[0][1],Corr_coef_theta2_rho2[0][1],
                         Corr_coef_rho1_psi1[0][1],Corr_coef_rho1_psi2[0][1],Corr_coef_rho2_psi1[0][1],Corr_coef_rho2_psi2[0][1]]
-                # Calculate uncertainty for the GUM approach
+                # Calculate uncertainty for the GUM approach # LOVE U Pep!!
                 # pdb.set_trace()
                 Uncertainty_Vh_GUM_F = SA.U_Vh_GUM([loaded_dict[0]['Uncertainty'][n_pp]['Elevation angle']%np.radians(360),loaded_dict[1]['Uncertainty'][n_pp]['Elevation angle']%np.radians(360)],[loaded_dict[0]['Uncertainty'][n_pp]['Azimuth'][0]%np.radians(360),loaded_dict[1]['Uncertainty'][n_pp]['Azimuth'][0]%np.radians(360)],[loaded_dict[0]['Uncertainty'][n_pp]['Focus distance'],loaded_dict[1]['Uncertainty'][n_pp]['Focus distance']],wind_direction,ind_wind_dir,Href,Vref,alpha,Hl,U,CorrCoef)   
         
