@@ -23,10 +23,15 @@ def PlotAnimUnc(Wdir_U,Vh_u,Coord):
     camera1 = Camera(fig)
     summ1,ii1= [],0
     summ2,ii2= [],0
+    
     axs2 = fig.add_axes([.75, .4, 0.15, 0.35])
     axs2.get_xaxis().set_visible(False)
-    axs3=axs2.twinx()
-    axs2.set_ylim(0,.5)
+    axs2.set_ylim(0,1)
+    
+    axs3=axs2.twinx()    
+    axs3.set_ylim(0,1)
+    axs3.get_xaxis().set_visible(False)
+
     # Plot the lidars locations, the measuremets locations and the trajectories   
     for n in range(len(Wdir_U)):    
         axs0.plot(Coord[0][0][0],Coord[0][0][1],Coord[0][0][2],'sb')
@@ -39,13 +44,13 @@ def PlotAnimUnc(Wdir_U,Vh_u,Coord):
     # Wind direction uncertainty animation 
         # pdb.set_trace()
         for ini in np.arange(n,-1,-1):
-            plt.axhline(Wdir_U[ini],color = 'g', linestyle = '-',alpha=0.2)
+            plt.axhline(Wdir_U[ini],color = 'g', linestyle = '-',alpha=0.1)
         summ1.append([np.sum(Wdir_U[indd]) for indd in range(ii1+1)])
         ii1+=1
         props = dict(boxstyle='round', facecolor='green', alpha=0.4)
         textstr1 = 'mean uncertainty wind direction[°] = '+str(np.round(np.nanmean(summ1[n]),2))+'; stdv[°] = '+str(np.round(np.nanstd(summ1[n]),2))
-        plt.axhline(np.nanmean(summ1[n]),color = 'r', linestyle = '-',linewidth=3)
-        plt.errorbar(np.linspace(0,0.1,1),np.nanmean(summ1[n]),yerr=np.round(np.nanstd(summ1[n]),2),ecolor = 'r')    
+        plt.axhline(np.nanmean(summ1[n]),color = 'darkgreen', linestyle = '-',linewidth=3)
+        plt.errorbar(np.linspace(0,0.1,1),np.nanmean(summ1[n]),yerr=np.round(np.nanstd(summ1[n]),2),ecolor = 'darkgreen')    
         axs2.text(-0.15, -0.25, textstr1, transform=axs2.transAxes, fontsize=9,horizontalalignment='left',verticalalignment='top', bbox=props)
         axs2.set_ylabel('Wind direction Uncertainty [°]', color = 'tab:green',fontsize=11.5)
         # pdb.set_trace()
@@ -53,14 +58,14 @@ def PlotAnimUnc(Wdir_U,Vh_u,Coord):
     
         for ini in np.arange(n,-1,-1):
             # pdb.set_trace()
-            plt.axhline(Vh_u[ini],color = 'b', linestyle = '-',alpha=0.2)
+            plt.axhline(Vh_u[ini],color = 'b', linestyle = '-',alpha=0.1)
         summ2.append([np.sum(Vh_u[indd]) for indd in range(ii2+1)])
         ii2+=1
-        props = dict(boxstyle='round', facecolor='blue', alpha=0.3)
+        props = dict(boxstyle='round', facecolor='blue', alpha=0.4)
         # pdb.set_trace()
         textstr2 ='mean uncertainty wind speed [m/s] = '+str(np.round(np.nanmean(summ2[n]),2))+'; stdv[m/s] = '+str(np.round(np.nanstd(summ2[n]),2))
-        plt.axhline(np.nanmean(summ2[n]),color = 'r', linestyle = '-',linewidth=3)
-        plt.errorbar(np.linspace(0,0.1,1),np.nanmean(summ2[n]),yerr=np.round(np.nanstd(summ2[n]),2),ecolor = 'r')    
+        plt.axhline(np.nanmean(summ2[n]),color = 'mediumblue', linestyle = '-',linewidth=3)
+        plt.errorbar(np.linspace(0,0.1,1),np.nanmean(summ2[n]),yerr=np.round(np.nanstd(summ2[n]),2),ecolor = 'mediumblue')    
         axs3.text(-0.15, -.10, textstr2, transform=axs3.transAxes, fontsize=9,horizontalalignment='left',verticalalignment='top', bbox=props)
         axs3.set_ylabel('Wind velocity Uncertainty [m/s]', color = 'tab:blue',fontsize=11.5)
         camera1.snap()    
@@ -70,7 +75,7 @@ def PlotAnimUnc(Wdir_U,Vh_u,Coord):
     animation1 = camera1.animate(interval = 500, repeat = True,repeat_delay = 500)
 
     # Save animation  
-    # pdb.set_trace()
+    pdb.set_trace()
     animation1.save('C:/SWE_LOCAL/GIT_Qlunc/Lidar_Projects/Unc4P.gif')
     
     return(animation1)
