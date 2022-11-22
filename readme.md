@@ -10,6 +10,7 @@
 Qlunc is a python-based, open, freely available software that aims to estimate errors when measuring with a lidar device. The code has an objected-oriented structure; by using python objects and simulating real lidar components the code puts all together in modules to eventually build up a lidar [digital twin](https://en.wikipedia.org/wiki/Digital_twin). The code is meant to be as modular as possible and offers the possibility of creating different lidar objects on parallel (see [Tutorial2.ipynb](https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Tutorials/Tutorial2.ipynb)), with different components at the same time. This allows to easily combine lidar modules with different characteristics, simulating different lidar devices.
 <p align="center">
   <img src="https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Pictures_repo_/Qlunc_GralStructure.JPG" />
+  Figure 1. General structure of Qlunc
 </p>
 Currently, Qlunc's framework can calculate uncertainties coming from photonics, including photodetector and optical amplifier uncertainties, as well as optics module uncertainty including scanner pointing accuracy, probe volume assessment for both continuous wave and pulsed lidars, and optical circulator uncertainties. For each module the Guide to the Expression of Uncertainty in Measurement ([GUM](http://www.bipm.org/en/publications/guides/gum.html)) is applied to calculate uncertainty propagation along the modules, taking into account that the components are considered uncorrelated. 
 Qlunc also offers the possibility of estimating the uncertainties of the line-of-sight wind velocity ( $V_{LOS}$ ), the horizontal wind velocity ( $V_{h}$ ) and in the wind direction (&#934;), and make a comparison between the developed analytical model and Montecarlo simulations. The possibility to consider the correlations between lidar measurement angles and also between different devices is available.
@@ -37,9 +38,12 @@ Considered as the major contributors to the uncertainty in lidar estimations, th
 
 
 <p align="center">
-  <img src="https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Lidar_Projects/Unc100P.gif" />
+  <img src="https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Lidar_Projects/Unc100PV1.1.gif" />
+  Figure 2. Horizontal wind speed and wind direction uncertainties - Lissajous Pattern
+
 </p>
 
+    
 
 
 ## How to use `Qlunc`
