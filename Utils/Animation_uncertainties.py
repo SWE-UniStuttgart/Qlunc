@@ -66,11 +66,11 @@ def PlotAnimUnc(Wdir_U,Vh_u,Coord):
     plt.show()
     
     # Play animation
-    animation1 = camera1.animate(interval = 100, repeat = True,repeat_delay = 500)
+    animation1 = camera1.animate(interval = 500, repeat = True,repeat_delay = 500)
 
     # Save animation  
-    pdb.set_trace()
-    animation1.save('C:/SWE_LOCAL/GIT_Qlunc/Lidar_Projects/Unc20P.gif')
+    # pdb.set_trace()
+    animation1.save('C:/SWE_LOCAL/GIT_Qlunc/Lidar_Projects/Unc4P.gif')
     
     return(animation1)
             
