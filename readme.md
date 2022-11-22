@@ -12,7 +12,7 @@ Qlunc is a python-based, open, freely available software that aims to estimate e
   <img src="https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Pictures_repo_/Qlunc_GralStructure.JPG" />
 </p>
 Currently, Qlunc's framework can calculate uncertainties coming from photonics, including photodetector and optical amplifier uncertainties, as well as optics module uncertainty including scanner pointing accuracy, probe volume assessment for both continuous wave and pulsed lidars, and optical circulator uncertainties. For each module the Guide to the Expression of Uncertainty in Measurement ([GUM](http://www.bipm.org/en/publications/guides/gum.html)) is applied to calculate uncertainty propagation along the modules, taking into account that the components are considered uncorrelated. 
-Qlunc also offers the possibility of estimating the uncertainties of the line-of-sight wind velocity ( $V_{LOS}$ ) and the horizontal wind velocity ( $V_{h}$ ), and make a comparison between the developed analytical model and Montecarlo simulations. The possibility to consider the correlations between lidar measurement angles and also between different devices is available.
+Qlunc also offers the possibility of estimating the uncertainties of the line-of-sight wind velocity ( $V_{LOS}$ ), the horizontal wind velocity ( $V_{h}$ ) and in the wind direction (&#934;), and make a comparison between the developed analytical model and Montecarlo simulations. The possibility to consider the correlations between lidar measurement angles and also between different devices is available.
 
 ### Creating a lidar device
 The user creates the different lidar components by instantiating python classes, including its functional parameters and defining the function that is used to obtain the specific component uncertainty. Then, each module (also python objects) is "filled" with the corresponding components and their uncertainties are computed following uncertainty propagation method according to the GUM model. Once each component is 'ensembled', building up the different modules, the lidar object is created and the modules included. As a result, the desired lidar digital twin is created.
@@ -25,7 +25,7 @@ The user creates also atmospheric scenarios to account for the different atmosph
 #### Uncertainties in hardware
 The flexibility of the code allows the user not just to assess global lidar uncertainty due to the noise in the signal, but also to query uncertainties coming from the noise added to the signal by specific modules or even single components.
 
-#### 🆕 Estimated Uncertainties in $V_{LOS}$, $V_{h}$ and wind direction due to errors in pointing accuracy and focus distance 🆕
+#### 🆕 Estimated Uncertainties in $V_{LOS}$, $V_{h}$ and &#934; due to errors in pointing accuracy and focus distance 🆕
 Considered as the major contributors to the uncertainty in lidar estimations, the new Qlunc's add-on is capable of estimating the uncertainty in the lidar line-of-sight and horizontal wind speeds, as well as the uncertainty in the wind direction, all due to errors in pointing accuracy and focus distance. It also offers the possibility of accounting for the correlations between the measuring angles and the correlation between two different lidars when mesuring together.
 
 #### Plots
@@ -33,7 +33,7 @@ Considered as the major contributors to the uncertainty in lidar estimations, th
  - Optical signal-to-noise ratio from the optical amplifier
  - 🆕 Uncertainties in $V_{LOS}$ and $V_{h}$ with the wind direction 
  - 🆕 Uncertainties in $V_{LOS}$ and $V_{h}$ against focus distance, elevation angle and/or azimuth angle for a fixed wind direction 
- - 🆕 Uncertainties in wind direction estimations 
+ - 🆕 Uncertainty in wind direction estimation
 ## How to use `Qlunc`
 
 :warning: **Please downolad the latest release (V1.0).**
