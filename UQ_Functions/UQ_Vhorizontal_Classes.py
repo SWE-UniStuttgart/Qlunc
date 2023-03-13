@@ -33,6 +33,7 @@ def UQ_Vh(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Lidars):
     Estimated uncertainty in horizontal wind speed
     
     """
+    pdb.set_trace()
     Href  = Qlunc_yaml_inputs['Components']['Scanner']['Href'],
     Vref  = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref']
     alpha = Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']    
@@ -51,7 +52,7 @@ def UQ_Vh(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Lidars):
     if len (Lids)==2:
         Vh_U=[]
         for n_pp in range(len(loaded_dict[0]['Uncertainty'])):
-            Uncertainty_V,Uncertainty_U,Uncertainty_Vh_MC,Uncertainty_Vh_GUM=[],[],[],[]
+            Uncertainty_V,Uncertainty_U,Uncertainty_Vh_MC,Uncertainty_Vh_GUM,Uncertainty_u_GUM=[],[],[],[],[]
             u_wind_GUM, v_wind_GUM=[],[]
             Vwind_MC,Uwind_MC,=[],[]
     
@@ -131,7 +132,19 @@ def UQ_Vh(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Lidars):
                 
                 # Multivariate distributions:
                 Theta1_cr,Theta2_cr,Psi1_cr,Psi2_cr,Rho1_cr,Rho2_cr = multivariate_normal.rvs([theta_means[0],theta_means[1],psi_means[0],psi_means[1],rho_means[0],rho_means[1]], cov_MAT,Lidar.optics.scanner.N_MC).T
-                
+                pdb.set_trace()
+    # ####################################################
+    #    # Covariance Matrix:
+    
+           
+    
+    #             cov_MAT_Vlos=[[ theta_stds[0]*psi_stds[0]*psi1_theta1_corr_n ,                        psi_stds[0]**2],
+                      
+    #                      [ theta_stds[0]*rho_stds[0]*theta1_rho1_corr_n,         psi_stds[0]*rho_stds[0]*psi1_rho1_corr_n]]
+       
+    #             Vlos1_cr,Vlos2_cr = multivariate_normal.rvs([theta_means[0],psi_means[0],rho_means[0]], cov_MAT_Vlos,Lidar.optics.scanner.N_MC).T
+
+    # ##################################################
                
                 # Theta
                 #Covariance (theta1, theta2) as defined in GUM
@@ -182,12 +195,13 @@ def UQ_Vh(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Lidars):
                 
                 
                 
-                #%% VH Montecarlo uncertainy ##############                
+                #%% VH Montecarlo uncertainty ##############                
                 # Calculate the u and v wind components and their uncertainties
                 # pdb.set_trace()
                 # Break down large equations
-                u_wind,v_wind = SA.U_Vh_MC([Theta1_cr,Theta2_cr],[Psi1_cr,Psi2_cr],[Rho1_cr,Rho2_cr],wind_direction,ind_wind_dir,Href,Vref,alpha,Hl)   
-    
+                # u_wind,v_wind = SA.U_Vh_MC([Theta1_cr,Theta2_cr],[Psi1_cr,Psi2_cr],[Rho1_cr,Rho2_cr],wind_direction,ind_wind_dir,Href,Vref,alpha,Hl)   
+                u_wind,v_wind = SA.U_Vh_MC([Theta1_cr,Theta2_cr],[Psi1_cr,Psi2_cr],[Rho1_cr,Rho2_cr],loaded_dict,wind_direction,ind_wind_dir,Href,Vref,alpha,Hl)   
+
                 # ucomponent estimation        
                 Uwind_MC.append(np.mean(u_wind))
                 # Uncertainty as standard deviation (k=1) in the u wind velocity component estimation
@@ -213,11 +227,12 @@ def UQ_Vh(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Lidars):
                         Corr_coef_theta1_psi1[0][1],Corr_coef_theta2_psi1[0][1],Corr_coef_theta1_psi2[0][1],Corr_coef_theta2_psi2[0][1],
                         Corr_coef_theta1_rho1[0][1],Corr_coef_theta2_rho1[0][1],Corr_coef_theta1_rho2[0][1],Corr_coef_theta2_rho2[0][1],
                         Corr_coef_rho1_psi1[0][1],Corr_coef_rho1_psi2[0][1],Corr_coef_rho2_psi1[0][1],Corr_coef_rho2_psi2[0][1]]
-                # Calculate uncertainty for the GUM approach # LOVE U Pep!!
+                # Calculate uncertainty for the GUM approach # LoveU Pep!!
                 # pdb.set_trace()
-                Uncertainty_Vh_GUM_F = SA.U_Vh_GUM([loaded_dict[0]['Uncertainty'][n_pp]['Elevation angle']%np.radians(360),loaded_dict[1]['Uncertainty'][n_pp]['Elevation angle']%np.radians(360)],[loaded_dict[0]['Uncertainty'][n_pp]['Azimuth'][0]%np.radians(360),loaded_dict[1]['Uncertainty'][n_pp]['Azimuth'][0]%np.radians(360)],[loaded_dict[0]['Uncertainty'][n_pp]['Focus distance'],loaded_dict[1]['Uncertainty'][n_pp]['Focus distance']],wind_direction,ind_wind_dir,Href,Vref,alpha,Hl,U,CorrCoef)   
+                Uncertainty_Vh_GUM_F= SA.U_Vh_GUM([loaded_dict[0]['Uncertainty'][n_pp]['Elevation angle']%np.radians(360),loaded_dict[1]['Uncertainty'][n_pp]['Elevation angle']%np.radians(360)],[loaded_dict[0]['Uncertainty'][n_pp]['Azimuth'][0]%np.radians(360),loaded_dict[1]['Uncertainty'][n_pp]['Azimuth'][0]%np.radians(360)],[loaded_dict[0]['Uncertainty'][n_pp]['Focus distance'],loaded_dict[1]['Uncertainty'][n_pp]['Focus distance']],wind_direction,ind_wind_dir,Href,Vref,alpha,Hl,U,CorrCoef)   
         
                 Uncertainty_Vh_GUM.append(Uncertainty_Vh_GUM_F)
+                # Uncertainty_u_GUM.append(U_comp)
             
            
             #%% Storing data
