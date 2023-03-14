@@ -103,6 +103,22 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         # scalarMap.set_array(Data['Vr Uncertainty MC [m/s]'][0])
         # fig.colorbar(scalarMap,label='$V_{rad} ~ Uncertainty ~(m/s)$',shrink=0.5)                
         # plt.show()
+         
+        
+        # 1. Plot Uncertainty in Vh against wind direction
+        # pdb.set_trace()
+        fig,ax1=plt.subplots()        
+        ax1.plot(np.degrees(Data['wind direction']),Data['Uncertainty Vh GUM'],'r-',label='GUM')
+        ax1.plot(np.degrees(Data['wind direction']),Data['Uncertainty Vh MCM'],'or' , markerfacecolor=(1, 1, 0, 0.5),label='MCM')
+        # color=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))   
+            
+        ax1.legend(loc=2, prop={'size': plot_param['legend_fontsize']})
+        ax1.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
+        ax1.tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
+        ax1.set_xlim(0,360)
+        ax1.set_ylim(0,3)
+        ax1.grid(axis='both')
+        plt.title('$V_{h}$ Uncertainty',fontsize=plot_param['title_fontsize'])
         
         # 2. Plot Uncertainty in Vrad with theta
         
