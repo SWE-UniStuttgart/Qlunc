@@ -160,29 +160,53 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         theta2_rho2_corr  = 0
        
         
-        #%% 4) Uncertainy calculation
-        
+        #%% 4) Wind velocity uncertainy estimation
+
         # 4.1) Store necessary parameters
         nec_par=[wind_direction,Href,Vref,alpha,Hg,Hl,N_MC,theta1[0],U_theta1,psi1 [0] ,U_psi1,rho1[0],U_rho1,theta2[0],U_theta2,psi2[0],U_psi2,
                  rho2[0],U_rho2,psi1_psi2_corr,theta1_theta2_corr,rho1_rho2_corr,psi1_theta1_corr,psi1_theta2_corr,psi2_theta1_corr,psi2_theta2_corr,
                  Vlos1_Vlos2_corr,psi1_rho1_corr,psi1_rho2_corr,psi2_rho1_corr,psi2_rho2_corr,theta1_rho1_corr,theta1_rho2_corr,theta2_rho1_corr,theta2_rho2_corr]
+        # Uncertainty u,v
+        U_Vlos1_MCM,U_Vlos2_MCM,u,v,U_u_MC,U_v_MC,Mult_param = SA.MCM_uv_lidar_uncertainty(*nec_par)
+
+
+        # 4.2) Uncertainty MCM for Vh
+        U_Vh_MCM = SA.MCM_Vh_lidar_uncertainty(wind_direction,u,v)
         
-        # 4.2) Uncertainty GUM method
-        U_Vlos1_GUM,U_Vlos2_GUM,U_Vh_GUM = SA.GUM_2D_lidar_uncertainty(*nec_par)
         
-        # 4.3) Uncertainty MC method
-        U_Vlos1_MCM,U_Vlos2_MCM,U_Vh_MCM = SA.MCM_2D_lidar_uncertainty(*nec_par)
+        # 4.3) Uncertainty GUM method
+        Vlos1_GUM,Vlos2_GUM,U_Vlos1_GUM,U_Vlos2_GUM= SA.GUM_uv_lidar_uncertainty(*nec_par)
+ 
+        # 4.4) Vh Uncertainty GUM method
+        U_Vh_GUM=SA.GUM_Vh_lidar_uncertainty(Vlos1_GUM,Vlos2_GUM,U_Vlos1_GUM,U_Vlos2_GUM,*nec_par)
         
-        pdb.set_trace()
+        
         #%% 5) Method for uncertainty when varying theta, psi OR rho   
         
         U_VLOS_T_MC_rho,U_VLOS_THomo_MC_rho,U_VLOS_T_GUM_rho,U_VLOS_THomo_GUM_rho,rho_TESTr,thata_TESTr,psi_TESTr          =  SA.VLOS_param(np.linspace(1000,5000,100),theta1,psi1,0,0,U_rho1,Lidar.optics.scanner.N_MC,U_Vlos1_GUM,Hl[0],Vref,Href,alpha,wind_direction_TEST,0,[0,0,0])
         U_VLOS_T_MC_theta,U_VLOS_THomo_MC_theta,U_VLOS_T_GUM_theta,U_VLOS_THomo_GUM_theta,rho_TESTt,theta_TESTt,psi_TESTt  =  SA.VLOS_param(rho1,np.radians(np.linspace(1,89,100)),psi1,U_theta1,0,0,Lidar.optics.scanner.N_MC,U_Vlos1_GUM,Hl[0],Vref,Href,alpha,wind_direction_TEST,0,[0,0,0])    
         U_VLOS_T_MC_psi,U_VLOS_THomo_MC_psi,U_VLOS_T_GUM_psi,U_VLOS_THomo_GUM_psi,rho_TESTp,theta_TESTp,psi_TESTp          =  SA.VLOS_param(rho1,theta1,np.radians(np.linspace(-90,90,100)),0,U_psi1,0,Lidar.optics.scanner.N_MC,U_Vlos1_GUM,Hl[0],Vref,Href,alpha,wind_direction_TEST,0,[0,0,0])
                 
+        #%% Wind direction uncertainty estimation
+        U_Wind_direction_MC=SA.U_WindDir_MC(wind_direction,u,v,Mult_param)
+        
+        U_Wind_direction_GUM=SA.U_WindDir_GUM(Vlos1_GUM,Vlos2_GUM,U_Vlos1_GUM,U_Vlos2_GUM,*nec_par)
+        
+        
+        
+        # plt.plot(U_Wind_direction_MC,'*m')
+        # plt.plot(U_Wind_direction_GUM)
+        
+        # pdb.set_trace()
+        
+        
+        
+        
+        
+        
         
         #%% 6) Storing data
-        Final_Output_UQ_Scanner                 = {'VLOS1 Uncertainty MC [m/s]':U_Vlos1_MCM,'VLOS1 Uncertainty GUM [m/s]':U_Vlos1_GUM,'Uncertainty Vh GUM':U_Vh_GUM,'Uncertainty Vh MCM':U_Vh_MCM,
+        Final_Output_UQ_Scanner                 = {'Uncertainty wind direction MCM':U_Wind_direction_MC,'Uncertainty wind direction GUM':U_Wind_direction_GUM,'VLOS1 Uncertainty MC [m/s]':U_Vlos1_MCM,'VLOS1 Uncertainty GUM [m/s]':U_Vlos1_GUM,'Uncertainty Vh GUM':U_Vh_GUM,'Uncertainty Vh MCM':U_Vh_MCM,
                                                    'Vr Uncertainty homo MC rho [m/s]':U_VLOS_THomo_MC_rho,'Vr Uncertainty homo GUM rho [m/s]':U_VLOS_THomo_GUM_rho,'Vr Uncertainty MC rho [m/s]':U_VLOS_T_MC_rho,'Vr Uncertainty GUM rho [m/s]':U_VLOS_T_GUM_rho,
                                                    'Vr Uncertainty homo MC theta [m/s]':U_VLOS_THomo_MC_theta,'Vr Uncertainty homo GUM theta [m/s]':U_VLOS_THomo_GUM_theta,'Vr Uncertainty MC theta [m/s]':U_VLOS_T_MC_theta,'Vr Uncertainty GUM theta [m/s]':U_VLOS_T_GUM_theta,
                                                    'Vr Uncertainty homo MC psi [m/s]':U_VLOS_THomo_MC_psi,'Vr Uncertainty homo GUM psi [m/s]':U_VLOS_THomo_GUM_psi,'Vr Uncertainty MC psi [m/s]':U_VLOS_T_MC_psi,'Vr Uncertainty GUM psi [m/s]':U_VLOS_T_GUM_psi,
