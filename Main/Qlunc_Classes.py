@@ -321,7 +321,7 @@ class lidar():
                  self.probe_volume     = probe_volume
                  self.lidar_inputs     = lidar_inputs
                  self.Uncertainty      = unc_func
-                 self.Uncertainty_Vh   = unc_Vh
+                 self.Call_a_project   = unc_Vh
                  self.Uncertainty_WindDir = unc_WindDir
                  print('Created new lidar device: {}'.format(self.LidarID))
 
