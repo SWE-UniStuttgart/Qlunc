@@ -57,7 +57,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 'markersize'          : 5,
                 'markersize_lidar'    : 9,
                 'marker'              : '.r',
-                'marker_face_color'   : [1,1,0,.43],
+                'marker_face_color'   : [1,1,0,.39],
                 'markerTheo'          : '.b',
                 'tick_labelrotation'  : 45,
                 'tick_labelfontsize'  : 19,
@@ -112,8 +112,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         ax0.plot(np.degrees(Data['wind direction']),Data['Uncertainty wind direction MCM'],'or' , markerfacecolor=plot_param['marker_face_color'],label='MCM')
         # color=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))   
         ax0.set_xlabel('Wind direction[°]',fontsize=plot_param['axes_label_fontsize'])
-        ax0.set_ylabel('Uncertainty [°]',fontsize=plot_param['axes_label_fontsize'])
-            
+        ax0.set_ylabel('Uncertainty [°]',fontsize=plot_param['axes_label_fontsize'])          
         ax0.legend(loc=2, prop={'size': plot_param['legend_fontsize']})
         ax0.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
         ax0.tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
@@ -128,7 +127,9 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         ax1.plot(np.degrees(Data['wind direction']),Data['Uncertainty Vh GUM'],'r-',label='GUM')
         ax1.plot(np.degrees(Data['wind direction']),Data['Uncertainty Vh MCM'],'or' , markerfacecolor=plot_param['marker_face_color'],label='MCM')
         # color=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))   
-            
+        ax1.set_xlabel('Wind direction[°]',fontsize=plot_param['axes_label_fontsize'])
+        ax1.set_ylabel('Uncertainty [m/s)]',fontsize=plot_param['axes_label_fontsize'])
+    
         ax1.legend(loc=2, prop={'size': plot_param['legend_fontsize']})
         ax1.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
         ax1.tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
