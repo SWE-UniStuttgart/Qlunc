@@ -169,16 +169,16 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         # Uncertainty u,v
         U_Vlos1_MCM,U_Vlos2_MCM,u,v,U_u_MC,U_v_MC,Mult_param = SA.MCM_uv_lidar_uncertainty(*nec_par)
 
-
+        # pdb.set_trace()
         # 4.2) Uncertainty MCM for Vh
-        U_Vh_MCM = SA.MCM_Vh_lidar_uncertainty(wind_direction,u,v)
+        U_Vh_MCM = SA.MCM_Vh_lidar_uncertainty(wind_direction,u,v,*Mult_param)
         
         
         # 4.3) Uncertainty GUM method
-        Vlos1_GUM,Vlos2_GUM,U_Vlos1_GUM,U_Vlos2_GUM= SA.GUM_uv_lidar_uncertainty(*nec_par)
+        Vlos1_GUM,Vlos2_GUM,U_Vlos1_GUM,U_Vlos2_GUM,u_GUM,v_GUM,U_u_GUM,U_v_GUM,CorrCoef_uv= SA.GUM_uv_lidar_uncertainty(*nec_par)
  
         # 4.4) Vh Uncertainty GUM method
-        U_Vh_GUM=SA.GUM_Vh_lidar_uncertainty(Vlos1_GUM,Vlos2_GUM,U_Vlos1_GUM,U_Vlos2_GUM,*nec_par)
+        U_Vh_GUM=SA.GUM_Vh_lidar_uncertainty(u_GUM,v_GUM,U_u_GUM,U_v_GUM,CorrCoef_uv,Vlos1_GUM,Vlos2_GUM,U_Vlos1_GUM,U_Vlos2_GUM,*nec_par)
         
         
         #%% 5) Method for uncertainty when varying theta, psi OR rho   
