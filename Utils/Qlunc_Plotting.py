@@ -57,9 +57,11 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 'markersize'          : 5,
                 'markersize_lidar'    : 9,
                 'marker'              : '.r',
+                'marker_face_color'   : [1,1,0,.39],
                 'markerTheo'          : '.b',
                 'tick_labelrotation'  : 45,
                 'tick_labelfontsize'  : 19,
+
                 'Qlunc_version'       : 'Qlunc Version - 0.91'
                 }
         
@@ -103,17 +105,49 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         # scalarMap.set_array(Data['Vr Uncertainty MC [m/s]'][0])
         # fig.colorbar(scalarMap,label='$V_{rad} ~ Uncertainty ~(m/s)$',shrink=0.5)                
         # plt.show()
+         
+        #%% 0%%. Plot Uncertainty in wind direction against wind direction
+        fig,ax0=plt.subplots()        
+        ax0.plot(np.degrees(Data['wind direction']),Data['Uncertainty wind direction GUM'],'r-',label='GUM')
+        ax0.plot(np.degrees(Data['wind direction']),Data['Uncertainty wind direction MCM'],'or' , markerfacecolor=plot_param['marker_face_color'],label='MCM')
+        # color=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))   
+        ax0.set_xlabel('Wind direction[°]',fontsize=plot_param['axes_label_fontsize'])
+        ax0.set_ylabel('Uncertainty [°]',fontsize=plot_param['axes_label_fontsize'])          
+        ax0.legend(loc=2, prop={'size': plot_param['legend_fontsize']})
+        ax0.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
+        ax0.tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
+        ax0.set_xlim(0,360)
+        ax0.set_ylim(0,3)
+        ax0.grid(axis='both')
+        plt.title('Wind direction Uncertainty',fontsize=plot_param['title_fontsize'])
         
-        # 2. Plot Uncertainty in Vrad with theta
+        
+        #%% 1. Plot Uncertainty in Vh against wind direction
+        fig,ax1=plt.subplots()        
+        ax1.plot(np.degrees(Data['wind direction']),Data['Uncertainty Vh GUM'],'r-',label='GUM')
+        ax1.plot(np.degrees(Data['wind direction']),Data['Uncertainty Vh MCM'],'or' , markerfacecolor=plot_param['marker_face_color'],label='MCM')
+        # color=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))   
+        ax1.set_xlabel('Wind direction[°]',fontsize=plot_param['axes_label_fontsize'])
+        ax1.set_ylabel('Uncertainty [m/s)]',fontsize=plot_param['axes_label_fontsize'])
+    
+        ax1.legend(loc=2, prop={'size': plot_param['legend_fontsize']})
+        ax1.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
+        ax1.tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
+        ax1.set_xlim(0,360)
+        ax1.set_ylim(0,3)
+        ax1.grid(axis='both')
+        plt.title('$V_{h}$ Uncertainty',fontsize=plot_param['title_fontsize'])
+        
+        #%% 2. Plot Uncertainty in Vrad with theta
         
         fig,ax2=plt.subplots()        
         ax2.plot(np.degrees(Data['theta']),Data['Vr Uncertainty homo GUM theta [m/s]'],'b-',label='Homogeneous flow - GUM')
-        ax2.plot(np.degrees(Data['theta']),Data['Vr Uncertainty homo MC theta [m/s]'],'ob' , markerfacecolor=(1, 1, 0, 0.5),label='Homogeneous flow - MC')
+        ax2.plot(np.degrees(Data['theta']),Data['Vr Uncertainty homo MC theta [m/s]'],'ob' , markerfacecolor=plot_param['marker_face_color'],label='Homogeneous flow - MC')
         # color=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))   
         for ind_a in range(len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'])):
             # c=next(color)
-            ax2.plot(np.degrees(Data['theta']),Data['Vr Uncertainty GUM theta [m/s]'],'-',label='Shear - GUM (alpha={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_a] ))
-            ax2.plot(np.degrees(Data['theta']),Data['Vr Uncertainty MC theta [m/s]'],'or' , markerfacecolor=(1, 1, 0, 0.5),label='Shear - MC')        
+            ax2.plot(np.degrees(Data['theta']),Data['Vr Uncertainty GUM theta [m/s]'],'r-',label='Shear - GUM (alpha={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_a] ))
+            ax2.plot(np.degrees(Data['theta']),Data['Vr Uncertainty MC theta [m/s]'],'or' , markerfacecolor=(plot_param['marker_face_color']),label='Shear - MC')        
         ax2.legend(loc=2, prop={'size': plot_param['legend_fontsize']})
         ax2.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
         ax2.tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
@@ -122,17 +156,17 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         plt.title('$V_{LOS}$ Uncertainty',fontsize=plot_param['title_fontsize'])
         
         
-        # 3. Plot Uncertainty in Vrad with psi
+        #%% 3. Plot Uncertainty in Vrad with psi
         
         fig,ax3=plt.subplots()
         ax3.plot(np.degrees(Data['psi']),Data['Vr Uncertainty homo GUM psi [m/s]'],'b-',label='Homogeneous flow - GUM')
-        ax3.plot(np.degrees(Data['psi']),Data['Vr Uncertainty homo MC psi [m/s]'],'ob' , markerfacecolor=(1, 1, 0, 0.5),label='Homogeneous flow - MC')
+        ax3.plot(np.degrees(Data['psi']),Data['Vr Uncertainty homo MC psi [m/s]'],'ob' , markerfacecolor=plot_param['marker_face_color'],label='Homogeneous flow - MC')
         # color=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))   
         
         for ind_a in range(len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'])):
             # c=next(color)
-            ax3.plot(np.degrees(Data['psi']),Data['Vr Uncertainty GUM psi [m/s]'],'-',label='Shear - GUM (alpha={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_a] ))
-            ax3.plot(np.degrees(Data['psi']),Data['Vr Uncertainty MC psi [m/s]'],'or' , markerfacecolor=(1, 1, 0, 0.5),label='Shear - MC')        
+            ax3.plot(np.degrees(Data['psi']),Data['Vr Uncertainty GUM psi [m/s]'],'r-',label='Shear - GUM (alpha={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_a] ))
+            ax3.plot(np.degrees(Data['psi']),Data['Vr Uncertainty MC psi [m/s]'],'or' , markerfacecolor=(plot_param['marker_face_color']),label='Shear - MC')        
         ax3.legend(loc=2, prop={'size': plot_param['legend_fontsize']})
         ax3.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
         ax3.tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
@@ -141,16 +175,16 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         plt.title('$V_{LOS}$ Uncertainty',fontsize=plot_param['title_fontsize'])
         
         
-        # 4.  Plot Uncertainty in Vrad with rho        
+        #%% 4.  Plot Uncertainty in Vrad with rho        
         fig,ax4=plt.subplots()
         ax4.plot(Data['rho'],Data['Vr Uncertainty homo GUM rho [m/s]'],'b-',label='Homogeneous flow - GUM')
-        ax4.plot(Data['rho'],Data['Vr Uncertainty homo MC rho [m/s]'],'ob' , markerfacecolor=(1, 1, 0, 0.5),label='Homogeneous flow - MC')
+        ax4.plot(Data['rho'],Data['Vr Uncertainty homo MC rho [m/s]'],'ob' , markerfacecolor=(plot_param['marker_face_color']),label='Homogeneous flow - MC')
         # color=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))   
         
         for ind_a in range(len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'])):
             # c=next(color)
-            ax4.plot(Data['rho'],Data['Vr Uncertainty GUM rho [m/s]'],'-',label='Shear - GUM (alpha={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_a] ))
-            ax4.plot(Data['rho'],Data['Vr Uncertainty MC rho [m/s]'],'or' , markerfacecolor=(1, 1, 0, 0.5),label='Shear - MC')      
+            ax4.plot(Data['rho'],Data['Vr Uncertainty GUM rho [m/s]'],'r-',label='Shear - GUM (alpha={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_a] ))
+            ax4.plot(Data['rho'],Data['Vr Uncertainty MC rho [m/s]'],'or' , markerfacecolor=(plot_param['marker_face_color']),label='Shear - MC')      
         ax4.legend(loc=2, prop={'size': plot_param['legend_fontsize']})
         ax4.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
         ax4.tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])

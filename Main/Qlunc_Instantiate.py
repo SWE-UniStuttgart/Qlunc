@@ -15,14 +15,21 @@ could be done by instantiating their python classes:
         
         1) Run Qlunc_Classes.py to create the classes corresponding to
            components, modules, atmospheric scenarios and lidar device
+        
+        
+        By running this script...
+                        
         2) Instantiate the different components
         3) Instantiate modules including corresponding components
         4) Instantiate class `atmosphere` --> atmospheric conditions
         5) Instantiate class `lidar_gral_inp` --> lidar general inputs
         6) Instantiate class `lidar` by including modules, lidar general inputs 
            and atmospheric conditions
-           
+
+        This is done in a more human-readable way through the yaml template 'Qlunc_inputs.yml' provided as an example in the repository, in the 'Main' folder
 """
+
+
 import os
 os.chdir('../')
 # importing  uncertainty functions
@@ -229,7 +236,7 @@ Lidar = lidar(name             = Qlunc_yaml_inputs['Lidar']['Name'],            
               probe_volume     = Probe_Volume, 
               lidar_inputs     = eval(Qlunc_yaml_inputs['Lidar']['Lidar inputs']), #  Lidar_inputs, #      # Introduce lidar general inputs
               unc_func         = ulc.sum_unc_lidar,
-              unc_Vh           = uVhc.UQ_Vh,
+              unc_Vh           = uVhc.Call_a_Project,
               unc_WindDir      = uWDirc.UQ_WinDir ) #eval(Qlunc_yaml_inputs['Lidar']['Uncertainty function'])) 
 
 #%% Creating atmospheric scenarios: ############################################
