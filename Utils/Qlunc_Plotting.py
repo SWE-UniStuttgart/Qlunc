@@ -264,6 +264,24 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         r'Href [m]={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['Href'], )))
         
         ax5.text(0.5, 0.95, textstr5, transform=ax5.transAxes, fontsize=14,horizontalalignment='left',verticalalignment='top', bbox=props5)
+ #%% Plot Uncertainty u and v components wind direction
+        fig,ax0=plt.subplots()        
+        ax0.plot(np.degrees(Data['wind direction']),Data['Uncertainty u wind component GUM'],'g-',label='$u$ wind component GUM')
+        ax0.plot(np.degrees(Data['wind direction']),Data['Uncertainty u wind component MCM'],'og' , markerfacecolor=plot_param['marker_face_color'],label='MCM')
+        ax0.plot(np.degrees(Data['wind direction']),Data['Uncertainty v wind component GUM'],'m-',label='$v$ wind component GUM')
+        ax0.plot(np.degrees(Data['wind direction']),Data['Uncertainty v wind component MCM'],'om' , markerfacecolor=plot_param['marker_face_color'],label='MCM')
+ 
+        # color=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))   
+        ax0.set_xlabel('Wind direction[°]',fontsize=plot_param['axes_label_fontsize'])
+        ax0.set_ylabel('Uncertainty [°]',fontsize=plot_param['axes_label_fontsize'])          
+        ax0.legend(loc=2, prop={'size': plot_param['legend_fontsize']})
+        ax0.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
+        ax0.tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
+        ax0.set_xlim(0,360)
+        ax0.set_ylim(0,3)
+        ax0.grid(axis='both')
+        plt.title('Wind direction Uncertainty',fontsize=plot_param['title_fontsize'])
+
 
 ###############   Plot photodetector noise   #############################       
     if flag_plot_photodetector_noise:
