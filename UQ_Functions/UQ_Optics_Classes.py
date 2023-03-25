@@ -168,11 +168,11 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
                  Vlos1_Vlos2_corr,psi1_rho1_corr,psi1_rho2_corr,psi2_rho1_corr,psi2_rho2_corr,theta1_rho1_corr,theta1_rho2_corr,theta2_rho1_corr,theta2_rho2_corr]
         # Uncertainty u,v
         # pdb.set_trace()
-        U_Vlos1_MCM,U_Vlos2_MCM,u,v,U_u_MC,U_v_MC,Mult_param = SA.MCM_uv_lidar_uncertainty(*nec_par)
+        CorrCoefuv,U_Vlos1_MCM,U_Vlos2_MCM,u,v,U_u_MC,U_v_MC,Mult_param = SA.MCM_uv_lidar_uncertainty(*nec_par)
 
         # pdb.set_trace()
         # 4.2) Uncertainty MCM for Vh
-        U_Vh_MCM = SA.MCM_Vh_lidar_uncertainty(wind_direction,u,v,*Mult_param)
+        U_Vh_MCM = SA.MCM_Vh_lidar_uncertainty(CorrCoefuv,wind_direction,u,v,U_u_MC,U_v_MC,*Mult_param)
         
         
         # 4.3) Uncertainty GUM method
