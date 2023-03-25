@@ -389,64 +389,64 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
 
 
 ###############   Plot Vh uncertainty   #############################           
-    if flag_plot_pointing_unc:
-        fig,ax1=plt.subplots()       
-        # plt.plot(np.degrees(wind_direction),u_wind_GUM,'-g', label='Uncertainty u component - GUM')
-        # plt.plot(np.degrees(wind_direction),v_wind_GUM,'-b', label='Uncertainty v component - GUM')
+#     if flag_plot_pointing_unc:
+#         fig,ax1=plt.subplots()       
+#         # plt.plot(np.degrees(wind_direction),u_wind_GUM,'-g', label='Uncertainty u component - GUM')
+#         # plt.plot(np.degrees(wind_direction),v_wind_GUM,'-b', label='Uncertainty v component - GUM')
         
-        ax1.plot(np.degrees(Data['wind direction']),Data['u Uncertainty [m/s]'],'og',alpha=0.3,label= 'Uncertainty u component - MC')
-        # plt.annotate('Uncertainty U', xy=(0.05, 0.9), xycoords='axes fraction')
+#         ax1.plot(np.degrees(Data['wind direction']),Data['u Uncertainty [m/s]'],'og',alpha=0.3,label= 'Uncertainty u component - MC')
+#         # plt.annotate('Uncertainty U', xy=(0.05, 0.9), xycoords='axes fraction')
         
-        # plt.figure()
-        ax1.plot(np.degrees(Data['wind direction']),Data['v Uncertainty [m/s]'],'ob',alpha=0.3,label='Uncertainty v component - MC')
-        # plt.annotate('Uncertainty V', xy=(0.05, 0.9), xycoords='axes fraction')
-        ax1.plot(np.degrees(Data['wind direction']),Data['Vh Uncertainty MC [m/s]'],'or',alpha=0.3, label='Uncertainty $V_{h}$ - MC')
-        ax1.plot(np.degrees(Data['wind direction']),Data['Vh Uncertainty GUM [m/s]'],'-r', label='Uncertainty $V_{h}$ - GUM')
-        ax1.set_xlabel('Wind Direction [°]',fontsize=plot_param['axes_label_fontsize'])
-        ax1.set_ylabel('Uncertainty [m/s]',fontsize=plot_param['axes_label_fontsize'])
-        ax1.legend(loc=2, prop={'size': plot_param['legend_fontsize']})
-        ax1.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
-        ax1.tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
-        plt.title('$V_{h}$ Uncertainty',fontsize=plot_param['title_fontsize'])
-        ax1.legend(loc=2, prop={'size': plot_param['legend_fontsize']})
-        ax1.grid(axis='both')
+#         # plt.figure()
+#         ax1.plot(np.degrees(Data['wind direction']),Data['v Uncertainty [m/s]'],'ob',alpha=0.3,label='Uncertainty v component - MC')
+#         # plt.annotate('Uncertainty V', xy=(0.05, 0.9), xycoords='axes fraction')
+#         ax1.plot(np.degrees(Data['wind direction']),Data['Vh Uncertainty MC [m/s]'],'or',alpha=0.3, label='Uncertainty $V_{h}$ - MC')
+#         ax1.plot(np.degrees(Data['wind direction']),Data['Vh Uncertainty GUM [m/s]'],'-r', label='Uncertainty $V_{h}$ - GUM')
+#         ax1.set_xlabel('Wind Direction [°]',fontsize=plot_param['axes_label_fontsize'])
+#         ax1.set_ylabel('Uncertainty [m/s]',fontsize=plot_param['axes_label_fontsize'])
+#         ax1.legend(loc=2, prop={'size': plot_param['legend_fontsize']})
+#         ax1.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
+#         ax1.tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
+#         plt.title('$V_{h}$ Uncertainty',fontsize=plot_param['title_fontsize'])
+#         ax1.legend(loc=2, prop={'size': plot_param['legend_fontsize']})
+#         ax1.grid(axis='both')
     
-###############   Plot Wind direction uncertainty   #############################           
-    if flag_plot_wind_dir_unc:
-        fig,ax1=plt.subplots()       
-        # plt.plot(np.degrees(wind_direction),u_wind_GUM,'-g', label='Uncertainty u component - GUM')
-        # plt.plot(np.degrees(wind_direction),v_wind_GUM,'-b', label='Uncertainty v component - GUM')
+# ###############   Plot Wind direction uncertainty   #############################           
+#     if flag_plot_wind_dir_unc:
+#         fig,ax1=plt.subplots()       
+#         # plt.plot(np.degrees(wind_direction),u_wind_GUM,'-g', label='Uncertainty u component - GUM')
+#         # plt.plot(np.degrees(wind_direction),v_wind_GUM,'-b', label='Uncertainty v component - GUM')
         
-        # ax1.plot(np.degrees(Data['wind direction']),Data['u Uncertainty [m/s]'],'og',alpha=0.3,label= 'Uncertainty u component - MC')
-        # plt.annotate('Uncertainty U', xy=(0.05, 0.9), xycoords='axes fraction')
+#         # ax1.plot(np.degrees(Data['wind direction']),Data['u Uncertainty [m/s]'],'og',alpha=0.3,label= 'Uncertainty u component - MC')
+#         # plt.annotate('Uncertainty U', xy=(0.05, 0.9), xycoords='axes fraction')
         
-        # plt.figure()
-        ax1.plot(np.degrees(Data['wind direction']),np.degrees(Data['Wind direction Uncertainty MC [m/s]']),'ob',alpha=0.3,label='Wind direction uncertainty - MC')
-        # plt.annotate('Uncertainty V', xy=(0.05, 0.9), xycoords='axes fraction')
-        ax1.plot(np.degrees(Data['wind direction']),np.degrees(Data['Wind direction Uncertainty GUM [m/s]']),'-r', label='Wind direction uncertainty - GUM')
-        ax1.set_xlabel('Wind Direction [°]',fontsize=plot_param['axes_label_fontsize'])
-        ax1.set_ylabel('Uncertainty [°]',fontsize=plot_param['axes_label_fontsize'])
-        ax1.legend(loc=2, prop={'size': plot_param['legend_fontsize']})
-        ax1.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
-        ax1.tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
-        plt.title('Wind direction Uncertainty',fontsize=plot_param['title_fontsize'])
-        ax1.legend(loc=2, prop={'size': plot_param['legend_fontsize']})
-        ax1.grid(axis='both')        
-         # these are matplotlib.patch.Patch properties
-        props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
-        textstr = '\n'.join((
-        r'$Elevation~angle~[°] - Lidar1 ~ =%.2f$' % (np.degrees(Data['Coord'][0]), ),
-        r'$Elevation~angle~[°] - Lidar2 ~ =%.2f$' % (np.degrees(Data['Coord'][1]), ),
-        r'$Azimuth~[°] - Lidar 1 ~ =%.2f$' % (np.degrees(Data['Coord'][2]), ),
-        r'$Azimuth~[°] - Lidar 2 ~ =%.2f$' % (np.degrees(Data['Coord'][3]), ),
-        r'$Focus~distance~ [m] - Lidar 1 ~=%.2f$' % (Data['Coord'][4], ),
-        r'$Focus~distance~ [m] - Lidar 2 ~=%.2f$' % (Data['Coord'][5], ),
-        r'N={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['N_MC'], ),
-        r'Href [m]={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['Href'], )))
+#         # plt.figure()
+#         ax1.plot(np.degrees(Data['wind direction']),np.degrees(Data['Wind direction Uncertainty MC [m/s]']),'ob',alpha=0.3,label='Wind direction uncertainty - MC')
+#         # plt.annotate('Uncertainty V', xy=(0.05, 0.9), xycoords='axes fraction')
+#         ax1.plot(np.degrees(Data['wind direction']),np.degrees(Data['Wind direction Uncertainty GUM [m/s]']),'-r', label='Wind direction uncertainty - GUM')
+#         ax1.set_xlabel('Wind Direction [°]',fontsize=plot_param['axes_label_fontsize'])
+#         ax1.set_ylabel('Uncertainty [°]',fontsize=plot_param['axes_label_fontsize'])
+#         ax1.legend(loc=2, prop={'size': plot_param['legend_fontsize']})
+#         ax1.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
+#         ax1.tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
+#         plt.title('Wind direction Uncertainty',fontsize=plot_param['title_fontsize'])
+#         ax1.legend(loc=2, prop={'size': plot_param['legend_fontsize']})
+#         ax1.grid(axis='both')        
+#          # these are matplotlib.patch.Patch properties
+#         props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+#         textstr = '\n'.join((
+#         r'$Elevation~angle~[°] - Lidar1 ~ =%.2f$' % (np.degrees(Data['Coord'][0]), ),
+#         r'$Elevation~angle~[°] - Lidar2 ~ =%.2f$' % (np.degrees(Data['Coord'][1]), ),
+#         r'$Azimuth~[°] - Lidar 1 ~ =%.2f$' % (np.degrees(Data['Coord'][2]), ),
+#         r'$Azimuth~[°] - Lidar 2 ~ =%.2f$' % (np.degrees(Data['Coord'][3]), ),
+#         r'$Focus~distance~ [m] - Lidar 1 ~=%.2f$' % (Data['Coord'][4], ),
+#         r'$Focus~distance~ [m] - Lidar 2 ~=%.2f$' % (Data['Coord'][5], ),
+#         r'N={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['N_MC'], ),
+#         r'Href [m]={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['Href'], )))
 
         
-        # place a tex1t box in upper left in axes coords
-        ax1.text(0.5, 0.95, textstr, transform=ax1.transAxes, fontsize=14,horizontalalignment='left',verticalalignment='top', bbox=props)
+#         # place a tex1t box in upper left in axes coords
+#         ax1.text(0.5, 0.95, textstr, transform=ax1.transAxes, fontsize=14,horizontalalignment='left',verticalalignment='top', bbox=props)
 
-        plt.show()
+#         plt.show()
         
