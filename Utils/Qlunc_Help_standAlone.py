@@ -999,8 +999,8 @@ def MCM_uv_lidar_uncertainty(wind_direction,Href,Vref,alpha,Hg,Hl,N_MC,theta1,u_
         cov_MAT_Vh=MultiVar(*Param_multivar2)
         # # Multivariate distributions:
         
-        if 1==1:
-            Theta1_cr2,Theta2_cr2,Psi1_cr2,Psi2_cr2,Rho1_cr2,Rho2_cr2,Vlos1_MC_cr2,Vlos2_MC_cr2= multivariate_normal.rvs([theta_means[0],theta_means[1],psi_means[0],psi_means[1],rho_means[0],rho_means[1],V_means2[0],V_means2[1]], cov_MAT_Vh,N_MC).T
+    
+        Theta1_cr2,Theta2_cr2,Psi1_cr2,Psi2_cr2,Rho1_cr2,Rho2_cr2,Vlos1_MC_cr2,Vlos2_MC_cr2= multivariate_normal.rvs([theta_means[0],theta_means[1],psi_means[0],psi_means[1],rho_means[0],rho_means[1],V_means2[0],V_means2[1]], cov_MAT_Vh,N_MC).T
         # pdb.set_trace()
             
             
@@ -1278,7 +1278,14 @@ def GUM_uv_lidar_uncertainty(wind_direction,Href,Vref,alpha,Hg,Hl,N_MC,theta1,u_
         dudpsi2= ((-Vlos1_GUM*(np.cos(psi2)))/(np.cos(theta1)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2)))) + (((-Vlos2_GUM)*np.cos(theta1)*np.sin(psi1) + Vlos1_GUM*np.cos(theta2)*np.sin(psi2))*(np.sin(psi1)*(-np.sin(psi2) )- np.cos(psi1)*(np.cos(psi2))))/(np.cos(theta1)*np.cos(theta2)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2))**2)   
         dvdpsi2= (Vlos1_GUM*(-np.sin(psi2)))/(np.cos(theta1)*(np.cos(psi2)*np.sin(psi1)-np.cos(psi1)*np.sin(psi2))) + ((Vlos2_GUM*np.cos(psi1)*np.cos(theta1)-Vlos1_GUM*np.cos(psi2)*np.cos(theta2))*(np.sin(psi1)*(-np.sin(psi2))-np.cos(psi1)*(np.cos(psi2))))/(np.cos(theta1)*np.cos(theta2)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2))**2)
         
-    
+        
+        # pdb.set_trace()
+        # U_u_GUM.append(np.sqrt((dudVlos1*U_Vlos1_GUM[ind_wind_dir])**2+(dudVlos2*U_Vlos2_GUM[ind_wind_dir])**2+2*(dudVlos1*U_Vlos1_GUM[ind_wind_dir]*dudVlos2*U_Vlos2_GUM[ind_wind_dir])*Vlos1_Vlos2_corr))
+        # U_v_GUM.append(np.sqrt((dvdVlos1*U_Vlos1_GUM[ind_wind_dir])**2+(dvdVlos2*U_Vlos2_GUM[ind_wind_dir])**2+2*(dvdVlos1*U_Vlos1_GUM[ind_wind_dir]*dvdVlos2*U_Vlos2_GUM[ind_wind_dir])*Vlos1_Vlos2_corr))
+        
+        
+        
+        
         # Inputs' covariance matrix for u and v components' uncertainty estimation
         #Param_multivar1=[N_MC                ,U_Vlos1_MCM           ,U_Vlos2_MCM,   theta_stds2      ,psi_stds2    ,rho_stds2,     psi1_psi2_corr,  theta1_theta2_corr  , rho1_rho2_corr        , psi1_theta1_corr , psi1_theta2_corr  ,       psi2_theta1_corr    , psi2_theta2_corr  , Vlos1_Vlos2_corr ,       psi1_rho1_corr ,psi1_rho2_corr ,psi2_rho1_corr ,psi2_rho2_corr ,theta1_rho1_corr ,theta1_rho2_corr ,theta2_rho1_corr ,theta2_rho2_corr,0,0,0,1 ]
         Param_multivar2=[ind_wind_dir,         U_Vlos1_GUM     ,     U_Vlos2_GUM  ,    u_theta,          u_psi    ,    u_rho   ,    psi1_psi2_corr  ,theta1_theta2_corr  ,  rho1_rho2_corr       ,psi1_theta1_corr ,   psi1_theta2_corr          ,psi2_theta1_corr  , psi2_theta2_corr  , Vlos1_Vlos2_corr,              0 ,             0 ,            0 ,              0 ,               0 ,             0 ,             0 ,                 0,         0,0,0,1 ]
@@ -1288,16 +1295,16 @@ def GUM_uv_lidar_uncertainty(wind_direction,Href,Vref,alpha,Hg,Hl,N_MC,theta1,u_
         
         
         
-        # Influence coefficients matrix for u and v components' uncertainty estimation
+        # # Influence coefficients matrix for u and v components' uncertainty estimation
         Cxuv = np.array([[0,0,0,0,0,0,dudVlos1,dudVlos2],[0,0,0,0,0,0,dvdVlos1,dvdVlos2]])
         
         
         
-        # u and v uncertainties estimation
+        # # u and v uncertainties estimation
         Uyuv=Cxuv.dot(Uxuv).dot(np.transpose(Cxuv))
         U_u_GUM.append(np.sqrt(Uyuv[0][0]))
         U_v_GUM.append(np.sqrt(Uyuv[1][1]))
-        pdb.set_trace()
+        # pdb.set_trace()
     CorrCoef_uv = np.corrcoef(u,v)[0][1]
     # pdb.set_trace()
     return(VL1,VL2,U_Vlos1_GUM,U_Vlos2_GUM,u,v,U_u_GUM,U_v_GUM,CorrCoef_uv)
@@ -1419,8 +1426,8 @@ def GUM_Vh_lidar_uncertainty (u,v,U_u_GUM,U_v_GUM,CorrCoef_uv,Vlos1_GUM,Vlos2_GU
  
             UxVh=MultiVar(*Param_multivar2)
        
-            # CxVh=[dVh_dtheta1[0],dVh_dtheta2[0],dVh_dpsi1[0],dVh_dpsi2[0],0,0,dVh_Vlos1[0],dVh_Vlos2[0]]
-            CxVh=[0,0,0,0,0,0,dVh_Vlos1[0],dVh_Vlos2[0]]
+            CxVh=[dVh_dtheta1[0],dVh_dtheta2[0],dVh_dpsi1[0],dVh_dpsi2[0],0,0,dVh_Vlos1[0],dVh_Vlos2[0]]
+            # CxVh=[0,0,0,0,0,0,dVh_Vlos1[0],dVh_Vlos2[0]]
 
             UyVh=np.array(CxVh).dot(UxVh).dot(np.transpose(CxVh))
             
