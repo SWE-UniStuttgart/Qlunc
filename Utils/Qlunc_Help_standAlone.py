@@ -928,7 +928,7 @@ def MCM_uv_lidar_uncertainty(wind_direction,Href,Vref,alpha,Hg,Hl,N_MC,theta1,u_
     
                                                                                                                                                                                                                                                                                                                                                                                                             ## MCM -Vlos
         #Param_multivar2=[N_MC,U_Vlos1_MCM,U_Vlos2_MCM,                                          ,theta_stds2,psi_stds2,rho_stds2   ,psi1_psi2_corr,theta1_theta2_corr  , rho1_rho2_corr    , psi1_theta1_corr , psi1_theta2_corr  , psi2_theta1_corr    , psi2_theta2_corr  , Vlos1_Vlos2_corr , psi1_rho1_corr ,psi1_rho2_corr ,psi2_rho1_corr ,psi2_rho2_corr ,theta1_rho1_corr ,theta1_rho2_corr ,theta2_rho1_corr ,theta2_rho2_corr,0,0,0,1 ]
-        Param_multivar=[ind_wind_dir,np.zeros(len(wind_direction)),np.zeros(len(wind_direction)),  theta_stds, psi_stds,  rho_stds,       0                 ,0  ,               0           , psi1_theta1_corr ,            0  ,          0    ,            psi2_theta2_corr  ,         0 ,              0 ,             0 ,            0 ,              0 ,         0 ,                    0 ,             0 , 0,        1,1,1,1]
+        Param_multivar=[ind_wind_dir,np.zeros(len(wind_direction)),np.zeros(len(wind_direction)),  theta_stds, psi_stds,  rho_stds,       0                 ,0  ,               0           , psi1_theta1_corr ,            0  ,          0    ,            psi2_theta2_corr  ,         0 ,              0 ,             0 ,            0 ,              0 ,         0 ,                    0 ,             0 , 0,        1,1,1,0]
         
         # Covariance matrix
         cov_MAT=MultiVar(*Param_multivar)
@@ -948,10 +948,13 @@ def MCM_uv_lidar_uncertainty(wind_direction,Href,Vref,alpha,Hg,Hl,N_MC,theta1,u_
         
        
         #  Uncertainty Vlosi ##############################
-        U_Vlos1_MCM.append(np.std(Vlos1[ind_wind_dir]))
-        U_Vlos2_MCM.append(np.std(Vlos2[ind_wind_dir]))
+        U_Vlos1_MCM0=(np.std(Vlos1[ind_wind_dir]))
+        U_Vlos2_MCM0=(np.std(Vlos2[ind_wind_dir]))
         # pdb.set_trace()
-
+        s_w=.1
+        s_est = 0.12
+        U_Vlos1_MCM.append(np.sqrt(U_Vlos1_MCM0**2+(np.sin(theta1)*s_w)**2) )
+        U_Vlos2_MCM.append(np.sqrt(U_Vlos2_MCM0**2+(np.sin(theta2)*s_w)**2) )
 
          ###CORRELATION COEFFICIENTS 1st multivariate
                 
@@ -992,9 +995,16 @@ def MCM_uv_lidar_uncertainty(wind_direction,Href,Vref,alpha,Hg,Hl,N_MC,theta1,u_
         rho_means2 = [rho1_noisy2.mean(),rho2_noisy2.mean()] 
         rho_stds2  = [rho1_noisy2.std(),rho2_noisy2.std()]
         # pdb.set_trace()
-                                                                                                                                                                                                                                                                                                                                                                                                                                        ## MCM - uv
-        Param_multivar2   = [ind_wind_dir,                   U_Vlos1_MCM,U_Vlos2_MCM        ,[0,0],                 [0,0],           [0,0],      psi1_psi2_corr      ,theta1_theta2_corr  , rho1_rho2_corr,            0 ,          psi1_theta2_corr  , psi2_theta1_corr    ,          0      ,    Vlos1_Vlos2_corr ,      0 ,                    0 ,            0             ,0              ,0              ,0                   ,0                 ,0       ,1,1,1,1 ]
-        # Param_multivar2 = [ N_MC,                          U_Vlos1_MCM,U_Vlos2_MCM,     theta_stds2,             psi_stds2,     rho_stds2,     psi1_psi2_corr      ,theta1_theta2_corr  , rho1_rho2_corr , psi1_theta1_corr     , psi1_theta2_corr  , psi2_theta1_corr    , psi2_theta2_corr  , Vlos1_Vlos2_corr , psi1_rho1_corr ,psi1_rho2_corr ,psi2_rho1_corr ,psi2_rho2_corr ,theta1_rho1_corr ,theta1_rho2_corr ,theta2_rho1_corr ,theta2_rho2_corr,     0,0,0,1 ]
+                                     
+        if psi1_theta1_corr==0:
+            psi1_theta1_corr= CorrCoefTheta1Psi1[0]
+        if psi2_theta2_corr==0:
+            psi2_theta2_corr= CorrCoefTheta2Psi2[0]
+        # else:
+        #     psi1_theta1_corr=psi2_theta2_corr=0
+                                                                                                                                                                                                                                                                                                                                                                                               ## MCM - uv
+        Param_multivar2   = [ind_wind_dir,   U_Vlos1_MCM,U_Vlos2_MCM   ,theta_stds2,    psi_stds2,     rho_stds2,     psi1_psi2_corr      ,theta1_theta2_corr  , rho1_rho2_corr,  psi1_theta1_corr,      psi1_theta2_corr  , psi2_theta1_corr    , psi2_theta2_corr ,  Vlos1_Vlos2_corr ,      0 ,                    0 ,            0             ,0              ,0              ,0                   ,0                 ,0       ,1,1,1,1 ]
+        # Param_multivar2 = [ N_MC,          U_Vlos1_MCM,U_Vlos2_MCM,   theta_stds2,    psi_stds2,     rho_stds2,     psi1_psi2_corr      ,theta1_theta2_corr  , rho1_rho2_corr , psi1_theta1_corr     , psi1_theta2_corr  , psi2_theta1_corr    , psi2_theta2_corr  , Vlos1_Vlos2_corr , psi1_rho1_corr ,psi1_rho2_corr ,psi2_rho1_corr ,psi2_rho2_corr ,theta1_rho1_corr ,theta1_rho2_corr ,theta2_rho1_corr ,theta2_rho2_corr,     0,0,0,1 ]
  
         cov_MAT_Vh=MultiVar(*Param_multivar2)
         # # Multivariate distributions:
@@ -1002,9 +1012,7 @@ def MCM_uv_lidar_uncertainty(wind_direction,Href,Vref,alpha,Hg,Hl,N_MC,theta1,u_
     
         Theta1_cr2,Theta2_cr2,Psi1_cr2,Psi2_cr2,Rho1_cr2,Rho2_cr2,Vlos1_MC_cr2,Vlos2_MC_cr2= multivariate_normal.rvs([theta_means[0],theta_means[1],psi_means[0],psi_means[1],rho_means[0],rho_means[1],V_means2[0],V_means2[1]], cov_MAT_Vh,N_MC).T
         # pdb.set_trace()
-            
-            
-        # pdb.set_trace()
+
    
         Theta1_cr2_s.append(Theta1_cr2)
         Theta2_cr2_s.append(Theta2_cr2)
@@ -1135,7 +1143,7 @@ def MCM_uv_lidar_uncertainty(wind_direction,Href,Vref,alpha,Hg,Hl,N_MC,theta1,u_
     # az4[1][0].set_xlabel(r'$\varphi{1}$',fontsize=21)
     # az4[0][0].set_ylabel(r'$\theta_{2}}$',fontsize=21)
     # az4[1][0].set_ylabel(r'$\varphi{2}$',fontsize=21)
-    # # pdb.set_trace()
+    # pdb.set_trace()
   
 
    
@@ -1250,8 +1258,10 @@ def GUM_uv_lidar_uncertainty(wind_direction,Href,Vref,alpha,Hg,Hl,N_MC,theta1,u_
         Uy=Cx.dot(Ux).dot(np.transpose(Cx))
         
         # Uncertainty of Vlosi. Here we account for rho, theta and psi uncertainties and their correlations.
-        U_Vlos1_GUM.append(np.sqrt(Uy[0][0]))
-        U_Vlos2_GUM.append(np.sqrt(Uy[1][1]))
+        s_w=.1
+        # pdb.set_trace()
+        U_Vlos1_GUM.append(np.sqrt(Uy[0][0]+(np.sin(theta1)*s_w)**2))
+        U_Vlos2_GUM.append(np.sqrt(Uy[1][1]+(np.sin(theta2)*s_w)**2))
     
         #%% u and v wind components' uncertainty analysis
         
