@@ -951,7 +951,7 @@ def MCM_uv_lidar_uncertainty(wind_direction,Href,Vref,alpha,Hg,Hl,N_MC,theta1,u_
         U_Vlos1_MCM0=(np.std(Vlos1[ind_wind_dir]))
         U_Vlos2_MCM0=(np.std(Vlos2[ind_wind_dir]))
         # pdb.set_trace()
-        s_w=1
+        s_w=0
         #s_est = 0.13
         U_Vlos1_MCM.append(np.sqrt(U_Vlos1_MCM0**2+(np.sin(theta1)*s_w)**2) )
         U_Vlos2_MCM.append(np.sqrt(U_Vlos2_MCM0**2+(np.sin(theta2)*s_w)**2) )
@@ -1292,7 +1292,7 @@ def GUM_uv_lidar_uncertainty(wind_direction,Href,Vref,alpha,Hg,Hl,N_MC,theta1,u_
         Uy=Cx.dot(Ux).dot(np.transpose(Cx))
         
         # Uncertainty of Vlosi. Here we account for rho, theta and psi uncertainties and their correlations.
-        s_w= 1
+        s_w= 0
         # pdb.set_trace()
         U_Vlos1_GUM.append(np.sqrt(Uy[0][0]+(np.sin(theta1)*s_w)**2))
         U_Vlos2_GUM.append(np.sqrt(Uy[1][1]+(np.sin(theta2)*s_w)**2))
@@ -1470,8 +1470,8 @@ def GUM_Vh_lidar_uncertainty (u,v,U_u_GUM,U_v_GUM,CorrCoef_uv,Vlos1_GUM,Vlos2_GU
  
             UxVh=MultiVar(*Param_multivar2)
        
-            CxVh=[dVh_dtheta1[0],dVh_dtheta2[0],dVh_dpsi1[0],dVh_dpsi2[0],0,0,dVh_Vlos1[0],dVh_Vlos2[0]]
-            # CxVh=[0,0,0,0,0,0,dVh_Vlos1[0],dVh_Vlos2[0]]
+            # CxVh=[dVh_dtheta1[0],dVh_dtheta2[0],dVh_dpsi1[0],dVh_dpsi2[0],0,0,dVh_Vlos1[0],dVh_Vlos2[0]]
+            CxVh=[0,0,0,0,0,0,dVh_Vlos1[0],dVh_Vlos2[0]]
 # 
             UyVh=np.array(CxVh).dot(UxVh).dot(np.transpose(CxVh))
             
