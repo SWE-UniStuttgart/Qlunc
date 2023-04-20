@@ -163,7 +163,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         #%% 4) Wind velocity uncertainy estimation
 
         # 4.1) Store necessary parameters
-        nec_par=[wind_direction,Href,Vref,alpha,Hg,Hl,N_MC,theta1[0],U_theta1,psi1 [0] ,U_psi1,rho1[0],U_rho1,theta2[0],U_theta2,psi2[0],U_psi2,
+        nec_par=[Qlunc_yaml_inputs,wind_direction,Href,Vref,alpha,Hg,Hl,N_MC,theta1[0],U_theta1,psi1 [0] ,U_psi1,rho1[0],U_rho1,theta2[0],U_theta2,psi2[0],U_psi2,
                  rho2[0],U_rho2,psi1_psi2_corr,theta1_theta2_corr,rho1_rho2_corr,psi1_theta1_corr,psi1_theta2_corr,psi2_theta1_corr,psi2_theta2_corr,
                  Vlos1_Vlos2_corr,psi1_rho1_corr,psi1_rho2_corr,psi2_rho1_corr,psi2_rho2_corr,theta1_rho1_corr,theta1_rho2_corr,theta2_rho1_corr,theta2_rho2_corr]
         # Uncertainty u,v
@@ -174,10 +174,10 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         # 4.2) Uncertainty MCM for Vh
         U_Vh_MCM = SA.MCM_Vh_lidar_uncertainty(CorrCoefuv,wind_direction,u,v,U_u_MC,U_v_MC,*Mult_param)
         
-        # pdb.set_trace()
+        # 
         # 4.3) Uncertainty GUM method
         Vlos1_GUM,Vlos2_GUM,U_Vlos1_GUM,U_Vlos2_GUM,u_GUM,v_GUM,U_u_GUM,U_v_GUM,CorrCoef_uv= SA.GUM_uv_lidar_uncertainty(*nec_par)
- 
+        # pdb.set_trace()
         # 4.4) Vh Uncertainty GUM method
         U_Vh_GUM=SA.GUM_Vh_lidar_uncertainty(u_GUM,v_GUM,U_u_GUM,U_v_GUM,CorrCoef_uv,Vlos1_GUM,Vlos2_GUM,U_Vlos1_GUM,U_Vlos2_GUM,*nec_par)
         
@@ -212,7 +212,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
                                                    'Vr Uncertainty homo MC theta [m/s]':U_VLOS_THomo_MC_theta,'Vr Uncertainty homo GUM theta [m/s]':U_VLOS_THomo_GUM_theta,'Vr Uncertainty MC theta [m/s]':U_VLOS_T_MC_theta,'Vr Uncertainty GUM theta [m/s]':U_VLOS_T_GUM_theta,
                                                    'Vr Uncertainty homo MC psi [m/s]':U_VLOS_THomo_MC_psi,'Vr Uncertainty homo GUM psi [m/s]':U_VLOS_THomo_GUM_psi,'Vr Uncertainty MC psi [m/s]':U_VLOS_T_MC_psi,'Vr Uncertainty GUM psi [m/s]':U_VLOS_T_GUM_psi,
                                                    'x':x,'y':y,'z':z,'rho':rho_TESTr,'theta':theta_TESTt,'psi':psi_TESTp,'wind direction':wind_direction,'Focus distance':rho1,'Elevation angle':theta1,'Azimuth':psi1,'STDVs':[U_theta1,U_psi1,U_rho1],
-                                                   'Lidar position':[Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0][1],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0][2]]} #, 'Rayleigh length':Probe_param['Rayleigh Length'],'Rayleigh length uncertainty':Probe_param['Rayleigh Length uncertainty']}
+                                                   'Lidar position':[Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0][1],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0][2]],'param':nec_par} #, 'Rayleigh length':Probe_param['Rayleigh Length'],'Rayleigh length uncertainty':Probe_param['Rayleigh Length uncertainty']}
         Lidar.lidar_inputs.dataframe['Scanner'] = {'Focus distance':Final_Output_UQ_Scanner['Focus distance'][0],'Elevation angle':Final_Output_UQ_Scanner['Elevation angle'][0],'Azimuth':Final_Output_UQ_Scanner['Azimuth'][0]}
         Scan_unc.append(Final_Output_UQ_Scanner)
         
