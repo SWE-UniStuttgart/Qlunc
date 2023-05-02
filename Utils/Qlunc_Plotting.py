@@ -139,10 +139,10 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         plt.title('$V_{h}$ Uncertainty',fontsize=plot_param['title_fontsize'])
         props1 = dict(boxstyle='round', facecolor='wheat', alpha=0.5)        
         textstr1 = '\n'.join((
-        r'$r_{\theta_{1},\theta_{2}} ~=%.1f$' % ( Data['param'][20], ),
-        r'$r_{\varphi_{1},\varphi_{2}}~ =%.1f$' % (Data['param'][19], ),
-        r'$r_{V_{1},V_{2}}~ =%.1f$' % (Data['param'][26], ),
-        r'$r_{r_{1},r_{2}}~~ =%.1f$' % (Data['param'][21], ),
+        r'$r_{\theta_{1},\theta_{2}} ~=%.1f$' % ( Data['param'][21], ),
+        r'$r_{\varphi_{1},\varphi_{2}}~ =%.1f$' % (Data['param'][20], ),
+        r'$r_{V_{1},V_{2}}~ =%.1f$' % (Data['param'][27], ),
+        r'$r_{r_{1},r_{2}}~~ =%.1f$' % (Data['param'][22], ),
         # r'Href [m]={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['Href'], )
         ))
         
