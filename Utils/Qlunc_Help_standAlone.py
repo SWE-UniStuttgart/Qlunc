@@ -724,10 +724,9 @@ def U_WindDir_MC(wind_direction,u,v,Mult_param0):
         
         # A=(-Vlos2[ind_wind_dir]*np.cos(Theta1_cr2[ind_wind_dir])*np.cos(Psi1_cr2[ind_wind_dir])+Vlos1[ind_wind_dir]*np.cos(Theta2_cr2[ind_wind_dir])*np.cos(Psi1_cr2[ind_wind_dir]))/(Vlos2[ind_wind_dir]*np.cos(Theta1_cr2[ind_wind_dir])*np.sin(Psi1_cr2[ind_wind_dir])-Vlos1[ind_wind_dir]*np.cos(Theta2_cr2[ind_wind_dir])*np.sin(Psi2_cr2[ind_wind_dir]))
         
-        W_D = np.arctan(v[ind_wind_dir]/u[ind_wind_dir])
+        W_D = np.degrees(np.arctan(v[ind_wind_dir]/u[ind_wind_dir]))
         
-        U_Wind_direction.append(np.degrees(np.std(W_D)))
-    #Pedersen
+        U_Wind_direction.append(np.std(W_D))
     return (U_Wind_direction)
 
 def U_WindDir_GUM(Vlos1,Vlos2,U_Vlos1,U_Vlos2,Qlunc_yaml_inputs,wind_direction,Href,Vref,alpha,Hg,Hl,N_MC,theta1,u_theta1,psi1,u_psi1,rho1  ,u_rho1,theta2,u_theta2,psi2  
@@ -755,7 +754,7 @@ def U_WindDir_GUM(Vlos1,Vlos2,U_Vlos1,U_Vlos2,Qlunc_yaml_inputs,wind_direction,H
   
     Returns
     -------    
-    u and v wind speed components 
+     wind direction uncertainty against wind direction
     """
     # Wind direction uncertainty
     # pdb.set_trace()
@@ -1241,7 +1240,7 @@ def GUM_uv_lidar_uncertainty(Qlunc_yaml_inputs,wind_direction,Href,Vref,alpha,Hg
         U_v_GUM.append(np.sqrt(Uyuv[1][1]))
         # pdb.set_trace()
     CorrCoef_uv = np.corrcoef(u,v)[0][1]
-    # pdb.set_trace()
+    pdb.set_trace()
     return(VL1,VL2,U_Vlos1_GUM,U_Vlos2_GUM,u,v,U_u_GUM,U_v_GUM,CorrCoef_uv)
 
 #%% ##########################################
