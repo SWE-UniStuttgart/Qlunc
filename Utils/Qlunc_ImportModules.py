@@ -41,4 +41,4 @@ from scipy.stats import multivariate_normal
 import pickle
 from celluloid import Camera
 from matplotlib import animation
-
+import matplotlib.colors as mcolors
