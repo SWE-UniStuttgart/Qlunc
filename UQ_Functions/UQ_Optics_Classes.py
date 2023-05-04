@@ -72,7 +72,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         rho0           = [Lidar.optics.scanner.focus_dist[meas_param]]  
         theta0         = [np.radians(Lidar.optics.scanner.cone_angle[meas_param])]  # %(360) converts negative angles to [0,360] positive angles
         psi0           = [np.radians(Lidar.optics.scanner.azimuth[meas_param])] 
-        wind_direction = np.radians(np.linspace(Atmospheric_Scenario.wind_direction[0],Atmospheric_Scenario.wind_direction[1],720))
+        wind_direction = np.radians(np.linspace(Atmospheric_Scenario.wind_direction[0],Atmospheric_Scenario.wind_direction[1],360))
         
         
         #%% 2) Lidars' position and measuring angles. The measuring angles are calculated based on the position of the lidars and the measuring points
@@ -192,7 +192,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         #%% Wind direction uncertainty estimation
         U_Wind_direction_MCM  =  SA.U_WindDir_MC(wind_direction,u,v,Mult_param)
         
-        U_Wind_direction_GUM  =  SA.U_WindDir_GUM(Vlos1_GUM,Vlos2_GUM,U_Vlos1_GUM,U_Vlos2_GUM,*nec_par)
+        U_Wind_direction_GUM  =  SA.U_WindDir_GUM(u_GUM,v_GUM,Vlos1_GUM,Vlos2_GUM,U_Vlos1_GUM,U_Vlos2_GUM,*nec_par)
         
         
         
