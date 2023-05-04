@@ -118,7 +118,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         ax0.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
         ax0.tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
         ax0.set_xlim(0,360)
-        ax0.set_ylim(0,3)
+        ax0.set_ylim(0,15)
         ax0.grid(axis='both')
         plt.title('Wind direction Uncertainty',fontsize=plot_param['title_fontsize'])
         
