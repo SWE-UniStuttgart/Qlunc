@@ -191,22 +191,32 @@ def UQ_Laser(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     """ 
     # STDV of the laser due to the wavelength error and the confidence interval, assuming a normal distribution. "JCGM 100:2008 GUM 1995 with minor changes", Anxex G, Table G1
-
+    pdb.set_trace()
+   
+    DuDL =.5*df
+    DuDf=-0.5*Lidar.photonics.laser.Wavelength
+    a_f = 1e10
+    a_L = 1e-7
+    u_f= a_f/np.sqrt(3)
+    uL = a_L/np.sqrt(3)
     
-    if Lidar.photonics.laser.conf_int==1:
-        u_fact = 1
-    elif Lidar.photonics.laser.conf_int==2:
-        u_fact = 1.645
-    elif Lidar.photonics.laser.conf_int==3:
-        u_fact = 1.96
-    elif Lidar.photonics.laser.conf_int==4:
-        u_fact = 2
-    elif Lidar.photonics.laser.conf_int==5:
-        u_fact = 2.576
-    elif Lidar.photonics.laser.conf_int==6:
-        u_fact = 3        
-    # UQ_Laser = np.array([( Lidar.photonics.laser.stdv_wavelength/u_fact)])    
-    UQ_Laser.U_Laser = [np.array(10*np.log10(10**(Lidar.photonics.laser.RIN/10)*Lidar.photonics.laser.BandWidth*Lidar.photonics.laser.Output_power))]
+    UQ_Laser.U_Laser = [np.sqrt((DuDL*uL)**2+(DuDf*u_f)**2+2*(DuDf*u_f*DuDL*uL))]
+    
+    
+    # if Lidar.photonics.laser.conf_int==1:
+    #     u_fact = 1
+    # elif Lidar.photonics.laser.conf_int==2:
+    #     u_fact = 1.645
+    # elif Lidar.photonics.laser.conf_int==3:
+    #     u_fact = 1.96
+    # elif Lidar.photonics.laser.conf_int==4:
+    #     u_fact = 2
+    # elif Lidar.photonics.laser.conf_int==5:
+    #     u_fact = 2.576
+    # elif Lidar.photonics.laser.conf_int==6:
+    #     u_fact = 3        
+    # # UQ_Laser = np.array([( Lidar.photonics.laser.stdv_wavelength/u_fact)])    
+    # UQ_Laser.U_Laser = [np.array(10*np.log10(10**(Lidar.photonics.laser.RIN/10)*Lidar.photonics.laser.BandWidth*Lidar.photonics.laser.Output_power))]
     
     Final_Output_UQ_Laser = {'Uncertainty_Laser':UQ_Laser.U_Laser}
     Lidar.lidar_inputs.dataframe['Laser'] = Final_Output_UQ_Laser['Uncertainty_Laser']
