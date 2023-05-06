@@ -29,7 +29,7 @@ def scatter3d(x,y,z, Vrad_homo, colorsMap='jet'):
     
 
 #%% Plotting:
-def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,flag_plot_photodetector_noise,flag_probe_volume_param,flag_plot_optical_amplifier_noise, flag_plot_pointing_unc,flag_plot_wind_dir_unc):
+def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,flag_plot_photodetector_noise,flag_probe_volume_param,flag_plot_optical_amplifier_noise, flag_plot_pointing_unc,flag_plot_wind_dir_unc,flag_plot_correlations):
     """.
     
     Plotting. Location: .Utils/Qlunc_plotting.py       
@@ -467,7 +467,8 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
 
 
 #%% Plotting correlations
-    # if flag_plot_correlations ==1:
+    if flag_plot_correlations ==1:
+        pdb.set_trace()
     #     fig0,az0=plt.subplots(3,sharex=True)
     #     fig0.add_subplot(111, frameon=False)
     #     plt.tick_params(labelcolor='none', top=False, bottom=False, left=False, right=False)

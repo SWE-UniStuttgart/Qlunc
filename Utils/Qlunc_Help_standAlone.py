@@ -1011,32 +1011,32 @@ def MCM_uv_lidar_uncertainty(Qlunc_yaml_inputs,wind_direction,Href,Vref,alpha,Hg
         ######## 1st multivariate distribution #####################
         
         
-        theta1_noisy = np.random.normal(theta1,u_theta1,N_MC)
-        psi1_noisy   = np.random.normal(psi1,u_psi1,N_MC)
-        rho1_noisy   = np.random.normal(rho1,u_rho1,N_MC)
-        theta2_noisy = np.random.normal(theta2,u_theta2,N_MC)
-        psi2_noisy   = np.random.normal(psi2,u_psi2,N_MC)
-        rho2_noisy   = np.random.normal(rho2,u_rho2,N_MC)
-        theta_means = [theta1_noisy.mean(),theta2_noisy.mean()]
-        theta_stds  = [theta1_noisy.std(),theta2_noisy.std()]
+        # theta1_noisy = np.random.normal(theta1,u_theta1,N_MC)
+        # psi1_noisy   = np.random.normal(psi1,u_psi1,N_MC)
+        # rho1_noisy   = np.random.normal(rho1,u_rho1,N_MC)
+        # theta2_noisy = np.random.normal(theta2,u_theta2,N_MC)
+        # psi2_noisy   = np.random.normal(psi2,u_psi2,N_MC)
+        # rho2_noisy   = np.random.normal(rho2,u_rho2,N_MC)
+        # theta_means = [theta1_noisy.mean(),theta2_noisy.mean()]
+        # theta_stds  = [theta1_noisy.std(),theta2_noisy.std()]
                
-        psi_means = [psi1_noisy.mean(),psi2_noisy.mean()]  
-        psi_stds  = [psi1_noisy.std(),psi2_noisy.std()]
+        # psi_means = [psi1_noisy.mean(),psi2_noisy.mean()]  
+        # psi_stds  = [psi1_noisy.std(),psi2_noisy.std()]
         
-        rho_means = [rho1_noisy.mean(),rho2_noisy.mean()] 
-        rho_stds  = [rho1_noisy.std(),rho2_noisy.std()]
+        # rho_means = [rho1_noisy.mean(),rho2_noisy.mean()] 
+        # rho_stds  = [rho1_noisy.std(),rho2_noisy.std()]
         V_means=[0,0]
     
                                                                                                                                                                                                                                                                                                                                                                                                             ## MCM -Vlos
-        #Param_multivar2=[N_MC,U_Vlos1_MCM,U_Vlos2_MCM,                                          ,theta_stds2,psi_stds2,rho_stds2   ,psi1_psi2_corr,theta1_theta2_corr  , rho1_rho2_corr    , psi1_theta1_corr , psi1_theta2_corr  , psi2_theta1_corr    , psi2_theta2_corr  , Vlos1_Vlos2_corr , psi1_rho1_corr ,psi1_rho2_corr ,psi2_rho1_corr ,psi2_rho2_corr ,theta1_rho1_corr ,theta1_rho2_corr ,theta2_rho1_corr ,theta2_rho2_corr,0,0,0,1 ]
-        Param_multivar=[ind_wind_dir,np.zeros(len(wind_direction)),np.zeros(len(wind_direction)),  theta_stds, psi_stds,  rho_stds,       0                 ,0  ,               0           , psi1_theta1_corr ,            0  ,          0    ,            psi2_theta2_corr  ,         0 ,              0 ,             0 ,            0 ,              0 ,         0 ,                    0 ,             0 , 0,        1,1,1,0]
+        #Param_multivar2=[N_MC,U_Vlos1_MCM,U_Vlos2_MCM,                                          ,theta_stds2           ,psi_stds2             ,rho_stds2   ,psi1_psi2_corr,theta1_theta2_corr  , rho1_rho2_corr    , psi1_theta1_corr , psi1_theta2_corr  , psi2_theta1_corr    , psi2_theta2_corr  , Vlos1_Vlos2_corr , psi1_rho1_corr ,psi1_rho2_corr ,psi2_rho1_corr ,psi2_rho2_corr ,theta1_rho1_corr ,theta1_rho2_corr ,theta2_rho1_corr ,theta2_rho2_corr,0,0,0,1 ]
+        Param_multivar=[ind_wind_dir,np.zeros(len(wind_direction)),np.zeros(len(wind_direction)),  [u_theta1,u_theta1], [u_psi1,u_psi2],  [u_rho1,u_rho2],       0                 ,0  ,               0           , psi1_theta1_corr ,            0  ,          0    ,            psi2_theta2_corr  ,         0 ,              0 ,             0 ,            0 ,              0 ,         0 ,                    0 ,             0 , 0,        1,1,1,0]
         
         # Covariance matrix
         cov_MAT=MultiVar(*Param_multivar)
         
         # # Multivariate distributions:
         
-        Theta1_cr,Theta2_cr,Psi1_cr,Psi2_cr,Rho1_cr,Rho2_cr,Vlos1_MC_cr,Vlos2_MC_cr= multivariate_normal.rvs([theta_means[0],theta_means[1],psi_means[0],psi_means[1],rho_means[0],rho_means[1],V_means[0],V_means[1]], cov_MAT,N_MC).T
+        Theta1_cr,Theta2_cr,Psi1_cr,Psi2_cr,Rho1_cr,Rho2_cr,Vlos1_MC_cr,Vlos2_MC_cr= multivariate_normal.rvs([theta1,theta2,psi1,psi2,rho1,rho2,V_means[0],V_means[1]], cov_MAT,N_MC).T
         
         
         ### VLOS calculations ############################
@@ -1079,22 +1079,22 @@ def MCM_uv_lidar_uncertainty(Qlunc_yaml_inputs,wind_direction,Href,Vref,alpha,Hg
         
         
         # Noisy points
-        theta1_noisy2 = np.random.normal(theta1,u_theta1,N_MC)
-        psi1_noisy2   = np.random.normal(psi1,u_psi1,N_MC)
-        rho1_noisy2   = np.random.normal(rho1,u_rho1,N_MC)
-        theta2_noisy2 = np.random.normal(theta2,u_theta2,N_MC)
-        psi2_noisy2   = np.random.normal(psi2,u_psi2,N_MC)
-        rho2_noisy2   = np.random.normal(rho2,u_rho2,N_MC)
+        # theta1_noisy2 = np.random.normal(theta1,u_theta1,N_MC)
+        # psi1_noisy2   = np.random.normal(psi1,u_psi1,N_MC)
+        # rho1_noisy2   = np.random.normal(rho1,u_rho1,N_MC)
+        # theta2_noisy2 = np.random.normal(theta2,u_theta2,N_MC)
+        # psi2_noisy2   = np.random.normal(psi2,u_psi2,N_MC)
+        # rho2_noisy2   = np.random.normal(rho2,u_rho2,N_MC)
         
-        # Means and stdv
-        theta_means2 = [theta1_noisy2.mean(),theta2_noisy2.mean()]
-        theta_stds2  = [theta1_noisy2.std(),theta2_noisy2.std()]
+        # # Means and stdv
+        # theta_means2 = [theta1_noisy2.mean(),theta2_noisy2.mean()]
+        # theta_stds2  = [theta1_noisy2.std(),theta2_noisy2.std()]
                
-        psi_means2 = [psi1_noisy2.mean(),psi2_noisy2.mean()]  
-        psi_stds2  = [psi1_noisy2.std(),psi2_noisy2.std()]
+        # psi_means2 = [psi1_noisy2.mean(),psi2_noisy2.mean()]  
+        # psi_stds2  = [psi1_noisy2.std(),psi2_noisy2.std()]
         
-        rho_means2 = [rho1_noisy2.mean(),rho2_noisy2.mean()] 
-        rho_stds2  = [rho1_noisy2.std(),rho2_noisy2.std()]
+        # rho_means2 = [rho1_noisy2.mean(),rho2_noisy2.mean()] 
+        # rho_stds2  = [rho1_noisy2.std(),rho2_noisy2.std()]
         # pdb.set_trace()
                                      
         # if psi1_theta1_corr==0:
@@ -1108,14 +1108,14 @@ def MCM_uv_lidar_uncertainty(Qlunc_yaml_inputs,wind_direction,Href,Vref,alpha,Hg
         # else:
         #     psi1_theta1_corr=psi2_theta2_corr=0
                                                                                                                                                                                                                                                                                                                                                                                                ## MCM - uv
-        Param_multivar2   = [ind_wind_dir,   U_Vlos1_MCM,U_Vlos2_MCM   ,theta_stds2,    psi_stds2,     rho_stds2,     psi1_psi2_corr      ,theta1_theta2_corr  , rho1_rho2_corr,  psi1_theta1_corr,      psi1_theta2_corr  , psi2_theta1_corr    , psi2_theta2_corr ,  Vlos1_Vlos2_corr ,      0 ,                    0 ,            0             ,0              ,0              ,0                   ,0                 ,0       ,1,1,1,1 ]
-        # Param_multivar2 = [ N_MC,          U_Vlos1_MCM,U_Vlos2_MCM,   theta_stds2,    psi_stds2,     rho_stds2,     psi1_psi2_corr      ,theta1_theta2_corr  , rho1_rho2_corr , psi1_theta1_corr     , psi1_theta2_corr  , psi2_theta1_corr    , psi2_theta2_corr  , Vlos1_Vlos2_corr , psi1_rho1_corr ,psi1_rho2_corr ,psi2_rho1_corr ,psi2_rho2_corr ,theta1_rho1_corr ,theta1_rho2_corr ,theta2_rho1_corr ,theta2_rho2_corr,     0,0,0,1 ]
+        Param_multivar2   = [ind_wind_dir,   U_Vlos1_MCM,U_Vlos2_MCM   ,[u_theta1,u_theta1], [u_psi1,u_psi2],  [u_rho1,u_rho2],     psi1_psi2_corr      ,theta1_theta2_corr  , rho1_rho2_corr,  psi1_theta1_corr,      psi1_theta2_corr  , psi2_theta1_corr    , psi2_theta2_corr ,  Vlos1_Vlos2_corr ,      0 ,                    0 ,            0             ,0              ,0              ,0                   ,0                 ,0       ,1,1,1,1 ]
+        # Param_multivar2 = [ N_MC,          U_Vlos1_MCM,U_Vlos2_MCM,   theta_stds2,             psi_stds2,     rho_stds2,          psi1_psi2_corr      ,theta1_theta2_corr  , rho1_rho2_corr , psi1_theta1_corr     , psi1_theta2_corr  , psi2_theta1_corr    , psi2_theta2_corr  , Vlos1_Vlos2_corr , psi1_rho1_corr ,psi1_rho2_corr ,psi2_rho1_corr ,psi2_rho2_corr ,theta1_rho1_corr ,theta1_rho2_corr ,theta2_rho1_corr ,theta2_rho2_corr,     0,0,0,1 ]
  
         cov_MAT_Vh=MultiVar(*Param_multivar2)
         # # Multivariate distributions:
         
     
-        Theta1_cr2,Theta2_cr2,Psi1_cr2,Psi2_cr2,Rho1_cr2,Rho2_cr2,Vlos1_MC_cr2,Vlos2_MC_cr2= multivariate_normal.rvs([theta_means2[0],theta_means2[1],psi_means2[0],psi_means2[1],rho_means2[0],rho_means2[1],V_means2[0],V_means2[1]], cov_MAT_Vh,N_MC).T
+        Theta1_cr2,Theta2_cr2,Psi1_cr2,Psi2_cr2,Rho1_cr2,Rho2_cr2,Vlos1_MC_cr2,Vlos2_MC_cr2= multivariate_normal.rvs([theta1,theta2,psi1,psi2,rho1,rho2,np.mean(Vlos1[ind_wind_dir]),np.mean(Vlos2[ind_wind_dir])], cov_MAT_Vh,N_MC).T
         # pdb.set_trace()
 
    
