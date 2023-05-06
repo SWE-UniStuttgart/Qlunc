@@ -566,43 +566,43 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         pdb.set_trace()
         
         # Correlations between the uncertainties
-        fig4,az4=plt.subplots(2,2)
-        fig4.add_subplot(111, frameon=False)
-        plt.tick_params(labelcolor='none', top=False, bottom=False, left=False, right=False)
-        plt.grid(False)
-        plt.xlabel("Samples",fontsize=25)
-        plt.ylabel("Correlation",fontsize=25)
+        # fig4,az4=plt.subplots(2,2)
+        # fig4.add_subplot(111, frameon=False)
+        # plt.tick_params(labelcolor='none', top=False, bottom=False, left=False, right=False)
+        # plt.grid(False)
+        # plt.xlabel("Samples",fontsize=25)
+        # plt.ylabel("Correlation",fontsize=25)
         
-        az4[0][0].plot(Theta1_cr2,Theta2_cr2,'bo',alpha=0.4)
-        az4[1][0].plot(Psi1_cr2,Psi2_cr2,'bo',alpha=0.4)
+        # az4[0][0].plot(Theta1_cr2,Theta2_cr2,'bo',alpha=0.4)
+        # az4[1][0].plot(Psi1_cr2,Psi2_cr2,'bo',alpha=0.4)
         
-        # Indexes for reference
-        az4[0][1].plot(U_Vlos1_MCM,U_Vlos2_MCM,'bo',alpha=0.4)  
-        az4[0][1].plot(U_Vlos1_MCM[0],U_Vlos2_MCM[0],'ro')
-        az4[0][1].plot(U_Vlos1_MCM[179],U_Vlos2_MCM[179],'go')
-        az4[0][1].plot(U_Vlos1_MCM[89],U_Vlos2_MCM[89],'ko')
-        az4[0][1].plot(U_Vlos1_MCM[270],U_Vlos2_MCM[270],'yo')
+        # # Indexes for reference
+        # az4[0][1].plot(U_Vlos1_MCM,U_Vlos2_MCM,'bo',alpha=0.4)  
+        # az4[0][1].plot(U_Vlos1_MCM[0],U_Vlos2_MCM[0],'ro')
+        # az4[0][1].plot(U_Vlos1_MCM[179],U_Vlos2_MCM[179],'go')
+        # az4[0][1].plot(U_Vlos1_MCM[89],U_Vlos2_MCM[89],'ko')
+        # az4[0][1].plot(U_Vlos1_MCM[270],U_Vlos2_MCM[270],'yo')
         
-        'VLOS1 Uncertainty MC [m/s]'
-        az4[1][1].plot(Data['Uncertainty u wind component MCM'],Data['Uncertainty v wind component MCM'],'bo',alpha=0.4)  
-        az4[1][1].plot(Data['Uncertainty u wind component MCM'][0],Data['Uncertainty v wind component MCM'][0],'ro')
-        az4[1][1].plot(Data['Uncertainty u wind component MCM'][179],Data['Uncertainty v wind component MCM'][179],'go')
-        az4[1][1].plot(Data['Uncertainty u wind component MCM'][89],Data['Uncertainty v wind component MCM'][89],'ko')
-        az4[1][1].plot(Data['Uncertainty u wind component MCM'][270],Data['Uncertainty v wind component MCM'][270],'yo')
+        # 'VLOS1 Uncertainty MC [m/s]'
+        # az4[1][1].plot(Data['Uncertainty u wind component MCM'],Data['Uncertainty v wind component MCM'],'bo',alpha=0.4)  
+        # az4[1][1].plot(Data['Uncertainty u wind component MCM'][0],Data['Uncertainty v wind component MCM'][0],'ro')
+        # az4[1][1].plot(Data['Uncertainty u wind component MCM'][179],Data['Uncertainty v wind component MCM'][179],'go')
+        # az4[1][1].plot(Data['Uncertainty u wind component MCM'][89],Data['Uncertainty v wind component MCM'][89],'ko')
+        # az4[1][1].plot(Data['Uncertainty u wind component MCM'][270],Data['Uncertainty v wind component MCM'][270],'yo')
         
-        az4[0][0].set_aspect(1) 
-        az4[1][0].set_aspect(1) 
-        az4[0][1].set_aspect(1) 
-        az4[1][1].set_aspect(1) 
+        # az4[0][0].set_aspect(1) 
+        # az4[1][0].set_aspect(1) 
+        # az4[0][1].set_aspect(1) 
+        # az4[1][1].set_aspect(1) 
         
-        az4[0][1].set_xlabel('$U_{V_{LOS1}}$',fontsize=21)
-        az4[1][1].set_xlabel('$U_u$',fontsize=21)
-        az4[0][1].set_ylabel('$U_{V_{LOS2}}$',fontsize=21)
-        az4[1][1].set_ylabel('$U_v$',fontsize=21)
+        # az4[0][1].set_xlabel('$U_{V_{LOS1}}$',fontsize=21)
+        # az4[1][1].set_xlabel('$U_u$',fontsize=21)
+        # az4[0][1].set_ylabel('$U_{V_{LOS2}}$',fontsize=21)
+        # az4[1][1].set_ylabel('$U_v$',fontsize=21)
         
-        az4[0][0].set_xlabel(r'$\theta_{1}$',fontsize=21)
-        az4[1][0].set_xlabel(r'$\varphi{1}$',fontsize=21)
-        az4[0][0].set_ylabel(r'$\theta_{2}}$',fontsize=21)
-        az4[1][0].set_ylabel(r'$\varphi{2}$',fontsize=21)
+        # az4[0][0].set_xlabel(r'$\theta_{1}$',fontsize=21)
+        # az4[1][0].set_xlabel(r'$\varphi{1}$',fontsize=21)
+        # az4[0][0].set_ylabel(r'$\theta_{2}}$',fontsize=21)
+        # az4[1][0].set_ylabel(r'$\varphi{2}$',fontsize=21)
     
            
