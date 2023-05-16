@@ -573,6 +573,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         
         # pdb.set_trace()
         
+
         # Correlations in uncertainties
         fig4,az4=plt.subplots(1,2)
         fig4.add_subplot(111, frameon=False)
@@ -580,10 +581,12 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         plt.grid(False)
         plt.xlabel("Samples",fontsize=25)
         plt.ylabel("Correlation",fontsize=25)
+
         
         # az4[0][0].plot(Theta1_cr2,Theta2_cr2,'bo',alpha=0.4)
         # az4[1][0].plot(Psi1_cr2,Psi2_cr2,'bo',alpha=0.4)
         
+
         
         az4[0].plot(Data['VLOS1 Uncertainty MC [m/s]'],Data['VLOS2 Uncertainty MC [m/s]'],'bo',alpha=0.4)  
         # Indexes for reference
@@ -609,6 +612,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         az4[1].set_ylabel('$U_v$',fontsize=21)
         az4[0].grid(axis='both')
         az4[1].grid(axis='both')
+
         # az4[0][0].set_xlabel(r'$\theta_{1}$',fontsize=21)
         # az4[1][0].set_xlabel(r'$\varphi{1}$',fontsize=21)
         # az4[0][0].set_ylabel(r'$\theta_{2}}$',fontsize=21)
