@@ -191,15 +191,21 @@ def UQ_Laser(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     """ 
     # STDV of the laser due to the wavelength error and the confidence interval, assuming a normal distribution. "JCGM 100:2008 GUM 1995 with minor changes", Anxex G, Table G1
-    pdb.set_trace()
    
-    DuDL =.5*df
-    DuDf=-0.5*Lidar.photonics.laser.Wavelength
-    a_f = 1e10
-    a_L = 1e-7
+    
+   
+    #f=cts.c/Lidar.photonics.laser.Wavelength
+    
+    df=1e-3 # Doppler frequency shift
+    DuDL =  0.5*df
+    DuDf = -0.5*Lidar.photonics.laser.Wavelength
+    
+    a_f = 1e6
+    a_L = Lidar.photonics.laser.stdv_wavelength
+    
     u_f= a_f/np.sqrt(3)
     uL = a_L/np.sqrt(3)
-    
+    # pdb.set_trace()
     UQ_Laser.U_Laser = [np.sqrt((DuDL*uL)**2+(DuDf*u_f)**2+2*(DuDf*u_f*DuDL*uL))]
     
     
