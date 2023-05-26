@@ -537,13 +537,13 @@ def U_WindDir_GUM(u,v,Vlos1,Vlos2,U_Vlos1,U_Vlos2,Qlunc_yaml_inputs,wind_directi
       
      # Utheta_Upsi
     u_theta1_psi1     = u_theta1*u_psi1*psi1_theta1_corr
-    u_theta1_psi2     = u_theta1*u_psi2*0
-    u_theta2_psi1     = u_theta2*u_psi1*0
+    u_theta1_psi2     = u_theta1*u_psi2*psi2_theta1_corr
+    u_theta2_psi1     = u_theta2*u_psi1*psi1_theta2_corr
     u_theta2_psi2     = u_theta2*u_psi2*psi2_theta2_corr
     #%% Correlations
         
     V1,V2,U_u_GUM,U_v_GUM,U_Vh_GUM_P,U_Vh_MCM,U_uv_GUM,U_wind_dir=[],[],[],[],[],[],[],[]
-    U_wind_dir=[]
+    U_wind_dir,r_uv=[],[]
     for ind_wind_dir in range(len(wind_direction)):
 
     
@@ -594,14 +594,14 @@ def U_WindDir_GUM(u,v,Vlos1,Vlos2,U_Vlos1,U_Vlos2,Qlunc_yaml_inputs,wind_directi
         U_v_GUM.append(np.sqrt(Uyuv[1][1]))
         U_uv_GUM.append((Uyuv[1] [0]))
         
-        r_uv=U_uv_GUM[ind_wind_dir]/np.sqrt(((U_u_GUM[ind_wind_dir])**2)*((U_v_GUM[ind_wind_dir])**2))
+        r_uv.append(U_uv_GUM[ind_wind_dir]/np.sqrt(((U_u_GUM[ind_wind_dir])**2)*((U_v_GUM[ind_wind_dir])**2)))
 
         ## Wind direction
         dWind_dirdu = 1/(1+(v[ind_wind_dir]/u[ind_wind_dir])**2)*(-v[ind_wind_dir]/u[ind_wind_dir]**2)
         dWind_dirdv = 1/(1+(v[ind_wind_dir]/u[ind_wind_dir])**2)*(1/u[ind_wind_dir])
         U_wind_dir.append(np.degrees(np.sqrt((dWind_dirdu*U_u_GUM[ind_wind_dir])**2+(dWind_dirdv*U_v_GUM[ind_wind_dir])**2+2*dWind_dirdv*dWind_dirdu*U_uv_GUM[ind_wind_dir])))
 
-     
+    pdb.set_trace()
     return (U_wind_dir)
 
 
@@ -767,6 +767,7 @@ def MCM_uv_lidar_uncertainty(Qlunc_yaml_inputs,wind_direction,Href,Vref,alpha,Hg
     Mult_param1 = [Vlos1_MC_cr2_s,Vlos2_MC_cr2_s,Theta1_cr2_s,Theta2_cr2_s,Psi1_cr2_s,Psi2_cr2_s,Rho1_cr2_s,Rho2_cr2_s]
     Correlation_coeffs=[CorrCoefTheta1Psi1,CorrCoefTheta2Psi2,CorrCoefTheta1,CorrCoefVlos1,CorrCoefPsi1,CorrCoefTheta1Psi2,CorrCoef_U_VLOS,
                        CorrCoefVlos2,CorrCoefTheta2,CorrCoefPsi2,CorrCoefTheta2_Psi2_2,CorrCoefTheta1Psi1_2,CorrCoefTheta1Psi2_2,CorrCoefTheta2Psi2_2,CorrCoefTheta2Psi1_2,CorrCoefTheta2Psi1]
+    pdb.set_trace()
     return CorrCoefuv,U_Vlos1_MCM,U_Vlos2_MCM,u,v,U_u_MC,U_v_MC ,Mult_param1,Correlation_coeffs
 
 #%% ##########################################
