@@ -307,18 +307,19 @@ def U_VLOS_MC(theta,psi,rho,Hl,Href,alpha,wind_direction,Vref,ind_wind_dir,VLOS1
      * Estimated uncertainty in the $V_{LOS}$ [int]
      """
      # pdb.set_trace()
-     VLOS01,U_VLOS1,=[],[]      
-     A=((Hl+(np.sin(theta)*rho))/Href)      
-     VLOS1 = Vref*(np.sign(A)*(abs(A)**alpha[0]))*(np.cos(theta)*np.cos(psi-wind_direction[ind_wind_dir])) #-np.sin(theta_corr[0][ind_npoints])*np.tan(wind_tilt[ind_npoints])
+     U_VLOS1=[]     
+     A=((Hl+(np.sin(theta)*rho))/Href)   
+     # for ind_alpha in range(len(alpha)):
+     VLOS1 = Vref*(np.sign(A)*(abs(A)**alpha))*(np.cos(theta)*np.cos(psi-wind_direction[ind_wind_dir])) #-np.sin(theta_corr[0][ind_npoints])*np.tan(wind_tilt[ind_npoints])
      VLOS1_list.append(np.mean(VLOS1))
-     U_VLOS1   = np.nanstd(VLOS1)   
+     U_VLOS1.append(np.nanstd(VLOS1))
          
     # Vlosi
      # Vlos1=(Vref*(np.sign(H_t1_cr)*((abs(H_t1_cr))**alpha))*np.cos(theta)*np.cos(psi-wind_direction[ind_wind_dir]))
-     return(VLOS1,U_VLOS1,VLOS1_list)
+     return(U_VLOS1)
 
-def U_VLOS_GUM (theta1,psi1,rho1,u_theta1,u_psi1,u_rho1,U_VLOS01,Hl,Vref,Href,alpha,wind_direction,ind_wind_dir,psi1_psi2_corr   , theta1_theta2_corr , rho1_rho2_corr   , psi1_theta1_corr,
-                    psi1_theta2_corr , psi2_theta1_corr   , psi2_theta2_corr , Vlos1_Vlos2_corr):
+def U_VLOS_GUM (theta1,psi1,rho1,u_theta1,u_psi1,u_rho1,Hl,Vref,Href,alpha,wind_direction,ind_wind_dir,psi1_psi2_corr,
+                theta1_theta2_corr,rho1_rho2_corr,psi1_theta1_corr,psi1_theta2_corr,psi2_theta1_corr,psi2_theta2_corr,Vlos1_Vlos2_corr):
     """.
     
     Analytical model based on the Guide to the expression of Uncertainty in Measurements (GUM) to estimate the uncertainty in the line of sight velocity ( $V_{LOS}$ ). Location: Qlunc_Help_standAlone.py
@@ -347,10 +348,10 @@ def U_VLOS_GUM (theta1,psi1,rho1,u_theta1,u_psi1,u_rho1,U_VLOS01,Hl,Vref,Href,al
     * Estimated uncertainty in the line of sight wind speed [np.array]
      
     """
-
+    
     H_t1 = ((rho1*np.sin(theta1)+Hl)/Href)
-    
-    
+    U_Vlos1_GUM=[]
+    # for ind_alpha in range(len(alpha)):
     # VLOS uncertainty
     # Calculate and store Vlosi
     Vlos1_GUM = Vref*(np.sign(H_t1)*((abs(H_t1))**alpha))*np.cos(theta1)*np.cos(psi1-wind_direction[ind_wind_dir])
@@ -391,7 +392,7 @@ def U_VLOS_GUM (theta1,psi1,rho1,u_theta1,u_psi1,u_rho1,U_VLOS01,Hl,Vref,Href,al
     Uy=Cx.dot(Ux).dot(np.transpose(Cx))
     
     # Uncertainty of Vlosi. Here we account for rho, theta and psi uncertainties and their correlations.
-    U_Vlos1_GUM=(np.sqrt(Uy[0][0]))
+    U_Vlos1_GUM.append((np.sqrt(Uy[0][0])))
     # U_Vlos2_GUM.append(np.sqrt(Uy[1][1]))
 
     return(U_Vlos1_GUM)
@@ -425,25 +426,32 @@ def VLOS_param (rho,theta,psi,U_theta1,U_psi1,U_rho1,N_MC,U_VLOS1,Hl,Vref,Href,a
 
     # Calculate radial speed uncertainty for an heterogeneous flow
     U_Vrad_homo_MC,U_Vrad_homo_MC_LOS1,U_Vrad_homo_MC_LOS2 = [],[],[]
-    VLOS_list_T,U_VLOS_T_MC,U_VLOS_T_GUM,U_VLOS_THomo_MC=[],[],[],[]
-    for ind_0 in range(len(ind_i)):
-        
-        # MC method
-        VLOS_T_MC1=[]
-        theta1_T_noisy = np.random.normal(theta_TEST[ind_0],U_theta1,N_MC)
-        psi1_T_noisy   = np.random.normal(psi_TEST[ind_0],U_psi1,N_MC)
-        rho1_T_noisy   = np.random.normal(rho_TEST[ind_0],U_rho1,N_MC)
-
-        VLOS_T_MC,U_VLOS_T,VLOS_LIST_T         = U_VLOS_MC(theta1_T_noisy,psi1_T_noisy,rho1_T_noisy,Hl,Href,alpha,wind_direction_TEST,Vref,0,VLOS_list_T)
-        VLOS_THomo_MC,U_VLOS_THomo,VLOS_LIST_T = U_VLOS_MC(theta1_T_noisy,psi1_T_noisy,rho1_T_noisy,Hl,Href, [0], wind_direction_TEST,Vref,0,VLOS_list_T)
-        
-        U_VLOS_T_MC.append(U_VLOS_T)         # For an heterogeneous flow  (shear)
-        U_VLOS_THomo_MC.append(U_VLOS_THomo) # For an homogeneous flow
+    VLOS_list_T,U_VLOS_T_MC,U_VLOS_T_GUM,U_VLOS_THomo_GUM,U_VLOS_THomo_MC,U_VLOS_T,U_VLOS_THomo=[],[],[],[],[],[],[]
     
-    # GUM method
-    U_VLOS_T_GUM     = U_VLOS_GUM (theta_TEST,psi_TEST,rho_TEST,U_theta1,U_psi1,U_rho1,U_VLOS1,Hl,Vref,Href,alpha,wind_direction_TEST,0,0,0,0,0,0,0,0,0)  # For an heterogeneous flow (shear)
-    U_VLOS_THomo_GUM = U_VLOS_GUM (theta_TEST,psi_TEST,rho_TEST,U_theta1,U_psi1,U_rho1,U_VLOS1,Hl,Vref,Href,[0],wind_direction_TEST,0,0,0,0,0,0,0,0,0)    # For an homogeneous flow
+    for ind_alpha in range(len(alpha)):
+        for ind_0 in range(len(ind_i)):
+            
+            # MC method
+            VLOS_T_MC1=[]
+            theta1_T_noisy = np.random.normal(theta_TEST[ind_0],U_theta1,N_MC)
+            psi1_T_noisy   = np.random.normal(psi_TEST[ind_0],U_psi1,N_MC)
+            rho1_T_noisy   = np.random.normal(rho_TEST[ind_0],U_rho1,N_MC)
+            U_VLOS_T.append(U_VLOS_MC(theta1_T_noisy,psi1_T_noisy,rho1_T_noisy,Hl,Href,alpha[ind_alpha],wind_direction_TEST,Vref,0,VLOS_list_T)[0])
+            U_VLOS_THomo.append(U_VLOS_MC(theta1_T_noisy,psi1_T_noisy,rho1_T_noisy,Hl,Href, [0], wind_direction_TEST,Vref,0,VLOS_list_T)[0])
+        
+        #Store results
+        U_VLOS_T_MC.append(np.array(U_VLOS_T))        # For an heterogeneous flow  (shear)
+        U_VLOS_T=[]
+        U_VLOS_THomo_MC.append(np.array(U_VLOS_THomo)) # For an homogeneous flow
+        U_VLOS_THomo=[]
 
+    for ind_alpha2 in range(len(alpha)):   
+        # GUM method
+
+        U_VLOS_T_GUM.append(U_VLOS_GUM (theta_TEST,psi_TEST,rho_TEST,U_theta1,U_psi1,U_rho1,Hl,Vref,Href,alpha[ind_alpha2],wind_direction_TEST,0,0,0,0,0,0,0,0,0) ) # For an heterogeneous flow (shear))
+        U_VLOS_THomo_GUM.append(U_VLOS_GUM (theta_TEST,psi_TEST,rho_TEST,U_theta1,U_psi1,U_rho1,Hl,Vref,Href,[0],wind_direction_TEST,0,0,0,0,0,0,0,0,0) )  # For an homogeneous flow
+        # pdb.set_trace()
+   
     return (U_VLOS_T_MC,U_VLOS_THomo_MC,U_VLOS_T_GUM,U_VLOS_THomo_GUM,rho_TEST,theta_TEST,psi_TEST)        
 
 #%% Wind direction uncertainties
@@ -680,8 +688,8 @@ def MCM_uv_lidar_uncertainty(Qlunc_yaml_inputs,wind_direction,Href,Vref,alpha,Hg
         H_t1_cr = ((Rho1_cr*np.sin(Theta1_cr)+Hl[0])/Href)
         H_t2_cr = ((Rho2_cr*np.sin(Theta2_cr)+Hl[1])/Href)
         
-        Vlos1.append(Vref*(np.sign(H_t1_cr)*((abs(H_t1_cr))**alpha))*np.cos(Theta1_cr)*np.cos(Psi1_cr-wind_direction[ind_wind_dir]))
-        Vlos2.append(Vref*(np.sign(H_t2_cr)*((abs(H_t2_cr))**alpha))*np.cos(Theta2_cr)*np.cos(Psi2_cr-wind_direction[ind_wind_dir]))
+        Vlos1.append(Vref*(np.sign(H_t1_cr)*((abs(H_t1_cr))**alpha[0]))*np.cos(Theta1_cr)*np.cos(Psi1_cr-wind_direction[ind_wind_dir]))
+        Vlos2.append(Vref*(np.sign(H_t2_cr)*((abs(H_t2_cr))**alpha[0]))*np.cos(Theta2_cr)*np.cos(Psi2_cr-wind_direction[ind_wind_dir]))
         V_means2=[np.mean(Vlos1[ind_wind_dir]),np.mean(Vlos2[ind_wind_dir])]
         
        
@@ -817,21 +825,21 @@ def GUM_uv_lidar_uncertainty(Qlunc_yaml_inputs,wind_direction,Href,Vref,alpha,Hg
     H_t2 = ((rho2*np.sin(theta2)+Hl[1])/Href)[0]
     
     for ind_wind_dir in range(len(wind_direction)):  
-    
-    # VLOS
+        
+        # VLOS
 
         # VLOS uncertainty
         # Calculate and store Vlosi
-        Vlos1_GUM = Vref*(np.sign(H_t1)*((abs(H_t1))**alpha))*np.cos(theta1)*np.cos(psi1-wind_direction[ind_wind_dir])
-        Vlos2_GUM = Vref*(np.sign(H_t2)*((abs(H_t2))**alpha))*np.cos(theta2)*np.cos(psi2-wind_direction[ind_wind_dir])    
+        Vlos1_GUM = Vref*(np.sign(H_t1)*((abs(H_t1))**alpha[0]))*np.cos(theta1)*np.cos(psi1-wind_direction[ind_wind_dir])
+        Vlos2_GUM = Vref*(np.sign(H_t2)*((abs(H_t2))**alpha[0]))*np.cos(theta2)*np.cos(psi2-wind_direction[ind_wind_dir])    
         VL1.append(Vlos1_GUM)
         VL2.append(Vlos2_GUM)
         
         # Calculate and store u and v components
         u_comp=((-Vlos1_GUM*np.sin(psi2)*np.cos(theta2)+Vlos2_GUM*np.sin(psi1)*np.cos(theta1))/(np.cos(theta1)*np.cos(theta2)*np.sin(psi1-psi2)))
         v_comp=(( Vlos1_GUM*np.cos(psi2)*np.cos(theta2)-Vlos2_GUM*np.cos(psi1)*np.cos(theta1))/(np.cos(theta1)*np.cos(theta2)*np.sin(psi1-psi2)))
-        u.append(u_comp[0])
-        v.append(v_comp[0])
+        u.append(u_comp)
+        v.append(v_comp)
         
         # Partial derivatives Vlosi with respect theta, psi and rho
         dVlos1dtheta1   =     Vref*(np.sign(H_t1)*((abs(H_t1))**alpha[0]))*(alpha[0]*((rho1*(np.cos(theta1))**2)/(rho1*np.sin(theta1)+Hl[0]))-np.sin(theta1))*np.cos(psi1-wind_direction[ind_wind_dir])
@@ -850,7 +858,7 @@ def GUM_uv_lidar_uncertainty(Qlunc_yaml_inputs,wind_direction,Href,Vref,alpha,Hg
         #Param_multivar1= [N_MC                ,U_Vlos1_MCM    ,U_Vlos2_MCM,   theta_stds2             ,psi_stds2       ,rho_stds2,     psi1_psi2_corr,  theta1_theta2_corr  , rho1_rho2_corr  , psi1_theta1_corr , psi1_theta2_corr  , psi2_theta1_corr    , psi2_theta2_corr  , Vlos1_Vlos2_corr , psi1_rho1_corr ,psi1_rho2_corr ,psi2_rho1_corr ,psi2_rho2_corr ,theta1_rho1_corr ,theta1_rho2_corr ,theta2_rho1_corr ,theta2_rho2_corr, 0,0,0,1 ]
         Param_multivar1 = [ind_wind_dir             ,surr,      surr,        [u_theta1,u_theta2],   [u_psi1,u_psi2]  ,[u_rho1,u_rho2],  psi1_psi2_corr , theta1_theta2_corr,   rho1_rho2_corr ,   psi1_theta1_corr , psi1_theta2_corr , psi2_theta1_corr,     psi2_theta2_corr  , Vlos1_Vlos2_corr , psi1_rho1_corr, psi1_rho2_corr ,psi2_rho1_corr ,psi2_rho2_corr ,theta1_rho1_corr, theta1_rho2_corr ,theta2_rho1_corr ,theta2_rho2_corr, 1,1,1,1 ]
         Ux=MultiVar(*Param_multivar1)
-        
+        # pdb.set_trace()
         
         # Influence coefficients matrix for Vlosi uncertainty estimation
         Cx = np.array([[dVlos1dtheta1  ,          0      ,  dVlos1dpsi1  ,      0        ,  dVlos1drho1  ,       0       ,  0  , 0],
@@ -925,7 +933,7 @@ def GUM_Vh_lidar_uncertainty (u,v,U_u_GUM,U_v_GUM,CorrCoef_uv,Vlos1_GUM,Vlos2_GU
         # Vh Uncertainty
         U_Vh_GUM=[]
         for ind_wind_dir in range(len(wind_direction)):  
-
+            # pdb.set_trace()
             num1 = np.sqrt(((Vlos1_GUM[ind_wind_dir]*np.cos(theta2))**2)+((Vlos2_GUM[ind_wind_dir]*np.cos(theta1))**2)-(2*Vlos1_GUM[ind_wind_dir]*Vlos2_GUM[ind_wind_dir]*np.cos(psi1-psi2)*np.cos(theta1)*np.cos(theta2)))
             den=np.cos(theta1)*np.cos(theta2)*np.sin(psi1-psi2)
             
@@ -956,7 +964,7 @@ def GUM_Vh_lidar_uncertainty (u,v,U_u_GUM,U_v_GUM,CorrCoef_uv,Vlos1_GUM,Vlos2_GU
  
             UxVh=MultiVar(*Param_multivar2)
        
-            CxVh=[dVh_dtheta1[0],dVh_dtheta2[0],dVh_dpsi1[0],dVh_dpsi2[0],0,0,dVh_Vlos1[0],dVh_Vlos2[0]]
+            CxVh=[dVh_dtheta1,dVh_dtheta2,dVh_dpsi1,dVh_dpsi2,0,0,dVh_Vlos1,dVh_Vlos2]
             # CxVh=[0,0,0,0,0,0,dVh_Vlos1[0],dVh_Vlos2[0]]
             UyVh=np.array(CxVh).dot(UxVh).dot(np.transpose(CxVh))
             
