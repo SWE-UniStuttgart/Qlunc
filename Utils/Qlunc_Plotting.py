@@ -107,11 +107,15 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         # plt.show()
          
         #%% 0%%. Plot Uncertainty in wind direction against wind direction
-        fig,ax0=plt.subplots()        
         
-        ax0.plot(np.degrees(Data['wind direction']),Data['Uncertainty wind direction MCM'],'o', markerfacecolor='fuchsia',markeredgecolor='lime',alpha=0.3,label='MCM')
-        ax0.plot(np.degrees(Data['wind direction']),Data['Uncertainty wind direction GUM'],'-', color='fuchsia',label='GUM')
-        # color=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))   
+        color=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'])))) 
+        fig,ax0=plt.subplots() 
+        pdb.set_trace()
+     
+        for ind_plot in range(len(Data['Uncertainty wind direction MCM'])):
+            ax0.plot(np.degrees(Data['wind direction']),Data['Uncertainty wind direction MCM'][ind_plot],'o', markerfacecolor=c,markeredgecolor='lime',alpha=0.3,label='MCM')
+            ax0.plot(np.degrees(Data['wind direction']),Data['Uncertainty wind direction GUM'][ind_plot],'-', color=c,label='GUM')
+            c=next(color)
         ax0.set_xlabel('Wind direction[°]',fontsize=plot_param['axes_label_fontsize'])
         ax0.set_ylabel('Uncertainty [°]',fontsize=plot_param['axes_label_fontsize'])          
         ax0.legend(loc=2, prop={'size': plot_param['legend_fontsize']})
@@ -121,14 +125,16 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         ax0.set_ylim(0,15)
         ax0.grid(axis='both')
         plt.title('Wind direction Uncertainty',fontsize=plot_param['title_fontsize'])
-        
+           
         
         #%% 1. Plot Uncertainty in Vh against wind direction
         fig,ax1=plt.subplots()        
-        
-        ax1.plot(np.degrees(Data['wind direction']),Data['Uncertainty Vh MCM'],'or' , markerfacecolor=plot_param['marker_face_color'],label='MCM')
-        ax1.plot(np.degrees(Data['wind direction']),Data['Uncertainty Vh GUM'],'r-',label='GUM')
-        # color=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))   
+        color=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))
+        for ind_plot in range(len(Data['Uncertainty wind direction MCM'])):
+            c=next(color) 
+            ax1.plot(np.degrees(Data['wind direction']),Data['Uncertainty Vh MCM'][ind_plot],'o' , markerfacecolor=c,markeredgecolor='lime',alpha=0.3,label='MCM')
+            ax1.plot(np.degrees(Data['wind direction']),Data['Uncertainty Vh GUM'][ind_plot],'-', color=c,label='GUM')
+            
         ax1.set_xlabel('Wind direction[°]',fontsize=plot_param['axes_label_fontsize'])
         ax1.set_ylabel('Uncertainty [m/s]',fontsize=plot_param['axes_label_fontsize'])
     
