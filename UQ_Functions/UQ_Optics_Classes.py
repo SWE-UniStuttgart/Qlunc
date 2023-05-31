@@ -188,8 +188,8 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             #%% 5) Method for uncertainty when varying theta, psi OR rho   
             
             U_VLOS_T_MC_rho,U_VLOS_T_GUM_rho,rho_TESTr,theta_TESTr,psi_TESTr      =  SA.VLOS_param(np.linspace(0,500,200),theta1,psi1,0,0,U_rho1,Lidar.optics.scanner.N_MC,U_Vlos1_GUM,Hl[0],Vref,Href,alpha[ind_alpha],wind_direction_TEST,0,[0,0,0])
-            U_VLOS_T_MC_theta,U_VLOS_T_GUM_theta,rho_TESTt,theta_TESTt,psi_TESTt  =  SA.VLOS_param(rho1,np.radians(np.linspace(0,359,200)),psi1,U_theta1,0,0,Lidar.optics.scanner.N_MC,U_Vlos1_GUM,Hl[0],Vref,Href,alpha[ind_alpha],wind_direction_TEST,0,[0,0,0])    
-            U_VLOS_T_MC_psi,U_VLOS_T_GUM_psi,rho_TESTp,theta_TESTp,psi_TESTp      =  SA.VLOS_param(rho1,theta1,np.radians(np.linspace(-0,359,200)),0,U_psi1,0,Lidar.optics.scanner.N_MC,U_Vlos1_GUM,Hl[0],Vref,Href,alpha[ind_alpha],wind_direction_TEST,0,[0,0,0])
+            U_VLOS_T_MC_theta,U_VLOS_T_GUM_theta,rho_TESTt,theta_TESTt,psi_TESTt  =  SA.VLOS_param(rho1,np.radians(np.linspace(0,90,200)),psi1,U_theta1,0,0,Lidar.optics.scanner.N_MC,U_Vlos1_GUM,Hl[0],Vref,Href,alpha[ind_alpha],wind_direction_TEST,0,[0,0,0])    
+            U_VLOS_T_MC_psi,U_VLOS_T_GUM_psi,rho_TESTp,theta_TESTp,psi_TESTp      =  SA.VLOS_param(rho1,theta1,np.radians(np.linspace(-90,90,200)),0,U_psi1,0,Lidar.optics.scanner.N_MC,U_Vlos1_GUM,Hl[0],Vref,Href,alpha[ind_alpha],wind_direction_TEST,0,[0,0,0])
             
             #Store data
             U_VLOS_T_MC_rho_T.append(U_VLOS_T_MC_rho)
