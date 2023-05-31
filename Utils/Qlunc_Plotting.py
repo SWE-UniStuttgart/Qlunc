@@ -203,10 +203,10 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             c=next(color)
             ax3.plot(np.degrees(Data['psi']),Data['Vr Uncertainty GUM psi [m/s]'][ind_plot][0][0],c=c,label=r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))
             ax3.plot(np.degrees(Data['psi']),Data['Vr Uncertainty MC psi [m/s]'][ind_plot][0],'or' , markerfacecolor=c,markeredgecolor='lime',alpha=0.4,label='MC')        
-        ax3.legend(loc=1, prop={'size': plot_param['legend_fontsize']})
+        ax3.legend(loc=4, prop={'size': plot_param['legend_fontsize']})
         ax3.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
         ax3.tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
-        ax3.set_xlim(-90,90)
+        ax3.set_xlim(0,359)
         ax3.set_ylim(0,1)
         plt.title('$V_{LOS}$ Uncertainty',fontsize=plot_param['title_fontsize'])
         # these are matplotlib.patch.Patch properties
@@ -217,13 +217,13 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         r'N={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['N_MC'], ),
         r'Href [m]={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['Href'], )))
 
-        ax3.text(0.5, 0.95, textstr3, transform=ax3.transAxes, fontsize=14,horizontalalignment='right',verticalalignment='top', bbox=props3)
+        ax3.text(0.5,0.7, textstr3, transform=ax3.transAxes, fontsize=14, bbox=props3)
         ax3.set_xlabel('Azimuth angle [°]',fontsize=plot_param['axes_label_fontsize'])
         ax3.set_ylabel('Uncertainty [m/s]',fontsize=plot_param['axes_label_fontsize'])
         ax3.grid(axis='both')
         plt.title('$V_{LOS}$ Uncertainty',fontsize=plot_param['title_fontsize'])
         plt.show()
-        plt.legend()
+        # plt.legend()
         
         #%% 4.  Plot Uncertainty in Vrad with rho        
         
@@ -253,7 +253,8 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         ax4.grid(axis='both')
         plt.title('$V_{LOS}$ Uncertainty',fontsize=plot_param['title_fontsize'])
         plt.show()
-        # pdb.set_trace()
+        pdb.set_trace()
+        
      
     
 
