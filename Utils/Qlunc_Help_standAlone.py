@@ -394,7 +394,7 @@ def U_VLOS_GUM (theta1,psi1,rho1,u_theta1,u_psi1,u_rho1,Hl,Vref,Href,alpha,wind_
     return(U_Vlos1_GUM)
 
 def VLOS_param (rho,theta,psi,U_theta1,U_psi1,U_rho1,N_MC,U_VLOS1,Hl,Vref,Href,alpha,wind_direction_TEST,ind_wind_dir,CROS_CORR):
-    wind_direction_TEST = np.radians([27.5])
+    wind_direction_TEST = np.radians([0])
     # wind_tilt_TEST      = np.radians([0])
     
     #If want to vary range    
