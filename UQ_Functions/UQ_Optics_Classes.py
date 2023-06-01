@@ -44,6 +44,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     """
     X,Y,Z,R=[],[],[],[]
+    U_Vh_GUM_T,U_Vh_MCM_T,U_Wind_direction_MCM,U_Wind_direction_GUM=[],[],[],[]
+    U_VLOS_T_MC_rho_T,U_VLOS_T_GUM_rho_T,U_VLOS_T_MC_theta_T,U_VLOS_T_GUM_theta_T,U_VLOS_T_MC_psi_T,U_VLOS_T_GUM_psi_T=[],[],[],[],[],[]
+    U_Vlos1_MCM_T,U_Vlos2_MCM_T,U_Vlos1_GUM_T,U_Vlos2_GUM_T=[],[],[],[]
     Scan_unc=[]
     rho_noisy0,theta_noisy0,psi_noisy0,rho_noisy,theta_noisy1,theta_noisy2,psi_noisy,rho_noisy1,rho_noisy2, theta_noisy,psi_noisy1,psi_noisy2,wind_direction_TEST ,wind_tilt_TEST   = [],[],[],[],[],[],[],[],[],[],[],[],[],[]
     # pdb.set_trace() 
@@ -65,155 +68,166 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         L=len(Lidar.optics.scanner.focus_dist)
 
     # Loop for the points in the pattern
-    for meas_param in range(L):
-        # LOVE U MAMA!!
-        
-        #%% 1) Rho, theta and psi values OF THE MEASURING POINT   
-        rho0           = [Lidar.optics.scanner.focus_dist[meas_param]]  
-        theta0         = [np.radians(Lidar.optics.scanner.cone_angle[meas_param])]  # %(360) converts negative angles to [0,360] positive angles
-        psi0           = [np.radians(Lidar.optics.scanner.azimuth[meas_param])] 
-        wind_direction = np.radians(np.linspace(Atmospheric_Scenario.wind_direction[0],Atmospheric_Scenario.wind_direction[1],360))
-        
-        
-        #%% 2) Lidars' position and measuring angles. The measuring angles are calculated based on the position of the lidars and the measuring points
-        
-        # Measurement point in cartesian coordinates before applying lidar position
-        if Lidar.optics.scanner.pattern=='lissajous':
-            x=np.array([xx[meas_param]])
-            y=np.array([yy[meas_param]])
-            z=np.array([zz[meas_param]])
+    
+    for ind_alpha in range(len(alpha)):
+        for meas_param in range(L):
+            # LOVE U MAMA!!
             
-        else:
-            x,y,z=SA.sph2cart(rho0,theta0,psi0)
-        
-
-        class lidar_coor:
-            def __init__(self, x,y,z,x_Lidar,y_Lidar,z_Lidar):
-                self.x_Lidar=x_Lidar
-                self.y_Lidar=y_Lidar
-                self.z_Lidar=z_Lidar
-                self.x=x
-                self.y=y
-                self.z=z
-            @classmethod
-            def vector_pos(cls,x,y,z,x_Lidar,y_Lidar,z_Lidar):
-                fx=(x-x_Lidar)
-                fy=(y-y_Lidar)
-                fz=(z-z_Lidar)
-                return(cls,fx,fy,fz)
-            @classmethod
-            def Cart2Sph (cls, x_vector_pos,y_vector_pos,z_vector_pos):
-                rho1,theta1,psi1 =SA.cart2sph(x_vector_pos,y_vector_pos,z_vector_pos)
-                return (cls,rho1,theta1,psi1)
-        
-        # Store lidar positionning   
-        lidars={}       
-        # pdb.set_trace()
-        for n_lidars in range(len(Qlunc_yaml_inputs['Components']['Scanner']['Origin'])):
-            lidars['Lidar{}_Rectangular'.format(n_lidars)]={'x':(lidar_coor.vector_pos(x,y,z,x_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][n_lidars][0],y_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][n_lidars][1],z_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][n_lidars][2])[1]),
-                                         'y':(lidar_coor.vector_pos(x,y,z,x_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][n_lidars][0],y_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][n_lidars][1],z_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][n_lidars][2])[2]),
-                                         'z':(lidar_coor.vector_pos(x,y,z,x_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][n_lidars][0],y_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][n_lidars][1],z_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][n_lidars][2])[3])}
+            #%% 1) Rho, theta and psi values OF THE MEASURING POINT   
+            rho0           = [Lidar.optics.scanner.focus_dist[meas_param]]  
+            theta0         = [np.radians(Lidar.optics.scanner.cone_angle[meas_param])]  # %(360) converts negative angles to [0,360] positive angles
+            psi0           = [np.radians(Lidar.optics.scanner.azimuth[meas_param])] 
+            wind_direction = np.radians(np.linspace(Atmospheric_Scenario.wind_direction[0],Atmospheric_Scenario.wind_direction[1],360))
             
-            lidars['Lidar{}_Spherical'.format(n_lidars)]={'rho':   np.round((lidar_coor.Cart2Sph(lidars['Lidar{}_Rectangular'.format(n_lidars)]['x'],lidars['Lidar{}_Rectangular'.format(n_lidars)]['y'],lidars['Lidar{}_Rectangular'.format(n_lidars)]['z']))[1],4),
-                                                          'theta': np.round((lidar_coor.Cart2Sph(lidars['Lidar{}_Rectangular'.format(n_lidars)]['x'],lidars['Lidar{}_Rectangular'.format(n_lidars)]['y'],lidars['Lidar{}_Rectangular'.format(n_lidars)]['z']))[2],4),
-                                                          'psi':   np.round((lidar_coor.Cart2Sph(lidars['Lidar{}_Rectangular'.format(n_lidars)]['x'],lidars['Lidar{}_Rectangular'.format(n_lidars)]['y'],lidars['Lidar{}_Rectangular'.format(n_lidars)]['z']))[3],4)}
-        
-             
-        # Rho, theta and psi lidar inputs and their uncertainties
-        
-        # Lidar 1
-        theta1,U_theta1 = lidars['Lidar0_Spherical']['theta']%np.radians(360) ,np.radians(Lidar.optics.scanner.stdv_cone_angle[0][0])
-        psi1  ,U_psi1   = lidars['Lidar0_Spherical']['psi']%np.radians(360)   ,np.radians(Lidar.optics.scanner.stdv_azimuth[0][0])
-        rho1  ,U_rho1   = lidars['Lidar0_Spherical']['rho']                 ,Lidar.optics.scanner.stdv_focus_dist [0][0]
-        # Lidar 2 
-        theta2,U_theta2 = lidars['Lidar1_Spherical']['theta']%np.radians(360) ,np.radians(Lidar.optics.scanner.stdv_cone_angle[1][0])
-        psi2  ,U_psi2   = lidars['Lidar1_Spherical']['psi']%np.radians(360)   ,np.radians(Lidar.optics.scanner.stdv_azimuth[1][0])
-        rho2  ,U_rho2   = lidars['Lidar1_Spherical']['rho']                 ,Lidar.optics.scanner.stdv_focus_dist [1][0]
-        
-
-        #%% Uncertainty in the probe volume (This call needs to be changed!)
-        # Probe_param = Lidar.probe_volume.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,lidars)
-        # Lidar.lidar_inputs.dataframe['Probe Volume'] = Probe_param
-        
-        #%% 3) State the correlations
-        psi1_psi2_corr     = Lidar.optics.scanner.correlations[0]  # correlation between psi1 and psi2
-        theta1_theta2_corr = Lidar.optics.scanner.correlations[1] # correlation Theta1 and Theta2
-        rho1_rho2_corr     = Lidar.optics.scanner.correlations[2]  # correlation Rho1 and Rho2
-        
-        # Cross correlations:
-        psi1_theta1_corr  = Lidar.optics.scanner.correlations[3]
-        psi1_theta2_corr  = Lidar.optics.scanner.correlations[4]
-        psi2_theta1_corr  = Lidar.optics.scanner.correlations[5]
-        psi2_theta2_corr  = Lidar.optics.scanner.correlations[6]
-        Vlos1_Vlos2_corr  = Lidar.optics.scanner.correlations[7]
-        
-        # There is NO correlation between range and angles since the range is determined by the AOM (at least in pulsed lidars) and the angles accuracy is related to the alignment of the telescope mirrors,
-        # to the position of the lense and also to the servos orienting the scanner
-        psi1_rho1_corr    = 0
-        psi1_rho2_corr    = 0
-        psi2_rho1_corr    = 0
-        psi2_rho2_corr    = 0
-        
-        theta1_rho1_corr  = 0 
-        theta1_rho2_corr  = 0
-        theta2_rho1_corr  = 0
-        theta2_rho2_corr  = 0
-       
-        
-        #%% 4) Wind velocity uncertainy estimation
-
-        # 4.1) Store necessary parameters
-        nec_par=[Qlunc_yaml_inputs,wind_direction,Href,Vref,alpha,Hg,Hl,N_MC,theta1[0],U_theta1,psi1 [0] ,U_psi1,rho1[0],U_rho1,theta2[0],U_theta2,psi2[0],U_psi2,
-                 rho2[0],U_rho2,psi1_psi2_corr,theta1_theta2_corr,rho1_rho2_corr,psi1_theta1_corr,psi1_theta2_corr,psi2_theta1_corr,psi2_theta2_corr,
-                 Vlos1_Vlos2_corr,psi1_rho1_corr,psi1_rho2_corr,psi2_rho1_corr,psi2_rho2_corr,theta1_rho1_corr,theta1_rho2_corr,theta2_rho1_corr,theta2_rho2_corr]
-        # pdb.set_trace()
-        # Uncertainty u,v
-        CorrCoefuv,U_Vlos1_MCM,U_Vlos2_MCM,u,v,U_u_MC,U_v_MC,Mult_param ,Correlation_coeff    =      SA.MCM_uv_lidar_uncertainty(*nec_par)
-
-        # pdb.set_trace()
-        # 4.2) Uncertainty MCM for Vh
-        U_Vh_MCM   =    SA.MCM_Vh_lidar_uncertainty(CorrCoefuv,wind_direction,u,v,U_u_MC,U_v_MC,*Mult_param)
-        
-        # 
-        # 4.3) Uncertainty GUM method
-        Vlos1_GUM,Vlos2_GUM,U_Vlos1_GUM,U_Vlos2_GUM,u_GUM,v_GUM,U_u_GUM,U_v_GUM,CorrCoef_uv_GUM   =    SA.GUM_uv_lidar_uncertainty(*nec_par)
-        # pdb.set_trace()
-        # 4.4) Vh Uncertainty GUM method
-        U_Vh_GUM   =   SA.GUM_Vh_lidar_uncertainty(u_GUM,v_GUM,U_u_GUM,U_v_GUM,CorrCoef_uv_GUM,Vlos1_GUM,Vlos2_GUM,U_Vlos1_GUM,U_Vlos2_GUM,*nec_par)
-        
-        # pdb.set_trace()
-        
-        
-        #%% 5) Method for uncertainty when varying theta, psi OR rho   
-        
-        U_VLOS_T_MC_rho,U_VLOS_THomo_MC_rho,U_VLOS_T_GUM_rho,U_VLOS_THomo_GUM_rho,rho_TESTr,thata_TESTr,psi_TESTr          =  SA.VLOS_param(np.linspace(1000,5000,100),theta1,psi1,0,0,U_rho1,Lidar.optics.scanner.N_MC,U_Vlos1_GUM,Hl[0],Vref,Href,alpha,wind_direction_TEST,0,[0,0,0])
-        U_VLOS_T_MC_theta,U_VLOS_THomo_MC_theta,U_VLOS_T_GUM_theta,U_VLOS_THomo_GUM_theta,rho_TESTt,theta_TESTt,psi_TESTt  =  SA.VLOS_param(rho1,np.radians(np.linspace(1,89,100)),psi1,U_theta1,0,0,Lidar.optics.scanner.N_MC,U_Vlos1_GUM,Hl[0],Vref,Href,alpha,wind_direction_TEST,0,[0,0,0])    
-        U_VLOS_T_MC_psi,U_VLOS_THomo_MC_psi,U_VLOS_T_GUM_psi,U_VLOS_THomo_GUM_psi,rho_TESTp,theta_TESTp,psi_TESTp          =  SA.VLOS_param(rho1,theta1,np.radians(np.linspace(-90,90,100)),0,U_psi1,0,Lidar.optics.scanner.N_MC,U_Vlos1_GUM,Hl[0],Vref,Href,alpha,wind_direction_TEST,0,[0,0,0])
+            
+            #%% 2) Lidars' position and measuring angles. The measuring angles are calculated based on the position of the lidars and the measuring points
+            
+            # Measurement point in cartesian coordinates before applying lidar position
+            if Lidar.optics.scanner.pattern=='lissajous':
+                x=np.array([xx[meas_param]])
+                y=np.array([yy[meas_param]])
+                z=np.array([zz[meas_param]])
                 
-        
-        
-        #%% 6) Wind direction uncertainty estimation
-        U_Wind_direction_MCM  =  SA.U_WindDir_MC(wind_direction,u,v,Mult_param)
-        
-        U_Wind_direction_GUM  =  SA.U_WindDir_GUM(u_GUM,v_GUM,Vlos1_GUM,Vlos2_GUM,U_Vlos1_GUM,U_Vlos2_GUM,*nec_par)
-  
-        
-        
-        
-        #%% 7) Storing data
-        Final_Output_UQ_Scanner                 = {'Uncertainty u wind component MCM':U_u_MC,'Uncertainty v wind component MCM':U_v_MC,'Uncertainty u wind component GUM':U_u_GUM,'Uncertainty v wind component GUM':U_v_GUM,'Uncertainty wind direction MCM':U_Wind_direction_MCM,
-                                                   'Uncertainty wind direction GUM':U_Wind_direction_GUM,'VLOS1 Uncertainty MC [m/s]':U_Vlos1_MCM,'VLOS2 Uncertainty MC [m/s]':U_Vlos2_MCM,'VLOS1 Uncertainty GUM [m/s]':U_Vlos1_GUM,'VLOS2 Uncertainty GUM [m/s]':U_Vlos2_GUM,'Uncertainty Vh GUM':U_Vh_GUM,'Uncertainty Vh MCM':U_Vh_MCM,
-                                                   'Vr Uncertainty homo MC rho [m/s]':U_VLOS_THomo_MC_rho,'Vr Uncertainty homo GUM rho [m/s]':U_VLOS_THomo_GUM_rho,'Vr Uncertainty MC rho [m/s]':U_VLOS_T_MC_rho,'Vr Uncertainty GUM rho [m/s]':U_VLOS_T_GUM_rho,
-                                                   'Vr Uncertainty homo MC theta [m/s]':U_VLOS_THomo_MC_theta,'Vr Uncertainty homo GUM theta [m/s]':U_VLOS_THomo_GUM_theta,'Vr Uncertainty MC theta [m/s]':U_VLOS_T_MC_theta,'Vr Uncertainty GUM theta [m/s]':U_VLOS_T_GUM_theta,
-                                                   'Vr Uncertainty homo MC psi [m/s]':U_VLOS_THomo_MC_psi,'Vr Uncertainty homo GUM psi [m/s]':U_VLOS_THomo_GUM_psi,'Vr Uncertainty MC psi [m/s]':U_VLOS_T_MC_psi,'Vr Uncertainty GUM psi [m/s]':U_VLOS_T_GUM_psi,
-                                                   'x':x,'y':y,'z':z,'rho':rho_TESTr,'theta':theta_TESTt,'psi':psi_TESTp,'wind direction':wind_direction,'Focus distance':rho1,'Elevation angle':theta1,'Azimuth':psi1,'STDVs':[U_theta1,U_psi1,U_rho1],
-                                                   'Lidar position':[Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0][1],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0][2]],'param':nec_par,'Correlation uv':CorrCoefuv,'Correlations':Correlation_coeff} #, 'Rayleigh length':Probe_param['Rayleigh Length'],'Rayleigh length uncertainty':Probe_param['Rayleigh Length uncertainty']}
-        Lidar.lidar_inputs.dataframe['Scanner'] = {'Focus distance':Final_Output_UQ_Scanner['Focus distance'][0],'Elevation angle':Final_Output_UQ_Scanner['Elevation angle'][0],'Azimuth':Final_Output_UQ_Scanner['Azimuth'][0]}
-        Scan_unc.append(Final_Output_UQ_Scanner)
-        
-        
-        #%% 7)Plotting data
-        QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,Qlunc_yaml_inputs['Flags']['Line of sight Velocity Uncertainty'],False,False,False,False,False,1)  #Qlunc_yaml_inputs['Flags']['Scanning Pattern']  
+            else:
+                x,y,z=SA.sph2cart(rho0,theta0,psi0)
+            
+    
+            class lidar_coor:
+                def __init__(self, x,y,z,x_Lidar,y_Lidar,z_Lidar):
+                    self.x_Lidar=x_Lidar
+                    self.y_Lidar=y_Lidar
+                    self.z_Lidar=z_Lidar
+                    self.x=x
+                    self.y=y
+                    self.z=z
+                @classmethod
+                def vector_pos(cls,x,y,z,x_Lidar,y_Lidar,z_Lidar):
+                    fx=(x-x_Lidar)
+                    fy=(y-y_Lidar)
+                    fz=(z-z_Lidar)
+                    return(cls,fx,fy,fz)
+                @classmethod
+                def Cart2Sph (cls, x_vector_pos,y_vector_pos,z_vector_pos):
+                    rho1,theta1,psi1 =SA.cart2sph(x_vector_pos,y_vector_pos,z_vector_pos)
+                    return (cls,rho1,theta1,psi1)
+            
+            # Store lidar positionning   
+            lidars={}       
+            
+            for n_lidars in range(len(Qlunc_yaml_inputs['Components']['Scanner']['Origin'])):
+                lidars['Lidar{}_Rectangular'.format(n_lidars)]={'x':(lidar_coor.vector_pos(x,y,z,x_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][n_lidars][0],y_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][n_lidars][1],z_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][n_lidars][2])[1]),
+                                             'y':(lidar_coor.vector_pos(x,y,z,x_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][n_lidars][0],y_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][n_lidars][1],z_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][n_lidars][2])[2]),
+                                             'z':(lidar_coor.vector_pos(x,y,z,x_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][n_lidars][0],y_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][n_lidars][1],z_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][n_lidars][2])[3])}
+                
+                lidars['Lidar{}_Spherical'.format(n_lidars)]={'rho':   np.round((lidar_coor.Cart2Sph(lidars['Lidar{}_Rectangular'.format(n_lidars)]['x'],lidars['Lidar{}_Rectangular'.format(n_lidars)]['y'],lidars['Lidar{}_Rectangular'.format(n_lidars)]['z']))[1],4),
+                                                              'theta': np.round((lidar_coor.Cart2Sph(lidars['Lidar{}_Rectangular'.format(n_lidars)]['x'],lidars['Lidar{}_Rectangular'.format(n_lidars)]['y'],lidars['Lidar{}_Rectangular'.format(n_lidars)]['z']))[2],4),
+                                                              'psi':   np.round((lidar_coor.Cart2Sph(lidars['Lidar{}_Rectangular'.format(n_lidars)]['x'],lidars['Lidar{}_Rectangular'.format(n_lidars)]['y'],lidars['Lidar{}_Rectangular'.format(n_lidars)]['z']))[3],4)}
+            
+                 
+            # Rho, theta and psi lidar inputs and their uncertainties       
+            # Lidar 1
+            theta1,U_theta1 = lidars['Lidar0_Spherical']['theta']%np.radians(360) ,np.radians(Lidar.optics.scanner.stdv_cone_angle[0][0])
+            psi1  ,U_psi1   = lidars['Lidar0_Spherical']['psi']%np.radians(360)   ,np.radians(Lidar.optics.scanner.stdv_azimuth[0][0])
+            rho1  ,U_rho1   = lidars['Lidar0_Spherical']['rho']                 ,Lidar.optics.scanner.stdv_focus_dist [0][0]
+            # Lidar 2 
+            theta2,U_theta2 = lidars['Lidar1_Spherical']['theta']%np.radians(360) ,np.radians(Lidar.optics.scanner.stdv_cone_angle[1][0])
+            psi2  ,U_psi2   = lidars['Lidar1_Spherical']['psi']%np.radians(360)   ,np.radians(Lidar.optics.scanner.stdv_azimuth[1][0])
+            rho2  ,U_rho2   = lidars['Lidar1_Spherical']['rho']                 ,Lidar.optics.scanner.stdv_focus_dist [1][0]
+            
+    
+            #%% Uncertainty in the probe volume (This call needs to be changed!)
+            # Probe_param = Lidar.probe_volume.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,lidars)
+            # Lidar.lidar_inputs.dataframe['Probe Volume'] = Probe_param
+            
+            #%% 3) State the correlations
+            psi1_psi2_corr     = Lidar.optics.scanner.correlations[0]  # correlation between psi1 and psi2
+            theta1_theta2_corr = Lidar.optics.scanner.correlations[1] # correlation Theta1 and Theta2
+            rho1_rho2_corr     = Lidar.optics.scanner.correlations[2]  # correlation Rho1 and Rho2
+            
+            # Cross correlations:
+            psi1_theta1_corr  = Lidar.optics.scanner.correlations[3]
+            psi1_theta2_corr  = Lidar.optics.scanner.correlations[4]
+            psi2_theta1_corr  = Lidar.optics.scanner.correlations[5]
+            psi2_theta2_corr  = Lidar.optics.scanner.correlations[6]
+            Vlos1_Vlos2_corr  = Lidar.optics.scanner.correlations[7]
+            
+            # There is NO correlation between range and angles since the range is determined by the AOM (at least in pulsed lidars) and the angles accuracy is related to the alignment of the telescope mirrors,
+            # to the position of the lense and also to the servos orienting the scanner
+            psi1_rho1_corr    = 0
+            psi1_rho2_corr    = 0
+            psi2_rho1_corr    = 0
+            psi2_rho2_corr    = 0
+            
+            theta1_rho1_corr  = 0 
+            theta1_rho2_corr  = 0
+            theta2_rho1_corr  = 0
+            theta2_rho2_corr  = 0
+           
+            
+            #%% 4) Wind velocity uncertainy estimation
+    
+            # 4.1) Store necessary parameters
+            nec_par=[Qlunc_yaml_inputs,wind_direction,Href,Vref,alpha[ind_alpha],Hg,Hl,N_MC,theta1[0],U_theta1,psi1 [0] ,U_psi1,rho1[0],U_rho1,theta2[0],U_theta2,psi2[0],U_psi2,
+                     rho2[0],U_rho2,psi1_psi2_corr,theta1_theta2_corr,rho1_rho2_corr,psi1_theta1_corr,psi1_theta2_corr,psi2_theta1_corr,psi2_theta2_corr,
+                     Vlos1_Vlos2_corr,psi1_rho1_corr,psi1_rho2_corr,psi2_rho1_corr,psi2_rho2_corr,theta1_rho1_corr,theta1_rho2_corr,theta2_rho1_corr,theta2_rho2_corr]
+    
+            # 4.2) Vlos and u,v Uncertainties MCM
+            CorrCoefuv,U_Vlos1_MCM,U_Vlos2_MCM,u,v,U_u_MC,U_v_MC,Mult_param ,Correlation_coeff    =      SA.MCM_uv_lidar_uncertainty(*nec_par)
+            
+            # Store data
+            U_Vlos1_MCM_T.append(U_Vlos1_MCM)
+            U_Vlos2_MCM_T.append(U_Vlos2_MCM)
+            
+            # 4.3) Uncertainty MCM for Vh
+            U_Vh_MCM   =    SA.MCM_Vh_lidar_uncertainty(CorrCoefuv,wind_direction,u,v,U_u_MC,U_v_MC,*Mult_param)
+            U_Vh_MCM_T.append(U_Vh_MCM)
+            
+            # 4.4) Vlos and u,v Uncertainties GUM method
+            Vlos1_GUM,Vlos2_GUM,U_Vlos1_GUM,U_Vlos2_GUM,u_GUM,v_GUM,U_u_GUM,U_v_GUM,CorrCoef_uv_GUM   =    SA.GUM_uv_lidar_uncertainty(*nec_par)
+            U_Vlos1_GUM_T.append(U_Vlos1_GUM)
+            U_Vlos2_GUM_T.append(U_Vlos2_GUM)
+            
+            # 4.5) Vh Uncertainty GUM method
+            U_Vh_GUM   =   SA.GUM_Vh_lidar_uncertainty(u_GUM,v_GUM,U_u_GUM,U_v_GUM,CorrCoef_uv_GUM,Vlos1_GUM,Vlos2_GUM,U_Vlos1_GUM,U_Vlos2_GUM,*nec_par)
+            U_Vh_GUM_T.append(U_Vh_GUM)        
+            
+            #%% 5) Method for uncertainty when varying theta, psi OR rho   
+            
+            U_VLOS_T_MC_rho,U_VLOS_T_GUM_rho,rho_TESTr,theta_TESTr,psi_TESTr      =  SA.VLOS_param(np.linspace(0,500,200),theta1,psi1,0,0,U_rho1,Lidar.optics.scanner.N_MC,U_Vlos1_GUM,Hl[0],Vref,Href,alpha[ind_alpha],wind_direction_TEST,0,[0,0,0])
+            U_VLOS_T_MC_theta,U_VLOS_T_GUM_theta,rho_TESTt,theta_TESTt,psi_TESTt  =  SA.VLOS_param(rho1,np.radians(np.linspace(0,90,200)),psi1,U_theta1,0,0,Lidar.optics.scanner.N_MC,U_Vlos1_GUM,Hl[0],Vref,Href,alpha[ind_alpha],wind_direction_TEST,0,[0,0,0])    
+            U_VLOS_T_MC_psi,U_VLOS_T_GUM_psi,rho_TESTp,theta_TESTp,psi_TESTp      =  SA.VLOS_param(rho1,theta1,np.radians(np.linspace(0,359,200)),0,U_psi1,0,Lidar.optics.scanner.N_MC,U_Vlos1_GUM,Hl[0],Vref,Href,alpha[ind_alpha],wind_direction_TEST,0,[0,0,0])
+            
+            #Store data
+            U_VLOS_T_MC_rho_T.append(U_VLOS_T_MC_rho)
+            U_VLOS_T_GUM_rho_T.append(U_VLOS_T_GUM_rho)
+            
+            
+            U_VLOS_T_MC_theta_T.append(U_VLOS_T_MC_theta)
+            U_VLOS_T_GUM_theta_T.append(U_VLOS_T_GUM_theta)
+
+            U_VLOS_T_MC_psi_T.append(U_VLOS_T_MC_psi)
+            U_VLOS_T_GUM_psi_T.append(U_VLOS_T_GUM_psi)
+            
+            
+            #%% 6) Wind direction uncertainty estimation
+            U_Wind_direction_MCM.append( SA.U_WindDir_MC(wind_direction,u,v,Mult_param)       )
+            U_Wind_direction_GUM.append(SA.U_WindDir_GUM(u_GUM,v_GUM,Vlos1_GUM,Vlos2_GUM,U_Vlos1_GUM,U_Vlos2_GUM,*nec_par))      
+            
+                      
+            #%% 7) Storing data
+    Final_Output_UQ_Scanner                 = {'Uncertainty u wind component MCM':U_u_MC,'Uncertainty v wind component MCM':U_v_MC,'Uncertainty u wind component GUM':U_u_GUM,'Uncertainty v wind component GUM':U_v_GUM,'Uncertainty wind direction MCM':U_Wind_direction_MCM,
+                                               'Uncertainty wind direction GUM':U_Wind_direction_GUM,'VLOS1 Uncertainty MC [m/s]':U_Vlos1_MCM_T,'VLOS2 Uncertainty MC [m/s]':U_Vlos2_MCM_T,'VLOS1 Uncertainty GUM [m/s]':U_Vlos1_GUM_T,'VLOS2 Uncertainty GUM [m/s]':U_Vlos2_GUM_T,'Uncertainty Vh GUM':U_Vh_GUM_T,'Uncertainty Vh MCM':U_Vh_MCM_T,
+                                               'Vr Uncertainty MC rho [m/s]':U_VLOS_T_MC_rho_T,'Vr Uncertainty GUM rho [m/s]':U_VLOS_T_GUM_rho_T,'Vr Uncertainty MC psi [m/s]':U_VLOS_T_MC_psi_T,'Vr Uncertainty GUM psi [m/s]':U_VLOS_T_GUM_psi_T,'Vr Uncertainty MC theta [m/s]':U_VLOS_T_MC_theta_T,'Vr Uncertainty GUM theta [m/s]':U_VLOS_T_GUM_theta_T,
+                                               'x':x,'y':y,'z':z,'rho':rho_TESTr,'theta':theta_TESTt,'psi':psi_TESTp,'wind direction':wind_direction,'Focus distance':[rho1,rho2],'Elevation angle':[theta1,theta2],'Azimuth':[psi1,psi2],'STDVs':[U_theta1,U_psi1,U_rho1],
+                                               'Lidar position':[Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0][1],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0][2]],'param':nec_par,'Correlation uv':CorrCoefuv,'Correlations':Correlation_coeff} #, 'Rayleigh length':Probe_param['Rayleigh Length'],'Rayleigh length uncertainty':Probe_param['Rayleigh Length uncertainty']}
+    
+    Lidar.lidar_inputs.dataframe['Scanner'] = {'Focus distance':Final_Output_UQ_Scanner['Focus distance'][0],'Elevation angle':Final_Output_UQ_Scanner['Elevation angle'][0],'Azimuth':Final_Output_UQ_Scanner['Azimuth'][0]}
+    Scan_unc.append(Final_Output_UQ_Scanner)
+    
+    
+    #%% 7)Plotting data
+    # pdb.set_trace()
+    QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,Qlunc_yaml_inputs['Flags']['Line of sight Velocity Uncertainty'],False,False,False,False,False,1)  #Qlunc_yaml_inputs['Flags']['Scanning Pattern']  
     # pdb.set_trace()
     return Scan_unc,Lidar.lidar_inputs.dataframe
 
