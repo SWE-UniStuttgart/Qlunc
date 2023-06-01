@@ -964,3 +964,49 @@ def GUM_Vh_lidar_uncertainty (u,v,U_u_GUM,U_v_GUM,CorrCoef_uv,Vlos1_GUM,Vlos2_GU
             U_Vh_GUM.append(np.sqrt(UyVh))
         # pdb.set_trace()
         return(U_Vh_GUM)
+    
+    
+    
+    
+    
+    
+    
+    
+# # 3D
+# u = -(-Vlos3* np.cos(theta1) *np.sin(psi1)* np.sin(psi2) + 
+#         Vlos3 *np.cos(theta2) *np.sin(psi1) *np.sin(psi2) + 
+#         Vlos2 *np.cos(theta1) *np.sin(psi1)* np.sin(psi3) - 
+#         Vlos2 *np.cos(theta3)* np.sin(psi1)* np.sin(psi3) - 
+#         Vlos1 *np.cos(theta2) *np.sin(psi2) *np.sin(psi3) + 
+#         Vlos1 *np.cos(theta3) *np.sin(psi2) *np.sin(psi3))/(np.cos(psi3) *np.cos(
+#           theta1) *np.cos(theta3) *np.sin(psi1)* np.sin(psi2) - 
+#         np.cos(psi3) *np.cos(theta2)* np.cos(theta3) *np.sin(psi1) *np.sin(psi2) - 
+#         np.cos(psi2) *np.cos(theta1)* np.cos(theta2) *np.sin(psi1) *np.sin(psi3) + 
+#         np.cos(psi2) *np.cos(theta2)* np.cos(theta3) *np.sin(psi1) *np.sin(psi3) + 
+#         np.cos(psi1) *np.cos(theta1)* np.cos(theta2) *np.sin(psi2) *np.sin(psi3) - 
+#         np.cos(psi1) *np.cos(theta1)* np.cos(theta3) *np.sin(psi2)* np.sin(psi3))
+# v =-(Vlos3 *np.cos(psi2) *np.cos(theta2) *np.sin(psi1) - 
+#         Vlos2 *np.cos(psi3) *np.cos(theta3) *np.sin(psi1) - 
+#         Vlos3 *np.cos(psi1) *np.cos(theta1) *np.sin(psi2) + 
+#         Vlos1 *np.cos(psi3) *np.cos(theta3) *np.sin(psi2) + 
+#         Vlos2 *np.cos(psi1) *np.cos(theta1) *np.sin(psi3) - 
+#         Vlos1 *np.cos(psi2) *np.cos(theta2) *np.sin(psi3))/(-np.cos(psi3) *np.cos(
+#           theta1)* np.cos(theta3) *np.sin(psi1) *np.sin(psi2) + 
+#         np.cos(psi3) *np.cos(theta2) *np.cos(theta3) *np.sin(psi1) *np.sin(psi2) + 
+#         np.cos(psi2) *np.cos(theta1) *np.cos(theta2) *np.sin(psi1) *np.sin(psi3) - 
+#         np.cos(psi2) *np.cos(theta2) *np.cos(theta3) *np.sin(psi1) *np.sin(psi3) - 
+#         np.cos(psi1) *np.cos(theta1) *np.cos(theta2) *np.sin(psi2) *np.sin(psi3) + 
+#         np.cos(psi1) *np.cos(theta1) *np.cos(theta3) *np.sin(psi2) *np.sin(psi3))
+# w=-(-Vlos3 *np.cos(psi2) *np.cos(theta1)* np.cos(theta2) *np.sin(psi1) + 
+#         Vlos2* np.cos(psi3) *np.cos(theta1)* np.cos(theta3) *np.sin(psi1) + 
+#         Vlos3 *np.cos(psi1) *np.cos(theta1)* np.cos(theta2) *np.sin(psi2) - 
+#         Vlos1 *np.cos(psi3) *np.cos(theta2)* np.cos(theta3) *np.sin(psi2) - 
+#         Vlos2 *np.cos(psi1) *np.cos(theta1)* np.cos(theta3) *np.sin(psi3) + 
+#         Vlos1 *np.cos(psi2) *np.cos(theta2)* np.cos(theta3) *np.sin(
+#           psi3))/(-np.cos(psi3)* np.cos(theta1)* np.cos(theta3) *np.sin(psi1) *np.sin(
+#           psi2) + np.cos(psi3) *np.cos(theta2) *np.cos(theta3)* np.sin(psi1) *np.sin(
+#           psi2) + np.cos(psi2) *np.cos(theta1) *np.cos(theta2) *np.sin(psi1) *np.sin(
+#           psi3) - np.cos(psi2) *np.cos(theta2) *np.cos(theta3) *np.sin(psi1) *np.sin(
+#           psi3) - np.cos(psi1) *np.cos(theta1) *np.cos(theta2) *np.sin(psi2) *np.sin(
+#           psi3) + np.cos(psi1) *np.cos(theta1)* np.cos(theta3) *np.sin(psi2) *np.sin(
+#           psi3))
