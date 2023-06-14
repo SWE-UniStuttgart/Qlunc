@@ -55,40 +55,47 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     alpha = Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']    
     Hg    = Qlunc_yaml_inputs['Atmospheric_inputs']['Height ground']
     Hl    = [Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0][2],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][1][2]]    
-    N_MC = Lidar.optics.scanner.N_MC
+    N_MC  = Lidar.optics.scanner.N_MC
+    
+    
     # R: Implement error in deployment of the tripod as a rotation over yaw, pitch and roll
     stdv_yaw    = np.array(np.radians(Lidar.lidar_inputs.yaw_error_dep))
     stdv_pitch  = np.array(np.radians(Lidar.lidar_inputs.pitch_error_dep))
     stdv_roll   = np.array(np.radians(Lidar.lidar_inputs.roll_error_dep))
     
     if Lidar.optics.scanner.pattern=='lissajous':
-        xx,yy,zz=SP.lissajous_pattern(Lidar,Lidar.optics.scanner.lissajous_param[0],Lidar.optics.scanner.lissajous_param[1],Lidar.optics.scanner.lissajous_param[2],Lidar.optics.scanner.lissajous_param[3],Lidar.optics.scanner.lissajous_param[4])
-        L=len(xx)
+        x_out,y_out,z_out=SP.lissajous_pattern(Lidar,Lidar.optics.scanner.lissajous_param[0],Lidar.optics.scanner.lissajous_param[1],Lidar.optics.scanner.lissajous_param[2],Lidar.optics.scanner.lissajous_param[3],Lidar.optics.scanner.lissajous_param[4])
+        L=len(x_out)
+        wind_direction = np.radians(np.linspace(Atmospheric_Scenario.wind_direction[0],Atmospheric_Scenario.wind_direction[1],1))
+    elif Lidar.optics.scanner.pattern=='plane':
+        x_in = 100
+        y_in = np.linspace(-2000,2000,5)
+        z_in = np.linspace(1,2300,5)
+        x_out,y_out,z_out=SP.Verticalplane_pattern(x_in,y_in,z_in)
+        L=len(x_out)
+        wind_direction = np.radians(np.linspace(Atmospheric_Scenario.wind_direction[0],Atmospheric_Scenario.wind_direction[1],1))        
     else:
         L=len(Lidar.optics.scanner.focus_dist)
+        wind_direction = np.radians(np.linspace(Atmospheric_Scenario.wind_direction[0],Atmospheric_Scenario.wind_direction[1],360))
 
     # Loop for the points in the pattern
-    
+    # pdb.set_trace()  
     for ind_alpha in range(len(alpha)):
         for meas_param in range(L):
-            # LOVE U MAMA!!
-        
-            #%% 1) Rho, theta and psi values OF THE MEASURING POINT   
-            # rho0           = [Lidar.optics.scanner.focus_dist[meas_param]]  
-            # theta0         = [np.radians(Lidar.optics.scanner.cone_angle[meas_param])]  # %(360) converts negative angles to [0,360] positive angles
-            # psi0           = [np.radians(Lidar.optics.scanner.azimuth[meas_param])] 
-            wind_direction = np.radians(np.linspace(Atmospheric_Scenario.wind_direction[0],Atmospheric_Scenario.wind_direction[1],360))
-            
-            
+            # LOVE U MAMA!!        
+         
             #%% 2) Lidars' position and measuring angles. The measuring angles are calculated based on the position of the lidars and the measuring points
             
             # Measurement point in cartesian coordinates before applying lidar position
-            if Lidar.optics.scanner.pattern=='lissajous':
-                x=np.array([xx[meas_param]])
-                y=np.array([yy[meas_param]])
-                z=np.array([zz[meas_param]])
+            if Lidar.optics.scanner.pattern=='lissajous' or Lidar.optics.scanner.pattern=='plane':
+                x=np.array([x_out[meas_param]])
+                y=np.array([y_out[meas_param]])
+                z=np.array([z_out[meas_param]])
                 
             else:
+            # rho0           = [Lidar.optics.scanner.focus_dist[meas_param]]  
+            # theta0         = [np.radians(Lidar.optics.scanner.cone_angle[meas_param])]  # %(360) converts negative angles to [0,360] positive angles
+            # psi0           = [np.radians(Lidar.optics.scanner.azimuth[meas_param])] 
 
                 x,y,z=SA.sph2cart([Lidar.optics.scanner.focus_dist[meas_param]],[np.radians(Lidar.optics.scanner.cone_angle[meas_param])],[np.radians(Lidar.optics.scanner.azimuth[meas_param])])
     
