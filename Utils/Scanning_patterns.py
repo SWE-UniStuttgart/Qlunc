@@ -32,7 +32,7 @@ def lissajous_pattern(Lidar,size_x,size_y,size_z,q,p):
     
     # lissajous transformation
     # pdb.set_trace()
-    z = size_x*np.sin((p*t+phi))+120
+    z = size_x*np.sin((p*t+phi))
     y = size_y*np.sin((q*t))
     x = np.array(len(t)*[size_z])
     # pdb.set_trace()
@@ -59,10 +59,7 @@ def lissajous_pattern(Lidar,size_x,size_y,size_z,q,p):
 def Verticalplane_pattern(x_in,y_in,z_in):
     # pdb.set_trace()
     # xx,yy,zz=SA.sph2cart(Lidar.optics.scanner.focus_dist,Lidar.optics.scanner.cone_angle,Lidar.optics.scanner.azimuth)
-    
-    x_in = 100
-    y_in = np.linspace(-200,200,55)
-    z_in = np.linspace(1,230,55)
+
     box=np.meshgrid(y_in,z_in)
     
     # Get coordinates of the points on the grid

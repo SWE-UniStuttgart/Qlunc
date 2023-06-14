@@ -32,7 +32,6 @@ import csv
 from termcolor import colored, cprint 
 import random
 import matplotlib
-# import matplotlib.cm as cmx
 import scipy as sc
 from scipy.stats import norm
 from matplotlib.pyplot import cm
@@ -42,3 +41,4 @@ import pickle
 from celluloid import Camera
 from matplotlib import animation
 import matplotlib.colors as mcolors
+import matplotlib.cm as cmx

@@ -66,7 +66,9 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 }
         
 ##################    Ploting scanner measuring points pattern #######################
-    if flag_plot_measuring_points_pattern:              
+    
+    if flag_plot_measuring_points_pattern and Lidar.optics.scanner.pattern=='None':
+        pdb.set_trace()              
         # Plotting
 # =============================================================================
 #         # fig,axs0 = plt.subplots()  
@@ -331,7 +333,31 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         ax0.grid(axis='both')
         plt.title('Wind direction Uncertainty',fontsize=plot_param['title_fontsize'])
     
-    
+    elif flag_plot_measuring_points_pattern and Lidar.optics.scanner.pattern=='plane':
+        # pdb.set_trace()
+        
+
+        ff=[]
+        for i in range(len(Data['Uncertainty Vh GUM'])):
+            
+            ff.append(Data['Uncertainty Vh GUM'][i][0])
+            
+        colorsMap='jet'
+        cm = plt.get_cmap(colorsMap)
+        cNorm = matplotlib.colors.Normalize(vmin=min(ff), vmax=max(ff))
+        scalarMap = cmx.ScalarMappable(norm=cNorm, cmap=cm)
+        fig = plt.figure()
+        ax = Axes3D(fig)
+        ax.scatter(Data['x_out'], Data['y_out'], Data['z_out'], ff, c=scalarMap.to_rgba(ff))
+        ax.set_xlabel('X')
+        ax.set_ylabel('Y')
+        ax.set_zlabel('Z')
+        ax.plot(Data['Lidar1 position'][0],Data['Lidar1 position'][1],Data['Lidar1 position'][2],'sb')
+        ax.plot(Data['Lidar2 position'][0],Data['Lidar2 position'][1],Data['Lidar2 position'][2],'sb')
+        scalarMap.set_array(Data['Uncertainty Vh GUM'])
+        fig.colorbar(scalarMap,label='V_h Uncertainty (m/s)', fraction=0.45)
+        plt.show()
+        # pdb.set_trace()
     ###############   Plot photodetector noise   #############################       
     if flag_plot_photodetector_noise:
         # Quantifying uncertainty from photodetector and interval domain for the plot Psax is define in the photodetector class properties)
