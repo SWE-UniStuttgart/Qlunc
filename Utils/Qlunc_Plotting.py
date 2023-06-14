@@ -355,7 +355,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         ax.plot(Data['Lidar1 position'][0],Data['Lidar1 position'][1],Data['Lidar1 position'][2],'sb')
         ax.plot(Data['Lidar2 position'][0],Data['Lidar2 position'][1],Data['Lidar2 position'][2],'sb')
         scalarMap.set_array(Data['Uncertainty Vh GUM'])
-        fig.colorbar(scalarMap,label='V_h Uncertainty (m/s)', fraction=0.45)
+        fig.colorbar(scalarMap,label='$V_h$ Uncertainty [m/s]', shrink=0.5)
         plt.show()
         # pdb.set_trace()
     ###############   Plot photodetector noise   #############################       

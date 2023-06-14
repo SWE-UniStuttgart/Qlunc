@@ -69,9 +69,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         wind_direction = np.radians(np.linspace(Atmospheric_Scenario.wind_direction[0],Atmospheric_Scenario.wind_direction[1],1))
     
     elif Lidar.optics.scanner.pattern=='plane':        
-        x_in = 2000
-        y_in = np.linspace(-100,100,50)
-        z_in = np.linspace(1,100,50)
+        x_in = 1000
+        y_in = np.linspace(-50,50,30)
+        z_in = np.linspace(40,140,30)
         x_out,y_out,z_out=SP.Verticalplane_pattern(x_in,y_in,z_in)
         L=len(x_out)
         wind_direction = np.radians(np.linspace(Atmospheric_Scenario.wind_direction[0],Atmospheric_Scenario.wind_direction[1],1))        
@@ -238,7 +238,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     #%% 7)Plotting data
     # pdb.set_trace()
     QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,Qlunc_yaml_inputs['Flags']['Line of sight Velocity Uncertainty'],False,False,False,False,False,1)  #Qlunc_yaml_inputs['Flags']['Scanning Pattern']  
-    pdb.set_trace()
+    # pdb.set_trace()
     return Scan_unc,Lidar.lidar_inputs.dataframe
 
 #%% Optical circulator:
