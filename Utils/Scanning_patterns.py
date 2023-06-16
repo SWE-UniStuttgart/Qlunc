@@ -37,7 +37,7 @@ def lissajous_pattern(Lidar,size_x,size_y,size_z,q,p):
     x = np.array(len(t)*[size_z])
     return x,y,z
 
-def Verticalplane_pattern(x_in,y_in,z_in):
+def Verticalplane_pattern(Lidar):
     """
     Plotting. Location: .Utils/Qlunc_plotting.py
     
@@ -53,6 +53,10 @@ def Verticalplane_pattern(x_in,y_in,z_in):
     list
     
     """
+    x_in = Lidar.optics.scanner.vert_plane[0]
+    y_in = np.linspace(Lidar.optics.scanner.vert_plane[1],Lidar.optics.scanner.vert_plane[2],Lidar.optics.scanner.vert_plane[-1])
+    z_in = np.linspace(Lidar.optics.scanner.vert_plane[3],Lidar.optics.scanner.vert_plane[4],Lidar.optics.scanner.vert_plane[-1])
+
     box=np.meshgrid(y_in,z_in)
     
     # Get coordinates of the points on the grid

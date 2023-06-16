@@ -27,7 +27,7 @@ constants.
 
 How is the code working?
 
-If user wants to implement another component/module s/he should create a class. 
+If user wants to implement another component/module they should create a new class. 
 
 For example, we might want build up a lidar and user wants to include a 'power'
 module which, in turn contains an UPS (uninterruptible power supply) with 
@@ -180,10 +180,10 @@ class converter(): # Not included yet in Version Qlunc v-0.9 calculations
                  print('Created new converter: {}'.format(self.ConverterID))
 
 class scanner():
-    def __init__(self,name,time_pattern,N_Points,Href,N_MC,time_point,scanner_type,pattern,lissajous_param,origin,sample_rate,focus_dist,cone_angle,azimuth,stdv_location,stdv_focus_dist,stdv_cone_angle,stdv_azimuth,stdv_Estimation,correlations,unc_func):
+    def __init__(self,name,time_pattern,Href,N_MC,time_point,scanner_type,pattern,lissajous_param,vert_plane,origin,sample_rate,focus_dist,cone_angle,azimuth,stdv_location,stdv_focus_dist,stdv_cone_angle,stdv_azimuth,stdv_Estimation,correlations,unc_func):
                  self.ScannerID       = name
                  self.time_pattern    = time_pattern
-                 self.N_Points        = N_Points
+                 #self.N_Points        = N_Points
                  self.Href            = Href
                  self.N_MC            = N_MC
                  self.time_point      = time_point 
@@ -191,6 +191,7 @@ class scanner():
                  self.origin          = origin
                  self.pattern         = pattern
                  self.lissajous_param = lissajous_param
+                 self.vert_plane      = vert_plane
                  self.sample_rate     = sample_rate
                  self.focus_dist      = focus_dist
                  self.cone_angle      = cone_angle

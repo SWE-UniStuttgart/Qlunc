@@ -69,17 +69,17 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         wind_direction = np.radians(np.linspace(Atmospheric_Scenario.wind_direction[0],Atmospheric_Scenario.wind_direction[1],1))
     
     elif Lidar.optics.scanner.pattern=='plane':        
-        x_in = 1000
-        y_in = np.linspace(-50,50,30)
-        z_in = np.linspace(40,140,30)
-        x_out,y_out,z_out=SP.Verticalplane_pattern(x_in,y_in,z_in)
+        # x_in = 500
+        # y_in = np.linspace(-50,50,5)
+        # z_in = np.linspace(10,140,5)
+        x_out,y_out,z_out=SP.Verticalplane_pattern(Lidar)
         L=len(x_out)
         wind_direction = np.radians(np.linspace(Atmospheric_Scenario.wind_direction[0],Atmospheric_Scenario.wind_direction[1],1))        
     
     else: # One point in all wind directions stated in YAML file
         L=len(Lidar.optics.scanner.focus_dist)
         wind_direction = np.radians(np.linspace(Atmospheric_Scenario.wind_direction[0],Atmospheric_Scenario.wind_direction[1],360))
-
+        x_out,y_out,z_out=0,0,0
     # Loop for the points in the pattern
     # pdb.set_trace()  
     for ind_alpha in range(len(alpha)):
