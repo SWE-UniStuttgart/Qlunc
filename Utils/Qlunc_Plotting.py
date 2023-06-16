@@ -298,29 +298,34 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             plt.title('$u$ and $v$ wind components Uncertainty',fontsize=plot_param['title_fontsize'])
             # pdb.set_trace()
         
-        # elif Lidar.optics.scanner.pattern=='plane':
-        #     # pdb.set_trace()
-        #     ff=[]
-        #     for i in range(len(Data['Uncertainty Vh GUM'])):
-        #         ff.append(Data['Uncertainty Vh GUM'][i][0])
+        elif Lidar.optics.scanner.pattern=='plane':
+            # pdb.set_trace()
+            ff=[]
+            for i in range(len(Data['Uncertainty Vh GUM'])):
+                ff.append(Data['Uncertainty Vh GUM'][i][0])
                 
-        #     colorsMap='jet'
-        #     cm = plt.get_cmap(colorsMap)
-        #     cNorm = matplotlib.colors.Normalize(vmin=min(ff), vmax=max(ff))
-        #     scalarMap = cmx.ScalarMappable(norm=cNorm, cmap=cm)
-        #     fig = plt.figure()
-        #     ax = Axes3D(fig)
-        #     ax.scatter(Data['x_out'], Data['y_out'], Data['z_out'], ff, c=scalarMap.to_rgba(ff))
-        #     ax.set_xlabel('X')
-        #     ax.set_ylabel('Y')
-        #     ax.set_zlabel('Z')
-        #     ax.plot(Data['Lidar1 position'][0],Data['Lidar1 position'][1],Data['Lidar1 position'][2],'sb')
-        #     ax.plot(Data['Lidar2 position'][0],Data['Lidar2 position'][1],Data['Lidar2 position'][2],'sb')
-        #     scalarMap.set_array(Data['Uncertainty Vh GUM'])
-        #     cb=plt.colorbar(scalarMap, shrink=0.5)
-        #     cb.set_label(label='$V_h$ Uncertainty [m/s]', size='large')
-        #     cb.ax.tick_params(labelsize='large')
-        #     plt.show()
+            colorsMap='jet'
+            cm = plt.get_cmap(colorsMap)
+            cNorm = matplotlib.colors.Normalize(vmin=min(ff), vmax=max(ff))
+            scalarMap = cmx.ScalarMappable(norm=cNorm, cmap=cm)
+            fig = plt.figure()
+            ax = Axes3D(fig)
+            ax.scatter(Data['x_out'], Data['y_out'], Data['z_out'], ff, c=scalarMap.to_rgba(ff))
+            ax.set_xlabel('X [m]')
+            ax.set_ylabel('Y [m]')
+            ax.set_zlabel('Z [m]')
+            ax.plot(Data['Lidar1 position'][0],Data['Lidar1 position'][1],Data['Lidar1 position'][2],'sb')
+            ax.plot(Data['Lidar2 position'][0],Data['Lidar2 position'][1],Data['Lidar2 position'][2],'sb')
+            scalarMap.set_array(Data['Uncertainty Vh GUM'])
+            cb=plt.colorbar(scalarMap, shrink=0.5)
+            cb.set_label(label='$V_h$ Uncertainty [m/s]', size='large')
+            cb.ax.tick_params(labelsize='large')
+            plt.show()
+            ax.set_box_aspect(aspect = (1,1,1)) 
+            pdb.set_trace()
+            # ax.axes.set_xlim3d(left=-400, right=400)
+            # ax.axes.set_ylim3d(left=-400, right=400)
+            # ax.axes.set_zlim3d(left=-400, right=400)
             # pdb.set_trace()
             
     
