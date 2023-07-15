@@ -10,7 +10,7 @@
 
 %%
 clear all
-close all
+% close all
 clc
 %% Inputs
 
@@ -28,8 +28,8 @@ level_noise      = .5;
 
 %% Uncertainty in the sampling frequency.
 % Gaussian distributed sampling frequency uncertainty with mean = fs_av and stdv = sigma_feq
-N=5;
-bias_fs_av =1e6; % +/-
+N=1000;
+bias_fs_av =2.5e6; % +/-
 % Lower and upper boundaries of the range where to find the
 % frequency fs
 lb = fs_av-bias_fs_av;
@@ -38,6 +38,7 @@ ub = fs_av+bias_fs_av;
 % probability is 1 for values within the range [lb,ub] and 0 outside.
 % fs = (ub-lb).*rand(N,1) + lb;
 % Ts = 1./fs;
+
 
 Tv=1/fs_av;
 tv=(0:n_fftpoints-1)*Tv;
@@ -49,7 +50,7 @@ fv = linspace(0,fs_av/2,floor(length(tv)/2+1));
 
 
 %% Loop to calculate the frequency spectra for each fs
-n_pulses=1;% n pulses
+n_pulses=10;% n pulses
 for ind_npulses=1:n_pulses % n pulses
     % Rectangular random distribution of frequencies and periods. The
     % probability is 1 for values within the range [lb,ub] and 0 outside.
@@ -63,8 +64,8 @@ for ind_npulses=1:n_pulses % n pulses
         % Signal:
         t{ind_fs}  = (0:L-1)*Ts(ind_fs); %t vector
         noise      = level_noise*randn(size(t{ind_fs}));
-        S{ind_fs}  = noise+(10*sin(2*pi*fd.*t{ind_fs})-2.1*sin(2*pi*abs(randn(1,1))*fd*t{ind_fs})+2*sin(2*pi*abs(randn(1,1))*fd*t{ind_fs})+...
-                     1.24*sin(2*pi*abs(randn(1,1))*fd.*t{ind_fs})+ 1.7*sin(2*pi*abs(randn(1,1))*fd*t{ind_fs})-1.4*sin(2*pi*abs(randn(1,1))*fd*t{ind_fs}));% Adding up Signal contributors
+        S{ind_fs}  = noise+(10*sin(2*pi*fd.*t{ind_fs})-2.1*sin(2*pi*10*abs(randn(1,1))*fd*t{ind_fs})+2*sin(2*pi*3*abs(randn(1,1))*fd*t{ind_fs})+...
+                            1.24*sin(2*pi*6*abs(randn(1,1))*fd.*t{ind_fs})+ 1.7*sin(2*pi*2*abs(randn(1,1))*fd*t{ind_fs})-1.4*sin(2*pi*abs(randn(1,1))*fd*t{ind_fs}));% Adding up Signal contributors
         
         % Spectrum function from matlab:
         [pxx{ind_fs},fr{ind_fs}] = pspectrum(S{ind_fs}./max(abs(S{ind_fs})));
@@ -231,15 +232,16 @@ mean_f_Peak  = mean(mean_fpeak_pulse,1);
 
 figure, hold on
 for in_fft=1:ind_npulses
-%     Legend2{in_fft}=['fs = ',num2str(fs(in_fft),'%.2s'),'; RE[%] = ', num2str(round(stdv_freq(in_fft,:),2))];
-    plot(fv,pow2db(Spec_mean_pulse(in_fft,:)));%,'displayname',Legend2{in_fft});
+    Legend2{in_fft}=['\sigma_{f}[Hz] =  ', num2str(stdv_freq_pulse,'%.1s') ];
+    plot(fv,pow2db(Spec_mean_pulse(in_fft,:)),'displayname',Legend2{in_fft});
 
 end
-plot(fv,pow2db(Spec_mean),'displayname','--ok','linewidth',3);
+plot(fv,pow2db(Spec_mean),'-k','linewidth',3,'displayname','Averaged Doppler Spectra');
 Y_text_in_plot=pow2db(max(Spec_mean)); % Takes the height of the last peak. Just a convention, to plot properly
 str={['#MC samples= ', num2str(N)],['\sigma_{V}[ms^{-1}] =  ', num2str(stdv_v,'%.1s') ],['RE_{V} [%] = ', num2str(RE_v,'%.1s') ]};
 text(5e6,Y_text_in_plot-.9,str, 'fontsize',25);
-
+% set(gca, 'YScale', 'log')
+% set(gca, 'XScale', 'log')
 % title('Frequency spectra', 'fontsize',25)
 xlabel('f [Hz]');%, 'fontsize',35)
 ylabel('PSD [dB]');% 'fontsize',35)
