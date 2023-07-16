@@ -3,7 +3,7 @@
 % fft_test
 % Simulating data processing
 % ADC and frequency analyser
-%
+% 
 %Francisco Costa
 % SWE-2022
 %%%
@@ -31,7 +31,7 @@ N_MC        =1e3;
 
 bias_fs_av  =2.5e6; % +/-
 std_fs_av   = bias_fs_av/sqrt(3);
-fs          = std_fs_av.*randn(N_MC,1) + fs_av;
+fs          = [fs_av;std_fs_av.*randn(N_MC,1) + fs_av];
 Ts          = 1./fs;
 
 % Accepted values
@@ -40,7 +40,7 @@ tv = (0:n_fftpoints-1)*Tv;
 fv = linspace(0,fs_av/2,floor(length(tv)/2+1));
 
 %%% Stdv due drift in the wavelength of the laser %%%
-stdv_wavelength = 10e-9; % m
+stdv_wavelength = .1e-9; % m
 % Noisy wavelength vector:
 noise_wavelength=stdv_wavelength;
 wavelength_noise=lidar_wavelength+noise_wavelength*randn(N_MC+1,1);
@@ -52,7 +52,7 @@ n_pulses = 1;% n pulses
 
 for ind_npulses=1:n_pulses
 
-    for ind_fs=1:N_MC
+    for ind_fs=1:N_MC+1
         % Time and frequency vectors
         tf{ind_fs} = (0:n_fftpoints-1)*Ts(ind_fs); %tf vector
         f{ind_fs} = linspace(0,fs(ind_fs)/2,floor(length(tf{ind_fs})/2+1));
@@ -144,7 +144,7 @@ for ind_npulses=1:n_pulses
     
     % Signal mean
     Spec_mean_pulse(ind_npulses,:)  = mean(sss(2:end,:),1);
-    
+    S_plot(ind_npulses,:)=sss(4,:);
     % ORiginal spectra
     S_original(ind_npulses,:)=sss(1,:);
     
@@ -161,33 +161,34 @@ mean_S_original=mean(S_original,1);
 mean_fpeak_pulse_OR = mean(f_peak(1,:),1);
 stdv_freq_pulse_OR  = std(f_peak(1,:));
 
-%Processed signal
+% Peaks' statistics
 mean_fpeak_pulse    = mean(f_peak(2:end,:),1);
+stdv_freq_pulse     = mean(std(f_peak(2:end,:)));
+RE_pulse            = (stdv_freq_pulse ./mean_fpeak_pulse)*100;
 
-if size(f_peak,2)==1
-    stdv_freq_pulse = std(f_peak(2:end,:));
-else
-    stdv_freq_pulse = std(mean_fpeak_pulse);
-    format short
-end
-RE_pulse = (stdv_freq_pulse ./mean_fpeak_pulse)*100;
-
-% Error in LOS
+% Uncertainty in LOS due to bias in sampling frequency
 % Mc method
-v_MC      = mean(v_MC_pulse);
-stdv_v_MC = std(v_MC_pulse);
-RE_v_MC   = (stdv_v_MC/v_MC)*100;
-
+v_s_MC                = mean(v_MC_pulse);
+stdv_v_MC           = mean(stdv_v_MC_pulse);
+RE_MC=100*stdv_v_MC/v_s_MC;
 % Analytical method
-m_v   = 0.5*lidar_wavelength*mean_fpeak_pulse;
-u_v   = 0.5*sqrt((fd^2*stdv_wavelength^2+lidar_wavelength^2.*stdv_freq_pulse.^2));
-RE_v  = (u_v./m_v)*100;
+v_An                = 0.5*lidar_wavelength*mean_fpeak_pulse;
+stdv_v_An           = 0.5*sqrt((fd^2*stdv_wavelength^2+lidar_wavelength^2.*stdv_freq_pulse.^2));
+RE_v                = (stdv_v_An./v_An)*100;
 
 
+% Uncertainty in LOS due to averaging of spectra
+stdv_av_v_An = std(v_An);
+stdv_av_v_MC = std(v_MC_pulse);
+RE_v_MC      = (stdv_av_v_MC/v_s_MC)*100;
 
-Spec_mean    = mean(Spec_mean_pulse,1);
-mean_f_Peak  = mean(mean_fpeak_pulse,1);
+% Spec_mean    = mean(Spec_mean_pulse,1);
+% mean_f_Peak  = mean(mean_fpeak_pulse,1);
 
+disp(['u_pulse_MC = ',num2str(stdv_v_MC),' m/s'])
+disp(['u_pulse_an = ',num2str(stdv_v_An),' m/s'])
+disp(['bias due to average (MC) = ',num2str(stdv_av_v_An),' m/s'])
+disp(['bias due to average (An) = ',num2str(stdv_av_v_MC),' m/s'])
 
 %% PLOTS
 
@@ -217,13 +218,16 @@ mean_f_Peak  = mean(mean_fpeak_pulse,1);
 
 figure, hold on
 for in_fft=1:ind_npulses
-    Legend2{in_fft}=['\sigma_{f}[Hz] =  ', num2str(stdv_freq_pulse,'%.1s') ];
-    plot(fv,pow2db(Spec_mean_pulse(in_fft,:)),'displayname',Legend2{in_fft});
+%     Legend2{in_fft}=['\sigma_{f}[Hz] =  ', num2str(stdv_freq_pulse,'%.1s') ];
+    plot(fv,pow2db(S_plot(in_fft,:)),'displayname','off');
     
 end
 plot(fv,pow2db(mean_S_original),'-k','linewidth',3,'displayname','Averaged Doppler Spectra');
 Y_text_in_plot=pow2db(max(mean_S_original)); % Takes the height of the last peak. Just a convention, to plot properly
-str={['#MC samples= ', num2str(N_MC)],['\sigma_{V}[ms^{-1}] =  ', num2str(stdv_v,'%.1s') ],['RE_{V} [%] = ', num2str(RE_v,'%.1s') ]};
+str={['#pulses     = ', num2str(n_pulses)],...
+     ['#MC samples = ', num2str(N_MC)],...
+     ['\sigma_{avg} [ms^{-1}] =  ', num2str(stdv_av_v_MC,'%.1s') ],...
+     ['\sigma_{v} [ms^{-1}]   =  ', num2str(stdv_v_MC,'%.1s') ],['RE_{v} [%] = ', num2str(RE_MC,'%.1s') ]};
 text(5e6,Y_text_in_plot-.9,str, 'fontsize',25);
 % set(gca, 'YScale', 'log')
 % set(gca, 'XScale', 'log')
@@ -238,7 +242,7 @@ set(gca,'FontSize',29);
 % str={['#MC samples= ', num2str(N_MC)],['\sigma_{V}[ms^{-1}] =  ', num2str(stdv_v,'%.1s') ],['RE_{V} [%] = ', num2str(RE,'%.1s') ]};
 % text(5e6,Y_text_in_plot-.9,str, 'fontsize',25);
 % hold off
-% % legend
+% % legend show
 % title('Frequency spectra', 'fontsize',25)
 % xlabel('f [Hz]', 'fontsize',25)
 % ylabel('PSD [dB]', 'fontsize',25)
