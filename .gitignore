@@ -1,6 +1,7 @@
 # Ignore this file formats:
 *.pyc
 *.xlsx
+*.asv
 
 # Ignore specific files:
 Qlunc_NoteBook-checkpoint.ipynb
