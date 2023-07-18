@@ -11,7 +11,15 @@
 %     selected
 % Takes a signal discretised at fs and digitises it. A Fourier
 % transform is applied to the digitised signal to obtain the frequency
-% spectra. 
+% spectra.
+
+% Issues:
+%   - Resolution.
+%   - Noise in the signal ('noise')
+%   -
+%   -
+
+
 % Francisco Costa
 % SWE-2022
 %%%
@@ -33,13 +41,14 @@ L                = 2^10;    %length of the signal.
 n_fftpoints      = L;       % n° of points for each block (fft points).
 fd               = 2*V_ref/lidar_wavelength;  % Doppler frequency corresponding to Vref
 level_noise      = 1.0; % noise as stdv added to the signal. Hardware comp before the signal downmixing
-n_pulses         = 1;   % n pulses for averaging the spectra
+n_pulses         = 100;   % n pulses for averaging the spectra
 N_MC             = 1e3; % n° MC samples to calculate the uncertainty due to bias in sampling frequency and wavelength
 
 %% Uncertainty in the signal processing.
 
 %%% Uncertainty in the sampling frequency %%%
-bias_fs_av  = 2.5e6; % +/-
+per         = 1;
+bias_fs_av  = (per/100)*fs_av; % +/-
 std_fs_av   = bias_fs_av/sqrt(3);
 fs          = [fs_av;std_fs_av.*randn(N_MC,1) + fs_av];
 Ts          = 1./fs;
@@ -48,34 +57,34 @@ Ts          = 1./fs;
 Tv = 1/fs_av;
 tv = (0:n_fftpoints-1)*Tv;
 fv = linspace(0,fs_av/2,floor(length(tv)/2+1));
+vv=0.5*lidar_wavelength*fv;
 
 %%% Stdv due drift in the wavelength of the laser %%%
-stdv_wavelength  = .1e-9; % m
+stdv_wavelength  = 0.0e-9; % m
 
 % Noisy wavelength vector:
 noise_wavelength = stdv_wavelength;
 wavelength_noise = lidar_wavelength+noise_wavelength*randn(N_MC+1,1);
 
-
 %% Loop to calculate the frequency spectra for each fs
 tic
-for ind_npulses = 1:n_pulses   
+for ind_npulses = 1:n_pulses
     for ind_fs = 1:N_MC+1
         % Time and frequency vectors
         t{ind_fs} = (0:n_fftpoints-1)*Ts(ind_fs); %#ok<SAGROW> %time vector
-        f{ind_fs}  = linspace(0,fs(ind_fs)/2,floor(length(t{ind_fs})/2+1)); %#ok<SAGROW> % floor()"/2+1" is added to match the length of the double-sided spectrum (P1)
+        f{ind_fs}  = linspace(0,fs(ind_fs)/2,floor(length(t{ind_fs}))/2+1); %#ok<SAGROW> % floor()"/2+1" is added to match the length of the double-sided spectrum (P1)
         
         % Signal + Hardware noise:
         noise      = level_noise*randn(size(t{ind_fs}));
-        S{ind_fs}  = noise+(10*sin(2*pi*fd.*t{ind_fs}) - 2.1*sin(2*pi*1.9*abs(randn(1,1))*fd*t{ind_fs}) + sin(2*pi*3*abs(randn(1,1))*fd*t{ind_fs})+...
-                            1.24*sin(2*pi*6*abs(randn(1,1))*fd.*t{ind_fs}) + 1.7*sin(2*pi*2*abs(randn(1,1))*fd*t{ind_fs}) - 1.4*sin(2*pi*abs(randn(1,1))*fd*t{ind_fs}));%#ok<SAGROW> % Adding up Signal contributors
-                
+        S{ind_fs}  = noise + (10*sin(2*pi*fd.*t{ind_fs}) - 2.1*sin(2*pi*1.9*abs(randn(1,1))*fd*t{ind_fs}) + sin(2*pi*3*abs(randn(1,1))*fd*t{ind_fs})+...
+            1.24*sin(2*pi*6*abs(randn(1,1))*fd.*t{ind_fs}) + 1.7*sin(2*pi*2*abs(randn(1,1))*fd*t{ind_fs}) - 1.4*sin(2*pi*abs(randn(1,1))*fd*t{ind_fs}));%#ok<SAGROW> % Adding up Signal contributors
+        %      S{ind_fs} = 3*cos(2*pi*2*t{ind_fs}) + 2*cos(2*pi*4*t{ind_fs}) + sin(2*pi*6*t{ind_fs});
         % Spectrum function from matlab:
         [pxx{ind_fs},fr{ind_fs}] = pspectrum(S{ind_fs}./max(abs(S{ind_fs}))); %#ok<SAGROW>
         
         % Normalise signal:
         X{ind_fs} =  S{ind_fs}./max(abs(S{ind_fs}))  ; %#ok<SAGROW>
-          
+        
         %%%%%%%%%%%%%%%%%%
         % ADC:
         % Quantization of the signal
@@ -99,7 +108,7 @@ for ind_npulses = 1:n_pulses
         
         % RMSE due to digitisation process. If the signal is unbiased, RMSE
         % is the standard deviation.
-        RMSE_digit(ind_fs,ind_npulses)= real(sqrt(sum((X{ind_fs}).^2-S_quant.^2)/length(t{ind_fs}))); %#ok<SAGROW>
+        RMSE_digit(ind_fs,ind_npulses)= (sqrt(abs(sum(X{ind_fs}.^2-S_quant.^2))/length(t{ind_fs}))); %#ok<SAGROW>
         
         
         % tic
@@ -111,7 +120,7 @@ for ind_npulses = 1:n_pulses
         P1            = P2(:,1:n_fftpoints/2+1);
         P1(2:end-1)   = 2*P1(2:end-1);
         S_fft_quant   = P1.^2;
-        sss(ind_fs,:) = P1.^2; %#ok<SAGROW>
+        S_fft_quant_mean(ind_fs,:) = P1.^2; %#ok<SAGROW>
         
         % T(1,ind_fs)=toc;
         % Time_fft(1,ind_fs)=sum(T); % Time taken for each fft
@@ -127,18 +136,17 @@ for ind_npulses = 1:n_pulses
         % Assessing Statistics:
         %         mode_S_quant{ind_fs}   = mode(S_quant);
         
-        % Velocity resolution. Frequency resolution: ratio(fs,nfft_points)
-        
+        % Velocity and frequency resolution. Frequency resolution: ratio(fs,nfft_points)
         f_resolution(ind_fs,ind_npulses) = f{ind_fs}(2); %#ok<SAGROW>
         V_resolution(ind_fs,ind_npulses) = 0.5*lidar_wavelength*(f_resolution(ind_fs,ind_npulses)); %#ok<SAGROW>
         
         
-        %         % Relative error in the peak detection
-        %         Relative_error(ind_fs,:,ind_npulses) =  100*abs((fd - f_peak(ind_fs,ind_npulses)))/fd;
-        %         stdv_signal (ind_fs,:,ind_npulses) = level_noise/sqrt(size(P3,1));
-        %         % STDV_signal (ind_fs,:) = level_noise/sqrt(size(P3,1));
-        %         RMSE(ind_fs,:,ind_npulses) =sqrt(mean((mean_S{ind_fs}-mean_S_quant{ind_fs}).^2));
-        %         SNQR(ind_fs,:,ind_npulses) =((6.02*n_bits-1.25));
+        % Relative error in the peak detection
+%         Relative_error(ind_fs,:,ind_npulses) =  100*abs((fd - f_peak(ind_fs,ind_npulses)))/fd; %#ok<SAGROW>
+%         stdv_signal (ind_fs,:,ind_npulses) = level_noise/sqrt(size(P3,1)); %#ok<SAGROW>
+        % STDV_signal (ind_fs,:) = level_noise/sqrt(size(P3,1));
+        RMSE(ind_fs,:,ind_npulses) =sqrt(mean((X{ind_fs}-mean_S_quant{ind_fs}).^2)); %#ok<SAGROW>
+        SNQR(ind_fs,:,ind_npulses) =((6.02*n_bits-1.25)); %#ok<SAGROW>
         
         % Clear variables
         clear P3
@@ -147,18 +155,19 @@ for ind_npulses = 1:n_pulses
         clear S_fft_quant
     end
     
-    % Signal mean
-    Spec_mean_pulse(ind_npulses,:)  = mean(sss(2:end,:),1); %#ok<SAGROW>
-    %     S_plot(ind_npulses,:)=sss(4,:);
-    % ORiginal spectra
-    S_original(ind_npulses,:)=sss(1,:); %#ok<SAGROW>
+    % Spectra of each pulse. Is the averaged spectra after the montecarlo simulation
+    Spec_mean_pulse(ind_npulses,:)  = mean(S_fft_quant_mean(2:end,:),1); %#ok<SAGROW>
     
+    % Original spectra of each pulse
+    S_original(ind_npulses,:)=S_fft_quant_mean(1,:); %#ok<SAGROW>
+    
+    % V LOS from montecarlo
     v_MC_pulse(ind_npulses,:)      = mean(v_MC(2:end,ind_npulses),1); %#ok<SAGROW>
     stdv_v_MC_pulse(ind_npulses,:) = std(v_MC(2:end,ind_npulses)); %#ok<SAGROW>
     RE_pulse(ind_npulses,:)        = stdv_v_MC_pulse(ind_npulses,:)/v_MC_pulse(ind_npulses,:); %#ok<SAGROW>
 end
 mean_S_original=mean(S_original,1);
-
+Spec_mean = mean(Spec_mean_pulse);
 %% Statistics
 
 % Frequency
@@ -186,7 +195,7 @@ stdv_av_v_An = std(v_An);
 stdv_av_v_MC = std(v_MC_pulse);
 RE_v_MC      = (stdv_av_v_MC/v_s_MC)*100;
 
-% Total uncertainty sum of varainces:
+% Total uncertainty sum of variances:
 stdv_v_T = sqrt((stdv_bias_v_An)^2+(stdv_av_v_An)^2);
 
 % Spec_mean    = mean(Spec_mean_pulse,1);
@@ -199,39 +208,51 @@ disp(['Uncertainty in V due to spectra average (An) = ',num2str(stdv_av_v_MC),' 
 
 %% PLOTS
 
-%%%%%%%%% Plotting signals + digitised signal + error: %%%%%%%%%%%%%%%%%%%%
+%%%%%%%% Plotting signals + digitised signal + error: %%%%%%%%%%%%%%%%%%%%
 % markersize=[{'k-*'},{'b-*'},{'r-*'},{'g-*'},{'c-*'},{'m-*'},{'y-*'}];
-% markersize_2=[{'r--x'},{'b--x'},{'r--x'},{'g--x'},{'c--x'},{'m--x'},{'y--x'}];
-% markersize_3=[{'k-.'},{'b-.'},{'r-.'},{'g-.'},{'c-.'},{'m-.'},{'y-.'}];
+% markersize_2=[{'k--x'},{'b--x'},{'r--x'},{'g--x'},{'c--x'},{'m--x'},{'y--x'}];
+% markersize_3=[{'m-.'},{'b-.'},{'r-.'},{'g-.'},{'c-.'},{'m-.'},{'y-.'}];
 % figure,hold on
 % for in_sig=1:length(fs)
-%     Legend1{in_sig}=['fs = ',num2str(fs(in_sig),'%.2s') , '; SNQR = ', num2str(SNQR{in_sig},'%.2s'),' dB'];
-%     plot(t{in_sig}(1,:)  ,mean_S{in_sig}(1,:),'Linewidth',1.2,'displayname',Legend1{in_sig})
-%     plot(t{in_sig},mean_S_quant{in_sig},'Linewidth',1.9,'displayname','Q');
-%     plot(t{in_sig},mean_S{in_sig}(1,:)-mean_S_quant{in_sig},'Linewidth',1.9,'displayname',['Quantization error; N_MC° bits =',num2str(n_bits) ]);
+%    
+%     plot(t{in_sig}(1,:)  ,X{in_sig}(1,:),markersize{in_sig},'Linewidth',1.2,'displayname','Original signal')
+%     plot(t{in_sig},mean_S_quant{in_sig},markersize_2{in_sig},'Linewidth',1.9,'displayname','Quantised signal' );
+%     plot(t{in_sig},X{in_sig}(1,:)-mean_S_quant{in_sig},markersize_3{in_sig},'Linewidth',1.9,'displayname',['Error(RMSE [-] = ',num2str(RMSE(in_sig)),')']);
 %     %     plot(t{i} ,X{i}(1,:)  ,markersize{i})
 %     %     plot(t{i},S_quant0{i},markersize_2{i},'Linewidth',1.4);
 % end
-% xlabel('time [s]', 'fontsize',20)
-% ylabel('[-]', 'fontsize',20)
-% title(['Signal -',' sigma = ',num2str(level_noise),'; n°bits = ', num2str(n_bits)],'fontsize',25)
+% xlabel('time [s]')
+% ylabel('[-]')
+% title(['Signal quantisation -',' n°bits = ', num2str(n_bits), ' - fs [Hz] = ',num2str(fs(in_sig),'%.2s') ])
 % hold off
 % legend show
 % grid on
-% set(gca,'FontSize',20);
+% set(gca,'FontSize',35);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%% fft signals %%%%%%%%%%%%%%
 fig=figure;
 hold on
-plot(fv,pow2db(S_original),'HandleVisibility','off');
-plot(fv,pow2db(mean_S_original),'-k','linewidth',2.7,'displayname','Averaged Doppler Spectra');
+
+% Against velocity
+plot(vv,pow2db(mean_S_original),'-k','linewidth',2.7,'displayname','Doppler Spectra (f_s)');
+plot(vv,pow2db(mean(Spec_mean_pulse,1)),'-m','linewidth',2.1,'displayname',[num2str(per), '% Biased Doppler Spectra']);
+xlabel('Wind velocity [ms^{-1}]');
+ylabel('PSD [dB]');
+
+% Against frequency
+% plot(vv,pow2db(Spec_mean_pulse),'-m','linewidth',2.1,'displayname','Biased Doppler Spectra');
+% plot(vv,pow2db(mean_S_original),'-k','linewidth',2.7,'displayname','Doppler Spectra');
+% xlabel('Frequency [Hz]');
+% ylabel('PSD [dB]');
+
+
 Y_text_in_plot=pow2db(max(mean_S_original)); % Takes the height of the last peak. Just a convention, to plot properly
 str={['# fft                  =  ', num2str(n_fftpoints)],...
     ['# pulses           =  ', num2str(n_pulses)],...
     ['# MC samples =  ', num2str(N_MC)],...
-    ['\sigma_{v,avg} [ms^{-1}]     =  ', num2str(stdv_av_v_An,'%.1s') ],...
-    ['\sigma_{v,bias} [ms^{-1}]    =  ', num2str(stdv_bias_v_An,'%.1s') ],...
+    ['\sigma_{v,avg} [ms^{-1}]     =  ', num2str(stdv_av_v_MC,'%.1s') ],...
+    ['\sigma_{v,bias} [ms^{-1}]    =  ', num2str(stdv_bias_v_MC,'%.1s') ],...
     ['\sigma_{v} [ms^{-1}]          =  ', num2str(stdv_v_T,'%.1s') ],...
     ['RE_{v} [%]           =  ', num2str(RE_MC,'%.1s') ]};
 % text(5e6,Y_text_in_plot-2.9,str, 'fontsize',17);
@@ -241,8 +262,7 @@ anot.String=str;
 anot.Position =  [0.135 0.415 0.6 0.5];
 anot.FitBoxToText='on';
 % title('Frequency spectra', 'fontsize',25)
-xlabel('Frequency [Hz]');
-ylabel('PSD [dB]');
+
 % legend show
 leg=legend;
 leg.FontSize=19 ;
