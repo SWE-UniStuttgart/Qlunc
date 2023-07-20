@@ -40,17 +40,18 @@ fs_av            = 50e6;    % sampling frequency
 L                = 2^10;    %length of the signal.
 n_fftpoints      = L;       % n° of points for each block (fft points).
 fd               = 2*V_ref/lidar_wavelength;  % Doppler frequency corresponding to Vref
-level_noise      = 1.0; % noise as stdv added to the signal. Hardware comp before the signal downmixing
-n_pulses         = 100;   % n pulses for averaging the spectra
-N_MC             = 1e3; % n° MC samples to calculate the uncertainty due to bias in sampling frequency and wavelength
+level_noise      = 0.5; % Hardware noise added before signal downmixing
+n_pulses         = 5;   % n pulses for averaging the spectra
+N_MC             = 1e2; % n° MC samples to calculate the uncertainty due to bias in sampling frequency and wavelength
 
 %% Uncertainty in the signal processing.
 
 %%% Uncertainty in the sampling frequency %%%
-per         = 1;
+per         = 5.5;
 bias_fs_av  = (per/100)*fs_av; % +/-
-std_fs_av   = bias_fs_av/sqrt(3);
+std_fs_av   = bias_fs_av/sqrt(3); % 2e-6*fs_av; % 
 fs          = [fs_av;std_fs_av.*randn(N_MC,1) + fs_av];
+
 Ts          = 1./fs;
 
 % Accepted values
@@ -60,7 +61,7 @@ fv = linspace(0,fs_av/2,floor(length(tv)/2+1));
 vv=0.5*lidar_wavelength*fv;
 
 %%% Stdv due drift in the wavelength of the laser %%%
-stdv_wavelength  = 0.0e-9; % m
+stdv_wavelength  = .1e-9; % m
 
 % Noisy wavelength vector:
 noise_wavelength = stdv_wavelength;
@@ -127,10 +128,10 @@ for ind_npulses = 1:n_pulses
         
         % Peak detection from the spectra
         [ii_mean,ii1_mean]          = max(S_fft_quant);
-        f_peak(ind_fs,ind_npulses)  = f{ind_fs} (ii1_mean); %#ok<SAGROW>
+        fd_peak(ind_fs,ind_npulses)  = f{ind_fs} (ii1_mean); %#ok<SAGROW>
         
         % Vlos
-        v_MC(ind_fs,ind_npulses) = 0.5*wavelength_noise(ind_fs)*f_peak(ind_fs,ind_npulses); %#ok<SAGROW>
+        v_MC(ind_fs,ind_npulses) = 0.5*wavelength_noise(ind_fs)*fd_peak(ind_fs,ind_npulses); %#ok<SAGROW>
         
         
         % Assessing Statistics:
@@ -166,19 +167,29 @@ for ind_npulses = 1:n_pulses
     stdv_v_MC_pulse(ind_npulses,:) = std(v_MC(2:end,ind_npulses)); %#ok<SAGROW>
     RE_pulse(ind_npulses,:)        = stdv_v_MC_pulse(ind_npulses,:)/v_MC_pulse(ind_npulses,:); %#ok<SAGROW>
 end
-mean_S_original=mean(S_original,1);
-Spec_mean = mean(Spec_mean_pulse);
+mean_S_original = mean(S_original,1);
+Spec_mean       = mean(Spec_mean_pulse);
 %% Statistics
 
 % Frequency
 % Original Doppler frequency
-mean_fpeak_pulse_OR = mean(f_peak(1,:),1);
-stdv_freq_pulse_OR  = std(f_peak(1,:));
+mean_fd_pulse_OR = mean(fd_peak(1,:),1);
+stdv_fd_pulse_OR  = std(fd_peak(1,:));
 
 % Peaks' statistics
-mean_fpeak_pulse    = mean(f_peak(2:end,:),1);
-stdv_freq_pulse     = mean(std(f_peak(2:end,:)));
-RE_pulse2            = (stdv_freq_pulse ./mean_fpeak_pulse)*100;
+mean_fd_pulse      = mean(fd_peak(2:end,:),1);
+stdv_fd_pulse      = std(fd_peak(2:end,:));
+stdv_fd_pulse_mean = mean(stdv_fd_pulse);
+RE_pulse2          = (stdv_fd_pulse ./mean_fd_pulse)*100;
+
+% Sum of variances from errors in fs and peak averaging:
+mean_fd    = mean(mean_fd_pulse,2);
+if size(mean_fd_pulse,2)==1
+    stdv_fd_av=0;
+else
+    stdv_fd_av=std(mean_fd_pulse);
+end
+stdv_fd = sqrt((stdv_fd_pulse_mean)^2+(stdv_fd_av)^2);
 
 %%% Uncertainty in LOS due to bias in sampling frequency
 % Mc method
@@ -186,8 +197,8 @@ v_s_MC          = mean(v_MC_pulse);
 stdv_bias_v_MC  = mean(stdv_v_MC_pulse);
 RE_MC           = 100*stdv_bias_v_MC/v_s_MC;
 % Analytical method
-v_An            = 0.5*lidar_wavelength*mean_fpeak_pulse;
-stdv_bias_v_An  = 0.5*sqrt((fd^2*stdv_wavelength^2+lidar_wavelength^2.*stdv_freq_pulse.^2));
+v_An            = 0.5*lidar_wavelength*mean_fd_pulse;
+stdv_bias_v_An  = 0.5*sqrt((fd^2*stdv_wavelength^2+lidar_wavelength^2.*stdv_fd.^2));
 RE_v            = (stdv_bias_v_An./v_An)*100;
 
 % Uncertainty in LOS due to averaging of spectra
@@ -195,8 +206,7 @@ stdv_av_v_An = std(v_An);
 stdv_av_v_MC = std(v_MC_pulse);
 RE_v_MC      = (stdv_av_v_MC/v_s_MC)*100;
 
-% Total uncertainty sum of variances:
-stdv_v_T = sqrt((stdv_bias_v_An)^2+(stdv_av_v_An)^2);
+
 
 % Spec_mean    = mean(Spec_mean_pulse,1);
 % mean_f_Peak  = mean(mean_fpeak_pulse,1);
@@ -235,8 +245,8 @@ fig=figure;
 hold on
 
 % Against velocity
-plot(vv,pow2db(mean_S_original),'-k','linewidth',2.7,'displayname','Doppler Spectra (f_s)');
-plot(vv,pow2db(mean(Spec_mean_pulse,1)),'-m','linewidth',2.1,'displayname',[num2str(per), '% Biased Doppler Spectra']);
+plot(vv,pow2db(mean_S_original),'-k','linewidth',2.7,'displayname','Doppler Spectrum (f_s)');
+plot(vv,pow2db(mean(Spec_mean_pulse,1)),'-m','linewidth',2.1,'displayname',[num2str(per), '% Biased Doppler Spectrum']);
 xlabel('Wind velocity [ms^{-1}]');
 ylabel('PSD [dB]');
 
