@@ -40,32 +40,30 @@ fs_av            = 50e6;    % sampling frequency
 L                = 2^10;    %length of the signal.
 n_fftpoints      = L;       % n° of points for each block (fft points).
 fd               = 2*V_ref/lidar_wavelength;  % Doppler frequency corresponding to Vref
-level_noise      = 0.5; % Hardware noise added before signal downmixing
-n_pulses         = 5;   % n pulses for averaging the spectra
-N_MC             = 1e2; % n° MC samples to calculate the uncertainty due to bias in sampling frequency and wavelength
+level_noise      = 1e-13; % Hardware noise added before signal downmixing
+n_pulses         = 1;   % n pulses for averaging the spectra
+N_MC             = 1e3; % n° MC samples to calculate the uncertainty due to bias in sampling frequency and wavelength
 
 %% Uncertainty in the signal processing.
 
 %%% Uncertainty in the sampling frequency %%%
-per         = 5.5;
+per         = 0.5;
 bias_fs_av  = (per/100)*fs_av; % +/-
+
+% fs = [fs_av;randi([-bias_fs_av/.05 bias_fs_av/.05], 1, N_MC)'*0.05+fs_av];
 std_fs_av   = bias_fs_av/sqrt(3); % 2e-6*fs_av; % 
 fs          = [fs_av;std_fs_av.*randn(N_MC,1) + fs_av];
-
 Ts          = 1./fs;
-
 % Accepted values
 Tv = 1/fs_av;
 tv = (0:n_fftpoints-1)*Tv;
 fv = linspace(0,fs_av/2,floor(length(tv)/2+1));
 vv=0.5*lidar_wavelength*fv;
 
+
 %%% Stdv due drift in the wavelength of the laser %%%
 stdv_wavelength  = .1e-9; % m
-
-% Noisy wavelength vector:
-noise_wavelength = stdv_wavelength;
-wavelength_noise = lidar_wavelength+noise_wavelength*randn(N_MC+1,1);
+wavelength_noise = lidar_wavelength+stdv_wavelength*randn(N_MC+1,1); % Noisy wavelength vector
 
 %% Loop to calculate the frequency spectra for each fs
 tic
@@ -77,8 +75,13 @@ for ind_npulses = 1:n_pulses
         
         % Signal + Hardware noise:
         noise      = level_noise*randn(size(t{ind_fs}));
-        S{ind_fs}  = noise + (10*sin(2*pi*fd.*t{ind_fs}) - 2.1*sin(2*pi*1.9*abs(randn(1,1))*fd*t{ind_fs}) + sin(2*pi*3*abs(randn(1,1))*fd*t{ind_fs})+...
-            1.24*sin(2*pi*6*abs(randn(1,1))*fd.*t{ind_fs}) + 1.7*sin(2*pi*2*abs(randn(1,1))*fd*t{ind_fs}) - 1.4*sin(2*pi*abs(randn(1,1))*fd*t{ind_fs}));%#ok<SAGROW> % Adding up Signal contributors
+        
+        S0         = (10*sin(2*pi*fd.*t{ind_fs}) - 2.1*sin(2*pi*1.9*abs(randn(1,1))*fd*t{ind_fs}) + sin(2*pi*3*abs(randn(1,1))*fd*t{ind_fs})+...
+                      1.24*sin(2*pi*6*abs(randn(1,1))*fd.*t{ind_fs}) + 1.7*sin(2*pi*2*abs(randn(1,1))*fd*t{ind_fs}) - 1.4*sin(2*pi*abs(randn(1,1))*fd*t{ind_fs}));%#ok<SAGROW> % Adding up Signal contributors
+        
+        S{ind_fs}  = awgn(S0, 5);
+        
+        
         %      S{ind_fs} = 3*cos(2*pi*2*t{ind_fs}) + 2*cos(2*pi*4*t{ind_fs}) + sin(2*pi*6*t{ind_fs});
         % Spectrum function from matlab:
         [pxx{ind_fs},fr{ind_fs}] = pspectrum(S{ind_fs}./max(abs(S{ind_fs}))); %#ok<SAGROW>
@@ -88,7 +91,7 @@ for ind_npulses = 1:n_pulses
         
         %%%%%%%%%%%%%%%%%%
         % ADC:
-        % Quantization of the signal
+        % Quantisation of the signal
         ENOB = n_bits; %(SINAD-1.76)/6.02;
         vres= (2/(2^ENOB));
         % find upper and lower limits
@@ -131,7 +134,7 @@ for ind_npulses = 1:n_pulses
         fd_peak(ind_fs,ind_npulses)  = f{ind_fs} (ii1_mean); %#ok<SAGROW>
         
         % Vlos
-        v_MC(ind_fs,ind_npulses) = 0.5*wavelength_noise(ind_fs)*fd_peak(ind_fs,ind_npulses); %#ok<SAGROW>
+        vlos_MC(ind_fs,ind_npulses) = 0.5*wavelength_noise(ind_fs)*fd_peak(ind_fs,ind_npulses); %#ok<SAGROW>
         
         
         % Assessing Statistics:
@@ -163,13 +166,16 @@ for ind_npulses = 1:n_pulses
     S_original(ind_npulses,:)=S_fft_quant_mean(1,:); %#ok<SAGROW>
     
     % V LOS from montecarlo
-    v_MC_pulse(ind_npulses,:)      = mean(v_MC(2:end,ind_npulses),1); %#ok<SAGROW>
-    stdv_v_MC_pulse(ind_npulses,:) = std(v_MC(2:end,ind_npulses)); %#ok<SAGROW>
+    v_MC_pulse(ind_npulses,:)      = mean(vlos_MC(2:end,ind_npulses),1); %#ok<SAGROW>
+    stdv_v_MC_pulse(ind_npulses,:) = std(vlos_MC(2:end,ind_npulses)); %#ok<SAGROW>
     RE_pulse(ind_npulses,:)        = stdv_v_MC_pulse(ind_npulses,:)/v_MC_pulse(ind_npulses,:); %#ok<SAGROW>
+
 end
+
+%% Statistics
+
 mean_S_original = mean(S_original,1);
 Spec_mean       = mean(Spec_mean_pulse);
-%% Statistics
 
 % Frequency
 % Original Doppler frequency
@@ -182,39 +188,26 @@ stdv_fd_pulse      = std(fd_peak(2:end,:));
 stdv_fd_pulse_mean = mean(stdv_fd_pulse);
 RE_pulse2          = (stdv_fd_pulse ./mean_fd_pulse)*100;
 
-% Sum of variances from errors in fs and peak averaging:
 mean_fd    = mean(mean_fd_pulse,2);
-if size(mean_fd_pulse,2)==1
-    stdv_fd_av=0;
-else
-    stdv_fd_av=std(mean_fd_pulse);
-end
-stdv_fd = sqrt((stdv_fd_pulse_mean)^2+(stdv_fd_av)^2);
+stdv_fd_av = std(mean_fd_pulse); % stdv between the peaks of the different pulses
 
-%%% Uncertainty in LOS due to bias in sampling frequency
+stdv_fd = sqrt((stdv_fd_pulse_mean)^2+(stdv_fd_av)^2); % Sum of variances from errors in fs and peak averaging:
+
+%% Uncertainty in LOS 
+
 % Mc method
 v_s_MC          = mean(v_MC_pulse);
-stdv_bias_v_MC  = mean(stdv_v_MC_pulse);
-RE_MC           = 100*stdv_bias_v_MC/v_s_MC;
+stdv_bias_v_MC  = mean(stdv_v_MC_pulse); % Mean of the stdvs of each pulse
+stdv_av_v_MC    = std(v_MC_pulse);
+stdv_T_v_MC     = sqrt(stdv_bias_v_MC^2+stdv_av_v_MC^2);
+RE_MC           = 100*stdv_T_v_MC/v_s_MC;
+
 % Analytical method
 v_An            = 0.5*lidar_wavelength*mean_fd_pulse;
-stdv_bias_v_An  = 0.5*sqrt((fd^2*stdv_wavelength^2+lidar_wavelength^2.*stdv_fd.^2));
-RE_v            = (stdv_bias_v_An./v_An)*100;
-
-% Uncertainty in LOS due to averaging of spectra
-stdv_av_v_An = std(v_An);
-stdv_av_v_MC = std(v_MC_pulse);
-RE_v_MC      = (stdv_av_v_MC/v_s_MC)*100;
+stdv_v_An       = 0.5*sqrt((fd^2*stdv_wavelength^2+lidar_wavelength^2.*stdv_fd.^2));
+RE_v            = (stdv_v_An./v_An)*100;
 
 
-
-% Spec_mean    = mean(Spec_mean_pulse,1);
-% mean_f_Peak  = mean(mean_fpeak_pulse,1);
-
-disp(['Uncertainty in V due to sampling frequency and wavelength drift (MC) = ' ,num2str(stdv_bias_v_MC),' m/s'])
-disp(['Uncertainty in V due to sampling frequency and wavelength drift (An) = ' ,num2str(stdv_bias_v_An),' m/s'])
-disp(['Uncertainty in V due to spectra average (MC) = ',num2str(stdv_av_v_An),' m/s'])
-disp(['Uncertainty in V due to spectra average (An) = ',num2str(stdv_av_v_MC),' m/s'])
 
 %% PLOTS
 
@@ -261,9 +254,7 @@ Y_text_in_plot=pow2db(max(mean_S_original)); % Takes the height of the last peak
 str={['# fft                  =  ', num2str(n_fftpoints)],...
     ['# pulses           =  ', num2str(n_pulses)],...
     ['# MC samples =  ', num2str(N_MC)],...
-    ['\sigma_{v,avg} [ms^{-1}]     =  ', num2str(stdv_av_v_MC,'%.1s') ],...
-    ['\sigma_{v,bias} [ms^{-1}]    =  ', num2str(stdv_bias_v_MC,'%.1s') ],...
-    ['\sigma_{v} [ms^{-1}]          =  ', num2str(stdv_v_T,'%.1s') ],...
+    ['\sigma_{v} [ms^{-1}]          =  ', num2str(stdv_T_v_MC,'%.1s') ],...
     ['RE_{v} [%]           =  ', num2str(RE_MC,'%.1s') ]};
 % text(5e6,Y_text_in_plot-2.9,str, 'fontsize',17);
 anot=annotation(fig, 'textbox');
@@ -283,6 +274,38 @@ set(gca,'FontSize',35);
 hold off
 
 toc
+
+
+%% Plot input quantities probability distributions
+figure,
+histogram(fs,15,'displayname','Probability distribution f_s')
+leg=legend;
+leg.FontSize=19 ;
+legend show
+grid on
+set(gca,'FontSize',35);
+hold off
+
+figure,
+histogram(noise,'displayname','Probability distribution noise')
+leg=legend;
+leg.FontSize=19 ;
+legend show
+grid on
+set(gca,'FontSize',35);
+hold off
+
+
+% figure,
+% histogram(noise,'displayname','Probability distribution noise')
+% leg=legend;
+% leg.FontSize=19 ;
+% legend show
+% grid on
+% set(gca,'FontSize',35);
+% hold off
+
+
 %%%%% Plot matlab spectrum %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % figure, hold on
 % for in_fft=1:length(fs)
