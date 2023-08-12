@@ -26,32 +26,30 @@
 
 %%
 clear all %#ok<CLALL>
-% close all
+close all
 clc
 format shortEng
 %% Inputs
 
 % distance         = 2000;
 % PRF              = physconst('LightSpeed')/(2*distance);
-n_bits           = 12;      % N_MC° bits ADC
-V_ref            = 15;      % Reference voltaje ADC
+n_bits           = 8;      % N_MC° bits ADC
+V_ref            = 10;      % Reference voltaje ADC
 lidar_wavelength = 1550e-9; % wavelength of the laser source.
-fs_av            = 50e6;    % sampling frequency
-L                = 2^10;    %length of the signal.
+fs_av            = 100e6;    % sampling frequency
+L                = 2^8;    %length of the signal.
 n_fftpoints      = L;       % n° of points for each block (fft points).
 fd               = 2*V_ref/lidar_wavelength;  % Doppler frequency corresponding to Vref
-level_noise      = 1e-13; % Hardware noise added before signal downmixing
+level_noise      = 583.0952e-9; % Hardware noise added before signal downmixing
 n_pulses         = 1;   % n pulses for averaging the spectra
 N_MC             = 1e3; % n° MC samples to calculate the uncertainty due to bias in sampling frequency and wavelength
-
+Dp               = L*2.9e8*.5/fs_av;
 %% Uncertainty in the signal processing.
 
 %%% Uncertainty in the sampling frequency %%%
-per         = 0.5;
-bias_fs_av  = (per/100)*fs_av; % +/-
-
-% fs = [fs_av;randi([-bias_fs_av/.05 bias_fs_av/.05], 1, N_MC)'*0.05+fs_av];
-std_fs_av   = bias_fs_av/sqrt(3); % 2e-6*fs_av; % 
+per         = 2e-4;
+% bias_fs_av  = (per/100)*fs_av; % +/-
+std_fs_av   = (per/100)*fs_av;%/sqrt(3); % 2e-6*fs_av; % 
 fs          = [fs_av;std_fs_av.*randn(N_MC,1) + fs_av];
 Ts          = 1./fs;
 % Accepted values
@@ -62,10 +60,14 @@ vv=0.5*lidar_wavelength*fv;
 
 
 %%% Stdv due drift in the wavelength of the laser %%%
-stdv_wavelength  = .1e-9; % m
+stdv_wavelength  = 1e-9/sqrt(3); % m
 wavelength_noise = lidar_wavelength+stdv_wavelength*randn(N_MC+1,1); % Noisy wavelength vector
+e_perc_wavelength = 100*wavelength_noise/lidar_wavelength;
+
+
 
 %% Loop to calculate the frequency spectra for each fs
+
 tic
 for ind_npulses = 1:n_pulses
     for ind_fs = 1:N_MC+1
@@ -76,13 +78,12 @@ for ind_npulses = 1:n_pulses
         % Signal + Hardware noise:
         noise      = level_noise*randn(size(t{ind_fs}));
         
-        S0         = (10*sin(2*pi*fd.*t{ind_fs}) - 2.1*sin(2*pi*1.9*abs(randn(1,1))*fd*t{ind_fs}) + sin(2*pi*3*abs(randn(1,1))*fd*t{ind_fs})+...
-                      1.24*sin(2*pi*6*abs(randn(1,1))*fd.*t{ind_fs}) + 1.7*sin(2*pi*2*abs(randn(1,1))*fd*t{ind_fs}) - 1.4*sin(2*pi*abs(randn(1,1))*fd*t{ind_fs}));%#ok<SAGROW> % Adding up Signal contributors
+        S{ind_fs}         = noise+(14*sin(2*pi*fd.*t{ind_fs}) - 2.1*sin(2*pi*1.9*abs(randn(1,1))*fd*t{ind_fs}) + 2*sin(2*pi*3*abs(randn(1,1))*fd*t{ind_fs})+...
+                      3.24*sin(2*pi*6*abs(randn(1,1))*fd.*t{ind_fs}) + 4.7*sin(2*pi*2*abs(randn(1,1))*fd*t{ind_fs}) - 1.4*sin(2*pi*abs(randn(1,1))*fd*t{ind_fs})); % Adding up Signal contributors
         
-        S{ind_fs}  = awgn(S0, 5);
+%         S{ind_fs}  = awgn(S0, 5); %#ok<SAGROW>
         
         
-        %      S{ind_fs} = 3*cos(2*pi*2*t{ind_fs}) + 2*cos(2*pi*4*t{ind_fs}) + sin(2*pi*6*t{ind_fs});
         % Spectrum function from matlab:
         [pxx{ind_fs},fr{ind_fs}] = pspectrum(S{ind_fs}./max(abs(S{ind_fs}))); %#ok<SAGROW>
         
@@ -107,7 +108,7 @@ for ind_npulses = 1:n_pulses
         % original value
         for ind_quant=1:size(S_quant,2)
             [s,b]=min(abs(S_quant(:,ind_quant)-mean(S_quant(:,ind_quant))));
-            mean_S_quant{ind_fs}(:,ind_quant)= S_quant(b,ind_quant); %#ok<SAGROW>
+            mean_S_quant{ind_fs}(:,ind_quant)= S_quant(b,ind_quant);
         end
         
         % RMSE due to digitisation process. If the signal is unbiased, RMSE
@@ -123,14 +124,14 @@ for ind_npulses = 1:n_pulses
         P2            = abs(P3')/n_fftpoints;
         P1            = P2(:,1:n_fftpoints/2+1);
         P1(2:end-1)   = 2*P1(2:end-1);
-        S_fft_quant   = P1.^2;
+        S_fft_quant   = 15*P1.^2;
         S_fft_quant_mean(ind_fs,:) = P1.^2; %#ok<SAGROW>
         
         % T(1,ind_fs)=toc;
         % Time_fft(1,ind_fs)=sum(T); % Time taken for each fft
         
         % Peak detection from the spectra
-        [ii_mean,ii1_mean]          = max(S_fft_quant);
+        [ii_mean,ii1_mean]          = max(S_fft_quant); % Assume maximum as a peak detection method
         fd_peak(ind_fs,ind_npulses)  = f{ind_fs} (ii1_mean); %#ok<SAGROW>
         
         % Vlos
@@ -203,8 +204,11 @@ stdv_T_v_MC     = sqrt(stdv_bias_v_MC^2+stdv_av_v_MC^2);
 RE_MC           = 100*stdv_T_v_MC/v_s_MC;
 
 % Analytical method
+corr_coeff      = 1;
 v_An            = 0.5*lidar_wavelength*mean_fd_pulse;
-stdv_v_An       = 0.5*sqrt((fd^2*stdv_wavelength^2+lidar_wavelength^2.*stdv_fd.^2));
+stdv_v_An       = sqrt(0.25*fd^2*stdv_wavelength^2+0.25*lidar_wavelength^2.*stdv_fd.^2+2*corr_coeff*(0.5*fd*stdv_wavelength*0.5*lidar_wavelength.*stdv_fd));
+stdv_v_An2       = sqrt(0.25*fd^2*stdv_wavelength^2+0.25*lidar_wavelength^2.*stdv_fd.^2);
+
 RE_v            = (stdv_v_An./v_An)*100;
 
 
@@ -238,24 +242,25 @@ fig=figure;
 hold on
 
 % Against velocity
-plot(vv,pow2db(mean_S_original),'-k','linewidth',2.7,'displayname','Doppler Spectrum (f_s)');
-plot(vv,pow2db(mean(Spec_mean_pulse,1)),'-m','linewidth',2.1,'displayname',[num2str(per), '% Biased Doppler Spectrum']);
-xlabel('Wind velocity [ms^{-1}]');
-ylabel('PSD [dB]');
+% plot(vv,pow2db(mean_S_original),'-k','linewidth',2.7,'displayname','Doppler Spectrum (f_s)');
+% plot(vv,pow2db(mean(Spec_mean_pulse,1)),'-m','linewidth',2.1,'displayname',['% Biased Doppler Spectrum']);
+% xlabel('Wind velocity [ms^{-1}]');
+% ylabel('PSD [dB]');
 
 % Against frequency
-% plot(vv,pow2db(Spec_mean_pulse),'-m','linewidth',2.1,'displayname','Biased Doppler Spectra');
-% plot(vv,pow2db(mean_S_original),'-k','linewidth',2.7,'displayname','Doppler Spectra');
-% xlabel('Frequency [Hz]');
-% ylabel('PSD [dB]');
+plot(fv,pow2db(mean_S_original),'-k','linewidth',2.7,'displayname','Doppler Spectra');
+plot(fv,pow2db(Spec_mean_pulse),'-m','linewidth',3.1,'displayname','Biased Doppler Spectra');
+
+xlabel('Frequency [Hz]');
+ylabel('PSD [dB]');
 
 
 Y_text_in_plot=pow2db(max(mean_S_original)); % Takes the height of the last peak. Just a convention, to plot properly
 str={['# fft                  =  ', num2str(n_fftpoints)],...
     ['# pulses           =  ', num2str(n_pulses)],...
     ['# MC samples =  ', num2str(N_MC)],...
-    ['\sigma_{v} [ms^{-1}]          =  ', num2str(stdv_T_v_MC,'%.1s') ],...
-    ['RE_{v} [%]           =  ', num2str(RE_MC,'%.1s') ]};
+    ['u_{est} [ms^{-1}]     =  ', num2str(stdv_T_v_MC,'%.1s') ],...
+    ['u_{est} [%]         =  ', num2str(RE_MC,'%.1s') ]};
 % text(5e6,Y_text_in_plot-2.9,str, 'fontsize',17);
 anot=annotation(fig, 'textbox');
 anot.FontSize=19;
@@ -295,7 +300,9 @@ grid on
 set(gca,'FontSize',35);
 hold off
 
-
+figure,
+histfit(fd_peak(:,1))
+pd = fitdist(fd_peak(:,1),'Normal')
 % figure,
 % histogram(noise,'displayname','Probability distribution noise')
 % leg=legend;
