@@ -156,7 +156,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             psi1_theta2_corr  = Lidar.optics.scanner.correlations[4]
             psi2_theta1_corr  = Lidar.optics.scanner.correlations[5]
             psi2_theta2_corr  = Lidar.optics.scanner.correlations[6]
-            Vlos1_Vlos2_corr  = Lidar.optics.scanner.correlations[7]
+            # Vlos1_Vlos2_corr  = Lidar.optics.scanner.correlations[7]
             
             # There is NO correlation between range and angles since the range is determined by the AOM (at least in pulsed lidars) and the angles accuracy is related to the alignment of the telescope mirrors,
             # to the position of the lense and also to the servos orienting the scanner
@@ -176,7 +176,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             # 4.1) Store necessary parameters
             nec_par=[Qlunc_yaml_inputs,wind_direction,Href,Vref,alpha[ind_alpha],Hg,Hl,N_MC,theta1[0],U_theta1,psi1 [0] ,U_psi1,rho1[0],U_rho1,theta2[0],U_theta2,psi2[0],U_psi2,
                      rho2[0],U_rho2,psi1_psi2_corr,theta1_theta2_corr,rho1_rho2_corr,psi1_theta1_corr,psi1_theta2_corr,psi2_theta1_corr,psi2_theta2_corr,
-                     Vlos1_Vlos2_corr,psi1_rho1_corr,psi1_rho2_corr,psi2_rho1_corr,psi2_rho2_corr,theta1_rho1_corr,theta1_rho2_corr,theta2_rho1_corr,theta2_rho2_corr]
+                     psi1_rho1_corr,psi1_rho2_corr,psi2_rho1_corr,psi2_rho2_corr,theta1_rho1_corr,theta1_rho2_corr,theta2_rho1_corr,theta2_rho2_corr]
             # pdb.set_trace()
             # 4.2) Vlos and u,v Uncertainties MCM
             CorrCoefuv,U_Vlos1_MCM,U_Vlos2_MCM,u,v,U_u_MC,U_v_MC,Mult_param ,Correlation_coeff    =      SA.MCM_uv_lidar_uncertainty(*nec_par)
@@ -189,6 +189,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             U_Vh_MCM   =    SA.MCM_Vh_lidar_uncertainty(CorrCoefuv,wind_direction,u,v,U_u_MC,U_v_MC,*Mult_param)
             U_Vh_MCM_T.append(U_Vh_MCM)
             # pdb.set_trace()
+            
             # 4.4) Vlos and u,v Uncertainties GUM method
             Vlos1_GUM,Vlos2_GUM,U_Vlos1_GUM,U_Vlos2_GUM,u_GUM,v_GUM,U_u_GUM,U_v_GUM,CorrCoef_uv_GUM ,Awachesneip,Awachesneip2  =    SA.GUM_uv_lidar_uncertainty(*nec_par)
             U_Vlos1_GUM_T.append(U_Vlos1_GUM)
@@ -300,19 +301,19 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # Each try/except evaluates wether the component is included in the module and therefore in the calculations   
     # Scanner
     if Lidar.optics.scanner != None:
-        try:                  
-            if Lidar.wfr_model.reconstruction_model != 'None':
-                   
-                Scanner_Uncertainty,DataFrame=Lidar.optics.scanner.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
-                WFR_Uncertainty=None#Lidar.wfr_model.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scanner_Uncertainty)            
+        # try:                  
+        if Lidar.wfr_model.reconstruction_model != 'None':
+               
+            Scanner_Uncertainty,DataFrame=Lidar.optics.scanner.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+            WFR_Uncertainty=None#Lidar.wfr_model.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scanner_Uncertainty)            
+        
+        else:  
             
-            else:  
-                
-                Scanner_Uncertainty,DataFrame=Lidar.optics.scanner.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
-                WFR_Uncertainty = None
-        except:
-            Scanner_Uncertainty=None
-            print(colored('Error in scanner uncertainty calculations!','cyan', attrs=['bold']))
+            Scanner_Uncertainty,DataFrame=Lidar.optics.scanner.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+            WFR_Uncertainty = None
+        # except:
+        Scanner_Uncertainty=None
+        print(colored('Error in scanner uncertainty calculations!','cyan', attrs=['bold']))
     else:
         print (colored('You didn´t include a head scanner in the lidar.','cyan', attrs=['bold']))       
    

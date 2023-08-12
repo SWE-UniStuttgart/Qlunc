@@ -68,25 +68,25 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     ### Optics
     if Lidar.optics != None:
+        # try:
+        Optics_Uncertainty,DataFrame = Lidar.optics.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+        # Save the dictionary --> Optics_Uncertainty to pass it to the function UQ_Pointing_Classes to calculate the Vh uncertainty
+        # pdb.set_trace()
+        with open('./Lidar_Projects/'+Lidar.LidarID, 'wb') as f:
+            pickle.dump(Optics_Uncertainty, f)
+        # Optics_Uncertainty           = np.ndarray.tolist(Optics_Uncertainty['Uncertainty_Optics'])*len(Atmospheric_Scenario.temperature)
+        # List_Unc_lidar.append(np.array([Optics_Uncertainty]))
         try:
-            Optics_Uncertainty,DataFrame = Lidar.optics.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
-            # Save the dictionary --> Optics_Uncertainty to pass it to the function UQ_Pointing_Classes to calculate the Vh uncertainty
-            # pdb.set_trace()
-            with open('./Lidar_Projects/'+Lidar.LidarID, 'wb') as f:
-                pickle.dump(Optics_Uncertainty, f)
-            # Optics_Uncertainty           = np.ndarray.tolist(Optics_Uncertainty['Uncertainty_Optics'])*len(Atmospheric_Scenario.temperature)
-            # List_Unc_lidar.append(np.array([Optics_Uncertainty]))
-            try:
-                List_Unc_lidar.append(DataFrame['Optical circulator'])                
-            except:
-                 print(colored('Error appending optical circulator for lidar uncertainty estimations.','cyan', attrs=['bold']))
-            try:
-                List_Unc_lidar.append(DataFrame['Telescope'])                
-            except:
-                 print(colored('No telescope in the photonics module. Telescope is not in lidar uncertainty estimations','cyan', attrs=['bold']))                          
+            List_Unc_lidar.append(DataFrame['Optical circulator'])                
         except:
-            Optics_Uncertainty = None
-            print(colored('Error in optics module calculations!','cyan', attrs=['bold']))
+             print(colored('Error appending optical circulator for lidar uncertainty estimations.','cyan', attrs=['bold']))
+        try:
+            List_Unc_lidar.append(DataFrame['Telescope'])                
+        except:
+             print(colored('No telescope in the photonics module. Telescope is not in lidar uncertainty estimations','cyan', attrs=['bold']))                          
+        # except:
+        Optics_Uncertainty = None
+        print(colored('Error in optics module calculations!','cyan', attrs=['bold']))
     else:
         print(colored('You didn´t include an optics module in the lidar','cyan', attrs=['bold']))
     
