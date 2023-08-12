@@ -95,7 +95,7 @@ model to calculate uncertainty expansion.
 #%% Constants:
 class cts():
     k = 1.38064852e-23 # Boltzman constant:[m^2 kg s^-2 K^-1]
-    h = 6.6207004e-34 # Plank constant [m^2 kg s^-1]
+    h = 6.62607004e-34 # Plank constant [m^2 kg s^-1]
     e = 1.60217662e-19 # electron charge [C]
     c = 2.99792e8 #speed of light [m s^-1]
 
