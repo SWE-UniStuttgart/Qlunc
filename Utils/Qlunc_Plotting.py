@@ -69,10 +69,9 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
 ##################    Ploting scanner measuring points pattern #######################
     # pdb.set_trace()
     if flag_plot_measuring_points_pattern:
-        if Lidar.optics.scanner.pattern=='None':
-             
-        
-        # 0. Plot Uncertainty in /Omega against wind direction 
+        if Lidar.optics.scanner.pattern in ['None']:
+      
+            # 0. Plot Uncertainty in /Omega against wind direction 
             color=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))
             fig,ax0=plt.subplots()
             for ind_plot in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction MCM'])):
@@ -97,7 +96,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             r'$r_{\theta_{2},\varphi_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[6])))           
             ax0.text(0.20, 0.95, textstr0, transform=ax0.transAxes, fontsize=16,horizontalalignment='left',verticalalignment='top', bbox=props0)     
 
-        # 1. Plot Uncertainty in Vh against wind direction
+            # 1. Plot Uncertainty in Vh against wind direction
             fig,ax1=plt.subplots()        
             color2=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))
             for ind_plot in range(len(Data['Vh Unc [m/s]']['Uncertainty Vh MCM'])):
@@ -207,7 +206,6 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             ax4.set_ylabel('$V_{LOS}$ Uncertainty [m/s]',fontsize=25)
             ax4.grid(axis='both')
             plt.show()
-            pdb.set_trace()
             
      
             # 5.  Plot Uncertainty in VLOS1 with wind direction 
@@ -295,7 +293,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             r'N={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['N_MC'], ),           
             r'$r_{\theta,\varphi}~ =%.2f$' % (Lidar.optics.scanner.correlations[6]),))           
             ax6[0].text(0.5, 0.95, textstr5, transform=ax6[0].transAxes, fontsize=14,horizontalalignment='left',verticalalignment='top', bbox=props5)
-            
+            pdb.set_trace()
             
            # #7. Plot Uncertainty u and v components wind direction
            #  fig,ax0=plt.subplots()                  
@@ -314,17 +312,17 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
            #  ax0.grid(axis='both')
            #  plt.title('$u$ and $v$ wind components Uncertainty',fontsize=plot_param['title_fontsize'])
            #  pdb.set_trace()
-        
-        
+
         #%% Plot the vertical plane
-        # elif Lidar.optics.scanner.pattern=='plane': 
+        
+        # if Lidar.optics.scanner.pattern in ['plane']:
         #     # pdb.set_trace()
         #     V=[]
         #     Dir=[]
-        #     for i in range(len(Data['Uncertainty Vh GUM'])):
-        #         V.append(Data['Uncertainty Vh GUM'][i][0])
-        #         Dir.append(Data['Uncertainty wind direction GUM'][i][0])         
-            
+        #     for i in range(len(Data['Vh Unc [m/s]']['Uncertainty Vh GUM'])):
+        #         V.append(Data['Vh Unc [m/s]']['Uncertainty Vh GUM'][i][0])
+        #         Dir.append(Data['WinDir Unc [°]']['Uncertainty wind direction GUM'][i][0])         
+        #     pdb.set_trace()
         #     # Horizontal wind velocity
         #     colorsMap='jet'
         #     cm = plt.get_cmap(colorsMap)
@@ -332,13 +330,13 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         #     scalarMap = cmx.ScalarMappable(norm=cNorm, cmap=cm)
         #     fig = plt.figure()
         #     ax = Axes3D(fig)
-        #     ax.scatter(Data['x_out'], Data['y_out'], Data['z_out'], V, c=scalarMap.to_rgba(V))
+        #     ax.scatter(Data['lidars']['Coord_Out'][0],Data['lidars']['Coord_Out'][1], Data['lidars']['Coord_Out'][2], V, c=scalarMap.to_rgba(V))
         #     ax.set_xlabel('X [m]')
         #     ax.set_ylabel('Y [m]')
         #     ax.set_zlabel('Z [m]')
-        #     ax.plot(Data['Lidar1 position'][0],Data['Lidar1 position'][1],Data['Lidar1 position'][2],'sb')
-        #     ax.plot(Data['Lidar2 position'][0],Data['Lidar2 position'][1],Data['Lidar2 position'][2],'sb')
-        #     scalarMap.set_array(Data['Uncertainty Vh GUM'])
+        #     ax.plot(Data['lidars']['Lidar0_Rectangular']['LidarPosX'],Data['lidars']['Lidar0_Rectangular']['LidarPosY'],Data['lidars']['Lidar0_Rectangular']['LidarPosZ'],'sb')
+        #     ax.plot(Data['lidars']['Lidar1_Rectangular']['LidarPosX'],Data['lidars']['Lidar1_Rectangular']['LidarPosY'],Data['lidars']['Lidar1_Rectangular']['LidarPosZ'],'sb')
+        #     scalarMap.set_array(Data['Vh Unc [m/s]']['Uncertainty Vh GUM'])
         #     cb=plt.colorbar(scalarMap, shrink=0.5)
         #     cb.set_label(label='$V_h$ Uncertainty [m/s]', size='large')
         #     cb.ax.tick_params(labelsize='large')
