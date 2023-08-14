@@ -625,8 +625,9 @@ def MultiVar (Lidar, U_Vlos1,U_Vlos2,  theta_stds, psi_stds,  rho_stds,autocorr_
 
         # pdb.set_trace()
         if mode==0:
+            # pdb.set_trace()
             psi1_theta1_corr      = Lidar.optics.scanner.correlations[3]
-            psi2_theta2_corr      = Lidar.optics.scanner.correlations[6] 
+            psi2_theta2_corr      = Lidar.optics.scanner.correlations[6]
             psi1_psi2_corr        = 0
             theta1_theta2_corr    = 0
             rho1_rho2_corr        = 0
@@ -638,20 +639,30 @@ def MultiVar (Lidar, U_Vlos1,U_Vlos2,  theta_stds, psi_stds,  rho_stds,autocorr_
             psi2_theta2_corr      = 0 #Lidar.optics.scanner.correlations[6]
             psi1_psi2_corr        = Lidar.optics.scanner.correlations[0]
             theta1_theta2_corr    = Lidar.optics.scanner.correlations[1]
-            rho1_rho2_corr        = Lidar.optics.scanner.correlations[2]   
+            rho1_rho2_corr        = Lidar.optics.scanner.correlations[2]
             psi1_theta2_corr      = Lidar.optics.scanner.correlations[4]
             psi2_theta1_corr      = Lidar.optics.scanner.correlations[5]
             u_Vlos1_Vlos2_corr    = Lidar.optics.scanner.correlations[7]
         elif mode==2:
-            psi1_theta1_corr      = 0 #Lidar.optics.scanner.correlations[3]
-            psi2_theta2_corr      = 0 #Lidar.optics.scanner.correlations[6] 
+            
+            psi1_theta1_corr      = Lidar.optics.scanner.correlations[3]
+            psi2_theta2_corr      = Lidar.optics.scanner.correlations[6]
             psi1_psi2_corr        = Lidar.optics.scanner.correlations[0]
             theta1_theta2_corr    = Lidar.optics.scanner.correlations[1]
-            rho1_rho2_corr        = Lidar.optics.scanner.correlations[2]   
+            rho1_rho2_corr        = Lidar.optics.scanner.correlations[2]
             psi1_theta2_corr      = Lidar.optics.scanner.correlations[4]
             psi2_theta1_corr      = Lidar.optics.scanner.correlations[5]
             u_Vlos1_Vlos2_corr    = Lidar.optics.scanner.correlations[7]
-            
+            # pdb.set_trace()
+        elif mode==3:
+            psi1_theta1_corr      = 0
+            psi2_theta2_corr      = 0
+            psi1_psi2_corr        = 0
+            theta1_theta2_corr    = 0
+            rho1_rho2_corr        = 0
+            psi1_theta2_corr      = 0
+            psi2_theta1_corr      = 0
+            u_Vlos1_Vlos2_corr    = Lidar.optics.scanner.correlations[7]           
         psi1_rho1_corr        = 0
         psi1_rho2_corr        = 0
         psi2_rho1_corr        = 0
@@ -662,14 +673,14 @@ def MultiVar (Lidar, U_Vlos1,U_Vlos2,  theta_stds, psi_stds,  rho_stds,autocorr_
         theta2_rho2_corr      = 0
 
         # pdb.set_trace()
-        cov_MAT=[[theta_stds[0]**2*autocorr_theta,                  theta_stds[1]*theta_stds[0]*theta1_theta2_corr,       psi_stds[0]*theta_stds[0]*psi1_theta1_corr ,      psi_stds[1]*theta_stds[0]*psi2_theta1_corr,   rho_stds[0]*theta_stds[0]*theta1_rho1_corr,  rho_stds[1]*theta_stds[0]*theta1_rho2_corr   ,  theta_stds[0]*U_Vlos1,                          theta_stds[0]*U_Vlos2                        ],
-                 [theta_stds[0]*theta_stds[1]*theta1_theta2_corr,          theta_stds[1]**2*autocorr_theta,               psi_stds[0]*theta_stds[1]*psi1_theta2_corr,       psi_stds[1]*theta_stds[1]*psi2_theta2_corr ,  rho_stds[0]*theta_stds[1]*theta2_rho1_corr,  rho_stds[1]*theta_stds[1]*theta2_rho2_corr   ,  theta_stds[1]*U_Vlos1                        , theta_stds[1]*U_Vlos2                       ],
-                 [theta_stds[0]*psi_stds[0]*psi1_theta1_corr  ,     theta_stds[1]*psi_stds[0]*psi1_theta2_corr,               psi_stds[0]**2*autocorr_psi,                  psi_stds[1]*psi_stds[0]*psi1_psi2_corr,       rho_stds[0]*psi_stds[0]*psi1_rho1_corr,      rho_stds[1]*psi_stds[0]*psi1_rho2_corr        , psi_stds[0]*U_Vlos1                          , psi_stds[0]*U_Vlos2                           ],
-                 [theta_stds[0]*psi_stds[1]*psi2_theta1_corr,       theta_stds[1]*psi_stds[1]*psi2_theta2_corr ,          psi_stds[0]*psi_stds[1]*psi1_psi2_corr,                 psi_stds[1]**2*autocorr_psi,            rho_stds[0]*psi_stds[1]*psi2_rho1_corr,      rho_stds[1]*psi_stds[1]*psi2_rho2_corr       ,  psi_stds[1]*U_Vlos1                          , psi_stds[1]*U_Vlos2                          ],
-                 [theta_stds[0]*rho_stds[0]*theta1_rho1_corr,          theta_stds[1]*rho_stds[0]*theta2_rho1_corr,        psi_stds[0]*rho_stds[0]*psi1_rho1_corr,           psi_stds[1]*rho_stds[0]*psi2_rho1_corr,                rho_stds[0]**2*autocorr_rho,          rho_stds[1]*rho_stds[0]*rho1_rho2_corr      , rho_stds[0]*U_Vlos1                            ,rho_stds[0]*U_Vlos2                         ],
-                 [theta_stds[0]*rho_stds[1]*theta1_rho2_corr,          theta_stds[1]*rho_stds[1]*theta2_rho2_corr,         psi_stds[0]*rho_stds[1]*psi1_rho2_corr,          psi_stds[1]*rho_stds[1]*psi2_rho2_corr,       rho_stds[0]*rho_stds[1]*rho1_rho2_corr,           rho_stds[1]**2*autocorr_rho           ,    rho_stds[1]*U_Vlos1   ,                         rho_stds[1]*U_Vlos2                         ],
-                 [theta_stds[0]*U_Vlos1    ,                                 theta_stds[1]*U_Vlos1               ,                 psi_stds[0]*U_Vlos1    ,                          psi_stds[1]*U_Vlos1,                               rho_stds[0]*U_Vlos1   ,             rho_stds[1]*U_Vlos1   ,                     U_Vlos1**2*autocorr_V,                          U_Vlos1*U_Vlos2*u_Vlos1_Vlos2_corr          ],
-                 [theta_stds[0]*U_Vlos2   ,                                  theta_stds[1]*U_Vlos2              ,                 psi_stds[0]*U_Vlos2  ,                             psi_stds[1]*U_Vlos2,                               rho_stds[0]*U_Vlos2    ,            rho_stds[1]*U_Vlos2  ,                      U_Vlos1*U_Vlos2*u_Vlos1_Vlos2_corr,             U_Vlos2**2*autocorr_V                       ]]
+        cov_MAT=[[theta_stds[0]**2*autocorr_theta,                  theta_stds[1]*theta_stds[0]*theta1_theta2_corr,       psi_stds[0]*theta_stds[0]*psi1_theta1_corr ,      psi_stds[1]*theta_stds[0]*psi2_theta1_corr,   rho_stds[0]*theta_stds[0]*theta1_rho1_corr,  rho_stds[1]*theta_stds[0]*theta1_rho2_corr   ,  theta_stds[0]*U_Vlos1*0,                          theta_stds[0]*U_Vlos2  *0                      ],
+                 [theta_stds[0]*theta_stds[1]*theta1_theta2_corr,          theta_stds[1]**2*autocorr_theta,               psi_stds[0]*theta_stds[1]*psi1_theta2_corr,       psi_stds[1]*theta_stds[1]*psi2_theta2_corr ,  rho_stds[0]*theta_stds[1]*theta2_rho1_corr,  rho_stds[1]*theta_stds[1]*theta2_rho2_corr   ,  theta_stds[1]*U_Vlos1*0                        , theta_stds[1]*U_Vlos2   *0                    ],
+                 [theta_stds[0]*psi_stds[0]*psi1_theta1_corr  ,     theta_stds[1]*psi_stds[0]*psi1_theta2_corr,               psi_stds[0]**2*autocorr_psi,                  psi_stds[1]*psi_stds[0]*psi1_psi2_corr,       rho_stds[0]*psi_stds[0]*psi1_rho1_corr,      rho_stds[1]*psi_stds[0]*psi1_rho2_corr        , psi_stds[0]*U_Vlos1*0                          , psi_stds[0]*U_Vlos2     *0                      ],
+                 [theta_stds[0]*psi_stds[1]*psi2_theta1_corr,       theta_stds[1]*psi_stds[1]*psi2_theta2_corr ,          psi_stds[0]*psi_stds[1]*psi1_psi2_corr,                 psi_stds[1]**2*autocorr_psi,            rho_stds[0]*psi_stds[1]*psi2_rho1_corr,      rho_stds[1]*psi_stds[1]*psi2_rho2_corr       ,  psi_stds[1]*U_Vlos1*0                          , psi_stds[1]*U_Vlos2     *0                     ],
+                 [theta_stds[0]*rho_stds[0]*theta1_rho1_corr,          theta_stds[1]*rho_stds[0]*theta2_rho1_corr,        psi_stds[0]*rho_stds[0]*psi1_rho1_corr,           psi_stds[1]*rho_stds[0]*psi2_rho1_corr,                rho_stds[0]**2*autocorr_rho,          rho_stds[1]*rho_stds[0]*rho1_rho2_corr      , rho_stds[0]*U_Vlos1*0                           ,rho_stds[0]*U_Vlos2     *0                    ],
+                 [theta_stds[0]*rho_stds[1]*theta1_rho2_corr,          theta_stds[1]*rho_stds[1]*theta2_rho2_corr,         psi_stds[0]*rho_stds[1]*psi1_rho2_corr,          psi_stds[1]*rho_stds[1]*psi2_rho2_corr,       rho_stds[0]*rho_stds[1]*rho1_rho2_corr,           rho_stds[1]**2*autocorr_rho           ,    rho_stds[1]*U_Vlos1 *0  ,                         rho_stds[1]*U_Vlos2    *0                     ],
+                 [theta_stds[0]*U_Vlos1*0    ,                                 theta_stds[1]*U_Vlos1*0               ,                 psi_stds[0]*U_Vlos1*0    ,                          psi_stds[1]*U_Vlos1*0,                               rho_stds[0]*U_Vlos1*0   ,             rho_stds[1]*U_Vlos1*0   ,                     U_Vlos1**2*autocorr_V,                          U_Vlos1*U_Vlos2*u_Vlos1_Vlos2_corr          ],
+                 [theta_stds[0]*U_Vlos2*0   ,                                  theta_stds[1]*U_Vlos2*0              ,                 psi_stds[0]*U_Vlos2*0  ,                             psi_stds[1]*U_Vlos2*0,                               rho_stds[0]*U_Vlos2*0    ,            rho_stds[1]*U_Vlos2*0  ,                      U_Vlos1*U_Vlos2*u_Vlos1_Vlos2_corr,             U_Vlos2**2*autocorr_V                       ]]
         
         return  cov_MAT
 
@@ -703,20 +714,17 @@ def MCM_uv_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,ind_alph
     Vlos1_MC_cr2_s,Vlos2_MC_cr2_s=[],[]
     CorrCoef_U_VLOS,CorrCoefVlos2,CorrCoefTheta2,CorrCoefPsi2,CorrCoefTheta1Psi2,CorrCoefTheta2Psi1,CorrCoef_U_uv,CorrCoefTheta1Psi1_2,CorrCoefTheta2Psi2_2=[],[],[],[],[],[],[],[],[]
     CorrCoefVlos1,  CorrCoefTheta1,CorrCoefPsi1,CorrCoefThetaPsi1,CorrCoefuv,CorrCoef_Theta1Psi2,CorrCoefTheta1Psi2_2,CorrCoefTheta2Psi1_2,CorrCoefTheta1Psi1=[],[],[],[],[],[],[],[],[]    
-    
+    Theta1_cr2_s,Theta2_cr2_s,Psi1_cr2_s,Psi2_cr2_s,Rho1_cr2_s,Rho2_cr2_s=[],[],[],[],[],[]
     for ind_wind_dir in range(len(wind_direction)):  
         
         
         ######## 1st multivariate distribution #####################
 
         V_means=[0,0]
-        # pdb.set_trace()                                                                                                                                                                                                                                                                                                                                                                                                      ## MCM -Vlos
-        #Param_multivar =[ U_Vlos1_MCM,U_Vlos2_MCM,    ,theta_stds2        ,psi_stds2        ,rho_stds2     ,psi1_psi2_corr,  theta1_theta2_corr  , rho1_rho2_corr    , psi1_theta1_corr , psi1_theta2_corr  , psi2_theta1_corr    , psi2_theta2_corr   , Vlos1_Vlos2_corr,  0,0,0,1 ]
-        # Param_multivar  =[    0,              0,     [u_theta1,u_theta1], [u_psi1,u_psi2],  [u_rho1,u_rho2], psi1_psi2_corr,   theta1_theta2_corr,  rho1_rho2_corr     , psi1_theta1_corr , psi1_theta2_corr,   psi2_theta1_corr,     psi2_theta2_corr   ,       0         , 1,1,1,0]
-        
+        # pdb.set_trace()
         # Covariance matrix
         # cov_MAT  =  MultiVar(Lidar,U_Vlos1_MCM,U_Vlos2_MCM, [u_theta1,u_theta1], [u_psi1,u_psi2],  [u_rho1,u_rho2]   ,autocorr_theta,autocorr_psi,autocorr_rho,autocorr_V,mode )
-        cov_MAT    =  MultiVar(Lidar,    0,          0       ,[u_theta1,u_theta1], [u_psi1,u_psi2],  [u_rho1,u_rho2]  ,       1     ,      1     ,       1    ,     0 ,      0    )
+        cov_MAT    =  MultiVar(Lidar,    0,          0       ,[u_theta1,u_theta2], [u_psi1,u_psi2],  [u_rho1,u_rho2]  ,       1     ,      1     ,       1    ,     0 ,      0    )
          
         # # Multivariate distributions:      
         Theta1_cr,Theta2_cr,Psi1_cr,Psi2_cr,Rho1_cr,Rho2_cr,Vlos1_MC_cr,Vlos2_MC_cr= multivariate_normal.rvs([theta1,theta2,psi1,psi2,rho1,rho2,V_means[0],V_means[1]], cov_MAT,Lidar.optics.scanner.N_MC).T
@@ -749,21 +757,27 @@ def MCM_uv_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,ind_alph
     CorrCoefTheta2Psi1.append(np.corrcoef(Theta2_cr,Psi1_cr)[0][1])
     
 
-
+    ######### 2nd multivariate  ####################################  
     for ind_wind_dir in range(len(wind_direction)):             
-        ######### 2nd multivariate  ####################################                                                                                                                                                                                                                                                                                                                      ## MCM - uv     
+                                                                                                                                                                                                                                                                                                                            ## MCM - uv     
         # Covariance matrix       
-        #                   (Lidar, U_Vlos1,                             U_Vlos2,         theta_stds, psi_stds,  rho_stds, autocorr_theta,autocorr_psi,autocorr_rho,autocorr_V ,mode)
-        cov_MAT_uv=MultiVar(Lidar,   U_Vlos1_MCM[ind_wind_dir],U_Vlos2_MCM[ind_wind_dir],  [u_theta1,u_theta2],  [u_psi1,u_psi2],  [u_rho1,u_rho2],        0     ,      0     ,       0    ,     1 ,       1  )
+        #                   (Lidar, U_Vlos1,                             U_Vlos2,                theta_stds,         psi_stds,          rho_stds,  autocorr_theta,autocorr_psi,autocorr_rho,autocorr_V ,  mode)
+        cov_MAT_uv = MultiVar(Lidar,   U_Vlos1_MCM[ind_wind_dir],U_Vlos2_MCM[ind_wind_dir],  [u_theta1,u_theta2],  [u_psi1,u_psi2],  [u_rho1,u_rho2],        1     ,      1     ,       1    ,     1 ,      1  )
         
         # # Multivariate distributions:       
-        Theta1_cr2,Theta2_cr2,Psi1_cr2,Psi2_cr2,Rho1_cr2,Rho2_cr2,Vlos1_MC_cr2,Vlos2_MC_cr2= multivariate_normal.rvs([0,0,0,0,0,0,np.mean(Vlos1[ind_wind_dir]),np.mean(Vlos2[ind_wind_dir])], cov_MAT_uv,Lidar.optics.scanner.N_MC).T
+        # Theta1_cr2,Theta2_cr2,Psi1_cr2,Psi2_cr2,Rho1_cr2,Rho2_cr2,Vlos1_MC_cr2,Vlos2_MC_cr2= multivariate_normal.rvs([theta1,theta2,psi1,psi2,rho1,rho2,np.mean(Vlos1[ind_wind_dir]),np.mean(Vlos2[ind_wind_dir])], cov_MAT_uv,Lidar.optics.scanner.N_MC).T
+        Theta1_cr2,Theta2_cr2,Psi1_cr2,Psi2_cr2,Rho1_cr2,Rho2_cr2,Vlos1_MC_cr2,Vlos2_MC_cr2= multivariate_normal.rvs([Theta1_cr.mean(),Theta2_cr.mean(),Psi1_cr.mean(),Psi2_cr.mean(),Rho1_cr.mean(),Rho2_cr.mean(),np.mean(Vlos1[ind_wind_dir]),np.mean(Vlos2[ind_wind_dir])], cov_MAT_uv,Lidar.optics.scanner.N_MC).T
         
         #Storing data
         Vlos1_MC_cr2_s.append(Vlos1_MC_cr2)
         Vlos2_MC_cr2_s.append(Vlos2_MC_cr2)
-
-        
+        Theta1_cr2_s.append(Theta1_cr2)       
+        Theta2_cr2_s.append(Theta2_cr2)
+        Psi1_cr2_s.append(Psi1_cr2)
+        Psi2_cr2_s.append(Psi2_cr2)
+        Rho1_cr2_s.append(Rho1_cr2)
+        Rho2_cr2_s.append(Rho2_cr2)        
+         
         ###CORRELATION COEFFICIENTS 2nd multivariate       
         CorrCoefVlos2.append(np.corrcoef(Vlos1_MC_cr2_s[ind_wind_dir],Vlos2_MC_cr2_s[ind_wind_dir])[0][1])       
         CorrCoefTheta2.append( np.corrcoef(Theta1_cr2,Theta2_cr2)[0][1])
@@ -773,10 +787,8 @@ def MCM_uv_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,ind_alph
         CorrCoefTheta1Psi2_2.append( np.corrcoef(Theta1_cr2,Psi2_cr2)[0][1])
         CorrCoefTheta2Psi2_2.append( np.corrcoef(Theta2_cr2,Psi2_cr2)[0][1])
         CorrCoefTheta2Psi1_2.append(np.corrcoef(Theta2_cr2,Psi1_cr2)[0][1])
-      
-        
-   
-        
+        # pdb.set_trace()
+                
         ########### Analysis u and v ##############################       
         u.append((-Vlos1_MC_cr2*np.cos(Theta2_cr2)*np.sin(Psi2_cr2)+Vlos2_MC_cr2*np.cos(Theta1_cr2)*np.sin(Psi1_cr2))/(np.cos(Theta1_cr2)*np.cos(Theta2_cr2)*np.sin(Psi1_cr2-Psi2_cr2)))
         v.append(( Vlos1_MC_cr2*np.cos(Theta2_cr2)*np.cos(Psi2_cr2)-Vlos2_MC_cr2*np.cos(Theta1_cr2)*np.cos(Psi1_cr2))/(np.cos(Theta1_cr2)*np.cos(Theta2_cr2)*np.sin(Psi1_cr2-Psi2_cr2)))
@@ -789,12 +801,13 @@ def MCM_uv_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,ind_alph
     
     
     # Store the multivariate distributions
-    Mult_param          =  [Vlos1_MC_cr2_s,Vlos2_MC_cr2_s,Theta1_cr,Theta2_cr,Psi1_cr,Psi2_cr,Rho1_cr,Rho2_cr]
-    
+    Mult_param          =  [Vlos1_MC_cr2_s,Vlos2_MC_cr2_s,Theta1_cr2_s,Theta2_cr2_s,Psi1_cr2_s,Psi2_cr2_s,Rho1_cr2_s,Rho2_cr2_s]
+    print(U_Vlos1_MCM)
+    print(U_Vlos2_MCM)
     # Store correlation coefficients
     Correlation_coeffs  =  [CorrCoefuv,CorrCoefTheta1Psi1,CorrCoefTheta2Psi2,CorrCoefTheta1,CorrCoefVlos1,CorrCoefPsi1,CorrCoefTheta1Psi2,CorrCoef_U_VLOS,
                             CorrCoefVlos2,CorrCoefTheta2,CorrCoefPsi2,CorrCoefTheta2_Psi2_2,CorrCoefTheta1Psi1_2,CorrCoefTheta1Psi2_2,CorrCoefTheta2Psi2_2,CorrCoefTheta2Psi1_2,CorrCoefTheta2Psi1]
-    # pdb.set_trace()
+    pdb.set_trace()
     return U_Vlos1_MCM,U_Vlos2_MCM,u,v,U_u_MC,U_v_MC ,Mult_param,Correlation_coeffs
 
 #%% ##########################################
@@ -810,6 +823,7 @@ This function calculates the uncertainty in Vh estimations based on the Montecar
 
 def MCM_Vh_lidar_uncertainty (wind_direction,Vlos1,Vlos2,Theta1,Theta2,Psi1,Psi2,Rho1,Rho2):
     Vh,U_Vh_MCM = [],[]
+    # pdb.set_trace()
     for ind_wind_dir in range(len(wind_direction)): 
         # Approach using Vlos1 and Vlos2  from "MCM_uv_lidar_uncertainty"
         Vh_num    = np.sqrt(((Vlos1[ind_wind_dir]*np.cos(Theta2[ind_wind_dir]))**2+(Vlos2[ind_wind_dir]*np.cos(Theta1[ind_wind_dir]))**2)-2*(Vlos1[ind_wind_dir]*Vlos2[ind_wind_dir]*np.cos(Theta1[ind_wind_dir])*np.cos(Theta2[ind_wind_dir])*np.cos(Psi1[ind_wind_dir]-Psi2[ind_wind_dir])))
@@ -872,11 +886,6 @@ def GUM_uv_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,ind_alpha
         u_V_LOS2Psi2.append(dVlos2dpsi2)
         u_V_LOS2Rho2.append(dVlos2drho2)
 
-        # u_theta=[u_theta1,u_theta2]
-        # u_psi=[u_psi1,u_psi2]
-        # u_rho=[u_rho1,u_rho2]
-       
-        
         ### Covariance matrix
         #           (Lidar, U_Vlos1,U_Vlos2,   [u_theta1,u_theta2],   [u_psi1,u_psi2]  ,[u_rho1,u_rho2],autocorr_theta,autocorr_psi,autocorr_rho,autocorr_V ,mode)       
         Ux=MultiVar(Lidar,       0,     0,      [u_theta1,u_theta2],  [u_psi1,u_psi2],  [u_rho1,u_rho2]       ,1   ,            1          ,1         ,1,     0  )
@@ -995,11 +1004,9 @@ def GUM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,theta1,p
             # Covaraiance and sensitivity matrices:
 
                       # (Lidar,              U_Vlos1,            U_Vlos2,            theta_stds,                psi_stds,         rho_stds,      autocorr_theta,autocorr_psi,autocorr_rho,autocorr_V ,mode)
-            UxVh=MultiVar(Lidar, U_Vlos1_GUM[ind_wind_dir],U_Vlos2_GUM[ind_wind_dir], [u_theta1,u_theta2],  [u_psi1,u_psi2],  [u_rho1,u_rho2],          0,           0,           0,          1,       1 )
-            # pdb.set_trace()
-            # CxVh=[dVh_dtheta1,dVh_dtheta2,dVh_dpsi1,dVh_dpsi2,0,0,dVh_Vlos1,dVh_Vlos2]
-            # pdb.set_trace()
-            CxVh=[0,0,0,0,0,0,dVh_Vlos1,dVh_Vlos2]
+            UxVh=MultiVar(Lidar, U_Vlos1_GUM[ind_wind_dir],U_Vlos2_GUM[ind_wind_dir], [u_theta1,u_theta2],  [u_psi1,u_psi2],  [u_rho1,u_rho2],          1,           1,           1,          1,       1 )
+            CxVh=[dVh_dtheta1,dVh_dtheta2,dVh_dpsi1,dVh_dpsi2,0,0,dVh_Vlos1,dVh_Vlos2]
+            # CxVh=[0,0,0,0,0,0,dVh_Vlos1,dVh_Vlos2]
             UyVh=np.array(CxVh).dot(UxVh).dot(np.transpose(CxVh))
             
             U_Vh_GUM.append(np.sqrt(UyVh))
@@ -1008,7 +1015,7 @@ def GUM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,theta1,p
         
         
         
-        # pdb.set_trace()
+        pdb.set_trace()
         # figure,ay0=plt.subplots()       
         # ay0.plot(np.linspace(0,359,360),dV1)
         # ay0.plot(np.linspace(0,359,360),dV2)

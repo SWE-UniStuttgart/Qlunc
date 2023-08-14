@@ -293,7 +293,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             r'N={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['N_MC'], ),           
             r'$r_{\theta,\varphi}~ =%.2f$' % (Lidar.optics.scanner.correlations[6]),))           
             ax6[0].text(0.5, 0.95, textstr5, transform=ax6[0].transAxes, fontsize=14,horizontalalignment='left',verticalalignment='top', bbox=props5)
-            pdb.set_trace()
+            # pdb.set_trace()
             
            # #7. Plot Uncertainty u and v components wind direction
            #  fig,ax0=plt.subplots()                  
