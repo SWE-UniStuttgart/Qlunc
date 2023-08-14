@@ -207,7 +207,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             ax4.grid(axis='both')
             plt.show()
             
-     
+            pdb.set_trace()
             # 5.  Plot Uncertainty in VLOS1 with wind direction 
             fig,ax5=plt.subplots(2,1)            
             color=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))   
