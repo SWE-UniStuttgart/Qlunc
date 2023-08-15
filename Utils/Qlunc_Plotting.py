@@ -207,7 +207,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             ax4.grid(axis='both')
             plt.show()
             
-            pdb.set_trace()
+            # pdb.set_trace()
             # 5.  Plot Uncertainty in VLOS1 with wind direction 
             fig,ax5=plt.subplots(2,1)            
             color=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))   
@@ -217,10 +217,10 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 ax5[0].plot(np.degrees(Data['wind direction']),Data['VLOS Unc [m/s]']['VLOS1 Uncertainty MC [m/s]'][ind_plot],'o', markerfacecolor=cc,markeredgecolor='lime',alpha=0.4,label='Montecarlo')
                         
             # Plot with sensitivity coefficients: Data['Uncertainty contributors Vlos1']=[contribution theta, contribution varphi, contribution rho] for alpha 0, 0.1 and 0.2. For the plotting we use alpha=0.2            
-            Cont_Theta         = (np.array(Data['Sens coeff']['Uncertainty contributors Vlos1'][2][0])*np.array(Data['STDVs'][0]))**2
-            Cont_Psi           = (np.array(Data['Sens coeff']['Uncertainty contributors Vlos1'][2][1])*np.array(Data['STDVs'][1]))**2
-            Cont_Rho           = (np.array(Data['Sens coeff']['Uncertainty contributors Vlos1'][2][2])*np.array(Data['STDVs'][2]))**2     
-            Cont_Corr          = 2*Lidar.optics.scanner.correlations[3]*np.array(Data['Sens coeff']['Uncertainty contributors Vlos1'][2][0])*np.array(Data['Sens coeff']['Uncertainty contributors Vlos1'][2][1])*np.array(Data['STDVs'][0])*np.array(Data['STDVs'][1])
+            Cont_Theta         = (np.array(Data['Sens coeff']['Uncertainty contributors Vlos1'][0][0])*np.array(Data['STDVs'][0]))**2
+            Cont_Psi           = (np.array(Data['Sens coeff']['Uncertainty contributors Vlos1'][0][1])*np.array(Data['STDVs'][1]))**2
+            Cont_Rho           = (np.array(Data['Sens coeff']['Uncertainty contributors Vlos1'][0][2])*np.array(Data['STDVs'][2]))**2     
+            Cont_Corr          = 2*Lidar.optics.scanner.correlations[3]*np.array(Data['Sens coeff']['Uncertainty contributors Vlos1'][0][1])*np.array(Data['Sens coeff']['Uncertainty contributors Vlos2'][0][1])*np.array(Data['STDVs'][0])*np.array(Data['STDVs'][1])
 
             Total_contribution = Cont_Theta+Cont_Psi+Cont_Rho+(Cont_Corr)
             Total_terms        = np.array([Cont_Theta,Cont_Psi,Cont_Rho,(Cont_Corr)]) #/Total_contribution
@@ -260,10 +260,10 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 ax6[0].plot(np.degrees(Data['wind direction']),Data['VLOS Unc [m/s]']['VLOS2 Uncertainty MC [m/s]'][ind_plot],'o', markerfacecolor=cc,markeredgecolor='lime',alpha=0.4,label='Montecarlo')
                         
             # Plot with sensitivity coefficients: Data['Uncertainty contributors Vlos1']=[contribution theta, contribution varphi, contribution rho] for alpha 0, 0.1 and 0.2. For the plotting we use alpha=0.2            
-            Cont_Theta         = (np.array(Data['Sens coeff']['Uncertainty contributors Vlos2'][2][0])*np.array(Data['STDVs'][0]))**2
-            Cont_Psi           = (np.array(Data['Sens coeff']['Uncertainty contributors Vlos2'][2][1])*np.array(Data['STDVs'][1]))**2
-            Cont_Rho           = (np.array(Data['Sens coeff']['Uncertainty contributors Vlos2'][2][2])*np.array(Data['STDVs'][2]))**2     
-            Cont_Corr          = 2*Lidar.optics.scanner.correlations[6]*np.array(Data['Sens coeff']['Uncertainty contributors Vlos2'][2][0])*np.array(Data['Sens coeff']['Uncertainty contributors Vlos1'][2][1])*np.array(Data['STDVs'][0])*np.array(Data['STDVs'][1])
+            Cont_Theta         = (np.array(Data['Sens coeff']['Uncertainty contributors Vlos2'][0][0])*np.array(Data['STDVs'][0]))**2
+            Cont_Psi           = (np.array(Data['Sens coeff']['Uncertainty contributors Vlos2'][0][1])*np.array(Data['STDVs'][1]))**2
+            Cont_Rho           = (np.array(Data['Sens coeff']['Uncertainty contributors Vlos2'][0][2])*np.array(Data['STDVs'][2]))**2     
+            Cont_Corr          = 2*Lidar.optics.scanner.correlations[6]*np.array(Data['Sens coeff']['Uncertainty contributors Vlos2'][0][0])*np.array(Data['Sens coeff']['Uncertainty contributors Vlos1'][0][1])*np.array(Data['STDVs'][0])*np.array(Data['STDVs'][1])
             # Total_contribution = np.mean([Cont_Theta,Cont_Psi,Cont_Rho,(Cont_Corr)],0)
             Total_contribution = Cont_Theta+Cont_Psi+Cont_Rho+(Cont_Corr)
             Total_terms        = np.array([Cont_Theta,Cont_Psi,Cont_Rho,(Cont_Corr)])
