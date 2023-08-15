@@ -317,7 +317,7 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # Each try/except evaluates wether the component is included in the module and therefore in the calculations   
     # Scanner
     if Lidar.optics.scanner != None:
-        try:                  
+        # try:                  
             if Lidar.wfr_model.reconstruction_model != 'None':
                    
                 Scanner_Uncertainty,DataFrame=Lidar.optics.scanner.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
@@ -327,9 +327,9 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
                 
                 Scanner_Uncertainty,DataFrame=Lidar.optics.scanner.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
                 WFR_Uncertainty = None
-        except:
-            Scanner_Uncertainty=None
-            print(colored('Error in scanner uncertainty calculations!','cyan', attrs=['bold']))
+        # except:
+            # Scanner_Uncertainty=None
+            # print(colored('Error in scanner uncertainty calculations!','cyan', attrs=['bold']))
     else:
         print (colored('You didn´t include a head scanner in the lidar.','cyan', attrs=['bold']))       
    
