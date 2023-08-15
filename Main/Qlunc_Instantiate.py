@@ -29,6 +29,9 @@ could be done by instantiating their python classes:
         This is done in a more human-readable way through the yaml template 'Qlunc_inputs.yml' provided as an example in the repository, in the 'Main' folder
 """
 
+#Clear all variables
+from IPython import get_ipython
+get_ipython().magic('reset -sf')
 
 import os
 os.chdir('../')
