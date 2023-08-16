@@ -121,7 +121,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             r'$r_{\theta_{2},\varphi_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[6])))          
             ax1.text(0.5, 0.95, textstr1, transform=ax1.transAxes, fontsize=16,horizontalalignment='left',verticalalignment='top', bbox=props1)     
             plt.show()
- 
+            pdb.set_trace()
             
             # 2. Plot Uncertainty in Vlos with theta       
             fig,ax2=plt.subplots() 
