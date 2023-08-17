@@ -723,7 +723,7 @@ def MCM_uv_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,ind_alph
     
         # Covariance matrix
                             # (Lidar,U_Vlos1_MCM,U_Vlos2_MCM , [u_theta1,u_theta1], [u_psi1,u_psi2],  [u_rho1,u_rho2]   ,autocorr_theta,autocorr_psi,autocorr_rho,autocorr_V,mode )
-        cov_MAT    =  MultiVar(Lidar,    0,          0       , [u_theta1,u_theta2], [u_psi1,u_psi2],  [u_rho1,u_rho2]  ,       1     ,      1     ,       1    ,    0 ,     'MC1'  )
+        cov_MAT    =  MultiVar(Lidar,    0,          0       , [u_theta1,u_theta2], [u_psi1,u_psi2],  [u_rho1,u_rho2]  ,       1     ,      1     ,       1    ,    1 ,     'MC1'  )
         
         # Multivariate distributions: 
         V_means=[0,0] # IN first multiv. we dont include partial derivarite respect Vlosi
@@ -866,8 +866,7 @@ def GUM_uv_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,ind_alpha
     
     ### Covariance matrix
     #           (Lidar, U_Vlos1,U_Vlos2,  [u_theta1,u_theta2],   [u_psi1,u_psi2]  ,[u_rho1,u_rho2],    autocorr_theta,  autocorr_psi ,autocorr_rho, autocorr_V ,mode)       
-    Ux=MultiVar(Lidar,       0,     0,   [u_theta1,u_theta2],   [u_psi1,u_psi2],  [u_rho1,u_rho2]        ,1   ,            1          ,1            ,0,      'GUM1'  )    
-    # pdb.set_trace()
+    Ux=MultiVar(Lidar,       0,     0,   [u_theta1,u_theta2],   [u_psi1,u_psi2],  [u_rho1,u_rho2]        ,1   ,            1          ,1            ,     1,   'GUM1'  )    
     for ind_wind_dir in range(len(wind_direction)):  
         
         # VLOS
@@ -904,8 +903,8 @@ def GUM_uv_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,ind_alpha
 
         
         # Influence coefficients matrix for Vlosi uncertainty estimation
-        Cx = np.array([[dVlos1dtheta1,         0       ,dVlos1dpsi1,       0     ,       dVlos1drho1  ,       0       ,  0  , 0],
-                       [      0        ,dVlos2dtheta2,       0       , dVlos2dpsi2,           0       ,  dVlos2drho2  ,  0  , 0]])
+        Cx = np.array([[dVlos1dtheta1,         0       ,dVlos1dpsi1,       0     ,       dVlos1drho1  ,       0       ,  1  , 0],
+                       [      0        ,dVlos2dtheta2,       0       , dVlos2dpsi2,           0       ,  dVlos2drho2  ,  0  ,1]])
         
         # Ouputs covariance matrix
         Uy=Cx.dot(Ux).dot(np.transpose(Cx))
