@@ -208,29 +208,29 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             #%% 5) Wind direction uncertainty estimation
             U_Wind_direction_MCM.append(SA.U_WindDir_MC(wind_direction,Mult_param))
             # pdb.set_trace()
-            U_Wind_direction_GUM.append(SA.U_WindDir_GUM(Lidar, Atmospheric_Scenario,wind_direction,theta1[0],psi1 [0],rho1[0],theta2[0],psi2[0],rho2[0],u_theta1 ,u_psi1,u_rho1,u_theta2 ,u_psi2,u_rho2,Vlos1_GUM,Vlos2_GUM,U_Vlos1_GUM,U_Vlos2_GUM))      
+            U_Wind_direction_GUM.append(SA.U_WindDir_GUM(Lidar,Atmospheric_Scenario,wind_direction,theta1[0],psi1 [0],rho1[0],theta2[0],psi2[0],rho2[0],u_theta1 ,u_psi1,u_rho1,u_theta2 ,u_psi2,u_rho2,Vlos1_GUM,Vlos2_GUM,U_Vlos1_GUM,U_Vlos2_GUM))      
      
               
             #%% 6) Method for uncertainty when varying theta, psi OR rho   
             
-            U_VLOS_T_MC_rho,U_VLOS_T_GUM_rho,rho_TESTr,theta_TESTr,psi_TESTr      =  SA.VLOS_param(np.linspace(10,5000,600),theta1,psi1,0,0,u_rho1,Lidar.optics.scanner.N_MC,U_Vlos1_GUM,Hl[0],Vref,Href,alpha[ind_alpha],wind_direction_TEST,0,[Lidar.optics.scanner.correlations[0],Lidar.optics.scanner.correlations[0]])
-            U_VLOS_T_MC_theta,U_VLOS_T_GUM_theta,rho_TESTt,theta_TESTt,psi_TESTt  =  SA.VLOS_param(rho1,np.radians(np.linspace(0,90,200)),psi1,u_theta1,0,0,Lidar.optics.scanner.N_MC,U_Vlos1_GUM,Hl[0],Vref,Href,alpha[ind_alpha],wind_direction_TEST,0,[Lidar.optics.scanner.correlations[0],Lidar.optics.scanner.correlations[0]])    
-            U_VLOS_T_MC_psi,U_VLOS_T_GUM_psi,rho_TESTp,theta_TESTp,psi_TESTp      =  SA.VLOS_param(rho1,theta1,np.radians(np.linspace(0,359,200)),0,u_psi1,0,Lidar.optics.scanner.N_MC,U_Vlos1_GUM,Hl[0],Vref,Href,alpha[ind_alpha],wind_direction_TEST,0,[Lidar.optics.scanner.correlations[0],Lidar.optics.scanner.correlations[0]])
-            
+            U_VLOS_T_MC_rho,U_VLOS_T_GUM_rho,rho_TESTr,theta_TESTr,psi_TESTr      =  SA.VLOS_param(Lidar,np.linspace(10,5000,600),theta1,psi1,0,0,u_rho1,Lidar.optics.scanner.N_MC,Hl[0],Vref,Href,alpha[ind_alpha],wind_direction_TEST,0)
+            U_VLOS_T_MC_theta,U_VLOS_T_GUM_theta,rho_TESTt,theta_TESTt,psi_TESTt  =  SA.VLOS_param(Lidar,rho1,np.radians(np.linspace(0,90,200)),psi1,u_theta1,0,0,Lidar.optics.scanner.N_MC,Hl[0],Vref,Href,alpha[ind_alpha],wind_direction_TEST,0)    
+            U_VLOS_T_MC_psi,U_VLOS_T_GUM_psi,rho_TESTp,theta_TESTp,psi_TESTp      =  SA.VLOS_param(Lidar,rho1,theta1,np.radians(np.linspace(0,359,200)),0,u_psi1,0,Lidar.optics.scanner.N_MC,Hl[0],Vref,Href,alpha[ind_alpha],wind_direction_TEST,0)
+            # pdb.set_trace()
             #Store data
             U_VLOS_T_MC_rho_T.append(U_VLOS_T_MC_rho)
-            U_VLOS_T_GUM_rho_T.append(U_VLOS_T_GUM_rho)
+            U_VLOS_T_GUM_rho_T.append(U_VLOS_T_GUM_rho[0])
                         
             U_VLOS_T_MC_theta_T.append(U_VLOS_T_MC_theta)
-            U_VLOS_T_GUM_theta_T.append(U_VLOS_T_GUM_theta)
+            U_VLOS_T_GUM_theta_T.append(U_VLOS_T_GUM_theta[0])
 
             U_VLOS_T_MC_psi_T.append(U_VLOS_T_MC_psi)
-            U_VLOS_T_GUM_psi_T.append(U_VLOS_T_GUM_psi)
+            U_VLOS_T_GUM_psi_T.append(U_VLOS_T_GUM_psi[0])
             
             SensCoeff.append(SensCoeff0)
             SensCoeff2.append(SensCoeff20)
             lidars['Coord_Test']={'TESTr':np.array([rho_TESTr]),'TESTt':np.array([theta_TESTt]),'TESTp':np.array([psi_TESTp])}
-                         
+    # pdb.set_trace()          
     #%% 7) Storing data
     # pdb.set_trace()
     VLOS_Unc    =  {'VLOS1 Uncertainty MC [m/s]':U_Vlos1_MCM_T,           'VLOS1 Uncertainty GUM [m/s]':U_Vlos1_GUM_T,
