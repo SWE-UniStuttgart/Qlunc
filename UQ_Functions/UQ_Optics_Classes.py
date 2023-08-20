@@ -43,12 +43,13 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     Dictionary with information about...
     
     """
-    X,Y,Z,R=[],[],[],[]
+
     U_Vh_GUM_T,U_Vh_MCM_T,U_Wind_direction_MCM,U_Wind_direction_GUM=[],[],[],[]
     U_VLOS_T_MC_rho_T,U_VLOS_T_GUM_rho_T,U_VLOS_T_MC_theta_T,U_VLOS_T_GUM_theta_T,U_VLOS_T_MC_psi_T,U_VLOS_T_GUM_psi_T=[],[],[],[],[],[]
     U_Vlos1_MCM_T,U_Vlos2_MCM_T,U_Vlos1_GUM_T,U_Vlos2_GUM_T=[],[],[],[]
     Scan_unc=[]
-    rho_noisy0,theta_noisy0,psi_noisy0,rho_noisy,theta_noisy1,theta_noisy2,psi_noisy,rho_noisy1,rho_noisy2, theta_noisy,psi_noisy1,psi_noisy2,wind_direction_TEST ,wind_tilt_TEST   = [],[],[],[],[],[],[],[],[],[],[],[],[],[]
+    SensCoeff,SensCoeff2,Correlation_coeff_T,SensCoeffVh1,SensCoeffVh2=[],[],[],[],[]
+    wind_direction_TEST ,wind_tilt_TEST     = [],[]
      
     Href  = Qlunc_yaml_inputs['Components']['Scanner']['Href'],
     Vref  = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref']
@@ -78,50 +79,41 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         wind_direction = np.radians(np.linspace(Atmospheric_Scenario.wind_direction[0],Atmospheric_Scenario.wind_direction[1],360))
         x_out,y_out,z_out=0,0,0
     
-    
-    # pdb.set_trace()
-    SensCoeff,SensCoeff2=[],[]
-    
-    
-    # Loop for the points in the pattern 
+    #%%Creating the class to store coordinates
+    class lidar_coor:
+        def __init__(self, x,y,z,x_Lidar,y_Lidar,z_Lidar):
+            self.x_Lidar=x_Lidar
+            self.y_Lidar=y_Lidar
+            self.z_Lidar=z_Lidar
+            self.x=x
+            self.y=y
+            self.z=z
+        @classmethod
+        def vector_pos(cls,x,y,z,x_Lidar,y_Lidar,z_Lidar):
+            fx=(x-x_Lidar)
+            fy=(y-y_Lidar)
+            fz=(z-z_Lidar)
+            return(cls,fx,fy,fz)
+        @classmethod
+        def Cart2Sph (cls, x_vector_pos,y_vector_pos,z_vector_pos):
+            rho1,theta1,psi1 =SA.cart2sph(x_vector_pos,y_vector_pos,z_vector_pos)
+            return (cls,rho1,theta1,psi1)
+
+    # Loop for the points in the pattern and the alpha exponents
     for ind_alpha in range(len(alpha)):
         
         for meas_param in range(L):
             # LOVE U MAMA!!        
          
-            #%% 2) Lidars' position and measuring angles. The measuring angles are calculated based on the position of the lidars and the measuring points
-            
+            #%% 2) Lidars' position and measuring angles. The measuring angles are calculated based on the position of the lidars and the measuring points            
             # Measurement point in cartesian coordinates before applying lidar position
             if Lidar.optics.scanner.pattern=='lissajous' or Lidar.optics.scanner.pattern=='plane':
                 x=np.array([x_out[meas_param]])
                 y=np.array([y_out[meas_param]])
-                z=np.array([z_out[meas_param]])
-                
+                z=np.array([z_out[meas_param]])               
             else:
-            # rho0           = [Lidar.optics.scanner.focus_dist[meas_param]]  
-            # theta0         = [np.radians(Lidar.optics.scanner.cone_angle[meas_param])]  # %(360) converts negative angles to [0,360] positive angles
-            # psi0           = [np.radians(Lidar.optics.scanner.azimuth[meas_param])] 
-
                 x,y,z=SA.sph2cart([Lidar.optics.scanner.focus_dist[meas_param]],[np.radians(Lidar.optics.scanner.cone_angle[meas_param])],[np.radians(Lidar.optics.scanner.azimuth[meas_param])])
     
-            class lidar_coor:
-                def __init__(self, x,y,z,x_Lidar,y_Lidar,z_Lidar):
-                    self.x_Lidar=x_Lidar
-                    self.y_Lidar=y_Lidar
-                    self.z_Lidar=z_Lidar
-                    self.x=x
-                    self.y=y
-                    self.z=z
-                @classmethod
-                def vector_pos(cls,x,y,z,x_Lidar,y_Lidar,z_Lidar):
-                    fx=(x-x_Lidar)
-                    fy=(y-y_Lidar)
-                    fz=(z-z_Lidar)
-                    return(cls,fx,fy,fz)
-                @classmethod
-                def Cart2Sph (cls, x_vector_pos,y_vector_pos,z_vector_pos):
-                    rho1,theta1,psi1 =SA.cart2sph(x_vector_pos,y_vector_pos,z_vector_pos)
-                    return (cls,rho1,theta1,psi1)
             
             # Store lidar positionning   
             lidars={}       
@@ -182,28 +174,34 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             #%% 4) Wind velocity uncertainy estimation
  
 
-            # 4.1) Vlos and u,v Uncertainties MCM
-            U_Vlos1_MCM,U_Vlos2_MCM,u,v,U_u_MC,U_v_MC,Mult_param ,Correlation_coeff,U_Vh_MCM    =      SA.MCM_uv_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,ind_alpha,theta1[0],u_theta1,psi1 [0] ,u_psi1,rho1[0],u_rho1,theta2[0],u_theta2,psi2[0],u_psi2,rho2[0],u_rho2)
+            # 4.1) Vh and Vlos and u,v Uncertainties MCM
+            U_Vlos1_MCM,U_Vlos2_MCM,u,v,U_u_MC,U_v_MC,Mult_param ,Correlation_coeff_Vlos,U_Vh_MCM    =      SA.MCM_Vh_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,ind_alpha,theta1[0],u_theta1,psi1 [0] ,u_psi1,rho1[0],u_rho1,theta2[0],u_theta2,psi2[0],u_psi2,rho2[0],u_rho2)
             
+            # pdb.set_trace()
             # Store data
             U_Vlos1_MCM_T.append(U_Vlos1_MCM)
             U_Vlos2_MCM_T.append(U_Vlos2_MCM)
-            
+            U_Vh_MCM_T.append(U_Vh_MCM)
+            Correlation_coeff_T.append(Correlation_coeff_Vlos[0])
             # 4.2) Uncertainty MCM for Vh
             # U_Vh_MCM   =    SA.MCM_Vh_lidar_uncertainty(wind_direction,*Mult_param)
-            U_Vh_MCM_T.append(U_Vh_MCM)
+            # U_Vh_MCM_T.append(U_Vh_MCM)
             # pdb.set_trace()
             
             # 4.3) Vlos and u,v Uncertainties GUM method
-            Vlos1_GUM,Vlos2_GUM,U_Vlos1_GUM,U_Vlos2_GUM,CorrCoef_U_Vlos_GUM ,SensCoeff0,SensCoeff20  =    SA.GUM_uv_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,ind_alpha,theta1[0],u_theta1,psi1 [0] ,u_psi1,rho1[0],u_rho1,theta2[0],u_theta2,psi2[0],u_psi2,rho2[0],u_rho2)
+            Vlos1_GUM,Vlos2_GUM,U_Vlos1_GUM,U_Vlos2_GUM ,SensCoeff0,SensCoeff20  =    SA.GUM_uv_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,ind_alpha,theta1[0],u_theta1,psi1 [0] ,u_psi1,rho1[0],u_rho1,theta2[0],u_theta2,psi2[0],u_psi2,rho2[0],u_rho2)
             U_Vlos1_GUM_T.append(U_Vlos1_GUM)
             U_Vlos2_GUM_T.append(U_Vlos2_GUM)
-            
+            print('CC: {}'.format(Correlation_coeff_Vlos))
  
             # 4.4) Vh Uncertainty GUM method
-            U_Vh_GUM   =   SA.GUM_Vh_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,theta1[0],psi1 [0],rho1[0],theta2[0],psi2[0],rho2[0],
-                                                       u_theta1,u_theta2,u_psi1,u_psi2,u_rho1,u_rho2 ,Vlos1_GUM,Vlos2_GUM,U_Vlos1_GUM,U_Vlos2_GUM,CorrCoef_U_Vlos_GUM)
-            U_Vh_GUM_T.append(U_Vh_GUM)        
+            U_Vh_GUM,dV1,dV2   =   SA.GUM_Vh_lidar_uncertainty(Lidar,Atmospheric_Scenario,Correlation_coeff_Vlos,wind_direction,theta1[0],psi1 [0],rho1[0],theta2[0],psi2[0],rho2[0],
+                                                               u_theta1,u_theta2,u_psi1,u_psi2,u_rho1,u_rho2 ,Vlos1_GUM,Vlos2_GUM,U_Vlos1_GUM,U_Vlos2_GUM)
+            
+            # Store data
+            U_Vh_GUM_T.append(U_Vh_GUM)                
+            SensCoeffVh1.append(dV1)
+            SensCoeffVh2.append(dV2)
             
             #%% 5) Wind direction uncertainty estimation
             U_Wind_direction_MCM.append(SA.U_WindDir_MC(wind_direction,Mult_param))
@@ -249,15 +247,15 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
                                'Vh Unc [m/s]':Vh_Unc,
                                'WinDir Unc [°]':WinDir_Unc,
                                'Sens coeff': SensCoef,
-                               'Correlations':Correlation_coeff}
+                               'Correlations':Correlation_coeff,
+                               'Correlation Vlos':Correlation_coeff_T,
+                               'Correlation Vh':[SensCoeffVh1,SensCoeffVh2]}
     # pdb.set_trace()
     # Lidar.lidar_inputs.dataframe['Scanner'] = {'Focus distance':Final_Output_UQ_Scanner['lidars'][0],'Elevation angle':Final_Output_UQ_Scanner['Elevation angle'][0],'Azimuth':Final_Output_UQ_Scanner['Azimuth'][0]}
     Scan_unc.append(Final_Output_UQ_Scanner)
     
-    #%% 7)Plotting data
-    # pdb.set_trace()
+    # 7)Plotting data
     QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,Qlunc_yaml_inputs['Flags']['Line of sight Velocity Uncertainty'],False,False,False,False,False,1)  #Qlunc_yaml_inputs['Flags']['Scanning Pattern']  
-    # pdb.set_trace()
     return Scan_unc,Lidar.lidar_inputs.dataframe
 
 #%% Optical circulator:
