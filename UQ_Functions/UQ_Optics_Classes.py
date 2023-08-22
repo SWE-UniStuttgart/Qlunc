@@ -189,7 +189,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             # pdb.set_trace()
             
             # 4.3) Vlos and u,v Uncertainties GUM method
-            Vlos1_GUM,Vlos2_GUM,U_Vlos1_GUM,U_Vlos2_GUM,Corrcoef_Vlos_GUM,SensCoeff0,SensCoeff20  =    SA.GUM_uv_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,ind_alpha,theta1[0],u_theta1,psi1 [0] ,u_psi1,rho1[0],u_rho1,theta2[0],u_theta2,psi2[0],u_psi2,rho2[0],u_rho2)
+            Vlos1_GUM,Vlos2_GUM,U_Vlos1_GUM,U_Vlos2_GUM,Corrcoef_Vlos_GUM,SensCoeff0,SensCoeff20  =    SA.GUM_Vlos_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,ind_alpha,theta1[0],u_theta1,psi1 [0] ,u_psi1,rho1[0],u_rho1,theta2[0],u_theta2,psi2[0],u_psi2,rho2[0],u_rho2)
             U_Vlos1_GUM_T.append(U_Vlos1_GUM)
             U_Vlos2_GUM_T.append(U_Vlos2_GUM)
             
@@ -202,7 +202,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             U_Vh_GUM_T.append(U_Vh_GUM)                
             SensCoeffVh1.append(dV1)
             SensCoeffVh2.append(dV2)
-            Correlation_Vlos_GUM_T.append(Correlation_Vlos_GUM)
+            Correlation_Vlos_GUM_T.append(Corrcoef_Vlos_GUM)
             #%% 5) Wind direction uncertainty estimation
             U_Wind_direction_MCM.append(SA.U_WindDir_MC(wind_direction,Mult_param))
             # pdb.set_trace()

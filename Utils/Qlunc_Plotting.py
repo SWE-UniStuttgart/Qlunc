@@ -54,7 +54,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 'xlim'                : [-280,280],
                 'ylim'                : [-280,280],
                 'zlim'                : [-280,280],
-                'linewidth'           : 3.15,
+                'linewidth'           : 2.25,
                 'markersize'          : 5,
                 'markersize_lidar'    : 9,
                 'marker'              : '.r',
@@ -105,19 +105,20 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             pl.figure()
             ax11=pl.subplot(gs[0,:])        
             color2=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))
-            color3=iter(cm.Set2(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))   
+            color3=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))   
             color4=iter(cm.Set2(np.linspace(0,1,len(Data['Sens coeff Vh']))))
             for ind_plot in range(len(Data['Vh Unc [m/s]']['Uncertainty Vh MCM'])):
                 c2=next(color2)
                 
-                pl.plot(np.degrees(Data['wind direction']),Data['Vh Unc [m/s]']['Uncertainty Vh GUM'][ind_plot],'-', color=c2,label=r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))
+                pl.plot(np.degrees(Data['wind direction']),Data['Vh Unc [m/s]']['Uncertainty Vh GUM'][ind_plot],'-', color=c2,linewidth=plot_param['linewidth'],label=r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))
                 pl.plot(np.degrees(Data['wind direction']),Data['Vh Unc [m/s]']['Uncertainty Vh MCM'][ind_plot],'o' , markerfacecolor=c2,markeredgecolor='lime',alpha=0.4,label='MCM')
             for ind_plot in range(len(Data['Vh Unc [m/s]']['Uncertainty Vh MCM'])):
                 c3=next(color3)
                 ax12=pl.subplot(gs[1,:]) 
                 # pdb.set_trace()                  
-                pl.plot(np.degrees(Data['wind direction']),Data['Correlation Vlos'][ind_plot],'-',c=c3,linewidth=plot_param['linewidth'],label=r'$\alpha$={}'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))
-                pl.plot(np.degrees(Data['wind direction']),Data['Correlation Vlos GUM'][ind_plot],'-',c='r',linewidth=plot_param['linewidth'],label=r'$\alpha$={}'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))
+                pl.plot(np.degrees(Data['wind direction']),Data['Correlation Vlos GUM'][ind_plot],'-',c=c3,linewidth=plot_param['linewidth'])
+
+                pl.plot(np.degrees(Data['wind direction']),Data['Correlation Vlos'][ind_plot],'o', markerfacecolor=c3,markeredgecolor='lime',alpha=0.4)
                 
             lett=[r'$\frac{\partial{V_{h}}}{\partial{V_{LOS_1}}}$',r'$\frac{\partial{V_{h}}}{\partial{V_{LOS_2}}}$']
             for ind_plot in range(len(Data['Sens coeff Vh'])): 
@@ -139,7 +140,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             ax12.set_ylabel('$r_{V_{LOS}}$ [-]',fontsize=plot_param['axes_label_fontsize']) 
             ax13.set_ylabel('$SensCoeffs',fontsize=plot_param['axes_label_fontsize']) 
             ax11.legend(loc=1, prop={'size': plot_param['legend_fontsize']})
-            ax12.legend(loc=1, prop={'size': plot_param['legend_fontsize']})
+            # ax12.legend(loc=1, prop={'size': plot_param['legend_fontsize']})
             ax13.legend(loc=1, prop={'size': plot_param['legend_fontsize']})
 
             ax11.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
@@ -166,7 +167,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             ax11.text(0.5, 0.95, textstr1, transform=ax11.transAxes, fontsize=16,horizontalalignment='left',verticalalignment='top', bbox=props1)     
             
 
-            pdb.set_trace()
+            # pdb.set_trace()
             plt.show()
             #######################################################
             # 2. Plot Uncertainty in Vlos with theta       
