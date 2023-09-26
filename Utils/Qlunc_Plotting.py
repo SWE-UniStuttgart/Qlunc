@@ -66,7 +66,6 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 'Qlunc_version'       : 'Qlunc Version - 1.0'
                 }
         
-##################    Plotting scanner measuring points pattern #######################
     # pdb.set_trace()
     if flag_plot_measuring_points_pattern:
         if Lidar.optics.scanner.pattern in ['None']:
@@ -307,15 +306,15 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 ax5[0].plot(np.degrees(Data['wind direction']),Data['VLOS Unc [m/s]']['VLOS1 Uncertainty GUM [m/s]'][ind_plot],'-',c=cc,label=r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))
                 ax5[0].plot(np.degrees(Data['wind direction']),Data['VLOS Unc [m/s]']['VLOS1 Uncertainty MC [m/s]'][ind_plot],'o', markerfacecolor=cc,markeredgecolor='lime',alpha=0.4,label='Montecarlo')                       
             # Plot with sensitivity coefficients: Data['Uncertainty contributors Vlos1']=[contribution theta, contribution varphi, contribution rho] for alpha 0, 0.1 and 0.2. For the plotting we use alpha=0.2                       
-            Cont_Theta         = (np.array(Data['Sens coeff']['Uncertainty contributors Vlos1'][len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'])-1][0])*np.array(Data['STDVs'][0]))**2
-            Cont_Psi           = (np.array(Data['Sens coeff']['Uncertainty contributors Vlos1'][len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'])-1][1])*np.array(Data['STDVs'][1]))**2
-            Cont_Rho           = (np.array(Data['Sens coeff']['Uncertainty contributors Vlos1'][len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'])-1][2])*np.array(Data['STDVs'][2]))**2     
-            Cont_Corr          = 2*Lidar.optics.scanner.correlations[3]*np.array(Data['Sens coeff']['Uncertainty contributors Vlos1'][0][1])*np.array(Data['Sens coeff']['Uncertainty contributors Vlos2'][0][1])*np.array(Data['STDVs'][0])*np.array(Data['STDVs'][1])
-            
-            ax5[1].plot(np.degrees(Data['wind direction']),Cont_Theta,'-',c='black',linewidth=plot_param['linewidth'],label=r'$\frac{\partial{V_{LOS}}}{\partial{\theta}}$')
-            ax5[1].plot(np.degrees(Data['wind direction']),Cont_Psi ,'-',c='dimgray',linewidth=plot_param['linewidth'],label=r'$\frac{\partial{V_{LOS}}}{\partial{\varphi}}$')
-            ax5[1].plot(np.degrees(Data['wind direction']),Cont_Rho,'-',c='lightgray',linewidth=plot_param['linewidth'],label=r'$\frac{\partial{V_{LOS}}}{\partial{\rho}}$')
-            ax5[1].plot(np.degrees(Data['wind direction']),Cont_Corr ,'-',c='cadetblue',linewidth=plot_param['linewidth'],label=r'$\frac{\partial^2{V_{LOS}}}{\partial{\theta}\partial{\varphi}}$')
+            Cont_Theta1         = (np.array(Data['Sens coeff']['Uncertainty contributors Vlos1'][len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'])-1][0])*np.array(Data['STDVs'][0]))**2
+            Cont_Psi1           = (np.array(Data['Sens coeff']['Uncertainty contributors Vlos1'][len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'])-1][1])*np.array(Data['STDVs'][1]))**2
+            Cont_Rho1           = (np.array(Data['Sens coeff']['Uncertainty contributors Vlos1'][len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'])-1][2])*np.array(Data['STDVs'][2]))**2     
+            Cont_Corr1          = 2*Lidar.optics.scanner.correlations[3]*np.array(Data['Sens coeff']['Uncertainty contributors Vlos1'][2][0])*np.array(Data['Sens coeff']['Uncertainty contributors Vlos2'][2][1])*np.array(Data['STDVs'][0])*np.array(Data['STDVs'][1])
+            # pdb.set_trace()
+            ax5[1].plot(np.degrees(Data['wind direction']),Cont_Theta1,'-',c='black',linewidth=plot_param['linewidth'],label=r'$\frac{\partial{V_{LOS}}}{\partial{\theta}}$')
+            ax5[1].plot(np.degrees(Data['wind direction']),Cont_Psi1 ,'-',c='dimgray',linewidth=plot_param['linewidth'],label=r'$\frac{\partial{V_{LOS}}}{\partial{\varphi}}$')
+            ax5[1].plot(np.degrees(Data['wind direction']),Cont_Rho1,'-',c='lightgray',linewidth=plot_param['linewidth'],label=r'$\frac{\partial{V_{LOS}}}{\partial{\rho}}$')
+            ax5[1].plot(np.degrees(Data['wind direction']),Cont_Corr1 ,'-',c='cadetblue',linewidth=plot_param['linewidth'],label=r'$\frac{\partial^2{V_{LOS}}}{\partial{\theta}\partial{\varphi}}$')
             ax5[1].set_xlabel('Wind Direction [°]',fontsize=plot_param['axes_label_fontsize'])
             ax5[0].set_ylabel('$V_{LOS}$ uncertainty [m/s]',fontsize=plot_param['axes_label_fontsize'])
             ax5[1].set_ylabel(r'$ \frac{\partial^2{V_{LOS}}}{\partial{\theta}\partial{\varphi}}~\sigma_{\theta \varphi}~$[m/s]',fontsize=plot_param['axes_label_fontsize']+.5)
@@ -356,16 +355,16 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 ax6[0].plot(np.degrees(Data['wind direction']),Data['VLOS Unc [m/s]']['VLOS2 Uncertainty MC [m/s]'][ind_plot],'o', markerfacecolor=cc,markeredgecolor='lime',alpha=0.4,label='Montecarlo')
                         
             # Plot with sensitivity coefficients: Data['Uncertainty contributors Vlos1']=[contribution theta, contribution varphi, contribution rho] for alpha 0, 0.1 and 0.2. For the plotting we use alpha=0.2            
-            Cont_Theta         = (np.array(Data['Sens coeff']['Uncertainty contributors Vlos2'][len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'])-1][0])*np.array(Data['STDVs'][0]))**2
-            Cont_Psi           = (np.array(Data['Sens coeff']['Uncertainty contributors Vlos2'][len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'])-1][1])*np.array(Data['STDVs'][1]))**2
-            Cont_Rho           = (np.array(Data['Sens coeff']['Uncertainty contributors Vlos2'][len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'])-1][2])*np.array(Data['STDVs'][2]))**2     
-            Cont_Corr          = 2*Lidar.optics.scanner.correlations[6]*np.array(Data['Sens coeff']['Uncertainty contributors Vlos2'][0][0])*np.array(Data['Sens coeff']['Uncertainty contributors Vlos1'][0][1])*np.array(Data['STDVs'][0])*np.array(Data['STDVs'][1])
-
+            Cont_Theta2         = (np.array(Data['Sens coeff']['Uncertainty contributors Vlos2'][len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'])-1][0])*np.array(Data['STDVs'][0]))**2
+            Cont_Psi2           = (np.array(Data['Sens coeff']['Uncertainty contributors Vlos2'][len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'])-1][1])*np.array(Data['STDVs'][1]))**2
+            Cont_Rho2           = (np.array(Data['Sens coeff']['Uncertainty contributors Vlos2'][len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'])-1][2])*np.array(Data['STDVs'][2]))**2     
+            Cont_Corr2          = 2*Lidar.optics.scanner.correlations[6]*np.array(Data['Sens coeff']['Uncertainty contributors Vlos2'][2][0])*np.array(Data['Sens coeff']['Uncertainty contributors Vlos1'][2][1])*np.array(Data['STDVs'][0])*np.array(Data['STDVs'][1])
+            # pdb.set_trace()
             # Plotting contributors:
-            ax6[1].plot(np.degrees(Data['wind direction']),Cont_Theta,'-',c='black',linewidth=plot_param['linewidth'],label=r'$\frac{\partial{V_{LOS}}}{\partial{\theta}}$')
-            ax6[1].plot(np.degrees(Data['wind direction']),Cont_Psi  ,'-',c='dimgray',linewidth=plot_param['linewidth'],label=r'$\frac{\partial{V_{LOS}}}{\partial{\varphi}}$')
-            ax6[1].plot(np.degrees(Data['wind direction']),Cont_Rho  ,'-',c='lightgray',linewidth=plot_param['linewidth'],label=r'$\frac{\partial{V_{LOS}}}{\partial{\rho}}$')
-            ax6[1].plot(np.degrees(Data['wind direction']),Cont_Corr ,'-',c='cadetblue',linewidth=plot_param['linewidth'],label=r'$\frac{\partial^2{V_{LOS}}}{\partial{\theta}\partial{\varphi}}$')
+            ax6[1].plot(np.degrees(Data['wind direction']),Cont_Theta2,'-',c='black',linewidth=plot_param['linewidth'],label=r'$\frac{\partial{V_{LOS}}}{\partial{\theta}}$')
+            ax6[1].plot(np.degrees(Data['wind direction']),Cont_Psi2  ,'-',c='dimgray',linewidth=plot_param['linewidth'],label=r'$\frac{\partial{V_{LOS}}}{\partial{\varphi}}$')
+            ax6[1].plot(np.degrees(Data['wind direction']),Cont_Rho2  ,'-',c='lightgray',linewidth=plot_param['linewidth'],label=r'$\frac{\partial{V_{LOS}}}{\partial{\rho}}$')
+            ax6[1].plot(np.degrees(Data['wind direction']),Cont_Corr2 ,'-',c='cadetblue',linewidth=plot_param['linewidth'],label=r'$\frac{\partial^2{V_{LOS}}}{\partial{\theta}\partial{\varphi}}$')
 
             ax6[1].set_xlabel('Wind Direction [°]',fontsize=plot_param['axes_label_fontsize'])
             ax6[0].set_ylabel('$V_{LOS}$ uncertainty [m/s]',fontsize=plot_param['axes_label_fontsize'])

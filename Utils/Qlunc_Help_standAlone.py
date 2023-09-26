@@ -618,7 +618,7 @@ def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,ind_alph
                                                                                                                                                                                                                                                                                                                            ## MCM - uv     
         # Covariance matrix       
         #                   (Lidar,  Vlos_corrcoeff,    U_Vlos1,           U_Vlos2       ,[u_theta1,u_theta2], [u_psi1,u_psi2],  [u_rho1,u_rho2],    autocorr_theta,   autocorr_psi,   autocorr_rho,    autocorr_V ,    mode)
-        cov_MAT_uv = MultiVar(Lidar, Vlos_corrcoeff,   U_Vlos1_MCM0,    U_Vlos2_MCM0  ,   [u_theta1,u_theta2], [u_psi1,u_psi2],  [u_rho1,u_rho2],           1   ,         1     ,         1 ,            1 ,        'MC2' )
+        cov_MAT_uv = MultiVar(Lidar, Vlos_corrcoeff,   U_Vlos1_MCM0,    U_Vlos2_MCM0  ,   [0,0], [0,0],  [0,0],           1   ,         1     ,         1 ,            1 ,        'MC2' )
         # pdb.set_trace() 
         
         # # Multivariate distributions:       
@@ -717,20 +717,20 @@ def GUM_Vlos_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,ind_alp
         v.append(v_comp)
         
         # Partial derivatives Vlosi with respect theta, psi and rho
-        dVlos1dtheta1   =     Atmospheric_Scenario.Vref*(np.sign(H_t1)*abs(H_t1)**Atmospheric_Scenario.PL_exp[ind_alpha])*(Atmospheric_Scenario.PL_exp[ind_alpha]*((rho1*(np.cos(theta1))**2)/(rho1*np.sin(theta1)+Lidar.optics.scanner.origin[0][2]))-np.sin(theta1))*np.cos(psi1-wind_direction[ind_wind_dir])
-        dVlos2dtheta2   =     Atmospheric_Scenario.Vref*(np.sign(H_t1)*abs(H_t2)**Atmospheric_Scenario.PL_exp[ind_alpha])*(Atmospheric_Scenario.PL_exp[ind_alpha]*((rho2*(np.cos(theta2))**2)/(rho2*np.sin(theta2)+Lidar.optics.scanner.origin[1][2]))-np.sin(theta2))*np.cos(psi2-wind_direction[ind_wind_dir])   
-        dVlos1dpsi1     =   - Atmospheric_Scenario.Vref*(np.sign(H_t1)*abs(H_t1)**Atmospheric_Scenario.PL_exp[ind_alpha])*(np.cos(theta1)*np.sin(psi1-wind_direction[ind_wind_dir]))
-        dVlos2dpsi2     =   - Atmospheric_Scenario.Vref*(np.sign(H_t1)*abs(H_t2)**Atmospheric_Scenario.PL_exp[ind_alpha])*(np.cos(theta2)*np.sin(psi2-wind_direction[ind_wind_dir]))    
-        dVlos1drho1     =     Atmospheric_Scenario.Vref*(np.sign(H_t1)*abs(H_t1)**Atmospheric_Scenario.PL_exp[ind_alpha])*Atmospheric_Scenario.PL_exp[ind_alpha]*(np.sin(theta1)/(rho1*np.sin(theta1)+Lidar.optics.scanner.origin[0][2]))*np.cos(theta1)*np.cos(psi1-wind_direction[ind_wind_dir])
-        dVlos2drho2     =     Atmospheric_Scenario.Vref*(np.sign(H_t1)*abs(H_t2)**Atmospheric_Scenario.PL_exp[ind_alpha])*Atmospheric_Scenario.PL_exp[ind_alpha]*(np.sin(theta2)/(rho2*np.sin(theta2)+Lidar.optics.scanner.origin[1][2]))*np.cos(theta2)*np.cos(psi2-wind_direction[ind_wind_dir])
+        dVlos1dtheta1   =     Atmospheric_Scenario.Vref*((H_t1)**Atmospheric_Scenario.PL_exp[ind_alpha])*(Atmospheric_Scenario.PL_exp[ind_alpha]*((rho1*(np.cos(theta1))**2)/(rho1*np.sin(theta1)+Lidar.optics.scanner.origin[0][2]))-np.sin(theta1))*np.cos(psi1-wind_direction[ind_wind_dir])
+        dVlos2dtheta2   =     Atmospheric_Scenario.Vref*((H_t2)**Atmospheric_Scenario.PL_exp[ind_alpha])*(Atmospheric_Scenario.PL_exp[ind_alpha]*((rho2*(np.cos(theta2))**2)/(rho2*np.sin(theta2)+Lidar.optics.scanner.origin[1][2]))-np.sin(theta2))*np.cos(psi2-wind_direction[ind_wind_dir])   
+        dVlos1dpsi1     =   - Atmospheric_Scenario.Vref*((H_t1)**Atmospheric_Scenario.PL_exp[ind_alpha])*(np.cos(theta1)*np.sin(psi1-wind_direction[ind_wind_dir]))
+        dVlos2dpsi2     =   - Atmospheric_Scenario.Vref*((H_t2)**Atmospheric_Scenario.PL_exp[ind_alpha])*(np.cos(theta2)*np.sin(psi2-wind_direction[ind_wind_dir]))    
+        dVlos1drho1     =     Atmospheric_Scenario.Vref*((H_t1)**Atmospheric_Scenario.PL_exp[ind_alpha])*Atmospheric_Scenario.PL_exp[ind_alpha]*(np.sin(theta1)/(rho1*np.sin(theta1)+Lidar.optics.scanner.origin[0][2]))*np.cos(theta1)*np.cos(psi1-wind_direction[ind_wind_dir])
+        dVlos2drho2     =     Atmospheric_Scenario.Vref*((H_t2)**Atmospheric_Scenario.PL_exp[ind_alpha])*Atmospheric_Scenario.PL_exp[ind_alpha]*(np.sin(theta2)/(rho2*np.sin(theta2)+Lidar.optics.scanner.origin[1][2]))*np.cos(theta2)*np.cos(psi2-wind_direction[ind_wind_dir])
         
         # pdb.set_trace()
-        dVlos1dtheta2 = Atmospheric_Scenario.Vref*(np.sign(H_t2)*abs(H_t2)**Atmospheric_Scenario.PL_exp[ind_alpha])*np.cos(theta2)*np.cos(psi1-wind_direction[ind_wind_dir])*np.sqrt(1-(np.sin(theta2)*rho2/rho1)**2)*(((Atmospheric_Scenario.PL_exp[ind_alpha]*rho2)/(rho2*np.sin(theta2)+Lidar.optics.scanner.origin[1][2]))-((np.sin(theta2)*(rho2/rho1)**2)/(1-(np.sin(theta2)*rho2/rho1)**2)))
-        dVlos2dtheta1 = Atmospheric_Scenario.Vref*(np.sign(H_t1)*abs(H_t1)**Atmospheric_Scenario.PL_exp[ind_alpha])*np.cos(theta1)*np.cos(psi2-wind_direction[ind_wind_dir])*np.sqrt(1-(np.sin(theta1)*rho1/rho2)**2)*(((Atmospheric_Scenario.PL_exp[ind_alpha]*rho1)/(rho1*np.sin(theta1)+Lidar.optics.scanner.origin[1][2]))-((np.sin(theta1)*(rho1/rho2)**2)/(1-(np.sin(theta1)*rho1/rho2)**2)))
+        dVlos1dtheta2 = Atmospheric_Scenario.Vref*((H_t2)**Atmospheric_Scenario.PL_exp[ind_alpha])*np.cos(theta2)*np.cos(psi1-wind_direction[ind_wind_dir])*np.sqrt(1-(np.sin(theta2)*rho2/rho1)**2)*(((Atmospheric_Scenario.PL_exp[ind_alpha]*rho2)/(rho2*np.sin(theta2)+Lidar.optics.scanner.origin[1][2]))-((np.sin(theta2)*(rho2/rho1)**2)/(1-(np.sin(theta2)*rho2/rho1)**2)))
+        dVlos2dtheta1 = Atmospheric_Scenario.Vref*((H_t1)**Atmospheric_Scenario.PL_exp[ind_alpha])*np.cos(theta1)*np.cos(psi2-wind_direction[ind_wind_dir])*np.sqrt(1-(np.sin(theta1)*rho1/rho2)**2)*(((Atmospheric_Scenario.PL_exp[ind_alpha]*rho1)/(rho1*np.sin(theta1)+Lidar.optics.scanner.origin[1][2]))-((np.sin(theta1)*(rho1/rho2)**2)/(1-(np.sin(theta1)*rho1/rho2)**2)))
         
         
-        dVlos1dpsi2   = -Atmospheric_Scenario.Vref*(np.sign(H_t1)*abs(H_t1)**Atmospheric_Scenario.PL_exp[ind_alpha])*np.cos(theta1)*np.sin(psi_bba+psi2-wind_direction[ind_wind_dir])
-        dVlos2dpsi1   = -Atmospheric_Scenario.Vref*(np.sign(H_t2)*abs(H_t2)**Atmospheric_Scenario.PL_exp[ind_alpha])*np.cos(theta2)*np.sin(psi1-psi_bba-wind_direction[ind_wind_dir])
+        dVlos1dpsi2   = -Atmospheric_Scenario.Vref*((H_t1)**Atmospheric_Scenario.PL_exp[ind_alpha])*np.cos(theta1)*np.sin(psi_bba+psi2-wind_direction[ind_wind_dir])
+        dVlos2dpsi1   = -Atmospheric_Scenario.Vref*((H_t2)**Atmospheric_Scenario.PL_exp[ind_alpha])*np.cos(theta2)*np.sin(psi1-psi_bba-wind_direction[ind_wind_dir])
         
         
         
