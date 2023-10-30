@@ -29,6 +29,9 @@ could be done by instantiating their python classes:
         This is done in a more human-readable way through the yaml template 'Qlunc_inputs.yml' provided as an example in the repository, in the 'Main' folder
 """
 
+#Clear all variables
+from IPython import get_ipython
+get_ipython().magic('reset -sf')
 
 import os
 os.chdir('../')
@@ -58,9 +61,10 @@ Scanner           = scanner(name            = Qlunc_yaml_inputs['Components']['S
                             scanner_type    = Qlunc_yaml_inputs['Components']['Scanner']['Type'],
                             origin          = Qlunc_yaml_inputs['Components']['Scanner']['Origin'],         # Origin (coordinates of the lidar deployment).
                             N_MC            = Qlunc_yaml_inputs['Components']['Scanner']['N_MC'],
-                            N_Points        = Qlunc_yaml_inputs['Components']['Scanner']['N_Points'],
+                          #  N_Points        = Qlunc_yaml_inputs['Components']['Scanner']['N_Points'],
                             pattern         = Qlunc_yaml_inputs['Components']['Scanner']['Pattern'],
                             lissajous_param = Qlunc_yaml_inputs['Components']['Scanner']['Lissajous parameters'],
+                            vert_plane      = Qlunc_yaml_inputs['Components']['Scanner']['Vertical plane parameters'],
                             sample_rate     = Qlunc_yaml_inputs['Components']['Scanner']['Sample rate'],    # for now introduce it in [degrees].
                             time_pattern    = Qlunc_yaml_inputs['Components']['Scanner']['Pattern time'],
                             time_point      = Qlunc_yaml_inputs['Components']['Scanner']['Single point measuring time'], 

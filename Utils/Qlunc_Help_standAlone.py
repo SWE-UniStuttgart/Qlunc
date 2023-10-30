@@ -278,7 +278,67 @@ def mesh (theta,psi,rho):
 
    # LoveU LU!
 
-def U_VLOS_MC(theta,psi,rho,Hl,Href,alpha,wind_direction,Vref,ind_wind_dir,VLOS1_list):
+
+def VLOS_param (Lidar,rho,theta,psi,u_theta1,u_psi1,u_rho1,N_MC,Hl,Vref,Href,alpha,wind_direction_TEST,ind_wind_dir):
+    #####################################
+    #####################################
+     # HARD CODED  Important HARD CODED  Need solution!!!
+    ######################################
+    #######################################
+    wind_direction_TEST = np.radians([0])
+    # wind_tilt_TEST      = np.radians([0])
+    
+    #If want to vary range    
+    if len (rho) !=1:
+        rho_TEST   = rho
+        theta_TEST = theta*np.ones(len(rho_TEST))
+        psi_TEST   = psi*np.ones(len(rho_TEST))
+        u_theta1   = 0
+        u_psi1   = 0
+        ind_i = theta_TEST
+    elif len(theta)!=1:
+        theta_TEST = theta
+        rho_TEST   = rho[0]*np.ones(len(theta_TEST))
+        psi_TEST   = psi*np.ones(len(theta_TEST))
+        u_rho1   = 0
+        u_psi1   = 0
+        ind_i = rho_TEST
+    elif len(psi)!=1:
+        psi_TEST   = psi
+        rho_TEST   = rho[0]*np.ones(len(psi_TEST))
+        theta_TEST = theta*np.ones(len(psi_TEST))
+        u_rho1   = 0
+        u_theta1  = 0
+        ind_i = rho_TEST
+
+    # Calculate radial speed uncertainty for an heterogeneous flow
+    U_VLOS_T_MC,U_VLOS_T_GUM,U_VLOS_T=[],[],[]   
+    Corr=Lidar.optics.scanner.correlations
+    
+
+    
+    # MC method
+    # Covariance matrix
+    cov_MAT    =  [[u_theta1**2 ,           u_theta1*u_psi1*0   ,u_theta1*u_rho1*0],
+                   [u_theta1*u_psi1*0 ,     u_psi1**2           ,u_psi1*u_rho1*0   ],
+                   [u_theta1*u_rho1*0 ,     u_psi1*u_rho1*0     ,u_rho1**2         ]]
+   
+
+    U_VLOS1=[]
+    U_VLOS_T=U_VLOS_MC(Lidar,cov_MAT,theta_TEST,psi_TEST,rho_TEST,Hl,Href,alpha,wind_direction_TEST,Vref,0,U_VLOS1)
+    # pdb.set_trace()    
+    #Store results
+    U_VLOS_T_MC.append(np.array(U_VLOS_T))
+    
+    
+    # GUM method
+    U_VLOS_T_GUM.append(U_VLOS_GUM (Lidar,theta_TEST,psi_TEST,rho_TEST,u_theta1,u_psi1,u_rho1,Hl,Vref,Href,alpha,wind_direction_TEST,0)) # For an heterogeneous flow (shear))  
+    # pdb.set_trace()
+    return (U_VLOS_T,U_VLOS_T_GUM,rho_TEST,theta_TEST,psi_TEST)        
+
+
+
+def U_VLOS_MC(Lidar,cov_MAT,theta,psi,rho,Hl,Href,alpha,wind_direction,Vref,ind_wind_dir,U_VLOS1):
      """.
     
      Performs a Montecarlo simulation to estimate the uncertainty in the line of sight velocity ( $V_{LOS}$ ). Location: Qlunc_Help_standAlone.py
@@ -298,26 +358,30 @@ def U_VLOS_MC(theta,psi,rho,Hl,Href,alpha,wind_direction,Vref,ind_wind_dir,VLOS1
      * alpha: power law exponent [-] 
     
      * Hl: Lidar height [m]
-        
-        
+               
      Returns
      -------    
      * Estimated line of sight wind speed [np.array]
      * Estimated average of the $V_{LOS}$
      * Estimated uncertainty in the $V_{LOS}$ [int]
      """
-     U_VLOS1=[]     
-     A=((Hl+(np.sin(theta)*rho))/Href)   
-     VLOS1 = Vref*(np.sign(A)*(abs(A)**alpha))*(np.cos(theta)*np.cos(psi-wind_direction[ind_wind_dir])) #-np.sin(theta_corr[0][ind_npoints])*np.tan(wind_tilt[ind_npoints])
-     VLOS1_list.append(np.mean(VLOS1))
-     U_VLOS1.append(np.nanstd(VLOS1))
+     
+     for ind_0 in range(len(theta)):
+
+     
+         # Multivariate
+         Theta1_cr,Psi1_cr,Rho1_cr= multivariate_normal.rvs([theta[ind_0],psi[ind_0],rho[ind_0]], cov_MAT,Lidar.optics.scanner.N_MC).T   
          
-    # Vlosi
-     # Vlos1=(Vref*(np.sign(H_t1_cr)*((abs(H_t1_cr))**alpha))*np.cos(theta)*np.cos(psi-wind_direction[ind_wind_dir]))
+         A=(Hl+(np.sin(Theta1_cr)*Rho1_cr))/Href   
+         VLOS1 = Vref*(A**alpha)*(np.cos(Theta1_cr)*np.cos(Psi1_cr-wind_direction[ind_wind_dir])) #-np.sin(theta_corr[0][ind_npoints])*np.tan(wind_tilt[ind_npoints])
+         
+         U_VLOS1.append(np.nanstd(VLOS1))
+     # pdb.set_trace()
      return(U_VLOS1)
 
-def U_VLOS_GUM (theta1,psi1,rho1,u_theta1,u_psi1,u_rho1,Hl,Vref,Href,alpha,wind_direction,ind_wind_dir,psi1_psi2_corr,
-                theta1_theta2_corr,rho1_rho2_corr,psi1_theta1_corr,psi1_theta2_corr,psi2_theta1_corr,psi2_theta2_corr,Vlos1_Vlos2_corr):
+
+def U_VLOS_GUM (Lidar,theta1,psi1,rho1,u_theta1,u_psi1,u_rho1,Hl,Vref,Href,alpha,wind_direction,ind_wind_dir):
+    Cont_Theta,Cont_Psi,Cont_Rho=[],[],[]
     """.
     
     Analytical model based on the Guide to the expression of Uncertainty in Measurements (GUM) to estimate the uncertainty in the line of sight velocity ( $V_{LOS}$ ). Location: Qlunc_Help_standAlone.py
@@ -352,38 +416,35 @@ def U_VLOS_GUM (theta1,psi1,rho1,u_theta1,u_psi1,u_rho1,Hl,Vref,Href,alpha,wind_
     # for ind_alpha in range(len(alpha)):
     # VLOS uncertainty
     # Calculate and store Vlosi
-    Vlos1_GUM = Vref*(np.sign(H_t1)*((abs(H_t1))**alpha))*np.cos(theta1)*np.cos(psi1-wind_direction[ind_wind_dir])
+    Vlos1_GUM = Vref*(H_t1**alpha)*np.cos(theta1)*np.cos(psi1-wind_direction[ind_wind_dir])
     # Vlos2_GUM = Vref*(np.sign(H_t2)*((abs(H_t2))**alpha))*np.cos(theta2)*np.cos(psi2-wind_direction[ind_wind_dir])    
 
     
     # Partial derivatives Vlosi with respect theta, psi and rho
-    dVlos1dtheta1   =     Vref*(np.sign(H_t1)*((abs(H_t1))**alpha))*(alpha*((rho1*(np.cos(theta1))**2)/(rho1*np.sin(theta1)+Hl))-np.sin(theta1))*np.cos(psi1-wind_direction[ind_wind_dir])
-    # dVlos2dtheta2   =     Vref*(np.sign(H_t2)*((abs(H_t2))**alpha))*(alpha*((rho2*(np.cos(theta2))**2)/(rho2*np.sin(theta2)+Hl))-np.sin(theta2))*np.cos(psi2-wind_direction[ind_wind_dir])   
-    dVlos1dpsi1     =   - Vref*(np.sign(H_t1)*((abs(H_t1))**alpha))*(np.cos(theta1)*np.sin(psi1-wind_direction[ind_wind_dir]))
-    # dVlos2dpsi2     =   - Vref*(np.sign(H_t2)*((abs(H_t2))**alpha))*(np.cos(theta2)*np.sin(psi2-wind_direction[ind_wind_dir]))    
-    dVlos1drho1     =     Vref*(np.sign(H_t1)*((abs(H_t1))**alpha))*alpha*(np.sin(theta1)/(rho1*np.sin(theta1)+Hl))*np.cos(theta1)*np.cos(psi1-wind_direction[ind_wind_dir])
-    # dVlos2drho2     =     Vref*(np.sign(H_t2)*((abs(H_t2))**alpha))*alpha*(np.sin(theta2)/(rho2*np.sin(theta2)+Hl))*np.cos(theta2)*np.cos(psi2-wind_direction[ind_wind_dir])
+    dVlos1dtheta1   =     Vref*(H_t1**alpha)*(alpha*((rho1*(np.cos(theta1))**2)/(rho1*np.sin(theta1)+Hl))-np.sin(theta1))*np.cos(psi1-wind_direction[ind_wind_dir])
+    dVlos1dpsi1     =   - Vref*(H_t1**alpha)*(np.cos(theta1)*np.sin(psi1-wind_direction[ind_wind_dir]))
+    dVlos1drho1     =     Vref*(H_t1**alpha)*alpha*(np.sin(theta1)/(rho1*np.sin(theta1)+Hl))*np.cos(theta1)*np.cos(psi1-wind_direction[ind_wind_dir])
+    # pdb.set_trace()
+    Ux=MultiVar(Lidar, 0,      0,     0,   [u_theta1,0],   [u_psi1,0],  [u_rho1,0]        ,1   ,            1          ,1            ,     1,   'GUM2'  )    
     
-
     # Inputs' correlation matrix for Vlosi uncertainty estimation
-    theta1_rho1_corr=0
-    psi1_rho1_corr=0
-    Ux = np.array([[      u_theta1**2,                       0 ,   u_psi1*u_theta1*psi1_theta1_corr ,    0 ,   u_rho1*u_theta1*theta1_rho1_corr ,    0 ],
-                   [            0 ,                          0,                    0 ,                   0 ,                  0,                     0 ],
-                   [u_theta1*u_psi1*psi1_theta1_corr  ,      0 ,                u_psi1**2,               0 ,       u_rho1*u_psi1*psi1_rho1_corr ,    0 ],
-                   [            0 ,                          0,                     0 ,                  0,                    0 ,                   0 ],
-                   [u_theta1*u_rho1*theta1_rho1_corr ,       0 ,       u_psi1*u_rho1*psi1_rho1_corr ,    0,                   u_rho1**2,             0 ],
-                   [              0,                         0 ,                     0 ,                 0 ,                   0 ,                   0 ]])
+    # theta1_rho1_corr=0
+    # psi1_rho1_corr=0
+    # Ux = np.array([[      u_theta1**2,                       0 ,   u_psi1*u_theta1*psi1_theta1_corr ,    0 ,   u_rho1*u_theta1*theta1_rho1_corr ,    0 ],
+    #                [            0 ,                          0,                    0 ,                   0 ,                  0,                     0 ],
+    #                [u_theta1*u_psi1*psi1_theta1_corr  ,      0 ,                u_psi1**2,               0 ,       u_rho1*u_psi1*psi1_rho1_corr ,    0 ],
+    #                [            0 ,                          0,                     0 ,                  0,                    0 ,                   0 ],
+    #                [u_theta1*u_rho1*theta1_rho1_corr ,       0 ,       u_psi1*u_rho1*psi1_rho1_corr ,    0,                   u_rho1**2,             0 ],
+    #                [              0,                         0 ,                     0 ,                 0 ,                   0 ,                   0 ]])
     
     
-    
-    
+    # Store data
+    Cont_Theta.append(dVlos1dtheta1)
+    Cont_Psi.append(dVlos1dpsi1)
+    Cont_Rho.append(dVlos1drho1)
     # Influence coefficients matrix for Vlosi uncertainty estimation
-    Cx = np.array([[dVlos1dtheta1  ,          0      ,  dVlos1dpsi1  ,      0        ,  dVlos1drho1  ,       0     ],
-                   [       0       ,          0  ,      0        ,  0  ,       0       ,  0]])     
-    # Cx = np.array([[dVlos1dtheta1  ,          0      ,  dVlos1dpsi1  ,      0        ,  dVlos1drho1  ,       0     ],
-     #               [       0       ,  dVlos2dtheta2  ,      0        ,  dVlos2dpsi2  ,       0       ,  dVlos2drho2]])
-    
+    Cx = np.array([[dVlos1dtheta1  ,          0      ,  dVlos1dpsi1  ,      0        ,  dVlos1drho1  ,  0,   0,  0   ],
+                   [       0       ,          0  ,             0        ,   0  ,                0    ,  0 ,  0  ,0   ]])     
     # Ouputs covariance matrix
     Uy=Cx.dot(Ux).dot(np.transpose(Cx))
     
@@ -391,62 +452,432 @@ def U_VLOS_GUM (theta1,psi1,rho1,u_theta1,u_psi1,u_rho1,Hl,Vref,Href,alpha,wind_
     U_Vlos1_GUM.append((np.sqrt(Uy[0][0])))
     # U_Vlos2_GUM.append(np.sqrt(Uy[1][1]))
 
-    return(U_Vlos1_GUM)
+    return([U_Vlos1_GUM,Cont_Theta,Cont_Psi,Cont_Rho])
 
-def VLOS_param (rho,theta,psi,U_theta1,U_psi1,U_rho1,N_MC,U_VLOS1,Hl,Vref,Href,alpha,wind_direction_TEST,ind_wind_dir,CROS_CORR):
-    wind_direction_TEST = np.radians([0])
-    # wind_tilt_TEST      = np.radians([0])
-    
-    #If want to vary range    
-    if len (rho) !=1:
-        rho_TEST   = rho
-        theta_TEST = theta*np.ones(len(rho_TEST))
-        psi_TEST   = psi*np.ones(len(rho_TEST))
-        U_theta1   = 0
-        U_psi1   = 0
-        ind_i = theta_TEST
-    elif len(theta)!=1:
-        theta_TEST = theta
-        rho_TEST   = rho[0]*np.ones(len(theta_TEST))
-        psi_TEST   = psi*np.ones(len(theta_TEST))
-        U_rho1   = 0
-        U_psi1   = 0
-        ind_i = rho_TEST
-    elif len(psi)!=1:
-        psi_TEST   = psi
-        rho_TEST   = rho[0]*np.ones(len(psi_TEST))
-        theta_TEST = theta*np.ones(len(psi_TEST))
-        U_rho1   = 0
-        U_theta1  = 0
-        ind_i = rho_TEST
 
-    # Calculate radial speed uncertainty for an heterogeneous flow
-    VLOS_list_T,U_VLOS_T_MC,U_VLOS_T_GUM,U_VLOS_T=[],[],[],[]
-    
-    # for ind_alpha in range(len(alpha)):
-    for ind_0 in range(len(ind_i)):
+
+#%%
+#############################
+#####CovarainceMatrix
+#############################
+
+'''
+This function calculated the covariance matrix
+'''
+def MultiVar (Lidar,Vlos_corrcoeff, U_Vlos1,U_Vlos2,  theta_stds, psi_stds,  rho_stds,autocorr_theta,autocorr_psi,autocorr_rho,autocorr_V,mode ):
+    # Covariance Matrix:
+        # psi1_theta1_corr      = Lidar.optics.scanner.correlations[3]
+
+        # pdb.set_trace()
+        if mode=='GUM1':
+            # pdb.set_trace()
+            psi1_theta1_corr      = Lidar.optics.scanner.correlations[3]
+            psi2_theta2_corr      = Lidar.optics.scanner.correlations[6]
+            rho1_rho2_corr        = Lidar.optics.scanner.correlations[2]
+            psi1_psi2_corr        = Lidar.optics.scanner.correlations[0]
+            theta1_theta2_corr    = Lidar.optics.scanner.correlations[1]
+            psi1_theta2_corr      = Lidar.optics.scanner.correlations[4]
+            psi2_theta1_corr      = Lidar.optics.scanner.correlations[5]
+            u_Vlos1_Vlos2_corr    = 0#Vlos_corrcoeff
         
-        # MC method
-        VLOS_T_MC1=[]
-        theta1_T_noisy = np.random.normal(theta_TEST[ind_0],U_theta1,N_MC)
-        psi1_T_noisy   = np.random.normal(psi_TEST[ind_0],U_psi1,N_MC)
-        rho1_T_noisy   = np.random.normal(rho_TEST[ind_0],U_rho1,N_MC)
-        U_VLOS_T.append(U_VLOS_MC(theta1_T_noisy,psi1_T_noisy,rho1_T_noisy,Hl,Href,alpha,wind_direction_TEST,Vref,0,VLOS_list_T)[0])
+        elif mode=='GUM2':
+            psi1_theta1_corr      = Lidar.optics.scanner.correlations[3]
+            psi2_theta2_corr      = Lidar.optics.scanner.correlations[6] 
+            rho1_rho2_corr        = Lidar.optics.scanner.correlations[2]
+            psi1_psi2_corr        = Lidar.optics.scanner.correlations[0]
+            theta1_theta2_corr    = Lidar.optics.scanner.correlations[1]
+            psi1_theta2_corr      = Lidar.optics.scanner.correlations[4]
+            psi2_theta1_corr      = Lidar.optics.scanner.correlations[5]
+            u_Vlos1_Vlos2_corr    = Vlos_corrcoeff#Lidar.optics.scanner.correlations[7]
+        elif mode=='MC1':
+            
+            psi1_theta1_corr      = Lidar.optics.scanner.correlations[3]
+            psi2_theta2_corr      = Lidar.optics.scanner.correlations[6]
+            rho1_rho2_corr        = Lidar.optics.scanner.correlations[2]
+            psi1_psi2_corr        = Lidar.optics.scanner.correlations[0]
+            theta1_theta2_corr    = Lidar.optics.scanner.correlations[1]
+            psi1_theta2_corr      = Lidar.optics.scanner.correlations[4]
+            psi2_theta1_corr      = Lidar.optics.scanner.correlations[5]
+            u_Vlos1_Vlos2_corr    = 0#Vlos_corrcoeff
+
+        elif mode=='MC2':            
+            psi1_theta1_corr      = Lidar.optics.scanner.correlations[3]
+            psi2_theta2_corr      = Lidar.optics.scanner.correlations[6]
+            rho1_rho2_corr        = Lidar.optics.scanner.correlations[2]
+            psi1_psi2_corr        = Lidar.optics.scanner.correlations[0]
+            theta1_theta2_corr    = Lidar.optics.scanner.correlations[1]
+            psi1_theta2_corr      = Lidar.optics.scanner.correlations[4]
+            psi2_theta1_corr      = Lidar.optics.scanner.correlations[5]
+            u_Vlos1_Vlos2_corr    = Vlos_corrcoeff#Lidar.optics.scanner.correlations[7]
+            
+        psi1_rho1_corr        = 0
+        psi1_rho2_corr        = 0
+        psi2_rho1_corr        = 0
+        psi2_rho2_corr        = 0
+        theta1_rho1_corr      = 0
+        theta1_rho2_corr      = 0
+        theta2_rho1_corr      = 0
+        theta2_rho2_corr      = 0
+
+        # pdb.set_trace()
+        cov_MAT=[[theta_stds[0]**2*autocorr_theta,                  theta_stds[1]*theta_stds[0]*theta1_theta2_corr,       psi_stds[0]*theta_stds[0]*psi1_theta1_corr ,      psi_stds[1]*theta_stds[0]*psi2_theta1_corr,   rho_stds[0]*theta_stds[0]*theta1_rho1_corr,  rho_stds[1]*theta_stds[0]*theta1_rho2_corr   ,  theta_stds[0]*U_Vlos1*0,                         theta_stds[0]*U_Vlos2  *0                      ],
+                 [theta_stds[0]*theta_stds[1]*theta1_theta2_corr,          theta_stds[1]**2*autocorr_theta,               psi_stds[0]*theta_stds[1]*psi1_theta2_corr,       psi_stds[1]*theta_stds[1]*psi2_theta2_corr ,  rho_stds[0]*theta_stds[1]*theta2_rho1_corr,  rho_stds[1]*theta_stds[1]*theta2_rho2_corr   ,  theta_stds[1]*U_Vlos1*0                        , theta_stds[1]*U_Vlos2   *0                    ],
+                 [theta_stds[0]*psi_stds[0]*psi1_theta1_corr  ,     theta_stds[1]*psi_stds[0]*psi1_theta2_corr,               psi_stds[0]**2*autocorr_psi,                  psi_stds[1]*psi_stds[0]*psi1_psi2_corr,       rho_stds[0]*psi_stds[0]*psi1_rho1_corr,      rho_stds[1]*psi_stds[0]*psi1_rho2_corr        , psi_stds[0]*U_Vlos1*0                          , psi_stds[0]*U_Vlos2     *0                      ],
+                 [theta_stds[0]*psi_stds[1]*psi2_theta1_corr,       theta_stds[1]*psi_stds[1]*psi2_theta2_corr ,          psi_stds[0]*psi_stds[1]*psi1_psi2_corr,                 psi_stds[1]**2*autocorr_psi,            rho_stds[0]*psi_stds[1]*psi2_rho1_corr,      rho_stds[1]*psi_stds[1]*psi2_rho2_corr       ,  psi_stds[1]*U_Vlos1*0                          , psi_stds[1]*U_Vlos2     *0                     ],
+                 [theta_stds[0]*rho_stds[0]*theta1_rho1_corr,          theta_stds[1]*rho_stds[0]*theta2_rho1_corr,        psi_stds[0]*rho_stds[0]*psi1_rho1_corr,           psi_stds[1]*rho_stds[0]*psi2_rho1_corr,                rho_stds[0]**2*autocorr_rho,          rho_stds[1]*rho_stds[0]*rho1_rho2_corr      , rho_stds[0]*U_Vlos1*0                           ,rho_stds[0]*U_Vlos2     *0                    ],
+                 [theta_stds[0]*rho_stds[1]*theta1_rho2_corr,          theta_stds[1]*rho_stds[1]*theta2_rho2_corr,         psi_stds[0]*rho_stds[1]*psi1_rho2_corr,          psi_stds[1]*rho_stds[1]*psi2_rho2_corr,       rho_stds[0]*rho_stds[1]*rho1_rho2_corr,           rho_stds[1]**2*autocorr_rho           ,    rho_stds[1]*U_Vlos1 *0  ,                        rho_stds[1]*U_Vlos2    *0                     ],
+                 [theta_stds[0]*U_Vlos1*0    ,                                 theta_stds[1]*U_Vlos1*0               ,             psi_stds[0]*U_Vlos1*0    ,                          psi_stds[1]*U_Vlos1*0,                      rho_stds[0]*U_Vlos1*0   ,                rho_stds[1]*U_Vlos1*0   ,                   U_Vlos1**2*autocorr_V,                     U_Vlos1*U_Vlos2*u_Vlos1_Vlos2_corr          ],
+                 [theta_stds[0]*U_Vlos2*0   ,                                  theta_stds[1]*U_Vlos2*0              ,             psi_stds[0]*U_Vlos2*0  ,                             psi_stds[1]*U_Vlos2*0,                      rho_stds[0]*U_Vlos2*0    ,               rho_stds[1]*U_Vlos2*0  ,                U_Vlos1*U_Vlos2*u_Vlos1_Vlos2_corr,                 U_Vlos2**2*autocorr_V                       ]]
+        
+        return  cov_MAT
+
+#%% Calculate correlations between Vlos1, ans Vlos2
+def Vlos_correlations(Lidar,Atmospheric_Scenario,wind_direction, ind_wind_dir,ind_alpha,Vlos1,Vlos2,theta1, theta2, psi1,psi2,rho1,rho2,u_theta1,u_theta2,u_psi1,u_psi2,u_rho1,u_rho2):
     
-    #Store results
-    U_VLOS_T_MC.append(np.array(U_VLOS_T))        # For an heterogeneous flow  (shear)
-    U_VLOS_T=[]
+    cov_MAT=MultiVar(Lidar, 0,   0,          0       , [u_theta1,u_theta2], [u_psi1,u_psi2],  [u_rho1,u_rho2]  ,       1     ,      1     ,       1    ,    0 ,     'MC1'  )
+    
+    Theta1_cr,Theta2_cr,Psi1_cr,Psi2_cr,Rho1_cr,Rho2_cr,Vlos1_cr,Vlos2_cr=multivariate_normal.rvs([theta1,theta2,psi1,psi2,rho1,rho2,0,0], cov_MAT,Lidar.optics.scanner.N_MC).T
+    
+    H_t1_cr = (Rho1_cr*np.sin(Theta1_cr)+Lidar.optics.scanner.origin[0][2])/Lidar.optics.scanner.Href
+    H_t2_cr = (Rho2_cr*np.sin(Theta2_cr)+Lidar.optics.scanner.origin[1][2])/Lidar.optics.scanner.Href   
+
+     
+    ### VLOS calculations ############################      
+    Vlos1_cr=(Atmospheric_Scenario.Vref*(H_t1_cr**Atmospheric_Scenario.PL_exp[ind_alpha])*np.cos(Theta1_cr)*np.cos(Psi1_cr-wind_direction[ind_wind_dir]))
+    Vlos2_cr=(Atmospheric_Scenario.Vref*(H_t2_cr**Atmospheric_Scenario.PL_exp[ind_alpha])*np.cos(Theta2_cr)*np.cos(Psi2_cr-wind_direction[ind_wind_dir]))
+    Correlation_Vlos = np.corrcoef(Vlos1_cr,Vlos2_cr)
+    # pdb.set_trace()
+
+    return (Correlation_Vlos[0][1],Vlos1_cr,Vlos2_cr,Theta1_cr,Theta2_cr,Psi1_cr,Psi2_cr,Rho1_cr,Rho2_cr)
+    
+#%% ##########################################
+##########################################
+#Uncertainty Vh following MCM
+##########################################
+##############################################
+#%%
+'''
+This function performs an estimation of the uncertainty in Vlos and u and v wind velocity components based on the Montecarlo method. 
+
+First it calculates the uncertainty of Vlos assigning multivariated normally distributed probability density functions
+    to the iput quantities rho, theta (aperture angle) and psi(azimuth). The covariance matrix includes the correlations between 
+    the aperture and azimuth angles of the same lidar. The cross-correlations betwen different lidars are not taken 
+    into account at this stage because each lidar is mesuring a Vlos value independtly.  
+
+Second, we use the statics of Vlos, mean and stdv, jointly with the correlation between lidars to create a second set of multivariated
+    distributions which are used to estimate the reconstructed u and v wind veloctiy components and their uncertainties. u anv v components
+    inherit the uncertainty in pointing and range from the Vlos uncertainty.
+
+'''
+
+def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,ind_alpha,theta1,u_theta1,psi1 ,u_psi1,rho1,u_rho1,theta2,u_theta2,psi2,u_psi2,rho2,u_rho2):
+    # pdb.set_trace()
+    Vh,u,v,U_u_MC,U_v_MC,U_Vh_MCM,CorrCoefTheta2Psi2=[],[],[],[], [],[],[]
+    Vlos1,Vlos2,U_Vlos1_MCM,U_Vlos2_MCM=[],[],[],[]
+    Vlos1_MC_cr2_s,Vlos2_MC_cr2_s=[],[]
+    CorrCoef_U_Vlos,CorrCoef_U_VLOS,CorrCoefVlos2,CorrCoefTheta2,CorrCoefPsi2,CorrCoefTheta1Psi2,CorrCoefTheta2Psi1,CorrCoef_U_uv,CorrCoefTheta1Psi1_2,CorrCoefTheta2Psi2_2=[],[],[],[],[],[],[],[],[],[]
+    CorrCoefVlos1,  CorrCoefTheta1,CorrCoefPsi1,CorrCoefThetaPsi1,CorrCoefuv,CorrCoef_Theta1Psi2,CorrCoefTheta1Psi2_2,CorrCoefTheta2Psi1_2,CorrCoefTheta1Psi1=[],[],[],[],[],[],[],[]    ,[]
+    Theta1_cr2_s,Theta2_cr2_s,Psi1_cr2_s,Psi2_cr2_s,Rho1_cr2_s,Rho2_cr2_s=[],[],[],[],[],[]
+    
+
+    for ind_wind_dir in range(len(wind_direction)):  
+        ######## Vlos multivariate distribution #####################
+
+        # # Multivariate distributions: 
+
+        Vlos_corrcoeff,Vlos1_MCM,Vlos2_MCM,Theta1_cr,Theta2_cr,Psi1_cr,Psi2_cr,Rho1_cr,Rho2_cr=Vlos_correlations(Lidar,Atmospheric_Scenario,wind_direction, ind_wind_dir,ind_alpha,Vlos1,Vlos2,theta1, theta2, psi1,psi2,rho1,rho2,u_theta1,u_theta2,u_psi1,u_psi2,u_rho1,u_rho2)
+        CorrCoef_U_Vlos.append(Vlos_corrcoeff)
+           
+        # Store data
+        Vlos1.append(Vlos1_MCM)
+        Vlos2.append(Vlos2_MCM)
+        # pdb.set_trace()
+        
+        #  Uncertainty Vlosi and Uest uncertainty ##############################
+        s_w=0
+        U_Vlos1_MCM0=np.sqrt(np.std(Vlos1_MCM)**2+ Lidar.optics.scanner.stdv_Estimation[0][0]**2+(np.sin(theta1)*s_w)**2)
+        U_Vlos2_MCM0=np.sqrt(np.std(Vlos2_MCM)**2+ Lidar.optics.scanner.stdv_Estimation[0][0]**2+(np.sin(theta1)*s_w)**2)
+        
+        # Store data
+        U_Vlos1_MCM.append(U_Vlos1_MCM0 ) 
+        U_Vlos2_MCM.append(U_Vlos2_MCM0)
+     
+        # pdb.set_trace()
+        ###CORRELATION COEFFICIENTS 1st multivariate  
+        CorrCoef_U_VLOS=(np.corrcoef(U_Vlos1_MCM[ind_wind_dir],U_Vlos2_MCM[ind_wind_dir])[0][1])              
+        CorrCoefTheta1Psi1.append( np.corrcoef(Theta1_cr,Psi1_cr)[0][1]) 
+        CorrCoefTheta2Psi2.append( np.corrcoef(Theta2_cr,Psi2_cr)[0][1])  
+        CorrCoefTheta1.append( np.corrcoef(Theta1_cr,Theta2_cr)[0][1])
+        CorrCoefVlos1.append( np.corrcoef(Vlos1[ind_wind_dir],Vlos2[ind_wind_dir])[0][1])        
+        CorrCoefPsi1.append( np.corrcoef(Psi1_cr,Psi2_cr)[0][1])
+        CorrCoefTheta1Psi2.append( np.corrcoef(Theta1_cr,Psi2_cr)[0][1])  
+        CorrCoefTheta2Psi1.append(np.corrcoef(Theta2_cr,Psi1_cr)[0][1])
+    
+
+        ######### Vh multivariate  ####################################  
+        # for ind_wind_dir in range(len(wind_direction)):             
+                                                                                                                                                                                                                                                                                                                           ## MCM - uv     
+        # Covariance matrix       
+        #                   (Lidar,  Vlos_corrcoeff,    U_Vlos1,           U_Vlos2       ,[u_theta1,u_theta2], [u_psi1,u_psi2],  [u_rho1,u_rho2],    autocorr_theta,   autocorr_psi,   autocorr_rho,    autocorr_V ,    mode)
+        cov_MAT_Vh = MultiVar(Lidar, Vlos_corrcoeff,   U_Vlos1_MCM0,    U_Vlos2_MCM0  ,   [0,0], [0,0],  [0,0],           1   ,         1     ,         1 ,            1 ,        'MC2' )
+        # pdb.set_trace() 
+        
+        # # Multivariate distributions:       
+        # Theta1_cr2,Theta2_cr2,Psi1_cr2,Psi2_cr2,Rho1_cr2,Rho2_cr2,Vlos1_MC_cr2,Vlos2_MC_cr2= multivariate_normal.rvs([theta1,theta2,psi1,psi2,rho1,rho2,np.mean(Vlos1[ind_wind_dir]),np.mean(Vlos2[ind_wind_dir])], cov_MAT_Vh,Lidar.optics.scanner.N_MC).T
+        Theta1_cr2,Theta2_cr2,Psi1_cr2,Psi2_cr2,Rho1_cr2,Rho2_cr2,Vlos1_MC_cr2,Vlos2_MC_cr2= multivariate_normal.rvs([theta1,theta2,psi1,psi2,rho1,rho2,np.mean(Vlos1_MCM),np.mean(Vlos2_MCM)], cov_MAT_Vh,Lidar.optics.scanner.N_MC).T
+        # pdb.set_trace()
+        
+        #Storing data
+        Vlos1_MC_cr2_s.append(Vlos1_MC_cr2)
+        Vlos2_MC_cr2_s.append(Vlos2_MC_cr2)
+        Theta1_cr2_s.append(Theta1_cr2)       
+        Theta2_cr2_s.append(Theta2_cr2)
+        Psi1_cr2_s.append(Psi1_cr2)       
+        Psi2_cr2_s.append(Psi2_cr2)
+        Rho1_cr2_s.append(Rho1_cr2)       
+        Rho2_cr2_s.append(Rho2_cr2)        
+        # pdb.set_trace()
+        
+        #%% Uncertainty in horizontal velocity
+        Vh_num    = np.sqrt(((Vlos1_MC_cr2*np.cos(Theta2_cr2))**2+(Vlos2_MC_cr2*np.cos(Theta1_cr2))**2)-2*(Vlos1_MC_cr2*Vlos2_MC_cr2*np.cos(Theta1_cr2)*np.cos(Theta2_cr2)*np.cos(Psi1_cr2-Psi2_cr2)))
+        Vh_denom  = np.cos(Theta1_cr2)*np.cos(Theta2_cr2)*np.sin(Psi1_cr2-Psi2_cr2)       
+        Vh.append(Vh_num/Vh_denom)       
+        U_Vh_MCM.append(np.std(Vh[ind_wind_dir]))
+        
+        
+        ###CORRELATION COEFFICIENTS 2nd multivariate       
+        CorrCoefVlos2.append(np.corrcoef(Vlos1_MC_cr2_s[ind_wind_dir],Vlos2_MC_cr2_s[ind_wind_dir])[0][1])       
+        CorrCoefTheta2.append( np.corrcoef(Theta1_cr2,Theta2_cr2)[0][1])
+        CorrCoefPsi2.append( np.corrcoef(Psi1_cr2,Psi2_cr2)[0][1])
+        CorrCoefTheta2_Psi2_2    = ( np.corrcoef(Theta2_cr2,Psi2_cr2)[0][1])         
+        CorrCoefTheta1Psi1_2.append( np.corrcoef(Theta1_cr2,Psi1_cr2)[0][1])
+        CorrCoefTheta1Psi2_2.append( np.corrcoef(Theta1_cr2,Psi2_cr2)[0][1])
+        CorrCoefTheta2Psi2_2.append( np.corrcoef(Theta2_cr2,Psi2_cr2)[0][1])
+        CorrCoefTheta2Psi1_2.append(np.corrcoef(Theta2_cr2,Psi1_cr2)[0][1])
+        # pdb.set_trace()
+                
+        ########### Analysis u and v ##############################       
+        u.append((-Vlos1_MC_cr2*np.cos(Theta2_cr2)*np.sin(Psi2_cr2)+Vlos2_MC_cr2*np.cos(Theta1_cr2)*np.sin(Psi1_cr2))/(np.cos(Theta1_cr2)*np.cos(Theta2_cr2)*np.sin(Psi1_cr2-Psi2_cr2)))
+        v.append(( Vlos1_MC_cr2*np.cos(Theta2_cr2)*np.cos(Psi2_cr2)-Vlos2_MC_cr2*np.cos(Theta1_cr2)*np.cos(Psi1_cr2))/(np.cos(Theta1_cr2)*np.cos(Theta2_cr2)*np.sin(Psi1_cr2-Psi2_cr2)))
+        ### Uncertainty u and v components
+        U_u_MC.append(np.std(u[ind_wind_dir]))
+        U_v_MC.append(np.std(v[ind_wind_dir]))        
+        # Correlation coefficients  u v
+        CorrCoef_U_uv.append(np.corrcoef(U_u_MC,U_v_MC)[0][1])
+        CorrCoefuv.append(np.corrcoef(u[ind_wind_dir],v[ind_wind_dir])[0][1])
+        # pdb.set_trace()
+    
+    # Store the multivariate distributions
+    Mult_param          =  [Vlos1_MC_cr2_s,Vlos2_MC_cr2_s,Theta1_cr2_s,Theta2_cr2_s,Psi1_cr2_s,Psi2_cr2_s,Rho1_cr2_s,Rho2_cr2_s]
+    # print(U_Vlos1_MCM)
+    # print(U_Vlos2_MCM)
+    # Store correlation coefficients
+    Correlation_coeffs  =  [CorrCoef_U_Vlos,CorrCoefuv,CorrCoefTheta1Psi1,CorrCoefTheta2Psi2,CorrCoefTheta1,CorrCoefVlos1,CorrCoefPsi1,CorrCoefTheta1Psi2,CorrCoef_U_VLOS,
+                            CorrCoefVlos2,CorrCoefTheta2,CorrCoefPsi2,CorrCoefTheta2_Psi2_2,CorrCoefTheta1Psi1_2,CorrCoefTheta1Psi2_2,CorrCoefTheta2Psi2_2,CorrCoefTheta2Psi1_2,CorrCoefTheta2Psi1]
+    # pdb.set_trace()
+    return U_Vlos1_MCM,U_Vlos2_MCM,u,v,U_u_MC,U_v_MC ,Mult_param,Correlation_coeffs,U_Vh_MCM
 
 
+#%% ##########################################
+##########################################
+#Uncertainty of u and v wind components following GUM model
+##########################################
+##############################################
+#%%
 
-    # GUM method
-    U_VLOS_T_GUM.append(U_VLOS_GUM (theta_TEST,psi_TEST,rho_TEST,U_theta1,U_psi1,U_rho1,Hl,Vref,Href,alpha,wind_direction_TEST,0,0,0,0,0,0,0,0,0) ) # For an heterogeneous flow (shear))
+def GUM_Vlos_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,ind_alpha,theta1,u_theta1,psi1,u_psi1,rho1  ,u_rho1,theta2,u_theta2,psi2  ,u_psi2,rho2  ,u_rho2):    
+    # pdb.set_trace()
+    # surr=np.zeros(len(wind_direction))
 
+    
    
-    return (U_VLOS_T_MC,U_VLOS_T_GUM,rho_TEST,theta_TEST,psi_TEST)        
+    U_Vlos1_GUM,U_Vlos2_GUM,U_u_GUM,U_v_GUM,VL1,VL2,u,v=[],[],[],[],[],[],[],[]
+    u_V_LOS1Theta1,u_V_LOS1Psi1,u_V_LOS1Rho1,u_V_LOS2Theta2,u_V_LOS2Psi2,u_V_LOS2Rho2,Corrcoef_Vlos =[], [],[],[],[],[],[]
+    H_t1 = ((rho1*np.sin(theta1)+Lidar.optics.scanner.origin[0][2])/Lidar.optics.scanner.Href)
+    H_t2 = ((rho2*np.sin(theta2)+Lidar.optics.scanner.origin[1][2])/Lidar.optics.scanner.Href)
+    CorrCoef_U_Vlos_GUM=[]
+    ### Covariance matrix
+    #           (Lidar,Vlos_corrcoeff, U_Vlos1,U_Vlos2,  [u_theta1,u_theta2],   [u_psi1,u_psi2]  ,[u_rho1,u_rho2],    autocorr_theta,  autocorr_psi ,autocorr_rho, autocorr_V ,mode)       
+    psi_bba = (np.radians(360)-abs(psi1-psi2))
+    # pdb.set_trace()
+    for ind_wind_dir in range(len(wind_direction)):  
+        
+        # VLOS
+        Ux=MultiVar(Lidar  ,0,     0,     0,   [u_theta1,u_theta2],   [u_psi1,u_psi2],  [u_rho1,u_rho2]        ,1   ,            1          ,1            ,     1,   'GUM1'  )  
+        # VLOS uncertainty
+        # Calculate and store Vlosi
+        Vlos1_GUM = Atmospheric_Scenario.Vref*(H_t1**Atmospheric_Scenario.PL_exp[ind_alpha])*np.cos(theta1)*np.cos(psi1-wind_direction[ind_wind_dir])
+        Vlos2_GUM = Atmospheric_Scenario.Vref*(H_t2**Atmospheric_Scenario.PL_exp[ind_alpha])*np.cos(theta2)*np.cos(psi2-wind_direction[ind_wind_dir])    
+        VL1.append(Vlos1_GUM)
+        VL2.append(Vlos2_GUM)
 
+        # Calculate and store u and v components
+        u_comp=((-Vlos1_GUM*np.sin(psi2)*np.cos(theta2)+Vlos2_GUM*np.sin(psi1)*np.cos(theta1))/(np.cos(theta1)*np.cos(theta2)*np.sin(psi1-psi2)))
+        v_comp=(( Vlos1_GUM*np.cos(psi2)*np.cos(theta2)-Vlos2_GUM*np.cos(psi1)*np.cos(theta1))/(np.cos(theta1)*np.cos(theta2)*np.sin(psi1-psi2)))
+        u.append(u_comp)
+        v.append(v_comp)
+        
+        # Partial derivatives Vlosi with respect theta, psi and rho
+        dVlos1dtheta1   =     Atmospheric_Scenario.Vref*((H_t1)**Atmospheric_Scenario.PL_exp[ind_alpha])*(Atmospheric_Scenario.PL_exp[ind_alpha]*((rho1*(np.cos(theta1))**2)/(rho1*np.sin(theta1)+Lidar.optics.scanner.origin[0][2]))-np.sin(theta1))*np.cos(psi1-wind_direction[ind_wind_dir])
+        dVlos2dtheta2   =     Atmospheric_Scenario.Vref*((H_t2)**Atmospheric_Scenario.PL_exp[ind_alpha])*(Atmospheric_Scenario.PL_exp[ind_alpha]*((rho2*(np.cos(theta2))**2)/(rho2*np.sin(theta2)+Lidar.optics.scanner.origin[1][2]))-np.sin(theta2))*np.cos(psi2-wind_direction[ind_wind_dir])   
+        dVlos1dpsi1     =   - Atmospheric_Scenario.Vref*((H_t1)**Atmospheric_Scenario.PL_exp[ind_alpha])*(np.cos(theta1)*np.sin(psi1-wind_direction[ind_wind_dir]))
+        dVlos2dpsi2     =   - Atmospheric_Scenario.Vref*((H_t2)**Atmospheric_Scenario.PL_exp[ind_alpha])*(np.cos(theta2)*np.sin(psi2-wind_direction[ind_wind_dir]))    
+        dVlos1drho1     =     Atmospheric_Scenario.Vref*((H_t1)**Atmospheric_Scenario.PL_exp[ind_alpha])*Atmospheric_Scenario.PL_exp[ind_alpha]*(np.sin(theta1)/(rho1*np.sin(theta1)+Lidar.optics.scanner.origin[0][2]))*np.cos(theta1)*np.cos(psi1-wind_direction[ind_wind_dir])
+        dVlos2drho2     =     Atmospheric_Scenario.Vref*((H_t2)**Atmospheric_Scenario.PL_exp[ind_alpha])*Atmospheric_Scenario.PL_exp[ind_alpha]*(np.sin(theta2)/(rho2*np.sin(theta2)+Lidar.optics.scanner.origin[1][2]))*np.cos(theta2)*np.cos(psi2-wind_direction[ind_wind_dir])
+        
+        # pdb.set_trace()
+        # dVlos1dtheta2 = Atmospheric_Scenario.Vref*((H_t2)**Atmospheric_Scenario.PL_exp[ind_alpha])*np.cos(theta2)*np.cos(psi1-wind_direction[ind_wind_dir])*np.sqrt(1-(np.sin(theta2)*rho2/rho1)**2)*(((Atmospheric_Scenario.PL_exp[ind_alpha]*rho2)/(rho2*np.sin(theta2)+Lidar.optics.scanner.origin[1][2]))-((np.sin(theta2)*(rho2/rho1)**2)/(1-(np.sin(theta2)*rho2/rho1)**2)))
+        # dVlos2dtheta1 = Atmospheric_Scenario.Vref*((H_t1)**Atmospheric_Scenario.PL_exp[ind_alpha])*np.cos(theta1)*np.cos(psi2-wind_direction[ind_wind_dir])*np.sqrt(1-(np.sin(theta1)*rho1/rho2)**2)*(((Atmospheric_Scenario.PL_exp[ind_alpha]*rho1)/(rho1*np.sin(theta1)+Lidar.optics.scanner.origin[1][2]))-((np.sin(theta1)*(rho1/rho2)**2)/(1-(np.sin(theta1)*rho1/rho2)**2)))
+        
+        
+        # dVlos1dpsi2   = -Atmospheric_Scenario.Vref*((H_t1)**Atmospheric_Scenario.PL_exp[ind_alpha])*np.cos(theta1)*np.sin(psi_bba+psi2-wind_direction[ind_wind_dir])
+        # dVlos2dpsi1   = -Atmospheric_Scenario.Vref*((H_t2)**Atmospheric_Scenario.PL_exp[ind_alpha])*np.cos(theta2)*np.sin(psi1-psi_bba-wind_direction[ind_wind_dir])
+        
+        
+        
+        
+        # pdb.set_trace()
+        # Store each contribution
+        u_V_LOS1Theta1.append(dVlos1dtheta1)
+        u_V_LOS1Psi1.append(dVlos1dpsi1)
+        u_V_LOS1Rho1.append(dVlos1drho1)
+        u_V_LOS2Theta2.append(dVlos2dtheta2)
+        u_V_LOS2Psi2.append(dVlos2dpsi2)
+        u_V_LOS2Rho2.append(dVlos2drho2)
+
+        
+        # Influence coefficients matrix for Vlosi uncertainty estimation
+        # Cx = np.array([[dVlos1dtheta1,dVlos1dtheta2,   dVlos1dpsi1,  dVlos1dpsi2,       dVlos1drho1  ,       0       ,  0  , 0],
+        #                 [dVlos2dtheta1,dVlos2dtheta2,     dVlos2dpsi1 , dVlos2dpsi2,           0       ,  dVlos2drho2  ,  0  ,0]])
+        Cx = np.array([[dVlos1dtheta1,        0,       dVlos1dpsi1,      0,          dVlos1drho1  ,       0       ,  0  , 0],
+                        [     0,        dVlos2dtheta2,         0 ,     dVlos2dpsi2,        0       ,  dVlos2drho2  ,  0  ,0]])
+        
+        # Ouput covariance matrix
+        Uy=Cx.dot(Ux).dot(np.transpose(Cx))
+        Corrcoef_Vlos.append(Uy[0][1]/np.sqrt(Uy[1][1]*Uy[0][0]))
+        # pdb.set_trace()
+        # 
+        # U_est ##############
+        s_w= 0
+        U_Vlos1_GUM.append(np.sqrt(Uy[0][0]+ Lidar.optics.scanner.stdv_Estimation[0][0]**2+(np.sin(theta1)*s_w)**2))
+        U_Vlos2_GUM.append(np.sqrt(Uy[1][1]+ Lidar.optics.scanner.stdv_Estimation[1][0]**2+(np.sin(theta2)*s_w)**2))
+        # pdb.set_trace()
+       
+        
+       #%%##################################################################################################################################################################
+       #% u and v wind components' uncertainty analysis (this needs its own function since the correlation coefficient Vlos1_Vlos2_corr = r_{Vlos1,Vlos2} needs to be calculated firsts
+       ##################################################################################################################################################################
+        # Partial derivative u and v respect to Vlos
+        dudVlos1 = -(np.sin(psi2)/(np.cos(theta1)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2)))) 
+        dudVlos2 =  (np.sin(psi1)/(np.cos(theta2)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2))))
+        dvdVlos1 =  np.cos(psi2)/(np.cos(theta1)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2)))
+        dvdVlos2 = -(np.cos(psi1)/(np.cos(theta2)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2))))   
+        
+     
+        # Partial derivative u and v respect to theta
+        
+        dudtheta1 = ((Vlos2_GUM*np.sin(psi1)*(-np.sin(theta1)))/(np.cos(theta1)*np.cos(theta2)*(np.cos(psi2)*np.sin(psi1)-np.cos(psi1)*np.sin(psi2))))+(((-Vlos2_GUM*np.cos(theta1) *np.sin(psi1)+Vlos1_GUM *np.cos(theta2) *np.sin(psi2))*(-np.sin(theta1)))/((np.cos(theta1)**2) *np.cos(theta2) *(np.cos(psi2) *np.sin(psi1) - np.cos(psi1) *np.sin(psi2))))           
+        dvdtheta1 = ((-Vlos2_GUM*np.cos(psi1)*(-np.sin(theta1)))/(np.cos(theta1)*np.cos(theta2)*(np.cos(psi2)*np.sin(psi1)-np.cos(psi1)*np.sin(psi2)))) + ((Vlos2_GUM*np.cos(theta1) *np.cos(psi1) -Vlos1_GUM *np.cos(theta2) *np.cos(psi2))*(-np.sin(theta1)))/((np.cos(theta1)**2) *np.cos(theta2) *(np.cos(psi2) *np.sin(psi1) - np.cos(psi1) *np.sin(psi2)))   
+        dudtheta2 = (((-Vlos1_GUM*np.sin(psi2)*(-np.sin(theta2)))/(np.cos(theta1)*np.cos(theta2)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2))))) +((((-Vlos2_GUM)*np.cos(theta1)*np.sin(psi1) + Vlos1_GUM*np.cos(theta2)*np.sin(psi2))*(-np.sin(theta2)))/(np.cos(theta1)*(np.cos(theta2)**2)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2))))        
+        dvdtheta2 = ((Vlos1_GUM*np.cos(psi2)*(-np.sin(theta2)))/(np.cos(theta1)*np.cos(theta2)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2)))) +(((Vlos2_GUM*np.cos(psi1)*np.cos(theta1) - Vlos1_GUM*np.cos(psi2)*np.cos(theta2))*(-np.sin(theta2)))/(np.cos(theta1)*(np.cos(theta2)**2) * (np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2))))
+        
+       
+        # Partial derivative u and v respect to psi
+        
+        dudpsi1=((np.cos(psi2)*(np.cos(psi1)) - np.sin(psi2)*(-np.sin(psi1)))*(Vlos1_GUM*np.sin(psi2)*np.cos(theta2) - Vlos2_GUM*np.sin(psi1)*np.cos(theta1)))/(np.cos(theta1)*np.cos(theta2)*(np.sin(psi1)*np.cos(psi2) - np.cos(psi1)*np.sin(psi2))**2) +(Vlos2_GUM*np.cos(psi1))/(np.cos(theta2)*(np.sin(psi1)*np.cos(psi2) - np.cos(psi1)*np.sin(psi2)))       
+        dvdpsi1= ((np.cos(psi2)*(np.cos(psi1))-np.sin(psi2)*(-np.sin(psi1)))*(Vlos2_GUM*np.cos(psi1)*np.cos(theta1) -  Vlos1_GUM*np.cos(psi2)*np.cos(theta2)))/(np.cos(theta1)*np.cos(theta2)*(np.sin(psi1)*np.cos(psi2) - np.cos(psi1)*np.sin(psi2))**2) - (Vlos2_GUM*(-np.sin(psi1)))/(np.cos(theta2)*(np.sin(psi1)*np.cos(psi2) -np.cos(psi1)*np.sin(psi2)))        
+        dudpsi2= ((-Vlos1_GUM*(np.cos(psi2)))/(np.cos(theta1)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2)))) + (((-Vlos2_GUM)*np.cos(theta1)*np.sin(psi1) + Vlos1_GUM*np.cos(theta2)*np.sin(psi2))*(np.sin(psi1)*(-np.sin(psi2) )- np.cos(psi1)*(np.cos(psi2))))/(np.cos(theta1)*np.cos(theta2)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2))**2)   
+        dvdpsi2= (Vlos1_GUM*(-np.sin(psi2)))/(np.cos(theta1)*(np.cos(psi2)*np.sin(psi1)-np.cos(psi1)*np.sin(psi2))) + ((Vlos2_GUM*np.cos(psi1)*np.cos(theta1)-Vlos1_GUM*np.cos(psi2)*np.cos(theta2))*(np.sin(psi1)*(-np.sin(psi2))-np.cos(psi1)*(np.cos(psi2))))/(np.cos(theta1)*np.cos(theta2)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2))**2)
+        # pdb.set_trace()
+        
+        
+        # Inputs' covariance matrix for u and v components' uncertainty estimation
+        #Param_multivar1=[U_Vlos1_MCM           ,U_Vlos2_MCM,                                  theta_stds2          ,psi_stds2        ,rho_stds2,      psi1_psi2_corr,  theta1_theta2_corr  , rho1_rho2_corr   , psi1_theta1_corr , psi1_theta2_corr  ,       psi2_theta1_corr    , psi2_theta2_corr  , Vlos1_Vlos2_corr ,   psi1_rho1_corr ,psi1_rho2_corr ,psi2_rho1_corr ,psi2_rho2_corr ,theta1_rho1_corr ,theta1_rho2_corr ,theta2_rho1_corr ,theta2_rho2_corr,0,0,0,1 ]
+        # Param_multivar2=[U_Vlos1_GUM[ind_wind_dir]     ,     U_Vlos2_GUM[ind_wind_dir]  ,[u_theta1,u_theta2],   [u_psi1,u_psi2]  ,[u_rho1,u_rho2],    psi1_psi2_corr  ,theta1_theta2_corr  ,  rho1_rho2_corr   ,psi1_theta1_corr , psi1_theta2_corr          ,psi2_theta1_corr  , psi2_theta2_corr  ,             0,        psi1_rho1_corr ,psi1_rho2_corr ,psi2_rho1_corr ,psi2_rho2_corr ,theta1_rho1_corr ,theta1_rho2_corr ,theta2_rho1_corr ,theta2_rho2_corr,1,1,1,1 ]
+        
+                    # (Lidar,Vlos_corrcoeff[0][1], U_Vlos1,  U_Vlos2,  [u_theta1,u_theta2],   [u_psi1,u_psi2],     [u_rho1,u_rho2],   autocorr_theta  ,autocorr_psi,autocorr_rho,autocorr_V ,mode)
+        Uxuv=MultiVar(Lidar,               0,            0,     0,     [u_theta1,u_theta2],  [u_psi1,u_psi2],      [u_rho1,u_rho2],         0  ,            0            ,0        ,1        ,'GUM1')
+        
+        
+        
+        # Influence coefficients matrix for u and v components' uncertainty estimation
+        Cxuv = np.array([[dudtheta1,dudtheta2,dudpsi1,dudpsi2,0,0,dudVlos1,dudVlos2],[dvdtheta1,dvdtheta2,dvdpsi1,dvdpsi2,0,0,dvdVlos1,dvdVlos2]])
+        # Cxuv = dVh_dtheta1[0],dVh_dtheta2[0],dVh_dpsi1[0],dVh_dpsi2[0],0,0,dVh_Vlos1[0],dVh_Vlos2[0]
+        # # u and v uncertainties estimation
+        Uyuv=Cxuv.dot(Uxuv).dot(np.transpose(Cxuv))
+        U_u_GUM.append(np.sqrt(Uyuv[0][0]))
+        U_v_GUM.append(np.sqrt(Uyuv[1][1]))
+        # pdb.set_trace()
+        
+    # CorrCoef_U_Vlos_GUM = np.corrcoef(u,v)[0][1]
+    # CorrCoef_U_Vlos_GUM = np.corrcoef(U_Vlos1_GUM,U_Vlos2_GUM)[0][1]
+
+    # Storing individual uncertainty contributors
+    Awachesneip=[u_V_LOS1Theta1,u_V_LOS1Psi1,u_V_LOS1Rho1]
+    Awachesneip2=[u_V_LOS2Theta2,u_V_LOS2Psi2,u_V_LOS2Rho2]
+    CorrCoef_U_VLOS=(np.corrcoef(U_Vlos1_GUM,U_Vlos2_GUM)[0][1])
+    # pdb.set_trace()
+    return(VL1,VL2,U_Vlos1_GUM,U_Vlos2_GUM,Corrcoef_Vlos,Awachesneip,Awachesneip2)
+
+#%% ##########################################
+##########################################
+#Uncertainty of Vh following GUM
+##########################################
+##############################################
+#%%
+def GUM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,Corrcoef_Vlos,wind_direction,theta1,psi1,rho1,theta2,psi2 ,rho2,u_theta1,u_theta2,u_psi1,u_psi2,u_rho1,u_rho2 ,Vlos1_GUM,Vlos2_GUM,U_Vlos1_GUM,U_Vlos2_GUM):
+        # Vh Uncertainty
+        Correlation_Vlos_GUM,UUy,U_Vh_GUM,dV1,dV2,dVt1,dVt2,dVp1,dVp2,dV1V2=[],[],[],[],[],[],[],[],[],[]
+        for ind_wind_dir in range(len(wind_direction)):  
+            
+            num1 = np.sqrt(((Vlos1_GUM[ind_wind_dir]*np.cos(theta2))**2)+((Vlos2_GUM[ind_wind_dir]*np.cos(theta1))**2)-(2*Vlos1_GUM[ind_wind_dir]*Vlos2_GUM[ind_wind_dir]*np.cos(psi1-psi2)*np.cos(theta1)*np.cos(theta2)))
+            den=np.cos(theta1)*np.cos(theta2)*np.sin(psi1-psi2)
+            
+            dVh_Vlos1= (1/den)*(1/(num1))*(Vlos1_GUM[ind_wind_dir]*((np.cos(theta2))**2)-Vlos2_GUM[ind_wind_dir]*np.cos(theta1)*np.cos(theta2)*np.cos(psi1-psi2))
+            dVh_Vlos2= (1/den)*(1/(num1))*(Vlos2_GUM[ind_wind_dir]*((np.cos(theta1))**2)-Vlos1_GUM[ind_wind_dir]*np.cos(theta1)*np.cos(theta2)*np.cos(psi1-psi2))
+            # pdb.set_trace()
+            dV1.append((dVh_Vlos1*u_theta1)**2)
+            dV2.append((dVh_Vlos2*u_theta2)**2)
+            dV1V2.append(dVh_Vlos1*u_theta1*dVh_Vlos2*u_theta2*Corrcoef_Vlos[ind_wind_dir])
+            
+            # dVh_dtheta1
+            dnum1= (1/(2*num1))*(-2*(Vlos2_GUM[ind_wind_dir]**2)*np.cos(theta1)*np.sin(theta1)+2*Vlos2_GUM[ind_wind_dir]*Vlos1_GUM[ind_wind_dir]*np.sin(theta1)*np.cos(theta2)*np.cos(psi1-psi2))
+            dVh_dtheta1 = (dnum1*den+num1*np.sin(theta1)*np.cos(theta2)*np.sin(psi1-psi2))/den**2
+            dVt1.append(dVh_dtheta1)
+           
+            # dVh_dtheta2
+            dnum2= (1/(2*num1))*(-2*(Vlos1_GUM[ind_wind_dir]**2)*np.cos(theta2)*np.sin(theta2)+2*Vlos2_GUM[ind_wind_dir]*Vlos1_GUM[ind_wind_dir]*np.sin(theta2)*np.cos(theta1)*np.cos(psi1-psi2))
+            dVh_dtheta2 = (dnum2*den+num1*np.cos(theta1)*np.sin(theta2)*np.sin(psi1-psi2))/den**2
+            dVt2.append(dVh_dtheta2)
+            
+            # dVh_dpsi1
+            dnum3= (1/(2*num1))*(2*Vlos2_GUM[ind_wind_dir]*Vlos1_GUM[ind_wind_dir]*np.cos(theta2)*np.cos(theta1)*np.sin(psi1-psi2))
+            dVh_dpsi1 = (dnum3*den-num1*np.cos(theta1)*np.cos(theta2)*np.cos(psi1-psi2))/(np.cos(theta2)*np.cos(theta1)*np.sin(psi1-psi2))**2
+            dVp1.append(dVh_dpsi1)
+            
+            # dVh_dpsi2
+            dnum4= (1/(2*num1))*(-2*Vlos2_GUM[ind_wind_dir]*Vlos1_GUM[ind_wind_dir]*np.cos(theta2)*np.cos(theta1)*np.sin(psi1-psi2))
+            dVh_dpsi2 = (dnum4*den+num1*np.cos(theta1)*np.cos(theta2)*np.cos(psi1-psi2))/(np.cos(theta2)*np.cos(theta1)*np.sin(psi1-psi2))**2
+            dVp2.append(dVh_dpsi2)
+
+            # Covariance and sensitivity matrices:
+            # pdb.set_trace()                
+                      # (Lidar,   Vlos_corrcoeff ,                         U_Vlos1,                   U_Vlos2,          theta_stds,    psi_stds,  rho_stds, autocorr_theta,autocorr_psi,autocorr_rho,autocorr_V ,   mode)
+            UxVh=MultiVar(Lidar,  Corrcoef_Vlos[ind_wind_dir],   U_Vlos1_GUM[ind_wind_dir],U_Vlos2_GUM[ind_wind_dir],   [u_theta1,u_theta2],  [u_psi1,u_psi2],      [u_rho1,u_rho2],        1,            1,           1    ,    1,        'GUM2' )
+            # CxVh=[dVh_dtheta1,dVh_dtheta2,dVh_dpsi1,dVh_dpsi2,0,0,dVh_Vlos1,dVh_Vlos2]
+            CxVh=[0,0,0,0,0,0,dVh_Vlos1,dVh_Vlos2]
+            UyVh=np.array(CxVh).dot(UxVh).dot(np.transpose(CxVh))
+            UUy.append(UyVh)
+            U_Vh_GUM.append(np.sqrt(UyVh))
+            Correlation_Vlos_GUM.append(UxVh[-1][-2]/(U_Vlos1_GUM[ind_wind_dir]*U_Vlos2_GUM[ind_wind_dir]))       
+        
+        # pdb.set_trace()
+        return(U_Vh_GUM,dV1,dV2,dV1V2,Correlation_Vlos_GUM)
+    
+    
+    
 #%% Wind direction uncertainties
-def U_WindDir_MC(wind_direction,u,v,Mult_param0):
+def U_WindDir_MC(wind_direction,Mult_param):
     """.
     
     Calculates wind direction. Location: Qlunc_Help_standAlone.py
@@ -473,20 +904,20 @@ def U_WindDir_MC(wind_direction,u,v,Mult_param0):
     """
     
     
-    Vlos1,Vlos2,Theta1_cr2,Theta2_cr2,Psi1_cr2,Psi2_cr2,Rho1_cr2,Rho2_cr2=Mult_param0
+    Vlos1,Vlos2,Theta1,Theta2,Psi1,Psi2,Rho1,Rho2=Mult_param
     #Wind direction
     U_Wind_direction=[]
     Wind_dir=[]
-    for ind_wind_dir in range(len(wind_direction)):      
+    for ind_wind_dir in range(len(wind_direction)):
+        # pdb.set_trace()
         # W_D = np.degrees(np.arctan(v[ind_wind_dir]/u[ind_wind_dir]))
-        W_D = np.degrees(np.arctan((Vlos1[ind_wind_dir]*np.cos(Theta2_cr2[ind_wind_dir])*np.cos(Psi2_cr2[ind_wind_dir])-Vlos2[ind_wind_dir]*np.cos(Theta1_cr2[ind_wind_dir])*np.cos(Psi1_cr2[ind_wind_dir]))/(-Vlos1[ind_wind_dir]*np.cos(Theta2_cr2[ind_wind_dir])*np.sin(Psi2_cr2[ind_wind_dir])+Vlos2[ind_wind_dir]*np.cos(Theta1_cr2[ind_wind_dir])*np.sin(Psi1_cr2[ind_wind_dir]))))
-        U_Wind_direction.append(np.std(W_D))
+        W_D = (np.arctan((Vlos1[ind_wind_dir]*np.cos(Theta2[ind_wind_dir])*np.cos(Psi2[ind_wind_dir])-Vlos2[ind_wind_dir]*np.cos(Theta1[ind_wind_dir])*np.cos(Psi1[ind_wind_dir]))/(-Vlos1[ind_wind_dir]*np.cos(Theta2[ind_wind_dir])*np.sin(Psi2[ind_wind_dir])+Vlos2[ind_wind_dir]*np.cos(Theta1[ind_wind_dir])*np.sin(Psi1[ind_wind_dir]))))
+        U_Wind_direction.append(np.degrees(np.std(W_D)))
     # pdb.set_trace()
     return (U_Wind_direction)
-
-def U_WindDir_GUM(u,v,Vlos1,Vlos2,U_Vlos1,U_Vlos2,Qlunc_yaml_inputs,wind_direction,Href,Vref,alpha,Hg,Hl,N_MC,theta1,u_theta1,psi1,u_psi1,rho1  ,u_rho1,theta2,u_theta2,psi2  
-                  ,u_psi2,rho2,u_rho2,psi1_psi2_corr,theta1_theta2_corr , rho1_rho2_corr   , psi1_theta1_corr, psi1_theta2_corr , psi2_theta1_corr   , psi2_theta2_corr , 
-                  Vlos1_Vlos2_corr,psi1_rho1_corr ,psi1_rho2_corr ,psi2_rho1_corr ,psi2_rho2_corr ,theta1_rho1_corr ,theta1_rho2_corr ,theta2_rho1_corr ,theta2_rho2_corr):
+    
+#%% U wind direction GUM
+def U_WindDir_GUM(Lidar,Atmospheric_Scenario,Corrcoef_Vlos_GUM,wind_direction,theta1,psi1,rho1,theta2,psi2,rho2,u_theta1 ,u_psi1,u_rho1,u_theta2 ,u_psi2,u_rho2,Vlos1,Vlos2,U_Vlos1,U_Vlos2):
     """.
     
     Calculates wind direction. Location: Qlunc_Help_standAlone.py
@@ -511,465 +942,91 @@ def U_WindDir_GUM(u,v,Vlos1,Vlos2,U_Vlos1,U_Vlos2,Qlunc_yaml_inputs,wind_directi
     -------    
      wind direction uncertainty against wind direction
     """
-    # Wind direction uncertainty
-    # pdb.set_trace()
-    u_theta1_theta1   = u_theta1**2
-    u_theta2_theta2   = u_theta2**2
-    u_theta1_theta2   = u_theta1*u_theta2*theta1_theta2_corr
-     
-    # U_psi
-    u_psi1_psi1       = u_psi1**2
-    u_psi2_psi2       = u_psi2**2
-    u_psi1_psi2       = u_psi1*u_psi2*psi1_psi2_corr
-      
-     # Uv_Utheta
-    u_v1_theta1       = 0
-    u_v1_theta2       = 0
-    u_v2_theta1       = 0
-    u_v2_theta2       = 0
-     
-     # Uv_Upsi
-    u_v1_psi1         = 0
-    u_v1_psi2         = 0
-    u_v2_psi1         = 0
-    u_v2_psi2         = 0
-      
-     # Utheta_Upsi
-    u_theta1_psi1     = u_theta1*u_psi1*psi1_theta1_corr
-    u_theta1_psi2     = u_theta1*u_psi2*psi2_theta1_corr
-    u_theta2_psi1     = u_theta2*u_psi1*psi1_theta2_corr
-    u_theta2_psi2     = u_theta2*u_psi2*psi2_theta2_corr
-    #%% Correlations
-        
-    V1,V2,U_u_GUM,U_v_GUM,U_Vh_GUM_P,U_Vh_MCM,U_uv_GUM,U_wind_dir=[],[],[],[],[],[],[],[]
-    U_wind_dir,r_uv=[],[]
+          
+    U_u_GUM,U_v_GUM,U_Vh_MCM,U_uv_GUM,U_wind_dir,r_uv=[],[],[],[],[],[]
+    dWinDir_Vlos1T,dWinDir_Vlos2T,dWinDir_theta1T,dWinDir_theta2T,dWinDir_psi1T,dWinDir_psi2T=[],[],[],[],[],[]
     for ind_wind_dir in range(len(wind_direction)):
 
-    
-        #Pedersen
-        u_v1_v1           = U_Vlos1[ind_wind_dir]**2
-        u_v2_v2           = U_Vlos2[ind_wind_dir]**2
-        u_v1_v2           = U_Vlos1[ind_wind_dir]*U_Vlos2[ind_wind_dir]*Vlos1_Vlos2_corr
-        # pdb.set_trace()
-        # Partial derivative u and v respect to Vlos
-        dudV1 = -(np.sin(psi2)/(np.cos(theta1)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2)))) 
-        dudV2 =  (np.sin(psi1)/(np.cos(theta2)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2))))
-        dvdV1 =  np.cos(psi2)/(np.cos(theta1)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2)))
-        dvdV2 = -(np.cos(psi1)/(np.cos(theta2)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2))))   
+
+
         
-     
-        # Partial derivative u and v respect to theta
-        
-        dudtheta1 = ((Vlos2[ind_wind_dir]*np.sin(psi1)*(-np.sin(theta1)))/(np.cos(theta1)*np.cos(theta2)*(np.cos(psi2)*np.sin(psi1)-np.cos(psi1)*np.sin(psi2))))+(((-Vlos2[ind_wind_dir]*np.cos(theta1) *np.sin(psi1)+Vlos1[ind_wind_dir]*np.cos(theta2) *np.sin(psi2))*(-np.sin(theta1)))/((np.cos(theta1)**2) *np.cos(theta2) *(np.cos(psi2) *np.sin(psi1) - np.cos(psi1) *np.sin(psi2))))           
-        dvdtheta1 = ((-Vlos2[ind_wind_dir]*np.cos(psi1)*(-np.sin(theta1)))/(np.cos(theta1)*np.cos(theta2)*(np.cos(psi2)*np.sin(psi1)-np.cos(psi1)*np.sin(psi2)))) + ((Vlos2[ind_wind_dir]*np.cos(theta1) *np.cos(psi1) -Vlos1[ind_wind_dir]*np.cos(theta2) *np.cos(psi2))*(-np.sin(theta1)))/((np.cos(theta1)**2) *np.cos(theta2) *(np.cos(psi2) *np.sin(psi1) - np.cos(psi1) *np.sin(psi2)))   
-        dudtheta2 = (((-Vlos1[ind_wind_dir]*np.sin(psi2)*(-np.sin(theta2)))/(np.cos(theta1)*np.cos(theta2)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2))))) +((((-Vlos2[ind_wind_dir])*np.cos(theta1)*np.sin(psi1) + Vlos1[ind_wind_dir]*np.cos(theta2)*np.sin(psi2))*(-np.sin(theta2)))/(np.cos(theta1)*(np.cos(theta2)**2)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2))))        
-        dvdtheta2 = ((Vlos1[ind_wind_dir]*np.cos(psi2)*(-np.sin(theta2)))/(np.cos(theta1)*np.cos(theta2)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2)))) +(((Vlos2[ind_wind_dir]*np.cos(psi1)*np.cos(theta1) - Vlos1[ind_wind_dir]*np.cos(psi2)*np.cos(theta2))*(-np.sin(theta2)))/(np.cos(theta1)*(np.cos(theta2)**2) * (np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2))))
-        
-       
-        # Partial derivative u and v respect to psi
-        
-        dudpsi1=((np.cos(psi2)*(np.cos(psi1)) - np.sin(psi2)*(-np.sin(psi1)))*(Vlos1[ind_wind_dir]*np.sin(psi2)*np.cos(theta2) - Vlos2[ind_wind_dir]*np.sin(psi1)*np.cos(theta1)))/(np.cos(theta1)*np.cos(theta2)*(np.sin(psi1)*np.cos(psi2) - np.cos(psi1)*np.sin(psi2))**2) +(Vlos2[ind_wind_dir]*np.cos(psi1))/(np.cos(theta2)*(np.sin(psi1)*np.cos(psi2) - np.cos(psi1)*np.sin(psi2)))       
-        dvdpsi1= ((np.cos(psi2)*(np.cos(psi1))-np.sin(psi2)*(-np.sin(psi1)))*(Vlos2[ind_wind_dir]*np.cos(psi1)*np.cos(theta1) -  Vlos1[ind_wind_dir]*np.cos(psi2)*np.cos(theta2)))/(np.cos(theta1)*np.cos(theta2)*(np.sin(psi1)*np.cos(psi2) - np.cos(psi1)*np.sin(psi2))**2) - (Vlos2[ind_wind_dir]*(-np.sin(psi1)))/(np.cos(theta2)*(np.sin(psi1)*np.cos(psi2) -np.cos(psi1)*np.sin(psi2)))        
-        dudpsi2= ((-Vlos1[ind_wind_dir]*(np.cos(psi2)))/(np.cos(theta1)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2)))) + (((-Vlos2[ind_wind_dir])*np.cos(theta1)*np.sin(psi1) + Vlos1[ind_wind_dir]*np.cos(theta2)*np.sin(psi2))*(np.sin(psi1)*(-np.sin(psi2) )- np.cos(psi1)*(np.cos(psi2))))/(np.cos(theta1)*np.cos(theta2)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2))**2)   
-        dvdpsi2= (Vlos1[ind_wind_dir]*(-np.sin(psi2)))/(np.cos(theta1)*(np.cos(psi2)*np.sin(psi1)-np.cos(psi1)*np.sin(psi2))) + ((Vlos2[ind_wind_dir]*np.cos(psi1)*np.cos(theta1)-Vlos1[ind_wind_dir]*np.cos(psi2)*np.cos(theta2))*(np.sin(psi1)*(-np.sin(psi2))-np.cos(psi1)*(np.cos(psi2))))/(np.cos(theta1)*np.cos(theta2)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2))**2)
+        A =  Vlos1[ind_wind_dir]*np.cos(theta2)*np.cos(psi2)-Vlos2[ind_wind_dir]*np.cos(theta1)*np.cos(psi1)        
+        B = -Vlos1[ind_wind_dir]*np.cos(theta2)*np.sin(psi2)+Vlos2[ind_wind_dir]*np.cos(theta1)*np.sin(psi1)
+        X =  1/(1+(A/B)**2)
         
         
         # Matrix of sensitivity coefficients
-        S_in = np.array([[dudV1,dudV2,dudtheta1,dudtheta2,dudpsi1,dudpsi2],[dvdV1,dvdV2,dvdtheta1,dvdtheta2,dvdpsi1,dvdpsi2]])
         
-      
+        dWinDir_Vlos1   =  X*np.cos(theta2)*(B*np.cos(psi2)+A*np.sin(psi2))/B**2
+        dWinDir_Vlos2   = -X*np.cos(theta1)*(B*np.cos(psi1)+A*np.sin(psi1))/B**2
+        
+        dWinDir_theta1  =  X*((Vlos2[ind_wind_dir]*np.sin(theta1)*np.cos(psi1)*B+A*Vlos2[ind_wind_dir]*np.sin(theta1)*np.sin(psi1))/(B**2))
+        dWinDir_theta2  =  X*((-Vlos1[ind_wind_dir]*np.sin(theta2)*np.cos(psi2)*B-A*Vlos1[ind_wind_dir]*np.sin(theta2)*np.sin(psi2))/(B**2))
+        
+        dWinDir_psi1    =  X*(Vlos2[ind_wind_dir]*np.cos(theta1)*np.sin(psi1)*B-A*Vlos2[ind_wind_dir]*np.cos(theta1)*np.cos(psi1))/(B**2)
+        dWinDir_psi2    =  X*(-Vlos1[ind_wind_dir]*np.cos(theta2)*np.sin(psi2)*B+A*Vlos1[ind_wind_dir]*np.cos(theta2)*np.cos(psi2))/(B**2)
+        # pdb.set_trace()
+        UxWinDir=MultiVar(Lidar,Corrcoef_Vlos_GUM[ind_wind_dir], U_Vlos1[ind_wind_dir],U_Vlos2[ind_wind_dir],  [0,0], [0,0],  [0,0]  ,  0,0,0,1, 'GUM2' )
+        CxWinDir=[0,0,0,0,0,0,dWinDir_Vlos1,dWinDir_Vlos2]  
           
-          
-        Uxuv = np.array([[   u_v1_v1   ,   u_v1_v2   , u_v1_theta1     ,  u_v1_theta2    , u_v1_psi1     ,   u_v1_psi2   ],
-                          [   u_v1_v2   ,   u_v2_v2   , u_v2_theta1     ,  u_v2_theta2    , u_v2_psi1     ,   u_v2_psi2   ],
-                          [ u_v1_theta1 , u_v2_theta1 , u_theta1_theta1 , u_theta1_theta2 , u_theta1_psi1 , u_theta1_psi2 ],
-                          [ u_v1_theta2 , u_v2_theta2 , u_theta1_theta2 , u_theta2_theta2 , u_theta2_psi1 , u_theta2_psi2 ],
-                          [  u_v1_psi1  ,  u_v2_psi1  , u_theta1_psi1   , u_theta2_psi1   , u_psi1_psi1   , u_psi1_psi2   ],
-                          [  u_v1_psi2  ,  u_v2_psi2  , u_theta1_psi2   , u_theta2_psi2   , u_psi1_psi2   , u_psi2_psi2   ]])
+        UyWinDir=np.array(CxWinDir).dot(UxWinDir).dot(np.transpose(CxWinDir))
         
-        # u and v uncertainties estimation
-        Uyuv=S_in.dot(Uxuv).dot(np.transpose(S_in))
-        U_u_GUM.append(np.sqrt(Uyuv[0][0]))
-        U_v_GUM.append(np.sqrt(Uyuv[1][1]))
-        U_uv_GUM.append((Uyuv[1] [0]))
+        # Data storage:
+        dWinDir_Vlos1T.append(dWinDir_Vlos1)
+        dWinDir_Vlos2T.append(dWinDir_Vlos2)
+        dWinDir_theta1T.append(dWinDir_theta1)        
+        dWinDir_theta2T.append(dWinDir_theta2)
+        dWinDir_psi1T.append(dWinDir_psi1)
+        dWinDir_psi2T.append(dWinDir_psi2)        
+                
+        U_wind_dir.append(np.degrees(np.sqrt(UyWinDir)))
+    
+        # #Pedersen
+        # u_v1_v1           = U_Vlos1[ind_wind_dir]**2
+        # u_v2_v2           = U_Vlos2[ind_wind_dir]**2
+        # u_v1_v2           = U_Vlos1[ind_wind_dir]*U_Vlos2[ind_wind_dir] #*Vlos1_Vlos2_corr
+        # pdb.set_trace()
+        # # Partial derivative u and v respect to Vlos
+        # dudV1 = -(np.sin(psi2)/(np.cos(theta1)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2)))) 
+        # dudV2 =  (np.sin(psi1)/(np.cos(theta2)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2))))
+        # dvdV1 =  np.cos(psi2)/(np.cos(theta1)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2)))
+        # dvdV2 = -(np.cos(psi1)/(np.cos(theta2)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2))))   
         
-        r_uv.append(U_uv_GUM[ind_wind_dir]/np.sqrt(((U_u_GUM[ind_wind_dir])**2)*((U_v_GUM[ind_wind_dir])**2)))
+     
+        # # Partial derivative u and v respect to theta
+        
+        # dudtheta1 = ((Vlos2[ind_wind_dir]*np.sin(psi1)*(-np.sin(theta1)))/(np.cos(theta1)*np.cos(theta2)*(np.cos(psi2)*np.sin(psi1)-np.cos(psi1)*np.sin(psi2))))+(((-Vlos2[ind_wind_dir]*np.cos(theta1) *np.sin(psi1)+Vlos1[ind_wind_dir]*np.cos(theta2) *np.sin(psi2))*(-np.sin(theta1)))/((np.cos(theta1)**2) *np.cos(theta2) *(np.cos(psi2) *np.sin(psi1) - np.cos(psi1) *np.sin(psi2))))           
+        # dvdtheta1 = ((-Vlos2[ind_wind_dir]*np.cos(psi1)*(-np.sin(theta1)))/(np.cos(theta1)*np.cos(theta2)*(np.cos(psi2)*np.sin(psi1)-np.cos(psi1)*np.sin(psi2)))) + ((Vlos2[ind_wind_dir]*np.cos(theta1) *np.cos(psi1) -Vlos1[ind_wind_dir]*np.cos(theta2) *np.cos(psi2))*(-np.sin(theta1)))/((np.cos(theta1)**2) *np.cos(theta2) *(np.cos(psi2) *np.sin(psi1) - np.cos(psi1) *np.sin(psi2)))   
+        # dudtheta2 = (((-Vlos1[ind_wind_dir]*np.sin(psi2)*(-np.sin(theta2)))/(np.cos(theta1)*np.cos(theta2)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2))))) +((((-Vlos2[ind_wind_dir])*np.cos(theta1)*np.sin(psi1) + Vlos1[ind_wind_dir]*np.cos(theta2)*np.sin(psi2))*(-np.sin(theta2)))/(np.cos(theta1)*(np.cos(theta2)**2)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2))))        
+        # dvdtheta2 = ((Vlos1[ind_wind_dir]*np.cos(psi2)*(-np.sin(theta2)))/(np.cos(theta1)*np.cos(theta2)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2)))) +(((Vlos2[ind_wind_dir]*np.cos(psi1)*np.cos(theta1) - Vlos1[ind_wind_dir]*np.cos(psi2)*np.cos(theta2))*(-np.sin(theta2)))/(np.cos(theta1)*(np.cos(theta2)**2) * (np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2))))
+        
+       
+        # # Partial derivative u and v respect to psi
+        
+        # dudpsi1=((np.cos(psi2)*(np.cos(psi1)) - np.sin(psi2)*(-np.sin(psi1)))*(Vlos1[ind_wind_dir]*np.sin(psi2)*np.cos(theta2) - Vlos2[ind_wind_dir]*np.sin(psi1)*np.cos(theta1)))/(np.cos(theta1)*np.cos(theta2)*(np.sin(psi1)*np.cos(psi2) - np.cos(psi1)*np.sin(psi2))**2) +(Vlos2[ind_wind_dir]*np.cos(psi1))/(np.cos(theta2)*(np.sin(psi1)*np.cos(psi2) - np.cos(psi1)*np.sin(psi2)))       
+        # dvdpsi1= ((np.cos(psi2)*(np.cos(psi1))-np.sin(psi2)*(-np.sin(psi1)))*(Vlos2[ind_wind_dir]*np.cos(psi1)*np.cos(theta1) -  Vlos1[ind_wind_dir]*np.cos(psi2)*np.cos(theta2)))/(np.cos(theta1)*np.cos(theta2)*(np.sin(psi1)*np.cos(psi2) - np.cos(psi1)*np.sin(psi2))**2) - (Vlos2[ind_wind_dir]*(-np.sin(psi1)))/(np.cos(theta2)*(np.sin(psi1)*np.cos(psi2) -np.cos(psi1)*np.sin(psi2)))        
+        # dudpsi2= ((-Vlos1[ind_wind_dir]*(np.cos(psi2)))/(np.cos(theta1)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2)))) + (((-Vlos2[ind_wind_dir])*np.cos(theta1)*np.sin(psi1) + Vlos1[ind_wind_dir]*np.cos(theta2)*np.sin(psi2))*(np.sin(psi1)*(-np.sin(psi2) )- np.cos(psi1)*(np.cos(psi2))))/(np.cos(theta1)*np.cos(theta2)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2))**2)   
+        # dvdpsi2= (Vlos1[ind_wind_dir]*(-np.sin(psi2)))/(np.cos(theta1)*(np.cos(psi2)*np.sin(psi1)-np.cos(psi1)*np.sin(psi2))) + ((Vlos2[ind_wind_dir]*np.cos(psi1)*np.cos(theta1)-Vlos1[ind_wind_dir]*np.cos(psi2)*np.cos(theta2))*(np.sin(psi1)*(-np.sin(psi2))-np.cos(psi1)*(np.cos(psi2))))/(np.cos(theta1)*np.cos(theta2)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2))**2)
+        
+        # # u and v uncertainties estimation
+        # Uyuv=S_in.dot(Uxuv).dot(np.transpose(S_in))
+        # U_u_GUM.append(np.sqrt(Uyuv[0][0]))
+        # U_v_GUM.append(np.sqrt(Uyuv[1][1]))
+        # U_uv_GUM.append((Uyuv[1] [0]))
+        
+        # r_uv.append(U_uv_GUM[ind_wind_dir]/np.sqrt(((U_u_GUM[ind_wind_dir])**2)*((U_v_GUM[ind_wind_dir])**2)))
 
-        ## Wind direction
-        dWind_dirdu = 1/(1+(v[ind_wind_dir]/u[ind_wind_dir])**2)*(-v[ind_wind_dir]/u[ind_wind_dir]**2)
-        dWind_dirdv = 1/(1+(v[ind_wind_dir]/u[ind_wind_dir])**2)*(1/u[ind_wind_dir])
-        U_wind_dir.append(np.degrees(np.sqrt((dWind_dirdu*U_u_GUM[ind_wind_dir])**2+(dWind_dirdv*U_v_GUM[ind_wind_dir])**2+2*dWind_dirdv*dWind_dirdu*U_uv_GUM[ind_wind_dir])))
+        # # Wind direction
+        # dWind_dirdu = 1/(1+(v[ind_wind_dir]/u[ind_wind_dir])**2)*(-v[ind_wind_dir]/u[ind_wind_dir]**2)
+        # dWind_dirdv = 1/(1+(v[ind_wind_dir]/u[ind_wind_dir])**2)*(1/u[ind_wind_dir])
+        # pdb.set_trace()
+        
+        # U_wind_dir.append(np.degrees(np.sqrt((dWind_dirdu*U_u_GUM[ind_wind_dir])**2+(dWind_dirdv*U_v_GUM[ind_wind_dir])**2+2*dWind_dirdv*dWind_dirdu*U_uv_GUM[ind_wind_dir])))
+        
 
     # pdb.set_trace()
     return (U_wind_dir)
 
-
-#%%
-#############################
-#####CovarainceMatrix
-#############################
-
-'''
-This function calculated the covariance matrix
-'''
-def MultiVar (ind_wind_dir,U_Vlos1,U_Vlos2,  theta_stds, psi_stds,  rho_stds, psi1_psi2_corr,theta1_theta2_corr  , rho1_rho2_corr    , psi1_theta1_corr , psi1_theta2_corr  , psi2_theta1_corr    , psi2_theta2_corr  , Vlos1_Vlos2_corr , psi1_rho1_corr ,psi1_rho2_corr ,psi2_rho1_corr ,psi2_rho2_corr ,theta1_rho1_corr ,theta1_rho2_corr ,theta2_rho1_corr ,theta2_rho2_corr,autocorr_theta,autocorr_psi,autocorr_rho,autocorr_V):
-    # Covariance Matrix:
-            # pdb.set_trace()
-            cov_MAT=[[theta_stds[0]**2*autocorr_theta,                  theta_stds[1]*theta_stds[0]*theta1_theta2_corr,       psi_stds[0]*theta_stds[0]*psi1_theta1_corr ,      psi_stds[1]*theta_stds[0]*psi2_theta1_corr,   rho_stds[0]*theta_stds[0]*theta1_rho1_corr,  rho_stds[1]*theta_stds[0]*theta1_rho2_corr   ,  theta_stds[0]*U_Vlos1[ind_wind_dir]*0,                          theta_stds[0]*U_Vlos2[ind_wind_dir]*0                        ],
-                     [theta_stds[0]*theta_stds[1]*theta1_theta2_corr,          theta_stds[1]**2*autocorr_theta,               psi_stds[0]*theta_stds[1]*psi1_theta2_corr,       psi_stds[1]*theta_stds[1]*psi2_theta2_corr ,  rho_stds[0]*theta_stds[1]*theta2_rho1_corr,  rho_stds[1]*theta_stds[1]*theta2_rho2_corr   ,  theta_stds[1]*U_Vlos1[ind_wind_dir]*0                         , theta_stds[1]*U_Vlos2[ind_wind_dir] *0                       ],
-                     [theta_stds[0]*psi_stds[0]*psi1_theta1_corr  ,     theta_stds[1]*psi_stds[0]*psi1_theta2_corr,               psi_stds[0]**2*autocorr_psi,                  psi_stds[1]*psi_stds[0]*psi1_psi2_corr,       rho_stds[0]*psi_stds[0]*psi1_rho1_corr,      rho_stds[1]*psi_stds[0]*psi1_rho2_corr        , psi_stds[0]*U_Vlos1[ind_wind_dir]*0                           , psi_stds[0]*U_Vlos2[ind_wind_dir]*0                          ],
-                     [theta_stds[0]*psi_stds[1]*psi2_theta1_corr,       theta_stds[1]*psi_stds[1]*psi2_theta2_corr ,          psi_stds[0]*psi_stds[1]*psi1_psi2_corr,                 psi_stds[1]**2*autocorr_psi,            rho_stds[0]*psi_stds[1]*psi2_rho1_corr,      rho_stds[1]*psi_stds[1]*psi2_rho2_corr       ,  psi_stds[1]*U_Vlos1[ind_wind_dir]*0                           , psi_stds[1]*U_Vlos2[ind_wind_dir] *0                         ],
-                     [theta_stds[0]*rho_stds[0]*theta1_rho1_corr,          theta_stds[1]*rho_stds[0]*theta2_rho1_corr,        psi_stds[0]*rho_stds[0]*psi1_rho1_corr,           psi_stds[1]*rho_stds[0]*psi2_rho1_corr,                rho_stds[0]**2*autocorr_rho,          rho_stds[1]*rho_stds[0]*rho1_rho2_corr      , rho_stds[0]*U_Vlos1[ind_wind_dir]*0                            ,rho_stds[0]*U_Vlos2[ind_wind_dir]*0                          ],
-                     [theta_stds[0]*rho_stds[1]*theta1_rho2_corr,          theta_stds[1]*rho_stds[1]*theta2_rho2_corr,         psi_stds[0]*rho_stds[1]*psi1_rho2_corr,          psi_stds[1]*rho_stds[1]*psi2_rho2_corr,       rho_stds[0]*rho_stds[1]*rho1_rho2_corr,           rho_stds[1]**2*autocorr_rho           ,    rho_stds[1]*U_Vlos1[ind_wind_dir]*0   ,                         rho_stds[1]*U_Vlos2[ind_wind_dir]*0                          ],
-                     [theta_stds[0]*U_Vlos1[ind_wind_dir]*0    ,         theta_stds[1]*U_Vlos1[ind_wind_dir]  *0             ,psi_stds[0]*U_Vlos1[ind_wind_dir]*0    ,          psi_stds[1]*U_Vlos1[ind_wind_dir]*0,          rho_stds[0]*U_Vlos1[ind_wind_dir]*0    ,     rho_stds[1]*U_Vlos1[ind_wind_dir]*0     ,       U_Vlos1[ind_wind_dir]**2*autocorr_V,                            U_Vlos1[ind_wind_dir]*U_Vlos2[ind_wind_dir]*Vlos1_Vlos2_corr ],
-                     [theta_stds[0]*U_Vlos2[ind_wind_dir]*0    ,            theta_stds[1]*U_Vlos2[ind_wind_dir]  *0             ,psi_stds[0]*U_Vlos2[ind_wind_dir]*0    ,       psi_stds[1]*U_Vlos2[ind_wind_dir]*0,          rho_stds[0]*U_Vlos2[ind_wind_dir]*0    ,     rho_stds[1]*U_Vlos2[ind_wind_dir]*0    ,        U_Vlos1[ind_wind_dir]*U_Vlos2[ind_wind_dir]*Vlos1_Vlos2_corr,   U_Vlos2[ind_wind_dir]**2*autocorr_V                          ]]
-            
-            return  cov_MAT
-
-
-
-#%% ##########################################
-##########################################
-#Uncertainty of u and v wind components following MCM
-##########################################
-##############################################
-#%%
-'''
-This function performs an estimation of the uncertainty in Vlos and u and v wind velocity components based on the Montecarlo method. 
-
-First it calculates the uncertainty of Vlos assigning multivariated normally distributed probability density functions
-    to the iput quantities rho, theta (aperture angle) and psi(azimuth). The covariance matrix includes the correlations between 
-    the aperture and azimuth angles of the same lidar. The cross-correlations betwen different lidars are not taken 
-    into account at this stage because each lidar is mesuring a Vlos value independtly.  
-
-Second, we use the statics of Vlos, mean and stdv, jointly with the correlation between lidars to create a second set of multivariated
-    distributions which are used to estimate the reconstructed u and v wind veloctiy components and their uncertainties. u anv v components
-    inherit the uncertainty in pointing and range from the Vlos uncertainty.
-
-'''
-
-def MCM_uv_lidar_uncertainty(Qlunc_yaml_inputs,wind_direction,Href,Vref,alpha,Hg,Hl,N_MC,theta1,u_theta1,psi1,u_psi1,rho1  ,u_rho1,theta2,u_theta2,psi2  ,u_psi2,rho2  ,u_rho2,psi1_psi2_corr    
-                            ,theta1_theta2_corr  , rho1_rho2_corr    , psi1_theta1_corr , psi1_theta2_corr  , psi2_theta1_corr    , psi2_theta2_corr  , Vlos1_Vlos2_corr ,
-                             psi1_rho1_corr ,psi1_rho2_corr ,psi2_rho1_corr ,psi2_rho2_corr ,theta1_rho1_corr ,theta1_rho2_corr ,theta2_rho1_corr ,theta2_rho2_corr ):
-    # pdb.set_trace()
-    u,v,U_u_MC,U_v_MC,U_Vh_MCM,CorrCoefTheta2Psi2,CorrCoef_Theta1Psi1,CorrCoefTheta1_Psi1,CorrCoefTheta2_Psi2,CorrCoef_Theta2Psi1=[],[],[],[], [],[],[],[],[],[]
-    Vlos1,Vlos2,U_Vlos1_MCM,U_Vlos2_MCM,CorrCoef_U_VLOS=[],[],[],[],[]
-    Theta1_cr2_s,Theta2_cr2_s,Psi1_cr2_s,Psi2_cr2_s,Vlos1_MC_cr2_s,Vlos2_MC_cr2_s,Rho1_cr2_s,Rho2_cr2_s=[],[],[],[],[],[],[],[]
-    CorrCoefVlos2,CorrCoefTheta2,CorrCoefPsi2,CorrCoefTheta1Psi2,CorrCoefTheta2Psi1,CorrCoef_U_uv,CorrCoefTheta1Psi1_2,CorrCoefTheta2Psi2_2=[],[],[],[],[],[],[],[]
-    U_Vh_MCM,Vh,CorrCoefVlos1,CorrCoefTheta1,CorrCoefPsi1,CorrCoefThetaPsi1,CorrCoefuv,CorrCoef_Theta1Psi2,CorrCoefTheta1Psi2_2,CorrCoefTheta2Psi1_2,CorrCoefTheta1Psi1=[],[],[],[],[],[],[],[],[],[],[]
-    for ind_wind_dir in range(len(wind_direction)):  
-        # pdb.set_trace()
-        
-        ######## 1st multivariate distribution #####################
-
-        V_means=[0,0]
-                                                                                                                                                                                                                                                                                                                                                                                                                ## MCM -Vlos
-        #Param_multivar =[N_MC     ,U_Vlos1_MCM,U_Vlos2_MCM,                                          ,theta_stds2           ,psi_stds2        ,rho_stds2   ,psi1_psi2_corr,theta1_theta2_corr  , rho1_rho2_corr    , psi1_theta1_corr , psi1_theta2_corr  , psi2_theta1_corr    , psi2_theta2_corr   , Vlos1_Vlos2_corr , psi1_rho1_corr ,psi1_rho2_corr ,psi2_rho1_corr ,psi2_rho2_corr ,theta1_rho1_corr ,theta1_rho2_corr ,theta2_rho1_corr ,theta2_rho2_corr,0,0,0,1 ]
-        Param_multivar  =[ind_wind_dir,np.zeros(len(wind_direction)),np.zeros(len(wind_direction)),  [u_theta1,u_theta1], [u_psi1,u_psi2],  [u_rho1,u_rho2], psi1_psi2_corr,theta1_theta2_corr,  rho1_rho2_corr     , psi1_theta1_corr , psi1_theta2_corr,   psi2_theta1_corr,     psi2_theta2_corr   ,Vlos1_Vlos2_corr ,  psi1_rho1_corr ,psi1_rho2_corr ,psi2_rho1_corr, psi2_rho2_corr ,theta1_rho1_corr, theta1_rho2_corr ,theta2_rho1_corr ,theta2_rho2_corr,1,1,1,1]
-        
-        # Covariance matrix
-        cov_MAT=MultiVar(*Param_multivar)
-        
-        # # Multivariate distributions:
-        
-        Theta1_cr,Theta2_cr,Psi1_cr,Psi2_cr,Rho1_cr,Rho2_cr,Vlos1_MC_cr,Vlos2_MC_cr= multivariate_normal.rvs([theta1,theta2,psi1,psi2,rho1,rho2,V_means[0],V_means[1]], cov_MAT,N_MC).T
-        
-        
-        ### VLOS calculations ############################
-        H_t1_cr = ((Rho1_cr*np.sin(Theta1_cr)+Hl[0])/Href)
-        H_t2_cr = ((Rho2_cr*np.sin(Theta2_cr)+Hl[1])/Href)
-        
-        Vlos1.append(Vref*(np.sign(H_t1_cr)*((abs(H_t1_cr))**alpha))*np.cos(Theta1_cr)*np.cos(Psi1_cr-wind_direction[ind_wind_dir]))
-        Vlos2.append(Vref*(np.sign(H_t2_cr)*((abs(H_t2_cr))**alpha))*np.cos(Theta2_cr)*np.cos(Psi2_cr-wind_direction[ind_wind_dir]))
-        V_means2=[np.mean(Vlos1[ind_wind_dir]),np.mean(Vlos2[ind_wind_dir])]
-        
-       
-        #  Uncertainty Vlosi ##############################
-        U_Vlos1_MCM0=(np.std(Vlos1[ind_wind_dir]))
-        U_Vlos2_MCM0=(np.std(Vlos2[ind_wind_dir]))
-        # pdb.set_trace()
-        s_w=0
-        #s_est = 0.13
-        U_Vlos1_MCM.append(np.sqrt(U_Vlos1_MCM0**2+ Qlunc_yaml_inputs['Components']['Scanner']['stdv Estimation'][0][0]**2+(np.sin(theta1)*s_w)**2) ) 
-        U_Vlos2_MCM.append(np.sqrt(U_Vlos2_MCM0**2+ Qlunc_yaml_inputs['Components']['Scanner']['stdv Estimation'][1][0]**2+(np.sin(theta2)*s_w)**2) )
-
-         ###CORRELATION COEFFICIENTS 1st multivariate
-                
-        CorrCoefTheta1Psi1.append( np.corrcoef(Theta1_cr,Psi1_cr)[0][1]) 
-        CorrCoefTheta2Psi2.append( np.corrcoef(Theta2_cr,Psi2_cr)[0][1])  
-        CorrCoefTheta1.append( np.corrcoef(Theta1_cr,Theta2_cr)[0][1])
-
-        CorrCoefVlos1.append( np.corrcoef(Vlos1[ind_wind_dir],Vlos2[ind_wind_dir])[0][1])        
-        CorrCoefPsi1.append( np.corrcoef(Psi1_cr,Psi2_cr)[0][1])
-        CorrCoefTheta1Psi2.append( np.corrcoef(Theta1_cr,Psi2_cr)[0][1])
-        CorrCoef_U_VLOS.append(np.corrcoef(U_Vlos1_MCM,U_Vlos2_MCM)[0][1])
-        
-        CorrCoefTheta2Psi1.append(np.corrcoef(Theta2_cr,Psi1_cr)[0][1])
-        
-        
-              
-        ######### 2nd multivariate  ####################################
-                                                                                                                                                                                                                                                                                                                                                                                               ## MCM - uv
-        Param_multivar2   = [ind_wind_dir,   U_Vlos1_MCM,U_Vlos2_MCM   ,[u_theta1,u_theta1], [u_psi1,u_psi2],  [u_rho1,u_rho2],     psi1_psi2_corr      ,theta1_theta2_corr  , rho1_rho2_corr,  psi1_theta1_corr,      psi1_theta2_corr  , psi2_theta1_corr    , psi2_theta2_corr ,  Vlos1_Vlos2_corr , psi1_rho1_corr ,psi1_rho2_corr ,psi2_rho1_corr ,psi2_rho2_corr ,theta1_rho1_corr ,theta1_rho2_corr ,theta2_rho1_corr ,theta2_rho2_corr,1,1,1,1 ]
-        # Param_multivar2 = [ N_MC,          U_Vlos1_MCM,U_Vlos2_MCM,   theta_stds2,             psi_stds2,     rho_stds2,          psi1_psi2_corr      ,theta1_theta2_corr  , rho1_rho2_corr , psi1_theta1_corr     , psi1_theta2_corr  , psi2_theta1_corr    , psi2_theta2_corr  , Vlos1_Vlos2_corr , psi1_rho1_corr ,psi1_rho2_corr ,psi2_rho1_corr ,psi2_rho2_corr ,theta1_rho1_corr ,theta1_rho2_corr ,theta2_rho1_corr ,theta2_rho2_corr,0,0,0,1 ]
- 
-        cov_MAT_uv=MultiVar(*Param_multivar2)
-        # # Multivariate distributions:
-        
-    
-        Theta1_cr2,Theta2_cr2,Psi1_cr2,Psi2_cr2,Rho1_cr2,Rho2_cr2,Vlos1_MC_cr2,Vlos2_MC_cr2= multivariate_normal.rvs([theta1,theta2,psi1,psi2,rho1,rho2,np.mean(Vlos1[ind_wind_dir]),np.mean(Vlos2[ind_wind_dir])], cov_MAT_uv,N_MC).T
-        # pdb.set_trace()
-
-   
-        Theta1_cr2_s.append(Theta1_cr2)
-        Theta2_cr2_s.append(Theta2_cr2)
-        Psi1_cr2_s.append(Psi1_cr2)
-        Psi2_cr2_s.append(Psi2_cr2)
-        Vlos1_MC_cr2_s.append(Vlos1_MC_cr2)
-        Vlos2_MC_cr2_s.append(Vlos2_MC_cr2)
-        Rho1_cr2_s.append(Rho1_cr2)
-        Rho2_cr2_s.append(Rho2_cr2)
-        
-        ###CORRELATION COEFFICIENTS 2nd multivariate
-        
-        CorrCoefVlos2.append(np.corrcoef(Vlos1_MC_cr2_s[ind_wind_dir],Vlos2_MC_cr2_s[ind_wind_dir])[0][1])
-        
-        CorrCoefTheta2.append( np.corrcoef(Theta1_cr2,Theta2_cr2)[0][1])
-        CorrCoefPsi2.append( np.corrcoef(Psi1_cr2,Psi2_cr2)[0][1])
-        CorrCoefTheta2_Psi2_2    = ( np.corrcoef(Theta2_cr2,Psi2_cr2)[0][1])  
-        
-        CorrCoefTheta1Psi1_2.append( np.corrcoef(Theta1_cr2,Psi1_cr2)[0][1])
-        CorrCoefTheta1Psi2_2.append( np.corrcoef(Theta1_cr2,Psi2_cr2)[0][1])
-        CorrCoefTheta2Psi2_2.append( np.corrcoef(Theta2_cr2,Psi2_cr2)[0][1])
-        CorrCoefTheta2Psi1_2.append(np.corrcoef(Theta2_cr2,Psi1_cr2)[0][1])
-      
-        # pdb.set_trace()
-   
-        
-        ########### Analysis u and v ##############################
-        
-        u.append((-Vlos1_MC_cr2*np.cos(Theta2_cr2)*np.sin(Psi2_cr2)+Vlos2_MC_cr2*np.cos(Theta1_cr2)*np.sin(Psi1_cr2))/(np.cos(Theta1_cr2)*np.cos(Theta2_cr2)*np.sin(Psi1_cr2-Psi2_cr2)))
-        v.append(( Vlos1_MC_cr2*np.cos(Theta2_cr2)*np.cos(Psi2_cr2)-Vlos2_MC_cr2*np.cos(Theta1_cr2)*np.cos(Psi1_cr2))/(np.cos(Theta1_cr2)*np.cos(Theta2_cr2)*np.sin(Psi1_cr2-Psi2_cr2)))
-        
-        
-        ### Uncertainty u and v components
-        U_u_MC.append(np.std(u[ind_wind_dir]))
-        U_v_MC.append(np.std(v[ind_wind_dir]))
-        
-        # Correlation coefficients 
-        CorrCoef_U_uv.append(np.corrcoef(U_u_MC,U_v_MC)[0][1])
-        CorrCoefuv.append(np.corrcoef(u[ind_wind_dir],v[ind_wind_dir])[0][1])
-    
-    
-
-        # pdb.set_trace()
-    Mult_param1 = [Vlos1_MC_cr2_s,Vlos2_MC_cr2_s,Theta1_cr2_s,Theta2_cr2_s,Psi1_cr2_s,Psi2_cr2_s,Rho1_cr2_s,Rho2_cr2_s]
-    Correlation_coeffs=[CorrCoefTheta1Psi1,CorrCoefTheta2Psi2,CorrCoefTheta1,CorrCoefVlos1,CorrCoefPsi1,CorrCoefTheta1Psi2,CorrCoef_U_VLOS,
-                       CorrCoefVlos2,CorrCoefTheta2,CorrCoefPsi2,CorrCoefTheta2_Psi2_2,CorrCoefTheta1Psi1_2,CorrCoefTheta1Psi2_2,CorrCoefTheta2Psi2_2,CorrCoefTheta2Psi1_2,CorrCoefTheta2Psi1]
-    # pdb.set_trace()
-    return CorrCoefuv,U_Vlos1_MCM,U_Vlos2_MCM,u,v,U_u_MC,U_v_MC ,Mult_param1,Correlation_coeffs
-
-#%% ##########################################
-##########################################
-#Uncertainty Vh following MCM
-##########################################
-##############################################
-#%%
-
-'''
-This function calculates the uncertainty in Vh estimations based on the Montecarlo method. 
- '''
-
-def MCM_Vh_lidar_uncertainty (CorrCoefuv,wind_direction,u,v,U_u_MC,U_v_MC,Vlos1_MC_cr2_s,Vlos2_MC_cr2_s,Theta1_cr2_s,Theta2_cr2_s,Psi1_cr2_s,Psi2_cr2_s,Rho1_cr2_s,Rho2_cr2_s):
-    # pdb.set_trace()
-    Vh,U_Vh_MCM = [],[]
-    for ind_wind_dir in range(len(wind_direction)): 
-                                                                                                                                                                                                                                                                                  
-        # # Approach using Vlos1 and Vlos2  from "MCM_uv_lidar_uncertainty"
-        Vh_num    = np.sqrt(((Vlos1_MC_cr2_s[ind_wind_dir]*np.cos(Theta2_cr2_s[ind_wind_dir]))**2+(Vlos2_MC_cr2_s[ind_wind_dir]*np.cos(Theta1_cr2_s[ind_wind_dir]))**2)-2*(Vlos1_MC_cr2_s[ind_wind_dir]*Vlos2_MC_cr2_s[ind_wind_dir]*np.cos(Theta1_cr2_s[ind_wind_dir])*np.cos(Theta2_cr2_s[ind_wind_dir])*np.cos(Psi1_cr2_s[ind_wind_dir]-Psi2_cr2_s[ind_wind_dir])))
-        Vh_denom  = np.cos(Theta1_cr2_s[ind_wind_dir])*np.cos(Theta2_cr2_s[ind_wind_dir])*np.sin(Psi1_cr2_s[ind_wind_dir]-Psi2_cr2_s[ind_wind_dir])
-       
-        Vh.append( Vh_num/Vh_denom)
-        
-        # pdb.set_trace()
-        U_Vh_MCM.append(np.std(Vh[ind_wind_dir]))
-    # pdb.set_trace()
-    return(U_Vh_MCM)
-    
-
-
-#%% ##########################################
-##########################################
-#Uncertainty of u and v wind components following GUM model
-##########################################
-##############################################
-#%%
-
-def GUM_uv_lidar_uncertainty(Qlunc_yaml_inputs,wind_direction,Href,Vref,alpha,Hg,Hl,N_MC,theta1,u_theta1,psi1,u_psi1,rho1  ,u_rho1,theta2,u_theta2,psi2  ,u_psi2,rho2  ,u_rho2,psi1_psi2_corr  
-                            ,theta1_theta2_corr , rho1_rho2_corr   , psi1_theta1_corr, psi1_theta2_corr , psi2_theta1_corr   , psi2_theta2_corr , Vlos1_Vlos2_corr,
-                             psi1_rho1_corr ,psi1_rho2_corr ,psi2_rho1_corr ,psi2_rho2_corr ,theta1_rho1_corr ,theta1_rho2_corr ,theta2_rho1_corr ,theta2_rho2_corr):    
-    
-    surr=np.zeros(len(wind_direction))
-    U_Vlos1_GUM,U_Vlos2_GUM,U_u_GUM,U_v_GUM,VL1,VL2,u,v=[],[],[],[],[],[],[],[]
-    
-    H_t1 = ((rho1*np.sin(theta1)+Hl[0])/Href)[0]
-    H_t2 = ((rho2*np.sin(theta2)+Hl[1])/Href)[0]
-    
-    for ind_wind_dir in range(len(wind_direction)):  
-        
-        # VLOS
-
-        # VLOS uncertainty
-        # Calculate and store Vlosi
-        Vlos1_GUM = Vref*(np.sign(H_t1)*((abs(H_t1))**alpha))*np.cos(theta1)*np.cos(psi1-wind_direction[ind_wind_dir])
-        Vlos2_GUM = Vref*(np.sign(H_t2)*((abs(H_t2))**alpha))*np.cos(theta2)*np.cos(psi2-wind_direction[ind_wind_dir])    
-        VL1.append(Vlos1_GUM)
-        VL2.append(Vlos2_GUM)
-        
-        # Calculate and store u and v components
-        u_comp=((-Vlos1_GUM*np.sin(psi2)*np.cos(theta2)+Vlos2_GUM*np.sin(psi1)*np.cos(theta1))/(np.cos(theta1)*np.cos(theta2)*np.sin(psi1-psi2)))
-        v_comp=(( Vlos1_GUM*np.cos(psi2)*np.cos(theta2)-Vlos2_GUM*np.cos(psi1)*np.cos(theta1))/(np.cos(theta1)*np.cos(theta2)*np.sin(psi1-psi2)))
-        u.append(u_comp)
-        v.append(v_comp)
-        
-        # Partial derivatives Vlosi with respect theta, psi and rho
-        dVlos1dtheta1   =     Vref*(np.sign(H_t1)*((abs(H_t1))**alpha))*(alpha*((rho1*(np.cos(theta1))**2)/(rho1*np.sin(theta1)+Hl[0]))-np.sin(theta1))*np.cos(psi1-wind_direction[ind_wind_dir])
-        dVlos2dtheta2   =     Vref*(np.sign(H_t2)*((abs(H_t2))**alpha))*(alpha*((rho2*(np.cos(theta2))**2)/(rho2*np.sin(theta2)+Hl[1]))-np.sin(theta2))*np.cos(psi2-wind_direction[ind_wind_dir])   
-        dVlos1dpsi1     =   - Vref*(np.sign(H_t1)*((abs(H_t1))**alpha))*(np.cos(theta1)*np.sin(psi1-wind_direction[ind_wind_dir]))
-        dVlos2dpsi2     =   - Vref*(np.sign(H_t2)*((abs(H_t2))**alpha))*(np.cos(theta2)*np.sin(psi2-wind_direction[ind_wind_dir]))    
-        dVlos1drho1     =     Vref*(np.sign(H_t1)*((abs(H_t1))**alpha))*alpha*(np.sin(theta1)/(rho1*np.sin(theta1)+Hl[0]))*np.cos(theta1)*np.cos(psi1-wind_direction[ind_wind_dir])
-        dVlos2drho2     =     Vref*(np.sign(H_t2)*((abs(H_t2))**alpha))*alpha*(np.sin(theta2)/(rho2*np.sin(theta2)+Hl[1]))*np.cos(theta2)*np.cos(psi2-wind_direction[ind_wind_dir])
-
-        # u_theta=[u_theta1,u_theta2]
-        # u_psi=[u_psi1,u_psi2]
-        # u_rho=[u_rho1,u_rho2]
-       
-        
-       ### Covariance matrix                                                                                                                                                                                                                                                                                                                                                                        ## GUM-VLOS
-        #Param_multivar1= [N_MC                ,U_Vlos1_MCM    ,U_Vlos2_MCM,   theta_stds2             ,psi_stds2       ,rho_stds2,     psi1_psi2_corr,  theta1_theta2_corr  , rho1_rho2_corr  , psi1_theta1_corr , psi1_theta2_corr  , psi2_theta1_corr    , psi2_theta2_corr  , Vlos1_Vlos2_corr , psi1_rho1_corr ,psi1_rho2_corr ,psi2_rho1_corr ,psi2_rho2_corr ,theta1_rho1_corr ,theta1_rho2_corr ,theta2_rho1_corr ,theta2_rho2_corr, 0,0,0,1 ]
-        Param_multivar1 = [ind_wind_dir             ,surr,      surr,        [u_theta1,u_theta2],   [u_psi1,u_psi2]  ,[u_rho1,u_rho2],  psi1_psi2_corr , theta1_theta2_corr,   rho1_rho2_corr ,   psi1_theta1_corr , psi1_theta2_corr , psi2_theta1_corr,     psi2_theta2_corr  , Vlos1_Vlos2_corr , psi1_rho1_corr, psi1_rho2_corr ,psi2_rho1_corr ,psi2_rho2_corr ,theta1_rho1_corr, theta1_rho2_corr ,theta2_rho1_corr ,theta2_rho2_corr, 1,1,1,1 ]
-        Ux=MultiVar(*Param_multivar1)
-        # pdb.set_trace()
-        
-        # Influence coefficients matrix for Vlosi uncertainty estimation
-        Cx = np.array([[dVlos1dtheta1  ,          0      ,  dVlos1dpsi1  ,      0        ,  dVlos1drho1  ,       0       ,  0  , 0],
-                       [       0       ,  dVlos2dtheta2  ,      0        ,  dVlos2dpsi2  ,       0       ,  dVlos2drho2  ,  0  , 0]])
-        
-        # Ouputs covariance matrix
-        Uy=Cx.dot(Ux).dot(np.transpose(Cx))
-        
-        # Uncertainty of Vlosi. Here we account for rho, theta and psi uncertainties and their correlations.
-        s_w= 0
-        # pdb.set_trace()
-        U_Vlos1_GUM.append(np.sqrt(Uy[0][0]+ Qlunc_yaml_inputs['Components']['Scanner']['stdv Estimation'][0][0]**2+(np.sin(theta1)*s_w)**2))
-        U_Vlos2_GUM.append(np.sqrt(Uy[1][1]+ Qlunc_yaml_inputs['Components']['Scanner']['stdv Estimation'][1][0]**2+(np.sin(theta2)*s_w)**2))
-
-       
-        #%% u and v wind components' uncertainty analysis
-
-        # Partial derivative u and v respect to Vlos
-        dudVlos1 = -(np.sin(psi2)/(np.cos(theta1)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2)))) 
-        dudVlos2 =  (np.sin(psi1)/(np.cos(theta2)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2))))
-        dvdVlos1 =  np.cos(psi2)/(np.cos(theta1)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2)))
-        dvdVlos2 = -(np.cos(psi1)/(np.cos(theta2)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2))))   
-        
-     
-        # Partial derivative u and v respect to theta
-        
-        dudtheta1 = ((Vlos2_GUM*np.sin(psi1)*(-np.sin(theta1)))/(np.cos(theta1)*np.cos(theta2)*(np.cos(psi2)*np.sin(psi1)-np.cos(psi1)*np.sin(psi2))))+(((-Vlos2_GUM*np.cos(theta1) *np.sin(psi1)+Vlos1_GUM *np.cos(theta2) *np.sin(psi2))*(-np.sin(theta1)))/((np.cos(theta1)**2) *np.cos(theta2) *(np.cos(psi2) *np.sin(psi1) - np.cos(psi1) *np.sin(psi2))))           
-        dvdtheta1 = ((-Vlos2_GUM*np.cos(psi1)*(-np.sin(theta1)))/(np.cos(theta1)*np.cos(theta2)*(np.cos(psi2)*np.sin(psi1)-np.cos(psi1)*np.sin(psi2)))) + ((Vlos2_GUM*np.cos(theta1) *np.cos(psi1) -Vlos1_GUM *np.cos(theta2) *np.cos(psi2))*(-np.sin(theta1)))/((np.cos(theta1)**2) *np.cos(theta2) *(np.cos(psi2) *np.sin(psi1) - np.cos(psi1) *np.sin(psi2)))   
-        dudtheta2 = (((-Vlos1_GUM*np.sin(psi2)*(-np.sin(theta2)))/(np.cos(theta1)*np.cos(theta2)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2))))) +((((-Vlos2_GUM)*np.cos(theta1)*np.sin(psi1) + Vlos1_GUM*np.cos(theta2)*np.sin(psi2))*(-np.sin(theta2)))/(np.cos(theta1)*(np.cos(theta2)**2)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2))))        
-        dvdtheta2 = ((Vlos1_GUM*np.cos(psi2)*(-np.sin(theta2)))/(np.cos(theta1)*np.cos(theta2)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2)))) +(((Vlos2_GUM*np.cos(psi1)*np.cos(theta1) - Vlos1_GUM*np.cos(psi2)*np.cos(theta2))*(-np.sin(theta2)))/(np.cos(theta1)*(np.cos(theta2)**2) * (np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2))))
-        
-       
-        # Partial derivative u and v respect to psi
-        
-        dudpsi1=((np.cos(psi2)*(np.cos(psi1)) - np.sin(psi2)*(-np.sin(psi1)))*(Vlos1_GUM*np.sin(psi2)*np.cos(theta2) - Vlos2_GUM*np.sin(psi1)*np.cos(theta1)))/(np.cos(theta1)*np.cos(theta2)*(np.sin(psi1)*np.cos(psi2) - np.cos(psi1)*np.sin(psi2))**2) +(Vlos2_GUM*np.cos(psi1))/(np.cos(theta2)*(np.sin(psi1)*np.cos(psi2) - np.cos(psi1)*np.sin(psi2)))       
-        dvdpsi1= ((np.cos(psi2)*(np.cos(psi1))-np.sin(psi2)*(-np.sin(psi1)))*(Vlos2_GUM*np.cos(psi1)*np.cos(theta1) -  Vlos1_GUM*np.cos(psi2)*np.cos(theta2)))/(np.cos(theta1)*np.cos(theta2)*(np.sin(psi1)*np.cos(psi2) - np.cos(psi1)*np.sin(psi2))**2) - (Vlos2_GUM*(-np.sin(psi1)))/(np.cos(theta2)*(np.sin(psi1)*np.cos(psi2) -np.cos(psi1)*np.sin(psi2)))        
-        dudpsi2= ((-Vlos1_GUM*(np.cos(psi2)))/(np.cos(theta1)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2)))) + (((-Vlos2_GUM)*np.cos(theta1)*np.sin(psi1) + Vlos1_GUM*np.cos(theta2)*np.sin(psi2))*(np.sin(psi1)*(-np.sin(psi2) )- np.cos(psi1)*(np.cos(psi2))))/(np.cos(theta1)*np.cos(theta2)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2))**2)   
-        dvdpsi2= (Vlos1_GUM*(-np.sin(psi2)))/(np.cos(theta1)*(np.cos(psi2)*np.sin(psi1)-np.cos(psi1)*np.sin(psi2))) + ((Vlos2_GUM*np.cos(psi1)*np.cos(theta1)-Vlos1_GUM*np.cos(psi2)*np.cos(theta2))*(np.sin(psi1)*(-np.sin(psi2))-np.cos(psi1)*(np.cos(psi2))))/(np.cos(theta1)*np.cos(theta2)*(np.cos(psi2)*np.sin(psi1) - np.cos(psi1)*np.sin(psi2))**2)
-
-        # Inputs' covariance matrix for u and v components' uncertainty estimation
-        #Param_multivar1=[N_MC                ,U_Vlos1_MCM           ,U_Vlos2_MCM,   theta_stds2              ,psi_stds2        ,rho_stds2,     psi1_psi2_corr,  theta1_theta2_corr  , rho1_rho2_corr        , psi1_theta1_corr , psi1_theta2_corr  ,       psi2_theta1_corr    , psi2_theta2_corr  , Vlos1_Vlos2_corr ,       psi1_rho1_corr ,psi1_rho2_corr ,psi2_rho1_corr ,psi2_rho2_corr ,theta1_rho1_corr ,theta1_rho2_corr ,theta2_rho1_corr ,theta2_rho2_corr,0,0,0,1 ]
-        Param_multivar2=[ind_wind_dir,         U_Vlos1_GUM     ,     U_Vlos2_GUM  ,[u_theta1,u_theta2],   [u_psi1,u_psi2]  ,[u_rho1,u_rho2],    psi1_psi2_corr  ,theta1_theta2_corr  ,  rho1_rho2_corr       ,psi1_theta1_corr ,   psi1_theta2_corr          ,psi2_theta1_corr  , psi2_theta2_corr  , Vlos1_Vlos2_corr,        psi1_rho1_corr ,psi1_rho2_corr ,psi2_rho1_corr ,psi2_rho2_corr ,theta1_rho1_corr ,theta1_rho2_corr ,theta2_rho1_corr ,theta2_rho2_corr,1,1,1,1 ]
-        
-        
-        Uxuv=MultiVar(*Param_multivar2)
-        
-        
-        
-        # Influence coefficients matrix for u and v components' uncertainty estimation
-        Cxuv = np.array([[dudtheta1,dudtheta2,dudpsi1,dudpsi2,0,0,dudVlos1,dudVlos2],[dvdtheta1,dvdtheta2,dvdpsi1,dvdpsi2,0,0,dvdVlos1,dvdVlos2]])
-        # Cxuv = dVh_dtheta1[0],dVh_dtheta2[0],dVh_dpsi1[0],dVh_dpsi2[0],0,0,dVh_Vlos1[0],dVh_Vlos2[0]
-        
-        
-        # # u and v uncertainties estimation
-        Uyuv=Cxuv.dot(Uxuv).dot(np.transpose(Cxuv))
-        U_u_GUM.append(np.sqrt(Uyuv[0][0]))
-        U_v_GUM.append(np.sqrt(Uyuv[1][1]))
-        # pdb.set_trace()
-    CorrCoef_uv = np.corrcoef(u,v)[0][1]
-    # pdb.set_trace()
-    return(VL1,VL2,U_Vlos1_GUM,U_Vlos2_GUM,u,v,U_u_GUM,U_v_GUM,CorrCoef_uv)
-
-#%% ##########################################
-##########################################
-#Uncertainty of Vh following GUM
-##########################################
-##############################################
-#%%
-def GUM_Vh_lidar_uncertainty (u,v,U_u_GUM,U_v_GUM,CorrCoef_uv,Vlos1_GUM,Vlos2_GUM,U_Vlos1_GUM,U_Vlos2_GUM,Qlunc_yaml_inputs,wind_direction,Href,Vref,alpha,Hg,Hl,N_MC,theta1,u_theta1,psi1,u_psi1,rho1  ,u_rho1,theta2,u_theta2,psi2  ,u_psi2,rho2  ,u_rho2,psi1_psi2_corr  
-                            ,theta1_theta2_corr , rho1_rho2_corr   , psi1_theta1_corr, psi1_theta2_corr , psi2_theta1_corr   , psi2_theta2_corr , Vlos1_Vlos2_corr,
-                             psi1_rho1_corr ,psi1_rho2_corr ,psi2_rho1_corr ,psi2_rho2_corr ,theta1_rho1_corr ,theta1_rho2_corr ,theta2_rho1_corr ,theta2_rho2_corr):
-        # Vh Uncertainty
-        U_Vh_GUM=[]
-        for ind_wind_dir in range(len(wind_direction)):  
-            # pdb.set_trace()
-            num1 = np.sqrt(((Vlos1_GUM[ind_wind_dir]*np.cos(theta2))**2)+((Vlos2_GUM[ind_wind_dir]*np.cos(theta1))**2)-(2*Vlos1_GUM[ind_wind_dir]*Vlos2_GUM[ind_wind_dir]*np.cos(psi1-psi2)*np.cos(theta1)*np.cos(theta2)))
-            den=np.cos(theta1)*np.cos(theta2)*np.sin(psi1-psi2)
-            
-            dVh_Vlos1= (1/den)*(1/(num1))*(Vlos1_GUM[ind_wind_dir]*((np.cos(theta2))**2)-Vlos2_GUM[ind_wind_dir]*np.cos(theta1)*np.cos(theta2)*np.cos(psi1-psi2))
-            dVh_Vlos2= (1/den)*(1/(num1))*(Vlos2_GUM[ind_wind_dir]*((np.cos(theta1))**2)-Vlos1_GUM[ind_wind_dir]*np.cos(theta1)*np.cos(theta2)*np.cos(psi1-psi2))
-            
-            # dVh_dtheta1
-            dnum1= (1/(2*num1))*(-2*(Vlos2_GUM[ind_wind_dir]**2)*np.cos(theta1)*np.sin(theta1)+2*Vlos2_GUM[ind_wind_dir]*Vlos1_GUM[ind_wind_dir]*np.sin(theta1)*np.cos(theta2)*np.cos(psi1-psi2))
-            dVh_dtheta1 = (dnum1*den+num1*np.sin(theta1)*np.cos(theta2)*np.sin(psi1-psi2))/(np.cos(theta1)*np.cos(theta2)*np.sin(psi1-psi2))**2
-            
-            # dVh_dtheta2
-            dnum2= (1/(2*num1))*(-2*(Vlos1_GUM[ind_wind_dir]**2)*np.cos(theta2)*np.sin(theta2)+2*Vlos2_GUM[ind_wind_dir]*Vlos1_GUM[ind_wind_dir]*np.sin(theta2)*np.cos(theta1)*np.cos(psi1-psi2))
-            dVh_dtheta2 = (dnum2*den+num1*np.cos(theta1)*np.sin(theta2)*np.sin(psi1-psi2))/(np.cos(theta2)*np.cos(theta1)*np.sin(psi1-psi2))**2
-            
-            # dVh_dpsi1
-            dnum3= (1/(2*num1))*(2*Vlos2_GUM[ind_wind_dir]*Vlos1_GUM[ind_wind_dir]*np.cos(theta2)*np.cos(theta1)*np.sin(psi1-psi2))
-            dVh_dpsi1 = (dnum3*den-num1*np.cos(theta1)*np.cos(theta2)*np.cos(psi1-psi2))/(np.cos(theta2)*np.cos(theta1)*np.sin(psi1-psi2))**2
-            
-            # dVh_dpsi2
-            dnum4= (1/(2*num1))*(-2*Vlos2_GUM[ind_wind_dir]*Vlos1_GUM[ind_wind_dir]*np.cos(theta2)*np.cos(theta1)*np.sin(psi1-psi2))
-            dVh_dpsi2 = (dnum4*den+num1*np.cos(theta1)*np.cos(theta2)*np.cos(psi1-psi2))/(np.cos(theta2)*np.cos(theta1)*np.sin(psi1-psi2))**2
-
-
-            # Covaraiance and sensitivity matrices:
-                                                                                                                                                                                                                                                                                                                                                                                                                                       #####GUM Vh
-            Param_multivar2 = [ind_wind_dir,      U_Vlos1_GUM,U_Vlos2_GUM      ,[u_theta1,u_theta2]    ,[u_psi1,u_psi2]    ,[u_rho1,u_rho2],     psi1_psi2_corr    ,theta1_theta2_corr  , rho1_rho2_corr,  psi1_theta1_corr,   psi1_theta2_corr  , psi2_theta1_corr , psi2_theta2_corr, Vlos1_Vlos2_corr , psi1_rho1_corr,psi1_rho2_corr ,psi2_rho1_corr ,psi2_rho2_corr ,theta1_rho1_corr ,theta1_rho2_corr ,theta2_rho1_corr ,theta2_rho2_corr,1,1,1,1 ]
-            # Param_multivar2=[N_MC,              U_Vlos1_MCM,U_Vlos2_MCM,     theta_stds2             ,psi_stds2,               rho_stds2,      psi1_psi2_corr    ,theta1_theta2_corr  , rho1_rho2_corr , psi1_theta1_corr  , psi1_theta2_corr  , psi2_theta1_corr , psi2_theta2_corr  , Vlos1_Vlos2_corr , psi1_rho1_corr ,psi1_rho2_corr ,psi2_rho1_corr ,psi2_rho2_corr ,theta1_rho1_corr ,theta1_rho2_corr ,theta2_rho1_corr ,theta2_rho2_corr,0,0,0,1 ]
- 
-            UxVh=MultiVar(*Param_multivar2)
-       
-            CxVh=[dVh_dtheta1,dVh_dtheta2,dVh_dpsi1,dVh_dpsi2,0,0,dVh_Vlos1,dVh_Vlos2]
-            # CxVh=[0,0,0,0,0,0,dVh_Vlos1[0],dVh_Vlos2[0]]
-            UyVh=np.array(CxVh).dot(UxVh).dot(np.transpose(CxVh))
-            
-            
-            
-            U_Vh_GUM.append(np.sqrt(UyVh))
-        # pdb.set_trace()
-        return(U_Vh_GUM)
-    
-    
-    
-    
-    
-    
     
     
 # # 3D
