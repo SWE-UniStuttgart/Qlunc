@@ -112,9 +112,10 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             # plt.tight_layout()
             for ind_plot in range(len(Data['Vh Unc [m/s]']['Uncertainty Vh MCM'])):
                 c2=next(color2)
-                
+                # pdb.set_trace()
                 plt.plot(np.degrees(Data['wind direction']),Data['Vh Unc [m/s]']['Uncertainty Vh GUM'][ind_plot],'-', color=c2,linewidth=plot_param['linewidth'],label=r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))
                 plt.plot(np.degrees(Data['wind direction']),Data['Vh Unc [m/s]']['Uncertainty Vh MCM'][ind_plot],'o' , markerfacecolor=c2,markeredgecolor='lime',alpha=0.4,label='MCM')
+                ax11.set_ylim([.0, .5])
             for ind_plot in range(len(Data['Vh Unc [m/s]']['Uncertainty Vh MCM'])):
                 c3=next(color3)
                 ax12=plt.subplot(gs[1,:]) 
@@ -173,8 +174,10 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             r'$r_{\varphi_{1},\varphi_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[0] ),
             r'$r_{\rho_{1},\rho_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[2]),
             r'$r_{\theta_{1},\varphi_{1}}~ =%.2f$' % (Lidar.optics.scanner.correlations[3]),
-            r'$r_{\theta_{2},\varphi_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[6])))          
-            ax12.text(0.9, 0.75, textstr1, transform=ax12.transAxes, fontsize=16,horizontalalignment='left',verticalalignment='top', bbox=props1)     
+            r'$r_{\theta_{2},\varphi_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[6]),
+            r'$r_{\theta_{1},\varphi_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[5]),
+            r'$r_{\theta_{2},\varphi_{1}}~ =%.2f$' % (Lidar.optics.scanner.correlations[4])))          
+            ax12.text(0.9, 0.935, textstr1, transform=ax12.transAxes, fontsize=16,horizontalalignment='left',verticalalignment='top', bbox=props1)     
             # pdb.set_trace()
             ax12.ticklabel_format(axis='y',style='sci')
             # Ennumeration:
@@ -186,10 +189,10 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             # ax12.text(0.010, 0.151, textstr02, transform=ax12.transAxes, fontsize=21.74,horizontalalignment='left',verticalalignment='top', bbox=props01)     
             # ax13.text(0.010, 0.151, textstr03, transform=ax13.transAxes, fontsize=21.74,horizontalalignment='left',verticalalignment='top', bbox=props01)     
             
-            gs.update(left=0.07,right=0.99,top=0.965,bottom=0.1,wspace=0.3,hspace=0.24)
-            # pdb.set_trace()
-            plt.show()
+            gs.update(left=0.085,right=0.99,top=0.965,bottom=0.1,wspace=0.3,hspace=0.24)
             
+            plt.show()
+            # pdb.set_trace()
             
             
             
@@ -423,49 +426,76 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         #         Dir.append(Data['WinDir Unc [°]']['Uncertainty wind direction GUM'][i][0])         
         #     pdb.set_trace()
         #     # Horizontal wind velocity
-        #     colorsMap='jet'
-        #     cm = plt.get_cmap(colorsMap)
-        #     cNorm = matplotlib.colors.Normalize(vmin=min(V), vmax=max(V))
-        #     scalarMap = cmx.ScalarMappable(norm=cNorm, cmap=cm)
+        #     # colorsMap='jet'
+        #     # cm = plt.get_cmap(colorsMap)
+        #     cNorm = matplotlib.colors.Normalize(vmin=0.10, vmax=0.40)
+        #     scalarMap = cmx.ScalarMappable(norm=cNorm, cmap='jet')
+            
         #     fig = plt.figure()
         #     ax = Axes3D(fig)
+        #     # fig00,ax00=plt.subplots()                
+        #     # plt.scatter(Data['lidars']['Coord_Out'][1],Data['lidars']['Coord_Out'][2], s=20,c=scalarMap.to_rgba(V))
+            
         #     ax.scatter(Data['lidars']['Coord_Out'][0],Data['lidars']['Coord_Out'][1], Data['lidars']['Coord_Out'][2], V, c=scalarMap.to_rgba(V))
-        #     ax.set_xlabel('X [m]')
-        #     ax.set_ylabel('Y [m]')
-        #     ax.set_zlabel('Z [m]')
+            
+            
+        #     # ax00.set_xlabel('Y [m]', fontsize=plot_param['tick_labelfontsize'], labelpad=15)
+        #     # ax00.set_ylabel('Z [m]', fontsize=plot_param['tick_labelfontsize'], labelpad=15)
+        #     ax.set_xlabel('X [m]', fontsize=plot_param['tick_labelfontsize'], labelpad=15)
+        #     ax.set_ylabel('Y [m]', fontsize=plot_param['tick_labelfontsize'], labelpad=15)
+        #     ax.set_zlabel('Z [m]', fontsize=plot_param['tick_labelfontsize'], labelpad=15)
+            
         #     ax.plot(Data['lidars']['Lidar0_Rectangular']['LidarPosX'],Data['lidars']['Lidar0_Rectangular']['LidarPosY'],Data['lidars']['Lidar0_Rectangular']['LidarPosZ'],'sb')
         #     ax.plot(Data['lidars']['Lidar1_Rectangular']['LidarPosX'],Data['lidars']['Lidar1_Rectangular']['LidarPosY'],Data['lidars']['Lidar1_Rectangular']['LidarPosZ'],'sb')
         #     scalarMap.set_array(Data['Vh Unc [m/s]']['Uncertainty Vh GUM'])
-        #     cb=plt.colorbar(scalarMap, shrink=0.5)
-        #     cb.set_label(label='$V_h$ Uncertainty [m/s]', size='large')
-        #     cb.ax.tick_params(labelsize='large')
+        #     cb=plt.colorbar(scalarMap, shrink=.8)
+        #     cb.set_label(label='$V_h$ Uncertainty [m/s]', size=plot_param['tick_labelfontsize'], labelpad=15)
+        #     # cb.ax.tick_params(labelsize=13)
+            
+        #     # ax00.ticklabel_format(useOffset=False)
         #     ax.ticklabel_format(useOffset=False)
-        #     plt.show()
+            
         #     ax.set_box_aspect([ub - lb for lb, ub in (getattr(ax, f'get_{a}lim')() for a in 'xyz')])
+        #     ax.xaxis.set_tick_params(labelsize=plot_param['tick_labelfontsize']-3)
+        #     ax.yaxis.set_tick_params(labelsize=plot_param['tick_labelfontsize']-3)
+        #     ax.zaxis.set_tick_params(labelsize=plot_param['tick_labelfontsize']-3)
             
-        #     pdb.set_trace()
-        #     # Wind direction
-        #     colorsMap='jet'
-        #     cm = plt.get_cmap(colorsMap)
-        #     cNorm = matplotlib.colors.Normalize(vmin=min(Dir), vmax=max(Dir))
-        #     scalarMap1 = cmx.ScalarMappable(norm=cNorm, cmap=cm)
-            
-        #     fig1 = plt.figure()
-        #     ax1 = Axes3D(fig1)
-        #     ax1.scatter(Data['x_out'], Data['y_out'], Data['z_out'], Dir, c=scalarMap1.to_rgba(Dir))
-        #     ax1.set_xlabel('X [m]')
-        #     ax1.set_ylabel('Y [m]')
-        #     ax1.set_zlabel('Z [m]')
-        #     ax1.plot(Data['Lidar1 position'][0],Data['Lidar1 position'][1],Data['Lidar1 position'][2],'sb')
-        #     ax1.plot(Data['Lidar2 position'][0],Data['Lidar2 position'][1],Data['Lidar2 position'][2],'sb')
-        #     scalarMap1.set_array(Data['Uncertainty Vh GUM'])
-        #     cb1=plt.colorbar(scalarMap1, shrink=0.5)
-        #     cb1.set_label(label='$\Omega$ Uncertainty [°]', size='large')
-        #     # cb1.ax1.tick_params(labelsize='large')
-        #     ax1.ticklabel_format(useOffset=False)
+        #     # ax00.set_box_aspect([ub - lb for lb, ub in (getattr(ax, f'get_{a}lim')() for a in 'yz')])
+        #     # ax00.xaxis.set_tick_params(labelsize=plot_param['tick_labelfontsize'])
+        #     # ax00.yaxis.set_tick_params(labelsize=plot_param['tick_labelfontsize'])
         #     plt.show()
-        #     ax1.set_box_aspect([ub - lb for lb, ub in (getattr(ax1, f'get_{a}lim')() for a in 'xyz')])
 
+            
+            # Wind direction
+            # colorsMap='jet'
+            # cm2 = plt.get_cmap(colorsMap)
+            # cNorm2 = matplotlib.colors.Normalize(vmin=0.15, vmax=0.2)
+            # scalarMap1 = cmx.ScalarMappable(norm=cNorm2, cmap=cm2)
+            
+            # fig1 = plt.figure()
+            # ax1 = Axes3D(fig1)
+            # ax1.scatter(Data['lidars']['Coord_Out'][0],Data['lidars']['Coord_Out'][1], Data['lidars']['Coord_Out'][2], Dir, c=scalarMap1.to_rgba(Dir))
+            # ax1.set_xlabel('X [m]', fontsize=plot_param['tick_labelfontsize'], labelpad=15)
+            # ax1.set_ylabel('Y [m]', fontsize=plot_param['tick_labelfontsize'], labelpad=15)
+            # ax1.set_zlabel('Z [m]', fontsize=plot_param['tick_labelfontsize'], labelpad=15)
+            
+            # ax1.plot(Data['lidars']['Lidar0_Rectangular']['LidarPosX'],Data['lidars']['Lidar0_Rectangular']['LidarPosY'],Data['lidars']['Lidar0_Rectangular']['LidarPosZ'],'sb')
+            # ax1.plot(Data['lidars']['Lidar1_Rectangular']['LidarPosX'],Data['lidars']['Lidar1_Rectangular']['LidarPosY'],Data['lidars']['Lidar1_Rectangular']['LidarPosZ'],'sb')
+            # # pdb.set_trace()
+            # scalarMap1.set_array(Data['WinDir Unc [°]']['Uncertainty wind direction GUM'])
+            # cb1=plt.colorbar(scalarMap1, shrink=0.5)
+            # cb1.set_label(label='$\Omega$ Uncertainty [°]', size=plot_param['tick_labelfontsize'])
+            # # cb1.ax1.tick_params(labelsize=13)
+            # # cb.ax.tick_params(labelsize=13)
+            # ax1.ticklabel_format(useOffset=False)
+            # plt.show()
+            # ax.set_box_aspect([ub - lb for lb, ub in (getattr(ax, f'get_{a}lim')() for a in 'xyz')])
+            # ax1.xaxis.set_tick_params(labelsize=plot_param['tick_labelfontsize']-3)
+            # ax1.yaxis.set_tick_params(labelsize=plot_param['tick_labelfontsize']-3)
+            # ax1.zaxis.set_tick_params(labelsize=plot_param['tick_labelfontsize']-3)
+
+            # ax1.set_box_aspect([ub - lb for lb, ub in (getattr(ax1, f'get_{a}lim')() for a in 'xyz')])
+        
     ###############   Plot photodetector noise   #############################       
     if flag_plot_photodetector_noise:
         # Quantifying uncertainty from photodetector and interval domain for the plot Psax is define in the photodetector class properties)
