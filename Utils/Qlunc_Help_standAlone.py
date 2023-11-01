@@ -104,7 +104,8 @@ def unc_comb(data):
         res_dB = list(data)
     else:
         for data_row in range(np.shape(data)[0]):# transform into watts        
-            try:    
+            try:  
+                # pdb.set_trace()
                 data_db=data[data_row,:]
             except:
                 data_db=data[data_row][0]             
@@ -115,6 +116,7 @@ def unc_comb(data):
             # res_watts.append(sum(map (lambda x: x**2,zipped_data[i]))) #   Combined Variance
             
             res_dB=10*np.log10(res_watts) #Convert into dB 
+        # pdb.set_trace()
         del data_db
     return np.array(res_dB)
 

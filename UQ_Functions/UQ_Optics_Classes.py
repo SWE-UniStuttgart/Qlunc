@@ -300,17 +300,17 @@ def UQ_OpticalCirculator(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
 
 #%% TELESCOPE NOT IMPLEMENTED
 def UQ_Telescope(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
-     # UQ_telescope=[(temp*0.5+hum*0.1+curvature_lens*0.1+aberration+o_c_tele) \
-     #               for temp           in inputs.atm_inp.Atmospheric_inputs['temperature']\
-     #               for hum            in inputs.atm_inp.Atmospheric_inputs['humidity']\
-     #               for curvature_lens in inputs.optics_inp.Telescope_uncertainty_inputs['curvature_lens'] \
-     #               for aberration     in inputs.optics_inp.Telescope_uncertainty_inputs['aberration'] \
-     #               for o_c_tele       in inputs.optics_inp.Telescope_uncertainty_inputs['OtherChanges_tele']]
-     # Telescope_Losses =Lidar.optics.telescope.Mirror_losses
-     UQ_telescope=[-100]
-     Final_Output_UQ_Telescope={'Telescope_Uncertainty':UQ_telescope}
-     Lidar.lidar_inputs.dataframe['Telescope']=Final_Output_UQ_Telescope['Telescope_Uncertainty']*np.linspace(1,1,len(Atmospheric_Scenario.temperature)) # linspace to create the appropriate length for the xarray. 
-     return Final_Output_UQ_Telescope,Lidar.lidar_inputs.dataframe
+      # UQ_telescope=[(temp*0.5+hum*0.1+curvature_lens*0.1+aberration+o_c_tele) \
+      #               for temp           in inputs.atm_inp.Atmospheric_inputs['temperature']\
+      #               for hum            in inputs.atm_inp.Atmospheric_inputs['humidity']\
+      #               for curvature_lens in inputs.optics_inp.Telescope_uncertainty_inputs['curvature_lens'] \
+      #               for aberration     in inputs.optics_inp.Telescope_uncertainty_inputs['aberration'] \
+      #               for o_c_tele       in inputs.optics_inp.Telescope_uncertainty_inputs['OtherChanges_tele']]
+      # Telescope_Losses =Lidar.optics.telescope.Mirror_losses
+      UQ_telescope=[-100]
+      Final_Output_UQ_Telescope={'Telescope_Uncertainty':UQ_telescope}
+      Lidar.lidar_inputs.dataframe['Telescope']=Final_Output_UQ_Telescope['Telescope_Uncertainty']*np.linspace(1,1,len(Atmospheric_Scenario.temperature)) # linspace to create the appropriate length for the xarray. 
+      return Final_Output_UQ_Telescope,Lidar.lidar_inputs.dataframe
 
 #%% Sum of uncertainties in `optics` module: 
 def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
@@ -319,7 +319,7 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # Scanner
     if Lidar.optics.scanner != None:
         # try:                  
-            if Lidar.wfr_model.reconstruction_model != 'None':
+            if Lidar.wfr_model.reconstruction_model != None:
                    
                 Scanner_Uncertainty,DataFrame=Lidar.optics.scanner.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
                 WFR_Uncertainty=None#Lidar.wfr_model.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scanner_Uncertainty)            
@@ -336,7 +336,7 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
    
     
    # Telescope
-    if Lidar.optics.telescope != 'None':
+    if Lidar.optics.telescope != None:
         try:
             Telescope_Uncertainty,DataFrame=Lidar.optics.telescope.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
             List_Unc_optics.append(Telescope_Uncertainty['Telescope_Uncertainty'])            
@@ -347,8 +347,8 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         print (colored('You didn´t include a telescope in the lidar,so that telescope uncertainty contribution is not in lidar uncertainty estimations.','cyan', attrs=['bold']))
     
     
-    # Optical Circulator
-    if Lidar.optics.optical_circulator != 'None': 
+    # # Optical Circulator
+    if Lidar.optics.optical_circulator != None: 
         try:
             Optical_circulator_Uncertainty,DataFrame = Lidar.optics.optical_circulator.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
             List_Unc_optics.append(Optical_circulator_Uncertainty['Optical_Circulator_Uncertainty'])       
@@ -357,11 +357,17 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             print(colored('Error in optical circulator uncertainty calculations!','cyan', attrs=['bold']))    
     else:
         print(colored('You didn´t include an optical circulator in the lidar,so that optical circulator uncertainty contribution is not in lidar uncertainty estimations.','cyan', attrs=['bold']))
-    Uncertainty_Optics_Module=SA.unc_comb(List_Unc_optics)
     
-    # Final_Output_UQ_Optics = {'Uncertainty_Optics':Uncertainty_Optics_Module, 'Uncertainty_WFR':WFR_Uncertainty['WFR_Uncertainty'],'Mean_error_PointingAccuracy':Scanner_Uncertainty['Simu_Mean_Distance_Error'],'Stdv_PointingAccuracy':Scanner_Uncertainty['STDV_Distance'], 'Rayleigh length':Scanner_Uncertainty['Rayleigh length'],'Rayleigh length uncertainty':Scanner_Uncertainty['Rayleigh length uncertainty']}
-    Final_Output_UQ_Optics = {'Uncertainty_Optics':Uncertainty_Optics_Module,'Uncertainty': Scanner_Uncertainty}
+    if not List_Unc_optics:
+        print("Optical module is empty (noo telescope and no optical circulator)")
+        Final_Output_UQ_Optics =None
+    else:
+        Uncertainty_Optics_Module=SA.unc_comb(List_Unc_optics)
     
-    Lidar.lidar_inputs.dataframe['Optics Module']=Final_Output_UQ_Optics['Uncertainty_Optics']*np.linspace(1,1,len(Atmospheric_Scenario.temperature))  # linspace to create the appropiate length for the xarray. 
+        # Final_Output_UQ_Optics = {'Uncertainty_Optics':Uncertainty_Optics_Module, 'Uncertainty_WFR':WFR_Uncertainty['WFR_Uncertainty'],'Mean_error_PointingAccuracy':Scanner_Uncertainty['Simu_Mean_Distance_Error'],'Stdv_PointingAccuracy':Scanner_Uncertainty['STDV_Distance'], 'Rayleigh length':Scanner_Uncertainty['Rayleigh length'],'Rayleigh length uncertainty':Scanner_Uncertainty['Rayleigh length uncertainty']}
+        Final_Output_UQ_Optics = {'Uncertainty_Optics':Uncertainty_Optics_Module,'Uncertainty': Scanner_Uncertainty}
+        
+        Lidar.lidar_inputs.dataframe['Optics Module']=Final_Output_UQ_Optics['Uncertainty_Optics']*np.linspace(1,1,len(Atmospheric_Scenario.temperature))  # linspace to create the appropiate length for the xarray. 
     return Final_Output_UQ_Optics,Lidar.lidar_inputs.dataframe
+    # return 
 

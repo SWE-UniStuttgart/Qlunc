@@ -129,11 +129,13 @@ class optical_amplifier():
                  
 
 class analog2digital_converter():
-    def __init__(self,name,nbits,vref,vground,q_error,ADC_bandwidth,unc_func):
+    def __init__(self,name,nbits,vref,vground,q_error,ADC_bandwidth,fs,u_fs,unc_func):
                  self.ADCID = name
                  self.nbits =nbits
                  self.vref = vref
                  self.vground = vground
+                 self.fs    =fs
+                 self.u_fs =u_fs
                  self.q_error = q_error
                  self.BandWidth = ADC_bandwidth
                  self.Uncertainty = unc_func
@@ -159,14 +161,10 @@ class power_source(): # Not included yet in Version Qlunc v-0.9 calculations
                  print('Created new power source: {}'.format(self.Power_SourceID))
 
 class laser(): # Not included yet in Version Qlunc v-0.9 calculations
-    def __init__(self,name,Wavelength,stdv_wavelength,Laser_Bandwidth,Output_power,unc_func,RIN,conf_int):
+    def __init__(self,name,Wavelength,stdv_wavelength,unc_func):
                  self.LaserID         = name
                  self.Wavelength      = Wavelength
                  self.stdv_wavelength = stdv_wavelength
-                 self.BandWidth       = Laser_Bandwidth
-                 self.conf_int     = conf_int
-                 self.Output_power    = Output_power
-                 self.RIN             = RIN
                  self.Uncertainty     = unc_func
                  print('Created new laser: {}'.format(self.LaserID))        
 
@@ -205,10 +203,10 @@ class scanner():
                  self.Uncertainty     = unc_func      
                  print('Created new scanner: {}'.format(self.ScannerID))
 
-class measurement_points():
-    def __init__(self,coord_meas_point):
-        self.coord_meas_point=coord_meas_point
-        print('Measurement points created')
+# class measurement_points():
+#     def __init__(self,coord_meas_point):
+#         self.coord_meas_point=coord_meas_point
+#         print('Measurement points created')
             
 
 class optical_circulator():
@@ -277,11 +275,11 @@ class optics():
                  print('Created new optic module: {}'.format(self.OpticsModuleID))
 
 class signal_processor():
-    def __init__(self,name,analog2digital_converter,unc_func): #f_analyser
+    def __init__(self,name,analog2digital_converter): #f_analyser
                  self.SignalProcessorModuleID = name
                  self.analog2digital_converter = analog2digital_converter
                  # self.f_analyser =f_analyser
-                 self.Uncertainty = unc_func
+                 # self.Uncertainty = unc_func
                  print('Created new signal processor module: {}'.format(self.SignalProcessorModuleID))
 
 
@@ -300,10 +298,9 @@ class atmosphere():
 
 #%% Creating lidar general data class:
 class lidar_gral_inp():
-    def __init__(self,name,wave,ltype,yaw_error,pitch_error,roll_error,dataframe):
+    def __init__(self,name,ltype,yaw_error,pitch_error,roll_error,dataframe):
                  self.Gral_InputsID   = name
                  self.LidarType       = ltype
-                 self.Wavelength      = wave
                  self.yaw_error_dep   = yaw_error   # yaw error angle when deploying the lidar device in the grounf or in the nacelle
                  self.pitch_error_dep = pitch_error # pitch error angle when deploying the lidar device in the grounf or in the nacelle
                  self.roll_error_dep  = roll_error  # roll error angle when deploying the lidar device in the grounf or in the nacelle

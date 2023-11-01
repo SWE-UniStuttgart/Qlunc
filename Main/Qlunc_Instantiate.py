@@ -177,10 +177,6 @@ Photodetector    = photodetector(name             = Qlunc_yaml_inputs['Component
 Laser           = laser(name              = Qlunc_yaml_inputs['Components']['Laser']['Name'],
                         Wavelength        = Qlunc_yaml_inputs['Components']['Laser']['Wavelength'],
                         stdv_wavelength   = Qlunc_yaml_inputs['Components']['Laser']['stdv Wavelength'],
-                        conf_int          = Qlunc_yaml_inputs['Components']['Laser']['Confidence interval'],
-                        Output_power      = Qlunc_yaml_inputs['Components']['Laser']['Output power'],
-                        Laser_Bandwidth   = Qlunc_yaml_inputs['Components']['Laser']['Bandwidth'],
-                        RIN               = Qlunc_yaml_inputs['Components']['Laser']['RIN'],
                         unc_func          = uphc.UQ_Laser)
 # Module:
 Photonics_Module = photonics(name                    = Qlunc_yaml_inputs['Modules']['Photonics Module']['Name'],        # Introduce your Photonics module name
@@ -196,20 +192,21 @@ ADC = analog2digital_converter (name     = Qlunc_yaml_inputs['Components']['ADC'
                                 nbits    = Qlunc_yaml_inputs['Components']['ADC']['Number of bits'],
                                 vref     = Qlunc_yaml_inputs['Components']['ADC']['Reference voltage'],
                                 vground  = Qlunc_yaml_inputs['Components']['ADC']['Ground voltage'],
+                                fs       = Qlunc_yaml_inputs['Components']['ADC']['Sampling frequency'],
+                                u_fs     = Qlunc_yaml_inputs['Components']['ADC']['Uncertainty sampling freq'],
                                 q_error  = Qlunc_yaml_inputs['Components']['ADC']['Quantization error'],
                                 ADC_bandwidth = Qlunc_yaml_inputs['Components']['ADC']['ADC Bandwidth'],
                                 unc_func = uspc.UQ_ADC)
 
-Signal_processor = signal_processor(name                     = Qlunc_yaml_inputs['Modules']['Signal processor Module']['Name'],
-                                           analog2digital_converter = eval(Qlunc_yaml_inputs['Modules']['Signal processor Module']['ADC']),
+Signal_processor_Module = signal_processor(name                     = Qlunc_yaml_inputs['Modules']['Signal processor Module']['Name'],
+                                           analog2digital_converter = eval(Qlunc_yaml_inputs['Modules']['Signal processor Module']['ADC']),)
                                            # f_analyser             = Qlunc_yaml_inputs['Modules']['Signal processor Module']['Frequency analyser'],
-                                           unc_func                 = uspc.sum_unc_signal_processor)
+                                           # unc_func                 = uspc.sum_unc_signal_processor)
 
 
 
 ## Lidar general inputs: ######################################################
 Lidar_inputs     = lidar_gral_inp(name        = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Name'],          # Introduce the name of your lidar data folder.
-                                  wave        = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Wavelength'],    # In [m]. Lidar wavelength.
                                   ltype       = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Type'],
                                   yaw_error   = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Yaw error'],     # In [°]. Degrees of rotation around z axis because of inclinometer errors
                                   pitch_error = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Pitch error'],   # In [°]. Degrees of rotation around y axis
