@@ -68,7 +68,7 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             Photonics_Uncertainty = None
             print(colored('Error in photonics module calculations!','cyan', attrs=['bold']))
     else:
-        print(colored('You didn´t include a photonics module in the lidar','cyan', attrs=['bold']))
+        print(colored('You didn´t include a photonics module in the lidar.','cyan', attrs=['bold']))
     
     
     ### Optics
@@ -88,12 +88,12 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         try:
             List_Unc_lidar.append(DataFrame['Telescope'])                
         except:
-              print(colored('No telescope in the photonics module. Telescope is not in lidar uncertainty estimations','cyan', attrs=['bold']))                          
+              print(colored('No telescope in the photonics module. Telescope is not in lidar uncertainty estimations.','cyan', attrs=['bold']))                          
         # except:
         #     Optics_Uncertainty = None
         #     print(colored('Error in optics module calculations!','cyan', attrs=['bold']))
     else:
-        print(colored('You didn´t include an optics module in the lidar','cyan', attrs=['bold']))
+        print(colored('You didn´t include an optics module in the lidar.','cyan', attrs=['bold']))
     
     
     # ### Power
@@ -105,7 +105,7 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             Power_Uncertainty = None
             print(colored('No power module in calculations!','cyan', attrs=['bold']))
     else:
-        print(colored('You didn´t include a power module in  the lidar','cyan', attrs=['bold']))
+        print(colored('You didn´t include a power module in  the lidar.','cyan', attrs=['bold']))
     
     
     ### Signal processor
@@ -119,7 +119,7 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             # SignalProcessor_Uncertainty = None
             # print(colored('No signal processor module in calculations!','cyan', attrs=['bold']))
     else:
-        print(colored('You didn´t include a signal processor module in  the lidar','cyan', attrs=['bold']))    
+        print(colored('You didn´t include a signal processor module in  the lidar.','cyan', attrs=['bold']))    
     
     
     
@@ -149,5 +149,5 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
 
         
         
-    print(colored('...Lidar uncertainty done. Lidar saved in folder "Lidar_Projects"','magenta', attrs=['bold']))
+    print(colored('...Lidar uncertainty done. Lidar saved in folder "Lidar_Projects".','magenta', attrs=['bold']))
     return Final_Output_Lidar_Uncertainty,Lidar.lidar_inputs.dataframe
