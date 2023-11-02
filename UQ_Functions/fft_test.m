@@ -40,8 +40,8 @@ fs_av            = 100e6;    % sampling frequency
 L                = 2^n_bits;    %length of the signal.
 n_fftpoints      = L;       % n° of points for each block (fft points).
 fd               = 2*V_ref/lidar_wavelength;  % Doppler frequency corresponding to Vref
-level_noise      = 0.008; % Hardware noise added before signal downmixing
-n_pulses         = 1;   % n pulses for averaging the spectra
+level_noise      = 10; % Hardware noise added before signal downmixing
+n_pulses         = 50;   % n pulses for averaging the spectra
 N_MC             = 1e3; % n° MC samples to calculate the uncertainty due to bias in sampling frequency and wavelength
 Dp               = L*2.9e8*.5/fs_av;
 %% Uncertainty in the signal processing.
