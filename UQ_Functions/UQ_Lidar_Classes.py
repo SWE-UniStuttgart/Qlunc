@@ -128,7 +128,7 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     #         WindFieldReconstruction_Uncertainty = Lidar.wfr_model.Uncertainty(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,Scanner_Uncertainty)
     #     except:
     #         print(colored('Error in wfr model','cyan', attrs=['bold']))
-    pdb.set_trace()
+    # pdb.set_trace()
     Uncertainty_Lidar                     = SA.unc_comb(List_Unc_lidar)[0]
     
     Final_Output_Lidar_Uncertainty        = {'Hardware_Lidar_Uncertainty_combination':Uncertainty_Lidar}#,'WFR_Uncertainty':Optics_Uncertainty['Uncertainty_WFR']}    
