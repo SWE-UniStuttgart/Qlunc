@@ -418,7 +418,6 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         #%% Plot the vertical plane
         
         # if Lidar.optics.scanner.pattern in ['plane']:
-        #     # pdb.set_trace()
         #     V=[]
         #     Dir=[]
         #     for i in range(len(Data['Vh Unc [m/s]']['Uncertainty Vh GUM'])):
@@ -428,7 +427,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         #     # Horizontal wind velocity
         #     # colorsMap='jet'
         #     # cm = plt.get_cmap(colorsMap)
-        #     cNorm = matplotlib.colors.Normalize(vmin=0.10, vmax=0.40)
+        #     cNorm = matplotlib.colors.Normalize(vmin=0., vmax=0.04)
         #     scalarMap = cmx.ScalarMappable(norm=cNorm, cmap='jet')
             
         #     fig = plt.figure()
