@@ -50,7 +50,7 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     N_MC             = 1000 # n° MC samples to calculate the uncertainty due to bias in sampling frequency and wavelength
     
     # Uncertainty in the signal processing.
-    pdb.set_trace()
+    # pdb.set_trace()
     ### Uncertainty in the sampling frequency 
     std_fs_av   = Qlunc_yaml_inputs['Components']['ADC']['Uncertainty sampling freq']*fs_av
     fs=np.random.normal(fs_av,std_fs_av,N_MC)
