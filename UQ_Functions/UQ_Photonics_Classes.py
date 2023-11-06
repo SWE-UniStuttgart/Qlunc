@@ -208,7 +208,7 @@ def UQ_Laser(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
 
     UQ_Laser.U_Laser = np.array([(DuDL*u_L)**2])
     # 
-    pdb.set_trace()
+    # pdb.set_trace()
     # if Lidar.photonics.laser.conf_int==1:
     #     u_fact = 1
     # elif Lidar.photonics.laser.conf_int==2:
