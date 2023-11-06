@@ -480,7 +480,7 @@ def MultiVar (Lidar,Vlos_corrcoeff, U_Vlos1,U_Vlos2,  theta_stds, psi_stds,  rho
             theta1_theta2_corr    = Lidar.optics.scanner.correlations[1]
             psi1_theta2_corr      = Lidar.optics.scanner.correlations[4]
             psi2_theta1_corr      = Lidar.optics.scanner.correlations[5]
-            u_Vlos1_Vlos2_corr    = 0#Vlos_corrcoeff
+            u_Vlos1_Vlos2_corr    = Vlos_corrcoeff
         
         elif mode=='GUM2':
             psi1_theta1_corr      = Lidar.optics.scanner.correlations[3]
@@ -500,7 +500,7 @@ def MultiVar (Lidar,Vlos_corrcoeff, U_Vlos1,U_Vlos2,  theta_stds, psi_stds,  rho
             theta1_theta2_corr    = Lidar.optics.scanner.correlations[1]
             psi1_theta2_corr      = Lidar.optics.scanner.correlations[4]
             psi2_theta1_corr      = Lidar.optics.scanner.correlations[5]
-            u_Vlos1_Vlos2_corr    = 0#Vlos_corrcoeff
+            u_Vlos1_Vlos2_corr    = Vlos_corrcoeff
 
         elif mode=='MC2':            
             psi1_theta1_corr      = Lidar.optics.scanner.correlations[3]
