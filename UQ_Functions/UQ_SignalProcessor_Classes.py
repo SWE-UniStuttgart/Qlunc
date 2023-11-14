@@ -109,8 +109,8 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
 
     Stdv_fpeak=np.std(fd_peak)
     Stdv_vlos=np.std(vlos_MC)
-    pdb.set_trace() 
-          
+    # pdb.set_trace() 
+          # 
     # # UQ_ADC.Thermal_noise =[]
     # # UQ_ADC.ADC_quant_err =[]
     # # UQ_ADC.ADC_resolution_V =[]
