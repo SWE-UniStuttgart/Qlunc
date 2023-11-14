@@ -216,15 +216,15 @@ Lidar_inputs     = lidar_gral_inp(name        = Qlunc_yaml_inputs['Components'][
 
 #%% Data processing methods
 
-# Wind field reconstruction model
-WFR_M = wfr (name                 = Qlunc_yaml_inputs['WFR model']['Name'],
-              reconstruction_model = Qlunc_yaml_inputs['WFR model']['Model'],
-              unc_func             = uprm.UQ_WFR)
+# # Wind field reconstruction model
+# WFR_M = wfr (name                 = Qlunc_yaml_inputs['WFR model']['Name'],
+#               reconstruction_model = Qlunc_yaml_inputs['WFR model']['Model'],
+#               unc_func             = uprm.UQ_WFR)
 
-# Data filtering method
-Filt_M = filtering_method (name        = Qlunc_yaml_inputs['Filtering method']['Name'],
-                           filt_method = Qlunc_yaml_inputs['Filtering method']['Method'],
-                           unc_func    = 'uprm.UQ_WFR')
+# # Data filtering method
+# Filt_M = filtering_method (name        = Qlunc_yaml_inputs['Filtering method']['Name'],
+#                            filt_method = Qlunc_yaml_inputs['Filtering method']['Method'],
+#                            unc_func    = 'uprm.UQ_WFR')
 
 #%% LIDAR device
 
@@ -233,8 +233,8 @@ Lidar = lidar(name             = Qlunc_yaml_inputs['Lidar']['Name'],            
               optics           = eval(Qlunc_yaml_inputs['Lidar']['Optics module']), # Optics_Module, #      # Introduce the name of your optics module.
               power            = eval(Qlunc_yaml_inputs['Lidar']['Power module']),#None, #         # Introduce the name of your power module. NOT IMPLEMENTED YET!
               signal_processor = eval(Qlunc_yaml_inputs['Lidar']['Signal processor']),#None, #Signal_processor_Module,
-              wfr_model        = WFR_M,
-              filt_method      = None,
+              # wfr_model        = WFR_M,
+              # filt_method      = None,
               probe_volume     = Probe_Volume, 
               lidar_inputs     = eval(Qlunc_yaml_inputs['Lidar']['Lidar inputs']), #  Lidar_inputs, #      # Introduce lidar general inputs
               unc_func         = ulc.sum_unc_lidar,

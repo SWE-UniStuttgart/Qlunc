@@ -309,14 +309,14 @@ class lidar_gral_inp():
 
 #%% Lidar class:
 class lidar():
-    def __init__(self,name,photonics,optics,power,signal_processor,wfr_model,filt_method,probe_volume,lidar_inputs,unc_func,unc_Vh,unc_WindDir):
+    def __init__(self,name,photonics,optics,power,signal_processor,probe_volume,lidar_inputs,unc_func,unc_Vh,unc_WindDir):
                  self.LidarID          = name
                  self.photonics        = photonics
                  self.optics           = optics
                  self.power            = power # Not included yet in Version Qlunc v-0.9 calculations
                  self.signal_processor = signal_processor
-                 self.wfr_model        = wfr_model
-                 self.filt_method      = filt_method
+                 # self.wfr_model        = wfr_model
+                 # self.filt_method      = filt_method
                  self.probe_volume     = probe_volume
                  self.lidar_inputs     = lidar_inputs
                  self.Uncertainty      = unc_func
@@ -325,19 +325,19 @@ class lidar():
                  print('Created new lidar device: {}'.format(self.LidarID))
 
 #%% Wind field recondtruction method
-class wfr():
-    def __init__ (self, name,reconstruction_model,unc_func):
-        self.name = name
-        self.reconstruction_model = reconstruction_model
-        self.Uncertainty=unc_func
-        print('Selected wfr model: {} terrain'.format(self.reconstruction_model))
+# class wfr():
+#     def __init__ (self, name,reconstruction_model,unc_func):
+#         self.name = name
+#         self.reconstruction_model = reconstruction_model
+#         self.Uncertainty=unc_func
+#         print('Selected wfr model: {} terrain'.format(self.reconstruction_model))
 #%% Data filtering method
-class filtering_method():
-    def __init__ (self, name,filt_method,unc_func):
-        self.name = name
-        self.filt_method = filt_method
-        self.Uncertainty=unc_func
-        print('Selected filtering model: {} '.format(self.filt_method))
+# class filtering_method():
+#     def __init__ (self, name,filt_method,unc_func):
+#         self.name = name
+#         self.filt_method = filt_method
+#         self.Uncertainty=unc_func
+#         print('Selected filtering model: {} '.format(self.filt_method))
         # LOVE U Caixa!!
         
 #%% Create the lidar objects for pointing accuracy (called in 'UQ_Optics_Classes.py')
