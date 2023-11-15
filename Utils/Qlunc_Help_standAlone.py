@@ -596,10 +596,13 @@ def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,ind_alph
         # pdb.set_trace()
         
         #  Uncertainty Vlosi and Uest uncertainty ##############################
+        # pdb.set_trace()
         s_w=0
-        U_Vlos1_MCM0=np.sqrt(np.std(Vlos1_MCM)**2+ Lidar.optics.scanner.stdv_Estimation[0][0]**2+(np.sin(theta1)*s_w)**2)
-        U_Vlos2_MCM0=np.sqrt(np.std(Vlos2_MCM)**2+ Lidar.optics.scanner.stdv_Estimation[0][0]**2+(np.sin(theta1)*s_w)**2)
-        
+        # U_Vlos1_MCM0=np.sqrt(np.std(Vlos1_MCM)**2+ Lidar.optics.scanner.stdv_Estimation[0][0]**2+(np.sin(theta1)*s_w)**2)
+        # U_Vlos2_MCM0=np.sqrt(np.std(Vlos2_MCM)**2+ Lidar.optics.scanner.stdv_Estimation[0][0]**2+(np.sin(theta1)*s_w)**2)       
+        U_Vlos1_MCM0=np.sqrt(np.std(Vlos1_MCM)**2+ Lidar.lidar_inputs.dataframe['Intrinsic Uncertainty [m/s]']**2)
+        U_Vlos2_MCM0=np.sqrt(np.std(Vlos2_MCM)**2+ Lidar.lidar_inputs.dataframe['Intrinsic Uncertainty [m/s]']**2)        
+
         # Store data
         U_Vlos1_MCM.append(U_Vlos1_MCM0 ) 
         U_Vlos2_MCM.append(U_Vlos2_MCM0)
@@ -761,8 +764,9 @@ def GUM_Vlos_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,ind_alp
         # 
         # U_est ##############
         s_w= 0
-        U_Vlos1_GUM.append(np.sqrt(Uy[0][0]+ Lidar.optics.scanner.stdv_Estimation[0][0]**2+(np.sin(theta1)*s_w)**2))
-        U_Vlos2_GUM.append(np.sqrt(Uy[1][1]+ Lidar.optics.scanner.stdv_Estimation[1][0]**2+(np.sin(theta2)*s_w)**2))
+        U_Vlos1_GUM.append(np.sqrt(Uy[0][0]+ Lidar.lidar_inputs.dataframe['Intrinsic Uncertainty [m/s]']**2+(np.sin(theta1)*s_w)**2))
+        U_Vlos2_GUM.append(np.sqrt(Uy[1][1]+ Lidar.lidar_inputs.dataframe['Intrinsic Uncertainty [m/s]']**2+(np.sin(theta2)*s_w)**2))
+
         # pdb.set_trace()
        
         
@@ -1038,7 +1042,21 @@ def U_WindDir_GUM(Lidar,Atmospheric_Scenario,Corrcoef_Vlos_GUM,wind_direction,th
     return (U_wind_dir)
 
     
+
     
+########### Intrinsic lidar uncertainty
+
+def U_intrinsic(Lidar,List_Unc_lidar,Qlunc_yaml_inputs):
+    # pdb.set_trace()
+    V_ref            = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref']      # Reference voltaje ADC
+    lidar_wavelength = Qlunc_yaml_inputs['Components']['Laser']['Wavelength'] # wavelength of the laser source.
+    fd               = 2*V_ref/lidar_wavelength  # Doppler frequency corresponding to Vref
+    corr_wavelength_fd=0
+    u_intrinsic = np.sqrt((fd*List_Unc_lidar['Stdv wavelength']/2)**2+(Qlunc_yaml_inputs['Components']['Laser']['Wavelength']*List_Unc_lidar['Stdv Doppler f_peak']/2)**2+(fd*Qlunc_yaml_inputs['Components']['Laser']['Wavelength']*List_Unc_lidar['Stdv Doppler f_peak']*List_Unc_lidar['Stdv wavelength'])*corr_wavelength_fd/2) 
+    return u_intrinsic
+
+
+
 # # 3D
 # u = -(-Vlos3* np.cos(theta1) *np.sin(psi1)* np.sin(psi2) + 
 #         Vlos3 *np.cos(theta2) *np.sin(psi1) *np.sin(psi2) + 
