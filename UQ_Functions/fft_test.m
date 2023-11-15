@@ -26,7 +26,7 @@
 
 %%
 clear all %#ok<CLALL>
-close all
+% close all
 clc
 format shortEng
 %% Inputs
@@ -37,11 +37,11 @@ n_bits           = 8;      % N_MC° bits ADC
 V_ref            = 10;      % Reference voltaje ADC
 lidar_wavelength = 1550e-9; % wavelength of the laser source.
 fs_av            = 100e6;    % sampling frequency
-L                = 2^8;    %length of the signal.
+L                = 2^n_bits;    %length of the signal.
 n_fftpoints      = L;       % n° of points for each block (fft points).
 fd               = 2*V_ref/lidar_wavelength;  % Doppler frequency corresponding to Vref
-level_noise      = 583.0952e-9; % Hardware noise added before signal downmixing
-n_pulses         = 1;   % n pulses for averaging the spectra
+level_noise      = 10; % Hardware noise added before signal downmixing
+n_pulses         = 50;   % n pulses for averaging the spectra
 N_MC             = 1e3; % n° MC samples to calculate the uncertainty due to bias in sampling frequency and wavelength
 Dp               = L*2.9e8*.5/fs_av;
 %% Uncertainty in the signal processing.
@@ -71,6 +71,7 @@ e_perc_wavelength = 100*wavelength_noise/lidar_wavelength;
 tic
 for ind_npulses = 1:n_pulses
     for ind_fs = 1:N_MC+1
+
         % Time and frequency vectors
         t{ind_fs} = (0:n_fftpoints-1)*Ts(ind_fs); %#ok<SAGROW> %time vector
         f{ind_fs}  = linspace(0,fs(ind_fs)/2,floor(length(t{ind_fs}))/2+1); %#ok<SAGROW> % floor()"/2+1" is added to match the length of the double-sided spectrum (P1)
@@ -113,7 +114,7 @@ for ind_npulses = 1:n_pulses
         
         % RMSE due to digitisation process. If the signal is unbiased, RMSE
         % is the standard deviation.
-        RMSE_digit(ind_fs,ind_npulses)= (sqrt(abs(sum(X{ind_fs}.^2-S_quant.^2))/length(t{ind_fs}))); %#ok<SAGROW>
+        RMSE_digit(ind_fs,ind_npulses)= (sqrt(abs(sum(X{ind_fs}-S_quant)).^2/length(t{ind_fs}))); %#ok<SAGROW>
         
         
         % tic
@@ -124,7 +125,7 @@ for ind_npulses = 1:n_pulses
         P2            = abs(P3')/n_fftpoints;
         P1            = P2(:,1:n_fftpoints/2+1);
         P1(2:end-1)   = 2*P1(2:end-1);
-        S_fft_quant   = 15*P1.^2;
+        S_fft_quant   = P1.^2;
         S_fft_quant_mean(ind_fs,:) = P1.^2; %#ok<SAGROW>
         
         % T(1,ind_fs)=toc;
