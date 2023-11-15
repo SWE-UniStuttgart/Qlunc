@@ -236,12 +236,12 @@ class telescope():
                 self.Uncertainty                = unc_func
                 print('Created new telescope: {}'.format(self.TelescopeID))
 
-class probe_volume():
-    def __init__(self,name,extinction_coef,unc_func):
-                 self.ProbeVolumeID              = name         
-                 self.extinction_coef            = extinction_coef
-                 self.Uncertainty                = unc_func
-                 print('Class "Probe volume" created')
+# class probe_volume():
+#     def __init__(self,name,extinction_coef,unc_func):
+#                  self.ProbeVolumeID              = name         
+#                  self.extinction_coef            = extinction_coef
+#                  self.Uncertainty                = unc_func
+#                  print('Class "Probe volume" created')
 
 #%% LIDAR MODULES
                  

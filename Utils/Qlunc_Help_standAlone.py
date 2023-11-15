@@ -105,7 +105,6 @@ def unc_comb(data):
     else:
         for data_row in range(np.shape(data)[0]):# transform into watts        
             try:  
-                # pdb.set_trace()
                 data_db=data[data_row,:]
             except:
                 data_db=data[data_row][0]             
@@ -116,7 +115,6 @@ def unc_comb(data):
             # res_watts.append(sum(map (lambda x: x**2,zipped_data[i]))) #   Combined Variance
             
             res_dB=10*np.log10(res_watts) #Convert into dB 
-        # pdb.set_trace()
         del data_db
     return np.array(res_dB)
 
@@ -593,10 +591,8 @@ def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,ind_alph
         # Store data
         Vlos1.append(Vlos1_MCM)
         Vlos2.append(Vlos2_MCM)
-        # pdb.set_trace()
         
         #  Uncertainty Vlosi and Uest uncertainty ##############################
-        # pdb.set_trace()
         s_w=0
         # U_Vlos1_MCM0=np.sqrt(np.std(Vlos1_MCM)**2+ Lidar.optics.scanner.stdv_Estimation[0][0]**2+(np.sin(theta1)*s_w)**2)
         # U_Vlos2_MCM0=np.sqrt(np.std(Vlos2_MCM)**2+ Lidar.optics.scanner.stdv_Estimation[0][0]**2+(np.sin(theta1)*s_w)**2)       
@@ -630,7 +626,6 @@ def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,ind_alph
         # # Multivariate distributions:       
         # Theta1_cr2,Theta2_cr2,Psi1_cr2,Psi2_cr2,Rho1_cr2,Rho2_cr2,Vlos1_MC_cr2,Vlos2_MC_cr2= multivariate_normal.rvs([theta1,theta2,psi1,psi2,rho1,rho2,np.mean(Vlos1[ind_wind_dir]),np.mean(Vlos2[ind_wind_dir])], cov_MAT_Vh,Lidar.optics.scanner.N_MC).T
         Theta1_cr2,Theta2_cr2,Psi1_cr2,Psi2_cr2,Rho1_cr2,Rho2_cr2,Vlos1_MC_cr2,Vlos2_MC_cr2= multivariate_normal.rvs([theta1,theta2,psi1,psi2,rho1,rho2,np.mean(Vlos1_MCM),np.mean(Vlos2_MCM)], cov_MAT_Vh,Lidar.optics.scanner.N_MC).T
-        # pdb.set_trace()
         
         #Storing data
         Vlos1_MC_cr2_s.append(Vlos1_MC_cr2)
@@ -670,12 +665,11 @@ def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,ind_alph
         # Correlation coefficients  u v
         CorrCoef_U_uv.append(np.corrcoef(U_u_MC,U_v_MC)[0][1])
         CorrCoefuv.append(np.corrcoef(u[ind_wind_dir],v[ind_wind_dir])[0][1])
-        # pdb.set_trace()
     
     # Store the multivariate distributions
     Mult_param          =  [Vlos1_MC_cr2_s,Vlos2_MC_cr2_s,Theta1_cr2_s,Theta2_cr2_s,Psi1_cr2_s,Psi2_cr2_s,Rho1_cr2_s,Rho2_cr2_s]
-    # print(U_Vlos1_MCM)
-    # print(U_Vlos2_MCM)
+
+
     # Store correlation coefficients
     Correlation_coeffs  =  [CorrCoef_U_Vlos,CorrCoefuv,CorrCoefTheta1Psi1,CorrCoefTheta2Psi2,CorrCoefTheta1,CorrCoefVlos1,CorrCoefPsi1,CorrCoefTheta1Psi2,CorrCoef_U_VLOS,
                             CorrCoefVlos2,CorrCoefTheta2,CorrCoefPsi2,CorrCoefTheta2_Psi2_2,CorrCoefTheta1Psi1_2,CorrCoefTheta1Psi2_2,CorrCoefTheta2Psi2_2,CorrCoefTheta2Psi1_2,CorrCoefTheta2Psi1]
