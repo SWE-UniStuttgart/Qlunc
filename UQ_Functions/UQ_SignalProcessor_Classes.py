@@ -45,7 +45,7 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     L                = 2**Lidar.signal_processor.analog2digital_converter.nbits    #length of the signal.
     n_fftpoints      = L       # n° of points for each block (fft points).
     fd               = 2*V_ref/lidar_wavelength  # Doppler frequency corresponding to Vref
-    level_noise      = 0.008 # Hardware noise added before signal downmixing
+    level_noise      = 10**(Lidar.lidar_inputs.dataframe['Total noise photodetector [dB]']/10) # Hardware noise added before signal downmixing
     n_pulses         = 1        #   % n pulses for averaging the spectra
     N_MC             = 1000 # n° MC samples to calculate the uncertainty due to bias in sampling frequency and wavelength
     
