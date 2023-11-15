@@ -40,7 +40,9 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     List_Unc_lidar = []
     print(colored('Processing lidar uncertainties...','magenta', attrs=['bold']))
     
+
     
+    # pdb.set_trace()    
     ### Photoniccs
     if Lidar.photonics != None:
         try: # each try/except evaluates whether the component is included in the module, therefore in the calculations
@@ -69,6 +71,22 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             print(colored('Error in photonics module calculations!','cyan', attrs=['bold']))
     else:
         print(colored('You didn´t include a photonics module in the lidar.','cyan', attrs=['bold']))
+    
+    ### Signal processor
+    if Lidar.signal_processor != None:   
+        # try:
+        SignalProcessor_Uncertainty,DataFrame = Lidar.signal_processor.analog2digital_converter.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+        # pdb.set_trace()
+        List_Unc_lidar.append(SignalProcessor_Uncertainty['Stdv Vlos']*len(Atmospheric_Scenario.temperature))
+        
+        # except:
+            # SignalProcessor_Uncertainty = None
+            # print(colored('No signal processor module in calculations!','cyan', attrs=['bold']))
+    else:
+        print(colored('You didn´t include a signal processor module in  the lidar.','cyan', attrs=['bold']))        
+    # pdb.set_trace()
+    ### Intrinsic lidar uncertainty:
+    Lidar.lidar_inputs.dataframe['Intrinsic Uncertainty [m/s]']= SA.U_intrinsic(Lidar,DataFrame,Qlunc_yaml_inputs)
     
     
     ### Optics
@@ -108,19 +126,7 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         print(colored('You didn´t include a power module in  the lidar.','cyan', attrs=['bold']))
     
     
-    ### Signal processor
-    if Lidar.signal_processor != None:   
-        # try:
-        SignalProcessor_Uncertainty,DataFrame = Lidar.signal_processor.analog2digital_converter.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
-        # pdb.set_trace()
-        # List_Unc_lidar.append(SignalProcessor_Uncertainty['Stdv Doppler f_peak']*len(Atmospheric_Scenario.temperature))
-        
-        # except:
-            # SignalProcessor_Uncertainty = None
-            # print(colored('No signal processor module in calculations!','cyan', attrs=['bold']))
-    else:
-        print(colored('You didn´t include a signal processor module in  the lidar.','cyan', attrs=['bold']))    
-    
+
     
     
     # if Lidar.wfr_model != None:
@@ -129,9 +135,9 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     #     except:
     #         print(colored('Error in wfr model','cyan', attrs=['bold']))
     # pdb.set_trace()
-    Uncertainty_Lidar                     = SA.unc_comb(List_Unc_lidar)[0]
+    # Uncertainty_Lidar                     = SA.unc_comb(List_Unc_lidar)[0]
     
-    Final_Output_Lidar_Uncertainty        = {'Hardware_Lidar_Uncertainty_combination':Uncertainty_Lidar}#,'WFR_Uncertainty':Optics_Uncertainty['Uncertainty_WFR']}    
+    # Final_Output_Lidar_Uncertainty        = {'Hardware_Lidar_Uncertainty_combination':Uncertainty_Lidar}#,'WFR_Uncertainty':Optics_Uncertainty['Uncertainty_WFR']}    
     
     # Lidar.lidar_inputs.dataframe['Lidar'] = Final_Output_Lidar_Uncertainty['Hardware_Lidar_Uncertainty_combination']*np.linspace(1,1,len(Atmospheric_Scenario.temperature))
     
@@ -150,4 +156,5 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         
         
     print(colored('...Lidar uncertainty done. Lidar saved in folder "Lidar_Projects".','magenta', attrs=['bold']))
-    return Final_Output_Lidar_Uncertainty,Lidar.lidar_inputs.dataframe
+    return Lidar.lidar_inputs.dataframe
+    # return Final_Output_Lidar_Uncertainty,Lidar.lidar_inputs.dataframe
