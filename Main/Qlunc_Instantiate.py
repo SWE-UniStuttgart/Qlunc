@@ -51,6 +51,74 @@ with open (r'./Main/Qlunc_inputs.yml') as file: # WHere the yaml file is in orde
 exec(open(Qlunc_yaml_inputs['Main directory']+'/Main/Qlunc_Classes.py').read())   
 #%%%%%%%%%%%%%%%%% INPUTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+## Photonics components and Module: ###########################################
+# Here we create photonics components and photonics module. Users can create as many components as they want and combine them to create different module types.
+
+# AOM = acousto_optic_modulator (name           = Qlunc_yaml_inputs['Components']['AOM']['Name'],
+#                                insertion_loss = Qlunc_yaml_inputs['Components']['AOM']['Insertion loss'],
+#                                tau            = Qlunc_yaml_inputs['Components']['AOM']['Pulse shape'],
+#                                tau_meas       = Qlunc_yaml_inputs['Components']['AOM']['Gate length'], 
+#                                stdv_tau       = Qlunc_yaml_inputs['Components']['AOM']['stdv Pulse shape'],
+#                                stdv_tau_meas  = Qlunc_yaml_inputs['Components']['AOM']['stdv Gate length'],                                
+#                                unc_func       = uphc.UQ_AOM)
+
+# Optical_Amplifier = optical_amplifier(name             = Qlunc_yaml_inputs['Components']['Optical Amplifier']['Name'],        # Introduce your scanner name.
+#                                       NoiseFig         = Qlunc_yaml_inputs['Components']['Optical Amplifier']['Optical amplifier noise figure'],          # In [dB]. Can introduce it as a table from manufactures (in this example the data is taken from Thorlabs.com, in section EDFA\Graps) or introduce a single well-known value
+#                                       OA_Gain          = Qlunc_yaml_inputs['Components']['Optical Amplifier']['Optical amplifier gain'],                         # In [dB]. (in this example the data is taken from Thorlabs.com, in section EDFA\Specs)
+#                                       OA_BW            = Qlunc_yaml_inputs['Components']['Optical Amplifier']['Optical amplifier BW'],
+#                                       Power_interval   = np.array(np.arange(Qlunc_yaml_inputs['Components']['Optical Amplifier']['Power interval'][0],
+#                                                                             Qlunc_yaml_inputs['Components']['Optical Amplifier']['Power interval'][1],
+#                                                                             Qlunc_yaml_inputs['Components']['Optical Amplifier']['Power interval'][2])),
+#                                       unc_func         = uphc.UQ_Optical_amplifier) #eval(Qlunc_yaml_inputs['Components']['Optical Amplifier']['Uncertainty function']))  # Function describing Optical Amplifier uncertainty. Further informaion in "UQ_Photonics_Classes.py" comments.
+
+Photodetector    = photodetector(name             = Qlunc_yaml_inputs['Components']['Photodetector']['Name'],               # Introduce your photodetector name.
+                                 Photo_BandWidth  = Qlunc_yaml_inputs['Components']['Photodetector']['Photodetector BandWidth'],                  # In[]. Photodetector bandwidth
+                                 Load_Resistor    = Qlunc_yaml_inputs['Components']['Photodetector']['Load resistor'],                     # In [ohms]
+                                 Photo_efficiency = Qlunc_yaml_inputs['Components']['Photodetector']['Photodetector efficiency'],                    # Photodetector efficiency [-]
+                                 Dark_Current     = Qlunc_yaml_inputs['Components']['Photodetector']['Dark current'],                   #  In [A]. Dark current in the photodetector.
+                                 Photo_SignalP    = Qlunc_yaml_inputs['Components']['Photodetector']['Photodetector signalP'],
+                                 Power_interval   = np.array(np.arange(Qlunc_yaml_inputs['Components']['Photodetector']['Power interval'][0],
+                                                                       Qlunc_yaml_inputs['Components']['Photodetector']['Power interval'][1],
+                                                                       Qlunc_yaml_inputs['Components']['Photodetector']['Power interval'][2])),#np.arange(Qlunc_yaml_inputs['Components']['Photodetector']['Power interval']), # In [w]. Power interval for the photodetector domain in photodetector SNR plot. 
+                                 Active_Surf      = Qlunc_yaml_inputs['Components']['Photodetector']['Active area'],
+                                 Gain_TIA         = Qlunc_yaml_inputs['Components']['Photodetector']['Gain TIA'],                    # In [dB]. If there is a transimpedance amplifier.
+                                 V_Noise_TIA      = Qlunc_yaml_inputs['Components']['Photodetector']['V Noise TIA'],                 # In [V]. If there is a transimpedance amplifier.
+                                 
+                                 unc_func         = uphc.UQ_Photodetector) #eval(Qlunc_yaml_inputs['Components']['Photodetector']['Uncertainty function']))  # Function describing Photodetector uncertainty. Further informaion in "UQ_Photonics_Classes.py" comments.
+
+# Laser           = laser(name              = Qlunc_yaml_inputs['Components']['Laser']['Name'],
+#                         Wavelength        = Qlunc_yaml_inputs['Components']['Laser']['Wavelength'],
+#                         stdv_wavelength   = Qlunc_yaml_inputs['Components']['Laser']['stdv Wavelength'],
+#                         unc_func          = uphc.UQ_Laser)
+# Module:
+Photonics_Module = photonics(name                    = Qlunc_yaml_inputs['Modules']['Photonics Module']['Name'],        # Introduce your Photonics module name
+                             photodetector           = eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['Photodetector']),             # Photodetector instance (in this example "Photodetector") or "None". "None" means that you don´t want to include photodetector in Photonics Module, either in uncertainty calculations.
+                             optical_amplifier       = None, #eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['Optical amplifier']),         # Scanner instance (in this example "OpticalAmplifier") or "None". "None" means that you don´t want to include Optical Amplifier in Photonics Module, either in uncertainty calculations.
+                             laser                   = None, #eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['Laser']),#'None', #Laser,
+                             acousto_optic_modulator = None , #eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['AOM']),
+                             unc_func                = uphc.sum_unc_photonics) #eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['Uncertainty function']))
+
+
+## Signal processor components and module: ###########################################################
+
+ADC = analog2digital_converter (name     = Qlunc_yaml_inputs['Components']['ADC']['Name'],
+                                nbits    = Qlunc_yaml_inputs['Components']['ADC']['Number of bits'],
+                                vref     = Qlunc_yaml_inputs['Components']['ADC']['Reference voltage'],
+                                vground  = Qlunc_yaml_inputs['Components']['ADC']['Ground voltage'],
+                                fs       = Qlunc_yaml_inputs['Components']['ADC']['Sampling frequency'],
+                                u_fs     = Qlunc_yaml_inputs['Components']['ADC']['Uncertainty sampling freq'],
+                                q_error  = Qlunc_yaml_inputs['Components']['ADC']['Quantization error'],
+                                ADC_bandwidth = Qlunc_yaml_inputs['Components']['ADC']['ADC Bandwidth'],
+                                unc_func = uspc.UQ_ADC)
+
+Signal_processor_Module = signal_processor(name                     = Qlunc_yaml_inputs['Modules']['Signal processor Module']['Name'],
+                                           analog2digital_converter = eval(Qlunc_yaml_inputs['Modules']['Signal processor Module']['ADC']),)
+                                           # f_analyser             = Qlunc_yaml_inputs['Modules']['Signal processor Module']['Frequency analyser'],
+                                           # unc_func                 = uspc.sum_unc_signal_processor)
+
+
+# pdb.set_trace()
+
 ## Optics components and Module: ##############################################
 
 # Here we create optics components and optics module. User can create as many components as he/she want and combine them to create different module types
@@ -100,9 +168,9 @@ Scanner           = scanner(name            = Qlunc_yaml_inputs['Components']['S
                             stdv_Estimation = Qlunc_yaml_inputs['Components']['Scanner']['stdv Estimation'],
                             correlations    = Qlunc_yaml_inputs['Components']['Scanner']['correlations'],
                             unc_func        = uopc.UQ_Scanner) #eval(Qlunc_yaml_inputs['Components']['Scanner']['Uncertainty function']) )    # here you put the function describing your scanner uncertainty. 
-# Measurement points
-# Meas_points = measurement_points (coord_meas_point = Qlunc_yaml_inputs['Components']['Scanner']['Measuring point'])
 
+    
+    
 #Optical Circulator:
 Optical_circulator = optical_circulator (name           = Qlunc_yaml_inputs['Components']['Optical Circulator']['Name'],       # Introduce your Optical circulator name.
                                          insertion_loss = Qlunc_yaml_inputs['Components']['Optical Circulator']['Insertion loss'],                        # In [dB]. Insertion loss parameters.
@@ -137,71 +205,6 @@ Optics_Module =  optics (name               = Qlunc_yaml_inputs['Modules']['Opti
                          telescope          = eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Telescope']), #Telescope,#
                          probe_volume       = Probe_Volume,#None,#
                          unc_func           = uopc.sum_unc_optics) #eval(Qlunc_yaml_inputs['Modules']['Optics Module']['Uncertainty function']))
-
-
-## Photonics components and Module: ###########################################
-# Here we create photonics components and photonics module. Users can create as many components as they want and combine them to create different module types.
-
-AOM = acousto_optic_modulator (name           = Qlunc_yaml_inputs['Components']['AOM']['Name'],
-                               insertion_loss = Qlunc_yaml_inputs['Components']['AOM']['Insertion loss'],
-                               tau            = Qlunc_yaml_inputs['Components']['AOM']['Pulse shape'],
-                               tau_meas       = Qlunc_yaml_inputs['Components']['AOM']['Gate length'], 
-                               stdv_tau       = Qlunc_yaml_inputs['Components']['AOM']['stdv Pulse shape'],
-                               stdv_tau_meas  = Qlunc_yaml_inputs['Components']['AOM']['stdv Gate length'],                                
-                               unc_func       = uphc.UQ_AOM)
-
-Optical_Amplifier = optical_amplifier(name             = Qlunc_yaml_inputs['Components']['Optical Amplifier']['Name'],        # Introduce your scanner name.
-                                      NoiseFig         = Qlunc_yaml_inputs['Components']['Optical Amplifier']['Optical amplifier noise figure'],          # In [dB]. Can introduce it as a table from manufactures (in this example the data is taken from Thorlabs.com, in section EDFA\Graps) or introduce a single well-known value
-                                      OA_Gain          = Qlunc_yaml_inputs['Components']['Optical Amplifier']['Optical amplifier gain'],                         # In [dB]. (in this example the data is taken from Thorlabs.com, in section EDFA\Specs)
-                                      OA_BW            = Qlunc_yaml_inputs['Components']['Optical Amplifier']['Optical amplifier BW'],
-                                      Power_interval   = np.array(np.arange(Qlunc_yaml_inputs['Components']['Optical Amplifier']['Power interval'][0],
-                                                                            Qlunc_yaml_inputs['Components']['Optical Amplifier']['Power interval'][1],
-                                                                            Qlunc_yaml_inputs['Components']['Optical Amplifier']['Power interval'][2])),
-                                      unc_func         = uphc.UQ_Optical_amplifier) #eval(Qlunc_yaml_inputs['Components']['Optical Amplifier']['Uncertainty function']))  # Function describing Optical Amplifier uncertainty. Further informaion in "UQ_Photonics_Classes.py" comments.
-
-Photodetector    = photodetector(name             = Qlunc_yaml_inputs['Components']['Photodetector']['Name'],               # Introduce your photodetector name.
-                                 Photo_BandWidth  = Qlunc_yaml_inputs['Components']['Photodetector']['Photodetector BandWidth'],                  # In[]. Photodetector bandwidth
-                                 Load_Resistor    = Qlunc_yaml_inputs['Components']['Photodetector']['Load resistor'],                     # In [ohms]
-                                 Photo_efficiency = Qlunc_yaml_inputs['Components']['Photodetector']['Photodetector efficiency'],                    # Photodetector efficiency [-]
-                                 Dark_Current     = Qlunc_yaml_inputs['Components']['Photodetector']['Dark current'],                   #  In [A]. Dark current in the photodetector.
-                                 Photo_SignalP    = Qlunc_yaml_inputs['Components']['Photodetector']['Photodetector signalP'],
-                                 Power_interval   = np.array(np.arange(Qlunc_yaml_inputs['Components']['Photodetector']['Power interval'][0],
-                                                                       Qlunc_yaml_inputs['Components']['Photodetector']['Power interval'][1],
-                                                                       Qlunc_yaml_inputs['Components']['Photodetector']['Power interval'][2])),#np.arange(Qlunc_yaml_inputs['Components']['Photodetector']['Power interval']), # In [w]. Power interval for the photodetector domain in photodetector SNR plot. 
-                                 Active_Surf      = Qlunc_yaml_inputs['Components']['Photodetector']['Active area'],
-                                 Gain_TIA         = Qlunc_yaml_inputs['Components']['Photodetector']['Gain TIA'],                    # In [dB]. If there is a transimpedance amplifier.
-                                 V_Noise_TIA      = Qlunc_yaml_inputs['Components']['Photodetector']['V Noise TIA'],                 # In [V]. If there is a transimpedance amplifier.
-                                 
-                                 unc_func         = uphc.UQ_Photodetector) #eval(Qlunc_yaml_inputs['Components']['Photodetector']['Uncertainty function']))  # Function describing Photodetector uncertainty. Further informaion in "UQ_Photonics_Classes.py" comments.
-
-Laser           = laser(name              = Qlunc_yaml_inputs['Components']['Laser']['Name'],
-                        Wavelength        = Qlunc_yaml_inputs['Components']['Laser']['Wavelength'],
-                        stdv_wavelength   = Qlunc_yaml_inputs['Components']['Laser']['stdv Wavelength'],
-                        unc_func          = uphc.UQ_Laser)
-# Module:
-Photonics_Module = photonics(name                    = Qlunc_yaml_inputs['Modules']['Photonics Module']['Name'],        # Introduce your Photonics module name
-                             photodetector           = eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['Photodetector']),             # Photodetector instance (in this example "Photodetector") or "None". "None" means that you don´t want to include photodetector in Photonics Module, either in uncertainty calculations.
-                             optical_amplifier       = eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['Optical amplifier']),         # Scanner instance (in this example "OpticalAmplifier") or "None". "None" means that you don´t want to include Optical Amplifier in Photonics Module, either in uncertainty calculations.
-                             laser                   = eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['Laser']),#'None', #Laser,
-                             acousto_optic_modulator = eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['AOM']),
-                             unc_func                = uphc.sum_unc_photonics) #eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['Uncertainty function']))
-
-## Signal processor components and module: ###########################################################
-
-ADC = analog2digital_converter (name     = Qlunc_yaml_inputs['Components']['ADC']['Name'],
-                                nbits    = Qlunc_yaml_inputs['Components']['ADC']['Number of bits'],
-                                vref     = Qlunc_yaml_inputs['Components']['ADC']['Reference voltage'],
-                                vground  = Qlunc_yaml_inputs['Components']['ADC']['Ground voltage'],
-                                fs       = Qlunc_yaml_inputs['Components']['ADC']['Sampling frequency'],
-                                u_fs     = Qlunc_yaml_inputs['Components']['ADC']['Uncertainty sampling freq'],
-                                q_error  = Qlunc_yaml_inputs['Components']['ADC']['Quantization error'],
-                                ADC_bandwidth = Qlunc_yaml_inputs['Components']['ADC']['ADC Bandwidth'],
-                                unc_func = uspc.UQ_ADC)
-
-Signal_processor_Module = signal_processor(name                     = Qlunc_yaml_inputs['Modules']['Signal processor Module']['Name'],
-                                           analog2digital_converter = eval(Qlunc_yaml_inputs['Modules']['Signal processor Module']['ADC']),)
-                                           # f_analyser             = Qlunc_yaml_inputs['Modules']['Signal processor Module']['Frequency analyser'],
-                                           # unc_func                 = uspc.sum_unc_signal_processor)
 
 
 
