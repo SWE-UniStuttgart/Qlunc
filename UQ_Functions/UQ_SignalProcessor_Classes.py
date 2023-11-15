@@ -61,7 +61,7 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     fv = np.linspace(0,fs_av/2,math.floor(len(tv)/2+1))
     vv=0.5*lidar_wavelength*fv
     
-    stdv_wavelength  = 1e-9/np.sqrt(3) #; % m
+    stdv_wavelength  = Qlunc_yaml_inputs['Components']['Laser']['stdv Wavelength']/np.sqrt(3) #; % m
     wavelength_noise = lidar_wavelength+np.random.normal(0,stdv_wavelength,N_MC)  #; % Noisy wavelength vector
     e_perc_wavelength = 100*wavelength_noise/lidar_wavelength
     fd_peak=[]
@@ -137,7 +137,8 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # SNR_ideal_watts = 10**(SNR_ideal_dB/10)
     
     
-    Lidar.lidar_inputs.dataframe['Uncertainty frequency peak [Hz]']=Final_Output_UQ_ADC['Stdv Doppler f_peak']*np.linspace(1,1,len(Atmospheric_Scenario.temperature)) # linspace to create the appropriate length for the xarray.
+    Lidar.lidar_inputs.dataframe['Stdv Doppler f_peak']=Final_Output_UQ_ADC['Stdv Doppler f_peak']*np.linspace(1,1,len(Atmospheric_Scenario.temperature)) # linspace to create the appropriate length for the xarray.
+    Lidar.lidar_inputs.dataframe['Stdv wavelength']=stdv_wavelength
     # pdb.set_trace()
     return Final_Output_UQ_ADC,Lidar.lidar_inputs.dataframe
 
