@@ -50,8 +50,16 @@ with open (r'./Main/Qlunc_inputs.yml') as file: # WHere the yaml file is in orde
 # Execute Qlunc_Classes.py (creating classes for lidar 'objects')
 exec(open(Qlunc_yaml_inputs['Main directory']+'/Main/Qlunc_Classes.py').read())   
 #%%%%%%%%%%%%%%%%% INPUTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#%%# Lidar general inputs: ######################################################
+Lidar_inputs     = lidar_gral_inp(name        = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Name'],          # Introduce the name of your lidar data folder.
+                                  ltype       = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Type'],
+                                  yaw_error   = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Yaw error'],     # In [°]. Degrees of rotation around z axis because of inclinometer errors
+                                  pitch_error = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Pitch error'],   # In [°]. Degrees of rotation around y axis
+                                  roll_error  = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Roll error'],    # In [°]. Degrees of rotation around z axis.
+                                  dataframe   = { })  # Final dataframe
 
-## Photonics components and Module: ###########################################
+
+#%%# Photonics components and Module: ###########################################
 # Here we create photonics components and photonics module. Users can create as many components as they want and combine them to create different module types.
 
 # AOM = acousto_optic_modulator (name           = Qlunc_yaml_inputs['Components']['AOM']['Name'],
@@ -90,7 +98,8 @@ Photodetector    = photodetector(name             = Qlunc_yaml_inputs['Component
 #                         Wavelength        = Qlunc_yaml_inputs['Components']['Laser']['Wavelength'],
 #                         stdv_wavelength   = Qlunc_yaml_inputs['Components']['Laser']['stdv Wavelength'],
 #                         unc_func          = uphc.UQ_Laser)
-# Module:
+
+# Photonics Module:
 Photonics_Module = photonics(name                    = Qlunc_yaml_inputs['Modules']['Photonics Module']['Name'],        # Introduce your Photonics module name
                              photodetector           = eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['Photodetector']),             # Photodetector instance (in this example "Photodetector") or "None". "None" means that you don´t want to include photodetector in Photonics Module, either in uncertainty calculations.
                              optical_amplifier       = None, #eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['Optical amplifier']),         # Scanner instance (in this example "OpticalAmplifier") or "None". "None" means that you don´t want to include Optical Amplifier in Photonics Module, either in uncertainty calculations.
@@ -99,27 +108,10 @@ Photonics_Module = photonics(name                    = Qlunc_yaml_inputs['Module
                              unc_func                = uphc.sum_unc_photonics) #eval(Qlunc_yaml_inputs['Modules']['Photonics Module']['Uncertainty function']))
 
 
-## Signal processor components and module: ###########################################################
-
-ADC = analog2digital_converter (name     = Qlunc_yaml_inputs['Components']['ADC']['Name'],
-                                nbits    = Qlunc_yaml_inputs['Components']['ADC']['Number of bits'],
-                                vref     = Qlunc_yaml_inputs['Components']['ADC']['Reference voltage'],
-                                vground  = Qlunc_yaml_inputs['Components']['ADC']['Ground voltage'],
-                                fs       = Qlunc_yaml_inputs['Components']['ADC']['Sampling frequency'],
-                                u_fs     = Qlunc_yaml_inputs['Components']['ADC']['Uncertainty sampling freq'],
-                                q_error  = Qlunc_yaml_inputs['Components']['ADC']['Quantization error'],
-                                ADC_bandwidth = Qlunc_yaml_inputs['Components']['ADC']['ADC Bandwidth'],
-                                unc_func = uspc.UQ_ADC)
-
-Signal_processor_Module = signal_processor(name                     = Qlunc_yaml_inputs['Modules']['Signal processor Module']['Name'],
-                                           analog2digital_converter = eval(Qlunc_yaml_inputs['Modules']['Signal processor Module']['ADC']),)
-                                           # f_analyser             = Qlunc_yaml_inputs['Modules']['Signal processor Module']['Frequency analyser'],
-                                           # unc_func                 = uspc.sum_unc_signal_processor)
 
 
-# pdb.set_trace()
 
-## Optics components and Module: ##############################################
+#%%# Optics components and Module: ##############################################
 
 # Here we create optics components and optics module. User can create as many components as he/she want and combine them to create different module types
 # Each module/component is a python object with their own technical characteristics and can be flexible combined to assess different use cases. 
@@ -171,7 +163,7 @@ Scanner           = scanner(name            = Qlunc_yaml_inputs['Components']['S
 
     
     
-#Optical Circulator:
+# Optical Circulator:
 # Optical_circulator = optical_circulator (name           = Qlunc_yaml_inputs['Components']['Optical Circulator']['Name'],       # Introduce your Optical circulator name.
 #                                          insertion_loss = Qlunc_yaml_inputs['Components']['Optical Circulator']['Insertion loss'],                        # In [dB]. Insertion loss parameters.
 #                                          SNR            = Qlunc_yaml_inputs['Components']['Optical Circulator']['SNR'], # [dB] SNR optical circulator
@@ -208,16 +200,25 @@ Optics_Module =  optics (name               = Qlunc_yaml_inputs['Modules']['Opti
 
 
 
-## Lidar general inputs: ######################################################
-Lidar_inputs     = lidar_gral_inp(name        = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Name'],          # Introduce the name of your lidar data folder.
-                                  ltype       = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Type'],
-                                  yaw_error   = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Yaw error'],     # In [°]. Degrees of rotation around z axis because of inclinometer errors
-                                  pitch_error = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Pitch error'],   # In [°]. Degrees of rotation around y axis
-                                  roll_error  = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Roll error'],    # In [°]. Degrees of rotation around z axis.
-                                  dataframe   = { })  # Final dataframe
 
 
-#%% Data processing methods
+#%% Data processing methods. Signal processor components and module: ###########################################################
+
+# Analog to digital converter
+ADC = analog2digital_converter (name     = Qlunc_yaml_inputs['Components']['ADC']['Name'],
+                                nbits    = Qlunc_yaml_inputs['Components']['ADC']['Number of bits'],
+                                vref     = Qlunc_yaml_inputs['Components']['ADC']['Reference voltage'],
+                                vground  = Qlunc_yaml_inputs['Components']['ADC']['Ground voltage'],
+                                fs       = Qlunc_yaml_inputs['Components']['ADC']['Sampling frequency'],
+                                u_fs     = Qlunc_yaml_inputs['Components']['ADC']['Uncertainty sampling freq'],
+                                q_error  = Qlunc_yaml_inputs['Components']['ADC']['Quantization error'],
+                                ADC_bandwidth = Qlunc_yaml_inputs['Components']['ADC']['ADC Bandwidth'],
+                                unc_func = uspc.UQ_ADC)
+# Signal processor module
+Signal_processor_Module = signal_processor(name                     = Qlunc_yaml_inputs['Modules']['Signal processor Module']['Name'],
+                                           analog2digital_converter = eval(Qlunc_yaml_inputs['Modules']['Signal processor Module']['ADC']),)
+                                           # f_analyser             = Qlunc_yaml_inputs['Modules']['Signal processor Module']['Frequency analyser'],
+                                           # unc_func                 = uspc.sum_unc_signal_processor)
 
 # # Wind field reconstruction model
 # WFR_M = wfr (name                 = Qlunc_yaml_inputs['WFR model']['Name'],
@@ -229,7 +230,9 @@ Lidar_inputs     = lidar_gral_inp(name        = Qlunc_yaml_inputs['Components'][
 #                            filt_method = Qlunc_yaml_inputs['Filtering method']['Method'],
 #                            unc_func    = 'uprm.UQ_WFR')
 
-#%% LIDAR device
+
+
+#%% LIDAR Module
 
 Lidar = lidar(name             = Qlunc_yaml_inputs['Lidar']['Name'],                       # Introduce the name of your lidar device.
               photonics        = eval(Qlunc_yaml_inputs['Lidar']['Photonics module']),#Photonics_Module, #     # Introduce the name of your photonics module.
@@ -243,6 +246,8 @@ Lidar = lidar(name             = Qlunc_yaml_inputs['Lidar']['Name'],            
               unc_func         = ulc.sum_unc_lidar,
               unc_Vh           = uVhc.Call_a_Project,
               unc_WindDir      = uWDirc.UQ_WinDir ) #eval(Qlunc_yaml_inputs['Lidar']['Uncertainty function'])) 
+
+
 
 #%% Creating atmospheric scenarios: ############################################
 Atmospheric_TimeSeries = Qlunc_yaml_inputs['Atmospheric_inputs']['TimeSeries'] # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere (T, H, rain and fog) 
