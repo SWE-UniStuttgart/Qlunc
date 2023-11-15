@@ -45,7 +45,6 @@ def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     list
     
     """    
-    # pdb.set_trace()
     UQ_Photodetector.Thermal_noise      = []
     UQ_Photodetector.SNR_thermal        = []
     UQ_Photodetector.Shot_noise         = []

@@ -137,19 +137,14 @@ class analog2digital_converter():
 
 
 class scanner():
-    def __init__(self,name,time_pattern,Href,N_MC,time_point,scanner_type,pattern,lissajous_param,vert_plane,origin,sample_rate,focus_dist,cone_angle,azimuth,stdv_location,stdv_focus_dist,stdv_cone_angle,stdv_azimuth,stdv_Estimation,correlations,unc_func):
+    def __init__(self,name,Href,N_MC,pattern,lissajous_param,vert_plane,origin,focus_dist,cone_angle,azimuth,stdv_location,stdv_focus_dist,stdv_cone_angle,stdv_azimuth,stdv_Estimation,correlations,unc_func):
                  self.ScannerID       = name
-                 self.time_pattern    = time_pattern
-                 #self.N_Points        = N_Points
                  self.Href            = Href
                  self.N_MC            = N_MC
-                 self.time_point      = time_point 
-                 self.scanner_type    = scanner_type
                  self.origin          = origin
                  self.pattern         = pattern
                  self.lissajous_param = lissajous_param
                  self.vert_plane      = vert_plane
-                 self.sample_rate     = sample_rate
                  self.focus_dist      = focus_dist
                  self.cone_angle      = cone_angle
                  self.azimuth         = azimuth

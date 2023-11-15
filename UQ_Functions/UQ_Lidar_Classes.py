@@ -85,6 +85,6 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     else:
         print(colored('You didn´t include an optics module in the lidar.','cyan', attrs=['bold']))
        
-    print(colored('...Lidar uncertainty done. Lidar saved in folder "Lidar_Projects".','magenta', attrs=['bold']))
+    print(colored('...Lidar uncertainty done.".','magenta', attrs=['bold']))
     return Lidar.lidar_inputs.dataframe
     # return Final_Output_Lidar_Uncertainty,Lidar.lidar_inputs.dataframe

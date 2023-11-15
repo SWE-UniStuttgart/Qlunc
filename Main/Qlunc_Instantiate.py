@@ -95,16 +95,11 @@ Photonics_Module = photonics(name                    = Qlunc_yaml_inputs['Module
 
 # Scanner:
 Scanner           = scanner(name            = Qlunc_yaml_inputs['Components']['Scanner']['Name'],           # Introduce your scanner name.
-                            scanner_type    = Qlunc_yaml_inputs['Components']['Scanner']['Type'],
                             origin          = Qlunc_yaml_inputs['Components']['Scanner']['Origin'],         # Origin (coordinates of the lidar deployment).
                             N_MC            = Qlunc_yaml_inputs['Components']['Scanner']['N_MC'],
-                          #  N_Points        = Qlunc_yaml_inputs['Components']['Scanner']['N_Points'],
                             pattern         = Qlunc_yaml_inputs['Components']['Scanner']['Pattern'],
                             lissajous_param = Qlunc_yaml_inputs['Components']['Scanner']['Lissajous parameters'],
                             vert_plane      = Qlunc_yaml_inputs['Components']['Scanner']['Vertical plane parameters'],
-                            sample_rate     = Qlunc_yaml_inputs['Components']['Scanner']['Sample rate'],    # for now introduce it in [degrees].
-                            time_pattern    = Qlunc_yaml_inputs['Components']['Scanner']['Pattern time'],
-                            time_point      = Qlunc_yaml_inputs['Components']['Scanner']['Single point measuring time'], 
                             Href            = Qlunc_yaml_inputs['Components']['Scanner']['Href'],                    
                             azimuth         = Qlunc_yaml_inputs['Components']['Scanner']['Psi'],   # Azimuth in [degrees]
                             focus_dist      = Qlunc_yaml_inputs['Components']['Scanner']['Rho'],   # Focus distance in [meters]                                                                                              
