@@ -152,7 +152,6 @@ Lidar = lidar(name             = Qlunc_yaml_inputs['Lidar']['Name'],            
               photonics        = eval(Qlunc_yaml_inputs['Lidar']['Photonics module']),#Photonics_Module, #     # Introduce the name of your photonics module.
               optics           = eval(Qlunc_yaml_inputs['Lidar']['Optics module']), # Optics_Module, #      # Introduce the name of your optics module.
               signal_processor = eval(Qlunc_yaml_inputs['Lidar']['Signal processor']),#None, #Signal_processor_Module,
-
               lidar_inputs     = eval(Qlunc_yaml_inputs['Lidar']['Lidar inputs']), #  Lidar_inputs, #      # Introduce lidar general inputs
               unc_func         = ulc.sum_unc_lidar,
               unc_WindDir      = uWDirc.UQ_WinDir ) #eval(Qlunc_yaml_inputs['Lidar']['Uncertainty function'])) 
