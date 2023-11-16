@@ -212,14 +212,13 @@ class lidar_gral_inp():
 
 #%% Lidar class:
 class lidar():
-    def __init__(self,name,photonics,optics,signal_processor,lidar_inputs,unc_func,unc_WindDir):
+    def __init__(self,name,photonics,optics,signal_processor,lidar_inputs,unc_func):
                  self.LidarID          = name
                  self.photonics        = photonics
                  self.optics           = optics
                  self.signal_processor = signal_processor
                  self.lidar_inputs     = lidar_inputs
                  self.Uncertainty      = unc_func
-                 self.Uncertainty_WindDir = unc_WindDir
                  print('Created new lidar device: {}'.format(self.LidarID))
 
     

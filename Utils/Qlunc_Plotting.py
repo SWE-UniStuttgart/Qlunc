@@ -42,8 +42,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
     ------- 
     
     list
-    
-    
+       
     """
     # Ploting general parameters:
     plot_param={'axes_label_fontsize' : 25,
@@ -133,30 +132,16 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             ax12.yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-4)
             ax13.yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-4)
             ax13.ticklabel_format(axis='y',style='sci', scilimits=(0,0))
-            # gs.tight_layout(fig1)
-
-            # plt.tight_layout()
-            # for ind_plot in range(len(Data['Sens coeff Vh'])): 
-            #     c5=next(color5)
-            #     ax13=pl.subplot(gs[1,:]) 
-                                  
-            #     pl.plot(np.degrees(Data['wind direction']),Data['Sens coeff']['Uncertainty contributors Vlos1'][-1],'-',c='red',linewidth=plot_param['linewidth'],label=lett[ind_plot])
            
-            # ax11.set_xlabel('Wind direction[°]',fontsize=plot_param['axes_label_fontsize'])
-            # ax12.set_xlabel('Wind direction[°]',fontsize=plot_param['axes_label_fontsize'])
             ax13.set_xlabel('Wind direction[°]',fontsize=plot_param['axes_label_fontsize'])
             ax11.set_ylabel('$U_{V_{h}}$ [m/s]',fontsize=plot_param['axes_label_fontsize']+2) 
             ax12.set_ylabel('$r_{V_{LOS}}$ [-]',fontsize=plot_param['axes_label_fontsize']) 
-            # ax13.set_ylabel('Sensitivity \n coefficients \n [m/s]',fontsize=plot_param['axes_label_fontsize']-2.37) 
             ax13.set_ylabel(r'$ \frac{\partial^2{V_{h}}}{\partial{V_{LOS_{i,j}}}}~\sigma_{V_{LOS_{i,j}}}~$[m/s]',fontsize=plot_param['axes_label_fontsize']-1.51) 
             ax11.legend(loc=1, prop={'size': plot_param['legend_fontsize']})
-            # ax12.legend(loc=1, prop={'size': plot_param['legend_fontsize']})
             ax13.legend(loc=1, prop={'size': plot_param['legend_fontsize']+4.7})
-
             ax11.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
             ax11.tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
             ax11.set_xlim(0,359)
-            # ax11.set_ylim(0,3)
             ax11.grid(axis='both')            
             ax12.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
             ax12.tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
@@ -179,19 +164,8 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             r'$r_{\theta_{2},\varphi_{1}}~ =%.2f$' % (Lidar.optics.scanner.correlations[4])))          
             ax12.text(0.9, 0.935, textstr1, transform=ax12.transAxes, fontsize=16,horizontalalignment='left',verticalalignment='top', bbox=props1)     
             ax12.ticklabel_format(axis='y',style='sci')
-            # Ennumeration:
-            # props01 = dict(boxstyle='round', ec='white',facecolor='white', alpha=0)   
-            # textstr01 = 'a)'
-            # textstr02 = 'b)'
-            # textstr03 = 'c)'
-            # ax11.text(0.010, 0.151, textstr01, transform=ax11.transAxes, fontsize=21.74,horizontalalignment='left',verticalalignment='top', bbox=props01)     
-            # ax12.text(0.010, 0.151, textstr02, transform=ax12.transAxes, fontsize=21.74,horizontalalignment='left',verticalalignment='top', bbox=props01)     
-            # ax13.text(0.010, 0.151, textstr03, transform=ax13.transAxes, fontsize=21.74,horizontalalignment='left',verticalalignment='top', bbox=props01)     
-            
-            gs.update(left=0.085,right=0.99,top=0.965,bottom=0.1,wspace=0.3,hspace=0.24)
-            
+            gs.update(left=0.085,right=0.99,top=0.965,bottom=0.1,wspace=0.3,hspace=0.24)           
             plt.show()
-            # pdb.set_trace()
             
             
             
@@ -395,24 +369,6 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             ax6[0].yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-3)
             ax6[1].yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-3)
            
-            # pdb.set_trace()       
-           # #7. Plot Uncertainty u and v components wind direction
-           #  fig,ax0=plt.subplots()                  
-           #  ax0.plot(np.degrees(Data['wind direction']),Data['Uncertainty u wind component MCM'],'og' , markerfacecolor=plot_param['marker_face_color'],label='MCM')
-           #  ax0.plot(np.degrees(Data['wind direction']),Data['Uncertainty u wind component GUM'],'g-',label='$u$ wind component GUM')           
-           #  ax0.plot(np.degrees(Data['wind direction']),Data['Uncertainty v wind component MCM'],'om' , markerfacecolor=plot_param['marker_face_color'],label='MCM')
-           #  ax0.plot(np.degrees(Data['wind direction']),Data['Uncertainty v wind component GUM'],'m-',label='$v$ wind component GUM')          
-           #  # color=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))   
-           #  ax0.set_xlabel('Wind direction[°]',fontsize=plot_param['axes_label_fontsize'])
-           #  ax0.set_ylabel('Uncertainty [°]',fontsize=plot_param['axes_label_fontsize'])          
-           #  ax0.legend(loc=1, prop={'size': plot_param['legend_fontsize']})
-           #  ax0.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
-           #  ax0.tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
-           #  ax0.set_xlim(0,359)
-           #  ax0.set_ylim(0,3)
-           #  ax0.grid(axis='both')
-           #  plt.title('$u$ and $v$ wind components Uncertainty',fontsize=plot_param['title_fontsize'])
-           #  pdb.set_trace()
 
         #%% Plot the vertical plane
         
@@ -425,11 +381,11 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             # Horizontal wind velocity
             # colorsMap='jet'
             # cm = plt.get_cmap(colorsMap)
-            col='viridis_r'
+            col='binary'
             # cNorm = matplotlib.colors.Normalize(vmin=np.min(V), vmax=np.max(V))
-            # cNorm = matplotlib.colors.Normalize(vmin=0.0036, vmax=0.21) #alpha=0
+            cNorm = matplotlib.colors.Normalize(vmin=0.0067, vmax=0.067) #alpha=0
             # cNorm = matplotlib.colors.Normalize(vmin=0.015, vmax=0.138) #alpha=0.1
-            cNorm = matplotlib.colors.Normalize(vmin=0.001, vmax=0.045) #alpha=0.2
+            # cNorm = matplotlib.colors.Normalize(vmin=0.001, vmax=0.045) #alpha=0.2
             scalarMap = cmx.ScalarMappable(norm=cNorm, cmap=col)
            
             
@@ -439,10 +395,10 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             plt.scatter(Data['lidars']['Coord_Out'][1],Data['lidars']['Coord_Out'][2], s=20,c=scalarMap.to_rgba(V))
             # ax00.scatter(Data['lidars']['Coord_Out'][0],Data['lidars']['Coord_Out'][1], Data['lidars']['Coord_Out'][2], V, c=scalarMap.to_rgba(V))
             
-            # VV=np.reshape(V,[30,30])
-            # XX=np.reshape(Data['lidars']['Coord_Out'][1],[30,30])
-            # YY=np.reshape(Data['lidars']['Coord_Out'][2],[30,30])
-            # plt.contourf(XX,YY, VV,cmap=col, norm=cNorm)
+            VV=np.reshape(V,[30,30])
+            XX=np.reshape(Data['lidars']['Coord_Out'][1],[30,30])
+            YY=np.reshape(Data['lidars']['Coord_Out'][2],[30,30])
+            plt.contourf(XX,YY, VV,cmap=col, norm=cNorm)
   
             ax00.set_xlabel('Y [m]', fontsize=plot_param['tick_labelfontsize']+20, labelpad=15)
             ax00.set_ylabel('Z [m]', fontsize=plot_param['tick_labelfontsize']+20, labelpad=15)
