@@ -383,21 +383,21 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             # cm = plt.get_cmap(colorsMap)
             col='binary'
             # cNorm = matplotlib.colors.Normalize(vmin=np.min(V), vmax=np.max(V))
-            cNorm = matplotlib.colors.Normalize(vmin=0.0067, vmax=0.067) #alpha=0
+            cNorm = matplotlib.colors.Normalize(vmin=0.055, vmax=0.12) #alpha=0
             # cNorm = matplotlib.colors.Normalize(vmin=0.015, vmax=0.138) #alpha=0.1
-            # cNorm = matplotlib.colors.Normalize(vmin=0.001, vmax=0.045) #alpha=0.2
+            # cNorm = matplotlib.colors.Normalize(vmin=0.006, vmax=0.067) #alpha=0.2
             scalarMap = cmx.ScalarMappable(norm=cNorm, cmap=col)
            
             
             # fig = plt.figure()
             # ax = Axes3D(fig)
             fig00,ax00=plt.subplots()                
-            plt.scatter(Data['lidars']['Coord_Out'][1],Data['lidars']['Coord_Out'][2], s=20,c=scalarMap.to_rgba(V))
-            # ax00.scatter(Data['lidars']['Coord_Out'][0],Data['lidars']['Coord_Out'][1], Data['lidars']['Coord_Out'][2], V, c=scalarMap.to_rgba(V))
+            # plt.scatter(Data['lidars']['Coord_Out'][1],Data['lidars']['Coord_Out'][2], s=20,c=scalarMap.to_rgba(V))
+            # # ax00.scatter(Data['lidars']['Coord_Out'][0],Data['lidars']['Coord_Out'][1], Data['lidars']['Coord_Out'][2], V, c=scalarMap.to_rgba(V))
             
-            VV=np.reshape(V,[30,30])
-            XX=np.reshape(Data['lidars']['Coord_Out'][1],[30,30])
-            YY=np.reshape(Data['lidars']['Coord_Out'][2],[30,30])
+            VV=np.reshape(V,[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
+            XX=np.reshape(Data['lidars']['Coord_Out'][1],[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
+            YY=np.reshape(Data['lidars']['Coord_Out'][2],[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
             plt.contourf(XX,YY, VV,cmap=col, norm=cNorm)
   
             ax00.set_xlabel('Y [m]', fontsize=plot_param['tick_labelfontsize']+20, labelpad=15)
