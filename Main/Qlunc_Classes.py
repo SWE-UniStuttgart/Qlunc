@@ -120,13 +120,14 @@ class photodetector():
 
 
 class analog2digital_converter():
-    def __init__(self,name,nbits,vref,vground,q_error,ADC_bandwidth,fs,u_fs,unc_func):
+    def __init__(self,name,nbits,vref,vground,q_error,ADC_bandwidth,fs,u_fs,u_speckle,unc_func):
                  self.ADCID = name
                  self.nbits =nbits
                  self.vref = vref
                  self.vground = vground
                  self.fs    =fs
                  self.u_fs =u_fs
+                 self.u_speckle = u_speckle
                  self.q_error = q_error
                  self.BandWidth = ADC_bandwidth
                  self.Uncertainty = unc_func

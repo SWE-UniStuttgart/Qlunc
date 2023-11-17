@@ -128,15 +128,16 @@ Optics_Module =  optics (name               = Qlunc_yaml_inputs['Modules']['Opti
 #%% Data processing methods. Signal processor components and module: ###########################################################
 
 # Analog to digital converter
-ADC = analog2digital_converter (name     = Qlunc_yaml_inputs['Components']['ADC']['Name'],
-                                nbits    = Qlunc_yaml_inputs['Components']['ADC']['Number of bits'],
-                                vref     = Qlunc_yaml_inputs['Components']['ADC']['Reference voltage'],
-                                vground  = Qlunc_yaml_inputs['Components']['ADC']['Ground voltage'],
-                                fs       = Qlunc_yaml_inputs['Components']['ADC']['Sampling frequency'],
-                                u_fs     = Qlunc_yaml_inputs['Components']['ADC']['Uncertainty sampling freq'],
-                                q_error  = Qlunc_yaml_inputs['Components']['ADC']['Quantization error'],
+ADC = analog2digital_converter (name          = Qlunc_yaml_inputs['Components']['ADC']['Name'],
+                                nbits         = Qlunc_yaml_inputs['Components']['ADC']['Number of bits'],
+                                vref          = Qlunc_yaml_inputs['Components']['ADC']['Reference voltage'],
+                                vground       = Qlunc_yaml_inputs['Components']['ADC']['Ground voltage'],
+                                fs            = Qlunc_yaml_inputs['Components']['ADC']['Sampling frequency'],
+                                u_fs          = Qlunc_yaml_inputs['Components']['ADC']['Uncertainty sampling freq'],
+                                u_speckle     = Qlunc_yaml_inputs['Components']['ADC']['Speckle noise'],
+                                q_error       = Qlunc_yaml_inputs['Components']['ADC']['Quantization error'],
                                 ADC_bandwidth = Qlunc_yaml_inputs['Components']['ADC']['ADC Bandwidth'],
-                                unc_func = uspc.UQ_ADC)
+                                unc_func      = uspc.UQ_ADC)
 # Signal processor module
 Signal_processor_Module = signal_processor(name                     = Qlunc_yaml_inputs['Modules']['Signal processor Module']['Name'],
                                            analog2digital_converter = eval(Qlunc_yaml_inputs['Modules']['Signal processor Module']['ADC']),)
