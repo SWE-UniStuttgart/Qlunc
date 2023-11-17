@@ -26,8 +26,8 @@ def lissajous_pattern(Lidar,size_x,size_y,size_z,q,p):
     """
     # parameters
     # (1<p<q)
-    # t   = np.arange(0,2*np.pi,.01)
-    t=np.linspace(0,2*np.pi,math.floor(Lidar.optics.scanner.time_pattern/Lidar.optics.scanner.time_point))
+    t   = np.arange(0,2*np.pi,.01)
+    # t=np.linspace(0,2*np.pi,math.floor(Lidar.optics.scanner.time_pattern/Lidar.optics.scanner.time_point))
     phi = np.linspace(0,2*np.pi,len(t))
     
     # lissajous transformation
