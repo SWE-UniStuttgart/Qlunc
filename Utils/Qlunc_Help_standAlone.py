@@ -483,8 +483,8 @@ def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,ind_alph
         s_w=0
         # U_Vlos1_MCM0=np.sqrt(np.std(Vlos1_MCM)**2+ Lidar.optics.scanner.stdv_Estimation[0][0]**2+(np.sin(theta1)*s_w)**2)
         # U_Vlos2_MCM0=np.sqrt(np.std(Vlos2_MCM)**2+ Lidar.optics.scanner.stdv_Estimation[0][0]**2+(np.sin(theta1)*s_w)**2)       
-        U_Vlos1_MCM0=np.sqrt(np.std(Vlos1_MCM)**2+ Lidar.lidar_inputs.dataframe['Intrinsic Uncertainty [m/s]']**2)
-        U_Vlos2_MCM0=np.sqrt(np.std(Vlos2_MCM)**2+ Lidar.lidar_inputs.dataframe['Intrinsic Uncertainty [m/s]']**2)        
+        U_Vlos1_MCM0=np.sqrt(np.std(Vlos1_MCM)**2+ Lidar.lidar_inputs.dataframe['Intrinsic Uncertainty [m/s]']**2+Lidar.optics.scanner.stdv_Estimation[0][0]**2)
+        U_Vlos2_MCM0=np.sqrt(np.std(Vlos2_MCM)**2+ Lidar.lidar_inputs.dataframe['Intrinsic Uncertainty [m/s]']**2+Lidar.optics.scanner.stdv_Estimation[0][0]**2)        
 
         # Store data
         U_Vlos1_MCM.append(U_Vlos1_MCM0 ) 
@@ -566,7 +566,7 @@ def GUM_Vlos_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,ind_alp
 
     
    
-    U_Vlos1_GUM,U_Vlos2_GUM,U_u_GUM,U_v_GUM,VL1,VL2,u,v=[],[],[],[],[],[],[],[]
+    U_Vlos1_GUM,U_Vlos2_GUM,VL1,VL2=[],[],[],[]
     u_V_LOS1Theta1,u_V_LOS1Psi1,u_V_LOS1Rho1,u_V_LOS2Theta2,u_V_LOS2Psi2,u_V_LOS2Rho2,Corrcoef_Vlos =[], [],[],[],[],[],[]
     H_t1 = ((rho1*np.sin(theta1)+Lidar.optics.scanner.origin[0][2])/Lidar.optics.scanner.Href)
     H_t2 = ((rho2*np.sin(theta2)+Lidar.optics.scanner.origin[1][2])/Lidar.optics.scanner.Href)
@@ -586,11 +586,6 @@ def GUM_Vlos_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,ind_alp
         VL1.append(Vlos1_GUM)
         VL2.append(Vlos2_GUM)
 
-        # Calculate and store u and v components
-        u_comp=((-Vlos1_GUM*np.sin(psi2)*np.cos(theta2)+Vlos2_GUM*np.sin(psi1)*np.cos(theta1))/(np.cos(theta1)*np.cos(theta2)*np.sin(psi1-psi2)))
-        v_comp=(( Vlos1_GUM*np.cos(psi2)*np.cos(theta2)-Vlos2_GUM*np.cos(psi1)*np.cos(theta1))/(np.cos(theta1)*np.cos(theta2)*np.sin(psi1-psi2)))
-        u.append(u_comp)
-        v.append(v_comp)
         
         # Partial derivatives Vlosi with respect theta, psi and rho
         dVlos1dtheta1   =     Atmospheric_Scenario.Vref*((H_t1)**Atmospheric_Scenario.PL_exp[ind_alpha])*(Atmospheric_Scenario.PL_exp[ind_alpha]*((rho1*(np.cos(theta1))**2)/(rho1*np.sin(theta1)+Lidar.optics.scanner.origin[0][2]))-np.sin(theta1))*np.cos(psi1-wind_direction[ind_wind_dir])
@@ -621,8 +616,8 @@ def GUM_Vlos_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,ind_alp
 
         # U_est ##############
         s_w= 0
-        U_Vlos1_GUM.append(np.sqrt(Uy[0][0]+ Lidar.lidar_inputs.dataframe['Intrinsic Uncertainty [m/s]']**2+(np.sin(theta1)*s_w)**2))
-        U_Vlos2_GUM.append(np.sqrt(Uy[1][1]+ Lidar.lidar_inputs.dataframe['Intrinsic Uncertainty [m/s]']**2+(np.sin(theta2)*s_w)**2))
+        U_Vlos1_GUM.append(np.sqrt(Uy[0][0]+ Lidar.lidar_inputs.dataframe['Intrinsic Uncertainty [m/s]']**2+Lidar.optics.scanner.stdv_Estimation[0][0]**2))
+        U_Vlos2_GUM.append(np.sqrt(Uy[1][1]+ Lidar.lidar_inputs.dataframe['Intrinsic Uncertainty [m/s]']**2+Lidar.optics.scanner.stdv_Estimation[0][0]**2))
 
 
     # Storing individual uncertainty contributors
