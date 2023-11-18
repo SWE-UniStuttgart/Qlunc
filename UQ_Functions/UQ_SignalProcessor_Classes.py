@@ -72,17 +72,13 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     stdv_speckle      =  Lidar.signal_processor.analog2digital_converter.u_speckle
     fd_speckle_noise  =  fd + fd * (np.random.normal(0 , stdv_speckle , N_MC)) 
 
-    # pdb.set_trace()
     #%% MC method  to calculate the impact of the uncertainty sources above
     for ind_pulse in range(N_MC):
         t              = np.array(range(0,n_fftpoints)) * Ts[ind_pulse]
         f              = np.linspace(0 , int(fs[ind_pulse] / 2) , int(math.floor(len(t)) / 2 + 1))
-        
-        # pdb.set_trace()
-        
+                
         # Signal + Noise:
         #Create signal and add hardware noise and speckle noise:
-        # pdb.set_trace()
         S1 = hardware_noise + (np.sin(2*np.pi*fd_speckle_noise[ind_pulse]*t))-.1*np.sin(2*np.pi*abs(np.random.normal(0,1.9))*fd_speckle_noise[ind_pulse]*t) + .2*np.sin(2*np.pi*abs(np.random.normal(0,3))*fd_speckle_noise[ind_pulse]*t)+\
                                 .2*np.sin(2*np.pi*abs(np.random.normal(0,6))*fd_speckle_noise[ind_pulse]*t) + .3*np.sin(2*np.pi*abs(np.random.normal(0,1))*fd_speckle_noise[ind_pulse]*t) #; % Adding up Signal contributors
 
@@ -129,13 +125,11 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     Final_Output_UQ_ADC                                      = {'Stdv Doppler f_peak':np.array(Stdv_fpeak),'Stdv Vlos':np.array(Stdv_vlos)}    
     Lidar.lidar_inputs.dataframe['Stdv Doppler f_peak [Hz]'] = Final_Output_UQ_ADC['Stdv Doppler f_peak']*np.linspace(1,1,len(Atmospheric_Scenario.temperature)) # linspace to create the appropriate length for the xarray.
     Lidar.lidar_inputs.dataframe['Stdv wavelength [m]']      = stdv_wavelength
-    pdb.set_trace()
     return Final_Output_UQ_ADC,Lidar.lidar_inputs.dataframe
 
 
 #%% Sum of uncertainties in `signal processor` module: 
 def sum_unc_signal_processor(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
-    # pdb.set_trace()
     List_Unc_signal_processor=[]
     if Lidar.signal_processor.analog2digital_converter != None:
         try: # ecah try/except evaluates wether the component is included in the module, therefore in the calculations               
