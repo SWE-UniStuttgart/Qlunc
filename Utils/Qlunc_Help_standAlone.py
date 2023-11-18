@@ -788,7 +788,6 @@ def U_WindDir_GUM(Lidar,Atmospheric_Scenario,Corrcoef_Vlos_GUM,wind_direction,th
 ########### Intrinsic lidar uncertainty
 
 def U_intrinsic(Lidar,List_Unc_lidar,Qlunc_yaml_inputs):
-    # pdb.set_trace()
     V_ref            = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref']      # Reference voltaje ADC
     lidar_wavelength = Qlunc_yaml_inputs['Components']['Laser']['Wavelength'] # wavelength of the laser source.
     fd               = 2*V_ref/lidar_wavelength  # Doppler frequency corresponding to Vref
