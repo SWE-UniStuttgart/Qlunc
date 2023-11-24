@@ -383,9 +383,9 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             # cm = plt.get_cmap(colorsMap)
             col='binary'
             # cNorm = matplotlib.colors.Normalize(vmin=np.min(V), vmax=np.max(V))
-            cNorm = matplotlib.colors.Normalize(vmin=0.055, vmax=0.12) #alpha=0
+            # cNorm = matplotlib.colors.Normalize(vmin=0.055, vmax=0.12) #alpha=0
             # cNorm = matplotlib.colors.Normalize(vmin=0.015, vmax=0.138) #alpha=0.1
-            # cNorm = matplotlib.colors.Normalize(vmin=0.006, vmax=0.067) #alpha=0.2
+            cNorm = matplotlib.colors.Normalize(vmin=0.08, vmax=0.147) #alpha=0.2
             scalarMap = cmx.ScalarMappable(norm=cNorm, cmap=col)
            
             
