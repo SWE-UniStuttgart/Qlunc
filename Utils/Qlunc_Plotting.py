@@ -371,37 +371,55 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
            
 
         #%% Plot the vertical plane
-        
-        if Lidar.optics.scanner.pattern in ['plane']:
+        # pdb.set_trace()
+        if Lidar.optics.scanner.pattern in ['vertical plane'] or Lidar.optics.scanner.pattern in ['horizontal plane']:
+            pdb.set_trace()
             V=[]
             Dir=[]
             for i in range(len(Data['Vh Unc [m/s]']['Uncertainty Vh GUM'])):
                 V.append(Data['Vh Unc [m/s]']['Uncertainty Vh GUM'][i][0])
                 Dir.append(Data['WinDir Unc [°]']['Uncertainty wind direction GUM'][i][0])         
+            
+            # Reshape V and avoid nans and infinit values
+            VV=np.reshape(V,[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
+            # VV[np.isnan(VV)]=nan
+            VV[VV>10]='nan'
+            
             # Horizontal wind velocity
-            # colorsMap='jet'
+            col ='jet'
+            cmaps = matplotlib.cm.get_cmap('jet')  # viridis is the default colormap for imshow
+            cmaps.set_bad(color='black')
             # cm = plt.get_cmap(colorsMap)
-            col='binary'
-            # cNorm = matplotlib.colors.Normalize(vmin=np.min(V), vmax=np.max(V))
-            # cNorm = matplotlib.colors.Normalize(vmin=0.055, vmax=0.12) #alpha=0
+            # col='binary'
+            cNorm = matplotlib.colors.Normalize(vmin=0, vmax=0.9)
+            # cNorm = matplotlib.colors.Normalize(vmin=0.1, vmax=4) #alpha=0
             # cNorm = matplotlib.colors.Normalize(vmin=0.015, vmax=0.138) #alpha=0.1
-            cNorm = matplotlib.colors.Normalize(vmin=0.08, vmax=0.147) #alpha=0.2
+            # cNorm = matplotlib.colors.Normalize(vmin=0.08, vmax=0.147) #alpha=0.2
             scalarMap = cmx.ScalarMappable(norm=cNorm, cmap=col)
            
             
             # fig = plt.figure()
             # ax = Axes3D(fig)
             fig00,ax00=plt.subplots()                
-            # plt.scatter(Data['lidars']['Coord_Out'][1],Data['lidars']['Coord_Out'][2], s=20,c=scalarMap.to_rgba(V))
-            # # ax00.scatter(Data['lidars']['Coord_Out'][0],Data['lidars']['Coord_Out'][1], Data['lidars']['Coord_Out'][2], V, c=scalarMap.to_rgba(V))
+            # plt.scatter(Data['lidars']['Coord_Out'][0],Data['lidars']['Coord_Out'][1], s=20,c=scalarMap.to_rgba(V))
+            # # ax.scatter(Data['lidars']['Coord_Out'][0],Data['lidars']['Coord_Out'][1], Data['lidars']['Coord_Out'][2], V, c=scalarMap.to_rgba(V))
             
-            VV=np.reshape(V,[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
-            XX=np.reshape(Data['lidars']['Coord_Out'][1],[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
-            YY=np.reshape(Data['lidars']['Coord_Out'][2],[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
-            plt.contourf(XX,YY, VV,cmap=col, norm=cNorm)
-  
-            ax00.set_xlabel('Y [m]', fontsize=plot_param['tick_labelfontsize']+20, labelpad=15)
-            ax00.set_ylabel('Z [m]', fontsize=plot_param['tick_labelfontsize']+20, labelpad=15)
+
+
+            if  Lidar.optics.scanner.pattern in ['vertical plane']:
+                XX=np.reshape(Data['lidars']['Coord_Out'][1],[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
+                YY=np.reshape(Data['lidars']['Coord_Out'][2],[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
+                ax00.set_xlabel('Y [m]', fontsize=plot_param['tick_labelfontsize']+20, labelpad=15)
+                ax00.set_ylabel('Z [m]', fontsize=plot_param['tick_labelfontsize']+20, labelpad=15)
+            elif  Lidar.optics.scanner.pattern in ['horizontal plane']:
+                XX=np.reshape(Data['lidars']['Coord_Out'][0],[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
+                YY=np.reshape(Data['lidars']['Coord_Out'][1],[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
+                ax00.set_xlabel('X [m]', fontsize=plot_param['tick_labelfontsize']+20, labelpad=15)
+                ax00.set_ylabel('Y [m]', fontsize=plot_param['tick_labelfontsize']+20, labelpad=15)
+            plt.contourf(XX,YY, VV,500,cmap=cmaps, norm=cNorm)
+            
+            # ax00.set_xlabel('Y [m]', fontsize=plot_param['tick_labelfontsize']+20, labelpad=15)
+            # ax00.set_ylabel('Z [m]', fontsize=plot_param['tick_labelfontsize']+20, labelpad=15)
             # ax.set_xlabel('X [m]', fontsize=plot_param['tick_labelfontsize'], labelpad=15)
             # ax.set_ylabel('Y [m]', fontsize=plot_param['tick_labelfontsize'], labelpad=15)
             # ax.set_zlabel('Z [m]', fontsize=plot_param['tick_labelfontsize'], labelpad=15)

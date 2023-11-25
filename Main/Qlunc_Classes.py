@@ -138,7 +138,7 @@ class analog2digital_converter():
 
 
 class scanner():
-    def __init__(self,name,Href,N_MC,pattern,lissajous_param,vert_plane,origin,focus_dist,cone_angle,azimuth,stdv_location,stdv_focus_dist,stdv_cone_angle,stdv_azimuth,stdv_Estimation,correlations,unc_func):
+    def __init__(self,name,Href,N_MC,pattern,lissajous_param,vert_plane,hor_plane,origin,focus_dist,cone_angle,azimuth,stdv_location,stdv_focus_dist,stdv_cone_angle,stdv_azimuth,stdv_Estimation,correlations,unc_func):
                  self.ScannerID       = name
                  self.Href            = Href
                  self.N_MC            = N_MC
@@ -146,6 +146,7 @@ class scanner():
                  self.pattern         = pattern
                  self.lissajous_param = lissajous_param
                  self.vert_plane      = vert_plane
+                 self.hor_plane      = hor_plane
                  self.focus_dist      = focus_dist
                  self.cone_angle      = cone_angle
                  self.azimuth         = azimuth

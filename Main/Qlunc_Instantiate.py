@@ -100,6 +100,7 @@ Scanner           = scanner(name            = Qlunc_yaml_inputs['Components']['S
                             pattern         = Qlunc_yaml_inputs['Components']['Scanner']['Pattern'],
                             lissajous_param = Qlunc_yaml_inputs['Components']['Scanner']['Lissajous parameters'],
                             vert_plane      = Qlunc_yaml_inputs['Components']['Scanner']['Vertical plane parameters'],
+                            hor_plane      = Qlunc_yaml_inputs['Components']['Scanner']['Horizontal plane parameters'],
                             Href            = Qlunc_yaml_inputs['Components']['Scanner']['Href'],                    
                             azimuth         = Qlunc_yaml_inputs['Components']['Scanner']['Psi'],   # Azimuth in [degrees]
                             focus_dist      = Qlunc_yaml_inputs['Components']['Scanner']['Rho'],   # Focus distance in [meters]                                                                                              

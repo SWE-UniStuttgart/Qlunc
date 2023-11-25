@@ -69,9 +69,13 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         L=len(x_out)
         wind_direction = np.radians(np.linspace(Atmospheric_Scenario.wind_direction[0],Atmospheric_Scenario.wind_direction[1],1))
     
-    elif Lidar.optics.scanner.pattern=='plane':        
+    elif Lidar.optics.scanner.pattern=='vertical plane':        
         x_out,y_out,z_out=SP.Verticalplane_pattern(Lidar)
         L=len(x_out)
+        wind_direction = np.radians(np.linspace(Atmospheric_Scenario.wind_direction[0],Atmospheric_Scenario.wind_direction[1],1))        
+    elif Lidar.optics.scanner.pattern=='horizontal plane':        
+        x_out,y_out,z_out=SP.Horizontalplane_pattern(Lidar)
+        L=len(z_out)
         wind_direction = np.radians(np.linspace(Atmospheric_Scenario.wind_direction[0],Atmospheric_Scenario.wind_direction[1],1))        
     
     else: # One point in all wind directions stated in YAML file
@@ -107,7 +111,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
          
             #%% 2) Lidars' position and measuring angles. The measuring angles are calculated based on the position of the lidars and the measuring points            
             # Measurement point in cartesian coordinates before applying lidar position
-            if Lidar.optics.scanner.pattern=='lissajous' or Lidar.optics.scanner.pattern=='plane':
+            if Lidar.optics.scanner.pattern=='lissajous' or Lidar.optics.scanner.pattern=='horizontal plane' or Lidar.optics.scanner.pattern=='vertical plane':
                 x=np.array([x_out[meas_param]])
                 y=np.array([y_out[meas_param]])
                 z=np.array([z_out[meas_param]])               

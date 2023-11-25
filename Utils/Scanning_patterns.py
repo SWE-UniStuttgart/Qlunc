@@ -10,7 +10,7 @@ from Utils import Qlunc_Help_standAlone as SA
 #%% Lissajous pattern
 def lissajous_pattern(Lidar,size_x,size_y,size_z,q,p):
     """
-    Plotting. Location: .Utils/Qlunc_plotting.py
+    Plotting. Location: .Utils/Scanning_patterns.py
     
     Parameters
     ----------
@@ -39,7 +39,7 @@ def lissajous_pattern(Lidar,size_x,size_y,size_z,q,p):
 
 def Verticalplane_pattern(Lidar):
     """
-    Plotting. Location: .Utils/Qlunc_plotting.py
+    Plotting. Location: .Utils/Scanning_patterns.py
     
     Parameters
     ----------
@@ -66,3 +66,31 @@ def Verticalplane_pattern(Lidar):
     x_out= np.linspace(x_in,x_in,len(y_out))   
     return x_out,y_out,z_out
 
+def Horizontalplane_pattern(Lidar):
+    """
+    Plotting. Location: .Utils/Scanning_patterns.py
+    
+    Parameters
+    ----------
+    
+    * Lidar
+        data...
+        
+    Returns
+    -------
+    
+    list
+    
+    """
+    x_in = np.linspace(Lidar.optics.scanner.hor_plane[0],Lidar.optics.scanner.hor_plane[1],Lidar.optics.scanner.hor_plane[-1]) #Lidar.optics.scanner.vert_plane[0]
+    y_in = np.linspace(Lidar.optics.scanner.hor_plane[2],Lidar.optics.scanner.hor_plane[3],Lidar.optics.scanner.hor_plane[-1])
+    z_in = Lidar.optics.scanner.vert_plane[4]
+
+    box=np.meshgrid(x_in,y_in)
+    # pdb.set_trace()
+    # Get coordinates of the points on the grid
+    box_positions = np.vstack(map(np.ravel, box))
+    y_out=box_positions[0]
+    x_out=box_positions[1]   
+    z_out= np.linspace(z_in,z_in,len(y_out))   
+    return x_out,y_out,z_out
