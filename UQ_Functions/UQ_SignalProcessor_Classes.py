@@ -48,13 +48,13 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     n_fftpoints          = 2**8       # n° of points for each block (fft points).
     fd                   = 2 * V_ref / lidar_wavelength  # Doppler frequency corresponding to Vref
     n_pulses             = 1        #   % n pulses for averaging the spectra
-    N_MC                 = 1000 # n° MC samples to calculate the uncertainty due to bias in sampling frequency and wavelength
+    N_MC                 = 10000 # n° MC samples to calculate the uncertainty due to bias in sampling frequency and wavelength
     
     #%% Uncertainty due to hardware noise, signal processing and speckle interference:
     
     # Hardware noise (thermal noise + shot noise + dark current noise + TIA noise):
     level_noise_hardware = 10**(Lidar.lidar_inputs.dataframe['Total noise photodetector [dB]']/10) # Hardware noise added before signal downmixing
-    hardware_noise = np.random.normal(0 , level_noise_hardware , n_fftpoints)
+    hardware_noise       = np.random.normal(0 , level_noise_hardware , n_fftpoints)
 
     
     # Bias in the sampling frequency 
@@ -70,9 +70,9 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
 
 
     # Speckle multiplicative noise    
-    lower=fd-Lidar.signal_processor.analog2digital_converter.u_speckle*fd
-    upper=fd+Lidar.signal_processor.analog2digital_converter.u_speckle*fd    
-    fd_speckle_noise  =   np.random.uniform( lower, upper, N_MC)
+    lower             = fd-Lidar.signal_processor.analog2digital_converter.u_speckle*fd
+    upper             = fd+Lidar.signal_processor.analog2digital_converter.u_speckle*fd    
+    fd_speckle_noise  = np.random.uniform( lower, upper, N_MC)
     # fd_speckle_noise  =  np.random.normal(fd , fd*Lidar.signal_processor.analog2digital_converter.u_speckle/np.sqrt(3) , N_MC)  #; % Noisy wavelength vector
 
     
@@ -124,7 +124,7 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     Stdv_fpeak = np.std(fd_peak)
     Stdv_vlos  = np.std(vlos_MC)
     mean_vlos  = np.mean(vlos_MC)
-    # pdb.set_trace()
+
     # Store data
     Final_Output_UQ_ADC                                      = {'Stdv Doppler f_peak':np.array(Stdv_fpeak),'Stdv Vlos':np.array(Stdv_vlos)}    
     Lidar.lidar_inputs.dataframe['Stdv Doppler f_peak [Hz]'] = Final_Output_UQ_ADC['Stdv Doppler f_peak']*np.linspace(1,1,len(Atmospheric_Scenario.temperature)) # linspace to create the appropriate length for the xarray.
