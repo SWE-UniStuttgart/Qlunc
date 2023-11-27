@@ -383,15 +383,15 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             # Reshape V and avoid nans and infinit values
             VV=np.reshape(V,[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
             # VV[np.isnan(VV)]=nan
-            VV[VV>10]='nan'
+            VV[VV>10]=3
             
             # Horizontal wind velocity
-            col ='jet'
-            cmaps = matplotlib.cm.get_cmap('jet')  # viridis is the default colormap for imshow
+            col ='jet' #'binary'
+            cmaps = matplotlib.cm.get_cmap(col)  # viridis is the default colormap for imshow
             cmaps.set_bad(color='black')
             # cm = plt.get_cmap(colorsMap)
-            # col='binary'
-            cNorm = matplotlib.colors.Normalize(vmin=0, vmax=0.9)
+            
+            cNorm = matplotlib.colors.Normalize(vmin=0, vmax=3)
             # cNorm = matplotlib.colors.Normalize(vmin=0.1, vmax=4) #alpha=0
             # cNorm = matplotlib.colors.Normalize(vmin=0.015, vmax=0.138) #alpha=0.1
             # cNorm = matplotlib.colors.Normalize(vmin=0.08, vmax=0.147) #alpha=0.2
@@ -403,8 +403,8 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             fig00,ax00=plt.subplots()                
             # plt.scatter(Data['lidars']['Coord_Out'][0],Data['lidars']['Coord_Out'][1], s=20,c=scalarMap.to_rgba(V))
             # # ax.scatter(Data['lidars']['Coord_Out'][0],Data['lidars']['Coord_Out'][1], Data['lidars']['Coord_Out'][2], V, c=scalarMap.to_rgba(V))
-            
-
+            ax00.plot(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0][1],'sk', ms=5, mec='black', mew=1.5)
+            ax00.plot(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][1][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][1][1],'sk', ms=5, mec='white', mew=1.5)
 
             if  Lidar.optics.scanner.pattern in ['vertical plane']:
                 XX=np.reshape(Data['lidars']['Coord_Out'][1],[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
@@ -416,7 +416,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 YY=np.reshape(Data['lidars']['Coord_Out'][1],[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
                 ax00.set_xlabel('X [m]', fontsize=plot_param['tick_labelfontsize']+20, labelpad=15)
                 ax00.set_ylabel('Y [m]', fontsize=plot_param['tick_labelfontsize']+20, labelpad=15)
-            plt.contourf(XX,YY, VV,500,cmap=cmaps, norm=cNorm)
+            plt.contourf(XX,YY, VV,300,cmap=cmaps, norm=cNorm)
             
             # ax00.set_xlabel('Y [m]', fontsize=plot_param['tick_labelfontsize']+20, labelpad=15)
             # ax00.set_ylabel('Z [m]', fontsize=plot_param['tick_labelfontsize']+20, labelpad=15)
