@@ -158,7 +158,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             # 3.1) Vlos and Vh Uncertainties MCM method
             U_Vlos1_MCM,U_Vlos2_MCM,U_Vlos3_MCM,Mult_param ,Correlation_coeff,U_Vh_MCM    =      SA.MCM_Vh_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,ind_alpha,theta1[0],u_theta1,psi1 [0] ,u_psi1,rho1[0],u_rho1,theta2[0],u_theta2,psi2[0],u_psi2,rho2[0],u_rho2,theta3[0],u_theta3,psi3[0]  ,u_psi3,rho3[0]  ,u_rho3)
             
-            # pdb.set_trace()
+
             # Store data
             U_Vlos1_MCM_T.append(U_Vlos1_MCM)
             U_Vlos2_MCM_T.append(U_Vlos2_MCM)
@@ -172,8 +172,8 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             U_Vlos3_GUM_T.append(U_Vlos3_GUM)
             pdb.set_trace()
             # 3.4) Vh Uncertainty GUM method
-            U_Vh_GUM,dV1,dV2,dV1V2,Correlation_Vlos_GUM   =   SA.GUM_Vh_lidar_uncertainty(Lidar,Atmospheric_Scenario,Corrcoef_Vlos_GUM,wind_direction,theta1[0],psi1 [0],rho1[0],theta2[0],psi2[0],rho2[0],
-                                                               u_theta1,u_theta2,u_psi1,u_psi2,u_rho1,u_rho2 ,Vlos1_GUM,Vlos2_GUM,U_Vlos1_GUM,U_Vlos2_GUM,U_Vlos3_GUM)
+            U_Vh_GUM,dV1,dV2,dV1V2   =   SA.GUM_Vh_lidar_uncertainty(Lidar,Atmospheric_Scenario,Corrcoef_Vlos_GUM12,Corrcoef_Vlos_GUM13,Corrcoef_Vlos_GUM23,wind_direction,theta1[0],psi1 [0],rho1[0],theta2[0],psi2[0],rho2[0],theta3[0],psi3[0],rho3[0],
+                                                               u_theta1,u_theta2,u_theta3,u_psi1,u_psi2,u_psi3,u_rho1,u_rho2,u_rho3,Vlos1_GUM,Vlos2_GUM,Vlos3_GUM,U_Vlos1_GUM,U_Vlos2_GUM,U_Vlos3_GUM)
             
             # Store data
             U_Vh_GUM_T.append(U_Vh_GUM)                
@@ -181,6 +181,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             SensCoeffVh2.append(dV2)
             SensCoeffVh12.append(dV1V2)
             Correlation_Vlos_GUM_T.append(Corrcoef_Vlos_GUM)
+            
             #%% 4) Wind direction uncertainty estimation
             U_Wind_direction_MCM.append(SA.U_WindDir_MC(wind_direction,Mult_param))
             # pdb.set_trace()
