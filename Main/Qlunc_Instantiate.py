@@ -36,7 +36,7 @@ get_ipython().magic('reset -sf')
 import os
 os.chdir('../')
 # importing  uncertainty functions
-import UQ_Functions.UQ_WindDirection_Classes as uWDirc, UQ_Functions.UQ_Vhorizontal_Classes as uVhc, UQ_Functions.UQ_Photonics_Classes as uphc,UQ_Functions.UQ_Optics_Classes as uopc, UQ_Functions.UQ_Power_Classes as upwc,UQ_Functions.UQ_Lidar_Classes as ulc, UQ_Functions.UQ_ProbeVolume_Classes as upbc,UQ_Functions.UQ_Data_processing_Classes as uprm, UQ_Functions.UQ_SignalProcessor_Classes as uspc
+import  UQ_Functions.UQ_Photonics_Classes as uphc,UQ_Functions.UQ_Optics_Classes as uopc,UQ_Functions.UQ_Lidar_Classes as ulc, UQ_Functions.UQ_ProbeVolume_Classes as upbc, UQ_Functions.UQ_SignalProcessor_Classes as uspc
 from Utils.Qlunc_ImportModules import *
 
 #%% Running Qlunc_Classes.py:
@@ -100,6 +100,7 @@ Scanner           = scanner(name            = Qlunc_yaml_inputs['Components']['S
                             pattern         = Qlunc_yaml_inputs['Components']['Scanner']['Pattern'],
                             lissajous_param = Qlunc_yaml_inputs['Components']['Scanner']['Lissajous parameters'],
                             vert_plane      = Qlunc_yaml_inputs['Components']['Scanner']['Vertical plane parameters'],
+                            hor_plane      = Qlunc_yaml_inputs['Components']['Scanner']['Horizontal plane parameters'],
                             Href            = Qlunc_yaml_inputs['Components']['Scanner']['Href'],                    
                             azimuth         = Qlunc_yaml_inputs['Components']['Scanner']['Psi'],   # Azimuth in [degrees]
                             focus_dist      = Qlunc_yaml_inputs['Components']['Scanner']['Rho'],   # Focus distance in [meters]                                                                                              
@@ -128,15 +129,16 @@ Optics_Module =  optics (name               = Qlunc_yaml_inputs['Modules']['Opti
 #%% Data processing methods. Signal processor components and module: ###########################################################
 
 # Analog to digital converter
-ADC = analog2digital_converter (name     = Qlunc_yaml_inputs['Components']['ADC']['Name'],
-                                nbits    = Qlunc_yaml_inputs['Components']['ADC']['Number of bits'],
-                                vref     = Qlunc_yaml_inputs['Components']['ADC']['Reference voltage'],
-                                vground  = Qlunc_yaml_inputs['Components']['ADC']['Ground voltage'],
-                                fs       = Qlunc_yaml_inputs['Components']['ADC']['Sampling frequency'],
-                                u_fs     = Qlunc_yaml_inputs['Components']['ADC']['Uncertainty sampling freq'],
-                                q_error  = Qlunc_yaml_inputs['Components']['ADC']['Quantization error'],
+ADC = analog2digital_converter (name          = Qlunc_yaml_inputs['Components']['ADC']['Name'],
+                                nbits         = Qlunc_yaml_inputs['Components']['ADC']['Number of bits'],
+                                vref          = Qlunc_yaml_inputs['Components']['ADC']['Reference voltage'],
+                                vground       = Qlunc_yaml_inputs['Components']['ADC']['Ground voltage'],
+                                fs            = Qlunc_yaml_inputs['Components']['ADC']['Sampling frequency'],
+                                u_fs          = Qlunc_yaml_inputs['Components']['ADC']['Uncertainty sampling freq'],
+                                u_speckle     = Qlunc_yaml_inputs['Components']['ADC']['Speckle noise'],
+                                q_error       = Qlunc_yaml_inputs['Components']['ADC']['Quantization error'],
                                 ADC_bandwidth = Qlunc_yaml_inputs['Components']['ADC']['ADC Bandwidth'],
-                                unc_func = uspc.UQ_ADC)
+                                unc_func      = uspc.UQ_ADC)
 # Signal processor module
 Signal_processor_Module = signal_processor(name                     = Qlunc_yaml_inputs['Modules']['Signal processor Module']['Name'],
                                            analog2digital_converter = eval(Qlunc_yaml_inputs['Modules']['Signal processor Module']['ADC']),)
@@ -152,10 +154,8 @@ Lidar = lidar(name             = Qlunc_yaml_inputs['Lidar']['Name'],            
               photonics        = eval(Qlunc_yaml_inputs['Lidar']['Photonics module']),#Photonics_Module, #     # Introduce the name of your photonics module.
               optics           = eval(Qlunc_yaml_inputs['Lidar']['Optics module']), # Optics_Module, #      # Introduce the name of your optics module.
               signal_processor = eval(Qlunc_yaml_inputs['Lidar']['Signal processor']),#None, #Signal_processor_Module,
-
               lidar_inputs     = eval(Qlunc_yaml_inputs['Lidar']['Lidar inputs']), #  Lidar_inputs, #      # Introduce lidar general inputs
-              unc_func         = ulc.sum_unc_lidar,
-              unc_WindDir      = uWDirc.UQ_WinDir ) #eval(Qlunc_yaml_inputs['Lidar']['Uncertainty function'])) 
+              unc_func         = ulc.sum_unc_lidar ) 
 
 
 

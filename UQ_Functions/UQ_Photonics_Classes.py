@@ -20,8 +20,8 @@ module.
 from Utils.Qlunc_ImportModules import *
 from Utils import Qlunc_Help_standAlone as SA
 from Utils import Qlunc_Plotting as QPlot
-import os
-import pdb
+# import os
+# import pdb
 #%% PHOTODETECTOR:
 def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     """

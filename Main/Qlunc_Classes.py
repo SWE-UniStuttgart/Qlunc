@@ -85,7 +85,7 @@ Lidar_1 = lidar(Power_Module = Power_1,
 So we have created a lidar digital twin with its first module, the `power` 
 module, which in turn contains a component, the uninterruptible power supply.
 
-(How to ask for uncertainties...)
+--> How to ask for uncertainties:Lidar.[module].[component].Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
 
 Qlunc uses GUM (Guide to the expression of Uncertainties in Measurement) 
 model to calculate uncertainty expansion.  
@@ -120,13 +120,14 @@ class photodetector():
 
 
 class analog2digital_converter():
-    def __init__(self,name,nbits,vref,vground,q_error,ADC_bandwidth,fs,u_fs,unc_func):
+    def __init__(self,name,nbits,vref,vground,q_error,ADC_bandwidth,fs,u_fs,u_speckle,unc_func):
                  self.ADCID = name
                  self.nbits =nbits
                  self.vref = vref
                  self.vground = vground
                  self.fs    =fs
                  self.u_fs =u_fs
+                 self.u_speckle = u_speckle
                  self.q_error = q_error
                  self.BandWidth = ADC_bandwidth
                  self.Uncertainty = unc_func
@@ -137,7 +138,7 @@ class analog2digital_converter():
 
 
 class scanner():
-    def __init__(self,name,Href,N_MC,pattern,lissajous_param,vert_plane,origin,focus_dist,cone_angle,azimuth,stdv_location,stdv_focus_dist,stdv_cone_angle,stdv_azimuth,stdv_Estimation,correlations,unc_func):
+    def __init__(self,name,Href,N_MC,pattern,lissajous_param,vert_plane,hor_plane,origin,focus_dist,cone_angle,azimuth,stdv_location,stdv_focus_dist,stdv_cone_angle,stdv_azimuth,stdv_Estimation,correlations,unc_func):
                  self.ScannerID       = name
                  self.Href            = Href
                  self.N_MC            = N_MC
@@ -145,6 +146,7 @@ class scanner():
                  self.pattern         = pattern
                  self.lissajous_param = lissajous_param
                  self.vert_plane      = vert_plane
+                 self.hor_plane      = hor_plane
                  self.focus_dist      = focus_dist
                  self.cone_angle      = cone_angle
                  self.azimuth         = azimuth
@@ -212,14 +214,13 @@ class lidar_gral_inp():
 
 #%% Lidar class:
 class lidar():
-    def __init__(self,name,photonics,optics,signal_processor,lidar_inputs,unc_func,unc_WindDir):
+    def __init__(self,name,photonics,optics,signal_processor,lidar_inputs,unc_func):
                  self.LidarID          = name
                  self.photonics        = photonics
                  self.optics           = optics
                  self.signal_processor = signal_processor
                  self.lidar_inputs     = lidar_inputs
                  self.Uncertainty      = unc_func
-                 self.Uncertainty_WindDir = unc_WindDir
                  print('Created new lidar device: {}'.format(self.LidarID))
 
     

@@ -26,7 +26,7 @@
 
 %%
 clear all %#ok<CLALL>
-% close all
+close all
 clc
 format shortEng
 %% Inputs
@@ -40,16 +40,16 @@ fs_av            = 100e6;    % sampling frequency
 L                = 2^n_bits;    %length of the signal.
 n_fftpoints      = L;       % n° of points for each block (fft points).
 fd               = 2*V_ref/lidar_wavelength;  % Doppler frequency corresponding to Vref
-level_noise      = 10; % Hardware noise added before signal downmixing
-n_pulses         = 50;   % n pulses for averaging the spectra
+level_noise      = 5e-11; % Hardware noise added before signal downmixing
+n_pulses         = 1;   % n pulses for averaging the spectra
 N_MC             = 1e3; % n° MC samples to calculate the uncertainty due to bias in sampling frequency and wavelength
 Dp               = L*2.9e8*.5/fs_av;
 %% Uncertainty in the signal processing.
 
 %%% Uncertainty in the sampling frequency %%%
-per         = 2e-4;
+per         = 1e-6;
 % bias_fs_av  = (per/100)*fs_av; % +/-
-std_fs_av   = (per/100)*fs_av;%/sqrt(3); % 2e-6*fs_av; % 
+std_fs_av   = (per)*fs_av;%/sqrt(3); % 2e-6*fs_av; % 
 fs          = [fs_av;std_fs_av.*randn(N_MC,1) + fs_av];
 Ts          = 1./fs;
 % Accepted values
@@ -62,7 +62,7 @@ vv=0.5*lidar_wavelength*fv;
 %%% Stdv due drift in the wavelength of the laser %%%
 stdv_wavelength  = 1e-9/sqrt(3); % m
 wavelength_noise = lidar_wavelength+stdv_wavelength*randn(N_MC+1,1); % Noisy wavelength vector
-e_perc_wavelength = 100*wavelength_noise/lidar_wavelength;
+% e_perc_wavelength = 100*wavelength_noise/lidar_wavelength;
 
 
 
@@ -79,9 +79,9 @@ for ind_npulses = 1:n_pulses
         % Signal + Hardware noise:
         noise      = level_noise*randn(size(t{ind_fs}));
         
-        S{ind_fs}         = noise+(14*sin(2*pi*fd.*t{ind_fs}) - 2.1*sin(2*pi*1.9*abs(randn(1,1))*fd*t{ind_fs}) + 2*sin(2*pi*3*abs(randn(1,1))*fd*t{ind_fs})+...
-                      3.24*sin(2*pi*6*abs(randn(1,1))*fd.*t{ind_fs}) + 4.7*sin(2*pi*2*abs(randn(1,1))*fd*t{ind_fs}) - 1.4*sin(2*pi*abs(randn(1,1))*fd*t{ind_fs})); % Adding up Signal contributors
-        
+%         S{ind_fs}         = noise+(70.4*sin(2*pi*fd.*t{ind_fs}) - 2.1*sin(2*pi*1.9*abs(randn(1,1))*fd*t{ind_fs}) + 2*sin(2*pi*3*abs(randn(1,1))*fd*t{ind_fs})+...
+%                       3.24*sin(2*pi*6*abs(randn(1,1))*fd.*t{ind_fs}) + 4.7*sin(2*pi*2*abs(randn(1,1))*fd*t{ind_fs}) - 1.4*sin(2*pi*abs(randn(1,1))*fd*t{ind_fs})); % Adding up Signal contributors
+        S{ind_fs}         = noise+sin(2*pi*fd.*t{ind_fs});
 %         S{ind_fs}  = awgn(S0, 5); %#ok<SAGROW>
         
         
