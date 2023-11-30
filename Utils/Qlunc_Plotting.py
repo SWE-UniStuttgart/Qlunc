@@ -591,18 +591,80 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
 
 
 ################### PLOT COORDINATE SYSTEM DUAL LIDAR ##############################################
+# from matplotlib.patches import Circle,Wedge
+# import mpl_toolkits.mplot3d.art3d as art3d
+# from matplotlib.patches import FancyArrowPatch
+# fig = plt.figure()
+# ax = fig.gca(projection='3d')
+
+# r = 89
+# x0 = 500 # To have the tangent at y=0
+# z0 = 119
+
+# # Theta varies only between pi/2 and 3pi/2. to have a half-circle
+# theta = np.linspace(0., 2*np.pi, 161)
+
+# x = np.zeros_like(theta)+x0 # x=0
+# y = r*np.cos(theta)  # y - y0 = r*cos(theta)
+# z = r*np.sin(theta) + z0 # z - z0 = r*sin(theta)
+# ax.plot(x, y, z,'k--',linewidth=2,label='Rotor area')
+
+
+
+# x1,y1,z1=[500,0],[0,-150],[119,1] 
+# x2,y2,z2=[500,0],[ 0,150],[119,1] 
+# p = patches.Rectangle((89.15, 29.85), -89.15*2,89.15*2,alpha=0.387,label='Scanned area')
+# ax.add_patch(p)
+# art3d.pathpatch_2d_to_3d(p, z=500, zdir="x")
+
+
+
+# x1,y1,z1=[500,0],[0,-150],[119,1] 
+# x2,y2,z2=[500,0],[ 0,150],[119,1] 
+# # p = Wedge((0, 119), 89.15,0,359,alpha=0.5,label='WT area',width=1.71, ls='--')
+# # ax.add_patch(p)
+# # art3d.pathpatch_2d_to_3d(p, z=500, zdir="x")
+# ax.scatter(500,0, 119, c='r', s=50, marker='o', label=r'$P~(x,y,z)$')
+# ax.scatter(0, -150, 1, c='b', s=50, marker='s', label=r'$Lidar_1~and~Lidar_2$')
+# ax.scatter(0, 150, 1, c='b', s=50, marker='s')
+
+# ax.plot(x1, y1, z1, color='magenta',linestyle='dashed')
+# ax.plot(x2, y2, z2, color='magenta',linestyle='dashed')
+
+# ax.set_xlabel('X [m]', fontsize=21,labelpad=15)
+# ax.set_ylabel('Y [m]', fontsize=21,labelpad=15)
+# ax.set_zlabel('Z [m]', fontsize=21,labelpad=15)
+# ax.set_zlim([0,250])
+# ax.set_xlim([0,570])
+# plt.legend(loc="best", fontsize=16.23)
+
+# ax.xaxis.set_tick_params(labelsize=15)
+# ax.yaxis.set_tick_params(labelsize=15)
+# ax.zaxis.set_tick_params(labelsize=15)
+
 
 # fig = plt.figure()
 # ax = fig.gca(projection='3d')
 
-# x1,y1,z1=[3000,0],[0,-550],[119,1] 
-# x2,y2,z2=[3000,0],[ 0,550],[119,1] 
 
-# ax.scatter(3000,0, 119, c='r', s=50, marker='o', label=r'$P~(x,y,z)$')
-# ax.scatter(0, -550, 1, c='b', s=50, marker='s', label=r'$Lidar_1~and~Lidar_2$')
-# ax.scatter(0, 550, 1, c='b', s=50, marker='s')
+# x1,y1,z1=[500,0],[0,-150],[119,1] 
+# x2,y2,z2=[500,0],[ 0,150],[119,1] 
+# p = patches.Rectangle((89.15, 29.84), -89.15*2,89.15*2,alpha=0.37)
+# ax.add_patch(p)
+# art3d.pathpatch_2d_to_3d(p, z=500, zdir="x")
 
 
+
+# x1,y1,z1=[500,0],[0,-150],[119,1] 
+# x2,y2,z2=[500,0],[ 0,150],[119,1] 
+# p = Wedge((0, 119), 89.15,0,360,alpha=0.9,label='Rotor diameter',width=3, ls='--')
+# ax.add_patch(p)
+# art3d.pathpatch_2d_to_3d(p, z=500, zdir="x")
+# ax.scatter(500,0, 119, c='r', s=50, marker='o', label=r'$P~(x,y,z)$')
+# ax.scatter(0, -150, 1, c='b', s=50, marker='s', label=r'$Lidar_1~and~Lidar_2$')
+# ax.scatter(0, 150, 1, c='b', s=50, marker='s')
+
+# ax.arrow
 # ax.plot(x1, y1, z1, color='g',linestyle='dashed')
 # ax.plot(x2, y2, z2, color='g',linestyle='dashed')
 
@@ -610,14 +672,12 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
 # ax.set_ylabel('Y [m]', fontsize=21,labelpad=15)
 # ax.set_zlabel('Z [m]', fontsize=21,labelpad=15)
 # ax.set_zlim([0,250])
-# ax.set_xlim([0,3200])
-# plt.legend(loc="center right")
+# ax.set_xlim([0,550])
+# plt.legend(loc="best", fontsize=16.23)
 
 # ax.xaxis.set_tick_params(labelsize=15)
 # ax.yaxis.set_tick_params(labelsize=15)
 # ax.zaxis.set_tick_params(labelsize=15)
-
-
 
 
 
