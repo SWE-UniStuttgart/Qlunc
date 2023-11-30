@@ -146,7 +146,7 @@ class scanner():
                  self.pattern         = pattern
                  self.lissajous_param = lissajous_param
                  self.vert_plane      = vert_plane
-                 self.hor_plane      = hor_plane
+                 self.hor_plane       = hor_plane
                  self.focus_dist      = focus_dist
                  self.cone_angle      = cone_angle
                  self.azimuth         = azimuth
