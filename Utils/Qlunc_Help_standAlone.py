@@ -745,11 +745,14 @@ def GUM_Vlos_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,ind_alp
 ##########################################
 ##############################################
 #%%
-def GUM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,Corrcoef_Vlos,wind_direction,theta1,psi1,rho1,theta2,psi2 ,rho2,u_theta1,u_theta2,u_psi1,u_psi2,u_rho1,u_rho2 ,Vlos1_GUM,Vlos2_GUM,U_Vlos1_GUM,U_Vlos2_GUM,U_Vlos3_GUM):
+def GUM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,Corrcoef_Vlos_GUM12,Corrcoef_Vlos_GUM13,Corrcoef_Vlos_GUM23,wind_direction,theta1,psi1,rho1,theta2,psi2 ,rho2,theta3,psi3 ,rho3,u_theta1,u_theta2,u_theta3,u_psi1,u_psi2,u_psi3,u_rho1,u_rho2,u_rho3 ,Vlos1_GUM,Vlos2_GUM,Vlos3_GUM,U_Vlos1_GUM,U_Vlos2_GUM,U_Vlos3_GUM):
         # Vh Uncertainty
-        Correlation_Vlos_GUM,UUy,U_Vh_GUM,dV1,dV2,dVt1,dVt2,dVp1,dVp2,dV1V2=[],[],[],[],[],[],[],[],[],[]
-        # App_dVh_Vlos1,App_dVh_Vlos2,App_dVh_Vlos12=[],[],[]
+        UUy,U_Vh_GUM,dV1,dV2,dVt1,dVt2,dVp1,dVp2,dV1V2=[],[],[],[],[],[],[],[],[]
+        pdb.set_trace()
         for ind_wind_dir in range(len(wind_direction)):  
+            
+            u,v,w=Wind_vector(theta1,theta2,theta3,psi1,psi2,psi3, Vlos1_GUM[ind_wind_dir],Vlos2_GUM[ind_wind_dir],Vlos3_GUM[ind_wind_dir])
+            
             
             num1 = np.sqrt(((Vlos1_GUM[ind_wind_dir]*np.cos(theta2))**2)+((Vlos2_GUM[ind_wind_dir]*np.cos(theta1))**2)-(2*Vlos1_GUM[ind_wind_dir]*Vlos2_GUM[ind_wind_dir]*np.cos(psi1-psi2)*np.cos(theta1)*np.cos(theta2)))
             den=np.cos(theta1)*np.cos(theta2)*np.sin(psi1-psi2)
@@ -760,7 +763,7 @@ def GUM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,Corrcoef_Vlos,wind_dire
  
             dV1.append((dVh_Vlos1*U_Vlos1_GUM[ind_wind_dir])**2)
             dV2.append((dVh_Vlos2*U_Vlos2_GUM[ind_wind_dir])**2)
-            dV1V2.append(2*dVh_Vlos1*U_Vlos1_GUM[ind_wind_dir]*dVh_Vlos2*U_Vlos2_GUM[ind_wind_dir]*Corrcoef_Vlos[ind_wind_dir])
+             
             
             # dVh_dtheta1
             dnum1= (1/(2*num1))*(-2*(Vlos2_GUM[ind_wind_dir]**2)*np.cos(theta1)*np.sin(theta1)+2*Vlos2_GUM[ind_wind_dir]*Vlos1_GUM[ind_wind_dir]*np.sin(theta1)*np.cos(theta2)*np.cos(psi1-psi2))
@@ -790,11 +793,9 @@ def GUM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,Corrcoef_Vlos,wind_dire
             CxVh=[0,0,0,0,0,0,dVh_Vlos1,dVh_Vlos2]
             UyVh=np.array(CxVh).dot(UxVh).dot(np.transpose(CxVh))
             UUy.append(UyVh)
-            U_Vh_GUM.append(np.sqrt(UyVh))
-            Correlation_Vlos_GUM.append(UxVh[-1][-2]/(U_Vlos1_GUM[ind_wind_dir]*U_Vlos2_GUM[ind_wind_dir]))       
+            U_Vh_GUM.append(np.sqrt(UyVh))        
         
-        
-        return(U_Vh_GUM,dV1,dV2,dV1V2,Correlation_Vlos_GUM)
+        return(U_Vh_GUM,dV1,dV2,dV1V2)
     
     
     
