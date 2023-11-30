@@ -124,13 +124,12 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     Stdv_fpeak = np.std(fd_peak)
     Stdv_vlos  = np.std(vlos_MC)
     mean_vlos  = np.mean(vlos_MC)
-
+    pdb.set_trace()
     # Store data
     Final_Output_UQ_ADC                                      = {'Stdv Doppler f_peak':np.array(Stdv_fpeak),'Stdv Vlos':np.array(Stdv_vlos)}    
     Lidar.lidar_inputs.dataframe['Stdv Doppler f_peak [Hz]'] = Final_Output_UQ_ADC['Stdv Doppler f_peak']*np.linspace(1,1,len(Atmospheric_Scenario.temperature)) # linspace to create the appropriate length for the xarray.
     Lidar.lidar_inputs.dataframe['Stdv wavelength [m]']      = stdv_wavelength
     return Final_Output_UQ_ADC,Lidar.lidar_inputs.dataframe
-    # pdb.set_trace()
 
 #%% Sum of uncertainties in `signal processor` module: 
 def sum_unc_signal_processor(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
