@@ -474,25 +474,25 @@ def MultiVar (Lidar,Vlos_corrcoeff12,Vlos_corrcoeff13, Vlos_corrcoeff23, U_Vlos1
         theta3_rho3_corr      = 0
 
         # pdb.set_trace()
-        cov_MAT=[[theta_stds[0]**2*autocorr_theta,                         theta_stds[1]*theta_stds[0]*theta1_theta2_corr,      theta_stds[2]*theta_stds[0]*theta1_theta3_corr,       psi_stds[0]*theta_stds[0]*psi1_theta1_corr ,      psi_stds[1]*theta_stds[0]*psi2_theta1_corr,      psi_stds[2]*theta_stds[0]*psi3_theta1_corr,     rho_stds[0]*theta_stds[0]*theta1_rho1_corr,  rho_stds[1]*theta_stds[0]*theta1_rho2_corr,    rho_stds[2]*theta_stds[0]*theta1_rho3_corr   ,      theta_stds[0]*U_Vlos1*0,                      theta_stds[0]*U_Vlos2  *0 ,             theta_stds[0]*U_Vlos3  *0  ],
-                 [theta_stds[0]*theta_stds[1]*theta1_theta2_corr,          theta_stds[1]**2*autocorr_theta,                     theta_stds[2]*theta_stds[1]*theta2_theta3_corr,       psi_stds[0]*theta_stds[1]*psi1_theta2_corr,       psi_stds[1]*theta_stds[1]*psi2_theta2_corr ,     psi_stds[2]*theta_stds[1]*psi3_theta2_corr,     rho_stds[0]*theta_stds[1]*theta2_rho1_corr,   rho_stds[1]*theta_stds[1]*theta2_rho2_corr,   rho_stds[2]*theta_stds[1]*theta2_rho3_corr      ,   theta_stds[1]*U_Vlos1*0                         , theta_stds[1]*U_Vlos2   *0 ,        theta_stds[1]*U_Vlos3  *0  ],
-                 [theta_stds[0]*theta_stds[2]*theta1_theta3_corr  ,        theta_stds[2]*theta_stds[1]*theta2_theta3_corr,               theta_stds[2]**2*autocorr_psi,                 theta_stds[2]*psi_stds[0]*psi1_theta3_corr,     theta_stds[2]*psi_stds[1]*psi2_theta3_corr,      theta_stds[2]*psi_stds[2]*psi3_theta3_corr,   rho_stds[0]*theta_stds[2]*theta3_rho1_corr,     rho_stds[1]*theta_stds[2]*theta3_rho2_corr,      rho_stds[2]*theta_stds[2]*theta3_rho3_corr       , theta_stds[2]*U_Vlos1*0                  , theta_stds[2]*U_Vlos2     *0   ,         theta_stds[2]*U_Vlos3  *0  ],                 
+        cov_MAT=[[theta_stds[0]**2*autocorr_theta,                         theta_stds[1]*theta_stds[0]*theta1_theta2_corr,      theta_stds[2]*theta_stds[0]*theta1_theta3_corr,       psi_stds[0]*theta_stds[0]*psi1_theta1_corr ,      psi_stds[1]*theta_stds[0]*psi2_theta1_corr,      psi_stds[2]*theta_stds[0]*psi3_theta1_corr,     rho_stds[0]*theta_stds[0]*theta1_rho1_corr,  rho_stds[1]*theta_stds[0]*theta1_rho2_corr,           rho_stds[2]*theta_stds[0]*theta1_rho3_corr   ,      theta_stds[0]*U_Vlos1*0,                  theta_stds[0]*U_Vlos2*0 ,              theta_stds[0]*U_Vlos3  *0  ],
+                 [theta_stds[0]*theta_stds[1]*theta1_theta2_corr,          theta_stds[1]**2*autocorr_theta,                     theta_stds[2]*theta_stds[1]*theta2_theta3_corr,       psi_stds[0]*theta_stds[1]*psi1_theta2_corr,       psi_stds[1]*theta_stds[1]*psi2_theta2_corr ,     psi_stds[2]*theta_stds[1]*psi3_theta2_corr,     rho_stds[0]*theta_stds[1]*theta2_rho1_corr,   rho_stds[1]*theta_stds[1]*theta2_rho2_corr,         rho_stds[2]*theta_stds[1]*theta2_rho3_corr      ,   theta_stds[1]*U_Vlos1*0                  , theta_stds[1]*U_Vlos2*0 ,              theta_stds[1]*U_Vlos3  *0  ],
+                 [theta_stds[0]*theta_stds[2]*theta1_theta3_corr  ,        theta_stds[2]*theta_stds[1]*theta2_theta3_corr,               theta_stds[2]**2*autocorr_psi,                 theta_stds[2]*psi_stds[0]*psi1_theta3_corr,     theta_stds[2]*psi_stds[1]*psi2_theta3_corr,      theta_stds[2]*psi_stds[2]*psi3_theta3_corr,   rho_stds[0]*theta_stds[2]*theta3_rho1_corr,     rho_stds[1]*theta_stds[2]*theta3_rho2_corr,            rho_stds[2]*theta_stds[2]*theta3_rho3_corr       , theta_stds[2]*U_Vlos1*0                , theta_stds[2]*U_Vlos2 *0   ,           theta_stds[2]*U_Vlos3  *0  ],                 
                  
-                 [theta_stds[0]*psi_stds[0]*psi1_theta1_corr  ,            theta_stds[1]*psi_stds[0]*psi1_theta2_corr,          theta_stds[2]*psi_stds[0]*psi1_theta3_corr,                     psi_stds[0]**2*autocorr_psi,            psi_stds[1]*psi_stds[0]*psi1_psi2_corr,          psi_stds[0]*psi_stds[2]*psi1_psi3_corr,        rho_stds[0]*psi_stds[0]*psi1_rho1_corr,      rho_stds[1]*psi_stds[0]*psi1_rho2_corr        ,rho_stds[2]*psi_stds[0]*psi1_rho3_corr        ,      psi_stds[0]*U_Vlos1*0                          , psi_stds[0]*U_Vlos2     *0     ,      psi_stds[0]*U_Vlos3  *0   ],
-                 [theta_stds[0]*psi_stds[1]*psi2_theta1_corr,              theta_stds[1]*psi_stds[1]*psi2_theta2_corr ,         theta_stds[2]*psi_stds[1]*psi2_theta3_corr ,           psi_stds[0]*psi_stds[1]*psi1_psi2_corr,                 psi_stds[1]**2*autocorr_psi,               psi_stds[1]*psi_stds[2]*psi2_psi3_corr,        rho_stds[0]*psi_stds[1]*psi2_rho1_corr,      rho_stds[1]*psi_stds[1]*psi2_rho2_corr      ,   rho_stds[2]*psi_stds[1]*psi2_rho3_corr ,          psi_stds[1]*U_Vlos1*0                          , psi_stds[1]*U_Vlos2     *0            ,psi_stds[1]*U_Vlos3  *0   ],
-                 [theta_stds[0]*psi_stds[2]*psi3_theta1_corr,              theta_stds[1]*psi_stds[2]*psi3_theta2_corr ,         theta_stds[2]*psi_stds[2]*psi3_theta3_corr ,           psi_stds[0]*psi_stds[2]*psi1_psi3_corr,           psi_stds[1]*psi_stds[2]*psi2_psi3_corr   ,               psi_stds[2]**2*autocorr_psi,           rho_stds[0]*psi_stds[2]*psi3_rho1_corr,      rho_stds[1]*psi_stds[2]*psi3_rho2_corr      ,   rho_stds[2]*psi_stds[2]*psi3_rho3_corr ,          psi_stds[2]*U_Vlos1*0                          , psi_stds[2]*U_Vlos2     *0            ,psi_stds[2]*U_Vlos3  *0   ],
+                 [theta_stds[0]*psi_stds[0]*psi1_theta1_corr  ,            theta_stds[1]*psi_stds[0]*psi1_theta2_corr,          theta_stds[2]*psi_stds[0]*psi1_theta3_corr,                     psi_stds[0]**2*autocorr_psi,            psi_stds[1]*psi_stds[0]*psi1_psi2_corr,          psi_stds[0]*psi_stds[2]*psi1_psi3_corr,        rho_stds[0]*psi_stds[0]*psi1_rho1_corr,      rho_stds[1]*psi_stds[0]*psi1_rho2_corr        ,         rho_stds[2]*psi_stds[0]*psi1_rho3_corr        ,      psi_stds[0]*U_Vlos1*0                  , psi_stds[0]*U_Vlos2*0     ,            psi_stds[0]*U_Vlos3  *0   ],
+                 [theta_stds[0]*psi_stds[1]*psi2_theta1_corr,              theta_stds[1]*psi_stds[1]*psi2_theta2_corr ,         theta_stds[2]*psi_stds[1]*psi2_theta3_corr ,           psi_stds[0]*psi_stds[1]*psi1_psi2_corr,                 psi_stds[1]**2*autocorr_psi,               psi_stds[1]*psi_stds[2]*psi2_psi3_corr,        rho_stds[0]*psi_stds[1]*psi2_rho1_corr,      rho_stds[1]*psi_stds[1]*psi2_rho2_corr      ,          rho_stds[2]*psi_stds[1]*psi2_rho3_corr ,            psi_stds[1]*U_Vlos1*0                   , psi_stds[1]*U_Vlos2*0                 ,psi_stds[1]*U_Vlos3  *0   ],
+                 [theta_stds[0]*psi_stds[2]*psi3_theta1_corr,              theta_stds[1]*psi_stds[2]*psi3_theta2_corr ,         theta_stds[2]*psi_stds[2]*psi3_theta3_corr ,           psi_stds[0]*psi_stds[2]*psi1_psi3_corr,           psi_stds[1]*psi_stds[2]*psi2_psi3_corr   ,               psi_stds[2]**2*autocorr_psi,           rho_stds[0]*psi_stds[2]*psi3_rho1_corr,      rho_stds[1]*psi_stds[2]*psi3_rho2_corr      ,         rho_stds[2]*psi_stds[2]*psi3_rho3_corr ,            psi_stds[2]*U_Vlos1*0                    , psi_stds[2]*U_Vlos2*0                  ,psi_stds[2]*U_Vlos3  *0   ],
                  
                  
                  
-                 [theta_stds[0]*rho_stds[0]*theta1_rho1_corr,          theta_stds[1]*rho_stds[0]*theta2_rho1_corr,            theta_stds[2]*rho_stds[0]*theta3_rho1_corr     ,        psi_stds[0]*rho_stds[0]*psi1_rho1_corr,           psi_stds[1]*rho_stds[0]*psi2_rho1_corr,          psi_stds[1]*rho_stds[2]*psi2_rho3_corr,        rho_stds[0]**2*autocorr_rho,                    rho_stds[1]*rho_stds[0]*rho1_rho2_corr      , rho_stds[2]*rho_stds[0]*rho1_rho3_corr      ,      rho_stds[0]*U_Vlos1*0                      ,rho_stds[0]*U_Vlos2     *0              ,rho_stds[0]*U_Vlos3     *0],
-                 [theta_stds[0]*rho_stds[1]*theta1_rho2_corr,          theta_stds[1]*rho_stds[1]*theta2_rho2_corr,            theta_stds[2]*rho_stds[1]*theta3_rho2_corr,                    psi_stds[0]*rho_stds[1]*psi1_rho2_corr,          psi_stds[1]*rho_stds[1]*psi2_rho2_corr,          psi_stds[2]*rho_stds[1]*psi3_rho2_corr,       rho_stds[0]*rho_stds[1]*rho1_rho2_corr,           rho_stds[1]**2*autocorr_rho           ,     rho_stds[2]*rho_stds[1]*rho2_rho3_corr,              rho_stds[1]*U_Vlos1 *0  ,                 rho_stds[1]*U_Vlos2    *0 ,               rho_stds[1]*U_Vlos3    *0 ],
-                 [theta_stds[0]*rho_stds[2]*theta1_rho3_corr,          theta_stds[1]*rho_stds[2]*theta2_rho3_corr,            theta_stds[2]*rho_stds[2]*theta3_rho3_corr,                    psi_stds[0]*rho_stds[2]*psi1_rho3_corr,          psi_stds[1]*rho_stds[2]*psi2_rho3_corr,          psi_stds[2]*rho_stds[2]*psi3_rho3_corr,       rho_stds[0]*rho_stds[2]*rho1_rho3_corr,          rho_stds[2]*rho_stds[1]*rho2_rho3_corr           ,     rho_stds[2]**2*autocorr_rho ,              rho_stds[2]*U_Vlos1 *0  ,                 rho_stds[2]*U_Vlos2    *0 ,               rho_stds[2]*U_Vlos3    *0 ],
+                 [theta_stds[0]*rho_stds[0]*theta1_rho1_corr,          theta_stds[1]*rho_stds[0]*theta2_rho1_corr,            theta_stds[2]*rho_stds[0]*theta3_rho1_corr     ,        psi_stds[0]*rho_stds[0]*psi1_rho1_corr,           psi_stds[1]*rho_stds[0]*psi2_rho1_corr,          psi_stds[1]*rho_stds[2]*psi2_rho3_corr,        rho_stds[0]**2*autocorr_rho,                    rho_stds[1]*rho_stds[0]*rho1_rho2_corr      ,       rho_stds[2]*rho_stds[0]*rho1_rho3_corr      ,        rho_stds[0]*U_Vlos1*0                      ,rho_stds[0]*U_Vlos2*0                 ,rho_stds[0]*U_Vlos3     *0],
+                 [theta_stds[0]*rho_stds[1]*theta1_rho2_corr,          theta_stds[1]*rho_stds[1]*theta2_rho2_corr,            theta_stds[2]*rho_stds[1]*theta3_rho2_corr,                    psi_stds[0]*rho_stds[1]*psi1_rho2_corr,          psi_stds[1]*rho_stds[1]*psi2_rho2_corr,          psi_stds[2]*rho_stds[1]*psi3_rho2_corr,       rho_stds[0]*rho_stds[1]*rho1_rho2_corr,           rho_stds[1]**2*autocorr_rho           ,        rho_stds[2]*rho_stds[1]*rho2_rho3_corr,              rho_stds[1]*U_Vlos1 *0  ,                 rho_stds[1]*U_Vlos2 *0 ,               rho_stds[1]*U_Vlos3    *0 ],
+                 [theta_stds[0]*rho_stds[2]*theta1_rho3_corr,          theta_stds[1]*rho_stds[2]*theta2_rho3_corr,            theta_stds[2]*rho_stds[2]*theta3_rho3_corr,                    psi_stds[0]*rho_stds[2]*psi1_rho3_corr,          psi_stds[1]*rho_stds[2]*psi2_rho3_corr,          psi_stds[2]*rho_stds[2]*psi3_rho3_corr,       rho_stds[0]*rho_stds[2]*rho1_rho3_corr,          rho_stds[2]*rho_stds[1]*rho2_rho3_corr           ,     rho_stds[2]**2*autocorr_rho ,              rho_stds[2]*U_Vlos1 *0  ,                  rho_stds[2]*U_Vlos2 *0 ,                 rho_stds[2]*U_Vlos3    *0 ],
                 
                  
                  
-                 [theta_stds[0]*U_Vlos1*0    ,                                 theta_stds[1]*U_Vlos1*0               ,          theta_stds[2]*U_Vlos1*0               ,                        psi_stds[0]*U_Vlos1*0    ,                          psi_stds[1]*U_Vlos1*0,                            psi_stds[2]*U_Vlos1*0,                      rho_stds[0]*U_Vlos1*0   ,                             rho_stds[1]*U_Vlos1*0   ,                rho_stds[2]*U_Vlos1*0   ,                U_Vlos1**2*autocorr_V,                     U_Vlos1*U_Vlos2*u_Vlos1_Vlos2_corr   ,     U_Vlos1*U_Vlos3*u_Vlos1_Vlos3_corr ],
-                 [theta_stds[0]*U_Vlos2*0    ,                                 theta_stds[1]*U_Vlos2*0               ,          theta_stds[2]*U_Vlos2*0               ,                        psi_stds[0]*U_Vlos2*0    ,                          psi_stds[1]*U_Vlos2*0,                            psi_stds[2]*U_Vlos2*0,                      rho_stds[0]*U_Vlos2*0   ,                             rho_stds[1]*U_Vlos2*0   ,            rho_stds[2]*U_Vlos2*0   ,                    U_Vlos1*U_Vlos2*u_Vlos1_Vlos2_corr   ,              U_Vlos2**2*autocorr_V,             U_Vlos2*U_Vlos3*u_Vlos2_Vlos3_corr],
-                 [theta_stds[0]*U_Vlos3*0    ,                                 theta_stds[1]*U_Vlos3*0               ,          theta_stds[2]*U_Vlos3*0               ,                        psi_stds[0]*U_Vlos3*0    ,                          psi_stds[1]*U_Vlos3*0,                            psi_stds[2]*U_Vlos3*0,                      rho_stds[0]*U_Vlos3*0   ,                             rho_stds[1]*U_Vlos3*0   ,            rho_stds[2]*U_Vlos3*0   ,                    U_Vlos1*U_Vlos3*u_Vlos1_Vlos3_corr  ,       U_Vlos2*U_Vlos3*u_Vlos2_Vlos3_corr ,        U_Vlos3**2*autocorr_V             ]
+                 [theta_stds[0]*U_Vlos1*0    ,                                 theta_stds[1]*U_Vlos1*0               ,          theta_stds[2]*U_Vlos1*0               ,                        psi_stds[0]*U_Vlos1*0    ,                          psi_stds[1]*U_Vlos1*0,                            psi_stds[2]*U_Vlos1*0,                      rho_stds[0]*U_Vlos1*0   ,                             rho_stds[1]*U_Vlos1*0   ,                rho_stds[2]*U_Vlos1*0   ,                       U_Vlos1**2*autocorr_V,                     U_Vlos1*U_Vlos2*u_Vlos1_Vlos2_corr   ,     U_Vlos1*U_Vlos3*u_Vlos1_Vlos3_corr ],
+                 [theta_stds[0]*U_Vlos2*0    ,                                 theta_stds[1]*U_Vlos2*0               ,          theta_stds[2]*U_Vlos2*0               ,                        psi_stds[0]*U_Vlos2*0    ,                          psi_stds[1]*U_Vlos2*0,                            psi_stds[2]*U_Vlos2*0,                      rho_stds[0]*U_Vlos2*0   ,                             rho_stds[1]*U_Vlos2*0   ,            rho_stds[2]*U_Vlos2*0   ,                           U_Vlos1*U_Vlos2*u_Vlos1_Vlos2_corr   ,              U_Vlos2**2*autocorr_V,            U_Vlos2*U_Vlos3*u_Vlos2_Vlos3_corr],
+                 [theta_stds[0]*U_Vlos3*0    ,                                 theta_stds[1]*U_Vlos3*0               ,          theta_stds[2]*U_Vlos3*0               ,                        psi_stds[0]*U_Vlos3*0    ,                          psi_stds[1]*U_Vlos3*0,                            psi_stds[2]*U_Vlos3*0,                      rho_stds[0]*U_Vlos3*0   ,                             rho_stds[1]*U_Vlos3*0   ,            rho_stds[2]*U_Vlos3*0   ,                           U_Vlos1*U_Vlos3*u_Vlos1_Vlos3_corr  ,       U_Vlos2*U_Vlos3*u_Vlos2_Vlos3_corr ,      U_Vlos3**2*autocorr_V             ]
                  ]
         return  cov_MAT
 
@@ -545,21 +545,20 @@ Second, we use the statics of Vlos, mean and stdv, jointly with the correlation 
 
 def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,ind_alpha,theta1,u_theta1,psi1 ,u_psi1,rho1,u_rho1,theta2,u_theta2,psi2,u_psi2,rho2,u_rho2,theta3,u_theta3,psi3,u_psi3,rho3,u_rho3):
     # pdb.set_trace()
-    Vh,U_Vh_MCM,CorrCoefTheta2Psi2= [],[],[]
-    Vlos1,Vlos2,Vlos3,U_Vlos1_MCM,U_Vlos2_MCM,U_Vlos3_MCM=[],[],[],[],[],[]
-    Vlos1_MC_cr2_s,Vlos2_MC_cr2_s,Vlos3_MC_cr2_s=[],[],[]
-    CorrCoef_U_VLOS,CorrCoefVlos2,CorrCoefTheta2,CorrCoefPsi2,CorrCoefTheta1Psi2,CorrCoefTheta2Psi1,CorrCoef_U_uv,CorrCoefTheta1Psi1_2,CorrCoefTheta2Psi2_2=[],[],[],[],[],[],[],[],[]
+    Vh,U_Vh_MCM                                           = [],[]
+    Vlos1,Vlos2,Vlos3,U_Vlos1_MCM,U_Vlos2_MCM,U_Vlos3_MCM = [],[],[],[],[],[]
+    Vlos1_MC_cr2_s,Vlos2_MC_cr2_s,Vlos3_MC_cr2_s          = [],[],[]
     CorrCoef_U_Vlos12,CorrCoef_U_Vlos13,CorrCoef_U_Vlos23 = [],[],[]
-    CorrCoefVlos1,  CorrCoefTheta1,CorrCoefPsi1,CorrCoefThetaPsi1,CorrCoefuv,CorrCoef_Theta1Psi2,CorrCoefTheta1Psi2_2,CorrCoefTheta2Psi1_2,CorrCoefTheta1Psi1=[],[],[],[],[],[],[],[]    ,[]
     Theta1_cr2_s,Theta2_cr2_s,Theta3_cr2_s,Psi1_cr2_s,Psi2_cr2_s,Psi3_cr2_s,Rho1_cr2_s,Rho2_cr2_s,Rho3_cr2_s=[],[],[],[],[],[],[],[],[]
     
+    u0,v0,w0 = [],[],[]
 
     for ind_wind_dir in range(len(wind_direction)):  
         ######## Vlos multivariate distribution #####################
 
         # # Multivariate distributions: 
 
-        Vlos_corrcoeff12,Vlos_corrcoeff13,Vlos_corrcoeff23,Vlos1_MCM,Vlos2_MCM,Vlos3_MCM,Theta1_cr,Theta2_cr,Theta3_cr,Psi1_cr,Psi2_cr,Psi3_cr,Rho1_cr,Rho2_cr,Rho3_cr=Vlos_correlations(Lidar,Atmospheric_Scenario,wind_direction, ind_wind_dir,ind_alpha,Vlos1,Vlos2,theta1, theta2,theta3, psi1,psi2,psi3,rho1,rho2,rho3,u_theta1,u_theta2,u_theta3,u_psi1,u_psi2,u_psi3,u_rho1,u_rho2,u_rho3)
+        Vlos_corrcoeff12,Vlos_corrcoeff13,Vlos_corrcoeff23,Vlos1_MCM,Vlos2_MCM,Vlos3_MCM,Theta1_cr,Theta2_cr,Theta3_cr,Psi1_cr,Psi2_cr,Psi3_cr,Rho1_cr,Rho2_cr,Rho3_cr  =  Vlos_correlations(Lidar,Atmospheric_Scenario,wind_direction, ind_wind_dir,ind_alpha,Vlos1,Vlos2,theta1, theta2,theta3, psi1,psi2,psi3,rho1,rho2,rho3,u_theta1,u_theta2,u_theta3,u_psi1,u_psi2,u_psi3,u_rho1,u_rho2,u_rho3)
         CorrCoef_U_Vlos12.append(Vlos_corrcoeff12)
         CorrCoef_U_Vlos13.append(Vlos_corrcoeff13)
         CorrCoef_U_Vlos23.append(Vlos_corrcoeff23)
@@ -581,34 +580,20 @@ def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,ind_alph
         U_Vlos2_MCM.append(U_Vlos2_MCM0)
         U_Vlos3_MCM.append(U_Vlos3_MCM0)
      
-        # pdb.set_trace()
-        ###CORRELATION COEFFICIENTS 1st multivariate  
-        # CorrCoef_U_VLOS=(np.corrcoef(U_Vlos1_MCM[ind_wind_dir],U_Vlos2_MCM[ind_wind_dir])[0][1])              
-        # CorrCoefTheta1Psi1.append( np.corrcoef(Theta1_cr,Psi1_cr)[0][1]) 
-        # CorrCoefTheta2Psi2.append( np.corrcoef(Theta2_cr,Psi2_cr)[0][1])  
-        # CorrCoefTheta1.append( np.corrcoef(Theta1_cr,Theta2_cr)[0][1])
-        # CorrCoefVlos1.append( np.corrcoef(Vlos1[ind_wind_dir],Vlos2[ind_wind_dir])[0][1])        
-        # CorrCoefPsi1.append( np.corrcoef(Psi1_cr,Psi2_cr)[0][1])
-        # CorrCoefTheta1Psi2.append( np.corrcoef(Theta1_cr,Psi2_cr)[0][1])  
-        # CorrCoefTheta2Psi1.append(np.corrcoef(Theta2_cr,Psi1_cr)[0][1])
     
-    
-        ######### Vh multivariate  ####################################  
-        # for ind_wind_dir in range(len(wind_direction)):             
-                                                                                                                                                                                                                                                                                                                           ## MCM - uv     
+        ######### Vh multivariate  ####################################                                                                                                                                                                                                                                                                                                                             ## MCM - uv     
         # Covariance matrix       
         #                   (Lidar,  Vlos_corrcoeff   Vlos_corrcoeff,   Vlos_corrcoeff,    U_Vlos1,           U_Vlos2       U_Vlos3       , [u_theta1,u_theta2,u_theta3], [u_psi1,u_psi2,u_psi3],  [u_rho1,u_rho2,u_rho3],    autocorr_theta,   autocorr_psi,   autocorr_rho,    autocorr_V ,    mode)
-        cov_MAT_Vh = MultiVar(Lidar, Vlos_corrcoeff12,Vlos_corrcoeff13, Vlos_corrcoeff23,  U_Vlos1_MCM0,    U_Vlos2_MCM0  , U_Vlos3_MCM0 ,        [0,0,0],                         [0,0,0],                 [0,0,0],                   1   ,         1     ,         1 ,            1 ,        'MC2' )
-        # pdb.set_trace() 
+        cov_MAT_Vh = MultiVar(Lidar, Vlos_corrcoeff12,Vlos_corrcoeff13, Vlos_corrcoeff23,  U_Vlos1_MCM0,    U_Vlos2_MCM0  , U_Vlos3_MCM0 ,  [0,0,0], [0,0,0],  [0,0,0] ,            1   ,         1     ,         1 ,            1 ,        'MC2' )
         
         # # Multivariate distributions:       
         Theta1_cr2,Theta2_cr2,Theta3_cr2,Psi1_cr2,Psi2_cr2,Psi3_cr2,Rho1_cr2,Rho2_cr2,Rho3_cr2,Vlos1_MC_cr2,Vlos2_MC_cr2,Vlos3_MC_cr2= multivariate_normal.rvs([theta1 , theta2 ,theta3, psi1 , psi2 ,psi3,rho1 , rho2 , rho3,np.mean(Vlos1_MCM) , np.mean(Vlos2_MCM),np.mean(Vlos3_MCM)] , cov_MAT_Vh , Lidar.optics.scanner.N_MC).T
         # # 3D
-   
         u,v,w=Wind_vector(Theta1_cr2,Theta2_cr2,Theta3_cr2,Psi1_cr2,Psi2_cr2,Psi3_cr2,Vlos1_MC_cr2,Vlos2_MC_cr2,Vlos3_MC_cr2)             
-        
-
-                   
+        # pdb.set_trace()
+        u0.append(np.mean(u))
+        v0.append(np.mean(v))           
+        w0.append(np.mean(w))
         
         #Storing data
         Vlos1_MC_cr2_s.append(Vlos1_MC_cr2)
@@ -630,25 +615,15 @@ def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,ind_alph
         Vh.append(np.sqrt(u**2+v**2+w**2))
         U_Vh_MCM.append(np.std(Vh[ind_wind_dir]))
         
-        
-        ###CORRELATION COEFFICIENTS 2nd multivariate       
-        # CorrCoefVlos2.append(np.corrcoef(Vlos1_MC_cr2_s[ind_wind_dir] , Vlos2_MC_cr2_s[ind_wind_dir])[0][1])       
-        # CorrCoefTheta2.append(np.corrcoef(Theta1_cr2,Theta2_cr2)[0][1])
-        # CorrCoefPsi2.append( np.corrcoef(Psi1_cr2,Psi2_cr2)[0][1])
-        # CorrCoefTheta2_Psi2_2    =   np.corrcoef(Theta2_cr2 , Psi2_cr2)[0][1]          
-        # CorrCoefTheta1Psi1_2.append( np.corrcoef(Theta1_cr2 , Psi1_cr2)[0][1])
-        # CorrCoefTheta1Psi2_2.append( np.corrcoef(Theta1_cr2 , Psi2_cr2)[0][1])
-        # CorrCoefTheta2Psi2_2.append( np.corrcoef(Theta2_cr2 , Psi2_cr2)[0][1])
-        # CorrCoefTheta2Psi1_2.append( np.corrcoef(Theta2_cr2 , Psi1_cr2)[0][1])
-        # pdb.set_trace()
      
+    CorrCoef_uv=np.corrcoef(u,v) 
     # Store the multivariate distributions
     Mult_param          =  [Vlos1_MC_cr2_s,Vlos2_MC_cr2_s,Vlos3_MC_cr2_s,Theta1_cr2_s,Theta2_cr2_s,Theta3_cr2_s,Psi1_cr2_s,Psi2_cr2_s,Psi3_cr2_s,Rho1_cr2_s,Rho2_cr2_s,Rho3_cr2_s]
 
-    # pdb.set_trace()
+    pdb.set_trace()
+    
     # Store correlation coefficients
     Correlation_coeffs  =  [CorrCoef_U_Vlos12,CorrCoef_U_Vlos13,CorrCoef_U_Vlos23]
-    # pdb.set_trace()
     return U_Vlos1_MCM , U_Vlos2_MCM ,U_Vlos3_MCM, Mult_param , Correlation_coeffs , U_Vh_MCM
 
 
@@ -697,9 +672,9 @@ def GUM_Vlos_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,ind_alp
         dVlos2dpsi2     =   - Atmospheric_Scenario.Vref*((H_t2)**Atmospheric_Scenario.PL_exp[ind_alpha]) * (np.cos(theta2)*np.sin(psi2 - wind_direction[ind_wind_dir]))    
         dVlos3dpsi3     =   - Atmospheric_Scenario.Vref*((H_t3)**Atmospheric_Scenario.PL_exp[ind_alpha]) * (np.cos(theta3)*np.sin(psi3 - wind_direction[ind_wind_dir]))    
        
-        dVlos1drho1     =     Atmospheric_Scenario.Vref*((H_t1)**Atmospheric_Scenario.PL_exp[ind_alpha]) * Atmospheric_Scenario.PL_exp[ind_alpha]*(np.sin(theta1) / (rho1*np.sin(theta1) + Lidar.optics.scanner.origin[0][2]))*np.cos(theta1)*np.cos(psi1-wind_direction[ind_wind_dir])
-        dVlos2drho2     =     Atmospheric_Scenario.Vref*((H_t2)**Atmospheric_Scenario.PL_exp[ind_alpha]) * Atmospheric_Scenario.PL_exp[ind_alpha]*(np.sin(theta2) / (rho2*np.sin(theta2) + Lidar.optics.scanner.origin[1][2]))*np.cos(theta2)*np.cos(psi2-wind_direction[ind_wind_dir])
-        dVlos3drho3     =     Atmospheric_Scenario.Vref*((H_t3)**Atmospheric_Scenario.PL_exp[ind_alpha]) * Atmospheric_Scenario.PL_exp[ind_alpha]*(np.sin(theta3) / (rho3*np.sin(theta3) + Lidar.optics.scanner.origin[2][2]))*np.cos(theta3)*np.cos(psi3-wind_direction[ind_wind_dir])
+        dVlos1drho1     =     Atmospheric_Scenario.Vref*((H_t1)**Atmospheric_Scenario.PL_exp[ind_alpha]) * Atmospheric_Scenario.PL_exp[ind_alpha]*(np.sin(theta1) / (rho1*np.sin(theta1) + Lidar.optics.scanner.origin[0][2]))*np.cos(theta1)*(np.cos(psi1-wind_direction[ind_wind_dir])+(np.tan(beta)/np.cos(theta1)))
+        dVlos2drho2     =     Atmospheric_Scenario.Vref*((H_t2)**Atmospheric_Scenario.PL_exp[ind_alpha]) * Atmospheric_Scenario.PL_exp[ind_alpha]*(np.sin(theta2) / (rho2*np.sin(theta2) + Lidar.optics.scanner.origin[1][2]))*np.cos(theta2)*(np.cos(psi2-wind_direction[ind_wind_dir])+(np.tan(beta)/np.cos(theta2)))
+        dVlos3drho3     =     Atmospheric_Scenario.Vref*((H_t3)**Atmospheric_Scenario.PL_exp[ind_alpha]) * Atmospheric_Scenario.PL_exp[ind_alpha]*(np.sin(theta3) / (rho3*np.sin(theta3) + Lidar.optics.scanner.origin[2][2]))*np.cos(theta3)*(np.cos(psi3-wind_direction[ind_wind_dir])+(np.tan(beta)/np.cos(theta3)))
         
            
         # Store each contribution
@@ -721,6 +696,7 @@ def GUM_Vlos_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,ind_alp
         
         # Ouput covariance matrix
         Uy=Cx.dot(Ux).dot(np.transpose(Cx))
+        # pdb.set_trace()
         Corrcoef_Vlos12.append(Uy[0][1]/np.sqrt(Uy[1][1]*Uy[0][0]))
         Corrcoef_Vlos13.append(Uy[0][2]/np.sqrt(Uy[0][0]*Uy[2][2]))
         Corrcoef_Vlos23.append(Uy[1][2]/np.sqrt(Uy[1][1]*Uy[2][2]))
@@ -736,7 +712,7 @@ def GUM_Vlos_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,ind_alp
     Awachesneip2=[u_V_LOS2Theta2,u_V_LOS2Psi2,u_V_LOS2Rho2]
     Awachesneip3=[u_V_LOS3Theta3,u_V_LOS3Psi3,u_V_LOS3Rho3]
     CorrCoef_U_VLOS=(np.corrcoef(U_Vlos1_GUM,U_Vlos2_GUM)[0][1])
-    # pdb.set_trace()
+    pdb.set_trace()
     return(VL1,VL2,VL3,U_Vlos1_GUM,U_Vlos2_GUM,U_Vlos3_GUM,Corrcoef_Vlos12,Corrcoef_Vlos13,Corrcoef_Vlos23,Awachesneip,Awachesneip2,Awachesneip3)
 
 #%% ##########################################
@@ -747,55 +723,52 @@ def GUM_Vlos_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,ind_alp
 #%%
 def GUM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,Corrcoef_Vlos_GUM12,Corrcoef_Vlos_GUM13,Corrcoef_Vlos_GUM23,wind_direction,theta1,psi1,rho1,theta2,psi2 ,rho2,theta3,psi3 ,rho3,u_theta1,u_theta2,u_theta3,u_psi1,u_psi2,u_psi3,u_rho1,u_rho2,u_rho3 ,Vlos1_GUM,Vlos2_GUM,Vlos3_GUM,U_Vlos1_GUM,U_Vlos2_GUM,U_Vlos3_GUM):
         # Vh Uncertainty
-        UUy,U_Vh_GUM,dV1,dV2,dVt1,dVt2,dVp1,dVp2,dV1V2=[],[],[],[],[],[],[],[],[]
-        pdb.set_trace()
+        UUy,U_Vh_GUM,dV1,dV2,dV3=[],[],[],[],[]
+        u0,v0,w0=[],[],[]
         for ind_wind_dir in range(len(wind_direction)):  
             
             u,v,w=Wind_vector(theta1,theta2,theta3,psi1,psi2,psi3, Vlos1_GUM[ind_wind_dir],Vlos2_GUM[ind_wind_dir],Vlos3_GUM[ind_wind_dir])
             
+            u0.append(u)
+            v0.append(v)
+            w0.append(w)
             
-            num1 = np.sqrt(((Vlos1_GUM[ind_wind_dir]*np.cos(theta2))**2)+((Vlos2_GUM[ind_wind_dir]*np.cos(theta1))**2)-(2*Vlos1_GUM[ind_wind_dir]*Vlos2_GUM[ind_wind_dir]*np.cos(psi1-psi2)*np.cos(theta1)*np.cos(theta2)))
-            den=np.cos(theta1)*np.cos(theta2)*np.sin(psi1-psi2)
-            den=np.cos(theta1)*np.cos(theta2)*np.sin(psi1-psi2)
-            dVh_Vlos1= (1/den)*(1/(num1))*(Vlos1_GUM[ind_wind_dir]*((np.cos(theta2))**2)-Vlos2_GUM[ind_wind_dir]*np.cos(theta1)*np.cos(theta2)*np.cos(psi1-psi2))
-            dVh_Vlos2= (1/den)*(1/(num1))*(Vlos2_GUM[ind_wind_dir]*((np.cos(theta1))**2)-Vlos1_GUM[ind_wind_dir]*np.cos(theta1)*np.cos(theta2)*np.cos(psi1-psi2))
+            # Definingn coefficients:
+            a=1/(2*np.sqrt(u**2 + v**2 + w**2))
+            b=(np.cos(theta1) *np.cos(theta3)*np.sin(theta2)*np.sin(psi3-psi1) + np.cos(theta2)*np.cos(theta3)*np.sin(theta1)*np.sin(psi2-psi3) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3)*np.sin(psi1-psi2))
+
+            dVwind_Vlos1= (a)*((-2*u*(np.cos(theta2) * np.sin(psi2)  * np.sin(theta3) - np.cos(theta3)*np.sin(psi3)*np.sin(theta2))/b) - 
+                                (2*v*(np.cos(psi3)  * np.cos(theta3) * np.sin(theta2) - np.cos(psi2)*np.cos(theta2)*np.sin(theta3))/b) -
+                               (2*w*np.cos(theta2)  * np.cos(theta3) * np.sin(psi3-psi2) )/b)
+            
+            dVwind_Vlos2= (a)*((-2*u*((np.cos(theta3)*np.sin(psi3)*np.sin(theta1) - np.cos(theta1)*np.sin(psi1)*np.sin(theta3)))/b) - 
+                               (2*v*((np.cos(psi1)*np.cos(theta1)*np.sin(theta3) - np.cos(psi3)*np.cos(theta3)*np.sin(theta1))/b)) -
+                               (2*w*(np.cos(theta1) * np.cos(theta3) * np.sin(psi1-psi3)))/b)
+            
+            dVwind_Vlos3= (a)*((-2*u*(np.cos(theta1)*np.sin(psi1)*np.sin(theta2) - np.cos(theta2)* np.sin(psi2)*np.sin(theta1))/b )- 
+                               (2*v*((np.cos(psi2)*np.cos(theta2)*np.sin(theta1) - np.cos(psi1)*np.cos(theta1)*np.sin(theta2)))/b) -
+                               (2*w*(np.cos(theta1) * np.cos(theta2) * np.sin(psi2-psi1)))/b)
+            
             
  
-            dV1.append((dVh_Vlos1*U_Vlos1_GUM[ind_wind_dir])**2)
-            dV2.append((dVh_Vlos2*U_Vlos2_GUM[ind_wind_dir])**2)
-             
+            dV1.append((dVwind_Vlos1*U_Vlos1_GUM[ind_wind_dir])**2)
+            dV2.append((dVwind_Vlos2*U_Vlos2_GUM[ind_wind_dir])**2)
+            dV3.append((dVwind_Vlos3*U_Vlos3_GUM[ind_wind_dir])**2)             
             
-            # dVh_dtheta1
-            dnum1= (1/(2*num1))*(-2*(Vlos2_GUM[ind_wind_dir]**2)*np.cos(theta1)*np.sin(theta1)+2*Vlos2_GUM[ind_wind_dir]*Vlos1_GUM[ind_wind_dir]*np.sin(theta1)*np.cos(theta2)*np.cos(psi1-psi2))
-            dVh_dtheta1 = (dnum1*den+num1*np.sin(theta1)*np.cos(theta2)*np.sin(psi1-psi2))/den**2
-            dVt1.append(dVh_dtheta1)
-           
-            # dVh_dtheta2
-            dnum2= (1/(2*num1))*(-2*(Vlos1_GUM[ind_wind_dir]**2)*np.cos(theta2)*np.sin(theta2)+2*Vlos2_GUM[ind_wind_dir]*Vlos1_GUM[ind_wind_dir]*np.sin(theta2)*np.cos(theta1)*np.cos(psi1-psi2))
-            dVh_dtheta2 = (dnum2*den+num1*np.cos(theta1)*np.sin(theta2)*np.sin(psi1-psi2))/den**2
-            dVt2.append(dVh_dtheta2)
-            
-            # dVh_dpsi1
-            dnum3= (1/(2*num1))*(2*Vlos2_GUM[ind_wind_dir]*Vlos1_GUM[ind_wind_dir]*np.cos(theta2)*np.cos(theta1)*np.sin(psi1-psi2))
-            dVh_dpsi1 = (dnum3*den-num1*np.cos(theta1)*np.cos(theta2)*np.cos(psi1-psi2))/(np.cos(theta2)*np.cos(theta1)*np.sin(psi1-psi2))**2
-            dVp1.append(dVh_dpsi1)
-            
-            # dVh_dpsi2
-            dnum4= (1/(2*num1))*(-2*Vlos2_GUM[ind_wind_dir]*Vlos1_GUM[ind_wind_dir]*np.cos(theta2)*np.cos(theta1)*np.sin(psi1-psi2))
-            dVh_dpsi2 = (dnum4*den+num1*np.cos(theta1)*np.cos(theta2)*np.cos(psi1-psi2))/(np.cos(theta2)*np.cos(theta1)*np.sin(psi1-psi2))**2
-            dVp2.append(dVh_dpsi2)
+          
 
             # Covariance and sensitivity matrices:
-            # pdb.set_trace()                
-                      # (Lidar,   Vlos_corrcoeff ,                         U_Vlos1,                   U_Vlos2,          theta_stds,    psi_stds,  rho_stds, autocorr_theta,autocorr_psi,autocorr_rho,autocorr_V ,   mode)
-            UxVh=MultiVar(Lidar,  Corrcoef_Vlos[ind_wind_dir],   U_Vlos1_GUM[ind_wind_dir],U_Vlos2_GUM[ind_wind_dir],   [u_theta1,u_theta2],  [u_psi1,u_psi2],      [u_rho1,u_rho2],        1,            1,           1    ,    1,        'GUM2' )
-            # CxVh=[dVh_dtheta1,dVh_dtheta2,dVh_dpsi1,dVh_dpsi2,0,0,dVh_Vlos1,dVh_Vlos2]
-            CxVh=[0,0,0,0,0,0,dVh_Vlos1,dVh_Vlos2]
-            UyVh=np.array(CxVh).dot(UxVh).dot(np.transpose(CxVh))
+                           
+                         # (Lidar,   Corrcoef_Vlos_GUM12[ind_wind_dir],   Corrcoef_Vlos_GUM13[ind_wind_dir],   Corrcoef_Vlos_GUM23[ind_wind_dir],       U_Vlos1,                   U_Vlos2,                   U_Vlos3,                         theta_stds,                  psi_stds,                      rho_stds,      autocorr_theta,autocorr_psi,autocorr_rho,autocorr_V ,   mode)
+            UxVh = MultiVar(Lidar,   Corrcoef_Vlos_GUM12[ind_wind_dir],   Corrcoef_Vlos_GUM13[ind_wind_dir],   Corrcoef_Vlos_GUM23[ind_wind_dir],   U_Vlos1_GUM[ind_wind_dir], U_Vlos2_GUM[ind_wind_dir],U_Vlos3_GUM[ind_wind_dir],   [u_theta1,u_theta2,u_theta3],  [u_psi1,u_psi2,u_psi3],      [u_rho1,u_rho2,u_rho3],        1,            1,           1    ,    1,        'GUM2' )
+            CxVh = [0,0,0,0,0,0,0,0,0,dVwind_Vlos1,dVwind_Vlos2,dVwind_Vlos3]
+            
+            
+            UyVh = np.array(CxVh).dot(UxVh).dot(np.transpose(CxVh))
             UUy.append(UyVh)
             U_Vh_GUM.append(np.sqrt(UyVh))        
-        
-        return(U_Vh_GUM,dV1,dV2,dV1V2)
+        pdb.set_trace() 
+        return(U_Vh_GUM,dV1,dV2,dV3)
     
     
     
@@ -916,64 +889,133 @@ def U_intrinsic(Lidar,List_Unc_lidar,Qlunc_yaml_inputs):
 
 def Wind_vector(theta1,theta2,theta3,psi1,psi2,psi3, Vlos1,Vlos2,Vlos3):
     # # 3D
-    u = (Vlos3* (np.cos(theta1)-np.cos(theta2)) *np.sin(psi1)* np.sin(psi2)  +                 
-         Vlos2 *(np.cos(theta3)-np.cos(theta1)) *np.sin(psi1)* np.sin(psi3)  +                 
-         Vlos1 *(np.cos(theta2)-np.cos(theta3)) *np.sin(psi2) *np.sin(psi3)) /(np.cos(theta1) *np.cos(theta3)*np.sin(psi2)*np.sin(psi1-psi3)+ 
-         np.cos(theta2)*np.cos(theta3)*np.sin(psi1)*np.sin(psi3-psi2)         + 
-         np.cos(theta1)*np.cos(theta2)*np.sin(psi3)*np.sin(psi2-psi1))
+    # pdb.set_trace()
     
     
-    v = (Vlos1* (np.cos(psi3)*np.cos(theta3)*np.sin(psi2)-np.cos(psi2)*np.cos(theta2)*np.sin(psi3)) +                 
-         Vlos2* (np.cos(psi1)*np.cos(theta1)*np.sin(psi3)-np.cos(psi3)*np.cos(theta3)*np.sin(psi1)) +                 
-         Vlos3* (np.cos(psi2)*np.cos(theta2)*np.sin(psi1)-np.cos(psi1)*np.cos(theta1)*np.sin(psi2)))/ (np.cos(theta1) *np.cos(theta3)*np.sin(psi2)*np.sin(psi1-psi3) + 
-         np.cos(theta2)*np.cos(theta3)*np.sin(psi1)*np.sin(psi3-psi2)   + 
-         np.cos(theta1)*np.cos(theta2)*np.sin(psi3)*np.sin(psi2-psi1))
+    u = - (Vlos3* (np.cos(theta1)*np.sin(psi1)*np.sin(theta2) - np.cos(theta2)* np.sin(psi2)*np.sin(theta1))  +                           
+           Vlos2 *(np.cos(theta3)*np.sin(psi3)*np.sin(theta1) - np.cos(theta1)*np.sin(psi1)*np.sin(theta3)) +                 
+           Vlos1 *(np.cos(theta2)*np.sin(psi2)*np.sin(theta3) - np.cos(theta3)*np.sin(psi3)*np.sin(theta2)) ) /(np.cos(theta1) *np.cos(theta3)*np.sin(theta2)*np.sin(psi3-psi1)+ 
+           np.cos(theta2)*np.cos(theta3)*np.sin(theta1)*np.sin(psi2-psi3)          + 
+           np.cos(theta1)*np.cos(theta2)*np.sin(theta3)*np.sin(psi1-psi2))
     
     
-    w= (Vlos1* np.cos(theta2) *np.cos(theta3)* np.sin(psi3-psi2)   +                
-        Vlos2 *np.cos(theta1)*np.cos(theta3) *np.sin(psi1-psi3)    +                 
-        Vlos3 *np.cos(theta1)*np.cos(theta2) *np.sin(psi2-psi1))   / (np.cos(theta1) *np.cos(theta3)*np.sin(psi2)*np.sin(psi1-psi3) + 
-        np.cos(theta2)*np.cos(theta3)*np.sin(psi1)*np.sin(psi3-psi2)   + 
-        np.cos(theta1)*np.cos(theta2)*np.sin(psi3)*np.sin(psi2-psi1)) 
+    v = - (Vlos1* (np.cos(psi3)*np.cos(theta3)*np.sin(theta2) - np.cos(psi2)*np.cos(theta2)*np.sin(theta3)) +                 
+           Vlos2* (np.cos(psi1)*np.cos(theta1)*np.sin(theta3) - np.cos(psi3)*np.cos(theta3)*np.sin(theta1)) +                 
+           Vlos3* (np.cos(psi2)*np.cos(theta2)*np.sin(theta1) - np.cos(psi1)*np.cos(theta1)*np.sin(theta2)))/(np.cos(theta1) *np.cos(theta3)*np.sin(theta2)*np.sin(psi3-psi1)+ 
+           np.cos(theta2)*np.cos(theta3)*np.sin(theta1)*np.sin(psi2-psi3)          + 
+           np.cos(theta1)*np.cos(theta2)*np.sin(theta3)*np.sin(psi1-psi2))
+    
+    
+    w =- (Vlos1 * np.cos(theta2) * np.cos(theta3) * np.sin(psi3-psi2)   +                
+          Vlos2 * np.cos(theta1) * np.cos(theta3) * np.sin(psi1-psi3)   +                 
+          Vlos3 * np.cos(theta1) * np.cos(theta2) * np.sin(psi2-psi1))  /(np.cos(theta1) *np.cos(theta3)*np.sin(theta2)*np.sin(psi3-psi1)+ 
+           np.cos(theta2)*np.cos(theta3)*np.sin(theta1)*np.sin(psi2-psi3)          + 
+           np.cos(theta1)*np.cos(theta2)*np.sin(theta3)*np.sin(psi1-psi2))                                                               
+    # pdb.set_trace()                        
     return u,v,w
 
 
 
 #%% 3D velocity vector
-# u = -(-Vlos3* np.cos(theta1) *np.sin(psi1)* np.sin(psi2) + 
-#             Vlos3 *np.cos(theta2) *np.sin(psi1) *np.sin(psi2) + 
-#             Vlos2 *np.cos(theta1) *np.sin(psi1)* np.sin(psi3) - 
-#             Vlos2 *np.cos(theta3)* np.sin(psi1)* np.sin(psi3) - 
-#             Vlos1 *np.cos(theta2) *np.sin(psi2) *np.sin(psi3) + 
-#             Vlos1 *np.cos(theta3) *np.sin(psi2) *np.sin(psi3))/(np.cos(psi3) *np.cos(
-#               theta1) *np.cos(theta3) *np.sin(psi1)* np.sin(psi2) - 
-#             np.cos(psi3) *np.cos(theta2)* np.cos(theta3) *np.sin(psi1) *np.sin(psi2) - 
-#             np.cos(psi2) *np.cos(theta1)* np.cos(theta2) *np.sin(psi1) *np.sin(psi3) + 
-#             np.cos(psi2) *np.cos(theta2)* np.cos(theta3) *np.sin(psi1) *np.sin(psi3) + 
-#             np.cos(psi1) *np.cos(theta1)* np.cos(theta2) *np.sin(psi2) *np.sin(psi3) - 
-#             np.cos(psi1) *np.cos(theta1)* np.cos(theta3) *np.sin(psi2)* np.sin(psi3))
-#     v =-(Vlos3 *np.cos(psi2) *np.cos(theta2) *np.sin(psi1) - 
-#             Vlos2 *np.cos(psi3) *np.cos(theta3) *np.sin(psi1) - 
-#             Vlos3 *np.cos(psi1) *np.cos(theta1) *np.sin(psi2) + 
-#             Vlos1 *np.cos(psi3) *np.cos(theta3) *np.sin(psi2) + 
-#             Vlos2 *np.cos(psi1) *np.cos(theta1) *np.sin(psi3) - 
-#             Vlos1 *np.cos(psi2) *np.cos(theta2) *np.sin(psi3))/(-np.cos(psi3) *np.cos(
-#               theta1)* np.cos(theta3) *np.sin(psi1) *np.sin(psi2) + 
-#             np.cos(psi3) *np.cos(theta2) *np.cos(theta3) *np.sin(psi1) *np.sin(psi2) + 
-#             np.cos(psi2) *np.cos(theta1) *np.cos(theta2) *np.sin(psi1) *np.sin(psi3) - 
-#             np.cos(psi2) *np.cos(theta2) *np.cos(theta3) *np.sin(psi1) *np.sin(psi3) - 
-#             np.cos(psi1) *np.cos(theta1) *np.cos(theta2) *np.sin(psi2) *np.sin(psi3) + 
-#             np.cos(psi1) *np.cos(theta1) *np.cos(theta3) *np.sin(psi2) *np.sin(psi3))
-#     w=-(-Vlos3 *np.cos(psi2) *np.cos(theta1)* np.cos(theta2) *np.sin(psi1) + 
-#             Vlos2* np.cos(psi3) *np.cos(theta1)* np.cos(theta3) *np.sin(psi1) + 
-#             Vlos3 *np.cos(psi1) *np.cos(theta1)* np.cos(theta2) *np.sin(psi2) - 
-#             Vlos1 *np.cos(psi3) *np.cos(theta2)* np.cos(theta3) *np.sin(psi2) - 
-#             Vlos2 *np.cos(psi1) *np.cos(theta1)* np.cos(theta3) *np.sin(psi3) + 
-#             Vlos1 *np.cos(psi2) *np.cos(theta2)* np.cos(theta3) *np.sin(
-#               psi3))/(-np.cos(psi3)* np.cos(theta1)* np.cos(theta3) *np.sin(psi1) *np.sin(
-#               psi2) + np.cos(psi3) *np.cos(theta2) *np.cos(theta3)* np.sin(psi1) *np.sin(
-#               psi2) + np.cos(psi2) *np.cos(theta1) *np.cos(theta2) *np.sin(psi1) *np.sin(
-#               psi3) - np.cos(psi2) *np.cos(theta2) *np.cos(theta3) *np.sin(psi1) *np.sin(
-#               psi3) - np.cos(psi1) *np.cos(theta1) *np.cos(theta2) *np.sin(psi2) *np.sin(
-#               psi3) + np.cos(psi1) *np.cos(theta1)* np.cos(theta3) *np.sin(psi2) *np.sin(
-#               psi3))
+'''
+u1 = -((-Vlos3 *np.cos(theta2)* np.sin(psi2)* np.sin(theta1) + 
+        Vlos2* np.cos(theta3) *np.sin(psi3) *np.sin(theta1) + 
+        Vlos3 *np.cos(theta1) *np.sin(psi1) *np.sin(theta2) - 
+        Vlos1* np.cos(theta3)* np.sin(psi3) *np.sin(theta2) - 
+        Vlos2* np.cos(theta1) *np.sin(psi1) *np.sin(theta3) + 
+        Vlos1 *np.cos(theta2)* np.sin(psi2) *np.sin(theta3))/
+       (np.cos(psi3) *np.cos(theta2) *np.cos(theta3) *np.sin(psi2) *np.sin(theta1) - 
+        np.cos(psi2) *np.cos(theta2) *np.cos(theta3) *np.sin(psi3)* np.sin(theta1) - 
+        np.cos(psi3) *np.cos(theta1) *np.cos(theta3) *np.sin(psi1)* np.sin(theta2) + 
+        np.cos(psi1)* np.cos(theta1) *np.cos(theta3) *np.sin(psi3)* np.sin(theta2) + 
+        np.cos(psi2)* np.cos(theta1) *np.cos(theta2)* np.sin(psi1)* np.sin(theta3) - 
+        np.cos(psi1) *np.cos(theta1) *np.cos(theta2)* np.sin(psi2)* np.sin(theta3)))
+  
+v1 = -((Vlos3 *np.cos(psi2) *np.cos(theta2)* np.sin(theta1) - 
+        Vlos2 *np.cos(psi3)* np.cos(theta3)* np.sin(theta1) - 
+        Vlos3 *np.cos(psi1)* np.cos(theta1) *np.sin(theta2) + 
+        Vlos1 *np.cos(psi3)* np.cos(theta3) *np.sin(theta2) + 
+        Vlos2 *np.cos(psi1)* np.cos(theta1) *np.sin(theta3) - 
+        Vlos1 *np.cos(psi2)* np.cos(theta2) *np.sin(theta3))/(np.cos(psi3) *np.cos(theta2) *np.cos(theta3) *np.sin(psi2) *np.sin(theta1) - 
+        np.cos(psi2)* np.cos(theta2) *np.cos(theta3)*np.sin(psi3)* np.sin(theta1) - 
+        np.cos(psi3) *np.cos(theta1) *np.cos(theta3)* np.sin(psi1)* np.sin(theta2) + 
+        np.cos(psi1) *np.cos(theta1) *np.cos(theta3)* np.sin(psi3) *np.sin(theta2) + 
+        np.cos(psi2) *np.cos(theta1) *np.cos(theta2)* np.sin(psi1) *np.sin(theta3) - 
+        np.cos(psi1) *np.cos(theta1) *np.cos(theta2)* np.sin(psi2) *np.sin(theta3)))
+  
+w1 = -((-Vlos3* np.cos(psi2) *np.cos(theta1)* np.cos(theta2) *np.sin(psi1) + 
+        Vlos2* np.cos(psi3) *np.cos(theta1)* np.cos(theta3)* np.sin(psi1) + 
+        Vlos3 *np.cos(psi1) *np.cos(theta1) *np.cos(theta2) *np.sin(psi2) - 
+        Vlos1 *np.cos(psi3) *np.cos(theta2) *np.cos(theta3) *np.sin(psi2) - 
+        Vlos2 *np.cos(psi1) *np.cos(theta1) *np.cos(theta3) *np.sin(psi3) + 
+        Vlos1 *np.cos(psi2) *np.cos(theta2) *np.cos(theta3) *np.sin(psi3))/(np.cos(psi3) *np.cos(theta2)* np.cos(theta3)* np.sin(psi2) *np.sin(theta1) - 
+        np.cos(psi2)* np.cos(theta2) *np.cos(theta3) *np.sin(psi3) *np.sin(theta1) - 
+        np.cos(psi3) *np.cos(theta1) *np.cos(theta3) *np.sin(psi1) *np.sin(theta2) + 
+        np.cos(psi1) *np.cos(theta1) *np.cos(theta3) *np.sin(psi3) *np.sin(theta2) + 
+        np.cos(psi2) *np.cos(theta1) *np.cos(theta2) *np.sin(psi1) *np.sin(theta3) - 
+        np.cos(psi1) *np.cos(theta1) *np.cos(theta2) *np.sin(psi2) *np.sin(theta3)))
+'''
+'''
+u = -(-Vlos3* np.cos(theta1) *np.sin(psi1)* np.sin(psi2) + 
+            Vlos3 *np.cos(theta2) *np.sin(psi1) *np.sin(psi2) + 
+            Vlos2 *np.cos(theta1) *np.sin(psi1)* np.sin(psi3) - 
+            Vlos2 *np.cos(theta3)* np.sin(psi1)* np.sin(psi3) - 
+            Vlos1 *np.cos(theta2) *np.sin(psi2) *np.sin(psi3) + 
+            Vlos1 *np.cos(theta3) *np.sin(psi2) *np.sin(psi3))/(np.cos(psi3) *np.cos(
+              theta1) *np.cos(theta3) *np.sin(psi1)* np.sin(psi2) - 
+            np.cos(psi3) *np.cos(theta2)* np.cos(theta3) *np.sin(psi1) *np.sin(psi2) - 
+            np.cos(psi2) *np.cos(theta1)* np.cos(theta2) *np.sin(psi1) *np.sin(psi3) + 
+            np.cos(psi2) *np.cos(theta2)* np.cos(theta3) *np.sin(psi1) *np.sin(psi3) + 
+            np.cos(psi1) *np.cos(theta1)* np.cos(theta2) *np.sin(psi2) *np.sin(psi3) - 
+            np.cos(psi1) *np.cos(theta1)* np.cos(theta3) *np.sin(psi2)* np.sin(psi3))
+
+v =-(Vlos3 *np.cos(psi2) *np.cos(theta2) *np.sin(psi1) - 
+            Vlos2 *np.cos(psi3) *np.cos(theta3) *np.sin(psi1) - 
+            Vlos3 *np.cos(psi1) *np.cos(theta1) *np.sin(psi2) + 
+            Vlos1 *np.cos(psi3) *np.cos(theta3) *np.sin(psi2) + 
+            Vlos2 *np.cos(psi1) *np.cos(theta1) *np.sin(psi3) - 
+            Vlos1 *np.cos(psi2) *np.cos(theta2) *np.sin(psi3))/(-np.cos(psi3) *np.cos(
+              theta1)* np.cos(theta3) *np.sin(psi1) *np.sin(psi2) + 
+            np.cos(psi3) *np.cos(theta2) *np.cos(theta3) *np.sin(psi1) *np.sin(psi2) + 
+            np.cos(psi2) *np.cos(theta1) *np.cos(theta2) *np.sin(psi1) *np.sin(psi3) - 
+            np.cos(psi2) *np.cos(theta2) *np.cos(theta3) *np.sin(psi1) *np.sin(psi3) - 
+            np.cos(psi1) *np.cos(theta1) *np.cos(theta2) *np.sin(psi2) *np.sin(psi3) + 
+            np.cos(psi1) *np.cos(theta1) *np.cos(theta3) *np.sin(psi2) *np.sin(psi3))
+
+w=-(-Vlos3 *np.cos(psi2) *np.cos(theta1)* np.cos(theta2) *np.sin(psi1) + 
+            Vlos2* np.cos(psi3) *np.cos(theta1)* np.cos(theta3) *np.sin(psi1) + 
+            Vlos3 *np.cos(psi1) *np.cos(theta1)* np.cos(theta2) *np.sin(psi2) - 
+            Vlos1 *np.cos(psi3) *np.cos(theta2)* np.cos(theta3) *np.sin(psi2) - 
+            Vlos2 *np.cos(psi1) *np.cos(theta1)* np.cos(theta3) *np.sin(psi3) + 
+            Vlos1 *np.cos(psi2) *np.cos(theta2)* np.cos(theta3) *np.sin(
+              psi3))/(-np.cos(psi3)* np.cos(theta1)* np.cos(theta3) *np.sin(psi1) *np.sin(
+              psi2) + np.cos(psi3) *np.cos(theta2) *np.cos(theta3)* np.sin(psi1) *np.sin(
+              psi2) + np.cos(psi2) *np.cos(theta1) *np.cos(theta2) *np.sin(psi1) *np.sin(
+              psi3) - np.cos(psi2) *np.cos(theta2) *np.cos(theta3) *np.sin(psi1) *np.sin(
+              psi3) - np.cos(psi1) *np.cos(theta1) *np.cos(theta2) *np.sin(psi2) *np.sin(
+              psi3) + np.cos(psi1) *np.cos(theta1)* np.cos(theta3) *np.sin(psi2) *np.sin(
+              psi3))
+
+'''
+#%% MINE
+
+   
+    # u =  (Vlos3* (np.cos(theta1) - np.cos(theta2)) *np.sin(psi1)* np.sin(psi2)  +                 
+    #       Vlos2 *(np.cos(theta3) - np.cos(theta1)) *np.sin(psi1)* np.sin(psi3)  +                 
+    #       Vlos1 *(np.cos(theta2) - np.cos(theta3)) *np.sin(psi2) *np.sin(psi3)) /(np.cos(theta1) *np.cos(theta3)*np.sin(psi2)*np.sin(psi1-psi3)+ 
+    #       np.cos(theta2)*np.cos(theta3)*np.sin(psi1)*np.sin(psi3-psi2)          + 
+    #       np.cos(theta1)*np.cos(theta2)*np.sin(psi3)*np.sin(psi2-psi1))
+    
+    
+    # v =  (Vlos1* (np.cos(psi3)*np.cos(theta3)*np.sin(psi2) - np.cos(psi2)*np.cos(theta2)*np.sin(psi3)) +                 
+    #       Vlos2* (np.cos(psi1)*np.cos(theta1)*np.sin(psi3) - np.cos(psi3)*np.cos(theta3)*np.sin(psi1)) +                 
+    #       Vlos3* (np.cos(psi2)*np.cos(theta2)*np.sin(psi1) - np.cos(psi1)*np.cos(theta1)*np.sin(psi2)))/ (np.cos(theta1) *np.cos(theta3)*np.sin(psi2)*np.sin(psi1-psi3) + 
+    #       np.cos(theta2)*np.cos(theta3)*np.sin(psi1)*np.sin(psi3-psi2)   + 
+    #       np.cos(theta1)*np.cos(theta2)*np.sin(psi3)*np.sin(psi2-psi1))
+    
+    
+    # w = (Vlos1 * np.cos(theta2) * np.cos(theta3) * np.sin(psi3-psi2)   +                
+    #      Vlos2 * np.cos(theta1) * np.cos(theta3) * np.sin(psi1-psi3)   +                 
+    #      Vlos3 * np.cos(theta1) * np.cos(theta2) * np.sin(psi2-psi1))  / (np.cos(theta1) *np.cos(theta3)*np.sin(psi2)*np.sin(psi1-psi3) + 
+    #      np.cos(theta2)*np.cos(theta3)*np.sin(psi1)*np.sin(psi3-psi2)  + 
+    #      np.cos(theta1)*np.cos(theta2)*np.sin(psi3)*np.sin(psi2-psi1)) 

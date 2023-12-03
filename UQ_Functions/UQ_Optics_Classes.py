@@ -140,17 +140,17 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             # Lidar 1
             theta1,u_theta1 = (lidars['Lidar0_Spherical']['theta'])%np.radians(360) ,np.radians(Lidar.optics.scanner.stdv_cone_angle[0][0])
             psi1  ,u_psi1   = (lidars['Lidar0_Spherical']['psi'])%np.radians(360)   ,np.radians(Lidar.optics.scanner.stdv_azimuth[0][0])
-            rho1  ,u_rho1   = lidars['Lidar0_Spherical']['rho']                 ,Lidar.optics.scanner.stdv_focus_dist [0][0]
+            rho1  ,u_rho1   = lidars['Lidar0_Spherical']['rho']                     ,Lidar.optics.scanner.stdv_focus_dist [0][0]
             # Lidar 2 
             theta2,u_theta2 = (lidars['Lidar1_Spherical']['theta'])%np.radians(360) ,np.radians(Lidar.optics.scanner.stdv_cone_angle[1][0])
             psi2  ,u_psi2   = (lidars['Lidar1_Spherical']['psi'])%np.radians(360)   ,np.radians(Lidar.optics.scanner.stdv_azimuth[1][0])
-            rho2  ,u_rho2   = lidars['Lidar1_Spherical']['rho']                 ,Lidar.optics.scanner.stdv_focus_dist [1][0]
+            rho2  ,u_rho2   = lidars['Lidar1_Spherical']['rho']                     ,Lidar.optics.scanner.stdv_focus_dist [1][0]
             # Lidar 3 
             theta3,u_theta3 = (lidars['Lidar2_Spherical']['theta'])%np.radians(360) ,np.radians(Lidar.optics.scanner.stdv_cone_angle[2][0])
             psi3  ,u_psi3   = (lidars['Lidar2_Spherical']['psi'])%np.radians(360)   ,np.radians(Lidar.optics.scanner.stdv_azimuth[2][0])
-            rho3  ,u_rho3   = lidars['Lidar2_Spherical']['rho']                 ,Lidar.optics.scanner.stdv_focus_dist [2][0]
+            rho3  ,u_rho3   = lidars['Lidar2_Spherical']['rho']                     ,Lidar.optics.scanner.stdv_focus_dist [2][0]
                         
-
+            # pdb.set_trace()
             
             #%% 3) Wind velocity uncertainy estimation
  
@@ -170,11 +170,11 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             U_Vlos1_GUM_T.append(U_Vlos1_GUM)
             U_Vlos2_GUM_T.append(U_Vlos2_GUM)
             U_Vlos3_GUM_T.append(U_Vlos3_GUM)
-            pdb.set_trace()
+            # pdb.set_trace()
             # 3.4) Vh Uncertainty GUM method
-            U_Vh_GUM,dV1,dV2,dV1V2   =   SA.GUM_Vh_lidar_uncertainty(Lidar,Atmospheric_Scenario,Corrcoef_Vlos_GUM12,Corrcoef_Vlos_GUM13,Corrcoef_Vlos_GUM23,wind_direction,theta1[0],psi1 [0],rho1[0],theta2[0],psi2[0],rho2[0],theta3[0],psi3[0],rho3[0],
+            U_Vh_GUM,dV1,dV2,dV3   =   SA.GUM_Vh_lidar_uncertainty(Lidar,Atmospheric_Scenario,Corrcoef_Vlos_GUM12,Corrcoef_Vlos_GUM13,Corrcoef_Vlos_GUM23,wind_direction,theta1[0],psi1 [0],rho1[0],theta2[0],psi2[0],rho2[0],theta3[0],psi3[0],rho3[0],
                                                                u_theta1,u_theta2,u_theta3,u_psi1,u_psi2,u_psi3,u_rho1,u_rho2,u_rho3,Vlos1_GUM,Vlos2_GUM,Vlos3_GUM,U_Vlos1_GUM,U_Vlos2_GUM,U_Vlos3_GUM)
-            
+            pdb.set_trace()
             # Store data
             U_Vh_GUM_T.append(U_Vh_GUM)                
             SensCoeffVh1.append(dV1)
