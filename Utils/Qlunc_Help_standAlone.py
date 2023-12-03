@@ -620,7 +620,7 @@ def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,ind_alph
     # Store the multivariate distributions
     Mult_param          =  [Vlos1_MC_cr2_s,Vlos2_MC_cr2_s,Vlos3_MC_cr2_s,Theta1_cr2_s,Theta2_cr2_s,Theta3_cr2_s,Psi1_cr2_s,Psi2_cr2_s,Psi3_cr2_s,Rho1_cr2_s,Rho2_cr2_s,Rho3_cr2_s]
 
-    pdb.set_trace()
+    # pdb.set_trace()
     
     # Store correlation coefficients
     Correlation_coeffs  =  [CorrCoef_U_Vlos12,CorrCoef_U_Vlos13,CorrCoef_U_Vlos23]
@@ -712,7 +712,7 @@ def GUM_Vlos_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,ind_alp
     Awachesneip2=[u_V_LOS2Theta2,u_V_LOS2Psi2,u_V_LOS2Rho2]
     Awachesneip3=[u_V_LOS3Theta3,u_V_LOS3Psi3,u_V_LOS3Rho3]
     CorrCoef_U_VLOS=(np.corrcoef(U_Vlos1_GUM,U_Vlos2_GUM)[0][1])
-    pdb.set_trace()
+    # pdb.set_trace()
     return(VL1,VL2,VL3,U_Vlos1_GUM,U_Vlos2_GUM,U_Vlos3_GUM,Corrcoef_Vlos12,Corrcoef_Vlos13,Corrcoef_Vlos23,Awachesneip,Awachesneip2,Awachesneip3)
 
 #%% ##########################################
@@ -759,15 +759,15 @@ def GUM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,Corrcoef_Vlos_GUM12,Cor
 
             # Covariance and sensitivity matrices:
                            
-                         # (Lidar,   Corrcoef_Vlos_GUM12[ind_wind_dir],   Corrcoef_Vlos_GUM13[ind_wind_dir],   Corrcoef_Vlos_GUM23[ind_wind_dir],       U_Vlos1,                   U_Vlos2,                   U_Vlos3,                         theta_stds,                  psi_stds,                      rho_stds,      autocorr_theta,autocorr_psi,autocorr_rho,autocorr_V ,   mode)
-            UxVh = MultiVar(Lidar,   Corrcoef_Vlos_GUM12[ind_wind_dir],   Corrcoef_Vlos_GUM13[ind_wind_dir],   Corrcoef_Vlos_GUM23[ind_wind_dir],   U_Vlos1_GUM[ind_wind_dir], U_Vlos2_GUM[ind_wind_dir],U_Vlos3_GUM[ind_wind_dir],   [u_theta1,u_theta2,u_theta3],  [u_psi1,u_psi2,u_psi3],      [u_rho1,u_rho2,u_rho3],        1,            1,           1    ,    1,        'GUM2' )
+                         # (Lidar,   Corrcoef_Vlos_GUM12[ind_wind_dir],   Corrcoef_Vlos_GUM13[ind_wind_dir],   Corrcoef_Vlos_GUM23[ind_wind_dir],       U_Vlos1,                   U_Vlos2,                   U_Vlos3,                  theta_stds,       psi_stds,     rho_stds,    autocorr_theta,autocorr_psi,autocorr_rho,autocorr_V ,   mode)
+            UxVh = MultiVar(Lidar,   Corrcoef_Vlos_GUM12[ind_wind_dir],   Corrcoef_Vlos_GUM13[ind_wind_dir],   Corrcoef_Vlos_GUM23[ind_wind_dir],   U_Vlos1_GUM[ind_wind_dir], U_Vlos2_GUM[ind_wind_dir],U_Vlos3_GUM[ind_wind_dir],     [0,0,0],          [0,0,0],       [0,0,0],        1,            1,           1    ,    1,        'GUM2' )
             CxVh = [0,0,0,0,0,0,0,0,0,dVwind_Vlos1,dVwind_Vlos2,dVwind_Vlos3]
             
             
             UyVh = np.array(CxVh).dot(UxVh).dot(np.transpose(CxVh))
             UUy.append(UyVh)
             U_Vh_GUM.append(np.sqrt(UyVh))        
-        pdb.set_trace() 
+        # pdb.set_trace() 
         return(U_Vh_GUM,dV1,dV2,dV3)
     
     
