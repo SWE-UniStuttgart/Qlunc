@@ -633,8 +633,8 @@ def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,ind_alph
         
         ######## Vlos multivariate distribution #####################
         # Multivariate distributions and correlation between the Vlos's: 
-        Vlos_corr = np.zeros(len(Lidar.optics.scanner.origin))
-        Vlos_corr,Vlos_MCM,U_Vlos,Theta_cr,Psi_cr,Rho_cr  =  Vlos_correlations(Lidar,Vlos_corr,Atmospheric_Scenario,wind_direction, ind_wind_dir,ind_alpha,lidars)
+        Vlos_corr0 = np.zeros(len(Lidar.optics.scanner.origin))
+        Vlos_corr,Vlos_MCM,U_Vlos,Theta_cr,Psi_cr,Rho_cr  =  Vlos_correlations(Lidar,Vlos_corr0,Atmospheric_Scenario,wind_direction, ind_wind_dir,ind_alpha,lidars)
         
         
         #Store data
@@ -660,7 +660,7 @@ def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,ind_alph
             v0.append(np.mean(v))           
             w0.append(np.mean(w))
                 
-            Vh.append(np.sqrt(u**2+v**2+w**2))
+            Vh.append(np.sqrt(u**2 + v**2 + w**2))
             U_Vh_MCM.append(np.std(Vh[ind_wind_dir]))
             
              #Storing data
@@ -724,10 +724,14 @@ def GUM_Vlos_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,ind_alp
 
     u_V_LOS1Theta1,u_V_LOS1Psi1,u_V_LOS1Rho1,u_V_LOS2Theta2,u_V_LOS2Psi2,u_V_LOS2Rho2,u_V_LOS3Theta3,u_V_LOS3Psi3,u_V_LOS3Rho3=[], [],[],[],[],[],[],[],[]
     U_Vlos_GUM = {"V1":[],"V2":[],"V3":[]}
-    Correlations_Vlos={"V1":[],"V2":[],"V3":[]}
+    Correlation_coeff={"V1":[],"V2":[],"V3":[]}
     Sens_coeff={'V1_theta':[],'V2_theta':[],'V3_theta':[],'V1_psi':[],'V2_psi':[],'V3_psi':[],'V1_rho':[],'V2_rho':[],'V3_rho':[]}
     VL=[]
     Vlos_GUM ={'V1':[],'V2':[],'V3':[]}
+    
+    
+    
+    Corrcoef_Vlos=[]
     
     # Tilt angle:
     beta=np.radians(Atmospheric_Scenario.wind_tilt)
@@ -756,11 +760,12 @@ def GUM_Vlos_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,ind_alp
             dVlosdrho.append(Atmospheric_Scenario.Vref*((H_cr)**Atmospheric_Scenario.PL_exp[ind_alpha]) * Atmospheric_Scenario.PL_exp[ind_alpha]*(np.sin(lidars['Lidar{}_Spherical'.format(i)]['theta']) / (lidars['Lidar{}_Spherical'.format(i)]['rho']*np.sin(lidars['Lidar{}_Spherical'.format(i)]['theta']) + Lidar.optics.scanner.origin[i][2]))*np.cos(lidars['Lidar{}_Spherical'.format(i)]['theta'])*(np.cos(lidars['Lidar{}_Spherical'.format(i)]['psi']-wind_direction[ind_wind_dir])+(np.tan(beta)/np.cos(lidars['Lidar{}_Spherical'.format(i)]['theta']))))
             
             # Store contributions:
-            Sens_coeff['V{}_theta'.format(i+1)]=dVlosdtheta
-            Sens_coeff['V{}_psi'.format(i+1)]=dVlosdpsi
-            Sens_coeff['V{}_rho'.format(i+1)]=dVlosdrho
-
+            Sens_coeff['V{}_theta'.format(i+1)].append(dVlosdtheta[i])
+            Sens_coeff['V{}_psi'.format(i+1)].append(dVlosdpsi[i])
+            Sens_coeff['V{}_rho'.format(i+1)].append(dVlosdrho[i])
         
+
+        # pdb.set_trace()
         if len(Lidar.optics.scanner.origin)==3:
             # Influence coefficients matrix for Vlosi uncertainty estimation
             Cx = np.array([[dVlosdtheta[0],        0,              0,        dVlosdpsi[0],      0,             0,       dVlosdrho[0]  ,       0     ,      0       ,0,0,0],
@@ -779,19 +784,19 @@ def GUM_Vlos_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,ind_alp
         
 
         for i_combi in range(len(Corr_combi)):            
-            Correlations_Vlos['V{}'.format(i_combi+1)].append(Uy[Corr_combi[i_combi][0]][Corr_combi[i_combi][1]]/np.sqrt(Uy[Corr_combi[i_combi][1]][Corr_combi[i_combi][1]]*Uy[Corr_combi[i_combi][0]][Corr_combi[i_combi][0]]))
+            Correlation_coeff['V{}'.format(i_combi+1)].append(Uy[Corr_combi[i_combi][0]][Corr_combi[i_combi][1]]/np.sqrt(Uy[Corr_combi[i_combi][1]][Corr_combi[i_combi][1]]*Uy[Corr_combi[i_combi][0]][Corr_combi[i_combi][0]]))
         for i in range(len(Lidar.optics.scanner.origin)):
             # U_est ##############
             U_Vlos_GUM["V{}".format(i+1)].append(np.sqrt(Uy[i][i]+ Lidar.lidar_inputs.dataframe['Intrinsic Uncertainty [m/s]']**2+Lidar.optics.scanner.stdv_Estimation[0][0]**2))       
         
             # Store data
-            VL.append(Vlos_GUM["V{}".format(i+1)])
-
-    
-    # Storing individual uncertainty contributors
+            # VL.append(Vlos_GUM["V{}".format(i+1)])
+        
+        
+        Corrcoef_Vlos.append(Uy[0][1]/np.sqrt(Uy[1][1]*Uy[0][0]))
 
     # pdb.set_trace()
-    return(Correlations_Vlos, U_Vlos_GUM, Vlos_GUM, Sens_coeff)
+    return(Correlation_coeff, U_Vlos_GUM, Vlos_GUM, Sens_coeff)
 
 #%% ##########################################
 ##########################################
@@ -803,7 +808,7 @@ def GUM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,Correlation_coeff,wind_
         # Vh Uncertainty
         UUy,U_Vh_GUM=[],[]
         u0,v0,w0=[],[],[]
-        dV={'dV1':[],'dV2':[],'dV3':[],'dV1V2':[],'dV1V3':[],'dV2V3':[]}
+        Sensitivity_Coefficients={'dV1':[],'dV2':[],'dV3':[],'dV1V2':[],'dV1V3':[],'dV2V3':[]}
         
         for ind_wind_dir in range(len(wind_direction)):  
             if len(Lidar.optics.scanner.origin)==3:
@@ -833,13 +838,13 @@ def GUM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,Correlation_coeff,wind_
                 Cx = [0,0,0,0,0,0,0,0,0,dVwind_Vlos1,dVwind_Vlos2,dVwind_Vlos3]
                 
                 # Store data:
-                # pdb.set_trace()
-                dV['dV1'].append((dVwind_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir])**2)
-                dV['dV2'].append((dVwind_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir])**2)
-                dV['dV3'].append((dVwind_Vlos3*U_Vlos_GUM['V3'][ind_wind_dir])**2) 
-                dV['dV1V2'].append(2*dVwind_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir]*dVwind_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir]*Correlation_coeff['V1'][ind_wind_dir])
-                dV['dV1V3'].append(2*dVwind_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir]*dVwind_Vlos3*U_Vlos_GUM['V3'][ind_wind_dir]*Correlation_coeff['V2'][ind_wind_dir])
-                dV['dV2V3'].append(2*dVwind_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir]*dVwind_Vlos3*U_Vlos_GUM['V3'][ind_wind_dir]*Correlation_coeff['V3'][ind_wind_dir])
+                # Contributions different sensitivity coefficients
+                Sensitivity_Coefficients['dV1'].append((dVwind_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir])**2)
+                Sensitivity_Coefficients['dV2'].append((dVwind_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir])**2)
+                Sensitivity_Coefficients['dV3'].append((dVwind_Vlos3*U_Vlos_GUM['V3'][ind_wind_dir])**2) 
+                Sensitivity_Coefficients['dV1V2'].append(2*dVwind_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir]*dVwind_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir]*Correlation_coeff['V1'][ind_wind_dir])
+                Sensitivity_Coefficients['dV1V3'].append(2*dVwind_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir]*dVwind_Vlos3*U_Vlos_GUM['V3'][ind_wind_dir]*Correlation_coeff['V2'][ind_wind_dir])
+                Sensitivity_Coefficients['dV2V3'].append(2*dVwind_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir]*dVwind_Vlos3*U_Vlos_GUM['V3'][ind_wind_dir]*Correlation_coeff['V3'][ind_wind_dir])
                 
                 # Storing UVlos and correlations
                 U_VLOS_GUM_list   = [U_Vlos_GUM['V1'][ind_wind_dir],U_Vlos_GUM['V2'][ind_wind_dir],U_Vlos_GUM['V3'][ind_wind_dir]]
@@ -854,10 +859,10 @@ def GUM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,Correlation_coeff,wind_
                 #Sensitivity matrix
                 Cx = [0,0,0,0,0,0,dVh_Vlos1,dVh_Vlos2]
                                 
-                # Store data:
-                dV['dV1'].append((dVh_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir])**2)
-                dV['dV2'].append((dVh_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir])**2)
-                dV['dV1V2'].append(2*dVh_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir]*dVh_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir]*Correlation_coeff['V1'][ind_wind_dir])
+                # Store Sensitivity coefficients:
+                Sensitivity_Coefficients['dV1'].append((dVh_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir])**2)
+                Sensitivity_Coefficients['dV2'].append((dVh_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir])**2)
+                Sensitivity_Coefficients['dV1V2'].append(2*dVh_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir]*dVh_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir]*Correlation_coeff['V1'][ind_wind_dir])
                 
                 # Storing UVlos and correlations
                 U_VLOS_GUM_list   = [U_Vlos_GUM['V1'][ind_wind_dir],U_Vlos_GUM['V2'][ind_wind_dir]]
@@ -870,8 +875,8 @@ def GUM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,Correlation_coeff,wind_
             UyVh = np.array(Cx).dot(Ux).dot(np.transpose(Cx))
             UUy.append(UyVh)
             U_Vh_GUM.append(np.sqrt(UyVh))        
-            # pdb.set_trace()
-        return(U_Vh_GUM,dV)
+        pdb.set_trace()
+        return(U_Vh_GUM,Sensitivity_Coefficients)
     
     
     
