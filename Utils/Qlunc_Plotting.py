@@ -99,7 +99,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             # 1. Plot Uncertainty in Vh against wind direction
 
             # pdb.set_trace()
-            fig1=plt.figure()
+            fig1=plt.figure(layout='constrained')
             gs=gridspec.GridSpec(3,1,hspace=0.4,wspace=0.1)
             
             
@@ -120,14 +120,15 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             for ind_plot in range(len(Data['Vh Unc [m/s]']['Uncertainty Vh MCM'])):
                 c3=next(color3)
                 ax12=plt.subplot(gs[1,:])
-                if range(len(Lidar.optics.scanner.origin))==3:
-                    plt.plot(np.degrees(Data['wind direction']),CorrelationsGUM[0][ind_plot],'-',c=c3,linewidth=plot_param['linewidth'])
-                    plt.plot(np.degrees(Data['wind direction']),CorrelationsGUM[1][ind_plot],'-',c=c3,linewidth=plot_param['linewidth'])
-                    plt.plot(np.degrees(Data['wind direction']),CorrelationsGUM[2][ind_plot],'-',c=c3,linewidth=plot_param['linewidth'])
+                if len(Lidar.optics.scanner.origin)==3:
+                    gs1=gridspec.GridSpecFromSubplotSpec(1,3,subplot_spec=gs[1,:])
                     
-                    plt.plot(np.degrees(Data['wind direction']),CorrelationsMCM[0][ind_plot],'o', markerfacecolor=c3,markeredgecolor='lime',alpha=0.4)
-                    plt.plot(np.degrees(Data['wind direction']),CorrelationsMCM[1][ind_plot],'o', markerfacecolor=c3,markeredgecolor='lime',alpha=0.4)
-                    plt.plot(np.degrees(Data['wind direction']),CorrelationsMCM[2][ind_plot],'o', markerfacecolor=c3,markeredgecolor='lime',alpha=0.4)
+                    for n in range(3):
+                        axp = fig1.add_subplot(gs1[n])
+                        axp.plot(np.degrees(Data['wind direction']),CorrelationsGUM[n][ind_plot],'-',c=c3,linewidth=plot_param['linewidth'])
+                       
+                        axp.plot(np.degrees(Data['wind direction']),CorrelationsMCM[n][ind_plot],'o', markerfacecolor=c3,markeredgecolor='lime',alpha=0.4)
+                        
                 else:
                     plt.plot(np.degrees(Data['wind direction']),CorrelationsGUM[0][ind_plot],'-',c=c3,linewidth=plot_param['linewidth'])
                     plt.plot(np.degrees(Data['wind direction']),CorrelationsMCM[0][ind_plot],'o', markerfacecolor=c3,markeredgecolor='lime',alpha=0.4)
@@ -137,7 +138,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
            
             
             pdb.set_trace()
-            SensCoeff1=[Data['Sens coeff']['dV1'],Data['Sens coeff']['dV2'],Data['Sens coeff']['dV1V2']]
+            SensCoeff_alpha1=[Data['Sens coeff']['dV1'],Data['Sens coeff']['dV2'],Data['Sens coeff']['dV1V2']]
             for ind_plot in range(3): 
                 
                 ax13=plt.subplot(gs[2,:]) 
@@ -150,7 +151,10 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             ax13.ticklabel_format(axis='y',style='sci', scilimits=(0,0))
            
             ax13.set_xlabel('Wind direction[°]',fontsize=plot_param['axes_label_fontsize'])
-            ax11.set_ylabel('$U_{V_{h}}$ [m/s]',fontsize=plot_param['axes_label_fontsize']+2) 
+            if range(len(Lidar.optics.scanner.origin))==3: 
+                ax11.set_ylabel('$U_{V_{h}}$ [m/s]',fontsize=plot_param['axes_label_fontsize']+2) 
+            else:
+                ax11.set_ylabel('$U_{V_{wind}}$ [m/s]',fontsize=plot_param['axes_label_fontsize']+2)
             ax12.set_ylabel('$r_{V_{LOS}}$ [-]',fontsize=plot_param['axes_label_fontsize']) 
             ax13.set_ylabel(r'$ \frac{\partial^2{V_{h}}}{\partial{V_{LOS_{i,j}}}}~\sigma_{V_{LOS_{i,j}}}~$[m/s]',fontsize=plot_param['axes_label_fontsize']-1.51) 
             ax11.legend(loc=1, prop={'size': plot_param['legend_fontsize']})
