@@ -270,7 +270,7 @@ def U_VLOS_MC(Lidar,cov_MAT,theta,psi,rho,Hl,Href,alpha,wind_direction,Vref,ind_
 
      
          # Multivariate
-         Theta1_cr,Psi1_cr,Rho1_cr= multivariate_normal.rvs([theta[ind_0] , psi[ind_0] , rho[ind_0]] , cov_MAT , Lidar.optics.scanner.N_MC).T   
+         Theta1_cr,Psi1_cr,Rho1_cr= multivariate_normal.rvs(np.concatenate([theta[ind_0] , psi[ind_0] , rho[ind_0]],axis=0) , cov_MAT , Lidar.optics.scanner.N_MC).T   
          
          A=(Hl + (np.sin(Theta1_cr) * Rho1_cr)) / Href   
          VLOS1 = Vref * (A**alpha) * (np.cos(Theta1_cr) * (np.cos(Psi1_cr - wind_direction[ind_wind_dir]) + (np.tan(0)*np.tan(Theta1_cr))))
@@ -527,22 +527,21 @@ def MultiVar (Lidar,Vlos_corrcoeff, U_Vlos,autocorr_theta,autocorr_psi,autocorr_
         theta3_rho3_corr      = 0
         
         if len(Lidar.optics.scanner.origin)==3:
-            
-            cov_MAT=[[u_theta1**2*autocorr_theta,                    u_theta2*u_theta1*theta1_theta2_corr,           u_theta3*u_theta1*theta1_theta3_corr,       u_psi1*u_theta1*psi1_theta1_corr ,      u_psi2*u_theta1*psi2_theta1_corr,      u_psi3*u_theta1*psi3_theta1_corr,     u_rho1*u_theta1*theta1_rho1_corr,    u_rho2*u_theta1*theta1_rho2_corr,         u_rho3*u_theta1*theta1_rho3_corr   ,     u_theta1*U_Vlos[0]*0,                    u_theta1*U_Vlos[1]*0 ,                          u_theta1*U_Vlos[2]  *0  ],
-                     [u_theta1*u_theta2*theta1_theta2_corr,          u_theta2**2*autocorr_theta,                     u_theta3*u_theta2*theta2_theta3_corr,       u_psi1*u_theta2*psi1_theta2_corr,       u_psi2*u_theta2*psi2_theta2_corr ,     u_psi3*u_theta2*psi3_theta2_corr,     u_rho1*u_theta2*theta2_rho1_corr,     u_rho2*u_theta2*theta2_rho2_corr,         u_rho3*u_theta2*theta2_rho3_corr      , u_theta2*U_Vlos[0]*0                   , u_theta2*U_Vlos[1]*0 ,                          u_theta2*U_Vlos[2]  *0  ],
-                     [u_theta1*u_theta3*theta1_theta3_corr  ,        u_theta3*u_theta2*theta2_theta3_corr,           u_theta3**2*autocorr_psi,                   u_theta3*u_psi1*psi1_theta3_corr,       u_theta3*u_psi2*psi2_theta3_corr,      u_theta3*u_psi3*psi3_theta3_corr,     u_rho1*u_theta3*theta3_rho1_corr,     u_rho2*u_theta3*theta3_rho2_corr,          u_rho3*u_theta3*theta3_rho3_corr     , u_theta3*U_Vlos[0]*0                   , u_theta3*U_Vlos[1] *0   ,                       u_theta3*U_Vlos[2]  *0  ],                 
+            pdb.set_trace()
+            Data_type = int
+            cov_MAT=[[np.array(u_theta1**2*autocorr_theta),                    np.array(u_theta2*u_theta1*theta1_theta2_corr),           np.array(u_theta3*u_theta1*theta1_theta3_corr),       np.array(u_psi1*u_theta1*psi1_theta1_corr) ,      np.array(u_psi2*u_theta1*psi2_theta1_corr),      np.array(u_psi3*u_theta1*psi3_theta1_corr),     np.array(u_rho1*u_theta1*theta1_rho1_corr),    np.array(u_rho2*u_theta1*theta1_rho2_corr),         np.array(u_rho3*u_theta1*theta1_rho3_corr)   ,     u_theta1*U_Vlos[0]*0,                    u_theta1*U_Vlos[1]*0 ,                          u_theta1*U_Vlos[2]  *0  ],
+                     [np.array(u_theta1*u_theta2*theta1_theta2_corr),          np.array(u_theta2**2*autocorr_theta),                     np.array(u_theta3*u_theta2*theta2_theta3_corr),       np.array(u_psi1*u_theta2*psi1_theta2_corr),       np.array(u_psi2*u_theta2*psi2_theta2_corr) ,     np.array(u_psi3*u_theta2*psi3_theta2_corr),     np.array(u_rho1*u_theta2*theta2_rho1_corr),     np.array(u_rho2*u_theta2*theta2_rho2_corr),         np.array(u_rho3*u_theta2*theta2_rho3_corr  )    , u_theta2*U_Vlos[0]*0                   , u_theta2*U_Vlos[1]*0 ,                          u_theta2*U_Vlos[2]  *0  ],
+                     [np.array(u_theta1*u_theta3*theta1_theta3_corr)  ,        np.array(u_theta3*u_theta2*theta2_theta3_corr),           np.array(u_theta3**2*autocorr_psi),                   np.array(u_theta3*u_psi1*psi1_theta3_corr),       np.array(u_theta3*u_psi2*psi2_theta3_corr),      np.array(u_theta3*u_psi3*psi3_theta3_corr),     np.array(u_rho1*u_theta3*theta3_rho1_corr),     np.array(u_rho2*u_theta3*theta3_rho2_corr),         np.array( u_rho3*u_theta3*theta3_rho3_corr   )  , u_theta3*U_Vlos[0]*0                   , u_theta3*U_Vlos[1] *0   ,                       u_theta3*U_Vlos[2]  *0  ],                 
                      
-                     [u_theta1*u_psi1*psi1_theta1_corr  ,            u_theta2*u_psi1*psi1_theta2_corr,              u_theta3*u_psi1*psi1_theta3_corr,            u_psi1**2*autocorr_psi,                 u_psi2*u_psi1*psi1_psi2_corr,          u_psi1*u_psi3*psi1_psi3_corr,        u_rho1*u_psi1*psi1_rho1_corr,          u_rho2*u_psi1*psi1_rho2_corr        ,   u_rho3*u_psi1*psi1_rho3_corr        ,    u_psi1*U_Vlos[0]*0                        , u_psi1*U_Vlos[1]*0     ,                      u_psi1*U_Vlos[2]  *0   ],
-                     [u_theta1*u_psi2*psi2_theta1_corr,              u_theta2*u_psi2*psi2_theta2_corr ,             u_theta3*u_psi2*psi2_theta3_corr ,           u_psi1*u_psi2*psi1_psi2_corr,                 u_psi2**2*autocorr_psi,          u_psi2*u_psi3*psi2_psi3_corr,        u_rho1*u_psi2*psi2_rho1_corr,          u_rho2*u_psi2*psi2_rho2_corr      ,     u_rho3*u_psi2*psi2_rho3_corr ,           u_psi2*U_Vlos[0]*0                         , u_psi2*U_Vlos[1]*0                          ,u_psi2*U_Vlos[2]  *0   ],
-                     [u_theta1*u_psi3*psi3_theta1_corr,              u_theta2*u_psi3*psi3_theta2_corr ,             u_theta3*u_psi3*psi3_theta3_corr ,           u_psi1*u_psi3*psi1_psi3_corr,           u_psi2*u_psi3*psi2_psi3_corr   ,       u_psi3**2*autocorr_psi,              u_rho1*u_psi3*psi3_rho1_corr,           u_rho2*u_psi3*psi3_rho2_corr      ,      u_rho3*u_psi3*psi3_rho3_corr ,            u_psi3*U_Vlos[0]*0                      , u_psi3*U_Vlos[1]*0                          ,u_psi3*U_Vlos[2]  *0   ],
+                     [np.array(u_theta1*u_psi1*psi1_theta1_corr)  ,            np.array(u_theta2*u_psi1*psi1_theta2_corr),              np.array(u_theta3*u_psi1*psi1_theta3_corr),            np.array(u_psi1**2*autocorr_psi),                 np.array(u_psi2*u_psi1*psi1_psi2_corr),          np.array(u_psi1*u_psi3*psi1_psi3_corr),        np.array(u_rho1*u_psi1*psi1_rho1_corr),        np.array(  u_rho2*u_psi1*psi1_rho2_corr)        ,   np.array(u_rho3*u_psi1*psi1_rho3_corr   )     ,    u_psi1*U_Vlos[0]*0                        , u_psi1*U_Vlos[1]*0     ,                      u_psi1*U_Vlos[2]  *0   ],
+                     [np.array(u_theta1*u_psi2*psi2_theta1_corr),              np.array(u_theta2*u_psi2*psi2_theta2_corr) ,             np.array(u_theta3*u_psi2*psi2_theta3_corr) ,           np.array(u_psi1*u_psi2*psi1_psi2_corr),           np.array(      u_psi2**2*autocorr_psi),          np.array(u_psi2*u_psi3*psi2_psi3_corr),        np.array(u_rho1*u_psi2*psi2_rho1_corr),        np.array(  u_rho2*u_psi2*psi2_rho2_corr)      ,     np.array(u_rho3*u_psi2*psi2_rho3_corr ),           u_psi2*U_Vlos[0]*0                         , u_psi2*U_Vlos[1]*0                          ,u_psi2*U_Vlos[2]  *0   ],
+                     [np.array(u_theta1*u_psi3*psi3_theta1_corr),              np.array(u_theta2*u_psi3*psi3_theta2_corr) ,             np.array(u_theta3*u_psi3*psi3_theta3_corr) ,           np.array(u_psi1*u_psi3*psi1_psi3_corr),           np.array(u_psi2*u_psi3*psi2_psi3_corr)   ,       np.array(u_psi3**2*autocorr_psi),              np.array(u_rho1*u_psi3*psi3_rho1_corr),        np.array(   u_rho2*u_psi3*psi3_rho2_corr)      ,    np.array(  u_rho3*u_psi3*psi3_rho3_corr ),            u_psi3*U_Vlos[0]*0                      , u_psi3*U_Vlos[1]*0                          ,u_psi3*U_Vlos[2]  *0   ],
+                                          
                      
-                     
-                     
-                     [u_theta1*u_rho1*theta1_rho1_corr,              u_theta2*u_rho1*theta2_rho1_corr,            u_theta3*u_rho1*theta3_rho1_corr     ,            u_psi1*u_rho1*psi1_rho1_corr,           u_psi2*u_rho1*psi2_rho1_corr,          u_psi3*u_rho1*psi2_rho3_corr,        u_rho1**2*autocorr_rho,              u_rho2*u_rho1*rho1_rho2_corr      ,    u_rho3*u_rho1*rho1_rho3_corr      ,       u_rho1*U_Vlos[0]*0                         ,u_rho1*U_Vlos[1]*0                          ,u_rho1*U_Vlos[2]     *0],
-                     [u_theta1*u_rho2*theta1_rho2_corr,              u_theta2*u_rho2*theta2_rho2_corr,            u_theta3*u_rho2*theta3_rho2_corr,                 u_psi1*u_rho2*psi1_rho2_corr,          u_psi2*u_rho2*psi2_rho2_corr,          u_psi3*u_rho2*psi3_rho2_corr,       u_rho1*u_rho2*rho1_rho2_corr,           u_rho2**2*autocorr_rho           ,     u_rho3*u_rho2*rho2_rho3_corr,             u_rho2*U_Vlos[0] *0  ,                    u_rho2*U_Vlos[1] *0 ,                         u_rho2*U_Vlos[2]    *0 ],
-                     [u_theta1*u_rho3*theta1_rho3_corr,              u_theta2*u_rho3*theta2_rho3_corr,            u_theta3*u_rho3*theta3_rho3_corr,                 u_psi1*u_rho3*psi1_rho3_corr,          u_psi2*u_rho3*psi2_rho3_corr,          u_psi3*u_rho3*psi3_rho3_corr,       u_rho1*u_rho3*rho1_rho3_corr,          u_rho3*u_rho2*rho2_rho3_corr      ,      u_rho3**2*autocorr_rho ,                 u_rho3*U_Vlos[0] *0  ,                     u_rho3*U_Vlos[1] *0 ,                        u_rho3*U_Vlos[2]    *0 ],
-                    
-                     
+                     [np.array(u_theta1*u_rho1*theta1_rho1_corr),              np.array(u_theta2*u_rho1*theta2_rho1_corr),            np.array(u_theta3*u_rho1*theta3_rho1_corr )    ,            np.array(u_psi1*u_rho1*psi1_rho1_corr),        np.array(   u_psi2*u_rho1*psi2_rho1_corr),       np.array(   u_psi3*u_rho1*psi2_rho3_corr),     np.array(   u_rho1**2*autocorr_rho),           np.array(   u_rho2*u_rho1*rho1_rho2_corr )     ,    np.array(u_rho3*u_rho1*rho1_rho3_corr )     ,       u_rho1*U_Vlos[0]*0                         ,u_rho1*U_Vlos[1]*0                          ,u_rho1*U_Vlos[2]     *0],
+                     [np.array(u_theta1*u_rho2*theta1_rho2_corr),              np.array(u_theta2*u_rho2*theta2_rho2_corr),            np.array(u_theta3*u_rho2*theta3_rho2_corr),                 np.array(u_psi1*u_rho2*psi1_rho2_corr),        np.array(  u_psi2*u_rho2*psi2_rho2_corr),        np.array(  u_psi3*u_rho2*psi3_rho2_corr),      np.array( u_rho1*u_rho2*rho1_rho2_corr),       np.array(    u_rho2**2*autocorr_rho    )       ,    np.array( u_rho3*u_rho2*rho2_rho3_corr),             u_rho2*U_Vlos[0] *0  ,                    u_rho2*U_Vlos[1] *0 ,                         u_rho2*U_Vlos[2]    *0 ],
+                     [np.array(u_theta1*u_rho3*theta1_rho3_corr),              np.array(u_theta2*u_rho3*theta2_rho3_corr),            np.array(u_theta3*u_rho3*theta3_rho3_corr),                 np.array(u_psi1*u_rho3*psi1_rho3_corr),        np.array(  u_psi2*u_rho3*psi2_rho3_corr),        np.array(  u_psi3*u_rho3*psi3_rho3_corr),      np.array( u_rho1*u_rho3*rho1_rho3_corr),       np.array(   u_rho3*u_rho2*rho2_rho3_corr )     ,    np.array(  u_rho3**2*autocorr_rho ),                 u_rho3*U_Vlos[0] *0  ,                     u_rho3*U_Vlos[1] *0 ,                        u_rho3*U_Vlos[2]    *0 ],
+                                        
                      
                      [u_theta1*U_Vlos[0]*0    ,                          u_theta2*U_Vlos[0]*0               ,          u_theta3*U_Vlos[0]*0               ,        u_psi1*U_Vlos[0]*0    ,                      u_psi2*U_Vlos[0]*0,                 u_psi3*U_Vlos[0]*0,                   u_rho1*U_Vlos[0]*0   ,                 u_rho2*U_Vlos[0]*0   ,                    u_rho3*U_Vlos[0]*0   ,            U_Vlos[0]**2*autocorr_V,                     U_Vlos[0]*U_Vlos[1]*Vlos_corrcoeff[0]   ,     U_Vlos[0]*U_Vlos[2]*Vlos_corrcoeff[1]],
                      [u_theta1*U_Vlos[1]*0    ,                          u_theta2*U_Vlos[1]*0               ,          u_theta3*U_Vlos[1]*0               ,        u_psi1*U_Vlos[1]*0    ,                      u_psi2*U_Vlos[1]*0,                 u_psi3*U_Vlos[1]*0,                  u_rho1*U_Vlos[1]*0   ,                 u_rho2*U_Vlos[1]*0   ,                    u_rho3*U_Vlos[1]*0   ,            U_Vlos[0]*U_Vlos[1]*Vlos_corrcoeff[0]   ,    U_Vlos[1]**2*autocorr_V,                      U_Vlos[1]*U_Vlos[2]*Vlos_corrcoeff[2]],
@@ -565,17 +564,17 @@ def Vlos_correlations(Lidar,Vlos_corr,Atmospheric_Scenario,wind_direction, ind_w
     U_Vlos_MCM =np.zeros(len(Lidar.optics.scanner.origin))
     # Find the first covariance  matrix
     cov_MAT=MultiVar(Lidar,Vlos_corr, U_Vlos_MCM  ,       1     ,      1     ,       1    ,    0 ,     'MC1'  )
-    
+    # pdb.set_trace()
     # Find the multivariate distributions
     if len(Lidar.optics.scanner.origin)==3: # For the triple solution
-        Theta1_cr,Theta2_cr,Theta3_cr,Psi1_cr,Psi2_cr,Psi3_cr,Rho1_cr,Rho2_cr,Rho3_cr,Vlos1_cr,Vlos2_cr,Vlos3_cr=multivariate_normal.rvs([lidars['Lidar0_Spherical']['theta'] , lidars['Lidar1_Spherical']['theta'] , lidars['Lidar2_Spherical']['theta'], lidars['Lidar0_Spherical']['psi'] , lidars['Lidar1_Spherical']['psi'] , lidars['Lidar2_Spherical']['psi'], lidars['Lidar0_Spherical']['rho'] , lidars['Lidar1_Spherical']['rho'] , lidars['Lidar2_Spherical']['rho'], 0 , 0, 0], cov_MAT , Lidar.optics.scanner.N_MC).T
+        Theta1_cr,Theta2_cr,Theta3_cr,Psi1_cr,Psi2_cr,Psi3_cr,Rho1_cr,Rho2_cr,Rho3_cr,Vlos1_cr,Vlos2_cr,Vlos3_cr=multivariate_normal.rvs(np.concatenate([lidars['Lidar0_Spherical']['theta'] , lidars['Lidar1_Spherical']['theta'] , lidars['Lidar2_Spherical']['theta'], lidars['Lidar0_Spherical']['psi'] , lidars['Lidar1_Spherical']['psi'] , lidars['Lidar2_Spherical']['psi'], lidars['Lidar0_Spherical']['rho'] , lidars['Lidar1_Spherical']['rho'] , lidars['Lidar2_Spherical']['rho'], np.array([0]) , np.array([0]), np.array([0])],axis=0), cov_MAT , Lidar.optics.scanner.N_MC).T
         # Store data
         Theta_cr = [Theta1_cr , Theta2_cr ,Theta3_cr] 
         Psi_cr   = [Psi1_cr , Psi2_cr , Psi3_cr ]
         Rho_cr   = [Rho1_cr , Rho2_cr, Rho3_cr]
 
     else: # For the dual solution
-        Theta1_cr,Theta2_cr,Psi1_cr,Psi2_cr,Rho1_cr,Rho2_cr,Vlos1_cr,Vlos2_cr=multivariate_normal.rvs([lidars['Lidar0_Spherical']['theta'] , lidars['Lidar1_Spherical']['theta'] , lidars['Lidar0_Spherical']['psi'] , lidars['Lidar1_Spherical']['psi'] , lidars['Lidar0_Spherical']['rho'] , lidars['Lidar1_Spherical']['rho'] , 0, 0], cov_MAT , Lidar.optics.scanner.N_MC).T
+        Theta1_cr,Theta2_cr,Psi1_cr,Psi2_cr,Rho1_cr,Rho2_cr,Vlos1_cr,Vlos2_cr=multivariate_normal.rvs(np.concatenate([lidars['Lidar0_Spherical']['theta'] , lidars['Lidar1_Spherical']['theta'] , lidars['Lidar0_Spherical']['psi'] , lidars['Lidar1_Spherical']['psi'] , lidars['Lidar0_Spherical']['rho'] , lidars['Lidar1_Spherical']['rho'] , 0, 0],axis=0), cov_MAT , Lidar.optics.scanner.N_MC).T
         # Store data
         Theta_cr = [Theta1_cr , Theta2_cr ] 
         Psi_cr   = [Psi1_cr , Psi2_cr  ]
@@ -651,8 +650,11 @@ def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,ind_alph
         cov_MAT_Vh = MultiVar(Lidar, Vlos_corrCoef_MCM     ,  U_Vlos ,          1   ,         1     ,         1 ,            1 ,        'MC2' )
            
         
-        if len(Lidar.optics.scanner.origin)==3:     
-            Theta1_cr2,Theta2_cr2,Theta3_cr2,Psi1_cr2,Psi2_cr2,Psi3_cr2,Rho1_cr2,Rho2_cr2,Rho3_cr2,Vlos1_MC_cr2,Vlos2_MC_cr2,Vlos3_MC_cr2= multivariate_normal.rvs([lidars['Lidar0_Spherical']['theta'] , lidars['Lidar1_Spherical']['theta'] , lidars['Lidar2_Spherical']['theta'], lidars['Lidar0_Spherical']['psi'] , lidars['Lidar1_Spherical']['psi'] , lidars['Lidar2_Spherical']['psi'], lidars['Lidar0_Spherical']['rho'] , lidars['Lidar1_Spherical']['rho'] , lidars['Lidar2_Spherical']['rho'],np.mean(Vlos_MCM[0]) , np.mean(Vlos_MCM[1]),np.mean(Vlos_MCM[2])] , cov_MAT_Vh , Lidar.optics.scanner.N_MC).T
+        if len(Lidar.optics.scanner.origin)==3:    
+            pdb.set_trace()
+            
+            
+            Theta1_cr2,Theta2_cr2,Theta3_cr2,Psi1_cr2,Psi2_cr2,Psi3_cr2,Rho1_cr2,Rho2_cr2,Rho3_cr2,Vlos1_MC_cr2,Vlos2_MC_cr2,Vlos3_MC_cr2= multivariate_normal.rvs(np.ndarray.tolist(np.concatenate([lidars['Lidar0_Spherical']['theta'] , lidars['Lidar1_Spherical']['theta'] , lidars['Lidar2_Spherical']['theta'], lidars['Lidar0_Spherical']['psi'] , lidars['Lidar1_Spherical']['psi'] , lidars['Lidar2_Spherical']['psi'], lidars['Lidar0_Spherical']['rho'] , lidars['Lidar1_Spherical']['rho'] , lidars['Lidar2_Spherical']['rho'],np.array([np.mean(Vlos_MCM[0])]) , np.array([np.mean(Vlos_MCM[1])]),np.array([np.mean(Vlos_MCM[2])])],axis=0)) , cov_MAT_Vh , Lidar.optics.scanner.N_MC).T
             # # 3D
             u,v,w=Wind_vector(Theta1_cr2,Theta2_cr2,Theta3_cr2,Psi1_cr2,Psi2_cr2,Psi3_cr2,Vlos1_MC_cr2,Vlos2_MC_cr2,Vlos3_MC_cr2)             
             # pdb.set_trace()
@@ -682,7 +684,7 @@ def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,ind_alph
         else:
             # pdb.set_trace()
             # # Multivariate distributions:       
-            Theta1_cr2,Theta2_cr2,Psi1_cr2,Psi2_cr2,Rho1_cr2,Rho2_cr2,Vlos1_MC_cr2,Vlos2_MC_cr2= multivariate_normal.rvs([lidars['Lidar0_Spherical']['theta'] , lidars['Lidar1_Spherical']['theta'] , lidars['Lidar0_Spherical']['psi'] , lidars['Lidar1_Spherical']['psi'] ,  lidars['Lidar0_Spherical']['rho'] , lidars['Lidar1_Spherical']['rho'] , np.mean(Vlos_MCM[0]) , np.mean(Vlos_MCM[1])], cov_MAT_Vh , Lidar.optics.scanner.N_MC).T
+            Theta1_cr2,Theta2_cr2,Psi1_cr2,Psi2_cr2,Rho1_cr2,Rho2_cr2,Vlos1_MC_cr2,Vlos2_MC_cr2= multivariate_normal.rvs(np.concatenate([lidars['Lidar0_Spherical']['theta'] , lidars['Lidar1_Spherical']['theta'] , lidars['Lidar0_Spherical']['psi'] , lidars['Lidar1_Spherical']['psi'] ,  lidars['Lidar0_Spherical']['rho'] , lidars['Lidar1_Spherical']['rho'] , np.mean(Vlos_MCM[0]) , np.mean(Vlos_MCM[1])],axis=0), cov_MAT_Vh , Lidar.optics.scanner.N_MC).T
             
             #Storing data
             Vlos_cr_s = [Vlos1_MC_cr2_s.append(Vlos1_MC_cr2),
@@ -875,7 +877,7 @@ def GUM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,Correlation_coeff,wind_
             UyVh = np.array(Cx).dot(Ux).dot(np.transpose(Cx))
             UUy.append(UyVh)
             U_Vh_GUM.append(np.sqrt(UyVh))        
-        pdb.set_trace()
+        # pdb.set_trace()
         return(U_Vh_GUM,Sensitivity_Coefficients)
     
     
