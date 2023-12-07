@@ -70,89 +70,37 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         if Lidar.optics.scanner.pattern in ['None']:
       
             # 0. Plot Uncertainty in /Omega against wind direction 
-            color=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))
-            fig0,ax0=plt.subplots()
-            fig0.tight_layout()
-            for ind_plot in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction MCM'])):
-                cc=next(color)
-                ax0.plot(np.degrees(Data['wind direction']),Data['WinDir Unc [°]']['Uncertainty wind direction GUM'][ind_plot],'-', color=cc,label=r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))
-                ax0.plot(np.degrees(Data['wind direction']),Data['WinDir Unc [°]']['Uncertainty wind direction MCM'][ind_plot],'o', markerfacecolor=cc,markeredgecolor='lime',alpha=0.4,label='MCM')        
-            ax0.set_xlabel('Wind direction[°]',fontsize=plot_param['axes_label_fontsize'])
-            ax0.set_ylabel('$\Omega$ Uncertainty [°]',fontsize=plot_param['axes_label_fontsize'])          
-            ax0.legend(loc=[0.7, 0.7], prop={'size': plot_param['legend_fontsize']})
-            ax0.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
-            ax0.tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
-            ax0.set_xlim(0,359)
-            ax0.set_ylim(0,15)
-            ax0.grid(axis='both')
-            plt.show()
-            props0 = dict(boxstyle='round', facecolor='wheat', alpha=0.4)        
-            textstr0 = '\n'.join((
-            r'$r_{\theta_{1},\theta_{2}} ~=%.2f$' % ( Lidar.optics.scanner.correlations[1] ),
-            r'$r_{\varphi_{1},\varphi_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[0]),
-            r'$r_{\rho_{1},\rho_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[2]),
-            r'$r_{\theta_{1},\varphi_{1}}~ =%.2f$' % (Lidar.optics.scanner.correlations[3]),
-            r'$r_{\theta_{2},\varphi_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[6])))           
-            ax0.text(0.90, 0.85, textstr0, transform=ax0.transAxes, fontsize=16,horizontalalignment='left',verticalalignment='top', bbox=props0)     
+            # color=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))
+            # fig0,ax0=plt.subplots()
+            # fig0.tight_layout()
+            # for ind_plot in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction MCM'])):
+            #     cc=next(color)
+            #     ax0.plot(np.degrees(Data['wind direction']),Data['WinDir Unc [°]']['Uncertainty wind direction GUM'][ind_plot],'-', color=cc,label=r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))
+            #     ax0.plot(np.degrees(Data['wind direction']),Data['WinDir Unc [°]']['Uncertainty wind direction MCM'][ind_plot],'o', markerfacecolor=cc,markeredgecolor='lime',alpha=0.4,label='MCM')        
+            # ax0.set_xlabel('Wind direction[°]',fontsize=plot_param['axes_label_fontsize'])
+            # ax0.set_ylabel('$\Omega$ Uncertainty [°]',fontsize=plot_param['axes_label_fontsize'])          
+            # ax0.legend(loc=[0.7, 0.7], prop={'size': plot_param['legend_fontsize']})
+            # ax0.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
+            # ax0.tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
+            # ax0.set_xlim(0,359)
+            # ax0.set_ylim(0,15)
+            # ax0.grid(axis='both')
+            # plt.show()
+            # props0 = dict(boxstyle='round', facecolor='wheat', alpha=0.4)        
+            # textstr0 = '\n'.join((
+            # r'$r_{\theta_{1},\theta_{2}} ~=%.2f$' % ( Lidar.optics.scanner.correlations[1] ),
+            # r'$r_{\varphi_{1},\varphi_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[0]),
+            # r'$r_{\rho_{1},\rho_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[2]),
+            # r'$r_{\theta_{1},\varphi_{1}}~ =%.2f$' % (Lidar.optics.scanner.correlations[3]),
+            # r'$r_{\theta_{2},\varphi_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[6])))           
+            # ax0.text(0.90, 0.85, textstr0, transform=ax0.transAxes, fontsize=16,horizontalalignment='left',verticalalignment='top', bbox=props0)     
             
             
             # 1. Plot Uncertainty in Vh against wind direction
-            from mpl_toolkits.axes_grid1 import Grid
-            import matplotlib.gridspec as gridspec
-            fig1=plt.figure()
-            gs=gridspec.GridSpec(3,1,hspace=0.4,wspace=0.1)
-            
-            
-            ax11=plt.subplot(gs[0,:])        
-            color2=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))
-            color3=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))   
-            color4=iter(cm.Set2(np.linspace(0,1,len(Data['Sens coeff Vh']))))
-            # plt.tight_layout()
-            for ind_plot in range(len(Data['Vh Unc [m/s]']['Uncertainty Vh MCM'])):
-                c2=next(color2)
-                plt.plot(np.degrees(Data['wind direction']),Data['Vh Unc [m/s]']['Uncertainty Vh GUM'][ind_plot],'-', color=c2,linewidth=plot_param['linewidth'],label=r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))
-                plt.plot(np.degrees(Data['wind direction']),Data['Vh Unc [m/s]']['Uncertainty Vh MCM'][ind_plot],'o' , markerfacecolor=c2,markeredgecolor='lime',alpha=0.4,label='MCM')
-                ax11.set_ylim([.0, .5])
-            for ind_plot in range(len(Data['Vh Unc [m/s]']['Uncertainty Vh MCM'])):
-                c3=next(color3)
-                ax12=plt.subplot(gs[1,:]) 
-                plt.plot(np.degrees(Data['wind direction']),Data['Correlation Vlos GUM'][ind_plot],'-',c=c3,linewidth=plot_param['linewidth'])
 
-                plt.plot(np.degrees(Data['wind direction']),Data['Correlation Vlos'][ind_plot],'o', markerfacecolor=c3,markeredgecolor='lime',alpha=0.4)
-                
-            legt=[r'$\frac{\partial{V_{h}}}{\partial{V_{LOS_1}}}$',r'$\frac{\partial{V_{h}}}{\partial{V_{LOS_2}}}$',r'$\frac{\partial^2{V_{h}}}{\partial{V_{LOS_{i,j}}}}$']
-            c5=['black','dimgray','cadetblue']
-            for ind_plot in range(len(Data['Sens coeff Vh'])): 
-                
-                ax13=plt.subplot(gs[2,:]) 
-                                  
-                plt.plot(np.degrees(Data['wind direction']),Data['Sens coeff Vh'][ind_plot][1],'-',c=c5[ind_plot],linewidth=plot_param['linewidth'],label=legt[ind_plot])
-                # pdb.set_trace()
-            ax11.yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-4)
-            ax12.yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-4)
-            ax13.yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-4)
-            ax13.ticklabel_format(axis='y',style='sci', scilimits=(0,0))
-           
-            ax13.set_xlabel('Wind direction[°]',fontsize=plot_param['axes_label_fontsize'])
-            ax11.set_ylabel('$U_{V_{h}}$ [m/s]',fontsize=plot_param['axes_label_fontsize']+2) 
-            ax12.set_ylabel('$r_{V_{LOS}}$ [-]',fontsize=plot_param['axes_label_fontsize']) 
-            ax13.set_ylabel(r'$ \frac{\partial^2{V_{h}}}{\partial{V_{LOS_{i,j}}}}~\sigma_{V_{LOS_{i,j}}}~$[m/s]',fontsize=plot_param['axes_label_fontsize']-1.51) 
-            ax11.legend(loc=1, prop={'size': plot_param['legend_fontsize']})
-            ax13.legend(loc=1, prop={'size': plot_param['legend_fontsize']+4.7})
-            ax11.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
-            ax11.tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
-            ax11.set_xlim(0,359)
-            ax11.grid(axis='both')            
-            ax12.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
-            ax12.tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
-            ax12.set_xlim(0,359)
-            ax12.set_ylim(-1,1)
-            ax12.grid(axis='both')
-            ax13.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
-            ax13.tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
-            ax13.set_xlim(0,359)
-            ax13.grid(axis='both')
-           
+            # pdb.set_trace()
+            fig1=plt.figure()
+            gs=fig1.add_gridspec(3,1,hspace=0.4,wspace=0.1)
             props1 = dict(boxstyle='round', facecolor='wheat', alpha=0.4)        
             textstr1 = '\n'.join((
             r'$r_{\theta_{1},\theta_{2}} ~=%.2f$' % ( Lidar.optics.scanner.correlations[1] ),
@@ -161,13 +109,121 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             r'$r_{\theta_{1},\varphi_{1}}~ =%.2f$' % (Lidar.optics.scanner.correlations[3]),
             r'$r_{\theta_{2},\varphi_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[6]),
             r'$r_{\theta_{1},\varphi_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[5]),
-            r'$r_{\theta_{2},\varphi_{1}}~ =%.2f$' % (Lidar.optics.scanner.correlations[4])))          
-            ax12.text(0.9, 0.935, textstr1, transform=ax12.transAxes, fontsize=16,horizontalalignment='left',verticalalignment='top', bbox=props1)     
-            ax12.ticklabel_format(axis='y',style='sci')
+            r'$r_{\theta_{2},\varphi_{1}}~ =%.2f$' % (Lidar.optics.scanner.correlations[4])))                      
+            # pdb.set_trace()
+            ax11=fig1.add_subplot(gs[0])        
+            color2=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))
+            color3=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))   
+            color4=iter(cm.Set2(np.linspace(0,1,3)))
+            
+                       
+            # plot  VH or Vwind
+            for ind_plot in range(len(Data['Vh Unc [m/s]']['Uncertainty Vh MCM'])):
+                c2=next(color2)
+                # pdb.set_trace()
+                plt.plot(np.degrees(Data['wind direction']),Data['Vh Unc [m/s]']['Uncertainty Vh GUM'][ind_plot],'-', color=c2,linewidth=plot_param['linewidth'],label=r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))
+                plt.plot(np.degrees(Data['wind direction']),Data['Vh Unc [m/s]']['Uncertainty Vh MCM'][ind_plot],'o' , markerfacecolor=c2,markeredgecolor='lime',alpha=0.4,label='MCM')
+                ax11.set_ylim([.0, .5])
+ 
+            # Plot correlations
+            CorrelationsGUM=[Data['Correlations']['V12_GUM'],Data['Correlations']['V13_GUM'],Data['Correlations']['V23_GUM']]
+            CorrelationsMCM=[Data['Correlations']['V12_MCM'],Data['Correlations']['V13_MCM'],Data['Correlations']['V23_MCM']]
+            if len(Lidar.optics.scanner.origin)==3:
+                gs_sub=gs[1].subgridspec(1, 3,wspace=0.05)
+                ax0=fig1.add_subplot(gs_sub[0,0])
+                ax1=fig1.add_subplot(gs_sub[0,1], sharey=ax0)
+                ax2=fig1.add_subplot(gs_sub[0,2], sharey=ax0)
+                ax11.set_ylabel('$U_{V_{wind}}$ [m/s]',fontsize=plot_param['axes_label_fontsize']+2) 
+                for ind_plot in range(len(Data['Vh Unc [m/s]']['Uncertainty Vh MCM'])):
+                    c3=next(color3)
+                    # Plot:
+                    ax0.plot(np.degrees(Data['wind direction']),CorrelationsGUM[0][ind_plot],'-',c=c3,linewidth=plot_param['linewidth'])                      
+                    ax0.plot(np.degrees(Data['wind direction']),CorrelationsMCM[0][ind_plot],'o', markerfacecolor=c3,markeredgecolor='lime',alpha=0.4)                    
+                    ax1.plot(np.degrees(Data['wind direction']),CorrelationsGUM[1][ind_plot],'-',c=c3,linewidth=plot_param['linewidth'])                      
+                    ax1.plot(np.degrees(Data['wind direction']),CorrelationsMCM[1][ind_plot],'o', markerfacecolor=c3,markeredgecolor='lime',alpha=0.4)
+                    ax2.plot(np.degrees(Data['wind direction']),CorrelationsGUM[2][ind_plot],'-',c=c3,linewidth=plot_param['linewidth'])                      
+                    ax2.plot(np.degrees(Data['wind direction']),CorrelationsMCM[2][ind_plot],'o', markerfacecolor=c3,markeredgecolor='lime',alpha=0.4)
+                    
+                    # Axes:
+                    ax0.set_ylim(-1,1)
+                    ax1.set_ylim(-1,1)
+                    ax2.set_ylim(-1,1)                    
+                    ax1.tick_params(labelleft=0)
+                    ax2.tick_params(labelleft=0)                    
+                    ax0.set_ylim(-1,1)
+                    ax1.set_ylim(-1,1)
+                    ax2.set_ylim(-1,1)
+                    ax0.ticklabel_format(axis='y',style='sci')
+                    ax1.ticklabel_format(axis='y',style='sci')
+                    ax2.ticklabel_format(axis='y',style='sci')
+                    ax0.grid(axis='both')
+                    ax1.grid(axis='both')
+                    ax2.grid(axis='both')
+                    ax0.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
+                    ax0.tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
+                    ax1.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
+                    ax2.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
+                    ax0.set_ylabel('$r_{V_{LOS}}$ [-]',fontsize=plot_param['axes_label_fontsize'])
+                    ax0.yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-4)
+                    ax2.text(0.8, 0.935, textstr1, transform=ax2.transAxes, fontsize=16,horizontalalignment='left',verticalalignment='top', bbox=props1) 
+                # Plot sensitivity coefficients
+                SensCoeff1=[Data['Sens coeff Vh'][-1]['dV1'],Data['Sens coeff Vh'][-1]['dV2'],Data['Sens coeff Vh'][-1]['dV3']]
+                c5=['black','dimgray','lightgray']
+                legt=[r'$\frac{\partial{V_{h}}}{\partial{V_{LOS_1}}}$',r'$\frac{\partial{V_{h}}}{\partial{V_{LOS_2}}}$',r'$\frac{\partial{V_{h}}}{\partial{V_{LOS_{3}}}}$']
+                for ind_plot in range(3):                 
+                    ax13=plt.subplot(gs[2,:])         
+                    plt.plot(np.degrees(Data['wind direction']),SensCoeff1[ind_plot],'-',c=c5[ind_plot],linewidth=plot_param['linewidth'],label=legt[ind_plot])
+                                    
+
+            else:
+                ax2D=fig1.add_subplot(gs[1])
+                ax11.set_ylabel('$U_{V_{h}}$ [m/s]',fontsize=plot_param['axes_label_fontsize']+2)
+                c5=['black','dimgray','cadetblue']
+                legt=[r'$\frac{\partial{V_{h}}}{\partial{V_{LOS_1}}}$',r'$\frac{\partial{V_{h}}}{\partial{V_{LOS_2}}}$',r'$\frac{\partial^2{V_{h}}}{\partial{V_{LOS_{i,j}}}}$']
+                for ind_plot in range(len(Data['Vh Unc [m/s]']['Uncertainty Vh MCM'])):
+                    c3=next(color3)
+                    ax2D.grid(axis='both')
+                    ax2D.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
+                    ax2D.tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])                   
+                    plt.plot(np.degrees(Data['wind direction']),CorrelationsGUM[0][ind_plot],'-',c=c3,linewidth=plot_param['linewidth'])
+                    plt.plot(np.degrees(Data['wind direction']),CorrelationsMCM[0][ind_plot],'o', markerfacecolor=c3,markeredgecolor='lime',alpha=0.4)
+                    ax2D.set_ylabel('$r_{V_{LOS}}$ [-]',fontsize=plot_param['axes_label_fontsize'])
+                    ax2D.yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-4)
+                    ax2D.text(0.8, 0.935, textstr1, transform=ax2D.transAxes, fontsize=16,horizontalalignment='left',verticalalignment='top', bbox=props1) 
+                    ax2D.set_ylim(-1,1)
+                # Plot sensitivity coefficients
+                SensCoeff1=[Data['Sens coeff Vh'][-1]['dV1'],Data['Sens coeff Vh'][-1]['dV2'],Data['Sens coeff Vh'][-1]['dV1V2']]
+                for ind_plot in range(3):                 
+                    ax13=plt.subplot(gs[2,:])         
+                    pdb.set_trace()                          
+                    plt.plot(np.degrees(Data['wind direction']),SensCoeff1[ind_plot],'-',c=c5[ind_plot],linewidth=plot_param['linewidth'],label=legt[ind_plot])
+    
+                
+            
+           
+            
+          
+         
+            # Legends
+            ax11.legend(loc=1, prop={'size': plot_param['legend_fontsize']})
+            ax13.legend(loc=1, prop={'size': plot_param['legend_fontsize']+4.7})
+            
+            # Axes
+            ax11.yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-4)
+            ax13.yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-4)
+            ax13.ticklabel_format(axis='y',style='sci', scilimits=(0,0))          
+            ax13.set_xlabel('Wind direction[°]',fontsize=plot_param['axes_label_fontsize'])
+            ax13.set_ylabel(r'$ \frac{\partial^2{V_{h}}}{\partial{V_{LOS_{i,j}}}}~\sigma_{V_{LOS_{i,j}}}~$[m/s]',fontsize=plot_param['axes_label_fontsize']-1.51) 
+            ax11.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
+            ax11.tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
+            ax11.set_xlim(0,359)
+            ax11.grid(axis='both')            
+            ax13.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
+            ax13.tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
+            ax13.set_xlim(0,359)
+            ax13.grid(axis='both')
             gs.update(left=0.085,right=0.99,top=0.965,bottom=0.1,wspace=0.3,hspace=0.24)           
             plt.show()
-            
-            
             
             #######################################################
             # 2. Plot Uncertainty in Vlos with theta       
@@ -177,7 +233,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             for ind_plot in range(len(Data['Vh Unc [m/s]']['Uncertainty Vh MCM'])):
                 cc=next(color)          
                 # pdb.set_trace()
-                ax2.plot(np.degrees(Data['lidars']['Coord_Test']['TESTt'][0]),Data['VLOS Unc [m/s]']['VLOS Uncertainty GUM theta [m/s]'][ind_plot][0][0],c=cc,label=r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot]))
+                ax2.plot(np.degrees(Data['lidars']['Coord_Test']['TESTt'][0]),Data['VLOS Unc [m/s]']['VLOS Uncertainty GUM theta [m/s]'][ind_plot],c=cc,label=r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot]))
                 ax2.plot(np.degrees(Data['lidars']['Coord_Test']['TESTt'][0]),Data['VLOS Unc [m/s]']['VLOS Uncertainty MC theta [m/s]'][ind_plot],'or' , markerfacecolor=cc,markeredgecolor='lime',alpha=0.3,label='MC')        
         
             ax2.legend(loc=4, prop={'size': plot_param['legend_fontsize']})
@@ -203,7 +259,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             ax2.grid(axis='both')
             plt.show()
             
-            
+            # pdb.set_trace()
             
             
             # 3. Plot Uncertainty in Vlos with psi
@@ -211,7 +267,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             color=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))              
             for ind_plot in range(len(Data['Vh Unc [m/s]']['Uncertainty Vh MCM'])):
                 cc=next(color)
-                ax3.plot(np.degrees(Data['lidars']['Coord_Test']['TESTp'][0]),Data['VLOS Unc [m/s]']['VLOS Uncertainty GUM psi [m/s]'][ind_plot][0][0],c=cc,label=r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))
+                ax3.plot(np.degrees(Data['lidars']['Coord_Test']['TESTp'][0]),Data['VLOS Unc [m/s]']['VLOS Uncertainty GUM psi [m/s]'][ind_plot],c=cc,label=r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))
                 ax3.plot(np.degrees(Data['lidars']['Coord_Test']['TESTp'][0]),Data['VLOS Unc [m/s]']['VLOS Uncertainty MC psi [m/s]'][ind_plot],'or' , markerfacecolor=cc,markeredgecolor='lime',alpha=0.4,label='MC')        
             ax3.legend(loc=1, prop={'size': plot_param['legend_fontsize']})
             ax3.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
@@ -242,7 +298,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             color=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))          
             for ind_plot in range(len(Data['Vh Unc [m/s]']['Uncertainty Vh MCM'])):
                 cc=next(color)
-                ax4.plot(Data['lidars']['Coord_Test']['TESTr'][0],Data['VLOS Unc [m/s]']['VLOS Uncertainty GUM rho [m/s]'][ind_plot][0][0],c=cc,label=r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))
+                ax4.plot(Data['lidars']['Coord_Test']['TESTr'][0],Data['VLOS Unc [m/s]']['VLOS Uncertainty GUM rho [m/s]'][ind_plot],c=cc,label=r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))
                 ax4.plot(Data['lidars']['Coord_Test']['TESTr'][0],Data['VLOS Unc [m/s]']['VLOS Uncertainty MC rho [m/s]'][ind_plot],'or' , markerfacecolor=cc,markeredgecolor='lime',alpha=0.4,label='MC')      
             ax4.legend(loc=1, prop={'size': plot_param['legend_fontsize']})
             ax4.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
@@ -275,18 +331,21 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             fig5,ax5=plt.subplots(2,1)            
             fig5.tight_layout()
             color=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))   
-            color4=iter(cm.Set2(np.linspace(0,1,len(Data['Sens coeff Vh']))))
+            color4=iter(cm.Set2(np.linspace(0,1,3)))
             
             for ind_plot in range(len(Data['Vh Unc [m/s]']['Uncertainty Vh MCM'])):
                 cc=next(color)
                 ax5[0].plot(np.degrees(Data['wind direction']),Data['VLOS Unc [m/s]']['VLOS1 Uncertainty GUM [m/s]'][ind_plot],'-',c=cc,label=r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))
                 ax5[0].plot(np.degrees(Data['wind direction']),Data['VLOS Unc [m/s]']['VLOS1 Uncertainty MC [m/s]'][ind_plot],'o', markerfacecolor=cc,markeredgecolor='lime',alpha=0.4,label='Montecarlo')                       
+            
+            
             # Plot with sensitivity coefficients: Data['Uncertainty contributors Vlos1']=[contribution theta, contribution varphi, contribution rho] for alpha 0, 0.1 and 0.2. For the plotting we use alpha=0.2                       
-            Cont_Theta1         = (np.array(Data['Sens coeff']['Uncertainty contributors Vlos1'][len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'])-1][0])*np.array(Data['STDVs'][0]))**2
-            Cont_Psi1           = (np.array(Data['Sens coeff']['Uncertainty contributors Vlos1'][len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'])-1][1])*np.array(Data['STDVs'][1]))**2
-            Cont_Rho1           = (np.array(Data['Sens coeff']['Uncertainty contributors Vlos1'][len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'])-1][2])*np.array(Data['STDVs'][2]))**2     
-            Cont_Corr1          = 2*Lidar.optics.scanner.correlations[3]*np.array(Data['Sens coeff']['Uncertainty contributors Vlos1'][2][0])*np.array(Data['Sens coeff']['Uncertainty contributors Vlos2'][2][1])*np.array(Data['STDVs'][0])*np.array(Data['STDVs'][1])
-            # pdb.set_trace()
+            
+            Cont_Theta1         = (np.array(Data['Sens coeff Vlos']['V1_theta'][-1]*np.array(np.radians(Data['STDVs'][0][0]))))**2
+            Cont_Psi1           = (np.array(Data['Sens coeff Vlos']['V1_psi'][-1]*np.array(np.radians(Data['STDVs'][1][0]))))**2
+            Cont_Rho1           = (np.array(Data['Sens coeff Vlos']['V1_rho'][-1]*np.array(Data['STDVs'][2][0])))**2     
+            Cont_Corr1          = 2*Lidar.optics.scanner.correlations[9]*np.array(Data['Sens coeff Vlos']['V1_theta'][0])*np.array(Data['Sens coeff Vlos']['V1_psi'][0])*np.array(np.radians(Data['STDVs'][0][0]))*np.array(np.radians(Data['STDVs'][1][0]))
+
             ax5[1].plot(np.degrees(Data['wind direction']),Cont_Theta1,'-',c='black',linewidth=plot_param['linewidth'],label=r'$\frac{\partial{V_{LOS}}}{\partial{\theta}}$')
             ax5[1].plot(np.degrees(Data['wind direction']),Cont_Psi1 ,'-',c='dimgray',linewidth=plot_param['linewidth'],label=r'$\frac{\partial{V_{LOS}}}{\partial{\varphi}}$')
             ax5[1].plot(np.degrees(Data['wind direction']),Cont_Rho1,'-',c='lightgray',linewidth=plot_param['linewidth'],label=r'$\frac{\partial{V_{LOS}}}{\partial{\rho}}$')
@@ -321,6 +380,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             ax5[1].yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-3)
  
 
+
            # 6.  Plot Uncertainty in VLOS2 with wind direction 
             fig6,ax6=plt.subplots(2,1)  
             fig6.tight_layout()
@@ -331,10 +391,10 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 ax6[0].plot(np.degrees(Data['wind direction']),Data['VLOS Unc [m/s]']['VLOS2 Uncertainty MC [m/s]'][ind_plot],'o', markerfacecolor=cc,markeredgecolor='lime',alpha=0.4,label='Montecarlo')
                         
             # Plot with sensitivity coefficients: Data['Uncertainty contributors Vlos1']=[contribution theta, contribution varphi, contribution rho] for alpha 0, 0.1 and 0.2. For the plotting we use alpha=0.2            
-            Cont_Theta2         = (np.array(Data['Sens coeff']['Uncertainty contributors Vlos2'][len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'])-1][0])*np.array(Data['STDVs'][0]))**2
-            Cont_Psi2           = (np.array(Data['Sens coeff']['Uncertainty contributors Vlos2'][len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'])-1][1])*np.array(Data['STDVs'][1]))**2
-            Cont_Rho2           = (np.array(Data['Sens coeff']['Uncertainty contributors Vlos2'][len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'])-1][2])*np.array(Data['STDVs'][2]))**2     
-            Cont_Corr2          = 2*Lidar.optics.scanner.correlations[6]*np.array(Data['Sens coeff']['Uncertainty contributors Vlos2'][2][0])*np.array(Data['Sens coeff']['Uncertainty contributors Vlos1'][2][1])*np.array(Data['STDVs'][0])*np.array(Data['STDVs'][1])
+            Cont_Theta2         = (np.array(Data['Sens coeff Vlos']['V2_theta'][-1]*np.array(np.radians(Data['STDVs'][0][1]))))**2
+            Cont_Psi2           = (np.array(Data['Sens coeff Vlos']['V2_psi'][-1]*np.array(np.radians(Data['STDVs'][1][1]))))**2
+            Cont_Rho2           = (np.array(Data['Sens coeff Vlos']['V2_rho'][-1]*np.array(Data['STDVs'][2][1])))**2     
+            Cont_Corr2          = 2*Lidar.optics.scanner.correlations[10]*np.array(Data['Sens coeff Vlos']['V2_theta'][0])*np.array(Data['Sens coeff Vlos']['V2_psi'][0])*np.array(np.radians(Data['STDVs'][1][1]))*np.array(np.radians(Data['STDVs'][0][1]))
             # pdb.set_trace()
             # Plotting contributors:
             ax6[1].plot(np.degrees(Data['wind direction']),Cont_Theta2,'-',c='black',linewidth=plot_param['linewidth'],label=r'$\frac{\partial{V_{LOS}}}{\partial{\theta}}$')

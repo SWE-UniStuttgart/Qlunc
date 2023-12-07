@@ -38,7 +38,9 @@ from matplotlib.pyplot import cm
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from scipy.stats import multivariate_normal
 import pickle
-from celluloid import Camera
+# from celluloid import Camera
 from matplotlib import animation
 import matplotlib.colors as mcolors
 import matplotlib.cm as cmx
+from mpl_toolkits.axes_grid1 import Grid
+import matplotlib.gridspec as gridspec
