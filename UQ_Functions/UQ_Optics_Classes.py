@@ -211,7 +211,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             U_VLOS_T_GUM_psi_T.append(U_VLOS_T_GUM_psi[0])
 
             lidars['Coord_Test']={'TESTr':np.array([rho_TESTr]),'TESTt':np.array([theta_TESTt]),'TESTp':np.array([psi_TESTp])}
-            pdb.set_trace()          
+            # pdb.set_trace()          
     #%% 6) Storing data
     # pdb.set_trace()
     
