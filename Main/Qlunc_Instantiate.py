@@ -30,8 +30,8 @@ could be done by instantiating their python classes:
 """
 
 #Clear all variables
-from IPython import get_ipython
-get_ipython().magic('reset -sf')
+# from IPython import get_ipython
+# get_ipython().magic('reset -sf')
 
 import os
 os.chdir('../')

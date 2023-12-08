@@ -91,6 +91,7 @@ Qlunc uses GUM (Guide to the expression of Uncertainties in Measurement)
 model to calculate uncertainty expansion.  
   
 """
+from Utils import Qlunc_Help_standAlone as SA
 
 #%% Constants:
 class cts():
@@ -223,4 +224,22 @@ class lidar():
                  self.Uncertainty      = unc_func
                  print('Created new lidar device: {}'.format(self.LidarID))
 
-    
+#%% 1) Creating the class to store coordinates
+class lidar_coor():
+    def __init__(self, x,y,z,x_Lidar,y_Lidar,z_Lidar):
+        self.x_Lidar=x_Lidar
+        self.y_Lidar=y_Lidar
+        self.z_Lidar=z_Lidar
+        self.x=x
+        self.y=y
+        self.z=z
+    @classmethod
+    def vector_pos(cls,x,y,z,x_Lidar,y_Lidar,z_Lidar):
+        fx=(x-x_Lidar)
+        fy=(y-y_Lidar)
+        fz=(z-z_Lidar)
+        return(cls,fx,fy,fz)
+    @classmethod
+    def Cart2Sph (cls, x_vector_pos,y_vector_pos,z_vector_pos):
+        rho1,theta1,psi1 =SA.cart2sph(x_vector_pos,y_vector_pos,z_vector_pos)
+        return (cls,rho1,theta1,psi1)   
