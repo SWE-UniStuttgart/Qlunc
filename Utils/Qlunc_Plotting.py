@@ -116,7 +116,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             r'$r_{\theta_{2},\varphi_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[6])))           
             ax0[0].text(0.95, 0., textstr0, transform=ax0[0].transAxes, fontsize=16,horizontalalignment='left',verticalalignment='top', bbox=props0)     
 
-            pdb.set_trace()
+            # pdb.set_trace()
 
             
             # 1. Plot Uncertainty in Vh against wind direction
