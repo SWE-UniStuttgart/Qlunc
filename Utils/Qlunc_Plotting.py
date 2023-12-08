@@ -445,13 +445,12 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         #%% Plot the vertical plane
         # pdb.set_trace()
         if Lidar.optics.scanner.pattern in ['vertical plane'] or Lidar.optics.scanner.pattern in ['horizontal plane']:
-            pdb.set_trace()
             V=[]
             Dir=[]
             for i in range(len(Data['Vh Unc [m/s]']['Uncertainty Vh GUM'])):
                 V.append(Data['Vh Unc [m/s]']['Uncertainty Vh GUM'][i][0])
                 Dir.append(Data['WinDir Unc [°]']['Uncertainty wind direction GUM'][i][0])         
-            
+            pdb.set_trace()
             # Reshape V and avoid nans and infinit values
             VV=np.reshape(V,[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
             # VV[np.isnan(VV)]=nan

@@ -10,18 +10,18 @@ from Utils import Qlunc_Help_standAlone as SA
 #%% Lissajous pattern
 def lissajous_pattern(Lidar,size_x,size_y,size_z,q,p):
     """
-    Plotting. Location: .Utils/Scanning_patterns.py
+    Calculates the coordinates of the points in a lissajous pattern. Location: .Utils/Scanning_patterns.py
     
     Parameters
     ----------
     
     * Lidar
-        data...
+        Dictionary containing lidar info
         
     Returns
     -------
     
-    list
+    x_out,y_out,z_out arrays
     
     """
     # parameters
@@ -39,47 +39,45 @@ def lissajous_pattern(Lidar,size_x,size_y,size_z,q,p):
 
 def Verticalplane_pattern(Lidar):
     """
-    Plotting. Location: .Utils/Scanning_patterns.py
+    Calculates the coordinates of the points in a vertical plane. Location: .Utils/Scanning_patterns.py
     
     Parameters
     ----------
     
     * Lidar
-        data...
+        Dictionary containing lidar info
         
     Returns
     -------
     
-    list
+    x_out,y_out,z_out arrays
     
     """
     x_in = Lidar.optics.scanner.vert_plane[0]
     y_in = np.linspace(Lidar.optics.scanner.vert_plane[1],Lidar.optics.scanner.vert_plane[2],Lidar.optics.scanner.vert_plane[-1])
     z_in = np.linspace(Lidar.optics.scanner.vert_plane[3],Lidar.optics.scanner.vert_plane[4],Lidar.optics.scanner.vert_plane[-1])
 
-    box=np.meshgrid(y_in,z_in)
-    
-    # Get coordinates of the points on the grid
-    box_positions = np.vstack(map(np.ravel, box))
-    y_out=box_positions[0]
-    z_out=box_positions[1]   
-    x_out= np.linspace(x_in,x_in,len(y_out))   
+    # Get coordinates of the points in the grid
+    y_out_M,z_out_M= (np.meshgrid(y_in,z_in))
+    y_out          = np.ravel(y_out_M)
+    z_out          = np.ravel(z_out_M)
+    x_out= np.linspace(x_in,x_in,len(y_out)) 
     return x_out,y_out,z_out
 
 def Horizontalplane_pattern(Lidar):
     """
-    Plotting. Location: .Utils/Scanning_patterns.py
+    Calculates the coordinates of the points in a horizontal plane. Location: .Utils/Scanning_patterns.py
     
     Parameters
     ----------
     
     * Lidar
-        data...
+        Dictionary containing lidar info
         
     Returns
     -------
     
-    list
+    x_out,y_out,z_out arrays
     
     """
     x_in = np.linspace(Lidar.optics.scanner.hor_plane[0],Lidar.optics.scanner.hor_plane[1],Lidar.optics.scanner.hor_plane[-1]) #Lidar.optics.scanner.vert_plane[0]
