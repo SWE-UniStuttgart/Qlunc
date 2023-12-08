@@ -885,6 +885,7 @@ def U_WindDir_MC(wind_direction,Mult_param):
     U_Wind_direction=[]
     Wind_dir=[]
     for ind_wind_dir in range(len(wind_direction)):
+        
         W_D = (np.arctan((Vlos1[ind_wind_dir]*np.cos(Theta2[ind_wind_dir])*np.cos(Psi2[ind_wind_dir])-Vlos2[ind_wind_dir]*np.cos(Theta1[ind_wind_dir])*np.cos(Psi1[ind_wind_dir]))/(-Vlos1[ind_wind_dir]*np.cos(Theta2[ind_wind_dir])*np.sin(Psi2[ind_wind_dir])+Vlos2[ind_wind_dir]*np.cos(Theta1[ind_wind_dir])*np.sin(Psi1[ind_wind_dir]))))
         U_Wind_direction.append(np.degrees(np.std(W_D)))
     # pdb.set_trace()
@@ -917,7 +918,7 @@ def U_WindDir_GUM(Lidar,Atmospheric_Scenario,Correlation_coeff,wind_direction,li
      wind direction uncertainty against wind direction
     """
     U_wind_dir=[]
-    dWinDir_Vlos1T,dWinDir_Vlos2T,dWinDir_theta1T,dWinDir_theta2T,dWinDir_psi1T,dWinDir_psi2T=[],[],[],[],[],[]
+    dWinDir_Vlos1T,dWinDir_Vlos2T,dWinDir_Vlos12T = [],[],[]
     for ind_wind_dir in range(len(wind_direction)):
         A =  Vlos_GUM['V1'][ind_wind_dir]*np.cos(lidars['Lidar1_Spherical']['theta'])*np.cos(lidars['Lidar1_Spherical']['psi'])-Vlos_GUM['V2'][ind_wind_dir]*np.cos(lidars['Lidar0_Spherical']['theta'])*np.cos(lidars['Lidar0_Spherical']['psi'])        
         B = -Vlos_GUM['V1'][ind_wind_dir]*np.cos(lidars['Lidar1_Spherical']['theta'])*np.sin(lidars['Lidar1_Spherical']['psi'])+Vlos_GUM['V2'][ind_wind_dir]*np.cos(lidars['Lidar0_Spherical']['theta'])*np.sin(lidars['Lidar0_Spherical']['psi'])
@@ -926,36 +927,35 @@ def U_WindDir_GUM(Lidar,Atmospheric_Scenario,Correlation_coeff,wind_direction,li
         
         # Matrix of sensitivity coefficients
         
-        dWinDir_Vlos1   =  X*np.cos(lidars['Lidar1_Spherical']['theta'])*(B*np.cos(lidars['Lidar1_Spherical']['psi'])+A*np.sin(lidars['Lidar1_Spherical']['psi']))/B**2
-        dWinDir_Vlos2   = -X*np.cos(lidars['Lidar0_Spherical']['theta'])*(B*np.cos(lidars['Lidar0_Spherical']['psi'])+A*np.sin(lidars['Lidar0_Spherical']['psi']))/B**2
-        
-        # dWinDir_theta1  =  X*((Vlos2[ind_wind_dir]*np.sin(lidars['Lidar0_Spherical']['theta'])*np.cos(lidars['Lidar0_Spherical']['psi'])*B+A*Vlos2[ind_wind_dir]*np.sin(lidars['Lidar0_Spherical']['theta'])*np.sin(lidars['Lidar0_Spherical']['psi']))/(B**2))
-        # dWinDir_theta2  =  X*((-Vlos_GUM['V1'][ind_wind_dir]*np.sin(lidars['Lidar1_Spherical']['theta'])*np.cos(lidars['Lidar1_Spherical']['psi'])*B-A*Vlos_GUM['V1'][ind_wind_dir]*np.sin(lidars['Lidar1_Spherical']['theta'])*np.sin(lidars['Lidar1_Spherical']['psi']))/(B**2))        
-        # dWinDir_psi1    =  X*(Vlos2[ind_wind_dir]*np.cos(lidars['Lidar0_Spherical']['theta'])*np.sin(lidars['Lidar0_Spherical']['psi'])*B-A*Vlos2[ind_wind_dir]*np.cos(lidars['Lidar0_Spherical']['theta'])*np.cos(lidars['Lidar0_Spherical']['psi']))/(B**2)
-        # dWinDir_psi2    =  X*(-Vlos_GUM['V1'][ind_wind_dir]*np.cos(lidars['Lidar1_Spherical']['theta'])*np.sin(lidars['Lidar1_Spherical']['psi'])*B+A*Vlos_GUM['V1'][ind_wind_dir]*np.cos(lidars['Lidar1_Spherical']['theta'])*np.cos(lidars['Lidar1_Spherical']['psi']))/(B**2)
-        # UxWinDir=MultiVar(Lidar,Corrcoef_Vlos_GUM[ind_wind_dir], U_Vlos1[ind_wind_dir],U_Vlos2[ind_wind_dir],  [0,0], [0,0],  [0,0]  ,  0,0,0,1, 'GUM2' )
-        
-        
+        # dWinDir_Vlos1   =  X*np.cos(lidars['Lidar1_Spherical']['theta'])*(B*np.cos(lidars['Lidar1_Spherical']['psi'])+A*np.sin(lidars['Lidar1_Spherical']['psi']))/B**2
+        # dWinDir_Vlos2   = -X*np.cos(lidars['Lidar0_Spherical']['theta'])*(B*np.cos(lidars['Lidar0_Spherical']['psi'])+A*np.sin(lidars['Lidar0_Spherical']['psi']))/B**2
+
+        dWinDir_Vlos1   =  X*Vlos_GUM['V2'][ind_wind_dir]*np.cos(lidars['Lidar1_Spherical']['theta'])*np.cos(lidars['Lidar0_Spherical']['theta'])*np.sin(lidars['Lidar0_Spherical']['psi']-lidars['Lidar1_Spherical']['psi'])/B**2        
+
+        dWinDir_Vlos2   =  X*Vlos_GUM['V1'][ind_wind_dir]*np.cos(lidars['Lidar1_Spherical']['theta'])*np.cos(lidars['Lidar0_Spherical']['theta'])*np.sin(lidars['Lidar1_Spherical']['psi']-lidars['Lidar0_Spherical']['psi'])/B**2        
+
         U_Vlos_GUM_list= [U_Vlos_GUM['V1'][ind_wind_dir],U_Vlos_GUM['V2'][ind_wind_dir]]        
-        Correlation_coeff_list=[Correlation_coeff['V12_GUM'][0][ind_wind_dir]]
-        # pdb.set_trace()
-        Ux=MultiVar(Lidar, Correlation_coeff_list,U_Vlos_GUM_list   ,1   ,            1          ,1            ,     1,   'GUM2'  )
+        
+        Correlation_coeff_list=[Correlation_coeff['V1'][ind_wind_dir],Correlation_coeff['V1'][ind_wind_dir]]
+        pdb.set_trace()
+        Ux=MultiVar(Lidar, Correlation_coeff_list, U_Vlos_GUM_list, 1, 1, 1, 1, 'GUM2'  )
         
         
-        Cx=np.array([[np.array([0]),np.array([0]),np.array([0]),np.array([0]),np.array([0]),np.array([0]),dWinDir_Vlos1,dWinDir_Vlos2]           ])
+        Cx=np.array([[np.array([0]),np.array([0]),np.array([0]),np.array([0]),np.array([0]),np.array([0]),dWinDir_Vlos1,dWinDir_Vlos2]])
         Cx=Cx[:,:,0]
         UyWinDir=np.array(Cx).dot(Ux).dot(np.transpose(Cx))
         
         # Data storage:
-        dWinDir_Vlos1T.append(dWinDir_Vlos1)
-        dWinDir_Vlos2T.append(dWinDir_Vlos2)
+        dWinDir_Vlos1T.append((dWinDir_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir])**2)
+        dWinDir_Vlos2T.append((dWinDir_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir])**2)
+        dWinDir_Vlos12T.append((dWinDir_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir]*dWinDir_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir])*Correlation_coeff_list)
         # dWinDir_theta1T.append(dWinDir_theta1)        
         # dWinDir_theta2T.append(dWinDir_theta2)
         # dWinDir_psi1T.append(dWinDir_psi1)
         # dWinDir_psi2T.append(dWinDir_psi2)        
                 
         U_wind_dir.append(np.degrees(np.sqrt(UyWinDir))[0])
-    return (U_wind_dir,dWinDir_Vlos1T,dWinDir_Vlos2T)
+    return (U_wind_dir,dWinDir_Vlos1T,dWinDir_Vlos2T,dWinDir_Vlos12T)
 
     
   
