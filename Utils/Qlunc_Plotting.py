@@ -454,12 +454,12 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             
             # Reshape V and avoid nans and infinit values
             VV=np.reshape(V,[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
-            VV[VV>5]=3
+            VV[VV>15]=15
             
             # Horizontal wind velocity
-            col ='binary' #'jet' #
+            col ='jet' #'binary' #
             cmaps = matplotlib.cm.get_cmap(col)  # viridis is the default colormap for imshow
-            cmap = matplotlib.cm.ScalarMappable(norm = mcolors.Normalize(vmin=VV.min(), vmax=VV.max()),cmap = plt.get_cmap('binary'))
+            cmap = matplotlib.cm.ScalarMappable(norm = mcolors.Normalize(vmin=VV.min(), vmax=VV.max()),cmap = plt.get_cmap(col))
 
             fig00,ax00=plt.subplots()
             if  Lidar.optics.scanner.pattern in ['vertical plane']:
@@ -472,15 +472,17 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 YY=np.reshape(Data['lidars']['Coord_Out'][1],[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
                 ax00.set_xlabel('X [m]', fontsize=plot_param['tick_labelfontsize']+20, labelpad=15)
                 ax00.set_ylabel('Y [m]', fontsize=plot_param['tick_labelfontsize']+20, labelpad=15)
-            plt.contourf(XX,YY, VV,700,cmap=cmaps,vmin=VV.min(), vmax=VV.max())
+            plt.contourf(XX,YY, VV,105,cmap=cmaps,vmin=VV.min(), vmax=VV.max())
             cmap.set_array([]) # or alternatively cmap._A = []
 
             colorbar=fig00.colorbar(cmap, ax = ax00)                        
-            colorbar.set_label(label='$V$ Uncertainty [m/s]', size=plot_param['tick_labelfontsize']+12, labelpad=15)
+            colorbar.set_label(label='Uncertainty [m/s]', size=plot_param['tick_labelfontsize']+12, labelpad=15)
             colorbar.ax.tick_params(labelsize=19)
             ax00.set_aspect('equal')
             ax00.ticklabel_format(useOffset=False)
-            
+            ax00.plot(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0][1],'sk', ms=5, mec='white', mew=1.5)
+            ax00.plot(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][1][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][1][1],'sk', ms=5, mec='white', mew=1.5)
+            ax00.plot(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][1][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][2][1],'sk', ms=5, mec='white', mew=1.5)
             
 
             ax00.xaxis.set_tick_params(labelsize=plot_param['tick_labelfontsize']+14)
