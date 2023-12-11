@@ -457,7 +457,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             VV[VV>15]=15
             
             # Horizontal wind velocity
-            col ='jet' #'binary' #
+            col ='binary' #'binary' #
             cmaps = matplotlib.cm.get_cmap(col)  # viridis is the default colormap for imshow
             cmap = matplotlib.cm.ScalarMappable(norm = mcolors.Normalize(vmin=VV.min(), vmax=VV.max()),cmap = plt.get_cmap(col))
 
@@ -472,7 +472,11 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 YY=np.reshape(Data['lidars']['Coord_Out'][1],[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
                 ax00.set_xlabel('X [m]', fontsize=plot_param['tick_labelfontsize']+20, labelpad=15)
                 ax00.set_ylabel('Y [m]', fontsize=plot_param['tick_labelfontsize']+20, labelpad=15)
-            plt.contourf(XX,YY, VV,105,cmap=cmaps,vmin=VV.min(), vmax=VV.max())
+                ax00.plot(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0][1],'sk', ms=5, mec='white', mew=1.5)
+                ax00.plot(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][1][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][1][1],'sk', ms=5, mec='white', mew=1.5)
+                ax00.plot(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][1][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][2][1],'sk', ms=5, mec='white', mew=1.5)
+     
+            plt.contourf(XX,YY, VV,50,cmap=cmaps,vmin=VV.min(), vmax=VV.max())
             cmap.set_array([]) # or alternatively cmap._A = []
 
             colorbar=fig00.colorbar(cmap, ax = ax00)                        
@@ -480,10 +484,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             colorbar.ax.tick_params(labelsize=19)
             ax00.set_aspect('equal')
             ax00.ticklabel_format(useOffset=False)
-            ax00.plot(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0][1],'sk', ms=5, mec='white', mew=1.5)
-            ax00.plot(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][1][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][1][1],'sk', ms=5, mec='white', mew=1.5)
-            ax00.plot(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][1][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][2][1],'sk', ms=5, mec='white', mew=1.5)
-            
+           
 
             ax00.xaxis.set_tick_params(labelsize=plot_param['tick_labelfontsize']+14)
             ax00.yaxis.set_tick_params(labelsize=plot_param['tick_labelfontsize']+14)
