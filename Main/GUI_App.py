@@ -86,20 +86,21 @@ def runQlunc():
         # pdb.set_trace()
         # os.chdir(os.path.normpath(os.path.join(os.path.dirname(__file__),"..\\Main")))
         # from Main import Qlunc_Instantiate
+        my_text2.insert('1.0',("application_path: {}".format(application_path)
 
         # runfile(application_path+ '\\Qlunc_Instantiate.py')
         exec(open('C:/SWE_LOCAL/Qlunc/Main/Qlunc_Instantiate.py').read()) 
         # os.chdir(wd)
-        
+
         root.title('Qlunc - Running Qlunc...' )
         B=Lidar.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
         root.title('Qlunc - Qlunc finished successfully' )
     except Exception as error:
         root.title('Qlunc - Error!' )
-        my_text2.delete(1.0,END)
+        # my_text2.delete(1.0,END)
         my_text2.insert('0.0',("Error occured with execution: {} /n".format(error)))
         application_path0=os.path.normpath(os.path.join(os.path.dirname(__file__),"..\\"))
-        my_text2.insert('0.0',("Directory: {}".format(os.getcwd())))
+        my_text2.insert('1.0',("Directory: {}".format(os.getcwd())))
 
 
 
