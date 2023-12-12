@@ -11,7 +11,7 @@ from tkinter.filedialog import asksaveasfilename
 import customtkinter as CTk
 import pdb
 import os
-
+import subprocess
 
 
 global wd, open_status_name,application_path
@@ -84,8 +84,9 @@ def save_file():
 # RunQlunc button
 def runQlunc():
     try:
-        d=g
-        runfile(application_path+'\\Qlunc_Instantiate.py')
+        os.chdir(os.path.normpath(os.path.join(os.path.dirname(__file__),"..\\")))
+
+        subprocess.run(['python', application_path+'\\Qlunc_Instantiate.py'])
         # os.chdir(wd)
         
         root.title('Qlunc - Running Qlunc...' )
@@ -93,8 +94,9 @@ def runQlunc():
         root.title('Qlunc - Qlunc finished successfully' )
     except Exception as error:
         my_text2.delete(1.0,END)
-        my_text2.insert('0.0',("Error occured with execution: {}".format(error)))
-        my_text2.insert('0.0',("Directory: {}".format(application_path)))
+        my_text2.insert('0.0',("Error occured with execution: {}\n".format(error)))
+        application_path0=os.path.normpath(os.path.join(os.path.dirname(__file__),"..\\"))
+        my_text2.insert('0.0',("Directory: {}".format(application_path0)))
 #Select a file
 def button_select_input_file():
 
