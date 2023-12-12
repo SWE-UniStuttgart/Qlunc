@@ -28,7 +28,6 @@ else:
     application_path = os.path.dirname(os.path.abspath(__file__))
 open_status_name = False
 
-# pdb.set_trace()
 #%% Functions
 
 # New file
@@ -84,19 +83,28 @@ def save_file():
 # RunQlunc button
 def runQlunc():
     try:
+        # pdb.set_trace()
         os.chdir(os.path.normpath(os.path.join(os.path.dirname(__file__),"..\\")))
+        from Main import Qlunc_Instantiate
 
-        subprocess.run(['python', application_path+'\\Qlunc_Instantiate.py'])
+        pdb.set_trace()
+        # runfile( '.\\Main\\Qlunc_Instantiate.py')
+        exec(open('.\\Main\\Qlunc_Instantiate.py').read()) 
         # os.chdir(wd)
         
         root.title('Qlunc - Running Qlunc...' )
         B=Lidar.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
         root.title('Qlunc - Qlunc finished successfully' )
     except Exception as error:
+        root.title('Qlunc - Error!' )
         my_text2.delete(1.0,END)
         my_text2.insert('0.0',("Error occured with execution: {}\n".format(error)))
         application_path0=os.path.normpath(os.path.join(os.path.dirname(__file__),"..\\"))
         my_text2.insert('0.0',("Directory: {}".format(application_path0)))
+
+
+
+
 #Select a file
 def button_select_input_file():
 
@@ -139,6 +147,7 @@ root=Tk()
 root.title("Qlunc")
 root.geometry('1220x660')
 root.configure(background='#4682B4')
+root.iconbitmap("C:\SWE_LOCAL\Qlunc\Pictures_repo_\QIcon.ico")
 # root.state('zoomed')
 width = root.winfo_screenwidth()
 height = root.winfo_screenheight()
