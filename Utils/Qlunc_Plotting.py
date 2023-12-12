@@ -442,42 +442,26 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             ax6[1].yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-3)
            
 
-        #%% Plot the vertical plane
+        #%% Plot the vertical/horizontal plane
         # pdb.set_trace()
         if Lidar.optics.scanner.pattern in ['vertical plane'] or Lidar.optics.scanner.pattern in ['horizontal plane']:
-            pdb.set_trace()
+            # pdb.set_trace()
             V=[]
             Dir=[]
-            for i in range(len(Data['Vh Unc [m/s]']['Uncertainty Vh GUM'])):
+            for i in range(int((len(Data['Sens coeff Vh'])/len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'])))):
                 V.append(Data['Vh Unc [m/s]']['Uncertainty Vh GUM'][i][0])
                 Dir.append(Data['WinDir Unc [°]']['Uncertainty wind direction GUM'][i][0])         
             
             # Reshape V and avoid nans and infinit values
             VV=np.reshape(V,[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
-            # VV[np.isnan(VV)]=nan
-            VV[VV>10]=3
+            VV[VV>15]=15
             
             # Horizontal wind velocity
-            col ='jet' #'binary'
+            col ='binary' #'binary' #
             cmaps = matplotlib.cm.get_cmap(col)  # viridis is the default colormap for imshow
-            cmaps.set_bad(color='black')
-            # cm = plt.get_cmap(colorsMap)
-            
-            cNorm = matplotlib.colors.Normalize(vmin=0, vmax=3)
-            # cNorm = matplotlib.colors.Normalize(vmin=0.1, vmax=4) #alpha=0
-            # cNorm = matplotlib.colors.Normalize(vmin=0.015, vmax=0.138) #alpha=0.1
-            # cNorm = matplotlib.colors.Normalize(vmin=0.08, vmax=0.147) #alpha=0.2
-            scalarMap = cmx.ScalarMappable(norm=cNorm, cmap=col)
-           
-            
-            # fig = plt.figure()
-            # ax = Axes3D(fig)
-            fig00,ax00=plt.subplots()                
-            # plt.scatter(Data['lidars']['Coord_Out'][0],Data['lidars']['Coord_Out'][1], s=20,c=scalarMap.to_rgba(V))
-            # # ax.scatter(Data['lidars']['Coord_Out'][0],Data['lidars']['Coord_Out'][1], Data['lidars']['Coord_Out'][2], V, c=scalarMap.to_rgba(V))
-            ax00.plot(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0][1],'sk', ms=5, mec='black', mew=1.5)
-            ax00.plot(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][1][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][1][1],'sk', ms=5, mec='white', mew=1.5)
+            cmap = matplotlib.cm.ScalarMappable(norm = mcolors.Normalize(vmin=VV.min(), vmax=VV.max()),cmap = plt.get_cmap(col))
 
+            fig00,ax00=plt.subplots()
             if  Lidar.optics.scanner.pattern in ['vertical plane']:
                 XX=np.reshape(Data['lidars']['Coord_Out'][1],[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
                 YY=np.reshape(Data['lidars']['Coord_Out'][2],[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
@@ -488,8 +472,35 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 YY=np.reshape(Data['lidars']['Coord_Out'][1],[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
                 ax00.set_xlabel('X [m]', fontsize=plot_param['tick_labelfontsize']+20, labelpad=15)
                 ax00.set_ylabel('Y [m]', fontsize=plot_param['tick_labelfontsize']+20, labelpad=15)
-            plt.contourf(XX,YY, VV,300,cmap=cmaps, norm=cNorm)
+                ax00.plot(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0][1],'sk', ms=5, mec='white', mew=1.5)
+                ax00.plot(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][1][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][1][1],'sk', ms=5, mec='white', mew=1.5)
+                ax00.plot(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][1][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][2][1],'sk', ms=5, mec='white', mew=1.5)
+     
+            plt.contourf(XX,YY, VV,50,cmap=cmaps,vmin=VV.min(), vmax=VV.max())
+            cmap.set_array([]) # or alternatively cmap._A = []
+
+            colorbar=fig00.colorbar(cmap, ax = ax00)                        
+            colorbar.set_label(label='Uncertainty [m/s]', size=plot_param['tick_labelfontsize']+12, labelpad=15)
+            colorbar.ax.tick_params(labelsize=19)
+            ax00.set_aspect('equal')
+            ax00.ticklabel_format(useOffset=False)
+           
+
+            ax00.xaxis.set_tick_params(labelsize=plot_param['tick_labelfontsize']+14)
+            ax00.yaxis.set_tick_params(labelsize=plot_param['tick_labelfontsize']+14)
+            plt.show()
             
+            # pdb.set_trace()
+           
+            ############################################################           
+            ## Plots the 3D figure
+            # fig = plt.figure()
+            # ax = Axes3D(fig)
+                            
+            # plt.scatter(Data['lidars']['Coord_Out'][0],Data['lidars']['Coord_Out'][1], s=20,c=scalarMap.to_rgba(V))
+            # # ax.scatter(Data['lidars']['Coord_Out'][0],Data['lidars']['Coord_Out'][1], Data['lidars']['Coord_Out'][2], V, c=scalarMap.to_rgba(V))
+            # ax00.plot(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0][1],'sk', ms=5, mec='black', mew=1.5)
+            # ax00.plot(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][1][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][1][1],'sk', ms=5, mec='white', mew=1.5)
             # ax00.set_xlabel('Y [m]', fontsize=plot_param['tick_labelfontsize']+20, labelpad=15)
             # ax00.set_ylabel('Z [m]', fontsize=plot_param['tick_labelfontsize']+20, labelpad=15)
             # ax.set_xlabel('X [m]', fontsize=plot_param['tick_labelfontsize'], labelpad=15)
@@ -498,34 +509,20 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             
             # ax.plot(Data['lidars']['Lidar0_Rectangular']['LidarPosX'],Data['lidars']['Lidar0_Rectangular']['LidarPosY'],Data['lidars']['Lidar0_Rectangular']['LidarPosZ'],'sb')
             # ax.plot(Data['lidars']['Lidar1_Rectangular']['LidarPosX'],Data['lidars']['Lidar1_Rectangular']['LidarPosY'],Data['lidars']['Lidar1_Rectangular']['LidarPosZ'],'sb')
-            scalarMap.set_array(Data['Vh Unc [m/s]']['Uncertainty Vh GUM'])
-            cb=plt.colorbar(scalarMap, shrink=.8)
-            cb.set_label(label='$V_h$ Uncertainty [m/s]', size=plot_param['tick_labelfontsize']+12, labelpad=15)
-            cb.ax.tick_params(labelsize=19)
-            # cb.ax.tick_params(labelsize=13)
-            ax00.set_aspect('equal')
-            ax00.ticklabel_format(useOffset=False)
-            # ax.ticklabel_format(useOffset=False)
-            
             # ax.set_box_aspect([ub - lb for lb, ub in (getattr(ax, f'get_{a}lim')() for a in 'xyz')])
             # ax.xaxis.set_tick_params(labelsize=plot_param['tick_labelfontsize']-3)
             # ax.yaxis.set_tick_params(labelsize=plot_param['tick_labelfontsize']-3)
             # ax.zaxis.set_tick_params(labelsize=plot_param['tick_labelfontsize']-3)
             # ax00.set_box_aspect([ub - lb for lb, ub in (getattr(ax00, f'get_{a}lim')() for a in 'yz')])
-            ax00.xaxis.set_tick_params(labelsize=plot_param['tick_labelfontsize']+14)
-            ax00.yaxis.set_tick_params(labelsize=plot_param['tick_labelfontsize']+14)
-            
-            # lab_Xaxis=ax00.get_xticks()
-            # lab_Yaxis=ax00.get_yticks()
-            # # ax00.set_xticks([lab_Xaxis[0],lab_Xaxis[2],lab_Xaxis[4],lab_Xaxis[6],lab_Xaxis[8]])
-            # # ax00.set_yticks([lab_Yaxis[0],lab_Yaxis[2],lab_Yaxis[4],lab_Yaxis[6]])
-            
+           # lab_Xaxis=ax00.get_xticks()
+           # lab_Yaxis=ax00.get_yticks()
+           # # ax00.set_xticks([lab_Xaxis[0],lab_Xaxis[2],lab_Xaxis[4],lab_Xaxis[6],lab_Xaxis[8]])
+           # # ax00.set_yticks([lab_Yaxis[0],lab_Yaxis[2],lab_Yaxis[4],lab_Yaxis[6]])
 
-            plt.show()
-        
-            pdb.set_trace()
+            #############################################################                   
             
-            # Wind direction
+            
+            #%% Wind direction
             # colorsMap='jet'
             # cm2 = plt.get_cmap(colorsMap)
             # cNorm2 = matplotlib.colors.Normalize(vmin=0.15, vmax=0.2)

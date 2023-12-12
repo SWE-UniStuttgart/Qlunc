@@ -588,10 +588,14 @@ def Vlos_correlations(Lidar,Vlos_corr,Atmospheric_Scenario,wind_direction, ind_w
     # CORRELATIONS Vlos
     Corr_combi        = list(itertools.combinations(Vlos_cr, 2)) # amount of Vlos combinations
     Correlations_Vlos = {'V1':[],'V2':[],'V3':[]}
-    for i_combi in range(len(Corr_combi)):
-        Correlations_Vlos['V{}'.format(i_combi+1)].append(np.corrcoef(Corr_combi[i_combi])[0][1])
-
-
+    # pdb.set_trace()
+    try:
+        for i_combi in range(len(Corr_combi)):
+            Correlations_Vlos['V{}'.format(i_combi+1)].append(np.corrcoef(Corr_combi[i_combi])[0][1])
+    except:
+        # print('Correlation failed!')
+        for i_combi in range(len(Corr_combi)):
+            Correlations_Vlos['V{}'.format(i_combi+1)].append(0)
     return (Correlations_Vlos, Vlos_cr, U_Vlos_MCM,Theta_cr ,Psi_cr,Rho_cr )
     
 #%% ##########################################
@@ -632,13 +636,13 @@ def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,alpha,li
         
         #Store data
         for i in range(len(Lidar.optics.scanner.origin)):
-            U_Vlos_MCM['V{}'.format(i+1)].append(U_Vlos[i]) 
+            U_Vlos_MCM['V{}'.format(i+1)].append(U_Vlos[i])
         Vlos_corr_MCM['V12'].append(Vlos_corr['V1'])
         Vlos_corr_MCM['V13'].append(Vlos_corr['V2'])
         Vlos_corr_MCM['V23'].append(Vlos_corr['V3'])
 
 
-        ######### Vh multivariate  ####################################                                                                                                                                                                                                                                                                                                                             ## MCM - uv     
+        ######### Vh multivariate  ####################################
         # Covariance matrix    
         Vlos_corrCoef_MCM=[Vlos_corr['V1'],Vlos_corr['V2'],Vlos_corr['V3']]
         cov_MAT_Vh = MultiVar(Lidar, Vlos_corrCoef_MCM     ,  U_Vlos ,          1   ,         1     ,         1 ,            1 ,        'MC2' )
@@ -764,7 +768,6 @@ def GUM_Vlos_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,alpha,l
         
         # CORRELATIONS Vlos
         Corr_combi = list(itertools.combinations(range(len(Uy)), 2)) # amount of Vlos combinations
-        
         for i_combi in range(len(Corr_combi)):            
             Correlation_coeff['V{}'.format(i_combi+1)].append(Uy[Corr_combi[i_combi][0]][Corr_combi[i_combi][1]]/np.sqrt(Uy[Corr_combi[i_combi][1]][Corr_combi[i_combi][1]]*Uy[Corr_combi[i_combi][0]][Corr_combi[i_combi][0]]))
         Corrcoef_Vlos.append(Uy[0][1]/np.sqrt(Uy[1][1]*Uy[0][0]))
@@ -924,14 +927,15 @@ def U_WindDir_MC(Lidar,wind_direction,Mult_param):
         W_D=[]
         if len(Lidar.optics.scanner.origin)==3:
             u,v,w=Wind_vector(Theta1[ind_wind_dir],Theta2[ind_wind_dir],Theta3[ind_wind_dir],Psi1[ind_wind_dir],Psi2[ind_wind_dir],Psi3[ind_wind_dir], Vlos1[ind_wind_dir],Vlos2[ind_wind_dir],Vlos3[ind_wind_dir])
-            for i in range(len(u)):
-                
-                W_D.append ( math.atan(v[i]/u[i])    )
+            try:
+                for i in range(len(u)):
+                    
+                    W_D.append ( math.atan(v[i]/u[i])    )
+            except:
+                W_D.append(0)
         else:
-        # pdb.set_trace()
             W_D = (np.arctan((Vlos1[ind_wind_dir]*np.cos(Theta2[ind_wind_dir])*np.cos(Psi2[ind_wind_dir])-Vlos2[ind_wind_dir]*np.cos(Theta1[ind_wind_dir])*np.cos(Psi1[ind_wind_dir]))/(-Vlos1[ind_wind_dir]*np.cos(Theta2[ind_wind_dir])*np.sin(Psi2[ind_wind_dir])+Vlos2[ind_wind_dir]*np.cos(Theta1[ind_wind_dir])*np.sin(Psi1[ind_wind_dir]))))
         U_Wind_direction.append(np.degrees(np.std(W_D)))
-    # pdb.set_trace()
     return (U_Wind_direction)
     
 #%% U wind direction GUM

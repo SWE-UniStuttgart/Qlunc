@@ -34,13 +34,18 @@ could be done by instantiating their python classes:
 # get_ipython().magic('reset -sf')
 
 import os
-os.chdir('../')
+import pdb
+# pdb.set_trace()
+
+# Changeing to Qlunc path
+os.chdir(os.path.normpath(os.path.join(os.path.dirname(__file__),"..\\")))
+
 # importing  uncertainty functions
 import  UQ_Functions.UQ_Photonics_Classes as uphc,UQ_Functions.UQ_Optics_Classes as uopc,UQ_Functions.UQ_Lidar_Classes as ulc, UQ_Functions.UQ_ProbeVolume_Classes as upbc, UQ_Functions.UQ_SignalProcessor_Classes as uspc
 from Utils.Qlunc_ImportModules import *
 
 #%% Running Qlunc_Classes.py:
-with open (r'./Main/Qlunc_inputs.yml') as file: # WHere the yaml file is in order to get the input data
+with open ('.\\Main\\Qlunc_inputs.yml') as file: # WHere the yaml file is in order to get the input data
     Qlunc_yaml_inputs={}
     docs = yaml.load_all(file, Loader=yaml.FullLoader)
     for doc in docs:      
@@ -48,7 +53,7 @@ with open (r'./Main/Qlunc_inputs.yml') as file: # WHere the yaml file is in orde
             Qlunc_yaml_inputs.setdefault(k,v)  # save a dictionary with the data coming from yaml file 
 
 # Execute Qlunc_Classes.py (creating classes for lidar 'objects')
-exec(open(Qlunc_yaml_inputs['Main directory']+'/Main/Qlunc_Classes.py').read())   
+exec(open('.\\Main\\Qlunc_Classes.py').read())   
 #%%%%%%%%%%%%%%%%% INPUTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #%%# Lidar general inputs: ######################################################
 Lidar_inputs     = lidar_gral_inp(name        = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Name'],          # Introduce the name of your lidar data folder.
