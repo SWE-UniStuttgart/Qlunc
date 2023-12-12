@@ -85,9 +85,8 @@ def runQlunc():
     try:
         # pdb.set_trace()
         os.chdir(os.path.normpath(os.path.join(os.path.dirname(__file__),"..\\")))
-        from Main import Qlunc_Instantiate
+        # from Main import Qlunc_Instantiate
 
-        pdb.set_trace()
         # runfile( '.\\Main\\Qlunc_Instantiate.py')
         exec(open('.\\Main\\Qlunc_Instantiate.py').read()) 
         # os.chdir(wd)
