@@ -14,7 +14,7 @@ import os
 
 
 
-global wd, open_status_name
+global wd, open_status_name,application_path
 # pdb.set_trace()
 # wd=os.getcwd()
 # os.chdir(wd)
@@ -27,6 +27,8 @@ if getattr(sys, 'frozen', False):
 else:
     application_path = os.path.dirname(os.path.abspath(__file__))
 open_status_name = False
+
+# pdb.set_trace()
 #%% Functions
 
 # New file
@@ -66,7 +68,7 @@ def saveas_file():
 
 def save_file():
     global open_status_name
-
+    
     if open_status_name:
         text_file = open(open_status_name, 'w')
         file = text_file.write(my_text.get(1.0,END))
@@ -81,12 +83,18 @@ def save_file():
 
 # RunQlunc button
 def runQlunc():
-    runfile(application_path+'\\Qlunc_Instantiate.py')
-    # os.chdir(wd)
-    
-    root.title('Qlunc - Running Qlunc...' )
-    B=Lidar.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
-    root.title('Qlunc - Qlunc finished successfully' )
+    try:
+        d=g
+        runfile(application_path+'\\Qlunc_Instantiate.py')
+        # os.chdir(wd)
+        
+        root.title('Qlunc - Running Qlunc...' )
+        B=Lidar.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+        root.title('Qlunc - Qlunc finished successfully' )
+    except Exception as error:
+        my_text2.delete(1.0,END)
+        my_text2.insert('0.0',("Error occured with execution: {}".format(error)))
+        my_text2.insert('0.0',("Directory: {}".format(application_path)))
 #Select a file
 def button_select_input_file():
 
@@ -104,18 +112,22 @@ def button_select_input_file():
     root.title('Qlunc - {}'.format(name) )
 # Save changes in the selected file
 def button_save_txt():
-    global open_status_name
-
-    if open_status_name:
-        text_file = open(open_status_name, 'w')
-        file = text_file.write(my_text.get(0.0,END))
-        name = text_file
-        #Clsoe file
-        text_file.close()
-        root.title('Qlunc - File saved successfully' )# Save file
-
+    if my_text.get("1.0", END)=="\n":
+        root.title('Qlunc - Nothing to save. Select an input file or create a new one.' )# Save file
+        
     else:
-        saveas_file()
+        global open_status_name
+        
+        if open_status_name:
+            text_file = open(open_status_name, 'w')
+            file = text_file.write(my_text.get(0.0,END))
+            name = text_file
+            #Clsoe file
+            text_file.close()
+            root.title('Qlunc - File saved successfully' )# Save file
+    
+        else:
+            saveas_file()
 
 
 
@@ -133,12 +145,20 @@ height = root.winfo_screenheight()
 my_frame = CTk.CTkFrame(root)
 my_frame.grid(row=0,column=1,rowspan=8,columnspan=3)
 
+my_frame2 = CTk.CTkFrame(root)
+my_frame2.grid(row=0,column=4)
+
 
 #%% Create a text box
 my_text = CTk.CTkTextbox(my_frame,width=900,height=600, corner_radius=15,undo=True,wrap='word')#,yscrollcommand=text_scroll.set)
 my_text.configure(font=('Adobe Caslon Pro',16))
 my_text.grid(row=2,column=2)
 
+
+#% Create a disable text box
+my_text2 = CTk.CTkTextbox(my_frame2,width=500,height=200,corner_radius=15)#,yscrollcommand=text_scroll.set)
+my_text2.configure(font=('Arial',16))
+my_text2.grid(row=2,column=3)
 # By defaults opens the yaml file:
 # text_file = open('C:/SWE_LOCAL/Qlunc/Main/Qlunc_inputs.yml', 'r')
 # file = text_file.read()
@@ -160,10 +180,12 @@ file_menu.add_separator()
 file_menu.add_command(label="Exit",command=root.destroy)
 
 #%% Create status bar:
-status_bar = CTk.CTkLabel(root,text='Ready', anchor=W)
-status_bar.grid(column=1)
-status_bar.configure(fg_color='#4682B4',bg_color='#4682B4')
-# #%% Create edit manu:
+# status_bar = CTk.CTkLabel(root,text='Ready', anchor=W)
+# status_bar.grid(column=1)
+# status_bar.configure(fg_color='#4682B4',bg_color='#4682B4')
+
+
+ #%% Create edit manu:
 # edit_menu = Menu(my_menu,tearoff=False)
 # my_menu.add_cascade(label="Edit", menu=edit_menu)
 # edit_menu.add_command(label="Cut")
