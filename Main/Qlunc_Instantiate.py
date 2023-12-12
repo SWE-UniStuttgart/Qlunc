@@ -41,22 +41,26 @@ import yaml
 
 # Changeing to Qlunc path
 # os.chdir(os.path.normpath(os.path.join(os.path.dirname(__file__),"..\\")))
-os.chdir('C:\\SWE_LOCAL\\Qlunc')
+# os.chdir('C:\\SWE_LOCAL\\Qlunc')
 # from Utils.Qlunc_ImportModules import *
 
-import  UQ_Functions.UQ_Photonics_Classes as uphc,UQ_Functions.UQ_Optics_Classes as uopc,UQ_Functions.UQ_Lidar_Classes as ulc, UQ_Functions.UQ_ProbeVolume_Classes as upbc, UQ_Functions.UQ_SignalProcessor_Classes as uspc
-os.chdir(os.path.normpath(os.path.join(os.path.dirname(__file__),"..\\")))
+# import  Qlunc.UQ_Functions.UQ_Photonics_Classes as uphc, Qlunc.UQ_Functions.UQ_Optics_Classes as uopc, Qlunc.UQ_Functions.UQ_Lidar_Classes as ulc,  Qlunc.UQ_Functions.UQ_ProbeVolume_Classes as upbc,  Qlunc.UQ_Functions.UQ_SignalProcessor_Classes as uspc
+# os.chdir(os.path.normpath(os.path.join(os.path.dirname(__file__),"..\\")))
 # importing  uncertainty functions
 # import  UQ_Functions.UQ_Photonics_Classes as uphc,UQ_Functions.UQ_Optics_Classes as uopc,UQ_Functions.UQ_Lidar_Classes as ulc, UQ_Functions.UQ_ProbeVolume_Classes as upbc, UQ_Functions.UQ_SignalProcessor_Classes as uspc
 
 
 #%% Running Qlunc_Classes.py:
-with open ('.\\Main\\Qlunc_inputs.yml') as file: # WHere the yaml file is in order to get the input data
+with open ('.\\Qlunc_inputs.yml') as file: # WHere the yaml file is in order to get the input data
     Qlunc_yaml_inputs={}
     docs = yaml.load_all(file, Loader=yaml.FullLoader)
     for doc in docs:      
         for k, v in doc.items():           
             Qlunc_yaml_inputs.setdefault(k,v)  # save a dictionary with the data coming from yaml file 
+
+os.chdir(Qlunc_yaml_inputs['Main directory'])
+import  UQ_Functions.UQ_Photonics_Classes as uphc, UQ_Functions.UQ_Optics_Classes as uopc, UQ_Functions.UQ_Lidar_Classes as ulc,  UQ_Functions.UQ_ProbeVolume_Classes as upbc,  UQ_Functions.UQ_SignalProcessor_Classes as uspc
+
 
 # Execute Qlunc_Classes.py (creating classes for lidar 'objects')
 exec(open('.\\Main\\Qlunc_Classes.py').read()) 
