@@ -49,7 +49,7 @@ import yaml
 # importing  uncertainty functions
 # import  UQ_Functions.UQ_Photonics_Classes as uphc,UQ_Functions.UQ_Optics_Classes as uopc,UQ_Functions.UQ_Lidar_Classes as ulc, UQ_Functions.UQ_ProbeVolume_Classes as upbc, UQ_Functions.UQ_SignalProcessor_Classes as uspc
 
-os.chdir('C:/SWE_LOCAL/Qlunc/Main')
+
 #%% Running Qlunc_Classes.py:
 with open ('./Qlunc_inputs.yml') as file: # WHere the yaml file is in order to get the input data
     Qlunc_yaml_inputs={}
