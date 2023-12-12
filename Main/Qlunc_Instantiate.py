@@ -34,7 +34,7 @@ could be done by instantiating their python classes:
 # get_ipython().magic('reset -sf')
 
 import os
-os.chdir('../')
+os.chdir('C:/SWE_LOCAL/Qlunc/')
 # importing  uncertainty functions
 import  UQ_Functions.UQ_Photonics_Classes as uphc,UQ_Functions.UQ_Optics_Classes as uopc,UQ_Functions.UQ_Lidar_Classes as ulc, UQ_Functions.UQ_ProbeVolume_Classes as upbc, UQ_Functions.UQ_SignalProcessor_Classes as uspc
 from Utils.Qlunc_ImportModules import *
