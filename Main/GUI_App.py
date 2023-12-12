@@ -88,7 +88,7 @@ def runQlunc():
         # from Main import Qlunc_Instantiate
 
         # runfile(application_path+ '\\Qlunc_Instantiate.py')
-        exec(open('C:\\SWE_LOCAL\\Qlunc\\Main\\Qlunc_Instantiate.py').read()) 
+        exec(open('C:/SWE_LOCAL/Qlunc/Main/Qlunc_Instantiate.py').read()) 
         # os.chdir(wd)
         
         root.title('Qlunc - Running Qlunc...' )
@@ -99,7 +99,7 @@ def runQlunc():
         my_text2.delete(1.0,END)
         my_text2.insert('0.0',("Error occured with execution: {}\n".format(error)))
         application_path0=os.path.normpath(os.path.join(os.path.dirname(__file__),"..\\"))
-        my_text2.insert('0.0',("Directory: {}".format(application_path0)))
+        my_text2.insert('0.0',("Directory: {}".format(os.getcwd())))
 
 
 
