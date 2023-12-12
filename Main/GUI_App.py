@@ -87,8 +87,8 @@ def runQlunc():
         # os.chdir(os.path.normpath(os.path.join(os.path.dirname(__file__),"..\\Main")))
         # from Main import Qlunc_Instantiate
 
-        runfile(application_path+ '\\Qlunc_Instantiate.py')
-        # exec(open(application_path+'\\Qlunc_Instantiate.py').read()) 
+        # runfile(application_path+ '\\Qlunc_Instantiate.py')
+        exec(open(application_path+'\\Qlunc_Instantiate.py').read()) 
         # os.chdir(wd)
         
         root.title('Qlunc - Running Qlunc...' )
