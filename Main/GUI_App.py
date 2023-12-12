@@ -83,12 +83,12 @@ def save_file():
 # RunQlunc button
 def runQlunc():
     try:
-        # pdb.set_trace()
+        pdb.set_trace()
         os.chdir(os.path.normpath(os.path.join(os.path.dirname(__file__),"..\\")))
         # from Main import Qlunc_Instantiate
 
-        # runfile( '.\\Main\\Qlunc_Instantiate.py')
-        exec(open('.\\Qlunc_Instantiate.py').read()) 
+        runfile( '.\\Main\\Qlunc_Instantiate.py')
+        # exec(open('.\\Main\\Qlunc_Instantiate.py').read()) 
         # os.chdir(wd)
         
         root.title('Qlunc - Running Qlunc...' )
