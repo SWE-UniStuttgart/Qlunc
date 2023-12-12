@@ -151,21 +151,21 @@ width = root.winfo_screenwidth()
 height = root.winfo_screenheight()
 
 #%% create main frame
-my_frame = Frame(root)
+my_frame = CTk.CTkFrame(root)
 my_frame.grid(row=0,column=1,rowspan=8,columnspan=3)
 
-my_frame2 =Frame(root)
+my_frame2 = CTk.CTkFrame(root)
 my_frame2.grid(row=0,column=4)
 
 
 #%% Create a text box
-my_text = Text(my_frame,width=100,height=35,undo=True,wrap='word')#,yscrollcommand=text_scroll.set)
+my_text = CTk.CTkTextbox(my_frame,width=900,height=600, corner_radius=15,undo=True,wrap='word')#,yscrollcommand=text_scroll.set)
 my_text.configure(font=('Adobe Caslon Pro',16))
 my_text.grid(row=2,column=2)
 
 
 #% Create a disable text box
-my_text2 = Text(my_frame2,width=25,height=15)#,yscrollcommand=text_scroll.set)
+my_text2 = CTk.CTkTextbox(my_frame2,width=500,height=200,corner_radius=15)#,yscrollcommand=text_scroll.set)
 my_text2.configure(font=('Arial',16))
 my_text2.grid(row=2,column=3)
 # By defaults opens the yaml file:
@@ -209,16 +209,16 @@ file_menu.add_command(label="Exit",command=root.destroy)
 #%% BUTTONS:
 
 
-btn_select_input_file = Button(root, text="Select input file",command=button_select_input_file)
+btn_select_input_file = CTk.CTkButton(root, text="Select input file",command=button_select_input_file)
 btn_select_input_file.grid(row=0,column=0)    
 
-btn_save_input_file = Button(root, text="Quick save",command=button_save_txt)
+btn_save_input_file = CTk.CTkButton(root, text="Quick save",command=button_save_txt)
 btn_save_input_file.grid(row=1,column=0)
 
-btn_runQlunc = Button(root, text="Run Qlunc",command=runQlunc)
+btn_runQlunc = CTk.CTkButton(root, text="Run Qlunc",command=runQlunc)
 btn_runQlunc.grid(row=2,column=0)
 
-button_quit = Button(root,text="Exit Qlunc", command=root.destroy)
+button_quit = CTk.CTkButton(root,text="Exit Qlunc", command=root.destroy)
 button_quit.grid(row=3,column=0)
 
 # ###########
