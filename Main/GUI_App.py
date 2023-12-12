@@ -75,7 +75,7 @@ def save_file():
 # RunQlunc button
 def runQlunc():
     os.chdir(wd)
-    runfile(wd+'\\Qlunc_Instantiate.py')
+    runfile(wd+'/Qlunc_Instantiate.py')
     root.title('Qlunc - Running Qlunc...' )
     B=Lidar.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
     root.title('Qlunc - Qlunc finished successfully' )
