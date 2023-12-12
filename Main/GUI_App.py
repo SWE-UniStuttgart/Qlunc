@@ -16,9 +16,16 @@ import os
 
 global wd, open_status_name
 # pdb.set_trace()
-wd=os.getcwd()
-os.chdir(wd)
-
+# wd=os.getcwd()
+# os.chdir(wd)
+import sys, os
+if getattr(sys, 'frozen', False):
+    # If the application is run as a bundle, the PyInstaller bootloader
+    # extends the sys module by a flag frozen=True and sets the app 
+    # path into variable _MEIPASS'.
+    application_path = sys._MEIPASS
+else:
+    application_path = os.path.dirname(os.path.abspath(__file__))
 open_status_name = False
 #%% Functions
 
@@ -34,7 +41,7 @@ def new_file():
 # Open file
 def open_file():
     my_text.delete(1.0,END)
-    text_file = askopenfilename(initialdir="../Main/", title="Select file", filetypes=( ('Yaml file',"*.yml"),("Text files",'*.txt'), ('All files','*.*'))) # show an "Open" dialog box and return the path to the selected file
+    text_file = askopenfilename(initialdir="..\\Main\\", title="Select file", filetypes=( ('Yaml file',"*.yml"),("Text files",'*.txt'), ('All files','*.*'))) # show an "Open" dialog box and return the path to the selected file
     name = text_file
     global open_status_name
     open_status_name = text_file
@@ -47,7 +54,7 @@ def open_file():
 
 
 def saveas_file():
-    text_file = asksaveasfilename(initialdir="../Main/", title="Save file", filetypes=( ('Yaml file',"*.yml"),("Text files",'*.txt'), ('All files','*.*'))) # show an "Open" dialog box and return the path to the selected file
+    text_file = asksaveasfilename(initialdir="..\\Main\\", title="Save file", filetypes=( ('Yaml file',"*.yml"),("Text files",'*.txt'), ('All files','*.*'))) # show an "Open" dialog box and return the path to the selected file
     if text_file:
         name = text_file
         # open the file
@@ -74,8 +81,9 @@ def save_file():
 
 # RunQlunc button
 def runQlunc():
-    os.chdir(wd)
-    runfile(wd+'/Qlunc_Instantiate.py')
+    runfile(application_path+'\\Qlunc_Instantiate.py')
+    # os.chdir(wd)
+    
     root.title('Qlunc - Running Qlunc...' )
     B=Lidar.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
     root.title('Qlunc - Qlunc finished successfully' )
@@ -83,7 +91,7 @@ def runQlunc():
 def button_select_input_file():
 
     my_text.delete(1.0,END)
-    text_file = askopenfilename(initialdir="../Main/", title="Select file", filetypes=( ('Yaml file',"*.yml"),("Text files",'*.txt'), ('All files','*.*'))) # show an "Open" dialog box and return the path to the selected file
+    text_file = askopenfilename(initialdir="..\\Main\\", title="Select file", filetypes=( ('Yaml file',"*.yml"),("Text files",'*.txt'), ('All files','*.*'))) # show an "Open" dialog box and return the path to the selected file
     global open_status_name
     open_status_name = text_file
     name = text_file
