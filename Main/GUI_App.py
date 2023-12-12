@@ -29,7 +29,7 @@ else:
 open_status_name = False
 
 #%% Functions
-
+# pdb.set_trace()
 # New file
 def new_file():
     my_text.delete(1.0,END)   
@@ -84,11 +84,11 @@ def save_file():
 def runQlunc():
     try:
         # pdb.set_trace()
-        os.chdir(os.path.normpath(os.path.join(os.path.dirname(__file__),"..\\Main")))
+        # os.chdir(os.path.normpath(os.path.join(os.path.dirname(__file__),"..\\Main")))
         # from Main import Qlunc_Instantiate
 
-        runfile( '.\\Qlunc_Instantiate.py')
-        # exec(open('.\\Main\\Qlunc_Instantiate.py').read()) 
+        # runfile(application_path+ '\\Qlunc_Instantiate.py')
+        exec(open('.\\Main\\Qlunc_Instantiate.py').read()) 
         # os.chdir(wd)
         
         root.title('Qlunc - Running Qlunc...' )
