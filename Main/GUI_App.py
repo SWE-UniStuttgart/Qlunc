@@ -140,7 +140,6 @@ def button_save_txt():
 
 
 
-CTk.deactivate_automatic_dpi_awareness()
 #%%
 root=Tk()
 root.title("Qlunc")
