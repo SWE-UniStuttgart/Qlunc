@@ -51,7 +51,7 @@ import yaml
 
 
 #%% Running Qlunc_Classes.py:
-with open ('.\\Qlunc_inputs.yml') as file: # WHere the yaml file is in order to get the input data
+with open ('./Main/Qlunc_inputs.yml') as file: # WHere the yaml file is in order to get the input data
     Qlunc_yaml_inputs={}
     docs = yaml.load_all(file, Loader=yaml.FullLoader)
     for doc in docs:      
