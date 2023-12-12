@@ -38,8 +38,12 @@ import pdb
 # pdb.set_trace()
 
 # Changeing to Qlunc path
-os.chdir(os.path.normpath(os.path.join(os.path.dirname(__file__),"..\\")))
+# os.chdir(os.path.normpath(os.path.join(os.path.dirname(__file__),"..\\")))
+os.chdir('C:/SWE_LOCAL/Qlunc/')
+from Utils.Qlunc_ImportModules import *
 
+import  UQ_Functions.UQ_Photonics_Classes as uphc,UQ_Functions.UQ_Optics_Classes as uopc,UQ_Functions.UQ_Lidar_Classes as ulc, UQ_Functions.UQ_ProbeVolume_Classes as upbc, UQ_Functions.UQ_SignalProcessor_Classes as uspc
+os.chdir(os.path.normpath(os.path.join(os.path.dirname(__file__),"..\\")))
 # importing  uncertainty functions
 # import  UQ_Functions.UQ_Photonics_Classes as uphc,UQ_Functions.UQ_Optics_Classes as uopc,UQ_Functions.UQ_Lidar_Classes as ulc, UQ_Functions.UQ_ProbeVolume_Classes as upbc, UQ_Functions.UQ_SignalProcessor_Classes as uspc
 
@@ -55,12 +59,6 @@ with open ('.\\Main\\Qlunc_inputs.yml') as file: # WHere the yaml file is in ord
 # Execute Qlunc_Classes.py (creating classes for lidar 'objects')
 exec(open('.\\Main\\Qlunc_Classes.py').read()) 
 
-
-os.chdir(Qlunc_yaml_inputs['Main directory'])
-from Utils.Qlunc_ImportModules import *
-
-import  UQ_Functions.UQ_Photonics_Classes as uphc,UQ_Functions.UQ_Optics_Classes as uopc,UQ_Functions.UQ_Lidar_Classes as ulc, UQ_Functions.UQ_ProbeVolume_Classes as upbc, UQ_Functions.UQ_SignalProcessor_Classes as uspc
-os.chdir(os.path.normpath(os.path.join(os.path.dirname(__file__),"..\\")))
 #%%%%%%%%%%%%%%%%% INPUTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #%%# Lidar general inputs: ######################################################
 Lidar_inputs     = lidar_gral_inp(name        = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Name'],          # Introduce the name of your lidar data folder.
