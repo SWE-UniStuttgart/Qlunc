@@ -97,7 +97,7 @@ def runQlunc():
     except Exception as error:
         root.title('Qlunc - Error!' )
         my_text2.delete(1.0,END)
-        my_text2.insert('0.0',("Error occured with execution: {}\n".format(error)))
+        my_text2.insert('0.0',("Error occured with execution: {} /n".format(error)))
         application_path0=os.path.normpath(os.path.join(os.path.dirname(__file__),"..\\"))
         my_text2.insert('0.0',("Directory: {}".format(os.getcwd())))
 
