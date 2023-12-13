@@ -36,6 +36,7 @@ could be done by instantiating their python classes:
 import os
 import pdb
 import yaml
+import numpy as np
 # pdb.set_trace()
 
 # Changeing to Qlunc path
@@ -54,7 +55,7 @@ with open ('.\\Main\\Qlunc_inputs.yml') as file: # WHere the yaml file is in ord
         for k, v in doc.items():           
             Qlunc_yaml_inputs.setdefault(k,v)  # save a dictionary with the data coming from yaml file 
 
-os.chdir(Qlunc_yaml_inputs['Main directory'])
+# os.chdir(Qlunc_yaml_inputs['Main directory'])
 import  UQ_Functions.UQ_Photonics_Classes as uphc,UQ_Functions.UQ_Optics_Classes as uopc,UQ_Functions.UQ_Lidar_Classes as ulc, UQ_Functions.UQ_ProbeVolume_Classes as upbc, UQ_Functions.UQ_SignalProcessor_Classes as uspc
 from Utils.Qlunc_ImportModules import *
 
@@ -202,3 +203,4 @@ else:
                                       wind_tilt     = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind tilt'],
                                       Hg             = Qlunc_yaml_inputs['Atmospheric_inputs']['Height ground'])
 
+# pdb.set_trace()
