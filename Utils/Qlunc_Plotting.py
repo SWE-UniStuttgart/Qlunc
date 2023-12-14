@@ -356,7 +356,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             Cont_Theta1         = (np.array(Data['Sens coeff Vlos']['V1_theta'][-1]*np.array(np.radians(Data['STDVs'][0][0]))))**2
             Cont_Psi1           = (np.array(Data['Sens coeff Vlos']['V1_psi'][-1]*np.array(np.radians(Data['STDVs'][1][0]))))**2
             Cont_Rho1           = (np.array(Data['Sens coeff Vlos']['V1_rho'][-1]*np.array(Data['STDVs'][2][0])))**2     
-            Cont_Corr1          = 2*Lidar.optics.scanner.correlations[9]*np.array(Data['Sens coeff Vlos']['V1_theta'][0])*np.array(Data['Sens coeff Vlos']['V1_psi'][0])*np.array(np.radians(Data['STDVs'][0][0]))*np.array(np.radians(Data['STDVs'][1][0]))
+            Cont_Corr1          = 2*Lidar.optics.scanner.correlations[9]*np.array(Data['Sens coeff Vlos']['V1_theta'][2])*np.array(Data['Sens coeff Vlos']['V1_psi'][2])*np.array(np.radians(Data['STDVs'][0][0]))*np.array(np.radians(Data['STDVs'][1][0]))
 
             ax5[1].plot(np.degrees(Data['wind direction']),Cont_Theta1,'-',c='black',linewidth=plot_param['linewidth'],label=r'$\frac{\partial{V_{LOS}}}{\partial{\theta}}$')
             ax5[1].plot(np.degrees(Data['wind direction']),Cont_Psi1 ,'-',c='dimgray',linewidth=plot_param['linewidth'],label=r'$\frac{\partial{V_{LOS}}}{\partial{\varphi}}$')
