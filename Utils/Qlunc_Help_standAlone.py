@@ -605,7 +605,6 @@ def Vlos_correlations(Lidar,Vlos_corr,Atmospheric_Scenario,wind_direction, ind_w
     # CORRELATIONS Vlos
     Corr_combi        = list(itertools.combinations(Vlos_cr, 2)) # amount of Vlos combinations
     Correlations_Vlos = {'V1':[],'V2':[],'V3':[]}
-    # pdb.set_trace()
     try:
         for i_combi in range(len(Corr_combi)):
             Correlations_Vlos['V{}'.format(i_combi+1)].append(np.corrcoef(Corr_combi[i_combi])[0][1])
@@ -718,7 +717,6 @@ def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,alpha,li
 
     # Store the multivariate distributions
     Mult_param          =  [Vlos1_MC_cr2_s,Vlos2_MC_cr2_s,Vlos3_MC_cr2_s,Theta1_cr2_s,Theta2_cr2_s,Theta3_cr2_s,Psi1_cr2_s,Psi2_cr2_s,Psi3_cr2_s,Rho1_cr2_s,Rho2_cr2_s,Rho3_cr2_s]
-    # pdb.set_trace()
     return Vlos_corr_MCM,U_Vlos_MCM , Mult_param  , U_Vh_MCM
 
 
