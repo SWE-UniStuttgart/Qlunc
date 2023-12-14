@@ -154,9 +154,9 @@ ADC = analog2digital_converter (name          = Qlunc_yaml_inputs['Components'][
                                 unc_func      = uspc.UQ_ADC)
 # Signal processor module
 Signal_processor_Module = signal_processor(name                     = Qlunc_yaml_inputs['Modules']['Signal processor Module']['Name'],
-                                           analog2digital_converter = eval(Qlunc_yaml_inputs['Modules']['Signal processor Module']['ADC']),)
+                                           analog2digital_converter = eval(Qlunc_yaml_inputs['Modules']['Signal processor Module']['ADC']),
                                            # f_analyser             = Qlunc_yaml_inputs['Modules']['Signal processor Module']['Frequency analyser'],
-                                           # unc_func                 = uspc.sum_unc_signal_processor)
+                                            unc_func                 = uspc.sum_unc_signal_processor)
 
 
 
@@ -204,3 +204,5 @@ else:
                                       Hg             = Qlunc_yaml_inputs['Atmospheric_inputs']['Height ground'])
 
 # pdb.set_trace()
+# B=Lidar.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+# print(B)
