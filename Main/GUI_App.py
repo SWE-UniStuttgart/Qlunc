@@ -29,8 +29,7 @@ import time
 import yaml
 import pylab
 import math
-# import xarray as xr
-# import netCDF4 as nc    
+from io import StringIO  
 import csv
 from termcolor import colored, cprint 
 import random
@@ -125,15 +124,25 @@ def runQlunc():
         # pdb.set_trace()
         os.chdir(os.path.normpath(os.path.join(os.path.dirname(__file__),"..\\")))
         # from Main import Qlunc_Instantiate
-
-        # pdb.set_trace()
-        runfile( '.\\Main\\Qlunc_Instantiate.py')
-        # LIdar=exec(open('.\\Main\\Qlunc_Instantiate.py').read()) 
-        # os.chdir(wd)
-        # pdb.set_trace()
+        # code = input_box.get(1.0, END)
+        old_stdout = sys.stdout
+        redirected_output = sys.stdout = StringIO()
         root.title('Qlunc - Running Qlunc...' )
-        B=Lidar.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+        # runfile( '.\\Main\\Qlunc_Instantiate.py')
+        exec(open('.\\Main\\Qlunc_Instantiate.py').read()) 
+
+
+        # B=Lidar.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
         root.title('Qlunc - Qlunc finished successfully' )
+    
+
+        sys.stdout = old_stdout
+        # my_text2.delete(1.0, "end")
+        my_text2.insert(1.0, redirected_output.getvalue())
+    
+    
+    
+    
     except Exception as error:
         root.title('Qlunc - Error!' )
         my_text2.delete(1.0,END)
@@ -206,7 +215,7 @@ my_text.grid(row=2,column=2)
 
 
 #% Create a disable text box
-my_text2 = CTk.CTkTextbox(my_frame2,width=500,height=200,corner_radius=15)#,yscrollcommand=text_scroll.set)
+my_text2 = CTk.CTkTextbox(my_frame2,width=700,height=700,corner_radius=15)#,yscrollcommand=text_scroll.set)
 my_text2.configure(font=('Arial',16))
 my_text2.grid(row=2,column=3)
 # By defaults opens the yaml file:
