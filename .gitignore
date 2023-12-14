@@ -11,7 +11,6 @@ metadata/rayleigh_distance.txt
 Lissajou_pattern.py
 
 # Ignore specific folders:
-Qlunc_Output/
 Sphinx4Qlunc/
 UnderDevelopment/
 
