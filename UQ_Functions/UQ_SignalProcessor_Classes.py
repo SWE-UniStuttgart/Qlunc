@@ -31,10 +31,9 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     Returns
     -------
     
-    list
+    DataFrame: Dictionary
     
     """
-    
     fd_peak = []
     vlos_MC = []
     ranvar  = []
@@ -53,7 +52,7 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     #%% Uncertainty due to hardware noise, signal processing and speckle interference:
     
     # Hardware noise (thermal noise + shot noise + dark current noise + TIA noise):
-    level_noise_hardware = 10**(Lidar.lidar_inputs.dataframe['Total noise photodetector [dB]']/10) # Hardware noise added before signal downmixing
+    level_noise_hardware = 10**(Lidar.lidar_inputs.dataframe['Uncertainty Photodetector']['Total noise photodetector [dB]']/10) # Hardware noise added before signal downmixing
     hardware_noise       = np.random.normal(0 , level_noise_hardware , n_fftpoints)
 
     
@@ -119,25 +118,43 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         # Frequency peak and Vlos
         fd_peak.append(f[max_fft])
         vlos_MC.append(0.5*wavelength_noise[ind_pulse]*fd_peak[ind_pulse])
-        # pdb.set_trace()
+
     # Stdv of the frequency peak and Vlos
     Stdv_fpeak = np.std(fd_peak)
     Stdv_vlos  = np.std(vlos_MC)
     mean_vlos  = np.mean(vlos_MC)
-    # pdb.set_trace()
+
     # Store data
-    Final_Output_UQ_ADC                                      = {'Stdv Doppler f_peak':np.array(Stdv_fpeak),'Stdv Vlos':np.array(Stdv_vlos)}    
-    Lidar.lidar_inputs.dataframe['Stdv Doppler f_peak [Hz]'] = Final_Output_UQ_ADC['Stdv Doppler f_peak']*np.linspace(1,1,len(Atmospheric_Scenario.temperature)) # linspace to create the appropriate length for the xarray.
-    Lidar.lidar_inputs.dataframe['Stdv wavelength [m]']      = stdv_wavelength
-    return Final_Output_UQ_ADC,Lidar.lidar_inputs.dataframe
+    Lidar.lidar_inputs.dataframe['Uncertainty ADC'] = {'Stdv Doppler f_peak [Hz]':np.array(Stdv_fpeak)*np.linspace(1,1,len(Atmospheric_Scenario.temperature)),'Stdv wavelength [m]':stdv_wavelength,'Stdv Vlos [m/s]':Stdv_vlos}
+    return Lidar.lidar_inputs.dataframe
 
 #%% Sum of uncertainties in `signal processor` module: 
 def sum_unc_signal_processor(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
-    List_Unc_signal_processor=[]
+    """
+    This function runs from the UQ_Lidar_Classes and calcualtes the uncertainty in the signal processor module.
+    So far, the signal processor module only includes the ADC
+    
+    Parameters
+    ----------
+    
+    * Lidar
+        data...
+    * Atmospheric_Scenario
+        Atmospheric data. Integer or Time series
+    * cts
+        Physical constants
+    * Qlunc_yaml_inputs
+        Lidar parameters data
+        
+    Returns
+    -------
+    
+    DataFrame: Dictionary
+    
+    """
     if Lidar.signal_processor.analog2digital_converter != None:
-        try: # each try/except evaluates whether the component is included in the module, therefore in the calculations               
-                ADC_Uncertainty,DataFrame=Lidar.signal_processor.analog2digital_converter.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
-                List_Unc_signal_processor.append(ADC_Uncertainty['ADC_Noise'])      
+        try:               
+            DataFrame = Lidar.signal_processor.analog2digital_converter.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
         except:
             ADC_Uncertainty=None
             print(colored('Error in ADC uncertainty calculations!','cyan', attrs=['bold']))
@@ -145,7 +162,4 @@ def sum_unc_signal_processor(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         print (colored('You didn´t include an analog to digital converter in the lidar.','cyan', attrs=['bold']))       
     
     # Store data
-    Uncertainty_SignalProcessor_Module=SA.unc_comb(List_Unc_signal_processor)
-    Final_Output_UQ_SignalProcessor = {'Uncertainty_SignalProcessor':Uncertainty_SignalProcessor_Module}
-    Lidar.lidar_inputs.dataframe['SignalProcessor Module']=Final_Output_UQ_SignalProcessor['Uncertainty_SignalProcessor']*np.linspace(1,1,len(Atmospheric_Scenario.temperature))  # linspace to create the appropiate length for the xarray. 
-    return Final_Output_UQ_SignalProcessor,Lidar.lidar_inputs.dataframe
+    return DataFrame

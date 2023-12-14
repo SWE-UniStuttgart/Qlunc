@@ -210,11 +210,11 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
                                'Sens coeff Vlos' : SensCoeff_Vlos,
                                'Correlations'    : Correlation_coeff}
     # Lidar.lidar_inputs.dataframe['Scanner'] = {'Focus distance':Final_Output_UQ_Scanner['lidars'][0],'Elevation angle':Final_Output_UQ_Scanner['Elevation angle'][0],'Azimuth':Final_Output_UQ_Scanner['Azimuth'][0]}
-    Scan_unc.append(Final_Output_UQ_Scanner)
+    Lidar.lidar_inputs.dataframe['Uncertainty Scanner']=Final_Output_UQ_Scanner
     
     # 7)Plotting data
     QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,Qlunc_yaml_inputs['Flags']['Line of sight Velocity Uncertainty'],False,False,False,False,False,1)  #Qlunc_yaml_inputs['Flags']['Scanning Pattern']  
-    return Scan_unc,Lidar.lidar_inputs.dataframe
+    return Lidar.lidar_inputs.dataframe
 
 
 #%% Sum of uncertainties in `optics` module: 
@@ -225,7 +225,7 @@ def sum_unc_optics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     if Lidar.optics.scanner != None:
        
                    
-        Scanner_Uncertainty,DataFrame=Lidar.optics.scanner.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+        DataFrame=Lidar.optics.scanner.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
             
          
     else:
