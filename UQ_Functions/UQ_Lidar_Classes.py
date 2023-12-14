@@ -40,51 +40,62 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     List_Unc_lidar = []
     print(colored('Processing lidar uncertainties...','magenta', attrs=['bold']))
     
-
-    
-    # pdb.set_trace()    
     ### Photoniccs
     if Lidar.photonics != None:
         try: # each try/except evaluates whether the component is included in the module, therefore in the calculations
-            Photonics_Uncertainty,DataFrame = Lidar.photonics.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
-            try:
-                # pdb.set_trace()
-                List_Unc_lidar.append(DataFrame['Thermal noise']) 
-                List_Unc_lidar.append(DataFrame['Shot noise']) 
-                List_Unc_lidar.append(DataFrame['Dark current noise']) 
-                List_Unc_lidar.append(DataFrame['TIA noise']) 
-            except:
-                print(colored('Error appending photodetetor noise components to the data frame.','cyan', attrs=['bold']))
-            
+            DataFrame = Lidar.photonics.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+
         except:
             Photonics_Uncertainty = None
             print(colored('Error in photonics module calculations!','cyan', attrs=['bold']))
     else:
         print(colored('You didn´t include a photonics module in the lidar.','cyan', attrs=['bold']))
     
-    ### Signal processor
+    #%% Signal processor
     if Lidar.signal_processor != None:   
         try:
-            SignalProcessor_Uncertainty,DataFrame = Lidar.signal_processor.analog2digital_converter.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
-    
-            List_Unc_lidar.append(SignalProcessor_Uncertainty['Stdv Vlos']*len(Atmospheric_Scenario.temperature))
-        
+            DataFrame = Lidar.signal_processor.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+            
         except:
             SignalProcessor_Uncertainty = None
-            print(colored('No signal processor module in calculations!','cyan', attrs=['bold']))
+            print(colored('Error in  signal processor module calculations!','cyan', attrs=['bold']))
     else:
-        print(colored('You didn´t include a signal processor module in  the lidar.','cyan', attrs=['bold']))        
+        Lidar.lidar_inputs.dataframe['Uncertainty ADC'] = {'Stdv Doppler f_peak [Hz]':np.array(0)*np.linspace(1,1,len(Atmospheric_Scenario.temperature)),'Stdv wavelength [m]':0,'Stdv Vlos [m/s]':0}
+        print(colored('You didn´t include a signal processor module in the lidar.','cyan', attrs=['bold']))        
 
-    ### Intrinsic lidar uncertainty:
-    Lidar.lidar_inputs.dataframe['Intrinsic Uncertainty [m/s]']= SA.U_intrinsic(Lidar,DataFrame,Qlunc_yaml_inputs)
+    #%% Intrinsic lidar uncertainty:
+    Lidar.lidar_inputs.dataframe['Intrinsic Uncertainty [m/s]'] = SA.U_intrinsic(Lidar,DataFrame,Qlunc_yaml_inputs)
     
-    
-    ### Optics
+    #%% Optics
     if Lidar.optics != None:
         DataFrame = Lidar.optics.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)     
     else:
         print(colored('You didn´t include an optics module in the lidar.','cyan', attrs=['bold']))
-       
+    
+    
+    #%% Save data
+    #Define the name based on the measuring configuration parameters
+    filename = "Output_"+"["+ str(Lidar.optics.scanner.cone_angle[0]) + "," + str(Lidar.optics.scanner.azimuth[0])+ "," +str(Lidar.optics.scanner.focus_dist[0])   + "]_"
+    for ind_loop in range (len( Lidar.optics.scanner.origin)):
+        filename += ('_LP{}_'.format(ind_loop)+str(Lidar.optics.scanner.origin[ind_loop]))
+        
+    # Define the path where to store the data
+    path = ".\\Qlunc_Output\\"+filename + ".pkl"
+    # Store the dictionary 
+    if os.path.isfile(path):
+        print(colored('lidar output file already exists', 'red',attrs=['bold']))
+        
+    else:
+                
+        # create a binary pickle file 
+        f = open(path,"wb")        
+        # write the python object (dict) to pickle file
+        pickle.dump(DataFrame,f)        
+        # close file
+        f.close()
+    ########################################    
+    # How to read the data
+    # Qlunc_data = pickle.load(open(path,"rb"))
+    ########################################
     print(colored('...Lidar uncertainty done.".','magenta', attrs=['bold']))
     return Lidar.lidar_inputs.dataframe
-    # return Final_Output_Lidar_Uncertainty,Lidar.lidar_inputs.dataframe
