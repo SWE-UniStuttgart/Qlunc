@@ -83,7 +83,7 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     path = ".\\Qlunc_Output\\"+filename + ".pkl"
     # Store the dictionary 
     if os.path.isfile(path):
-        print(colored('lidar output file already exists', 'red',attrs=['bold']))
+        print(colored('The lidar output file already exists', 'red',attrs=['bold']))
         
     else:
                 
