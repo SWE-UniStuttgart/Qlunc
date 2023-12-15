@@ -12,20 +12,20 @@ University of Stuttgart(c)
 from Utils.Qlunc_ImportModules import *
 
 
-def scatter3d(x,y,z, Vrad_homo, colorsMap='jet'):
-    cm = plt.get_cmap(colorsMap)
-    cNorm = matplotlib.colors.Normalize(vmin=min(Vrad_homo), vmax=max(Vrad_homo)) #Normalize(vmin=0.005, vmax=.045) # 
-    scalarMap = cmx.ScalarMappable(norm=cNorm, cmap=cm)
-    fig = plt.figure()
-    ax = Axes3D(fig)
-    ax.scatter(x, y, z, Vrad_homo, s=75, c=scalarMap.to_rgba(Vrad_homo))
-    ax.set_xlabel('theta [°]',fontsize=plot_param['axes_label_fontsize'])
-    ax.set_ylabel('psi [°]',fontsize=plot_param['axes_label_fontsize'])
-    ax.set_zlabel('rho [m]',fontsize=plot_param['axes_label_fontsize'])
-    scalarMap.set_array(Vrad_homo)
-    fig.colorbar(scalarMap,label='V_Rad Uncertainty [m/s]',shrink=0.7)
-    # fig.colorbar.tick_params(labelsize=10)
-    plt.show()
+# def scatter3d(x,y,z, Vrad_homo, colorsMap='jet'):
+#     cm = plt.get_cmap(colorsMap)
+#     cNorm = matplotlib.colors.Normalize(vmin=min(Vrad_homo), vmax=max(Vrad_homo)) #Normalize(vmin=0.005, vmax=.045) # 
+#     scalarMap = cmx.ScalarMappable(norm=cNorm, cmap=cm)
+#     fig = plt.figure()
+#     ax = Axes3D(fig)
+#     ax.scatter(x, y, z, Vrad_homo, s=75, c=scalarMap.to_rgba(Vrad_homo))
+#     ax.set_xlabel('theta [°]',fontsize=plot_param['axes_label_fontsize'])
+#     ax.set_ylabel('psi [°]',fontsize=plot_param['axes_label_fontsize'])
+#     ax.set_zlabel('rho [m]',fontsize=plot_param['axes_label_fontsize'])
+#     scalarMap.set_array(Vrad_homo)
+#     fig.colorbar(scalarMap,label='V_Rad Uncertainty [m/s]',shrink=0.7)
+#     # fig.colorbar.tick_params(labelsize=10)
+#     plt.show()
     
 
 #%% Plotting:

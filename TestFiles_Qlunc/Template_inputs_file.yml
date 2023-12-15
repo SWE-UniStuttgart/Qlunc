@@ -174,7 +174,7 @@ Atmospheric_inputs:
   Height ground:           # [m] Ground height
   Power law exponent: [,,] # power law exponent. Vector of alpha values.
   Vref:                    # [m/s] - Reference velocity
-  Wind direction:  [0,359] # [deg] - [from,to]
+  Wind direction:  [,] # [deg] - [from,to]
   Wind tilt:               # [deg]
   
 ---
