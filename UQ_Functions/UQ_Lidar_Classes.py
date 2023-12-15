@@ -74,25 +74,28 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     
     #%% Save data
-    #Define the name based on the measuring configuration parameters
-    filename = "Output_"+"["+ str(Lidar.optics.scanner.cone_angle[0]) + "," + str(Lidar.optics.scanner.azimuth[0])+ "," +str(Lidar.optics.scanner.focus_dist[0])   + "]_"
-    for ind_loop in range (len( Lidar.optics.scanner.origin)):
-        filename += ('_LP{}_'.format(ind_loop+1)+str(Lidar.optics.scanner.origin[ind_loop]))
-        
-    # Define the path where to store the data
-    path = ".\\Qlunc_Output\\"+filename + ".pkl"
-    # Store the dictionary 
-    if os.path.isfile(path):
-        print(colored('The lidar output file already exists', 'red',attrs=['bold']))
-        
-    else:
-                
-        # create a binary pickle file 
-        f = open(path,"wb")        
-        # write the python object (dict) to pickle file
-        pickle.dump(DataFrame,f)        
-        # close file
-        f.close()
+    pdb.set_trace()
+    if Qlunc_yaml_inputs['Save data']:
+        #Define the name based on the measuring configuration parameters
+        filename = "Q_output_"+"["+ str(Lidar.optics.scanner.cone_angle[0]) + "," + str(Lidar.optics.scanner.azimuth[0])+ "," +str(Lidar.optics.scanner.focus_dist[0])   + "]_"
+        for ind_loop in range (len( Lidar.optics.scanner.origin)):
+            filename += ('_LP{}_'.format(ind_loop+1)+str(Lidar.optics.scanner.origin[ind_loop]))
+            
+        # Define the path where to store the data
+        path = ".\\Qlunc_Output\\"+filename + ".pkl"
+        # Store the dictionary 
+        if os.path.isfile(path):
+            print(colored('The lidar output file already exists', 'red',attrs=['bold']))
+            
+        else:
+                    
+            # create a binary pickle file 
+            f = open(path,"wb")        
+            # write the python object (dict) to pickle file
+            pickle.dump(DataFrame,f)        
+            # close file
+            f.close()
+        print("{} ".format(filename)+"saved at 'Qlunc_Output' folder")    
     ########################################    
     # How to read the data
     # Qlunc_data = pickle.load(open(path,"rb"))
