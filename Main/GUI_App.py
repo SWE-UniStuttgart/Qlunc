@@ -65,7 +65,7 @@ else:
 open_status_name = False
 
 #%% Functions
-
+# pdb.set_trace()
 # New file
 def new_file():
     my_text.delete(1.0,END)   
@@ -123,6 +123,7 @@ def save_file():
 def runQlunc():
     try:
         # pdb.set_trace()
+
         os.chdir(os.path.normpath(os.path.join(os.path.dirname(__file__),"..\\")))
         # from Main import Qlunc_Instantiate
         # code = input_box.get(1.0, END)
@@ -134,6 +135,7 @@ def runQlunc():
 
 
         # B=Lidar.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+
         root.title('Qlunc - Qlunc finished successfully' )
     
 
@@ -146,10 +148,10 @@ def runQlunc():
     
     except Exception as error:
         root.title('Qlunc - Error!' )
-        my_text2.delete(1.0,END)
-        my_text2.insert('0.0',("Error occured with execution: {}\n".format(error)))
+        # my_text2.delete(1.0,END)
+        my_text2.insert('0.0',("Error occured with execution: {} /n".format(error)))
         application_path0=os.path.normpath(os.path.join(os.path.dirname(__file__),"..\\"))
-        my_text2.insert('0.0',("Directory: {}".format(application_path0)))
+        my_text2.insert('1.0',("Directory: {}".format(os.getcwd())))
 
 
 
@@ -188,6 +190,7 @@ def button_save_txt():
         else:
             saveas_file()
 
+
 def button_saveas_txt():
     if my_text.get("1.0", END)=="\n":
         root.title('Qlunc - Nothing to save. Select an input file or create a new one.' )# Save file
@@ -198,6 +201,7 @@ def button_saveas_txt():
         root.title('Qlunc - File saved successfully' )
         
 CTk.deactivate_automatic_dpi_awareness()
+
 #%%
 root=Tk()
 root.title("Qlunc")

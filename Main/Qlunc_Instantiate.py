@@ -35,33 +35,43 @@ could be done by instantiating their python classes:
 
 import os
 import pdb
+
 import yaml
 import numpy as np
+
 # pdb.set_trace()
 
 # Changeing to Qlunc path
-os.chdir(os.path.normpath(os.path.join(os.path.dirname(__file__),"..\\")))
+# os.chdir(os.path.normpath(os.path.join(os.path.dirname(__file__),"..\\")))
+# os.chdir('C:\\SWE_LOCAL\\Qlunc')
+# from Utils.Qlunc_ImportModules import *
 
+# import  Qlunc.UQ_Functions.UQ_Photonics_Classes as uphc, Qlunc.UQ_Functions.UQ_Optics_Classes as uopc, Qlunc.UQ_Functions.UQ_Lidar_Classes as ulc,  Qlunc.UQ_Functions.UQ_ProbeVolume_Classes as upbc,  Qlunc.UQ_Functions.UQ_SignalProcessor_Classes as uspc
+# os.chdir(os.path.normpath(os.path.join(os.path.dirname(__file__),"..\\")))
 # importing  uncertainty functions
 # import  UQ_Functions.UQ_Photonics_Classes as uphc,UQ_Functions.UQ_Optics_Classes as uopc,UQ_Functions.UQ_Lidar_Classes as ulc, UQ_Functions.UQ_ProbeVolume_Classes as upbc, UQ_Functions.UQ_SignalProcessor_Classes as uspc
 
+
 # from Utils.Qlunc_ImportModules import *
 
+
 #%% Running Qlunc_Classes.py:
-with open ('.\\Main\\Qlunc_inputs.yml') as file: # WHere the yaml file is in order to get the input data
+with open ('./Qlunc_inputs.yml') as file: # WHere the yaml file is in order to get the input data
     Qlunc_yaml_inputs={}
     docs = yaml.load_all(file, Loader=yaml.FullLoader)
     for doc in docs:      
         for k, v in doc.items():           
             Qlunc_yaml_inputs.setdefault(k,v)  # save a dictionary with the data coming from yaml file 
 
-# os.chdir(Qlunc_yaml_inputs['Main directory'])
+
 import  UQ_Functions.UQ_Photonics_Classes as uphc,UQ_Functions.UQ_Optics_Classes as uopc,UQ_Functions.UQ_Lidar_Classes as ulc, UQ_Functions.UQ_ProbeVolume_Classes as upbc, UQ_Functions.UQ_SignalProcessor_Classes as uspc
 from Utils.Qlunc_ImportModules import *
 
 
+
 # Execute Qlunc_Classes.py (creating classes for lidar 'objects')
-exec(open('.\\Main\\Qlunc_Classes.py').read())   
+exec(open('.\\Main\\Qlunc_Classes.py').read()) 
+
 #%%%%%%%%%%%%%%%%% INPUTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #%%# Lidar general inputs: ######################################################
 Lidar_inputs     = lidar_gral_inp(name        = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Name'],          # Introduce the name of your lidar data folder.
@@ -70,6 +80,7 @@ Lidar_inputs     = lidar_gral_inp(name        = Qlunc_yaml_inputs['Components'][
                                   pitch_error = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Pitch error'],   # In [°]. Degrees of rotation around y axis
                                   roll_error  = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Roll error'],    # In [°]. Degrees of rotation around z axis.
                                   dataframe   = { })  # Final dataframe
+
 
 
 #%%# Photonics components and Module: ###########################################
