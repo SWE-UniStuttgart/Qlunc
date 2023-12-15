@@ -364,20 +364,28 @@ This function calculated the covariance matrix
 '''
 def MultiVar (Lidar,Vlos_corrcoeff, U_Vlos,autocorr_theta,autocorr_psi,autocorr_rho,autocorr_V,mode ):
     # Covariance Matrix:
-            
-        #Lidar1
-        u_theta1 = np.radians(Lidar.optics.scanner.stdv_cone_angle[0][0])
-        u_psi1   = np.radians(Lidar.optics.scanner.stdv_azimuth[0][0])
-        u_rho1   = Lidar.optics.scanner.stdv_focus_dist [0][0]
-        # Lidar 2 
-        u_theta2 = np.radians(Lidar.optics.scanner.stdv_cone_angle[1][0])
-        u_psi2   = np.radians(Lidar.optics.scanner.stdv_azimuth[1][0])
-        u_rho2   = Lidar.optics.scanner.stdv_focus_dist [1][0]
-        # Lidar 3 
-        u_theta3 = np.radians(Lidar.optics.scanner.stdv_cone_angle[2][0])
-        u_psi3   = np.radians(Lidar.optics.scanner.stdv_azimuth[2][0])
-        u_rho3   =Lidar.optics.scanner.stdv_focus_dist [2][0]
-
+        if len(Lidar.optics.scanner.origin)==3:
+            #Lidar1
+            u_theta1 = np.radians(Lidar.optics.scanner.stdv_cone_angle[0][0])
+            u_psi1   = np.radians(Lidar.optics.scanner.stdv_azimuth[0][0])
+            u_rho1   = Lidar.optics.scanner.stdv_focus_dist [0][0]
+            # Lidar 2 
+            u_theta2 = np.radians(Lidar.optics.scanner.stdv_cone_angle[1][0])
+            u_psi2   = np.radians(Lidar.optics.scanner.stdv_azimuth[1][0])
+            u_rho2   = Lidar.optics.scanner.stdv_focus_dist [1][0]
+            # Lidar 3 
+            u_theta3 = np.radians(Lidar.optics.scanner.stdv_cone_angle[2][0])
+            u_psi3   = np.radians(Lidar.optics.scanner.stdv_azimuth[2][0])
+            u_rho3   =Lidar.optics.scanner.stdv_focus_dist [2][0]
+        else:
+            #Lidar1
+            u_theta1 = np.radians(Lidar.optics.scanner.stdv_cone_angle[0][0])
+            u_psi1   = np.radians(Lidar.optics.scanner.stdv_azimuth[0][0])
+            u_rho1   = Lidar.optics.scanner.stdv_focus_dist [0][0]
+            # Lidar 2 
+            u_theta2 = np.radians(Lidar.optics.scanner.stdv_cone_angle[1][0])
+            u_psi2   = np.radians(Lidar.optics.scanner.stdv_azimuth[1][0])
+            u_rho2   = Lidar.optics.scanner.stdv_focus_dist [1][0]
         if mode=='GUM1':
             # pdb.set_trace()
 
@@ -518,6 +526,7 @@ def MultiVar (Lidar,Vlos_corrcoeff, U_Vlos,autocorr_theta,autocorr_psi,autocorr_
         theta3_rho3_corr      = 0
         
         if len(Lidar.optics.scanner.origin)==3:
+
             cov_MAT0=[[np.array(u_theta1**2*autocorr_theta),                    np.array(u_theta2*u_theta1*theta1_theta2_corr),           np.array(u_theta3*u_theta1*theta1_theta3_corr),       np.array(u_psi1*u_theta1*psi1_theta1_corr) ,      np.array(u_psi2*u_theta1*psi2_theta1_corr),      np.array(u_psi3*u_theta1*psi3_theta1_corr),     np.array(u_rho1*u_theta1*theta1_rho1_corr),    np.array(u_rho2*u_theta1*theta1_rho2_corr),         np.array(u_rho3*u_theta1*theta1_rho3_corr)   ,     u_theta1*U_Vlos[0]*0,                    u_theta1*U_Vlos[1]*0 ,                          u_theta1*U_Vlos[2]  *0  ],
                      [np.array(u_theta1*u_theta2*theta1_theta2_corr),          np.array(u_theta2**2*autocorr_theta),                     np.array(u_theta3*u_theta2*theta2_theta3_corr),       np.array(u_psi1*u_theta2*psi1_theta2_corr),       np.array(u_psi2*u_theta2*psi2_theta2_corr) ,     np.array(u_psi3*u_theta2*psi3_theta2_corr),     np.array(u_rho1*u_theta2*theta2_rho1_corr),     np.array(u_rho2*u_theta2*theta2_rho2_corr),         np.array(u_rho3*u_theta2*theta2_rho3_corr  )    , u_theta2*U_Vlos[0]*0                   , u_theta2*U_Vlos[1]*0 ,                          u_theta2*U_Vlos[2]  *0  ],
                      [np.array(u_theta1*u_theta3*theta1_theta3_corr)  ,        np.array(u_theta3*u_theta2*theta2_theta3_corr),           np.array(u_theta3**2*autocorr_psi),                   np.array(u_theta3*u_psi1*psi1_theta3_corr),       np.array(u_theta3*u_psi2*psi2_theta3_corr),      np.array(u_theta3*u_psi3*psi3_theta3_corr),     np.array(u_rho1*u_theta3*theta3_rho1_corr),     np.array(u_rho2*u_theta3*theta3_rho2_corr),         np.array( u_rho3*u_theta3*theta3_rho3_corr   )  , u_theta3*U_Vlos[0]*0                   , u_theta3*U_Vlos[1] *0   ,                       u_theta3*U_Vlos[2]  *0  ],                 
@@ -540,7 +549,15 @@ def MultiVar (Lidar,Vlos_corrcoeff, U_Vlos,autocorr_theta,autocorr_psi,autocorr_
             for i in cov_MAT0:
                 cov_MAT.append(list([n.item() for n in i]))
         
-        else:      
+        else: 
+            # #Lidar1
+            # u_theta1 = np.radians(Lidar.optics.scanner.stdv_cone_angle[0][0])
+            # u_psi1   = np.radians(Lidar.optics.scanner.stdv_azimuth[0][0])
+            # u_rho1   = Lidar.optics.scanner.stdv_focus_dist [0][0]
+            # # Lidar 2 
+            # u_theta2 = np.radians(Lidar.optics.scanner.stdv_cone_angle[1][0])
+            # u_psi2   = np.radians(Lidar.optics.scanner.stdv_azimuth[1][0])
+            # u_rho2   = Lidar.optics.scanner.stdv_focus_dist [1][0]
             cov_MAT0=[[np.array([u_theta1**2*autocorr_theta]),                  np.array([u_theta2*u_theta1*theta1_theta2_corr]),    np.array([u_psi1*u_theta1*psi1_theta1_corr]) ,     np.array([u_psi2*u_theta1*psi2_theta1_corr]),   np.array([u_rho1*u_theta1*theta1_rho1_corr]),  np.array([u_rho2*u_theta1*theta1_rho2_corr])   ,    u_theta1*U_Vlos[0]*0,                        u_theta1*U_Vlos[1]*0                     ],
                      [np.array([u_theta1*u_theta2*theta1_theta2_corr]),        np.array([u_theta2**2*autocorr_theta]),            np.array([u_psi1*u_theta2*psi1_theta2_corr]),      np.array([u_psi2*u_theta2*psi2_theta2_corr]) ,  np.array([u_rho1*u_theta2*theta2_rho1_corr]),  np.array([u_rho2*u_theta2*theta2_rho2_corr])  ,     u_theta2*U_Vlos[0]*0                       ,u_theta2*U_Vlos[1]*0               ],
                      [np.array([u_theta1*u_psi1*psi1_theta1_corr])  ,     np.array([u_theta2*u_psi1*psi1_theta2_corr]),             np.array([u_psi1**2*autocorr_psi]),                 np.array([u_psi2*u_psi1*psi1_psi2_corr]),       np.array([u_rho1*u_psi1*psi1_rho1_corr]),      np.array([u_rho2*u_psi1*psi1_rho2_corr])       ,    u_psi1*U_Vlos[0]*0                         ,u_psi1*U_Vlos[1]*0                    ],
@@ -588,7 +605,6 @@ def Vlos_correlations(Lidar,Vlos_corr,Atmospheric_Scenario,wind_direction, ind_w
     # CORRELATIONS Vlos
     Corr_combi        = list(itertools.combinations(Vlos_cr, 2)) # amount of Vlos combinations
     Correlations_Vlos = {'V1':[],'V2':[],'V3':[]}
-    # pdb.set_trace()
     try:
         for i_combi in range(len(Corr_combi)):
             Correlations_Vlos['V{}'.format(i_combi+1)].append(np.corrcoef(Corr_combi[i_combi])[0][1])
@@ -701,7 +717,6 @@ def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,alpha,li
 
     # Store the multivariate distributions
     Mult_param          =  [Vlos1_MC_cr2_s,Vlos2_MC_cr2_s,Vlos3_MC_cr2_s,Theta1_cr2_s,Theta2_cr2_s,Theta3_cr2_s,Psi1_cr2_s,Psi2_cr2_s,Psi3_cr2_s,Rho1_cr2_s,Rho2_cr2_s,Rho3_cr2_s]
-    # pdb.set_trace()
     return Vlos_corr_MCM,U_Vlos_MCM , Mult_param  , U_Vh_MCM
 
 
@@ -1053,13 +1068,13 @@ def U_WindDir_GUM(Lidar,Atmospheric_Scenario,Correlation_coeff,wind_direction,li
 ########### Intrinsic lidar uncertainty
 
 def U_intrinsic(Lidar,List_Unc_lidar,Qlunc_yaml_inputs):   
-    V_ref            = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref']      # Reference voltaje ADC
+    V_ref            = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref']      # Reference velocity
     lidar_wavelength = Qlunc_yaml_inputs['Components']['Laser']['Wavelength'] # wavelength of the laser source.
     fd               = 2*V_ref/lidar_wavelength  # Doppler frequency corresponding to Vref
-    corr_wavelength_fd=1
+    corr_wavelength_fd = 1
     
-    # Analytical solution:    
-    u_intrinsic = np.sqrt((fd*List_Unc_lidar['Stdv wavelength [m]']/2)**2+(Qlunc_yaml_inputs['Components']['Laser']['Wavelength']*List_Unc_lidar['Stdv Doppler f_peak [Hz]']/2)**2+(fd*Qlunc_yaml_inputs['Components']['Laser']['Wavelength']*List_Unc_lidar['Stdv Doppler f_peak [Hz]']*List_Unc_lidar['Stdv wavelength [m]'])*corr_wavelength_fd/2) 
+    # Analytical solution:   
+    u_intrinsic = np.sqrt((fd*List_Unc_lidar['Uncertainty ADC']['Stdv wavelength [m]']/2)**2+(Qlunc_yaml_inputs['Components']['Laser']['Wavelength']*List_Unc_lidar['Uncertainty ADC']['Stdv Doppler f_peak [Hz]']/2)**2+(fd*Qlunc_yaml_inputs['Components']['Laser']['Wavelength']*List_Unc_lidar['Uncertainty ADC']['Stdv Doppler f_peak [Hz]']*List_Unc_lidar['Uncertainty ADC']['Stdv wavelength [m]'])*corr_wavelength_fd/2) 
     return u_intrinsic
 
 

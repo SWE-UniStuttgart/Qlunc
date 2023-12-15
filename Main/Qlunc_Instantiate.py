@@ -35,8 +35,10 @@ could be done by instantiating their python classes:
 
 import os
 import pdb
-import numpy as np
+
 import yaml
+import numpy as np
+
 # pdb.set_trace()
 
 # Changeing to Qlunc path
@@ -50,6 +52,9 @@ import yaml
 # import  UQ_Functions.UQ_Photonics_Classes as uphc,UQ_Functions.UQ_Optics_Classes as uopc,UQ_Functions.UQ_Lidar_Classes as ulc, UQ_Functions.UQ_ProbeVolume_Classes as upbc, UQ_Functions.UQ_SignalProcessor_Classes as uspc
 
 
+# from Utils.Qlunc_ImportModules import *
+
+
 #%% Running Qlunc_Classes.py:
 with open ('./Qlunc_inputs.yml') as file: # WHere the yaml file is in order to get the input data
     Qlunc_yaml_inputs={}
@@ -58,8 +63,10 @@ with open ('./Qlunc_inputs.yml') as file: # WHere the yaml file is in order to g
         for k, v in doc.items():           
             Qlunc_yaml_inputs.setdefault(k,v)  # save a dictionary with the data coming from yaml file 
 
-os.chdir(Qlunc_yaml_inputs['Main directory'])
-import  UQ_Functions.UQ_Photonics_Classes as uphc, UQ_Functions.UQ_Optics_Classes as uopc, UQ_Functions.UQ_Lidar_Classes as ulc,  UQ_Functions.UQ_ProbeVolume_Classes as upbc,  UQ_Functions.UQ_SignalProcessor_Classes as uspc
+
+import  UQ_Functions.UQ_Photonics_Classes as uphc,UQ_Functions.UQ_Optics_Classes as uopc,UQ_Functions.UQ_Lidar_Classes as ulc, UQ_Functions.UQ_ProbeVolume_Classes as upbc, UQ_Functions.UQ_SignalProcessor_Classes as uspc
+from Utils.Qlunc_ImportModules import *
+
 
 
 # Execute Qlunc_Classes.py (creating classes for lidar 'objects')
@@ -158,9 +165,9 @@ ADC = analog2digital_converter (name          = Qlunc_yaml_inputs['Components'][
                                 unc_func      = uspc.UQ_ADC)
 # Signal processor module
 Signal_processor_Module = signal_processor(name                     = Qlunc_yaml_inputs['Modules']['Signal processor Module']['Name'],
-                                           analog2digital_converter = eval(Qlunc_yaml_inputs['Modules']['Signal processor Module']['ADC']),)
+                                           analog2digital_converter = eval(Qlunc_yaml_inputs['Modules']['Signal processor Module']['ADC']),
                                            # f_analyser             = Qlunc_yaml_inputs['Modules']['Signal processor Module']['Frequency analyser'],
-                                           # unc_func                 = uspc.sum_unc_signal_processor)
+                                            unc_func                 = uspc.sum_unc_signal_processor)
 
 
 
@@ -207,3 +214,5 @@ else:
                                       wind_tilt     = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind tilt'],
                                       Hg             = Qlunc_yaml_inputs['Atmospheric_inputs']['Height ground'])
 
+# pdb.set_trace()
+QluncData=Lidar.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)# print(B)

@@ -2,6 +2,7 @@
 *.pyc
 *.xlsx
 *.asv
+*.pkl
 
 # Ignore specific files:
 Qlunc_NoteBook-checkpoint.ipynb
@@ -10,8 +11,8 @@ Main/Qlunc_inputs.yml
 metadata/rayleigh_distance.txt
 Lissajou_pattern.py
 
+
 # Ignore specific folders:
-Figures/
 Sphinx4Qlunc/
 UnderDevelopment/
 

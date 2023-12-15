@@ -12,20 +12,20 @@ University of Stuttgart(c)
 from Utils.Qlunc_ImportModules import *
 
 
-def scatter3d(x,y,z, Vrad_homo, colorsMap='jet'):
-    cm = plt.get_cmap(colorsMap)
-    cNorm = matplotlib.colors.Normalize(vmin=min(Vrad_homo), vmax=max(Vrad_homo)) #Normalize(vmin=0.005, vmax=.045) # 
-    scalarMap = cmx.ScalarMappable(norm=cNorm, cmap=cm)
-    fig = plt.figure()
-    ax = Axes3D(fig)
-    ax.scatter(x, y, z, Vrad_homo, s=75, c=scalarMap.to_rgba(Vrad_homo))
-    ax.set_xlabel('theta [°]',fontsize=plot_param['axes_label_fontsize'])
-    ax.set_ylabel('psi [°]',fontsize=plot_param['axes_label_fontsize'])
-    ax.set_zlabel('rho [m]',fontsize=plot_param['axes_label_fontsize'])
-    scalarMap.set_array(Vrad_homo)
-    fig.colorbar(scalarMap,label='V_Rad Uncertainty [m/s]',shrink=0.7)
-    # fig.colorbar.tick_params(labelsize=10)
-    plt.show()
+# def scatter3d(x,y,z, Vrad_homo, colorsMap='jet'):
+#     cm = plt.get_cmap(colorsMap)
+#     cNorm = matplotlib.colors.Normalize(vmin=min(Vrad_homo), vmax=max(Vrad_homo)) #Normalize(vmin=0.005, vmax=.045) # 
+#     scalarMap = cmx.ScalarMappable(norm=cNorm, cmap=cm)
+#     fig = plt.figure()
+#     ax = Axes3D(fig)
+#     ax.scatter(x, y, z, Vrad_homo, s=75, c=scalarMap.to_rgba(Vrad_homo))
+#     ax.set_xlabel('theta [°]',fontsize=plot_param['axes_label_fontsize'])
+#     ax.set_ylabel('psi [°]',fontsize=plot_param['axes_label_fontsize'])
+#     ax.set_zlabel('rho [m]',fontsize=plot_param['axes_label_fontsize'])
+#     scalarMap.set_array(Vrad_homo)
+#     fig.colorbar(scalarMap,label='V_Rad Uncertainty [m/s]',shrink=0.7)
+#     # fig.colorbar.tick_params(labelsize=10)
+#     plt.show()
     
 
 #%% Plotting:
@@ -356,7 +356,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             Cont_Theta1         = (np.array(Data['Sens coeff Vlos']['V1_theta'][-1]*np.array(np.radians(Data['STDVs'][0][0]))))**2
             Cont_Psi1           = (np.array(Data['Sens coeff Vlos']['V1_psi'][-1]*np.array(np.radians(Data['STDVs'][1][0]))))**2
             Cont_Rho1           = (np.array(Data['Sens coeff Vlos']['V1_rho'][-1]*np.array(Data['STDVs'][2][0])))**2     
-            Cont_Corr1          = 2*Lidar.optics.scanner.correlations[9]*np.array(Data['Sens coeff Vlos']['V1_theta'][0])*np.array(Data['Sens coeff Vlos']['V1_psi'][0])*np.array(np.radians(Data['STDVs'][0][0]))*np.array(np.radians(Data['STDVs'][1][0]))
+            Cont_Corr1          = 2*Lidar.optics.scanner.correlations[9]*np.array(Data['Sens coeff Vlos']['V1_theta'][-1])*np.array(Data['Sens coeff Vlos']['V1_psi'][-1])*np.array(np.radians(Data['STDVs'][0][0]))*np.array(np.radians(Data['STDVs'][1][0]))
 
             ax5[1].plot(np.degrees(Data['wind direction']),Cont_Theta1,'-',c='black',linewidth=plot_param['linewidth'],label=r'$\frac{\partial{V_{LOS}}}{\partial{\theta}}$')
             ax5[1].plot(np.degrees(Data['wind direction']),Cont_Psi1 ,'-',c='dimgray',linewidth=plot_param['linewidth'],label=r'$\frac{\partial{V_{LOS}}}{\partial{\varphi}}$')

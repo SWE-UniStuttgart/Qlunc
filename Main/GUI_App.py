@@ -4,6 +4,8 @@ Created on Sat Dec  9 12:40:10 2023
 
 @author: fcosta
 """
+# from Qlunc_ImportModules import *
+
 from tkinter import *
 from tkinter import font
 from tkinter.filedialog import askopenfilename
@@ -11,7 +13,41 @@ from tkinter.filedialog import asksaveasfilename
 import customtkinter as CTk
 import pdb
 import os
-import subprocess
+import sys
+import numpy as np 
+import scipy.interpolate as itp 
+# import pandas as pd 
+# import numbers
+# import pdb
+# from scipy.optimize import curve_fit
+import itertools
+# import functools
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.pyplot as plt
+# from functools import reduce
+# from operator import getitem
+# import time
+import yaml
+# import pylab
+import math
+from io import StringIO  
+# import csv
+from termcolor import colored, cprint 
+# import random
+import matplotlib
+import scipy as sc
+# from scipy.stats import norm
+# from matplotlib.pyplot import cm
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+from scipy.stats import multivariate_normal
+import pickle
+# # from celluloid import Camera
+# from matplotlib import animation
+import matplotlib.colors as mcolors
+# import matplotlib.cm as cmx
+from mpl_toolkits.axes_grid1 import Grid
+import matplotlib.gridspec as gridspec
+from scipy.fft import fft, ifft
 
 
 global wd, open_status_name,application_path
@@ -80,21 +116,36 @@ def save_file():
 
 
 
+
+
+
 # RunQlunc button
 def runQlunc():
     try:
         # pdb.set_trace()
-        # os.chdir(os.path.normpath(os.path.join(os.path.dirname(__file__),"..\\Main")))
+
+        os.chdir(os.path.normpath(os.path.join(os.path.dirname(__file__),"..\\")))
         # from Main import Qlunc_Instantiate
-        my_text2.insert('1.0',("application_path: {}".format(application_path)
-
-        # runfile(application_path+ '\\Qlunc_Instantiate.py')
-        exec(open('C:/SWE_LOCAL/Qlunc/Main/Qlunc_Instantiate.py').read()) 
-        # os.chdir(wd)
-
+        # code = input_box.get(1.0, END)
+        old_stdout = sys.stdout
+        redirected_output = sys.stdout = StringIO()
         root.title('Qlunc - Running Qlunc...' )
-        B=Lidar.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+        # runfile( '.\\Main\\Qlunc_Instantiate.py')
+        exec(open('.\\Main\\Qlunc_Instantiate.py').read()) 
+
+
+        # B=Lidar.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+
         root.title('Qlunc - Qlunc finished successfully' )
+    
+
+        sys.stdout = old_stdout
+        # my_text2.delete(1.0, "end")
+        my_text2.insert(1.0, redirected_output.getvalue())
+    
+    
+    
+    
     except Exception as error:
         root.title('Qlunc - Error!' )
         # my_text2.delete(1.0,END)
@@ -140,11 +191,21 @@ def button_save_txt():
             saveas_file()
 
 
+def button_saveas_txt():
+    if my_text.get("1.0", END)=="\n":
+        root.title('Qlunc - Nothing to save. Select an input file or create a new one.' )# Save file
+        
+    else:
+        global open_status_name
+        saveas_file()
+        root.title('Qlunc - File saved successfully' )
+        
+CTk.deactivate_automatic_dpi_awareness()
 
 #%%
 root=Tk()
 root.title("Qlunc")
-root.geometry('1220x660')
+root.geometry('1220x930')
 root.configure(background='#4682B4')
 root.iconbitmap("C:\SWE_LOCAL\Qlunc\Pictures_repo_\QIcon.ico")
 # root.state('zoomed')
@@ -153,22 +214,23 @@ height = root.winfo_screenheight()
 
 #%% create main frame
 my_frame = CTk.CTkFrame(root)
-my_frame.grid(row=0,column=1,rowspan=8,columnspan=3)
+my_frame.configure(width=900,height=600)
+my_frame.place(x = 175, y = 30 )
 
 my_frame2 = CTk.CTkFrame(root)
-my_frame2.grid(row=0,column=4)
+my_frame2.configure(width=900,height=200)
+
+my_frame2.place(x = 175, y = 640 )
 
 
 #%% Create a text box
 my_text = CTk.CTkTextbox(my_frame,width=900,height=600, corner_radius=15,undo=True,wrap='word')#,yscrollcommand=text_scroll.set)
-my_text.configure(font=('Adobe Caslon Pro',16))
-my_text.grid(row=2,column=2)
+my_text.place(x = 0, y = 0 ) 
 
 
 #% Create a disable text box
-my_text2 = CTk.CTkTextbox(my_frame2,width=500,height=200,corner_radius=15)#,yscrollcommand=text_scroll.set)
-my_text2.configure(font=('Arial',16))
-my_text2.grid(row=2,column=3)
+my_text2 = CTk.CTkTextbox(my_frame2,width=900,height=200,corner_radius=15)#,yscrollcommand=text_scroll.set)
+my_text2.place(x = 0, y = 0 ) 
 # By defaults opens the yaml file:
 # text_file = open('C:/SWE_LOCAL/Qlunc/Main/Qlunc_inputs.yml', 'r')
 # file = text_file.read()
@@ -208,19 +270,21 @@ file_menu.add_command(label="Exit",command=root.destroy)
 
 
 #%% BUTTONS:
+my_font=("Console", 16,'bold')
 
+btn_select_input_file = CTk.CTkButton(root, text="Select input file",command=button_select_input_file, font=my_font)
+btn_select_input_file.place(x =10, y = 30 )    
 
-btn_select_input_file = CTk.CTkButton(root, text="Select input file",command=button_select_input_file)
-btn_select_input_file.grid(row=0,column=0)    
+btn_save_input_file = CTk.CTkButton(root, text="Quick save",command=button_save_txt,font=my_font)
+btn_save_input_file.place(x =10, y = 70 )   
+btn_select_input_file = CTk.CTkButton(root, text="Save as",command=button_saveas_txt, font=my_font)
+btn_select_input_file.place(x =10, y = 110 )    
 
-btn_save_input_file = CTk.CTkButton(root, text="Quick save",command=button_save_txt)
-btn_save_input_file.grid(row=1,column=0)
+btn_runQlunc = CTk.CTkButton(root, text="Run Qlunc",command=runQlunc,font=my_font)
+btn_runQlunc.place(x = 10, y = 170 )   
 
-btn_runQlunc = CTk.CTkButton(root, text="Run Qlunc",command=runQlunc)
-btn_runQlunc.grid(row=2,column=0)
-
-button_quit = CTk.CTkButton(root,text="Exit Qlunc", command=root.destroy)
-button_quit.grid(row=3,column=0)
+button_quit = CTk.CTkButton(root,text="Exit Qlunc", command=root.destroy,font=my_font)
+button_quit.place(x = 10, y = 250 )   
 
 # ###########
 # subframe_mod=LabelFrame(root,text='Modules:')# subframe for modules

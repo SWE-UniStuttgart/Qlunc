@@ -183,9 +183,10 @@ class optics():
                  print('Created new optic module: {}'.format(self.OpticsModuleID))
 
 class signal_processor():
-    def __init__(self,name,analog2digital_converter): #f_analyser
+    def __init__(self,name,analog2digital_converter,unc_func): #f_analyser
                  self.SignalProcessorModuleID = name
                  self.analog2digital_converter = analog2digital_converter
+                 self.Uncertainty              = unc_func
                  print('Created new signal processor module: {}'.format(self.SignalProcessorModuleID))
 
 
