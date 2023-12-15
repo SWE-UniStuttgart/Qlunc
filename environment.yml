@@ -8,16 +8,21 @@
 name: Qlunc_Env
 # Dependencies we want to install
 dependencies:
-  - matplotlib==3.2.1
-  - numpy==1.18.5 
-  - pandas==1.2.1
-  - pyyaml==5.4.1
-  - scipy==1.6.0
-  - sympy==1.7.1
-  - xarray==0.15.1
+  - matplotlib==3.8.0
+  - numpy==1.26.2 
+  - yaml==0.2.5
+  - scipy==1.11.4
   - spyder==4.2.1
-  - python==3.7.9
-  - notebook
-  - jupyterlab
-  - netcdf4==1.5.3
+  - python==3.11.5
   - termcolor==1.1.0
+  - setuptools==68.0.0
+  - math
+  - sys
+  - os
+  - itertools
+  - pickle
+  - tkinter
+  - customtkinter==5.2.1
+  - termcolor
+ 
+
