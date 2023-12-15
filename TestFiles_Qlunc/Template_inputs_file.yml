@@ -1,0 +1,219 @@
+# Francisco Costa García
+# University of Stuttgart, Stuttgart Wind Energy (SWE) 2020 (c) 
+
+# IMPORTANT- README
+# Input file for   --->>  Qlunc-v2.0  <<----
+# Do not change definition names or vary the structure of the file!! Just change parameter values. 
+
+# (*)  --> Python module! (You develop a function and save it as a python module)
+# (**) --> Has to be the same name as the instance
+
+######################################################################################
+##################################   QLUNC INPUTS   ##################################
+######################################################################################
+
+# DIRECTORY -------------------------------------------------------------------------------------------
+
+Main directory: 'C:\' # Directory where Qlunc_Classes.py is
+
+# Lidar values. Modules and components parameters ------------------------------------------------------
+
+Components:
+#Optics: 
+  Scanner:
+    
+    Name:  # Provide an ID to your scanner:      
+    Origin:  [[ ],[ ],[ ]] # Lidar position in meters (each vector is one lidar): [x,y,z] 
+    Error origin: [[ ],[ ],[ ]] # [m] Error in the location of the lidar (GPS error): [x,y,z] 
+       
+    # N° of points for the Montecarlo simulation 
+    N_MC: xxxx 
+    
+    # Measuring patterns
+    
+    # Lissajous patterns:
+    Lissajous parameters: [x_dim,y_dim,z_dim,q,p] # [x_dim,y_dim,z_dim,q,p]
+    
+    #Vertical plane parameters
+    Vertical plane parameters: [distance_plane, y_max, y_min, z_min, z_max, n°points] # [distance_plane, y_max, y_min, z_min, z_max, n°points]
+    
+    #Horizontal plane parameters
+    Horizontal plane parameters: [x_max, x_min, y_max, y_min, height, n°points] # [x_max, x_min, y_max, y_min, height, n°points]    
+        
+    # Measuring pattern 
+    Pattern: 'None' # 'vertical plane','horizontal plane', 'lissajous', user defined pattern or 'None' in case no predefined pattern
+
+  
+    # STDV in lidar angles and focus distance. One value for each lidar
+    stdv focus distance:  [ [ ],  [ ],  [ ]  ] # [m] 
+    stdv Elevation angle: [ [ ],  [ ],  [ ]  ] # [deg]
+    stdv Azimuth:         [ [ ],  [ ],  [ ]  ] # [deg]   
+    stdv Estimation:      [ [ ],  [ ],  [ ]  ] # [m/s]   # error, Extra standard uncertainty term. Keep 0 if no extra uncertainty is considered
+    
+    # Correlations betwen the lidars 1, 2 (if dual lidar system) and 3 (if triple lidar system) [p/m 1]
+    correlations: [ 0.0,  # Psi1Psi2
+                    0.0,  # Psi1Psi3
+                    0.0,  # Psi2Psi3
+                                       
+                    0.0 , # Theta1Theta2
+                    0.0 , # Theta1Theta3
+                    0.0 , # Theta2Theta3
+                             
+                    0.0,  # Rho1Rho2
+                    0.0,  # Rho1Rho3
+                    0.0,  # Rho2Rho3
+                    
+                    0.0,  # Psi1Theta1
+                    0.0,  # Psi2Theta2
+                    0.0,  # Psi3Theta3
+                    
+                    0.0,  # Psi1Theta2
+                    0.0,  # Psi1Theta3
+                    
+                    0.0,  # Psi2Theta1
+                    0.0,  # Psi2Theta3
+                                        
+                    0.0,  # Psi3Theta1
+                    0.0]  # Psi3Theta2
+
+    
+    # Measurement point coordinates in spherical (related to the inertial coordinate system)    
+    Rho:   []    # [m]   - Focus distance
+    Theta: []    # [deg] - Theta increases from the ground (elevation angle)
+    Psi:   []    # [deg] - Psi increases from x towards y axis (Azimuth)
+    Href:        # [m]   - Reference height
+    
+  Laser:
+    Name:  
+    Wavelength:                # [m]
+    stdv Wavelength:           # [m] plus/minus--> it is assumed a rectangular distribution (stdv_Wavelength/sqrt(3)) 
+    Uncertainty function:    
+    # Uncertainty function
+    Uncertainty function: 
+    
+# Photonics  
+ 
+  Photodetector:
+    Name:  
+    Photodetector BandWidth:       # [Hz]            
+    Load resistor:                 # [Ohm]
+    Photodetector efficiency:      # [-] - Photodetector efficiency
+    Dark current:                  # [A] - Dark current in the photodetector.
+    Photodetector signalP:         # [W/m^2]
+    Power interval: [ , ]            # [W] - [initial, final, step]
+    Gain TIA:                      # [W] - Value or 'None' if no TIA in the photodetector
+    Active area: 1                 # [m] - Keep it 1;
+    V Noise TIA:                   # [V] - Value or 'None' if no TIA in the photodetector
+    # Uncertainty function
+    Uncertainty function:          # Python module! (You develop a function and save it as a python module)
+  
+
+# Analog to digital converter: Performs the uncertainty in signal processing
+  ADC:
+    Name:  
+    Number of bits:             # Effective number of bits (ENOB)
+    Reference voltage:
+    Ground voltage: 
+    Quantization error:
+    Sampling frequency:
+    Uncertainty sampling freq:       # [Hz] -  #*fs 
+    Speckle noise:                   # [%] noise in % of the Doppler frequency
+    ADC Bandwidth: 
+    # Uncertainty function
+    Uncertainty function: 
+        
+# Lidar general inputs 
+  Lidar general inputs:
+    Name:  
+    Type:              # CW/Pulsed for continuous wave or pulsed lidars.
+    Yaw error:         # [deg]
+    Pitch error:       # [deg]
+    Roll error:        # [deg]
+    DataFrame: {}      # Leave empty. To be filled with ouputs by the code itself
+---
+# Modules:
+Modules:
+  
+  Optics Module:
+    Name
+    Scanner:                       # (**)
+    Uncertainty function:          # (*)
+  
+  Photonics Module:
+    Name: 
+    Photodetector:                  # (**)
+    Uncertainty function:  # (*)
+  
+  Signal processor Module:
+    Name: 
+    ADC:  #(**)
+    Frequency analyser:  #Frequency_analyser
+---  
+# Lidar:
+Lidar:
+  Name: Test              
+  Photonics module:       # (**)
+  Optics module:          # (**)
+  Signal processor:       # (**)
+  Lidar inputs:           # (**)
+  Uncertainty function:   # (*)
+
+---
+
+# ATMOSPHERIC INPUTS -----------------------------------------------
+# Atmospheric_inputs to create the atmospheric scenarios
+
+Atmospheric_inputs:
+  Name: ''
+  TimeSeries    :          # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere characteristics (T, H, rain and fog)   
+  Atmos_TS_FILE :          #'AtmosphericScenarios.csv'  # (... .csv)
+  Temperature: []          # [K] Have to put the same number of elements for temperature and humidity. Always in paired values   
+  Humidity: []             # [%] 
+  Rain: false              # for rain and fog intensity intervals might be introduced [none,low, medium, high]
+  Fog: false
+  Height ground:           # [m] Ground height
+  Power law exponent: [,,] # power law exponent. Vector of alpha values.
+  Vref:                    # [m/s] - Reference velocity
+  Wind direction:  [0,359] # [deg] - [from,to]
+  Wind tilt:               # [deg]
+  
+---
+
+# Plotting ------------------------------------------------------------
+Flags:
+  
+  Scanning Pattern: False
+  Photodetector noise: False
+  Save data: True
+  Probe Volume parameters: False
+  Optical_amplifier_noise: False
+  Line of sight Velocity Uncertainty: False
+  Horizontal Velocity Uncertainty: False
+  Wind direction Uncertainty: False
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
