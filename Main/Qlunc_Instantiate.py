@@ -204,5 +204,4 @@ else:
                                       Hg             = Qlunc_yaml_inputs['Atmospheric_inputs']['Height ground'])
 
 # pdb.set_trace()
-# B=Lidar.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
-# print(B)
+QluncData=Lidar.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)# print(B)
