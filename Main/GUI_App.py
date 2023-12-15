@@ -187,13 +187,20 @@ def button_save_txt():
         else:
             saveas_file()
 
-
-
+def button_saveas_txt():
+    if my_text.get("1.0", END)=="\n":
+        root.title('Qlunc - Nothing to save. Select an input file or create a new one.' )# Save file
+        
+    else:
+        global open_status_name
+        saveas_file()
+        root.title('Qlunc - File saved successfully' )
+        
 CTk.deactivate_automatic_dpi_awareness()
 #%%
 root=Tk()
 root.title("Qlunc")
-root.geometry('1220x660')
+root.geometry('1220x930')
 root.configure(background='#4682B4')
 root.iconbitmap("C:\SWE_LOCAL\Qlunc\Pictures_repo_\QIcon.ico")
 # root.state('zoomed')
@@ -202,22 +209,23 @@ height = root.winfo_screenheight()
 
 #%% create main frame
 my_frame = CTk.CTkFrame(root)
-my_frame.grid(row=0,column=1,rowspan=8,columnspan=3)
+my_frame.configure(width=900,height=600)
+my_frame.place(x = 175, y = 30 )
 
 my_frame2 = CTk.CTkFrame(root)
-my_frame2.grid(row=0,column=4)
+my_frame2.configure(width=900,height=200)
+
+my_frame2.place(x = 175, y = 640 )
 
 
 #%% Create a text box
 my_text = CTk.CTkTextbox(my_frame,width=900,height=600, corner_radius=15,undo=True,wrap='word')#,yscrollcommand=text_scroll.set)
-my_text.configure(font=('Adobe Caslon Pro',16))
-my_text.grid(row=2,column=2)
+my_text.place(x = 0, y = 0 ) 
 
 
 #% Create a disable text box
-my_text2 = CTk.CTkTextbox(my_frame2,width=700,height=700,corner_radius=15)#,yscrollcommand=text_scroll.set)
-my_text2.configure(font=('Arial',16))
-my_text2.grid(row=2,column=3)
+my_text2 = CTk.CTkTextbox(my_frame2,width=900,height=200,corner_radius=15)#,yscrollcommand=text_scroll.set)
+my_text2.place(x = 0, y = 0 ) 
 # By defaults opens the yaml file:
 # text_file = open('C:/SWE_LOCAL/Qlunc/Main/Qlunc_inputs.yml', 'r')
 # file = text_file.read()
@@ -257,19 +265,21 @@ file_menu.add_command(label="Exit",command=root.destroy)
 
 
 #%% BUTTONS:
+my_font=("Console", 16,'bold')
 
+btn_select_input_file = CTk.CTkButton(root, text="Select input file",command=button_select_input_file, font=my_font)
+btn_select_input_file.place(x =10, y = 30 )    
 
-btn_select_input_file = CTk.CTkButton(root, text="Select input file",command=button_select_input_file)
-btn_select_input_file.grid(row=0,column=0)    
+btn_save_input_file = CTk.CTkButton(root, text="Quick save",command=button_save_txt,font=my_font)
+btn_save_input_file.place(x =10, y = 70 )   
+btn_select_input_file = CTk.CTkButton(root, text="Save as",command=button_saveas_txt, font=my_font)
+btn_select_input_file.place(x =10, y = 110 )    
 
-btn_save_input_file = CTk.CTkButton(root, text="Quick save",command=button_save_txt)
-btn_save_input_file.grid(row=1,column=0)
+btn_runQlunc = CTk.CTkButton(root, text="Run Qlunc",command=runQlunc,font=my_font)
+btn_runQlunc.place(x = 10, y = 170 )   
 
-btn_runQlunc = CTk.CTkButton(root, text="Run Qlunc",command=runQlunc)
-btn_runQlunc.grid(row=2,column=0)
-
-button_quit = CTk.CTkButton(root,text="Exit Qlunc", command=root.destroy)
-button_quit.grid(row=3,column=0)
+button_quit = CTk.CTkButton(root,text="Exit Qlunc", command=root.destroy,font=my_font)
+button_quit.place(x = 10, y = 250 )   
 
 # ###########
 # subframe_mod=LabelFrame(root,text='Modules:')# subframe for modules
