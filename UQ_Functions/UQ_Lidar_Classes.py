@@ -74,18 +74,17 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     
     #%% Save data
-    pdb.set_trace()
-    if Qlunc_yaml_inputs['Save data']:
+    if Qlunc_yaml_inputs['Flags']['Save data']:
         #Define the name based on the measuring configuration parameters
-        filename = "Q_output_"+"["+ str(Lidar.optics.scanner.cone_angle[0]) + "," + str(Lidar.optics.scanner.azimuth[0])+ "," +str(Lidar.optics.scanner.focus_dist[0])   + "]_"
+        filename = "Q_output_P"+"["+ str(Lidar.optics.scanner.cone_angle[0]) + "," + str(Lidar.optics.scanner.azimuth[0])+ "," +str(Lidar.optics.scanner.focus_dist[0])   + "]"
         for ind_loop in range (len( Lidar.optics.scanner.origin)):
-            filename += ('_LP{}_'.format(ind_loop+1)+str(Lidar.optics.scanner.origin[ind_loop]))
-            
+            filename += ('_L{}_'.format(ind_loop+1)+str(Lidar.optics.scanner.origin[ind_loop]))
+        filename=filename+'_tilt{}'.format((Atmospheric_Scenario.wind_tilt))+'_Vref{}'.format(Atmospheric_Scenario.Vref)    
         # Define the path where to store the data
         path = ".\\Qlunc_Output\\"+filename + ".pkl"
         # Store the dictionary 
         if os.path.isfile(path):
-            print(colored('The lidar output file already exists', 'red',attrs=['bold']))
+            print(colored('The lidar output file already exists.', 'red',attrs=['bold']))
             
         else:
                     
@@ -95,10 +94,14 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             pickle.dump(DataFrame,f)        
             # close file
             f.close()
-        print("{} ".format(filename)+"saved at 'Qlunc_Output' folder")    
+            print(colored("The file containing data {} ".format(filename)+"has been saved at 'Qlunc_Output' folder.",'cyan',attrs=['bold']) )   
+    else:
+        print(colored("No data saved.",'cyan',attrs=['bold']) )   
+
+    
     ########################################    
     # How to read the data
     # Qlunc_data = pickle.load(open(path,"rb"))
     ########################################
-    print(colored('...Lidar uncertainty done.".','magenta', attrs=['bold']))
+    print(colored('...Lidar uncertainty done.','magenta', attrs=['bold']))
     return Lidar.lidar_inputs.dataframe
