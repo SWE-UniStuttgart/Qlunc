@@ -22,22 +22,28 @@ Qlunc also offers the possibility of estimating the uncertainties of the line-of
 The user creates the different lidar components by instantiating python classes, including its functional parameters and defining the function that is used to obtain the specific component uncertainty. Then, each module (also python objects) is "filled" with the corresponding components and their uncertainties are computed following uncertainty propagation method according to the GUM model. Once each component is 'ensembled', building up the different modules, the lidar object is created and the modules included. As a result, the desired lidar digital twin is created.
 
 ### Creating atmospheric conditions
-The user creates also atmospheric scenarios to account for the different atmospheric conditions the lidar has to deal with. Atmospheric inputs, basically temperature and humidity are accepted, either single values or time-dependent variabilities of these inputs, taken from peripherals.
+The user creates also atmospheric scenarios to account for the different atmospheric conditions the lidar has to deal with. Power law  exponent α, temperature and humidity are accepted, either single values or time-dependent variabilities of these inputs, taken from peripherals.
 
 ### Qlunc (NEW!) available capabilities
 
 #### Uncertainties in hardware
-The flexibility of the code allows the user not just to assess global lidar uncertainty due to the noise in the signal, but also to query uncertainties coming from the noise added to the signal by specific modules or even single components.
-
-#### 🆕 Estimated Uncertainties in $V_{LOS}$, $V_{h}$ and &#934; due to errors in pointing accuracy and focus distance 🆕
-Considered as the major contributors to the uncertainty in lidar estimations, the new Qlunc's add-on is capable of estimating the uncertainty in the lidar line-of-sight and horizontal wind speeds, as well as the uncertainty in the wind direction, all due to errors in pointing accuracy and focus distance. It also offers the possibility of accounting for the correlations between the measuring angles and the correlation between two different lidars when mesuring together.
+The flexibility of the code allows the user not only to assess global lidar uncertainty due to signla noise, but also to query uncertainties contirbuted by noise in specific modules or even single components.
+#### 🆕 Estimated uncertainties in $V_{wind}$ and &#934 with information from 3D wind vector 🆕
+#### 🆕 Estimated uncertainties in $V_{LOS}$, $V_{h}$ and &#934; due to errors in pointing accuracy and focus distance 🆕
+Considered as the major contributors to uncertainty in lidar estimations, the new Qlunc's add-on uses a combination of analytic and Monte Carlo approaches for estimating the intrinsic lidar uncertainty including:
+- Hardware noise
+- Speckle noise
+- Bias in the sampling frequency
+- Bias in the laser wavelength
+- Quantisation and FFT-based signal processing
+- Uncertainty in the lidar line-of-sight and horizontal wind speeds, as well as the uncertainty in the wind direction, all due to errors in pointing accuracy and focus distance. It also offers the possibility of accounting for the correlations between the measuring angles and the correlation between two different lidars when mesuring together.
 
 #### Plots
  - Photodetector total signal-to-noise ratio and separate contributions due to shot noise, thermal noise, dark current noise and, if needed, trans-impedance amplifier noise.
- - Optical signal-to-noise ratio from the optical amplifier
- - 🆕 Uncertainties in $V_{LOS}$ and $V_{h}$ with the wind direction 
- - 🆕 Uncertainties in $V_{LOS}$ and $V_{h}$ against focus distance, elevation angle and/or azimuth angle for a fixed wind direction 
+ - 🆕 Uncertainties in $V_{LOS}$, $V_{h}$ and $V_{wind}$ with the wind direction 
+ - 🆕 Uncertainties in $V_{LOS}$ focus distance, elevation angle and/or azimuth angle for a fixed wind direction 
  - 🆕 Uncertainty in wind direction estimation
+ - 🆕 Uncertainty in vertical and horizontal measuring planes
 
 
 <p align="center">
