@@ -213,7 +213,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     Lidar.lidar_inputs.dataframe['Uncertainty Scanner']=Final_Output_UQ_Scanner
     
     # 7)Plotting data
-    QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,Qlunc_yaml_inputs['Flags']['Line of sight Velocity Uncertainty'],False,False,False,False,False,1)  #Qlunc_yaml_inputs['Flags']['Scanning Pattern']  
+    QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,Qlunc_yaml_inputs['Flags']['Scanning uncertainties'],False,False,False,False,False,1)  #Qlunc_yaml_inputs['Flags']['Scanning Pattern']  
     return Lidar.lidar_inputs.dataframe
 
 
