@@ -680,17 +680,17 @@ def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,alpha,li
                          Vlos2_MC_cr2_s.append(Vlos2_MC_cr2),
                          Vlos3_MC_cr2_s.append(Vlos3_MC_cr2)]
             
-            Theta_cr_s = [Theta1_cr2_s.append(Theta_cr[0]) ,     
-                          Theta2_cr2_s.append(Theta_cr[1]),
-                          Theta3_cr2_s.append(Theta_cr[2])]
+            Theta_cr_s = [Theta1_cr2_s.append(Theta1_cr2) ,     
+                          Theta2_cr2_s.append(Theta2_cr2),
+                          Theta3_cr2_s.append(Theta3_cr2)]
             
-            Psi_cr_s = [Psi1_cr2_s.append(Psi_cr[0]),       
-                        Psi2_cr2_s.append(Psi_cr[1]),
-                        Psi3_cr2_s.append(Psi_cr[2])]
+            Psi_cr_s = [Psi1_cr2_s.append(Psi1_cr2),       
+                        Psi2_cr2_s.append(Psi2_cr2),
+                        Psi3_cr2_s.append(Psi3_cr2)]
             
-            Rho_cr_s = [Rho1_cr2_s.append(Rho_cr[0]),
-                        Rho2_cr2_s.append(Rho_cr[1]),
-                        Rho3_cr2_s.append(Rho_cr[2])]
+            Rho_cr_s = [Rho1_cr2_s.append(Rho1_cr2),
+                        Rho2_cr2_s.append(Rho2_cr2),
+                        Rho3_cr2_s.append(Rho3_cr2)]
         else:
             # # Multivariate distributions:       
             Theta1_cr2,Theta2_cr2,Psi1_cr2,Psi2_cr2,Rho1_cr2,Rho2_cr2,Vlos1_MC_cr2,Vlos2_MC_cr2= multivariate_normal.rvs((np.concatenate([lidars['Lidar0_Spherical']['theta'] , lidars['Lidar1_Spherical']['theta'] , lidars['Lidar0_Spherical']['psi'] , lidars['Lidar1_Spherical']['psi'] ,  lidars['Lidar0_Spherical']['rho'] , lidars['Lidar1_Spherical']['rho'] , np.array([np.mean(Vlos_MCM[0])]) , np.array([np.mean(Vlos_MCM[1])])],axis=0)), cov_MAT_Vh , Lidar.optics.scanner.N_MC).T
