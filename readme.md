@@ -28,7 +28,7 @@ The user creates also atmospheric scenarios to account for the different atmosph
 
 #### Uncertainties in hardware
 The flexibility of the code allows the user not only to assess global lidar uncertainty due to signla noise, but also to query uncertainties contirbuted by noise in specific modules or even single components.
-#### 🆕 Estimated uncertainties in $V_{wind}$ and &#934 with information from 3D wind vector 🆕
+#### 🆕 Estimated uncertainties in $V_{wind}$ and &#934; with information from 3D wind vector 🆕
 #### 🆕 Estimated uncertainties in $V_{LOS}$, $V_{h}$ and &#934; due to errors in pointing accuracy and focus distance 🆕
 Considered as the major contributors to uncertainty in lidar estimations, the new Qlunc's add-on uses a combination of analytic and Monte Carlo approaches for estimating the intrinsic lidar uncertainty including:
 - Hardware noise
