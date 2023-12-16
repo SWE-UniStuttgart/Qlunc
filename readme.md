@@ -10,7 +10,7 @@
 
 
 ## What is `Qlunc`?
-Qlunc is a python-based, open, freely available software that aims to estimate errors in wind velocity and wind direction estimations when measuring with a lidar device. The code has an objected-oriented structure; by using python objects and simulating real lidar components the code puts all together in modules to eventually build up a lidar [digital twin](https://en.wikipedia.org/wiki/Digital_twin). The code is meant to be as modular as possible and offers the possibility of creating different lidar objects on parallel (see [Tutorial2.ipynb](https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Tutorials/Tutorial2.ipynb)), with different components at the same time. This allows to easily combine lidar modules with different characteristics, simulating different lidar devices.
+Qlunc is a python-based, open-source software aligned with the [Wind lidar Ontology]([https://en.wikipedia.org/wiki/Digital_twin](https://github.com/IEA-Wind-Task-32/wind-lidar-ontology)) by [IEA TCP Wind Task52 ]([[https://en.wikipedia.org/wiki/Digital_twin](https://github.com/IEA-Wind-Task-32/wind-lidar-ontology)](https://iea-wind.org/task52/ )) that aims to estimate errors in wind velocity and wind direction estimations when measuring with a lidar device. The code has an objected-oriented structure; by using python objects and simulating real lidar components the code puts all together in modules to eventually build up a lidar [digital twin](https://en.wikipedia.org/wiki/Digital_twin). The code is meant to be as modular as possible and offers the possibility of creating different lidar objects on parallel (see [Tutorial2.ipynb](https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Tutorials/Tutorial2.ipynb)), with different components at the same time. This allows to easily combine lidar modules with different characteristics, simulating different lidar devices.
 <p align="center">
   <img src="https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Pictures_repo_/Qlunc_GralStructure.JPG" />
   Figure 1. General structure of Qlunc
@@ -36,10 +36,11 @@ Considered as the major contributors to uncertainty in lidar estimations, the ne
 - Bias in the sampling frequency
 - Bias in the laser wavelength
 - Quantisation and FFT-based signal processing
-- Uncertainty in the lidar line-of-sight and horizontal wind speeds, as well as the uncertainty in the wind direction, all due to errors in pointing accuracy and focus distance. It also offers the possibility of accounting for the correlations between the measuring angles and the correlation between two different lidars when mesuring together.
+- Uncertainty in the lidar line-of-sight and horizontal wind speeds, as well as the uncertainty in the wind direction, all due to errors in pointing accuracy and focus distance
+- Lidar unceratinty correlations assessment
 
 #### Plots
- - Photodetector total signal-to-noise ratio and separate contributions due to shot noise, thermal noise, dark current noise and, if needed, trans-impedance amplifier noise.
+ - Photodetector signal-to-noise ratio and separate contributions due to shot noise, thermal noise, dark current noise and, if needed, trans-impedance amplifier noise.
  - 🆕 Uncertainties in $V_{LOS}$, $V_{h}$ and $V_{wind}$ with the wind direction 
  - 🆕 Uncertainties in $V_{LOS}$ focus distance, elevation angle and/or azimuth angle for a fixed wind direction 
  - 🆕 Uncertainty in wind direction estimation
@@ -75,11 +76,12 @@ conda activate <envname>
 
 By downloading or cloning the repository you will get several folders within which Qlunc is organized. 
  
-The most importants to know are:
+First,
 1) Create a folder named `Qlunc_Output` in '\Qlunc' main directory. Here the data will be saved. 
 2) Copy and paste the file `Qlunc_inputs.yml` in `TestFiles_Qlunc` into `Main` for a quick start/test. Otherwise, fill in the template in the same folder (`TestFiles_Qlunc`) and rename it to `Qlunc_inputs.yml`. Copy and paste this file into the `Main` folder. 
 3) The content of each folder in the repository is breafly explained here below. Further information can be found in the `readme` in the corresponding folder. 
- 
+
+
 ### Main
 This is the core of Qlunc. Here the user creates the classes describing the components, modules and general inputs of the lidar device and instantiate the classes.
  - `Qlunc_Classes.py` contains the code which creates the lidar digital twin. Each lidar module/component is assigned to a python class.
@@ -97,7 +99,7 @@ This is the core of Qlunc. Here the user creates the classes describing the comp
  - `Template_yaml_inputs_file.yml` to create your own use case
 
 ### Tutorials
-- Contains 3 [Jupyter Notebook-based tutorials](https://github.com/SWE-UniStuttgart/Qlunc/tree/Qlunc-V0.9/Tutorials); `Turial0.ipynb`, `Tutorial1.ipynb` and `Tutorial2.ipynb` with their corresponding yaml files and working examples. These tutorials are meant to serve as a guide for the user to get familiar with the Qlunc's routines, and show the current capabilities of the framework. The tutorials are also available through the Binder service to ease accessibility and reproducibility. Users can find more information about these tutorials in the corresponding `readme` in the folder `Tutorials`.
+- Contains 3 [Jupyter Notebook-based tutorials](https://github.com/SWE-UniStuttgart/Qlunc/tree/Qlunc-V0.9/Tutorials) with their corresponding yaml files and working examples. These tutorials are meant to serve as a guide to get familiar with Qlunc's routines, and show current capabilities of the framework. Users can find more information about these tutorials in the corresponding `readme` in the folder `Tutorials`.
 
 ## Requirements
 The `environment.yml` file summarises the python packages needed to run Qlunc 
