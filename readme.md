@@ -49,12 +49,9 @@ Considered as the major contributors to uncertainty in lidar estimations, the ne
 <p align="center">
   <img src="https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Pictures_repo_/Unc100PV1.1.gif" />
   Figure 2. Horizontal wind speed and wind direction uncertainties - Lissajous Pattern
-
 </p>
 
     
-
-
 ## How to use `Qlunc`
 
 :warning: **Please downolad the latest release (V1.0).**
@@ -65,22 +62,22 @@ Considered as the major contributors to uncertainty in lidar estimations, the ne
 
 2) In the Anaconda prompt, go to the directory where you have clone/download Qlunc and type:
 
-```
+```file.
 conda env create -f environment.yml 
 conda activate <envname>
 ```
 
 3) Your environment is ready to rumble. You have now a new environment, called `Qlunc_Env` by default, with all the packages needed to run Qlunc.
 
-4) In case you don't want to create a new environment, just install the requirements listed in the *Requirements* section below.
+4) In case you don't want to create a new environment, just install the requirements listed in the `environment.yml` file.
 
 ### Download or [clone](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository) the repository to a local directory.
 
 By downloading or cloning the repository you will get several folders within which Qlunc is organized. 
  
 The most importants to know are:
-1) Create a folder named `Lidar_Projects` in the main directory. Here the created lidar object(s) will be saved. 
-2) Copyand paste the file `Qlunc_inputs.yml` in `TestFiles_Qlunc` into `Main` for a quick start/test. Otherwise, fill in the template in the same folder (`TestFiles_Qlunc`) and rename it to `Qlunc_inputs.yml`. Copy and paste this file into the `Main` folder.
+1) Create a folder named `Qlunc_Output` in '\Qlunc' main directory. Here the data will be saved. 
+2) Copy and paste the file `Qlunc_inputs.yml` in `TestFiles_Qlunc` into `Main` for a quick start/test. Otherwise, fill in the template in the same folder (`TestFiles_Qlunc`) and rename it to `Qlunc_inputs.yml`. Copy and paste this file into the `Main` folder. 
 3) The content of each folder in the repository is breafly explained here below. Further information can be found in the `readme` in the corresponding folder. 
  
 ### Main
@@ -89,10 +86,7 @@ This is the core of Qlunc. Here the user creates the classes describing the comp
  - `Qlunc_Instantiate.py` instantiate the lidar classes taking the values from `Qlunc_inputs.yml`.
 
 ### UQ_Functions
- - Contains the functions that compute the uncertainties from different devices, calculting also the uncertainty propagation corresponding to the different      modules and the lidar uncertainty as well. Users can define their own functions to calculate specific module uncertainties, and combined/expanded uncertainties as well. 
-
-### Lidar_Projects
-When a lidar object is created, data from its characteristics and measuring configuration are stored here.
+ - Contains the functions that compute the uncertainties from different devices, calculting also the uncertainty propagation corresponding to the different modules and the lidar uncertainty as well. Users can define their own functions to calculate specific module uncertainties, and combined/expanded uncertainties as well. 
 
 ### Utils
  - Contains scripts meant to do different tasks. Importing packages and stand alone funtions which don´t interface directly with Qlunc but are necessary to compute calculations. Also contains `Qlunc_Plotting.py`, a script to automate plots and `Qlunc_ImportModules.py` to import the necessary python packages. 
@@ -106,22 +100,7 @@ When a lidar object is created, data from its characteristics and measuring conf
 - Contains 3 [Jupyter Notebook-based tutorials](https://github.com/SWE-UniStuttgart/Qlunc/tree/Qlunc-V0.9/Tutorials); `Turial0.ipynb`, `Tutorial1.ipynb` and `Tutorial2.ipynb` with their corresponding yaml files and working examples. These tutorials are meant to serve as a guide for the user to get familiar with the Qlunc's routines, and show the current capabilities of the framework. The tutorials are also available through the Binder service to ease accessibility and reproducibility. Users can find more information about these tutorials in the corresponding `readme` in the folder `Tutorials`.
 
 ## Requirements
-The following python packages should be installed beforehand and are included in the `environment.yml` file:
-
-- matplotlib==3.2.1
-- numpy==1.18.5 
-- pandas==1.2.1
-- pyyaml==5.4.1
-- scipy==1.6.0
-- sympy==1.7.1
-- xarray==0.15.1
-- xarray-extras==0.4.2
-- python==3.7.9
-- spyder==4.2.1
-- netcdf4==1.5.3
-- notebook
-- jupyterlab
-- termcolor==1.1.0
+The `environment.yml` file summarises the python packages needed to run Qlunc 
 
 ## Author
 [Francisco Costa](https://www.ifb.uni-stuttgart.de/en/institute/team/Costa-Garcia/)
