@@ -1,25 +1,20 @@
 # **Quantification of lidar uncertainties - Qlunc**
 
 
-
-
-
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7309008.svg)](https://doi.org/10.5281/zenodo.7309008)
 
 
-
-
 ## What is `Qlunc`?
-Qlunc is a python-based, open-source software aligned with the [Wind lidar Ontology](https://github.com/IEA-Wind-Task-32/wind-lidar-ontology) by [IEA TCP Wind Task52 ](https://iea-wind.org/task52/) that aims to estimate errors in wind velocity and wind direction estimations when measuring with a lidars. The code has an objected-oriented structure; by using python objects and simulating real lidar components the code puts all together in modules to eventually build up a lidar [digital twin](https://en.wikipedia.org/wiki/Digital_twin). The code is meant to be as modular as possible and offers the possibility of creating different lidar objects on parallel (see [Tutorial2.ipynb](https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Tutorials/Tutorial2.ipynb)), with different components at the same time. This allows to easily combine lidar modules with different characteristics, simulating different lidar devices.
+Qlunc is a python-based, open-source software, aligned with the [Wind lidar Ontology](https://github.com/IEA-Wind-Task-32/wind-lidar-ontology) by [IEA TCP Wind Task52 ](https://iea-wind.org/task52/), which can be used to estimate errors in wind velocity and wind direction estimations when measuring with a lidars. The code has an objected-oriented structure; by using python objects and simulating real lidar components the code puts all together in modules to eventually build up a lidar [digital twin](https://en.wikipedia.org/wiki/Digital_twin). The code is modular and offers the possibility of creating different lidar objects on parallel (see [Tutorial2.ipynb](https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Tutorials/Tutorial2.ipynb)). This allows to easily combine lidar modules with different characteristics, simulating different lidar devices.
 <p align="center">
   <img src="https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Pictures_repo_/Qlunc_GralStructure.JPG" />
   Figure 1. General structure of Qlunc
 </p>
-Currently, Qlunc's framework can calculate uncertainties coming from photonics, including photodetector and optical amplifier uncertainties, as well as optics module uncertainty including scanner pointing accuracy, probe volume assessment for both continuous wave and pulsed lidars, and optical circulator uncertainties. For each module the Guide to the Expression of Uncertainty in Measurement ([GUM](http://www.bipm.org/en/publications/guides/gum.html)) is applied to calculate uncertainty propagation along the modules, taking into account that the components are considered uncorrelated. 
-Qlunc also offers the possibility of estimating the uncertainties of the line-of-sight wind velocity ( $V_{LOS}$ ), the horizontal wind velocity ( $V_{h}$ ) and in the wind direction (&#934;), and make a comparison between the developed analytical model and Montecarlo simulations. The possibility to consider the correlations between lidar measurement angles and also between different devices is available.
-
+Currently, Qlunc's framework can account for photonics, including photodetector, signal processing techniques and pointing uncertainties. For each module the Guide to the Expression of Uncertainty in Measurement ([GUM](http://www.bipm.org/en/publications/guides/gum.html)) is applied to calculate uncertainty propagation along the modules. 
+Qlunc estimates uncertainties of the line-of-sight wind velocity ( $V_{LOS}$ ), the horizontal wind velocity ( $V_{h}$ ), 3D wind vector ($V_{wind}$) and in the wind direction (&#934;), and make a comparison between the developed analytical model and Monte Carlo simulations. The possibility to consider the correlations between lidar measurement angles and also between different devices is available.
+pe
 ### Creating a lidar device
-The user creates the different lidar components by instantiating python classes, including its functional parameters and defining the function that is used to obtain the specific component uncertainty. Then, each module (also python objects) is "filled" with the corresponding components and their uncertainties are computed following uncertainty propagation method according to the GUM model. Once each component is 'ensembled', building up the different modules, the lidar object is created and the modules included. As a result, the desired lidar digital twin is created.
+The user creates the different lidar components by instantiating python classes, including its functional parameters and defining their specific uncertainty functions. Then, each module (also python objects) is "filled" with the corresponding components and their uncertainties are computed following uncertainty propagation method according to the GUM model. Once each component is "ensembled", building up the different modules, the lidar object is created and the modules included. As a result, the desired lidar digital twin is created.
 
 ### Creating atmospheric conditions
 The user creates also atmospheric scenarios to account for the different atmospheric conditions the lidar has to deal with. Power law  exponent α, temperature and humidity are accepted, either single values or time-dependent variabilities of these inputs, taken from peripherals.
@@ -27,7 +22,7 @@ The user creates also atmospheric scenarios to account for the different atmosph
 ### Qlunc (NEW!) available capabilities
 
 #### Uncertainties in hardware
-The flexibility of the code allows the user not only to assess global lidar uncertainty due to signla noise, but also to query uncertainties contirbuted by noise in specific modules or even single components.
+The flexibility of the code allows the user not only to assess global lidar uncertainty due to signal noise, but also to query uncertainties contirbuted by noise in specific modules or even single components.
 #### 🆕 Estimated uncertainties in $V_{wind}$ and &#934; with information from 3D wind vector 🆕
 #### 🆕 Estimated uncertainties in $V_{LOS}$, $V_{h}$ and &#934; due to errors in pointing accuracy and focus distance 🆕
 Considered as the major contributors to uncertainty in lidar estimations, the new Qlunc's add-on uses a combination of analytic and Monte Carlo approaches for estimating the intrinsic lidar uncertainty including:
@@ -83,15 +78,15 @@ First,
 
 
 ### Main
-This is the core of Qlunc. Here the user creates the classes describing the components, modules and general inputs of the lidar device and instantiate the classes.
- - `Qlunc_Classes.py` contains the code which creates the lidar digital twin. Each lidar module/component is assigned to a python class.
+`Main` is the core of Qlunc. Here the user creates the classes describing the components, modules and general inputs of the lidar device and atmospheric scenarios, and instantiates the classes.
+ - `Qlunc_Classes.py` contains the code which creates the lidar components and modules. Each lidar module/component is assigned to a python class.
  - `Qlunc_Instantiate.py` instantiate the lidar classes taking the values from `Qlunc_inputs.yml`.
 
 ### UQ_Functions
  - Contains the functions that compute the uncertainties from different devices, calculting also the uncertainty propagation corresponding to the different modules and the lidar uncertainty as well. Users can define their own functions to calculate specific module uncertainties, and combined/expanded uncertainties as well. 
 
 ### Utils
- - Contains scripts meant to do different tasks. Importing packages and stand alone funtions which don´t interface directly with Qlunc but are necessary to compute calculations. Also contains `Qlunc_Plotting.py`, a script to automate plots and `Qlunc_ImportModules.py` to import the necessary python packages. 
+ - Contains scripts meant to do different tasks. Contains funtions which interface directly with Qlunc and are necessary to compute calculations. Also contains `Qlunc_Plotting.py`, a script to automate plots and `Qlunc_ImportModules.py` to import the necessary python packages. 
  - The new functions implemented for this release estimating the uncertainty in $V_{LOS}$ and $V_{h}$ are allocated here.
 
 ###  TestFile_Qlunc
