@@ -41,7 +41,7 @@ Considered as the major contributors to the uncertainty in lidar estimations, th
 
 
 <p align="center">
-  <img src="https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Lidar_Projects/Unc100PV1.1.gif" />
+  <img src="https://github.com/SWE-UniStuttgart/Qlunc/Pictures_repo_/Unc100PV1.1.gif" />
   Figure 2. Horizontal wind speed and wind direction uncertainties - Lissajous Pattern
 
 </p>
