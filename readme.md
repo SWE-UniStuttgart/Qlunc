@@ -10,7 +10,7 @@
 
 
 ## What is `Qlunc`?
-Qlunc is a python-based, open-source software aligned with the [Wind lidar Ontology](https://github.com/IEA-Wind-Task-32/wind-lidar-ontology) by [IEA TCP Wind Task52 ](https://iea-wind.org/task52/) that aims to estimate errors in wind velocity and wind direction estimations when measuring with a lidar device. The code has an objected-oriented structure; by using python objects and simulating real lidar components the code puts all together in modules to eventually build up a lidar [digital twin](https://en.wikipedia.org/wiki/Digital_twin). The code is meant to be as modular as possible and offers the possibility of creating different lidar objects on parallel (see [Tutorial2.ipynb](https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Tutorials/Tutorial2.ipynb)), with different components at the same time. This allows to easily combine lidar modules with different characteristics, simulating different lidar devices.
+Qlunc is a python-based, open-source software aligned with the [Wind lidar Ontology](https://github.com/IEA-Wind-Task-32/wind-lidar-ontology) by [IEA TCP Wind Task52 ](https://iea-wind.org/task52/) that aims to estimate errors in wind velocity and wind direction estimations when measuring with a lidars. The code has an objected-oriented structure; by using python objects and simulating real lidar components the code puts all together in modules to eventually build up a lidar [digital twin](https://en.wikipedia.org/wiki/Digital_twin). The code is meant to be as modular as possible and offers the possibility of creating different lidar objects on parallel (see [Tutorial2.ipynb](https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Tutorials/Tutorial2.ipynb)), with different components at the same time. This allows to easily combine lidar modules with different characteristics, simulating different lidar devices.
 <p align="center">
   <img src="https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Pictures_repo_/Qlunc_GralStructure.JPG" />
   Figure 1. General structure of Qlunc
@@ -59,7 +59,7 @@ Considered as the major contributors to uncertainty in lidar estimations, the ne
 
 ### Create an environment and install dependencies
 
-1) Having [Anaconda](https://docs.anaconda.com) installed is a prerequisite if we want to work in a different environment than `base`, and it is recommended. Then, based on the requirements added to the ``environment.yaml`` file on the repository, where are included the name of the environment and the tools/packages we want to install, we build the new environment. 
+1) Having [Anaconda](https://docs.anaconda.com) installed is a prerequisite if we want to work in a different environment than `base`, and it is recommended. Then, based on the requirements added to the ``environment.yaml`` file we build the new environment named `Qlunc_Env` by default. 
 
 2) In the Anaconda prompt, go to the directory where you have clone/download Qlunc and type:
 
@@ -68,7 +68,7 @@ conda env create -f environment.yml
 conda activate <envname>
 ```
 
-3) Your environment is ready to rumble. You have now a new environment, called `Qlunc_Env` by default, with all the packages needed to run Qlunc.
+3) Your environment is ready to rumble. You have now a new environment with all the packages needed to run Qlunc.
 
 4) In case you don't want to create a new environment, just install the requirements listed in the `environment.yml` file.
 
