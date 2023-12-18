@@ -37,8 +37,8 @@ Considered as a major contributor to uncertainty in lidar estimations, the new Q
 #### Plots
  - Photodetector signal-to-noise ratio and separate contributions due to shot noise, thermal noise, dark current noise and, if needed, trans-impedance amplifier noise.
  - 🆕 Uncertainties in $V_{LOS}$, $V_{h}$ and $V_{wind}$ with the wind direction 
- - 🆕 Uncertainties in $V_{LOS}$ focus distance, elevation angle and/or azimuth angle for a fixed wind direction 
- - 🆕 Uncertainty in wind direction estimation
+ - 🆕 Uncertainties in $V_{LOS}$ with focus distance, elevation angle and azimuth angle for a fixed wind direction 
+ - 🆕 Uncertainty in &#934; lidar estimation
  - 🆕 Uncertainty in vertical and horizontal measuring planes
 
 
