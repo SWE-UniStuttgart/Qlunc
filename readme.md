@@ -10,7 +10,7 @@ Qlunc is a python-based, open-source software, aligned with the [Wind lidar Onto
   <img src="https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Pictures_repo_/Qlunc_GralStructure.JPG" />
   Figure 1. General structure of Qlunc
 </p>
-Currently, Qlunc's framework accounts for photonics, signal processing techniques and pointing uncertainties. For each module the Guide to the Expression of Uncertainty in Measurement ( [GUM](http://www.bipm.org/en/publications/guides/gum.html) ) is applied to calculate uncertainty propagation along the modules. 
+Currently, Qlunc's framework accounts for photonics, signal processing techniques and pointing uncertainties. For each module the Guide to the Expression of Uncertainty in Measurement (GUM) is applied to calculate uncertainty propagation along the modules. 
 Qlunc estimates uncertainties of the line-of-sight wind velocity ($V_{LOS}$), the horizontal wind velocity ($V_{h}$), 3D wind vector ($V_{wind}$) and wind direction (&#934;), and makes a comparison between the developed analytical model and Monte Carlo simulations. The possibility to consider the correlations between measurement angles within a single lidar and among different lidar devices is available.
 
 ### Creating a lidar device
