@@ -45,3 +45,9 @@ import matplotlib.colors as mcolors
 # from mpl_toolkits.axes_grid1 import Grid
 import matplotlib.gridspec as gridspec
 from scipy.fft import fft, ifft
+from tkinter import *
+from tkinter import font
+from tkinter.filedialog import askopenfilename
+from tkinter.filedialog import asksaveasfilename
+import customtkinter as CTk
+from io import StringIO 
