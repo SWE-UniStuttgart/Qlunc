@@ -5,16 +5,16 @@
 
 
 ## What is `Qlunc`?
-Qlunc is a python-based, open-source software, aligned with the [Wind lidar Ontology](https://github.com/IEA-Wind-Task-32/wind-lidar-ontology) by [IEA TCP Wind Task52 ](https://iea-wind.org/task52/), which can be used to estimate errors in wind velocity and wind direction estimations when measuring with a lidars. The code has an objected-oriented structure; by using python objects and simulating real lidar components the code puts all together in modules to eventually build up a lidar [digital twin](https://en.wikipedia.org/wiki/Digital_twin). The code is modular and offers the possibility of creating different lidar objects on parallel (see [Tutorial2.ipynb](https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Tutorials/Tutorial2.ipynb)). This allows to easily combine lidar modules with different characteristics, simulating different lidar devices.
+Qlunc is a python-based, open-source software, aligned with the [Wind lidar Ontology](https://github.com/IEA-Wind-Task-32/wind-lidar-ontology) by [IEA TCP Wind Task52 ](https://iea-wind.org/task52/), which can be used to estimate errors in wind velocity and wind direction estimations when probing the wind with lidars. The code has an objected-oriented structure; by using python objects and simulating real lidar components the code puts all together in modules to build up a lidar [digital twin](https://en.wikipedia.org/wiki/Digital_twin). The code is modular and offers the possibility of creating different lidar objects on parallel (see [Tutorial2.ipynb](https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Tutorials/Tutorial2.ipynb)). This allows to easily combine lidar modules with different characteristics, simulating different lidar devices.
 <p align="center">
   <img src="https://github.com/SWE-UniStuttgart/Qlunc/blob/main/Pictures_repo_/Qlunc_GralStructure.JPG" />
   Figure 1. General structure of Qlunc
 </p>
-Currently, Qlunc's framework can account for photonics, including photodetector, signal processing techniques and pointing uncertainties. For each module the Guide to the Expression of Uncertainty in Measurement ([GUM](http://www.bipm.org/en/publications/guides/gum.html)) is applied to calculate uncertainty propagation along the modules. 
-Qlunc estimates uncertainties of the line-of-sight wind velocity (<img src="https://latex.codecogs.com/gif.latex?V_{LOS}" />), the horizontal wind velocity ( <img src="https://latex.codecogs.com/gif.latex?V_{h}" /> ), 3D wind vector ( <img src="https://latex.codecogs.com/gif.latex?V_{wind}" /> ) and in the wind direction (&#934;), and make a comparison between the developed analytical model and Monte Carlo simulations. The possibility to consider the correlations between lidar measurement angles and also between different devices is available.
-pe
+Currently, Qlunc's framework accounts for photonics, signal processing techniques and pointing uncertainties. For each module the Guide to the Expression of Uncertainty in Measurement ([GUM](http://www.bipm.org/en/publications/guides/gum.html)) is applied to calculate uncertainty propagation along the modules. 
+Qlunc estimates uncertainties of the line-of-sight wind velocity ($V_{LOS}$), the horizontal wind velocity ($V_{h}$), 3D wind vector ($V_{wind}$) and wind direction (&#934;), and makes a comparison between the developed analytical model and Monte Carlo simulations. The possibility to consider the correlations between measurement angles within a single lidar and among different lidar devices is available.
+
 ### Creating a lidar device
-The user creates the different lidar components by instantiating python classes, including its functional parameters and defining their specific uncertainty functions. Then, each module (also python objects) is "filled" with the corresponding components and their uncertainties are computed following uncertainty propagation method according to the GUM model. Once each component is "ensembled", building up the different modules, the lidar object is created and the modules included. As a result, the desired lidar digital twin is created.
+The user creates the different lidar components by instantiating python classes, including its functional parameters and defining their specific uncertainty functions. Then, each module (also python objects) is "filled" with the corresponding components and their uncertainties are computed following uncertainty propagation method according to the GUM model. Once each component is "ensembled", building up the different modules, the modules are included into the lidar object.
 
 ### Creating atmospheric conditions
 The user creates also atmospheric scenarios to account for the different atmospheric conditions the lidar has to deal with. Power law  exponent α, temperature and humidity are accepted, either single values or time-dependent variabilities of these inputs, taken from peripherals.
@@ -22,10 +22,10 @@ The user creates also atmospheric scenarios to account for the different atmosph
 ### Qlunc (NEW!) available capabilities
 
 #### Uncertainties in hardware
-The flexibility of the code allows the user not only to assess global lidar uncertainty due to signal noise, but also to query uncertainties contirbuted by noise in specific modules or even single components.
+The flexibility of the code allows users, not only to assess global lidar uncertainty due to signal noise, but also to query uncertainties contributed by noise in specific modules or even single components.
 #### 🆕 Estimated uncertainties in $V_{wind}$ and &#934; with information from 3D wind vector 🆕
 #### 🆕 Estimated uncertainties in $V_{LOS}$, $V_{h}$ and &#934; due to errors in pointing accuracy and focus distance 🆕
-Considered as the major contributors to uncertainty in lidar estimations, the new Qlunc's add-on uses a combination of analytic and Monte Carlo approaches for estimating the intrinsic lidar uncertainty including:
+Considered as a major contributor to uncertainty in lidar estimations, the new Qlunc's add-on uses a combination of analytic and Monte Carlo approaches for estimating the intrinsic lidar uncertainty including:
 - Hardware noise
 - Speckle noise
 - Bias in the sampling frequency
@@ -73,7 +73,7 @@ By downloading or cloning the repository you will get several folders within whi
  
 First,
 1) Create a folder named `Qlunc_Output` in '\Qlunc' main directory. Here the data will be saved. 
-2) Copy and paste the file `Qlunc_inputs.yml` in `TestFiles_Qlunc` into `Main` for a quick start/test. Otherwise, fill in the template in the same folder (`TestFiles_Qlunc`) and rename it to `Qlunc_inputs.yml`. Copy and paste this file into the `Main` folder. 
+2) Copy and paste the file `Qlunc_inputs.yml` from `TestFiles_Qlunc` into `Main` for a quick start/test. Otherwise, fill in the template in the same folder (`TestFiles_Qlunc`) and rename it to `Qlunc_inputs.yml`. Copy and paste this file into the `Main` folder. 
 3) The content of each folder in the repository is breafly explained here below. Further information can be found in the `readme` in the corresponding folder. 
 
 
