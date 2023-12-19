@@ -713,7 +713,12 @@ def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,alpha,li
             Vh_denom  = np.cos(Theta1_cr2) * np.cos(Theta2_cr2) * np.sin(Psi1_cr2 - Psi2_cr2)       
             Vh.append(Vh_num / Vh_denom)       
             U_Vh_MCM.append(np.std(Vh[ind_wind_dir]))
-
+            
+            
+            # u,v=Wind_vector2(Theta1_cr2,Theta2_cr2,Psi1_cr2,Psi2_cr2, Vlos1_MC_cr2,Vlos2_MC_cr2)
+            # Vh.append(np.sqrt(u**2+v**2))       
+            # U_Vh_MCM.append(np.std(Vh[ind_wind_dir]))
+            
 
     # Store the multivariate distributions
     Mult_param          =  [Vlos1_MC_cr2_s,Vlos2_MC_cr2_s,Vlos3_MC_cr2_s,Theta1_cr2_s,Theta2_cr2_s,Theta3_cr2_s,Psi1_cr2_s,Psi2_cr2_s,Psi3_cr2_s,Rho1_cr2_s,Rho2_cr2_s,Rho3_cr2_s]
@@ -1042,7 +1047,7 @@ def U_WindDir_GUM(Lidar,Atmospheric_Scenario,Correlation_coeff,wind_direction,li
     
             # Formating data to pass to the function
             U_Vlos_GUM_list= [U_Vlos_GUM['V1'][ind_wind_dir],U_Vlos_GUM['V2'][ind_wind_dir]]                    
-            Correlation_coeff_list=[Correlation_coeff['V1'][ind_wind_dir],Correlation_coeff['V1'][ind_wind_dir]]
+            Correlation_coeff_list=[Correlation_coeff['V1'][ind_wind_dir]]
 
             # Covariance matrix inputs
             Ux=MultiVar(Lidar, Correlation_coeff_list, U_Vlos_GUM_list, 1, 1, 1, 1, 'GUM2'  )
@@ -1053,7 +1058,7 @@ def U_WindDir_GUM(Lidar,Atmospheric_Scenario,Correlation_coeff,wind_direction,li
             
             # Covariance matrix outputs
             UyWinDir=np.array(Cx).dot(Ux).dot(np.transpose(Cx))
-        
+        # pdb.set_trace()
         # Data storage:
         dWinDir_Vlos1T.append((dWinDir_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir])**2)
         dWinDir_Vlos2T.append((dWinDir_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir])**2)
@@ -1105,7 +1110,15 @@ def Wind_vector(theta1,theta2,theta3,psi1,psi2,psi3, Vlos1,Vlos2,Vlos3):
     # pdb.set_trace()                        
     return u,v,w
 
-
+# def Wind_vector2(theta1,theta2,psi1,psi2, Vlos1,Vlos2):
+#     # # 3D
+#     # pdb.set_trace()
+    
+#     u = (- Vlos1*np.cos(theta2)*np.sin(psi2) + Vlos2*np.cos(theta1)*np.sin(psi1)) / (np.cos(theta1) *np.cos(theta2)*np.sin(psi1 - psi2))
+#     v = (  Vlos1*np.cos(theta2)*np.cos(psi2) - Vlos2*np.cos(theta1)*np.cos(psi1)) / (np.cos(theta1) *np.cos(theta2)*np.sin(psi1 - psi2))
+                                                             
+#     # pdb.set_trace()                        
+#     return u,v
 
 #%% 3D velocity vector
 '''
