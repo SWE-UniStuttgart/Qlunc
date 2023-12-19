@@ -68,7 +68,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
     # pdb.set_trace()
     if flag_plot_measuring_points_pattern:
         
-        pdb.set_trace()
+        # pdb.set_trace()
         if Qlunc_yaml_inputs['Flags']['Wind direction uncertainty']:
             # 0. Plot Uncertainty in /Omega against wind direction             
             color1=iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))

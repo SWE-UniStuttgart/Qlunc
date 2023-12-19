@@ -87,7 +87,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     else: # One point for all wind directions stated in YAML file
         L=len(Lidar.optics.scanner.focus_dist)
-        wind_direction = np.radians(np.linspace(Atmospheric_Scenario.wind_direction[0],Atmospheric_Scenario.wind_direction[1],360))
+        wind_direction = np.radians(np.linspace(Atmospheric_Scenario.wind_direction[0],Atmospheric_Scenario.wind_direction[1],Atmospheric_Scenario.wind_direction[2]))
         x_out,y_out,z_out=0,0,0
     
 

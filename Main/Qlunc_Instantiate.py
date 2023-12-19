@@ -211,8 +211,11 @@ else:
                                       PL_exp         = Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'],
                                       Vref           = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref'],
                                       wind_direction = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind direction'],
-                                      wind_tilt     = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind tilt'],
+                                      wind_tilt      = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind tilt'],
                                       Hg             = Qlunc_yaml_inputs['Atmospheric_inputs']['Height ground'])
 
 # pdb.set_trace()
-QluncData=Lidar.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)# print(B)
+for i_tilt in np.linspace(Atmospheric_Scenario.wind_tilt[0],Atmospheric_Scenario.wind_tilt[1],Atmospheric_Scenario.wind_tilt[2]):
+    # pdb.set_trace()
+    Atmospheric_Scenario.wind_tilt = i_tilt
+    QluncData = Lidar.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)# print(B)
