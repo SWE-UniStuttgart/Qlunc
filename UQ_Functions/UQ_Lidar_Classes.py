@@ -79,7 +79,7 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         filename = "Q_output_P"+"["+ str(Lidar.optics.scanner.cone_angle[0]) + "," + str(Lidar.optics.scanner.azimuth[0])+ "," +str(Lidar.optics.scanner.focus_dist[0])   + "]"
         for ind_loop in range (len( Lidar.optics.scanner.origin)):
             filename += ('_L{}_'.format(ind_loop+1)+str(Lidar.optics.scanner.origin[ind_loop]))
-        filename=filename+'_tilt{}'.format((Atmospheric_Scenario.wind_tilt))+'_Vref{}'.format(Atmospheric_Scenario.Vref)    
+        filename=filename+'_tilt{}'.format(np.round(Atmospheric_Scenario.wind_tilt,2))+'_Vref{}'.format(Atmospheric_Scenario.Vref)    
         # Define the path where to store the data
         path = ".\\Qlunc_Output\\"+filename + ".pkl"
         # Store the dictionary 
