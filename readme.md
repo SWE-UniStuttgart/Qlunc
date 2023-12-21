@@ -73,7 +73,7 @@ By downloading or cloning the repository user will get several folders within wh
  
 First,
 1) Create a folder named `Qlunc_Output` in '\Qlunc' main directory. Here the data will be saved. 
-2) Copy and paste the file `Qlunc_inputs.yml` from `TestFiles_Qlunc` into `Main` for a quick start/test. Otherwise, fill in the template in the same folder (`TestFiles_Qlunc`) and rename it to `Qlunc_inputs.yml`. Copy and paste this file into the `Main` folder. 
+2) Copy and paste the file `Qlunc_inputs_Dual.yml`, for a dual lidar solution, or `Qlunc_inputs_Triple.yml`, for a triple lidar solution, from `TestFiles_Qlunc` into `Main` and rename it to `Qlunc_inputs.yml` for a quick start/test. Otherwise, fill in the template in the same folder (`TestFiles_Qlunc`) and rename it to `Qlunc_inputs.yml`. Copy and paste this file into the `Main` folder. 
 
 The content of each folder in the repository is breafly explained here below. Further information can be found in the `readme` in the corresponding folder. 
 
