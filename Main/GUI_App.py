@@ -58,12 +58,11 @@ def new_file():
     open_status_name=False
     root.title('New file')
 
-    root.title('New file')
 
 # Open file
 def open_file():
     my_text.delete(1.0,END)
-    text_file = askopenfilename(initialdir="..\\Main\\", title="Select file", filetypes=( ('Yaml file',"*.yml"),("Text files",'*.txt'), ('All files','*.*'))) # show an "Open" dialog box and return the path to the selected file
+    text_file = askopenfilename(initialdir="..\\", title="Select file", filetypes=( ('Yaml file',"*.yml"),("Text files",'*.txt'), ('All files','*.*'))) # show an "Open" dialog box and return the path to the selected file
     name = text_file
     global open_status_name
     open_status_name = text_file
@@ -75,7 +74,7 @@ def open_file():
 
 
 def saveas_file():
-    text_file = asksaveasfilename(initialdir="..\\Main\\", title="Save file", filetypes=( ('Yaml file',"*.yml"),("Text files",'*.txt'), ('All files','*.*'))) # show an "Open" dialog box and return the path to the selected file
+    text_file = asksaveasfilename(initialdir="..\\", title="Save file", filetypes=( ('Yaml file',"*.yml"),("Text files",'*.txt'), ('All files','*.*'))) # show an "Open" dialog box and return the path to the selected file
     if text_file:
         name = text_file
         # open the file
@@ -115,7 +114,7 @@ def runQlunc():
         redirected_output = sys.stdout = StringIO()
         root.title('Qlunc - Running Qlunc...' )
         # runfile( '.\\Main\\Qlunc_Instantiate.py')
-        exec(open('.\\Main\\Qlunc_Instantiate.py').read()) 
+        exec(open('.\\Qlunc_Instantiate.py').read()) 
 
         root.title('Qlunc - Qlunc finished successfully' )
     
@@ -141,7 +140,7 @@ def runQlunc():
 def button_select_input_file():
 
     my_text.delete(1.0,END)
-    text_file = askopenfilename(initialdir="..\\Main\\", title="Select file", filetypes=( ('Yaml file',"*.yml"),("Text files",'*.txt'), ('All files','*.*'))) # show an "Open" dialog box and return the path to the selected file
+    text_file = askopenfilename(initialdir="..\\", title="Select file", filetypes=( ('Yaml file',"*.yml"),("Text files",'*.txt'), ('All files','*.*'))) # show an "Open" dialog box and return the path to the selected file
     global open_status_name
     open_status_name = text_file
     name = text_file
