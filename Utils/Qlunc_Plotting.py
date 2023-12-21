@@ -183,6 +183,9 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                         ax0.grid(axis='both')
                         ax1.grid(axis='both')
                         ax2.grid(axis='both')
+                        ax0.set_xlim(0,359)
+                        ax1.set_xlim(0,359)
+                        ax2.set_xlim(0,359)                    
                         ax0.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
                         ax0.tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
                         ax1.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
@@ -215,6 +218,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                         ax2D.yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-4)
                         ax2D.text(0.91, 0.935, textstr1, transform=ax2D.transAxes, fontsize=16,horizontalalignment='left',verticalalignment='top', bbox=props1) 
                         ax2D.set_ylim(-1,1)
+                        ax2D.set_xlim(0,359)
                     # Plot sensitivity coefficients
                     SensCoeff1=[Data['Sens coeff Vh'][-1]['dV1'],Data['Sens coeff Vh'][-1]['dV2'],Data['Sens coeff Vh'][-1]['dV1V2']]
                     for ind_plot in range(3):                 
@@ -237,8 +241,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 ax11.grid(axis='both')            
                 ax13.tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
                 ax13.tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
-                ax13.set_xlim(0,359)
-                ax2D.set_xlim(0,359)
+                ax13.set_xlim(0,359)                
                 ax13.grid(axis='both')
                 gs.update(left=0.085,right=0.99,top=0.965,bottom=0.1,wspace=0.3,hspace=0.24)           
                 plt.show()
