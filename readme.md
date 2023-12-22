@@ -99,6 +99,11 @@ The content of each folder in the repository is breafly explained here below. Fu
 ## Requirements
 The `environment.yml` file summarises the python packages needed to run Qlunc 
 
+## How to run `Qlunc`
+
+1) Run `Qlunc_Instantiate.py` to instantiate the lidar classes
+2) Alternatively, user can run the Qlunc graphical user interface Qlunc_GUI.py in `Main` 
+
 ## Author
 [Francisco Costa](https://www.ifb.uni-stuttgart.de/en/institute/team/Costa-Garcia/)
 
