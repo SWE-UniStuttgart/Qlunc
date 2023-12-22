@@ -101,8 +101,8 @@ The `environment.yml` file summarises the python packages needed to run Qlunc
 
 ## How to run `Qlunc`
 
-1) Run `Qlunc_Instantiate.py` to instantiate the lidar classes
-2) Fill in the `Qlunc_inputs.yml` with the desired values for uncertainty estimation
+1) Fill in the `Qlunc_inputs.yml` with the desired values for uncertainty estimation
+2) Run `Qlunc_Instantiate.py` to instantiate the lidar classes
 3) Type "QluncData = Lidar.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)". A dictionary with relevant parameters about lidar(s) uncertainties and configuration(s) is stored in `QluncData`
 4) Alternatively, user can execute Qlunc through a graphical user interface `Qlunc_GUI.py` in `Main` developed to ease the use of Qlunc 
 
