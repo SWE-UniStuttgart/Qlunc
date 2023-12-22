@@ -96,13 +96,15 @@ The content of each folder in the repository is breafly explained here below. Fu
 ### Tutorials
 - Contains 3 [Jupyter Notebook-based tutorials](https://github.com/SWE-UniStuttgart/Qlunc/tree/Qlunc-V0.9/Tutorials) with their corresponding yaml files and working examples. These tutorials are meant to serve as a guide to get familiar with Qlunc's routines, and show current capabilities of the framework. Users can find more information about these tutorials in the corresponding `readme` in the folder `Tutorials`.
 
-## Requirements
+### Requirements
 The `environment.yml` file summarises the python packages needed to run Qlunc 
 
 ## How to run `Qlunc`
 
 1) Run `Qlunc_Instantiate.py` to instantiate the lidar classes
-2) Alternatively, user can run the Qlunc graphical user interface Qlunc_GUI.py in `Main` 
+2) Fill in the `Qlunc_inputs.yml` with the desired values for uncertainty estimation
+3) Type "QluncData = Lidar.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)". A dictionary with relevant parameters about lidar(s) uncertainties and configuration(s) is stored in `QluncData`
+4) Alternatively, user can execute Qlunc through a graphical user interface `Qlunc_GUI.py` in `Main` developed to ease the use of Qlunc 
 
 ## Author
 [Francisco Costa](https://www.ifb.uni-stuttgart.de/en/institute/team/Costa-Garcia/)
