@@ -29,18 +29,22 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     ----------
     
     * Lidar
+        Dictionary containing lidar info
         
     * Atmospheric_Scenario
         Atmospheric data. Integer or Time series
+
     * cts
         Physical constants
+
     * Qlunc_yaml_inputs
         Lidar parameters data        
+
     Returns
     -------
     
     Dictionary containing information about uncertainties in:
-        1) wind direction, 
+        1) Wind direction 
         2) LOS wind velocity
         3) Horizontal wind velocity
         4) Wind velocity 3D vector
@@ -66,10 +70,10 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     N_MC  = Lidar.optics.scanner.N_MC
     
     
-    # Implement error in deployment of the tripod as a rotation over yaw, pitch and roll
-    stdv_yaw    = np.array(np.radians(Lidar.lidar_inputs.yaw_error_dep))
-    stdv_pitch  = np.array(np.radians(Lidar.lidar_inputs.pitch_error_dep))
-    stdv_roll   = np.array(np.radians(Lidar.lidar_inputs.roll_error_dep))
+    # # Implement error in deployment of the tripod as a rotation over yaw, pitch and roll
+    # stdv_yaw    = np.array(np.radians(Lidar.lidar_inputs.yaw_error_dep))
+    # stdv_pitch  = np.array(np.radians(Lidar.lidar_inputs.pitch_error_dep))
+    # stdv_roll   = np.array(np.radians(Lidar.lidar_inputs.roll_error_dep))
     
     if Lidar.optics.scanner.pattern=='lissajous':
         x_out,y_out,z_out=SP.lissajous_pattern(Lidar,Lidar.optics.scanner.lissajous_param[0],Lidar.optics.scanner.lissajous_param[1],Lidar.optics.scanner.lissajous_param[2],Lidar.optics.scanner.lissajous_param[3],Lidar.optics.scanner.lissajous_param[4])
@@ -125,7 +129,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             
             
             # Add coordinates to lidars dict to calculate uncertainties using a pattern instead of a single point
-            lidars['Coord_Out']     =np.array([x_out,y_out,z_out])
+            lidars['Coord_Out'] = np.array([x_out,y_out,z_out])
 
             
             #%% 3) Wind velocity uncertainy estimation
@@ -185,9 +189,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
 
             # Add test coordinates to lidars dict
             lidars['Coord_Test']={'TESTr':np.array([rho_TESTr]),'TESTt':np.array([theta_TESTt]),'TESTp':np.array([psi_TESTp])}
-
-
-    #%% 6) Storing data    
+  
     
     VLOS_Unc    =  {'VLOS1 Uncertainty MC [m/s]':U_Vlos['V1_MCM'],           'VLOS1 Uncertainty GUM [m/s]':U_Vlos['V1_GUM'],
                     'VLOS2 Uncertainty MC [m/s]':U_Vlos['V2_MCM'],           'VLOS2 Uncertainty GUM [m/s]':U_Vlos['V2_GUM'],
@@ -212,7 +214,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # Lidar.lidar_inputs.dataframe['Scanner'] = {'Focus distance':Final_Output_UQ_Scanner['lidars'][0],'Elevation angle':Final_Output_UQ_Scanner['Elevation angle'][0],'Azimuth':Final_Output_UQ_Scanner['Azimuth'][0]}
     Lidar.lidar_inputs.dataframe['Uncertainty Scanner']=Final_Output_UQ_Scanner
     
-    # 7)Plotting data
+    
+    
+    #%% 7) Plotting data
     QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,Qlunc_yaml_inputs['Flags']['Scanning uncertainties'],False,False,False,False,False,1)  #Qlunc_yaml_inputs['Flags']['Scanning Pattern']  
     return Lidar.lidar_inputs.dataframe
 

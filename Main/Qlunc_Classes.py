@@ -205,12 +205,12 @@ class atmosphere():
 
 #%% Creating lidar general data class:
 class lidar_gral_inp():
-    def __init__(self,name,ltype,yaw_error,pitch_error,roll_error,dataframe):
+    def __init__(self,name,ltype,dataframe):
                  self.Gral_InputsID   = name
                  self.LidarType       = ltype
-                 self.yaw_error_dep   = yaw_error   # yaw error angle when deploying the lidar device in the grounf or in the nacelle
-                 self.pitch_error_dep = pitch_error # pitch error angle when deploying the lidar device in the grounf or in the nacelle
-                 self.roll_error_dep  = roll_error  # roll error angle when deploying the lidar device in the grounf or in the nacelle
+                 # self.yaw_error_dep   = yaw_error   # yaw error angle when deploying the lidar device in the grounf or in the nacelle
+                 # self.pitch_error_dep = pitch_error # pitch error angle when deploying the lidar device in the grounf or in the nacelle
+                 # self.roll_error_dep  = roll_error  # roll error angle when deploying the lidar device in the grounf or in the nacelle
                  self.dataframe       = dataframe   # Final dataframe
                  print('Created new lidar general inputs: {}'.format(self.Gral_InputsID))
 
