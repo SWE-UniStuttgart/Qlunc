@@ -266,7 +266,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             # Plot the vertical/horizontal plane
             # pdb.set_trace()
             elif Lidar.optics.scanner.pattern in ['vertical plane'] or Lidar.optics.scanner.pattern in ['horizontal plane']:
-                # pdb.set_trace()
+                pdb.set_trace()
                 V=[]
                 Dir=[]
                 for i in range(int((len(Data['Sens coeff Vh'])/len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'])))):
@@ -275,42 +275,59 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 
                 # Reshape V and avoid nans and infinit values
                 VV=np.reshape(V,[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
-                VV[VV>5]=5
-                
+                DirD=np.reshape(Dir,[int(np.sqrt(len(Dir))),int(np.sqrt(len(Dir)))])
+
+                VV[VV>5]=1
+                DirD[DirD>10]=10
+                DirD=np.reshape(Dir,[int(np.sqrt(len(Dir))),int(np.sqrt(len(Dir)))])
                 # Horizontal wind velocity
                 col ='binary' #'binary' #
                 cmaps = matplotlib.cm.get_cmap(col)  # viridis is the default colormap for imshow
-                cmap = matplotlib.cm.ScalarMappable(norm = mcolors.Normalize(vmin=VV.min(), vmax=VV.max()),cmap = plt.get_cmap(col))
+                cmap0 = matplotlib.cm.ScalarMappable(norm = mcolors.Normalize(vmin=0, vmax=0.9),cmap = plt.get_cmap(col))
+                cmap1 = matplotlib.cm.ScalarMappable(norm = mcolors.Normalize(vmin=0, vmax=10),cmap = plt.get_cmap(col))
     
                 fig00,ax00=plt.subplots()
+                fig01,ax01=plt.subplots()
                 if  Lidar.optics.scanner.pattern in ['vertical plane']:
                     XX=np.reshape(Data['lidars']['Coord_Out'][1],[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
                     YY=np.reshape(Data['lidars']['Coord_Out'][2],[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
                     ax00.set_xlabel('Y [m]', fontsize=plot_param['tick_labelfontsize']+20, labelpad=15)
                     ax00.set_ylabel('Z [m]', fontsize=plot_param['tick_labelfontsize']+20, labelpad=15)
+                    ax01.set_xlabel('Y [m]', fontsize=plot_param['tick_labelfontsize']+20, labelpad=15)
+                    ax01.set_ylabel('Z [m]', fontsize=plot_param['tick_labelfontsize']+20, labelpad=15)
+
                 elif  Lidar.optics.scanner.pattern in ['horizontal plane']:
                     XX=np.reshape(Data['lidars']['Coord_Out'][0],[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
                     YY=np.reshape(Data['lidars']['Coord_Out'][1],[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
                     ax00.set_xlabel('X [m]', fontsize=plot_param['tick_labelfontsize']+20, labelpad=15)
                     ax00.set_ylabel('Y [m]', fontsize=plot_param['tick_labelfontsize']+20, labelpad=15)
+                    ax01.set_xlabel('X [m]', fontsize=plot_param['tick_labelfontsize']+20, labelpad=15)
+                    ax01.set_ylabel('Y [m]', fontsize=plot_param['tick_labelfontsize']+20, labelpad=15)
                     
                     for ind_len in range(len(Lidar.optics.scanner.origin)):
                         ax00.plot(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_len][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_len][1],'sk', ms=5, mec='white', mew=1.5)
-                        # ax00.plot(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][1][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_len][1],'sk', ms=5, mec='white', mew=1.5)
-                        # ax00.plot(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][1][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_len][1],'sk', ms=5, mec='white', mew=1.5)
-         
-                plt.contourf(XX,YY, VV,10,cmap=cmaps,vmin=VV.min(), vmax=VV.max())
-                cmap.set_array([]) # or alternatively cmap._A = []
+                        ax01.plot(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_len][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_len][1],'sk', ms=5, mec='white', mew=1.5)
+                ax01.contourf(XX,YY, DirD,250,cmap=cmaps,vmin=0, vmax=10)
+                ax00.contourf(XX,YY, VV,250,cmap=cmaps,vmin=0, vmax=0.9)
+                cmap0.set_array([]) # or alternatively cmap._A = []
     
-                colorbar=fig00.colorbar(cmap, ax = ax00)                        
-                colorbar.set_label(label='Uncertainty [m/s]', size=plot_param['tick_labelfontsize']+12, labelpad=15)
-                colorbar.ax.tick_params(labelsize=19)
+                colorbar0=fig00.colorbar(cmap0, ax = ax00) 
+                colorbar1=fig00.colorbar(cmap1, ax = ax01)                        
+                colorbar0.set_label(label='Uncertainty [m/s]', size=plot_param['tick_labelfontsize']+12, labelpad=15)
+                colorbar0.ax.tick_params(labelsize=19)
+                colorbar1.set_label(label='Uncertainty [°]', size=plot_param['tick_labelfontsize']+12, labelpad=15)
+                colorbar1.ax.tick_params(labelsize=19)
+
                 ax00.set_aspect('equal')
                 ax00.ticklabel_format(useOffset=False)
-               
+                ax01.set_aspect('equal')
+                ax01.ticklabel_format(useOffset=False)
+                
     
                 ax00.xaxis.set_tick_params(labelsize=plot_param['tick_labelfontsize']+14)
                 ax00.yaxis.set_tick_params(labelsize=plot_param['tick_labelfontsize']+14)
+                ax01.xaxis.set_tick_params(labelsize=plot_param['tick_labelfontsize']+14)
+                ax01.yaxis.set_tick_params(labelsize=plot_param['tick_labelfontsize']+14)
                 plt.show()
                 
                 # pdb.set_trace()
