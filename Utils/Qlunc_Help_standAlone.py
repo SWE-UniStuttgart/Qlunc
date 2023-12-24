@@ -175,9 +175,9 @@ def rmse(f,ff):
 
 
    # LoveU LU!
+#%% Vlos parameters individual analysis 
 
-
-def VLOS_param (Lidar,rho,theta,psi,u_theta1,u_psi1,u_rho1,N_MC,Hl,Vref,Href,alpha,wind_direction_TEST,ind_wind_dir):
+def VLOS_param (Lidar,rho,theta,psi,u_theta1,u_psi1,u_rho1,N_MC,Hl,Vref,Href,alpha,wind_direction_TEST,ind_wind_dir,DataFrame):
     #####################################
     #####################################
     # HARD CODED  Important HARD CODED  Need solution!!!
@@ -185,8 +185,7 @@ def VLOS_param (Lidar,rho,theta,psi,u_theta1,u_psi1,u_rho1,N_MC,Hl,Vref,Href,alp
     # wind_tilt_TEST      = np.radians([0])
     ######################################
     #######################################
-
-    
+   
     #If want to vary range    
     if len (rho) !=1:
         rho_TEST   = rho
@@ -223,18 +222,18 @@ def VLOS_param (Lidar,rho,theta,psi,u_theta1,u_psi1,u_rho1,N_MC,Hl,Vref,Href,alp
                    [u_theta1*u_rho1*0 ,     u_psi1*u_rho1*0     ,u_rho1**2         ]]
    
     U_VLOS1=[]
-    U_VLOS_T=U_VLOS_MC(Lidar,cov_MAT,theta_TEST,psi_TEST,rho_TEST,Hl,Href,alpha,wind_direction_TEST,Vref,0,U_VLOS1)
+    U_VLOS_T=U_VLOS_MC(Lidar,cov_MAT,theta_TEST,psi_TEST,rho_TEST,Hl,Href,alpha,wind_direction_TEST,Vref,0,U_VLOS1,DataFrame)
+    
     #Store results
     U_VLOS_T_MC.append(np.array(U_VLOS_T))
-    
-    
+        
     # GUM method
-    U_VLOS_T_GUM=(U_VLOS_GUM (Lidar,theta_TEST,psi_TEST,rho_TEST,u_theta1,u_psi1,u_rho1,Hl,Vref,Href,alpha,wind_direction_TEST,0)) # For an heterogeneous flow (shear))  
+    U_VLOS_T_GUM=(U_VLOS_GUM (Lidar,theta_TEST,psi_TEST,rho_TEST,u_theta1,u_psi1,u_rho1,Hl,Vref,Href,alpha,wind_direction_TEST,0,DataFrame)) # For an heterogeneous flow (shear))  
     return (U_VLOS_T,U_VLOS_T_GUM,rho_TEST,theta_TEST,psi_TEST)        
 
 
 
-def U_VLOS_MC(Lidar,cov_MAT,theta,psi,rho,Hl,Href,alpha,wind_direction,Vref,ind_wind_dir,U_VLOS1):
+def U_VLOS_MC(Lidar,cov_MAT,theta,psi,rho,Hl,Href,alpha,wind_direction,Vref,ind_wind_dir,U_VLOS1,DataFrame):
      """.
     
      Performs a Montecarlo simulation to estimate the uncertainty in the line of sight velocity ( $V_{LOS}$ ). Location: Qlunc_Help_standAlone.py
@@ -263,19 +262,17 @@ def U_VLOS_MC(Lidar,cov_MAT,theta,psi,rho,Hl,Href,alpha,wind_direction,Vref,ind_
      """
      
      for ind_0 in range(len(theta)):
-
-     
-         # Multivariate
-         Theta1_cr,Psi1_cr,Rho1_cr= multivariate_normal.rvs([theta[ind_0] , psi[ind_0] , rho[ind_0]] , cov_MAT , Lidar.optics.scanner.N_MC).T   
          
-         A=(Hl + (np.sin(Theta1_cr) * Rho1_cr)) / Href   
-         VLOS1 = Vref * (A**alpha) * (np.cos(Theta1_cr) * (np.cos(Psi1_cr - wind_direction[ind_wind_dir]) + (np.tan(0)*np.tan(Theta1_cr))))
+         # Multivariate
+         Theta1_cr,Psi1_cr,Rho1_cr = multivariate_normal.rvs([theta[ind_0] , psi[ind_0] , rho[ind_0]] , cov_MAT , Lidar.optics.scanner.N_MC).T   
+         
+         VLOS1 = Vref * (((Hl + (np.sin(Theta1_cr) * Rho1_cr)) / Href)**alpha) * (np.cos(Theta1_cr) * (np.cos(Psi1_cr - wind_direction[ind_wind_dir]) + (np.tan(0)*np.tan(Theta1_cr))))
          
          U_VLOS1.append(np.std(VLOS1))
      return(U_VLOS1)
 
 
-def U_VLOS_GUM (Lidar,theta1,psi1,rho1,u_theta1,u_psi1,u_rho1,Hl,Vref,Href,alpha,wind_direction,ind_wind_dir):
+def U_VLOS_GUM (Lidar,theta1,psi1,rho1,u_theta1,u_psi1,u_rho1,Hl,Vref,Href,alpha,wind_direction,ind_wind_dir,DataFrame):
     Cont_Theta,Cont_Psi,Cont_Rho=[],[],[]
     """.
     
@@ -312,14 +309,8 @@ def U_VLOS_GUM (Lidar,theta1,psi1,rho1,u_theta1,u_psi1,u_rho1,Hl,Vref,Href,alpha
     U_Vlos1_GUM=[]
     for i in range(len(rho1)):
         H_t1 = ((rho1[i] * np.sin(theta1[i])+Hl) / Href)
-        
-        # for ind_alpha in range(len(alpha)):
-        # VLOS uncertainty
-        # Calculate and store Vlosi
-        # Vlos_GUM['V1'] = Vref * (H_t1**alpha) * np.cos(theta1) * np.cos(psi1 - wind_direction[ind_wind_dir])
-        
-        # Partial derivatives Vlosi with respect theta, psi and rho
-    
+
+        # Partial derivatives Vlosi with respect theta, psi and rho    
         dVlos1dtheta1   =     Vref * (H_t1**alpha) * (alpha * ((rho1[i] * (np.cos(theta1[i]))**2) / (rho1[i] * np.sin(theta1[i])+Hl)) - np.sin(theta1[i])) * np.cos(psi1[i] - wind_direction[ind_wind_dir])
         dVlos1dpsi1     =   - Vref * (H_t1**alpha) * (np.cos(theta1[i]) * np.sin(psi1[i] - wind_direction[ind_wind_dir]))
         dVlos1drho1     =     Vref * (H_t1**alpha) * alpha * (np.sin(theta1[i]) / (rho1[i] * np.sin(theta1[i])+Hl)) * np.cos(theta1[i]) * np.cos(psi1[i] - wind_direction[ind_wind_dir])
@@ -333,10 +324,11 @@ def U_VLOS_GUM (Lidar,theta1,psi1,rho1,u_theta1,u_psi1,u_rho1,Hl,Vref,Href,alpha
         Cont_Theta.append(dVlos1dtheta1)
         Cont_Psi.append(dVlos1dpsi1)
         Cont_Rho.append(dVlos1drho1)
+        
         # Influence coefficients matrix for Vlosi uncertainty estimation
         Cx = np.array([dVlos1dtheta1  , dVlos1dpsi1  ,  dVlos1drho1]).T     
-        # Ouputs covariance matrix
-        
+
+        # Ouputs covariance matrix       
         Uy=Cx.dot(Ux).dot(np.transpose(Cx))
         
         # Uncertainty of Vlosi. Here we account for rho, theta and psi uncertainties and their correlations.
@@ -547,7 +539,7 @@ def MultiVar (Lidar,Vlos_corrcoeff, U_Vlos,autocorr_theta,autocorr_psi,autocorr_
         return  cov_MAT
 
 #%% Calculate correlations between Vlos1, ans Vlos2
-def Vlos_correlations(Lidar,Vlos_corr,Atmospheric_Scenario,wind_direction, ind_wind_dir,alpha,lidars):
+def Vlos_correlations(Lidar,Vlos_corr,Atmospheric_Scenario,wind_direction, ind_wind_dir,alpha,lidars,DataFrame):
     U_Vlos_MCM = np.zeros(len(Lidar.optics.scanner.origin))
     
     # Find the first covariance  matrix
@@ -577,7 +569,7 @@ def Vlos_correlations(Lidar,Vlos_corr,Atmospheric_Scenario,wind_direction, ind_w
         Vlos_cr.append (Atmospheric_Scenario.Vref * (H_cr**alpha) * np.cos(Theta_cr[i]) * (np.cos(Psi_cr[i] - wind_direction[ind_wind_dir]) + (np.tan(beta)*np.tan(Theta_cr[i]))))
         
         ### Uncertainty VLOS calculations ############################  
-        U_Vlos_MCM.append(np.sqrt(np.std(Vlos_cr[i])**2 + Lidar.lidar_inputs.dataframe['Intrinsic Uncertainty [m/s]']**2 + Lidar.optics.scanner.stdv_Estimation[0][0]**2))
+        U_Vlos_MCM.append(np.sqrt(np.std(Vlos_cr[i])**2 + DataFrame['Intrinsic Uncertainty [m/s]']**2 + Lidar.optics.scanner.stdv_Estimation[0][0]**2))
        
     # CORRELATIONS Vlos
     Corr_combi        = list(itertools.combinations(Vlos_cr, 2)) # amount of Vlos combinations
@@ -610,7 +602,7 @@ Second, we use the statics of Vlos, mean and stdv, jointly with the correlation 
 
 '''
 
-def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,alpha,lidars):
+def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,alpha,lidars,DataFrame):
     Vh,U_Vh_MCM                                           = [],[]
     Vlos1_MC_cr2_s,Vlos2_MC_cr2_s,Vlos3_MC_cr2_s          = [],[],[]
     Theta1_cr2_s,Theta2_cr2_s,Theta3_cr2_s,Psi1_cr2_s,Psi2_cr2_s,Psi3_cr2_s,Rho1_cr2_s,Rho2_cr2_s,Rho3_cr2_s=[],[],[],[],[],[],[],[],[]    
@@ -623,7 +615,7 @@ def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,alpha,li
         ######## Vlos multivariate distribution #####################
         # Multivariate distributions and correlation between the Vlos's: 
         
-        Vlos_corr,Vlos_MCM,U_Vlos,Theta_cr,Psi_cr,Rho_cr  =  Vlos_correlations(Lidar,Vlos_corr0,Atmospheric_Scenario,wind_direction, ind_wind_dir,alpha,lidars)
+        Vlos_corr,Vlos_MCM,U_Vlos,Theta_cr,Psi_cr,Rho_cr  =  Vlos_correlations(Lidar,Vlos_corr0,Atmospheric_Scenario,wind_direction, ind_wind_dir,alpha,lidars,DataFrame)
         
         
         #Store data
@@ -708,7 +700,7 @@ def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,alpha,li
 ##############################################
 #%%
 
-def GUM_Vlos_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,alpha,lidars):    
+def GUM_Vlos_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,alpha,lidars,DataFrame):    
 
     u_V_LOS1Theta1,u_V_LOS1Psi1,u_V_LOS1Rho1,u_V_LOS2Theta2,u_V_LOS2Psi2,u_V_LOS2Rho2,u_V_LOS3Theta3,u_V_LOS3Psi3,u_V_LOS3Rho3=[], [],[],[],[],[],[],[],[]
     U_Vlos_GUM = {"V1":[],"V2":[],"V3":[]}
@@ -770,7 +762,7 @@ def GUM_Vlos_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,alpha,l
         
         # Add uncertainty in Vlos estimation from the Doppler spectrum(u_est) ###### Así mama me gusta más ########
         for i in range(len(Lidar.optics.scanner.origin)):            
-            U_Vlos_GUM["V{}".format(i+1)].append(np.sqrt(Uy[i][i]+ Lidar.lidar_inputs.dataframe['Intrinsic Uncertainty [m/s]']**2+Lidar.optics.scanner.stdv_Estimation[0][0]**2))                      
+            U_Vlos_GUM["V{}".format(i+1)].append(np.sqrt(Uy[i][i]+ DataFrame['Intrinsic Uncertainty [m/s]']**2+Lidar.optics.scanner.stdv_Estimation[0][0]**2))                      
         
     return(Correlation_coeff, U_Vlos_GUM, Vlos_GUM, Sens_coeff)
 
@@ -780,7 +772,7 @@ def GUM_Vlos_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,alpha,l
 ##########################################
 ##############################################
 #%%
-def GUM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,Correlation_coeff,wind_direction,lidars ,Vlos_GUM,U_Vlos_GUM):
+def GUM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,Correlation_coeff,wind_direction,lidars ,Vlos_GUM,U_Vlos_GUM,DataFrame):
     """.
     
     Calculates uncertainty in horizontal wind veloctiy as well asa associated sensitivity coefficients and correlations. Location: Qlunc_Help_standAlone.py
@@ -898,7 +890,7 @@ def GUM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,Correlation_coeff,wind_
     
     
 #%% Wind direction uncertainties
-def U_WindDir_MC(Lidar,wind_direction,Mult_param):
+def U_WindDir_MC(Lidar,wind_direction,Mult_param,DataFrame):
     """.
     
     Calculates wind direction. Location: Qlunc_Help_standAlone.py
@@ -938,7 +930,7 @@ def U_WindDir_MC(Lidar,wind_direction,Mult_param):
     return (U_Wind_direction)
     
 #%% U wind direction GUM
-def U_WindDir_GUM(Lidar,Atmospheric_Scenario,Correlation_coeff,wind_direction,lidars,Vlos_GUM,U_Vlos_GUM,u,v,w):
+def U_WindDir_GUM(Lidar,Atmospheric_Scenario,Correlation_coeff,wind_direction,lidars,Vlos_GUM,U_Vlos_GUM,u,v,w,DataFrame):
     """.
     
     Calculates wind direction. Location: Qlunc_Help_standAlone.py
@@ -1051,14 +1043,14 @@ def U_WindDir_GUM(Lidar,Atmospheric_Scenario,Correlation_coeff,wind_direction,li
   
 ########### Intrinsic lidar uncertainty
 
-def U_intrinsic(Lidar,List_Unc_lidar,Qlunc_yaml_inputs):   
+def U_intrinsic(Lidar,DataFrame,Qlunc_yaml_inputs):   
     V_ref            = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref']      # Reference velocity
     lidar_wavelength = Qlunc_yaml_inputs['Components']['Laser']['Wavelength'] # wavelength of the laser source.
     fd               = 2*V_ref/lidar_wavelength  # Doppler frequency corresponding to Vref
     corr_wavelength_fd = 1
     
     # Analytical solution:   
-    u_intrinsic = np.sqrt((fd*List_Unc_lidar['Uncertainty ADC']['Stdv wavelength [m]']/2)**2+(Qlunc_yaml_inputs['Components']['Laser']['Wavelength']*List_Unc_lidar['Uncertainty ADC']['Stdv Doppler f_peak [Hz]']/2)**2+(fd*Qlunc_yaml_inputs['Components']['Laser']['Wavelength']*List_Unc_lidar['Uncertainty ADC']['Stdv Doppler f_peak [Hz]']*List_Unc_lidar['Uncertainty ADC']['Stdv wavelength [m]'])*corr_wavelength_fd/2) 
+    u_intrinsic = np.sqrt((fd*DataFrame['Uncertainty ADC']['Stdv wavelength [m]']/2)**2+(Qlunc_yaml_inputs['Components']['Laser']['Wavelength']*DataFrame['Uncertainty ADC']['Stdv Doppler f_peak [Hz]']/2)**2+(fd*Qlunc_yaml_inputs['Components']['Laser']['Wavelength']*DataFrame['Uncertainty ADC']['Stdv Doppler f_peak [Hz]']*DataFrame['Uncertainty ADC']['Stdv wavelength [m]'])*corr_wavelength_fd/2) 
     return u_intrinsic
 
 

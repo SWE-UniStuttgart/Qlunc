@@ -21,7 +21,7 @@ from Utils.Qlunc_ImportModules import *
 from Utils import Qlunc_Help_standAlone as SA
 from Utils import Qlunc_Plotting as QPlot
 #%% PHOTODETECTOR:
-def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
+def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
     """
     Photodetector uncertainty estimation. Location: ./UQ_Functions/UQ_Photonics_Classes.py
     
@@ -113,15 +113,15 @@ def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     # Lidar.lidar_inputs.dataframe['Shot noise']=10*np.log10(UQ_Photodetector.Shot_noise)
     # Lidar.lidar_inputs.dataframe['Dark current noise']=10*np.log10(UQ_Photodetector.Dark_current_noise)
     # Lidar.lidar_inputs.dataframe['TIA noise']=10*np.log10(UQ_Photodetector.TIA_noise)
-    Lidar.lidar_inputs.dataframe['Uncertainty Photodetector']=Final_Output_UQ_Photo
+    DataFrame['Uncertainty Photodetector']=Final_Output_UQ_Photo
     # Plotting:
     QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Photo,False,Qlunc_yaml_inputs['Flags']['Photodetector noise'],False,False,False,False,False)
-    return Lidar.lidar_inputs.dataframe
+    return DataFrame
 
 
 
 #%% Sum of uncertainties in photonics module: 
-def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs): 
+def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame): 
     List_Unc_photonics = []
 
     ###############
@@ -130,7 +130,7 @@ def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     if Lidar.photonics.photodetector != None:
         try: # each try/except evaluates wether the component is included in the module, therefore in the calculations
             # pdb.set_trace()    
-            DataFrame = Lidar.photonics.photodetector.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+            DataFrame = Lidar.photonics.photodetector.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame)
             
             List_Unc_photonics.append(DataFrame['Uncertainty Photodetector']['Thermal noise'])
             List_Unc_photonics.append(DataFrame['Uncertainty Photodetector']['Shot noise'])
@@ -141,10 +141,15 @@ def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             DataFrame['Uncertainty Photodetector'] = None
             print(colored('Error in photodetector uncertainty calculations!','cyan', attrs=['bold']))
     else:
-        print(colored('You didnt include a photodetector in the lidar, so that photodetector uncertainty contribution is not in lidar uncertainty estimations','cyan', attrs=['bold']))
+        List_Unc_photonics.append(0*len(Atmospheric_Scenario.temperature) )
+        DataFrame['Uncertainty Photodetector'] ={'Total Uncertainty Photodetector':np.array([0]),'SNR_data_photodetector':np.array([0]), 'Thermal noise':np.array([0]),'Shot noise':np.array([0]), 'Dark current noise':np.array([0]), 'TIA noise':np.array([0])}      
+        
+        print(colored('You didnt include a photodetector in the lidar. The photodetector uncertainty contribution is zero in the lidar hardware uncertainty estimations','cyan', attrs=['bold']))
 
-    Uncertainty_Photonics_Module                     = SA.unc_comb(List_Unc_photonics)
-    Final_Output_UQ_Photonics                        = {'Noise Photodetector':Uncertainty_Photonics_Module}
-    Lidar.lidar_inputs.dataframe['Uncertainty Photodetector']['Total noise photodetector [dB]'] = np.array(Final_Output_UQ_Photonics['Noise Photodetector'])
+    # Uncertainty_Photonics_Module                     = SA.unc_comb(List_Unc_photonics)
+    Final_Output_UQ_Photonics                        = {'Noise Photodetector':SA.unc_comb(List_Unc_photonics)}
+    
+    # pdb.set_trace()
+    DataFrame['Uncertainty Photodetector']['Total noise photodetector [dB]'] = np.array(Final_Output_UQ_Photonics['Noise Photodetector'])
     # pdb.set_trace()
     return DataFrame

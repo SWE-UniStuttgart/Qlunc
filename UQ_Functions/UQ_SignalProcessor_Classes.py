@@ -12,7 +12,7 @@ from Utils import Qlunc_Plotting as QPlot
 
 #%% Analog to digital converter
 
-def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
+def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
     """
     Analog to digital converter uncertainty estimation. Location: ./UQ_Functions/UQ_SignalProcessor_Classes.py
     
@@ -34,6 +34,8 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     DataFrame: Dictionary
     
     """
+    
+    # pdb.set_trace()
     fd_peak = []
     vlos_MC = []
     ranvar  = []
@@ -48,11 +50,14 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     fd                   = 2 * V_ref / lidar_wavelength  # Doppler frequency corresponding to Vref
     n_pulses             = 1        #   % n pulses for averaging the spectra
     N_MC                 = 10000 # n° MC samples to calculate the uncertainty due to bias in sampling frequency and wavelength
-    
+    # pdb.set_trace()
     #%% Uncertainty due to hardware noise, signal processing and speckle interference:
     
     # Hardware noise (thermal noise + shot noise + dark current noise + TIA noise):
-    level_noise_hardware = 10**(Lidar.lidar_inputs.dataframe['Uncertainty Photodetector']['Total noise photodetector [dB]']/10) # Hardware noise added before signal downmixing
+    if DataFrame['Uncertainty Photodetector']['Total noise photodetector [dB]']==0:
+        level_noise_hardware = np.array([0])
+    else: 
+        level_noise_hardware = 10**(DataFrame['Uncertainty Photodetector']['Total noise photodetector [dB]']/10) # Hardware noise added before signal downmixing
     hardware_noise       = np.random.normal(0 , level_noise_hardware , n_fftpoints)
 
     
@@ -123,13 +128,13 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     Stdv_fpeak = np.std(fd_peak)
     Stdv_vlos  = np.std(vlos_MC)
     mean_vlos  = np.mean(vlos_MC)
-
+    # pdb.set_trace()
     # Store data
-    Lidar.lidar_inputs.dataframe['Uncertainty ADC'] = {'Stdv Doppler f_peak [Hz]':np.array(Stdv_fpeak)*np.linspace(1,1,len(Atmospheric_Scenario.temperature)),'Stdv wavelength [m]':stdv_wavelength,'Stdv Vlos [m/s]':Stdv_vlos}
-    return Lidar.lidar_inputs.dataframe
+    DataFrame['Uncertainty ADC'] = {'Stdv Doppler f_peak [Hz]':np.array(Stdv_fpeak)*np.linspace(1,1,len(Atmospheric_Scenario.temperature)),'Stdv wavelength [m]':stdv_wavelength,'Stdv Vlos [m/s]':Stdv_vlos}
+    return DataFrame
 
 #%% Sum of uncertainties in `signal processor` module: 
-def sum_unc_signal_processor(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
+def sum_unc_signal_processor(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
     """
     This function runs from the UQ_Lidar_Classes and calcualtes the uncertainty in the signal processor module.
     So far, the signal processor module only includes the ADC
@@ -154,12 +159,16 @@ def sum_unc_signal_processor(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     """
     if Lidar.signal_processor.analog2digital_converter != None:
         try:               
-            DataFrame = Lidar.signal_processor.analog2digital_converter.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+            # pdb.set_trace()
+            DataFrame = Lidar.signal_processor.analog2digital_converter.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame)
         except:
             ADC_Uncertainty=None
             print(colored('Error in ADC uncertainty calculations!','cyan', attrs=['bold']))
     else:
-        print (colored('You didn´t include an analog to digital converter in the lidar.','cyan', attrs=['bold']))       
+        # pdb.set_trace()
+        ADC_Uncertainty=None
+        DataFrame['Uncertainty ADC'] = {'Stdv Doppler f_peak [Hz]':np.array(0)*np.linspace(1,1,len(Atmospheric_Scenario.temperature)),'Stdv wavelength [m]':0,'Stdv Vlos [m/s]':0}
+        print (colored('You didn´t include an ADC in the lidar. The ADC uncertainty contribution is zero in the lidar hardware uncertainty estimations','cyan', attrs=['bold']))       
     
     # Store data
     return DataFrame
