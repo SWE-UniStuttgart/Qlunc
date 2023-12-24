@@ -81,7 +81,7 @@ except:
                 Qlunc_yaml_inputs.setdefault(k,v)  # save a dictionary with the data coming from yaml file 
 
     # pdb.set_trace()
-    import  UQ_Functions.UQ_Photonics_Classes as uphc,UQ_Functions.UQ_Optics_Classes as uopc,UQ_Functions.UQ_Lidar_Classes as ulc, UQ_Functions.UQ_ProbeVolume_Classes as upbc, UQ_Functions.UQ_SignalProcessor_Classes as uspc
+    import  UQ_Functions.UQ_Photonics_Classes as uphc,UQ_Functions.UQ_Optics_Classes as uopc,UQ_Functions.UQ_Lidar_Classes as ulc, UQ_Functions.UQ_SignalProcessor_Classes as uspc
     from Utils.Qlunc_ImportModules import *
 
 
@@ -91,12 +91,12 @@ except:
 
 #%%%%%%%%%%%%%%%%% INPUTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #%%# Lidar general inputs: ######################################################
-Lidar_inputs     = lidar_gral_inp(name        = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Name'],          # Introduce the name of your lidar data folder.
-                                  ltype       = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Type'],
-                                  # yaw_error   = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Yaw error'],     # In [°]. Degrees of rotation around z axis because of inclinometer errors
-                                  # pitch_error = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Pitch error'],   # In [°]. Degrees of rotation around y axis
-                                  # roll_error  = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Roll error'],    # In [°]. Degrees of rotation around z axis.
-                                  dataframe   = { })  # Final dataframe
+# Lidar_inputs     = lidar_gral_inp(name        = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Name'],          # Introduce the name of your lidar data folder.
+#                                   ltype       = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Type'],
+#                                   # yaw_error   = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Yaw error'],     # In [°]. Degrees of rotation around z axis because of inclinometer errors
+#                                   # pitch_error = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Pitch error'],   # In [°]. Degrees of rotation around y axis
+#                                   # roll_error  = Qlunc_yaml_inputs['Components']['Lidar general inputs']['Roll error'],    # In [°]. Degrees of rotation around z axis.
+#                                   dataframe   = { })  # Final dataframe
 
 
 
@@ -141,7 +141,7 @@ Scanner           = scanner(name            = Qlunc_yaml_inputs['Components']['S
                             pattern         = Qlunc_yaml_inputs['Components']['Scanner']['Pattern'],
                             lissajous_param = Qlunc_yaml_inputs['Components']['Scanner']['Lissajous parameters'],
                             vert_plane      = Qlunc_yaml_inputs['Components']['Scanner']['Vertical plane parameters'],
-                            hor_plane      = Qlunc_yaml_inputs['Components']['Scanner']['Horizontal plane parameters'],
+                            hor_plane       = Qlunc_yaml_inputs['Components']['Scanner']['Horizontal plane parameters'],
                             Href            = Qlunc_yaml_inputs['Components']['Scanner']['Href'],                    
                             azimuth         = Qlunc_yaml_inputs['Components']['Scanner']['Psi'],   # Azimuth in [degrees]
                             focus_dist      = Qlunc_yaml_inputs['Components']['Scanner']['Rho'],   # Focus distance in [meters]                                                                                              
@@ -184,7 +184,7 @@ ADC = analog2digital_converter (name          = Qlunc_yaml_inputs['Components'][
 Signal_processor_Module = signal_processor(name                     = Qlunc_yaml_inputs['Modules']['Signal processor Module']['Name'],
                                            analog2digital_converter = eval(Qlunc_yaml_inputs['Modules']['Signal processor Module']['ADC']),
                                            # f_analyser             = Qlunc_yaml_inputs['Modules']['Signal processor Module']['Frequency analyser'],
-                                            unc_func                 = uspc.sum_unc_signal_processor)
+                                            unc_func                = uspc.sum_unc_signal_processor)
 
 
 
@@ -195,7 +195,7 @@ Lidar = lidar(name             = Qlunc_yaml_inputs['Lidar']['Name'],            
               photonics        = eval(Qlunc_yaml_inputs['Lidar']['Photonics module']),#Photonics_Module, #     # Introduce the name of your photonics module.
               optics           = eval(Qlunc_yaml_inputs['Lidar']['Optics module']), # Optics_Module, #      # Introduce the name of your optics module.
               signal_processor = eval(Qlunc_yaml_inputs['Lidar']['Signal processor']),#None, #Signal_processor_Module,
-              lidar_inputs     = eval(Qlunc_yaml_inputs['Lidar']['Lidar inputs']), #  Lidar_inputs, #      # Introduce lidar general inputs
+              # lidar_inputs     = eval(Qlunc_yaml_inputs['Lidar']['Lidar inputs']), #  Lidar_inputs, #      # Introduce lidar general inputs
               unc_func         = ulc.sum_unc_lidar ) 
 
 
