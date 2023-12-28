@@ -1053,7 +1053,7 @@ def U_intrinsic(Lidar,DataFrame,Qlunc_yaml_inputs):
     lidar_wavelength = Qlunc_yaml_inputs['Components']['Laser']['Wavelength'] # wavelength of the laser source.
     fd               = 2*V_ref/lidar_wavelength  # Doppler frequency corresponding to Vref
     corr_wavelength_fd = 1
-    
+    # pdb.set_trace()
     # Analytical solution:   
     u_intrinsic = np.sqrt((fd*DataFrame['Uncertainty ADC']['Stdv wavelength [m]']/2)**2+(Qlunc_yaml_inputs['Components']['Laser']['Wavelength']*DataFrame['Uncertainty ADC']['Stdv Doppler f_peak [Hz]']/2)**2+(fd*Qlunc_yaml_inputs['Components']['Laser']['Wavelength']*DataFrame['Uncertainty ADC']['Stdv Doppler f_peak [Hz]']*DataFrame['Uncertainty ADC']['Stdv wavelength [m]'])*corr_wavelength_fd/2) 
     return u_intrinsic
