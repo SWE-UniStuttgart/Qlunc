@@ -97,11 +97,10 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
             pickle.dump(DataFrame,f)        
             # close file
             f.close()
-            print(colored("The file containing data {} ".format(filename)+"has been saved at 'Qlunc_Output' folder.",'cyan',attrs=['bold']) )   
+            print(colored("The file containing data {} ".format(filename)+"has been saved to 'Qlunc_Output' folder.",'cyan',attrs=['bold']) )   
     else:
         print(colored("No data saved.",'cyan',attrs=['bold']) )   
 
-    
     ########################################    
     # How to read the data
     # Qlunc_data = pickle.load(open(path,"rb"))

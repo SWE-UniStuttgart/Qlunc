@@ -96,10 +96,9 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
         Notebook: C2/C2S2_DigitalSignalQuantization.ipynb
     
         Args:
-            S (np.ndarray): Original signal
-            quant_min (float): Minimum quantization level (Default value = -1.0)
-            quant_max (float): Maximum quantization level (Default value = 1.0)
-            quant_level (int): Number of quantization levels (Default value = 5)
+            S         : Original signal
+            quant_min : Minimum quantization level 
+            quant_max : Maximum quantization level 
     
         Returns:
             x_quant (np.ndarray): Quantized signal
