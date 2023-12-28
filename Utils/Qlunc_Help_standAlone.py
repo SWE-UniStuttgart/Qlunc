@@ -1008,6 +1008,11 @@ def U_WindDir_GUM(Lidar,Atmospheric_Scenario,Correlation_coeff,wind_direction,li
             # Covariance matrix outputs
             UyWinDir=np.array(Cx).dot(Ux).dot(np.transpose(Cx))
         
+            # Data storage:
+            dWinDir_Vlos1T.append((dWinDir_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir])**2)
+            dWinDir_Vlos2T.append((dWinDir_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir])**2)
+            dWinDir_Vlos12T.append((dWinDir_Vlos3*U_Vlos_GUM['V3'][ind_wind_dir])**2)
+
         else:
             A =  Vlos_GUM['V1'][ind_wind_dir]*np.cos(lidars['Lidar1_Spherical']['theta'])*np.cos(lidars['Lidar1_Spherical']['psi'])-Vlos_GUM['V2'][ind_wind_dir]*np.cos(lidars['Lidar0_Spherical']['theta'])*np.cos(lidars['Lidar0_Spherical']['psi'])        
             B = -Vlos_GUM['V1'][ind_wind_dir]*np.cos(lidars['Lidar1_Spherical']['theta'])*np.sin(lidars['Lidar1_Spherical']['psi'])+Vlos_GUM['V2'][ind_wind_dir]*np.cos(lidars['Lidar0_Spherical']['theta'])*np.sin(lidars['Lidar0_Spherical']['psi'])
@@ -1030,10 +1035,10 @@ def U_WindDir_GUM(Lidar,Atmospheric_Scenario,Correlation_coeff,wind_direction,li
             # Covariance matrix outputs
             UyWinDir=np.array(Cx).dot(Ux).dot(np.transpose(Cx))
 
-        # Data storage:
-        dWinDir_Vlos1T.append((dWinDir_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir])**2)
-        dWinDir_Vlos2T.append((dWinDir_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir])**2)
-        dWinDir_Vlos12T.append((dWinDir_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir]*dWinDir_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir])*Correlation_coeff_list)
+            # Data storage:
+            dWinDir_Vlos1T.append((dWinDir_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir])**2)
+            dWinDir_Vlos2T.append((dWinDir_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir])**2)
+            dWinDir_Vlos12T.append((dWinDir_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir]*dWinDir_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir])*Correlation_coeff_list)
 
         # Uncertainty in wind direction:
         U_wind_dir.append(np.degrees(np.sqrt(UyWinDir))[0])
