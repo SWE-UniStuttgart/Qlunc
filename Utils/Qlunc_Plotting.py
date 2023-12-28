@@ -76,16 +76,22 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             fig0.tight_layout()
             if len(Lidar.optics.scanner.origin)==3:
                 legt = [r'$\frac{\partial{\Omega}}{\partial{V_{LOS_1}}}$',r'$\frac{\partial{\Omega}}{\partial{V_{LOS_2}}}$',r'$\frac{\partial{\Omega}}{\partial{V_{LOS_{3}}}}$']
+                ax0[1].plot(np.degrees(Data['wind direction']),Data['Sens coeff Vlos']['W1'][-1],'-', color='black',alpha=0.7,label=legt[0])
+                ax0[1].plot(np.degrees(Data['wind direction']),Data['Sens coeff Vlos']['W2'][-1],'-', color='dimgray',alpha=0.7,label=legt[1])     
+                ax0[1].plot(np.degrees(Data['wind direction']),Data['Sens coeff Vlos']['W1W2'][-1],'-', color='lightgray',alpha=0.7,label=legt[2])
             else:
-                legt = [r'$\frac{\partial{\Omega}}{\partial{V_{LOS_1}}}$',r'$\frac{\partial{\Omega}}{\partial{V_{LOS_2}}}$',r'$\frac{\partial^2{\Omega}}{\partial{V_{LOS_{1}}V_{LOS_{2}}}}$']
+                legt = [r'$\frac{\partial{\Omega}}{\partial{V_{LOS_1}}}$',r'$\frac{\partial{\Omega}}{\partial{V_{LOS_2}}}$',r'$\frac{\partial{\Omega}}{\partial{V_{LOS_{12}}}}$']
+                ax0[1].plot(np.degrees(Data['wind direction']),Data['Sens coeff Vlos']['W1'][-1],'-', color='black',alpha=0.7,label=legt[0])
+                ax0[1].plot(np.degrees(Data['wind direction']),Data['Sens coeff Vlos']['W2'][-1],'-', color='dimgray',alpha=0.7,label=legt[1])     
+                ax0[1].plot(np.degrees(Data['wind direction']),Data['Sens coeff Vlos']['W1W2'][-1],'-', color='cadetblue',alpha=0.7,label=legt[2])
+            
             for ind_plot in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction MCM'])):
                 
                 cc=next(color1)
                 ax0[0].plot(np.degrees(Data['wind direction']),Data['WinDir Unc [°]']['Uncertainty wind direction GUM'][ind_plot],'-', color=cc,label=r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))
                 ax0[0].plot(np.degrees(Data['wind direction']),Data['WinDir Unc [°]']['Uncertainty wind direction MCM'][ind_plot],'o', markerfacecolor=cc,markeredgecolor='lime',alpha=0.4,label='MCM')        
-            ax0[1].plot(np.degrees(Data['wind direction']),Data['Sens coeff Vlos']['W1'][-1],'-', color='black',alpha=0.7,label=legt[0])
-            ax0[1].plot(np.degrees(Data['wind direction']),Data['Sens coeff Vlos']['W2'][-1],'-', color='dimgray',alpha=0.7,label=legt[1])        
-            ax0[1].plot(np.degrees(Data['wind direction']),Data['Sens coeff Vlos']['W1W2'][-1],'-', color='cadetblue',alpha=0.7,label=legt[2])        
+              
+            # ax0[1].plot(np.degrees(Data['wind direction']),Data['Sens coeff Vlos']['W1W2'][-1],'-', color='cadetblue',alpha=0.7,label=legt[2])        
             
             
 
@@ -107,7 +113,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             ax0[1].tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
             ax0[1].set_xlim(0,359)
             ax0[1].grid(axis='both')
-
+            # pdb.set_trace()
             
             props0 = dict(boxstyle='round', facecolor='wheat', alpha=0.4)        
             textstr0 = '\n'.join((
@@ -117,7 +123,11 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             r'$r_{\theta_{1},\varphi_{1}}~ =%.2f$' % (Lidar.optics.scanner.correlations[3]),
             r'$r_{\theta_{2},\varphi_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[6])))           
             ax0[0].text(0.91, 0.42, textstr0, transform=ax0[0].transAxes, fontsize=16,horizontalalignment='left',verticalalignment='top', bbox=props0)     
-                # Legends
+            
+            # Titles
+            ax0[0].set_title(r'$Lidar_1(\theta,\varphi,\rho)=$ ['+ str(np.round(np.degrees(Data['lidars']['Lidar0_Spherical']['theta'][0]),2)) +','+str(np.round(np.degrees(Data['lidars']['Lidar0_Spherical']['psi'][0]),2))+','+str(np.round(Data['lidars']['Lidar0_Spherical']['rho'][0] ,2))  + ']' + 
+                              r' ; $~Lidar_2(\theta,\varphi,\rho)=$ ['+ str(np.round(np.degrees(Data['lidars']['Lidar1_Spherical']['theta'][0]),2)) +','+str(np.round(np.degrees(Data['lidars']['Lidar1_Spherical']['psi'][0]),2))+','+str(np.round(Data['lidars']['Lidar1_Spherical']['rho'][0],2) )  + ']',fontsize=20)
+            # Legends
             # ax0[0].legend(loc=1, prop={'size': plot_param['legend_fontsize']})
             # ax0[1].legend(loc=1, prop={'size': plot_param['legend_fontsize']+4.7})
             plt.show()                       
@@ -224,7 +234,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                     ax2D = fig1.add_subplot(gs[1])
                     ax11.set_ylabel('$U_{V_{h}}$ [m/s]',fontsize = plot_param['axes_label_fontsize']+2)
                     c5 = ['black','dimgray','cadetblue']
-                    legt = [r'$\frac{\partial{V_{h}}}{\partial{V_{LOS_1}}}$',r'$\frac{\partial{V_{h}}}{\partial{V_{LOS_2}}}$',r'$\frac{\partial^2{V_{h}}}{\partial{V_{LOS_{i,j}}}}$']
+                    legt = [r'$\frac{\partial{V_{h}}}{\partial{V_{LOS_1}}}$',r'$\frac{\partial{V_{h}}}{\partial{V_{LOS_2}}}$',r'$\frac{\partial{V_{h}}}{\partial{V_{LOS_{1,2}}}}$']
                     for ind_plot in range(len(Data['Vh Unc [m/s]']['Uncertainty Vh MCM'])):
                         c3 = next(color3)
                         ax2D.grid(axis = 'both')
@@ -261,7 +271,10 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 ax13.tick_params(axis = 'y', labelsize = plot_param['tick_labelfontsize'])
                 ax13.set_xlim(0,359)                
                 ax13.grid(axis = 'both')
-                gs.update(left = 0.085,right = 0.99,top = 0.965,bottom = 0.1,wspace = 0.3,hspace = 0.24)           
+                gs.update(left = 0.085,right = 0.99,top = 0.965,bottom = 0.1,wspace = 0.3,hspace = 0.24)
+                ax11.set_title(r'$Lidar_1(\theta,\varphi,\rho)=$ ['+ str(np.round(np.degrees(Data['lidars']['Lidar0_Spherical']['theta'][0]),2)) +','+str(np.round(np.degrees(Data['lidars']['Lidar0_Spherical']['psi'][0]),2))+','+str(np.round(Data['lidars']['Lidar0_Spherical']['rho'][0] ,2))  + ']' + 
+                                  r' ; $~Lidar_2(\theta,\varphi,\rho)=$ ['+ str(np.round(np.degrees(Data['lidars']['Lidar1_Spherical']['theta'][0]),2)) +','+str(np.round(np.degrees(Data['lidars']['Lidar1_Spherical']['psi'][0]),2))+','+str(np.round(Data['lidars']['Lidar1_Spherical']['rho'][0],2) )  + ']',fontsize=20)
+                
                 plt.show()
             # Plot the vertical/horizontal plane
             # pdb.set_trace()
@@ -428,7 +441,6 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             ax2.grid(axis = 'both')
             plt.show()
             
-            # pdb.set_trace()
             
             
             # 3. Plot Uncertainty in Vlos with psi
@@ -458,7 +470,6 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             ax3.set_ylabel('$V_{LOS}$ Uncertainty [m/s]',fontsize = plot_param['axes_label_fontsize'])
             ax3.grid(axis = 'both')
             plt.show()
-            # pdb.set_trace()
 
 
 
@@ -495,7 +506,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         
        
         
-        if Qlunc_yaml_inputs['Flags']['Line of sight velocity uncertainty']:           
+        # if Qlunc_yaml_inputs['Flags']['Line of sight velocity uncertainty']:           
             # 5.  Plot Uncertainty in VLOS1 with wind direction 
             fig5,ax5 = plt.subplots(2,1)            
             fig5.tight_layout()
@@ -622,89 +633,6 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         # axs1.set_title('SNR - Photodetector',fontsize=plot_param['title_fontsize'])
         axs1.grid(axis = 'both')
         axs1.text(.90,.05,plot_param['Qlunc_version'],transform = axs1.transAxes, fontsize = 14,verticalalignment = 'top',bbox = dict(boxstyle = 'round', facecolor = 'white', alpha = 0.5))
-    
-    
-    ###############   Plot Probe Volume parameters    ############################
-    if flag_probe_volume_param: 
-        # typeLidar ="CW"
-        wave      = Qlunc_yaml_inputs['Components']['Laser']['Wavelength']  # wavelength
-        f_length  = Qlunc_yaml_inputs['Components']['Telescope']['Focal length'] # focal length
-        a         = np.arange(2e-3,4e-3,.002e-3) # distance fiber-end--telescope lens
-        a0        = Qlunc_yaml_inputs['Components']['Telescope']['Fiber-lens offset'] # the offset (a constant number), to avoid the fiber-end locates at the focal point, otherwise the lights will be parallel to each other
-        A         = Qlunc_yaml_inputs['Components']['Telescope']['Output beam radius'] # beam radius at the output lens
-        ext_coef  = 1
-        # effective_radius_telescope  = 16.6e-3
-        s = 0 # distance from telescope to the target
-        # The focus distance varies with the distance between the fiber-end and the telescope lens. So that, also the probe length varies with such distance.
-        #Calculating focus distance depending on the distance between the fiber-end and the telescope lens:
-        focus_distance = 1/((1/f_length)-(1/(a+a0))) # Focus distance
-        dist =(np.linspace(0,80,len(a)))  # distance from the focus position along the beam direction
-        # Rayleigh length variation due to focus_distance variations (due to the distance between fiber-end and telescope lens)
-        zr = (wave*(focus_distance**2))/(np.pi*(Qlunc_yaml_inputs['Components']['Telescope']['Effective radius telescope'])**2)# Rayleigh length  (considered as the probe length) # half-width of the weighting function --> FWHM = 2*zr
-    
-        # Probe volume:
-        #Probe_volume = np.pi*(A**2)*((4*(focus_distance**2)*wave)/(Telescope_aperture)) # based on Marijn notes
-        vol_zr       = np.pi*(A**2)*(2*zr) # based on the definition of Rayleigh length in Liqin Jin notes (Focus calibration formula)
-        
-        # Lorentzian weighting function:
-        
-        phi = (ext_coef/np.pi)*(zr/((zr**2)+(s-focus_distance)**2))
-        # phi = (ext_coef/np.pi)*(zr/((zr**2)))
-        # Plotting
-        fig=plt.figure()
-        axs2=fig.add_subplot(2,2,1)
-        axs2.plot(dist,phi)
-        axs2.set_yscale('log')
-        axs2.title.set_text('Weighting function')
-        axs2.set_xlabel('focus distance [m]',fontsize=plot_param['axes_label_fontsize'])
-        axs2.set_ylabel('$\phi$ [-]',fontsize=plot_param['axes_label_fontsize'])
-    
-        axs3=fig.add_subplot(2,2,2)
-        axs3.plot(focus_distance,zr)
-        # axs3.set_xlabel('focus distance [m]',fontsize=plot_param['axes_label_fontsize'])
-        axs3.set_ylabel('{} [m]'.format('$\mathregular{z_{R}}$'),fontsize=plot_param['axes_label_fontsize'])
-        
-        axs4=fig.add_subplot(2,2,3)
-        axs4.plot(a,zr)
-        axs4.set_xlabel('(a+a0) [m]',fontsize=plot_param['axes_label_fontsize'])
-        axs4.set_ylabel('{} [m]'.format('$\mathregular{z_{R}}$'),fontsize=plot_param['axes_label_fontsize'])
-        
-        
-        axs5=fig.add_subplot(2,2,4)
-        axs5.plot(focus_distance,a)
-        axs5.set_xlabel('focus distance [m]',fontsize=plot_param['axes_label_fontsize'])
-        axs5.set_ylabel('(a+a0) [m]',fontsize=plot_param['axes_label_fontsize'])
-    
-        # Titles and axes
-        
-        axs3.title.set_text('Rayleigh Vs focus distance')
-        axs4.title.set_text('Rayleigh Vs Fiber-end/lens')
-        axs5.title.set_text('Fiber-end/lens distance Vs focus distance')
-    
-    
-
-
-###############   Plot optical amplifier noise   #############################    
-    if flag_plot_optical_amplifier_noise:
-        # Quantifying uncertainty from photodetector and interval domain for the plot Psax is define in the photodetector class properties)
-        # Psax=10*np.log10(np.linspace(0,20e-3,1000))
-        # Psax=(Lidar.photonics.photodetector.Power_interval)*Lidar.photonics.photodetector.Active_Surf
-        
-        # Plotting:
-        fig=plt.figure()
-        axs=fig.subplots()
-        label0=['Optical amplifier OSNR']
-        axs.plot(Lidar.photonics.optical_amplifier.Power_interval,Data['OSNR'],label=label0[0])  
-        # axs1.plot(Lidar.photonics.optical_amplifier.Power_interval,Data['OSNR'],label=label0[0],marker='o')  
-
-        axs.set_xlabel('Input Signal optical power [W]',fontsize=plot_param['axes_label_fontsize'])
-        axs.set_ylabel('OSNR [dB]',fontsize=plot_param['axes_label_fontsize'])
-        axs.legend(fontsize=plot_param['legend_fontsize'])
-        axs.set_title('OSNR - Optical Amplifier',fontsize=plot_param['title_fontsize'])
-        axs.grid(axis='both')
-        axs.text(.90,.05,plot_param['Qlunc_version'],transform=axs.transAxes, fontsize=14,verticalalignment='top',bbox=dict(boxstyle='round', facecolor='white', alpha=0.5))
-
-
 
 
 ################### PLOT COORDINATE SYSTEM DUAL LIDAR ##############################################
@@ -796,163 +724,3 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
 # ax.yaxis.set_tick_params(labelsize=15)
 # ax.zaxis.set_tick_params(labelsize=15)
 
-
-
-
-#%% Plotting correlations
-    # flag_plot_correlations =1
-    # if flag_plot_correlations ==1:
-        
-    #     fig0,az0=plt.subplots(3,sharex=True)
-    #     fig0.add_subplot(111, frameon=False)
-    #     plt.tick_params(labelcolor='none', top=False, bottom=False, left=False, right=False)
-        
-    #     plt.xlabel("Samples",fontsize=25)
-    #     plt.ylabel("Correlation",fontsize=25)
-    #     az0[0].plot(Data['Correlations'][3])
-    #     az0[1].plot(Data['Correlations'][7])
-    #     az0[2].plot(Data['Correlation uv'])
-    #     # fig0.suptitle('Correlations Vlos, uv',fontsize=25)
-    #     az0[0].set_ylim(-1,1)
-    #     az0[1].set_ylim(-1,1)
-    #     az0[2].set_ylim(-1,1)
-    #     az0[0].title.set_text('$V_{LOS_{1}} - V_{LOS_{2}}$ - 1st Multivariate')
-    #     az0[1].title.set_text('$V_{LOS_{1}} - V_{LOS_{2}}$ - 2nd Multivariate')
-    #     az0[2].title.set_text('$u - v$')
-    #     az0[0].grid(axis='both')
-    #     az0[1].grid(axis='both')
-    #     az0[2].grid(axis='both')
-    #     plt.xlabel("Wind direction [°]",fontsize=25)
-    #     plt.ylabel("Correlation",fontsize=25)
-    #     # pdb.set_trace()
-        
-        
-    #     ###1st Multi
-    #     fig1,az1=plt.subplots(2,3)  
-    #     fig1.add_subplot(111, frameon=False)
-    #     # hide tick and tick label of the big axes
-    #     plt.tick_params(labelcolor='none', top=False, bottom=False, left=False, right=False)
-    #     plt.grid(False)
-    #     plt.xlabel("Samples",fontsize=25)
-    #     plt.ylabel("Correlation",fontsize=25)
-    #     az1[0][0].plot(Data['Correlations'][2])
-    #     az1[0][1].plot(Data['Correlations'][0])
-    #     az1[0][2].plot(Data['Correlations'][5])    
-    #     az1[1][0].plot(Data['Correlations'][4])
-    #     az1[1][1].plot(Data['Correlations'][1])
-    #     az1[1][2].plot(Data['Correlations'][15])    
-    #     az1[0][0].title.set_text('theta1theta2')
-    #     az1[0][1].title.set_text('theta1psi1')
-    #     az1[0][2].title.set_text('theta1psi2')
-    #     az1[1][0].title.set_text('psi1psi2')
-    #     az1[1][1].title.set_text('theta2psi2')
-    #     az1[1][2].title.set_text('theta2psi1')    
-    #     fig1.suptitle('$1^{st}$ Multivariate',fontsize=25)
-    #     az1[0][0].grid(axis='both')
-    #     az1[0][1].grid(axis='both')
-    #     az1[0][2].grid(axis='both')
-    #     az1[1][0].grid(axis='both')
-    #     az1[1][1].grid(axis='both')
-    #     az1[1][2].grid(axis='both')
-    #     # pdb.set_trace()
-        
-    #     ###2nd Multi
-    #     fig2,az2=plt.subplots(2,3)  
-    #     fig2.add_subplot(111, frameon=False)
-    #     plt.tick_params(labelcolor='none', top=False, bottom=False, left=False, right=False)
-    #     plt.grid(False)
-    #     plt.xlabel("Samples",fontsize=25)
-    #     plt.ylabel("Correlation",fontsize=25)
-    #     az2[0][0].plot(Data['Correlations'][8])
-    #     az2[0][1].plot(Data['Correlations'][11])
-    #     az2[0][2].plot(Data['Correlations'][12])
-        
-    #     az2[1][0].plot(Data['Correlations'][9])
-    #     az2[1][1].plot(Data['Correlations'][13])
-    #     az2[1][2].plot(Data['Correlations'][14])
-        
-    #     az2[0][0].title.set_text('theta1theta2')
-    #     az2[0][1].title.set_text('theta1psi1')
-    #     az2[0][2].title.set_text('theta1psi2')
-    #     az2[1][0].title.set_text('psi1psi2')
-    #     az2[1][1].title.set_text('theta2psi2')
-    #     az2[1][2].title.set_text('theta2psi1')    
-    #     fig2.suptitle('$2^{nd}$ Multivariate',fontsize=25)    
-    #     az2[0][0].grid(axis='both')
-    #     az2[0][1].grid(axis='both')
-    #     az2[0][2].grid(axis='both')
-    #     az2[1][0].grid(axis='both')
-    #     az2[1][1].grid(axis='both')
-    #     az2[1][2].grid(axis='both')
-    #     # pdb.set_trace()
-        
-    #     fig2,az2=plt.subplots(2)   
-    #     az2[0].plot(CorrCoef_U_VLOS)
-    #     az2[1].plot(CorrCoef_U_uv)
-    #     az2[0].set_ylabel(r'$r_{U_{V1V2}}$',fontsize=21)
-    #     az2[1].set_ylabel(r'$r_{U_{uv}}$',fontsize=21)
-        
-    #     fig3,az3=plt.subplots(1,3)
-    #     fig3.add_subplot(111, frameon=False)
-    #     plt.tick_params(labelcolor='none', top=False, bottom=False, left=False, right=False)
-    #     plt.grid(False)
-    #     plt.xlabel("Samples",fontsize=25)
-    #     plt.ylabel("Correlation",fontsize=25)
-    #     az3[0].plot(Vlos1_MC_cr2,Vlos2_MC_cr2,'bo',alpha=0.4)
-    #     az3[1].plot(Theta1_cr2,Theta2_cr2,'bo',alpha=0.4)
-    #     az3[2].plot(Psi1_cr2,Psi2_cr2,'bo',alpha=0.4)
-    #     az3[0].set_aspect(1) 
-    #     az3[1].set_aspect(1) 
-    #     az3[2].set_aspect(1)    
-    #     az3[0].title.set_text('Vlos_MC_cr2')
-    #     az3[1].title.set_text('Theta_cr2')
-    #     az3[2].title.set_text('Psi_cr2')
-        
-    #     # pdb.set_trace()
-        
-
-    #     Correlations in uncertainties
-    #     fig4,az4=plt.subplots(1,2)
-    #     fig4.add_subplot(111, frameon=False)
-    #     plt.tick_params(labelcolor='none', top=False, bottom=False, left=False, right=False)
-    #     plt.grid(False)
-    #     plt.xlabel("Samples",fontsize=25)
-    #     plt.ylabel("Correlation",fontsize=25)
-
-        
-    #     # az4[0][0].plot(Theta1_cr2,Theta2_cr2,'bo',alpha=0.4)
-    #     # az4[1][0].plot(Psi1_cr2,Psi2_cr2,'bo',alpha=0.4)
-        
-
-        
-    #     az4[0].plot(Data['VLOS1 Uncertainty MC [m/s]'],Data['VLOS2 Uncertainty MC [m/s]'],'bo',alpha=0.4)  
-    #     # Indexes for reference
-    #     az4[0].plot(Data['VLOS1 Uncertainty MC [m/s]'][0],Data['VLOS2 Uncertainty MC [m/s]'][0],'ro')
-    #     az4[0].plot(Data['VLOS1 Uncertainty MC [m/s]'][179],Data['VLOS2 Uncertainty MC [m/s]'][179],'go')
-    #     az4[0].plot(Data['VLOS1 Uncertainty MC [m/s]'][89],Data['VLOS2 Uncertainty MC [m/s]'][89],'ko')
-    #     az4[0].plot(Data['VLOS1 Uncertainty MC [m/s]'][270],Data['VLOS2 Uncertainty MC [m/s]'][270],'yo')
-        
-    #     az4[1].plot(Data['Uncertainty u wind component MCM'],Data['Uncertainty v wind component MCM'],'bo',alpha=0.4)  
-    #     az4[1].plot(Data['Uncertainty u wind component MCM'][0],Data['Uncertainty v wind component MCM'][0],'ro')
-    #     az4[1].plot(Data['Uncertainty u wind component MCM'][179],Data['Uncertainty v wind component MCM'][179],'go')
-    #     az4[1].plot(Data['Uncertainty u wind component MCM'][89],Data['Uncertainty v wind component MCM'][89],'ko')
-    #     az4[1].plot(Data['Uncertainty u wind component MCM'][270],Data['Uncertainty v wind component MCM'][270],'yo')
-        
-    #     az4[0].set_aspect(1) 
-    #     # az4[1][0].set_aspect(1) 
-    #     az4[1].set_aspect(1) 
-    #     # az4[1][1].set_aspect(1) 
-        
-    #     az4[0].set_xlabel('$U_{V_{LOS1}}$',fontsize=21)
-    #     az4[1].set_xlabel('$U_u$',fontsize=21)
-    #     az4[0].set_ylabel('$U_{V_{LOS2}}$',fontsize=21)
-    #     az4[1].set_ylabel('$U_v$',fontsize=21)
-    #     az4[0].grid(axis='both')
-    #     az4[1].grid(axis='both')
-
-    #     az4[0][0].set_xlabel(r'$\theta_{1}$',fontsize=21)
-    #     az4[1][0].set_xlabel(r'$\varphi{1}$',fontsize=21)
-    #     az4[0][0].set_ylabel(r'$\theta_{2}}$',fontsize=21)
-    #     az4[1][0].set_ylabel(r'$\varphi{2}$',fontsize=21)
-    
-           
