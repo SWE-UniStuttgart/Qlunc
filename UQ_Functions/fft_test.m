@@ -47,11 +47,20 @@ Dp               = L*2.9e8*.5/fs_av;
 %% Uncertainty in the signal processing.
 
 %%% Uncertainty in the sampling frequency %%%
-per         = 1e-6;
+per         = 2e-6;
 % bias_fs_av  = (per/100)*fs_av; % +/-
 std_fs_av   = (per)*fs_av;%/sqrt(3); % 2e-6*fs_av; % 
-fs          = [fs_av;std_fs_av.*randn(N_MC,1) + fs_av];
+
+% Distribution for fs
+
+% Normal distribution
+% fs          = [fs_av;std_fs_av.*randn(N_MC,1) + fs_av];
+
+%Uniform distribution
+fs          = [fs_av;unifrnd(fs_av-std_fs_av,fs_av+std_fs_av,1,N_MC)'];
+
 Ts          = 1./fs;
+
 % Accepted values
 Tv = 1/fs_av;
 tv = (0:n_fftpoints-1)*Tv;
@@ -79,9 +88,9 @@ for ind_npulses = 1:n_pulses
         % Signal + Hardware noise:
         noise      = level_noise*randn(size(t{ind_fs}));
         
-%         S{ind_fs}         = noise+(70.4*sin(2*pi*fd.*t{ind_fs}) - 2.1*sin(2*pi*1.9*abs(randn(1,1))*fd*t{ind_fs}) + 2*sin(2*pi*3*abs(randn(1,1))*fd*t{ind_fs})+...
-%                       3.24*sin(2*pi*6*abs(randn(1,1))*fd.*t{ind_fs}) + 4.7*sin(2*pi*2*abs(randn(1,1))*fd*t{ind_fs}) - 1.4*sin(2*pi*abs(randn(1,1))*fd*t{ind_fs})); % Adding up Signal contributors
-        S{ind_fs}         = noise+sin(2*pi*fd.*t{ind_fs});
+        S{ind_fs}         = noise+(7.4*sin(2*pi*fd.*t{ind_fs}) - 0.1*sin(2*pi*1.9*abs(randn(1,1))*fd*t{ind_fs}) + 1.1*sin(2*pi*3*abs(randn(1,1))*fd*t{ind_fs})+...
+                      0.24*sin(2*pi*6*abs(randn(1,1))*fd.*t{ind_fs}) + 0.7*sin(2*pi*2*abs(randn(1,1))*fd*t{ind_fs}) - 0.4*sin(2*pi*abs(randn(1,1))*fd*t{ind_fs})); % Adding up Signal contributors
+%         S{ind_fs}         = noise+sin(2*pi*fd.*t{ind_fs});
 %         S{ind_fs}  = awgn(S0, 5); %#ok<SAGROW>
         
         
@@ -284,7 +293,7 @@ toc
 
 %% Plot input quantities probability distributions
 figure,
-histogram(fs,15,'displayname','Probability distribution f_s')
+histogram(fs,500,'displayname','Probability distribution f_s')
 leg=legend;
 leg.FontSize=19 ;
 legend show
