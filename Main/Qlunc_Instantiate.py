@@ -233,6 +233,7 @@ else:
 
 #%% Run Qlunc for different values of tilt angle
 for i_tilt in np.linspace(Atmospheric_Scenario.wind_tilt[0],Atmospheric_Scenario.wind_tilt[1],Atmospheric_Scenario.wind_tilt[2]):
-    # pdb.set_trace()
-    Atmospheric_Scenario.wind_tilt = i_tilt
-    QluncData = Lidar.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+    for i_Vref in np.linspace(Atmospheric_Scenario.Vref[0],Atmospheric_Scenario.Vref[1],Atmospheric_Scenario.Vref[2]):
+        Atmospheric_Scenario.wind_tilt = i_tilt
+        Atmospheric_Scenario.Vref = i_Vref
+        QluncData = Lidar.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
