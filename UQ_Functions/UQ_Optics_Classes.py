@@ -64,7 +64,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
 
      
     Href  = Qlunc_yaml_inputs['Components']['Scanner']['Href'],
-    Vref  = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref']
+    Vref  = Atmospheric_Scenario.Vref
     alpha = Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']    
     Hg    = Qlunc_yaml_inputs['Atmospheric_inputs']['Height ground']
     Hl    = [Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0][2],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][1][2]]    
