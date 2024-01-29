@@ -38,7 +38,6 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
     # pdb.set_trace()
     fd_peak = []
     vlos_MC = []
-    ranvar  = []
    
     #%% Inputs
     
