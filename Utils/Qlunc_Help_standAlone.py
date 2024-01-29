@@ -635,7 +635,7 @@ def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,alpha,li
         if len(Lidar.optics.scanner.origin)==3: # Triple solution         
             Theta1_cr2,Theta2_cr2,Theta3_cr2,Psi1_cr2,Psi2_cr2,Psi3_cr2,Rho1_cr2,Rho2_cr2,Rho3_cr2,Vlos1_MC_cr2,Vlos2_MC_cr2,Vlos3_MC_cr2= multivariate_normal.rvs(np.ndarray.tolist(np.concatenate([lidars['Lidar0_Spherical']['theta'] , lidars['Lidar1_Spherical']['theta'] , lidars['Lidar2_Spherical']['theta'], lidars['Lidar0_Spherical']['psi'] , lidars['Lidar1_Spherical']['psi'] , lidars['Lidar2_Spherical']['psi'], lidars['Lidar0_Spherical']['rho'] , lidars['Lidar1_Spherical']['rho'] , lidars['Lidar2_Spherical']['rho'],np.array([np.mean(Vlos_MCM[0])]) , np.array([np.mean(Vlos_MCM[1])]),np.array([np.mean(Vlos_MCM[2])])],axis=0)) , cov_MAT_Vh , Lidar.optics.scanner.N_MC).T
             
-            u,v,w=Wind_vector(Theta1_cr2,Theta2_cr2,Theta3_cr2,Psi1_cr2,Psi2_cr2,Psi3_cr2,Vlos1_MC_cr2,Vlos2_MC_cr2,Vlos3_MC_cr2)             
+            u,v,w = Wind_vector(Theta1_cr2,Theta2_cr2,Theta3_cr2,Psi1_cr2,Psi2_cr2,Psi3_cr2,Vlos1_MC_cr2,Vlos2_MC_cr2,Vlos3_MC_cr2)             
             u0.append(np.mean(u))
             v0.append(np.mean(v))           
             w0.append(np.mean(w))
@@ -703,11 +703,11 @@ def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,alpha,li
 def GUM_Vlos_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,alpha,lidars,DataFrame):    
 
     u_V_LOS1Theta1,u_V_LOS1Psi1,u_V_LOS1Rho1,u_V_LOS2Theta2,u_V_LOS2Psi2,u_V_LOS2Rho2,u_V_LOS3Theta3,u_V_LOS3Psi3,u_V_LOS3Rho3=[], [],[],[],[],[],[],[],[]
-    U_Vlos_GUM = {"V1":[],"V2":[],"V3":[]}
-    Correlation_coeff={"V1":[],"V2":[],"V3":[]}
-    Sens_coeff={'V1_theta':[],'V2_theta':[],'V3_theta':[],'V1_psi':[],'V2_psi':[],'V3_psi':[],'V1_rho':[],'V2_rho':[],'V3_rho':[]}
-    VL=[]
-    Vlos_GUM ={'V1':[],'V2':[],'V3':[]}
+    U_Vlos_GUM        = {"V1":[],"V2":[],"V3":[]}
+    Correlation_coeff = {"V1":[],"V2":[],"V3":[]}
+    Sens_coeff        = {'V1_theta':[],'V2_theta':[],'V3_theta':[],'V1_psi':[],'V2_psi':[],'V3_psi':[],'V1_rho':[],'V2_rho':[],'V3_rho':[]}
+    VL                = []
+    Vlos_GUM          = {'V1':[],'V2':[],'V3':[]}
 
     Corrcoef_Vlos=[]
     
@@ -717,9 +717,9 @@ def GUM_Vlos_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,alpha,l
     for ind_wind_dir in range(len(wind_direction)):  
         
         # VLOS
-        Vlos_corr = np.zeros(len(Lidar.optics.scanner.origin))
-        U_Vlos_GUM0 =np.zeros(len(Lidar.optics.scanner.origin))
-        Ux=MultiVar(Lidar, Vlos_corr,U_Vlos_GUM0    ,1   ,            1          ,1            ,     1,   'GUM1'  )  
+        Vlos_corr   = np.zeros(len(Lidar.optics.scanner.origin))
+        U_Vlos_GUM0 = np.zeros(len(Lidar.optics.scanner.origin))
+        Ux          = MultiVar(Lidar, Vlos_corr,U_Vlos_GUM0    ,1   ,            1          ,1            ,     1,   'GUM1'  )  
         
 
         # VLOS uncertainty
@@ -832,17 +832,17 @@ def GUM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,Correlation_coeff,wind_
             a=1/(2*np.sqrt(u**2 + v**2 + w**2))
             b=(np.cos(lidars['Lidar0_Spherical']['theta']) *np.cos(lidars['Lidar2_Spherical']['theta'])*np.sin(lidars['Lidar1_Spherical']['theta'])*np.sin(lidars['Lidar2_Spherical']['psi']-lidars['Lidar0_Spherical']['psi']) + np.cos(lidars['Lidar1_Spherical']['theta'])*np.cos(lidars['Lidar2_Spherical']['theta'])*np.sin(lidars['Lidar0_Spherical']['theta'])*np.sin(lidars['Lidar1_Spherical']['psi']-lidars['Lidar2_Spherical']['psi']) + np.cos(lidars['Lidar0_Spherical']['theta'])*np.cos(lidars['Lidar1_Spherical']['theta'])*np.sin(lidars['Lidar2_Spherical']['theta'])*np.sin(lidars['Lidar0_Spherical']['psi']-lidars['Lidar1_Spherical']['psi']))
 
-            dVwind_Vlos1= (a)*((-2*u*(np.cos(lidars['Lidar1_Spherical']['theta']) * np.sin(lidars['Lidar1_Spherical']['psi'])  * np.sin(lidars['Lidar2_Spherical']['theta']) - np.cos(lidars['Lidar2_Spherical']['theta'])*np.sin(lidars['Lidar2_Spherical']['psi'])*np.sin(lidars['Lidar1_Spherical']['theta']))/b) - 
-                                (2*v*(np.cos(lidars['Lidar2_Spherical']['psi'])  * np.cos(lidars['Lidar2_Spherical']['theta']) * np.sin(lidars['Lidar1_Spherical']['theta']) - np.cos(lidars['Lidar1_Spherical']['psi'])*np.cos(lidars['Lidar1_Spherical']['theta'])*np.sin(lidars['Lidar2_Spherical']['theta']))/b) -
-                                (2*w*np.cos(lidars['Lidar1_Spherical']['theta'])  * np.cos(lidars['Lidar2_Spherical']['theta']) * np.sin(lidars['Lidar2_Spherical']['psi']-lidars['Lidar1_Spherical']['psi']) )/b)
+            dVwind_Vlos1 = (a)*((-2*u*(np.cos(lidars['Lidar1_Spherical']['theta']) * np.sin(lidars['Lidar1_Spherical']['psi'])  * np.sin(lidars['Lidar2_Spherical']['theta']) - np.cos(lidars['Lidar2_Spherical']['theta'])*np.sin(lidars['Lidar2_Spherical']['psi'])*np.sin(lidars['Lidar1_Spherical']['theta']))/b) - 
+                                 (2*v*(np.cos(lidars['Lidar2_Spherical']['psi'])  * np.cos(lidars['Lidar2_Spherical']['theta']) * np.sin(lidars['Lidar1_Spherical']['theta']) - np.cos(lidars['Lidar1_Spherical']['psi'])*np.cos(lidars['Lidar1_Spherical']['theta'])*np.sin(lidars['Lidar2_Spherical']['theta']))/b) -
+                                 (2*w*np.cos(lidars['Lidar1_Spherical']['theta'])  * np.cos(lidars['Lidar2_Spherical']['theta']) * np.sin(lidars['Lidar2_Spherical']['psi']-lidars['Lidar1_Spherical']['psi']) )/b)
             
-            dVwind_Vlos2= (a)*((-2*u*((np.cos(lidars['Lidar2_Spherical']['theta'])*np.sin(lidars['Lidar2_Spherical']['psi'])*np.sin(lidars['Lidar0_Spherical']['theta']) - np.cos(lidars['Lidar0_Spherical']['theta'])*np.sin(lidars['Lidar0_Spherical']['psi'])*np.sin(lidars['Lidar2_Spherical']['theta'])))/b) - 
-                                (2*v*((np.cos(lidars['Lidar0_Spherical']['psi'])*np.cos(lidars['Lidar0_Spherical']['theta'])*np.sin(lidars['Lidar2_Spherical']['theta']) - np.cos(lidars['Lidar2_Spherical']['psi'])*np.cos(lidars['Lidar2_Spherical']['theta'])*np.sin(lidars['Lidar0_Spherical']['theta']))/b)) -
-                                (2*w*(np.cos(lidars['Lidar0_Spherical']['theta']) * np.cos(lidars['Lidar2_Spherical']['theta']) * np.sin(lidars['Lidar0_Spherical']['psi']-lidars['Lidar2_Spherical']['psi'])))/b)
+            dVwind_Vlos2 = (a)*((-2*u*((np.cos(lidars['Lidar2_Spherical']['theta'])*np.sin(lidars['Lidar2_Spherical']['psi'])*np.sin(lidars['Lidar0_Spherical']['theta']) - np.cos(lidars['Lidar0_Spherical']['theta'])*np.sin(lidars['Lidar0_Spherical']['psi'])*np.sin(lidars['Lidar2_Spherical']['theta'])))/b) - 
+                                 (2*v*((np.cos(lidars['Lidar0_Spherical']['psi'])*np.cos(lidars['Lidar0_Spherical']['theta'])*np.sin(lidars['Lidar2_Spherical']['theta']) - np.cos(lidars['Lidar2_Spherical']['psi'])*np.cos(lidars['Lidar2_Spherical']['theta'])*np.sin(lidars['Lidar0_Spherical']['theta']))/b)) -
+                                 (2*w*(np.cos(lidars['Lidar0_Spherical']['theta']) * np.cos(lidars['Lidar2_Spherical']['theta']) * np.sin(lidars['Lidar0_Spherical']['psi']-lidars['Lidar2_Spherical']['psi'])))/b)
             
-            dVwind_Vlos3= (a)*((-2*u*(np.cos(lidars['Lidar0_Spherical']['theta'])*np.sin(lidars['Lidar0_Spherical']['psi'])*np.sin(lidars['Lidar1_Spherical']['theta']) - np.cos(lidars['Lidar1_Spherical']['theta'])* np.sin(lidars['Lidar1_Spherical']['psi'])*np.sin(lidars['Lidar0_Spherical']['theta']))/b )- 
-                                (2*v*((np.cos(lidars['Lidar1_Spherical']['psi'])*np.cos(lidars['Lidar1_Spherical']['theta'])*np.sin(lidars['Lidar0_Spherical']['theta']) - np.cos(lidars['Lidar0_Spherical']['psi'])*np.cos(lidars['Lidar0_Spherical']['theta'])*np.sin(lidars['Lidar1_Spherical']['theta'])))/b) -
-                                (2*w*(np.cos(lidars['Lidar0_Spherical']['theta']) * np.cos(lidars['Lidar1_Spherical']['theta']) * np.sin(lidars['Lidar1_Spherical']['psi']-lidars['Lidar0_Spherical']['psi'])))/b)
+            dVwind_Vlos3 = (a)*((-2*u*(np.cos(lidars['Lidar0_Spherical']['theta'])*np.sin(lidars['Lidar0_Spherical']['psi'])*np.sin(lidars['Lidar1_Spherical']['theta']) - np.cos(lidars['Lidar1_Spherical']['theta'])* np.sin(lidars['Lidar1_Spherical']['psi'])*np.sin(lidars['Lidar0_Spherical']['theta']))/b )- 
+                                 (2*v*((np.cos(lidars['Lidar1_Spherical']['psi'])*np.cos(lidars['Lidar1_Spherical']['theta'])*np.sin(lidars['Lidar0_Spherical']['theta']) - np.cos(lidars['Lidar0_Spherical']['psi'])*np.cos(lidars['Lidar0_Spherical']['theta'])*np.sin(lidars['Lidar1_Spherical']['theta'])))/b) -
+                                 (2*w*(np.cos(lidars['Lidar0_Spherical']['theta']) * np.cos(lidars['Lidar1_Spherical']['theta']) * np.sin(lidars['Lidar1_Spherical']['psi']-lidars['Lidar0_Spherical']['psi'])))/b)
             
             #Sensitivity matrix
             Cx = np.array([[np.array([0]),np.array([0]),np.array([0]),np.array([0]),np.array([0]),np.array([0]),np.array([0]),np.array([0]),np.array([0]),dVwind_Vlos1,dVwind_Vlos2,dVwind_Vlos3]])
@@ -915,9 +915,9 @@ def U_WindDir_MC(Lidar,wind_direction,Mult_param,DataFrame):
     U_Wind_direction=[]
     
     for ind_wind_dir in range(len(wind_direction)):
-        W_D=[]
+        W_D = []
         if len(Lidar.optics.scanner.origin)==3:
-            u,v,w=Wind_vector(Theta1[ind_wind_dir],Theta2[ind_wind_dir],Theta3[ind_wind_dir],Psi1[ind_wind_dir],Psi2[ind_wind_dir],Psi3[ind_wind_dir], Vlos1[ind_wind_dir],Vlos2[ind_wind_dir],Vlos3[ind_wind_dir])
+            u,v,w = Wind_vector(Theta1[ind_wind_dir],Theta2[ind_wind_dir],Theta3[ind_wind_dir],Psi1[ind_wind_dir],Psi2[ind_wind_dir],Psi3[ind_wind_dir], Vlos1[ind_wind_dir],Vlos2[ind_wind_dir],Vlos3[ind_wind_dir])
             try:
                 for i in range(len(u)):
                     
@@ -981,9 +981,9 @@ def U_WindDir_GUM(Lidar,Atmospheric_Scenario,Correlation_coeff,wind_direction,li
             
             X =  1/(1+(v[ind_wind_dir]/u[ind_wind_dir])**2)
             
-            A=(np.cos(lidars['Lidar0_Spherical']['theta']) *np.cos(lidars['Lidar2_Spherical']['theta'])*np.sin(lidars['Lidar1_Spherical']['theta'])*np.sin(lidars['Lidar2_Spherical']['psi']-lidars['Lidar0_Spherical']['psi'])+ 
-               np.cos(lidars['Lidar1_Spherical']['theta'])*np.cos(lidars['Lidar2_Spherical']['theta'])*np.sin(lidars['Lidar0_Spherical']['theta'])*np.sin(lidars['Lidar1_Spherical']['psi']-lidars['Lidar2_Spherical']['psi'])          + 
-               np.cos(lidars['Lidar0_Spherical']['theta'])*np.cos(lidars['Lidar1_Spherical']['theta'])*np.sin(lidars['Lidar2_Spherical']['theta'])*np.sin(lidars['Lidar0_Spherical']['psi']-lidars['Lidar1_Spherical']['psi']))
+            A = (np.cos(lidars['Lidar0_Spherical']['theta']) *np.cos(lidars['Lidar2_Spherical']['theta'])*np.sin(lidars['Lidar1_Spherical']['theta'])*np.sin(lidars['Lidar2_Spherical']['psi']-lidars['Lidar0_Spherical']['psi'])+ 
+                 np.cos(lidars['Lidar1_Spherical']['theta'])*np.cos(lidars['Lidar2_Spherical']['theta'])*np.sin(lidars['Lidar0_Spherical']['theta'])*np.sin(lidars['Lidar1_Spherical']['psi']-lidars['Lidar2_Spherical']['psi'])          + 
+                 np.cos(lidars['Lidar0_Spherical']['theta'])*np.cos(lidars['Lidar1_Spherical']['theta'])*np.sin(lidars['Lidar2_Spherical']['theta'])*np.sin(lidars['Lidar0_Spherical']['psi']-lidars['Lidar1_Spherical']['psi']))
             
             
             NUM_V1 = ((-(np.cos(lidars['Lidar2_Spherical']['psi'])*np.cos(lidars['Lidar2_Spherical']['theta'])*np.sin(lidars['Lidar1_Spherical']['theta']) - np.cos(lidars['Lidar1_Spherical']['psi'])*np.cos(lidars['Lidar1_Spherical']['theta'])*np.sin(lidars['Lidar2_Spherical']['theta']))/A)*u[ind_wind_dir]) + (v[ind_wind_dir]*(np.cos(lidars['Lidar1_Spherical']['theta'])*np.sin(lidars['Lidar1_Spherical']['psi'])*np.sin(lidars['Lidar2_Spherical']['theta']) - np.cos(lidars['Lidar2_Spherical']['theta'])*np.sin(lidars['Lidar2_Spherical']['psi'])*np.sin(lidars['Lidar1_Spherical']['theta']))/A)                     
@@ -1000,13 +1000,13 @@ def U_WindDir_GUM(Lidar,Atmospheric_Scenario,Correlation_coeff,wind_direction,li
             Correlation_coeff_list = [Correlation_coeff['V1'][ind_wind_dir],Correlation_coeff['V2'][ind_wind_dir],Correlation_coeff['V3'][ind_wind_dir]]
             
             # Covariance matrix inputs
-            Ux=MultiVar(Lidar, Correlation_coeff_list, U_Vlos_GUM_list, 1, 1, 1, 1, 'GUM2'  )
+            Ux = MultiVar(Lidar, Correlation_coeff_list, U_Vlos_GUM_list, 1, 1, 1, 1, 'GUM2'  )
             
             # Matrix sensitivity coefficients
-            Cx=np.array([np.array([0]),np.array([0]),np.array([0]),np.array([0]),np.array([0]),np.array([0]),np.array([0]),np.array([0]),np.array([0]),dWinDir_Vlos1,dWinDir_Vlos2,dWinDir_Vlos3]).T
+            Cx = np.array([np.array([0]),np.array([0]),np.array([0]),np.array([0]),np.array([0]),np.array([0]),np.array([0]),np.array([0]),np.array([0]),dWinDir_Vlos1,dWinDir_Vlos2,dWinDir_Vlos3]).T
             
             # Covariance matrix outputs
-            UyWinDir=np.array(Cx).dot(Ux).dot(np.transpose(Cx))
+            UyWinDir = np.array(Cx).dot(Ux).dot(np.transpose(Cx))
         
             # Data storage:
             dWinDir_Vlos1T.append((dWinDir_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir])**2)
@@ -1022,18 +1022,18 @@ def U_WindDir_GUM(Lidar,Atmospheric_Scenario,Correlation_coeff,wind_direction,li
             dWinDir_Vlos2   =  X*Vlos_GUM['V1'][ind_wind_dir]*np.cos(lidars['Lidar1_Spherical']['theta'])*np.cos(lidars['Lidar0_Spherical']['theta'])*np.sin(lidars['Lidar1_Spherical']['psi']-lidars['Lidar0_Spherical']['psi'])/B**2        
     
             # Formating data to pass to the function
-            U_Vlos_GUM_list= [U_Vlos_GUM['V1'][ind_wind_dir],U_Vlos_GUM['V2'][ind_wind_dir]]                    
-            Correlation_coeff_list=[Correlation_coeff['V1'][ind_wind_dir]]
+            U_Vlos_GUM_list        = [U_Vlos_GUM['V1'][ind_wind_dir],U_Vlos_GUM['V2'][ind_wind_dir]]                    
+            Correlation_coeff_list = [Correlation_coeff['V1'][ind_wind_dir]]
 
             # Covariance matrix inputs
-            Ux=MultiVar(Lidar, Correlation_coeff_list, U_Vlos_GUM_list, 1, 1, 1, 1, 'GUM2'  )
+            Ux = MultiVar(Lidar, Correlation_coeff_list, U_Vlos_GUM_list, 1, 1, 1, 1, 'GUM2'  )
             
             # Matrix sensitivity coefficients
-            Cx=np.array([[np.array([0]),np.array([0]),np.array([0]),np.array([0]),np.array([0]),np.array([0]),dWinDir_Vlos1,dWinDir_Vlos2]])
-            Cx=Cx[:,:,0]
+            Cx = np.array([[np.array([0]),np.array([0]),np.array([0]),np.array([0]),np.array([0]),np.array([0]),dWinDir_Vlos1,dWinDir_Vlos2]])
+            Cx = Cx[:,:,0]
             
             # Covariance matrix outputs
-            UyWinDir=np.array(Cx).dot(Ux).dot(np.transpose(Cx))
+            UyWinDir = np.array(Cx).dot(Ux).dot(np.transpose(Cx))
 
             # Data storage:
             dWinDir_Vlos1T.append((dWinDir_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir])**2)
