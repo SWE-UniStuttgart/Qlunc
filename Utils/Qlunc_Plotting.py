@@ -65,7 +65,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 'Qlunc_version'       : 'Qlunc Version - 1.0'
                 }
         
-    # pdb.set_trace()
+    
     if flag_plot_measuring_points_pattern:
         
         # pdb.set_trace()
@@ -292,12 +292,12 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
 
                 VV[VV>5]=1
                 DirD[DirD>10]=10
-                DirD=np.reshape(Dir,[int(np.sqrt(len(Dir))),int(np.sqrt(len(Dir)))])
+                # DirD=np.reshape(Dir,[int(np.sqrt(len(Dir))),int(np.sqrt(len(Dir)))])
                 # Horizontal wind velocity
-                col ='binary' #'binary' #
+                col ='coolwarm' #'binary' #
                 cmaps = matplotlib.cm.get_cmap(col)  # viridis is the default colormap for imshow
-                cmap0 = matplotlib.cm.ScalarMappable(norm = mcolors.Normalize(vmin = 0, vmax = 0.9),cmap = plt.get_cmap(col))
-                cmap1 = matplotlib.cm.ScalarMappable(norm = mcolors.Normalize(vmin = 0, vmax = 10),cmap = plt.get_cmap(col))
+                cmap0 = matplotlib.cm.ScalarMappable(norm = mcolors.Normalize(vmin = VV.min(), vmax = VV.max()),cmap = plt.get_cmap(col))
+                cmap1 = matplotlib.cm.ScalarMappable(norm = mcolors.Normalize(vmin = DirD.min(), vmax = DirD.max()),cmap = plt.get_cmap(col))
     
                 fig00,ax00 = plt.subplots()
                 fig01,ax01 = plt.subplots()
@@ -320,10 +320,10 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                     for ind_len in range(len(Lidar.optics.scanner.origin)):
                         ax00.plot(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_len][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_len][1],'sk', ms=5, mec='white', mew=1.5)
                         ax01.plot(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_len][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_len][1],'sk', ms=5, mec='white', mew=1.5)
-                ax01.contourf(XX,YY, DirD,250,cmap = cmaps,vmin = 0, vmax = 10)
-                ax00.contourf(XX,YY, VV,250,cmap = cmaps,vmin = 0, vmax = 0.9)
-                cmap0.set_array([]) # or alternatively cmap._A = []
-    
+                ax01.contourf(XX,YY, DirD,250,cmap = cmaps,vmin = DirD.min(), vmax = DirD.max())
+                ax00.contourf(XX,YY, VV,250,cmap = cmaps,vmin = VV.min(), vmax = VV.max())
+                cmap0.set_array([]) 
+                cmap1.set_array([]) 
                 colorbar0 = fig00.colorbar(cmap0, ax = ax00) 
                 colorbar1 = fig00.colorbar(cmap1, ax = ax01)                        
                 colorbar0.set_label(label = 'Uncertainty [m/s]', size = plot_param['tick_labelfontsize']+12, labelpad = 15)
@@ -343,7 +343,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 ax01.yaxis.set_tick_params(labelsize = plot_param['tick_labelfontsize']+14)
                 plt.show()
                 
-                # pdb.set_trace()
+                pdb.set_trace()
                
                 ############################################################           
                 ## Plots the 3D figure
@@ -637,11 +637,13 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
 
 
 ################### PLOT COORDINATE SYSTEM DUAL LIDAR ##############################################
+
+# pdb.set_trace()
 # from matplotlib.patches import Circle,Wedge
 # import mpl_toolkits.mplot3d.art3d as art3d
-# from matplotlib.patches import FancyArrowPatch
+# from matplotlib.patches import * #FancyArrowPatch
 # fig = plt.figure()
-# ax = fig.gca(projection='3d')
+# ax = fig.add_subplot(projection='3d')
 
 # r = 89
 # x0 = 500 # To have the tangent at y=0
@@ -656,39 +658,52 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
 # ax.plot(x, y, z,'k--',linewidth=2,label='Rotor area')
 
 
-
+# # 2lidars
 # x1,y1,z1=[500,0],[0,-150],[119,1] 
 # x2,y2,z2=[500,0],[ 0,150],[119,1] 
-# p = patches.Rectangle((89.15, 29.85), -89.15*2,89.15*2,alpha=0.387,label='Scanned area')
+
+
+# # 3 lidars
+# x1,y1,z1=[500,0],[0,-0],[119,1] 
+# x2,y2,z2=[500,829],[ 0,343],[119,1] 
+# x3,y3,z3=[500,829],[ 0,-343],[119,1] 
+
+
+# p = Rectangle((89.15, 29.85), -89.15*2,89.15*2,alpha=0.387,label='Scanned area')
 # ax.add_patch(p)
 # art3d.pathpatch_2d_to_3d(p, z=500, zdir="x")
 
 
 
-# x1,y1,z1=[500,0],[0,-150],[119,1] 
-# x2,y2,z2=[500,0],[ 0,150],[119,1] 
+# # x1,y1,z1=[500,0],[0,-150],[119,1] 
+# # x2,y2,z2=[500,0],[ 0,150],[119,1] 
 # # p = Wedge((0, 119), 89.15,0,359,alpha=0.5,label='WT area',width=1.71, ls='--')
 # # ax.add_patch(p)
 # # art3d.pathpatch_2d_to_3d(p, z=500, zdir="x")
 # ax.scatter(500,0, 119, c='r', s=50, marker='o', label=r'$P~(x,y,z)$')
-# ax.scatter(0, -150, 1, c='b', s=50, marker='s', label=r'$Lidar_1~and~Lidar_2$')
-# ax.scatter(0, 150, 1, c='b', s=50, marker='s')
+# ax.scatter(0, -0, 1, c='b', s=50, marker='s', label=r'$Lidars$')
+# ax.scatter(829, 343, 1, c='b', s=50, marker='s')
+# ax.scatter(829, -343, 1, c='b', s=50, marker='s')
+# ax.set_box_aspect((np.ptp(x1), np.ptp(y1), np.ptp(z1)))  # aspect ratio is 1:1:1 in data space
+# ax.set_box_aspect((np.ptp(x2), np.ptp(y2), np.ptp(z2)))  # aspect ratio is 1:1:1 in data space
+# ax.set_box_aspect((np.ptp(x3), np.ptp(y3), np.ptp(z3)))  # aspect ratio is 1:1:1 in data space
 
 # ax.plot(x1, y1, z1, color='magenta',linestyle='dashed')
 # ax.plot(x2, y2, z2, color='magenta',linestyle='dashed')
+# ax.plot(x3, y3, z3, color='magenta',linestyle='dashed')
+
 
 # ax.set_xlabel('X [m]', fontsize=21,labelpad=15)
 # ax.set_ylabel('Y [m]', fontsize=21,labelpad=15)
 # ax.set_zlabel('Z [m]', fontsize=21,labelpad=15)
 # ax.set_zlim([0,250])
-# ax.set_xlim([0,570])
+# ax.set_xlim([-20,850])
 # plt.legend(loc="best", fontsize=16.23)
 
 # ax.xaxis.set_tick_params(labelsize=15)
 # ax.yaxis.set_tick_params(labelsize=15)
 # ax.zaxis.set_tick_params(labelsize=15)
-
-
+#######################################################################################################################
 # fig = plt.figure()
 # ax = fig.gca(projection='3d')
 
