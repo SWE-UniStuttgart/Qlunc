@@ -83,8 +83,8 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
     
     #%% MC method  to calculate the impact of the uncertainty sources above
     for ind_pulse in range(N_MC):
-        t              = np.array(range(0,n_fftpoints)) * Ts[ind_pulse]
-        f              = np.linspace(0 , int(fs[ind_pulse] / 2) , int(math.floor(len(t)) / 2 + 1))
+        t = np.array(range(0,n_fftpoints)) * Ts[ind_pulse]
+        f = np.linspace(0 , int(fs[ind_pulse] / 2) , int(math.floor(len(t)) / 2 + 1))
         # pdb.set_trace()
         # Signal + Noise:
         #Create signal and add hardware noise and speckle noise:
