@@ -42,14 +42,14 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
    
     #%% Inputs
     
-    V_ref                = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref']         # Reference voltaje ADC
+    V_ref                = Atmospheric_Scenario.Vref        
     lidar_wavelength     = Qlunc_yaml_inputs['Components']['Laser']['Wavelength'] # wavelength of the laser source.
     fs_av                = Qlunc_yaml_inputs['Components']['ADC']['Sampling frequency']   # sampling frequency
     L                    = 2**Lidar.signal_processor.analog2digital_converter.nbits    #length of the signal.
     n_fftpoints          = L #2**8      # n° of points for each block (fft points).
     fd                   = 2 * V_ref / lidar_wavelength  # Doppler frequency corresponding to Vref
     n_pulses             = 1        #   % n pulses for averaging the spectra
-    N_MC                 = 100000 # n° MC samples to calculate the uncertainty due to bias in sampling frequency and wavelength
+    N_MC                 = 10000 # n° MC samples to calculate the uncertainty due to bias in sampling frequency and wavelength
     # pdb.set_trace()
     #%% Uncertainty due to hardware noise, signal processing and speckle interference:
     
@@ -129,7 +129,7 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
     Stdv_fpeak = np.std(fd_peak)
     Stdv_vlos  = np.std(vlos_MC)
     mean_vlos  = np.mean(vlos_MC)
-    pdb.set_trace()
+    # pdb.set_trace()
     # Store data
     DataFrame['Uncertainty ADC'] = {'Stdv Doppler f_peak [Hz]':np.array(Stdv_fpeak)*np.linspace(1,1,len(Atmospheric_Scenario.temperature)),'Stdv wavelength [m]':stdv_wavelength,'Stdv Vlos [m/s]':Stdv_vlos}
     return DataFrame
