@@ -177,7 +177,7 @@ def rmse(f,ff):
    # LoveU LU!
 #%% Vlos parameters individual analysis 
 
-def VLOS_param (Lidar,rho,theta,psi,u_theta1,u_psi1,u_rho1,N_MC,Hl,Vref,Href,alpha,wind_direction_TEST,ind_wind_dir,DataFrame):
+def VLOS_param (Lidar,rho,theta,psi,u_theta1,u_psi1,u_rho1,N_MC,Hl,V_ref,Href,alpha,wind_direction_TEST,ind_wind_dir,DataFrame):
     #####################################
     #####################################
     # HARD CODED  Important HARD CODED  Need solution!!!
@@ -222,18 +222,18 @@ def VLOS_param (Lidar,rho,theta,psi,u_theta1,u_psi1,u_rho1,N_MC,Hl,Vref,Href,alp
                    [u_theta1*u_rho1*0 ,     u_psi1*u_rho1*0     ,u_rho1**2         ]]
    
     U_VLOS1=[]
-    U_VLOS_T=U_VLOS_MC(Lidar,cov_MAT,theta_TEST,psi_TEST,rho_TEST,Hl,Href,alpha,wind_direction_TEST,Vref,0,U_VLOS1,DataFrame)
+    U_VLOS_T=U_VLOS_MC(Lidar,cov_MAT,theta_TEST,psi_TEST,rho_TEST,Hl,Href,alpha,wind_direction_TEST,V_ref,0,U_VLOS1,DataFrame)
     
     #Store results
     U_VLOS_T_MC.append(np.array(U_VLOS_T))
         
     # GUM method
-    U_VLOS_T_GUM=(U_VLOS_GUM (Lidar,theta_TEST,psi_TEST,rho_TEST,u_theta1,u_psi1,u_rho1,Hl,Vref,Href,alpha,wind_direction_TEST,0,DataFrame)) # For an heterogeneous flow (shear))  
+    U_VLOS_T_GUM=(U_VLOS_GUM (Lidar,theta_TEST,psi_TEST,rho_TEST,u_theta1,u_psi1,u_rho1,Hl,V_ref,Href,alpha,wind_direction_TEST,0,DataFrame)) # For an heterogeneous flow (shear))  
     return (U_VLOS_T,U_VLOS_T_GUM,rho_TEST,theta_TEST,psi_TEST)        
 
 
 
-def U_VLOS_MC(Lidar,cov_MAT,theta,psi,rho,Hl,Href,alpha,wind_direction,Vref,ind_wind_dir,U_VLOS1,DataFrame):
+def U_VLOS_MC(Lidar,cov_MAT,theta,psi,rho,Hl,Href,alpha,wind_direction,V_ref,ind_wind_dir,U_VLOS1,DataFrame):
      """.
     
      Performs a Montecarlo simulation to estimate the uncertainty in the line of sight velocity ( $V_{LOS}$ ). Location: Qlunc_Help_standAlone.py
@@ -266,13 +266,13 @@ def U_VLOS_MC(Lidar,cov_MAT,theta,psi,rho,Hl,Href,alpha,wind_direction,Vref,ind_
          # Multivariate
          Theta1_cr,Psi1_cr,Rho1_cr = multivariate_normal.rvs([theta[ind_0] , psi[ind_0] , rho[ind_0]] , cov_MAT , Lidar.optics.scanner.N_MC).T   
          
-         VLOS1 = Vref * (((Hl + (np.sin(Theta1_cr) * Rho1_cr)) / Href)**alpha) * (np.cos(Theta1_cr) * (np.cos(Psi1_cr - wind_direction[ind_wind_dir]) + (np.tan(0)*np.tan(Theta1_cr))))
+         VLOS1 = V_ref * (((Hl + (np.sin(Theta1_cr) * Rho1_cr)) / Href)**alpha) * (np.cos(Theta1_cr) * (np.cos(Psi1_cr - wind_direction[ind_wind_dir]) + (np.tan(0)*np.tan(Theta1_cr))))
          
          U_VLOS1.append(np.std(VLOS1))
      return(U_VLOS1)
 
 
-def U_VLOS_GUM (Lidar,theta1,psi1,rho1,u_theta1,u_psi1,u_rho1,Hl,Vref,Href,alpha,wind_direction,ind_wind_dir,DataFrame):
+def U_VLOS_GUM (Lidar,theta1,psi1,rho1,u_theta1,u_psi1,u_rho1,Hl,V_ref,Href,alpha,wind_direction,ind_wind_dir,DataFrame):
     Cont_Theta,Cont_Psi,Cont_Rho=[],[],[]
     """.
     
@@ -311,9 +311,9 @@ def U_VLOS_GUM (Lidar,theta1,psi1,rho1,u_theta1,u_psi1,u_rho1,Hl,Vref,Href,alpha
         H_t1 = ((rho1[i] * np.sin(theta1[i])+Hl) / Href)
 
         # Partial derivatives Vlosi with respect theta, psi and rho    
-        dVlos1dtheta1   =     Vref * (H_t1**alpha) * (alpha * ((rho1[i] * (np.cos(theta1[i]))**2) / (rho1[i] * np.sin(theta1[i])+Hl)) - np.sin(theta1[i])) * np.cos(psi1[i] - wind_direction[ind_wind_dir])
-        dVlos1dpsi1     =   - Vref * (H_t1**alpha) * (np.cos(theta1[i]) * np.sin(psi1[i] - wind_direction[ind_wind_dir]))
-        dVlos1drho1     =     Vref * (H_t1**alpha) * alpha * (np.sin(theta1[i]) / (rho1[i] * np.sin(theta1[i])+Hl)) * np.cos(theta1[i]) * np.cos(psi1[i] - wind_direction[ind_wind_dir])
+        dVlos1dtheta1   =     V_ref * (H_t1**alpha) * (alpha * ((rho1[i] * (np.cos(theta1[i]))**2) / (rho1[i] * np.sin(theta1[i])+Hl)) - np.sin(theta1[i])) * np.cos(psi1[i] - wind_direction[ind_wind_dir])
+        dVlos1dpsi1     =   - V_ref * (H_t1**alpha) * (np.cos(theta1[i]) * np.sin(psi1[i] - wind_direction[ind_wind_dir]))
+        dVlos1drho1     =     V_ref * (H_t1**alpha) * alpha * (np.sin(theta1[i]) / (rho1[i] * np.sin(theta1[i])+Hl)) * np.cos(theta1[i]) * np.cos(psi1[i] - wind_direction[ind_wind_dir])
     
         Ux= [[u_theta1*u_theta1 ,u_theta1*u_psi1*0   ,u_theta1*u_psi1*0],
             [u_psi1*u_theta1*0   ,u_psi1*u_psi1      ,u_psi1*u_rho1*0],
@@ -1055,7 +1055,7 @@ def U_intrinsic(Lidar,Atmospheric_Scenario,DataFrame,Qlunc_yaml_inputs):
     corr_wavelength_fd = 1
     # pdb.set_trace()
     # Analytical solution:   
-    u_intrinsic = np.round(np.sqrt((fd*DataFrame['Uncertainty ADC']['Stdv wavelength [m]']/2)**2+(Qlunc_yaml_inputs['Components']['Laser']['Wavelength']*DataFrame['Uncertainty ADC']['Stdv Doppler f_peak [Hz]']/2)**2+(fd*Qlunc_yaml_inputs['Components']['Laser']['Wavelength']*DataFrame['Uncertainty ADC']['Stdv Doppler f_peak [Hz]']*DataFrame['Uncertainty ADC']['Stdv wavelength [m]'])*corr_wavelength_fd/2) ,2)
+    u_intrinsic = np.round(np.sqrt((fd*DataFrame['Uncertainty ADC']['Stdv wavelength [m]']/2)**2+(Qlunc_yaml_inputs['Components']['Laser']['Wavelength']*DataFrame['Uncertainty ADC']['Stdv Doppler f_peak [Hz]']/2)**2+(fd*Qlunc_yaml_inputs['Components']['Laser']['Wavelength']*DataFrame['Uncertainty ADC']['Stdv Doppler f_peak [Hz]']*DataFrame['Uncertainty ADC']['Stdv wavelength [m]'])*corr_wavelength_fd/2) ,4)
     return u_intrinsic
 
 
@@ -1085,15 +1085,15 @@ def Wind_vector(theta1,theta2,theta3,psi1,psi2,psi3, Vlos1,Vlos2,Vlos3):
            np.cos(theta1)*np.cos(theta2)*np.sin(theta3)*np.sin(psi1-psi2))                                                               
     return u,v,w
 
-# def Wind_vector2(theta1,theta2,psi1,psi2, Vlos1,Vlos2):
-#     # # 3D
-#     # pdb.set_trace()
+def Wind_vector2(theta1,theta2,psi1,psi2, Vlos1,Vlos2):
+    # # 3D
+    # pdb.set_trace()
     
-#     u = (- Vlos1*np.cos(theta2)*np.sin(psi2) + Vlos2*np.cos(theta1)*np.sin(psi1)) / (np.cos(theta1) *np.cos(theta2)*np.sin(psi1 - psi2))
-#     v = (  Vlos1*np.cos(theta2)*np.cos(psi2) - Vlos2*np.cos(theta1)*np.cos(psi1)) / (np.cos(theta1) *np.cos(theta2)*np.sin(psi1 - psi2))
+    u = (- Vlos1*np.cos(theta2)*np.sin(psi2) + Vlos2*np.cos(theta1)*np.sin(psi1)) / (np.cos(theta1) *np.cos(theta2)*np.sin(psi1 - psi2))
+    v = (  Vlos1*np.cos(theta2)*np.cos(psi2) - Vlos2*np.cos(theta1)*np.cos(psi1)) / (np.cos(theta1) *np.cos(theta2)*np.sin(psi1 - psi2))
                                                              
-#     # pdb.set_trace()                        
-#     return u,v
+    # pdb.set_trace()                        
+    return u,v
 
 #%% 3D velocity vector
 '''
