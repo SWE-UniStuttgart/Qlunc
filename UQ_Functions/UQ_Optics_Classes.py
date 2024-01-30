@@ -64,7 +64,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
 
      
     Href  = Qlunc_yaml_inputs['Components']['Scanner']['Href'],
-    Vref  = Atmospheric_Scenario.Vref
+    V_ref  = Atmospheric_Scenario.Vref
     alpha = Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']    
     Hg    = Qlunc_yaml_inputs['Atmospheric_inputs']['Height ground']
     Hl    = [Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0][2],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][1][2]]    
@@ -151,9 +151,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
             U_Wind_direction_GUM0,dWinDir_Vlos1,dWinDir_Vlos2,dWinDir_Vlos12 = (SA.U_WindDir_GUM(Lidar,Atmospheric_Scenario,Correlation_coeff_GUM,wind_direction,lidars,Vlos_GUM,U_Vlos_GUM,u,v,w,DataFrame))      
                         
             #%% 5) Method for uncertainty when varying theta, psi 'OR' rho   
-            U_VLOS_T_MC_rho,U_VLOS_T_GUM_rho,rho_TESTr,theta_TESTr,psi_TESTr      =  SA.VLOS_param(Lidar,np.linspace(10,5000,600),lidars['Lidar0_Spherical']['theta'],lidars['Lidar0_Spherical']['psi'],0,0,Lidar.optics.scanner.stdv_focus_dist[0][0],Lidar.optics.scanner.N_MC,Hl[0],Vref,Href,alpha,wind_direction_TEST,0,DataFrame)
-            U_VLOS_T_MC_theta,U_VLOS_T_GUM_theta,rho_TESTt,theta_TESTt,psi_TESTt  =  SA.VLOS_param(Lidar,lidars['Lidar0_Spherical']['rho'],np.radians(np.linspace(0,90,200)),lidars['Lidar0_Spherical']['psi'],np.radians(Lidar.optics.scanner.stdv_cone_angle[0][0]),0,0,Lidar.optics.scanner.N_MC,Hl[0],Vref,Href,alpha,wind_direction_TEST,0,DataFrame)    
-            U_VLOS_T_MC_psi,U_VLOS_T_GUM_psi,rho_TESTp,theta_TESTp,psi_TESTp      =  SA.VLOS_param(Lidar,lidars['Lidar0_Spherical']['rho'],lidars['Lidar0_Spherical']['theta'],np.radians(np.linspace(0,359,200)),0,np.radians(Lidar.optics.scanner.stdv_azimuth[0][0]),0,Lidar.optics.scanner.N_MC,Hl[0],Vref,Href,alpha,wind_direction_TEST,0,DataFrame)
+            U_VLOS_T_MC_rho,U_VLOS_T_GUM_rho,rho_TESTr,theta_TESTr,psi_TESTr      =  SA.VLOS_param(Lidar,np.linspace(10,5000,600),lidars['Lidar0_Spherical']['theta'],lidars['Lidar0_Spherical']['psi'],0,0,Lidar.optics.scanner.stdv_focus_dist[0][0],Lidar.optics.scanner.N_MC,Hl[0],V_ref,Href,alpha,wind_direction_TEST,0,DataFrame)
+            U_VLOS_T_MC_theta,U_VLOS_T_GUM_theta,rho_TESTt,theta_TESTt,psi_TESTt  =  SA.VLOS_param(Lidar,lidars['Lidar0_Spherical']['rho'],np.radians(np.linspace(0,90,200)),lidars['Lidar0_Spherical']['psi'],np.radians(Lidar.optics.scanner.stdv_cone_angle[0][0]),0,0,Lidar.optics.scanner.N_MC,Hl[0],V_ref,Href,alpha,wind_direction_TEST,0,DataFrame)    
+            U_VLOS_T_MC_psi,U_VLOS_T_GUM_psi,rho_TESTp,theta_TESTp,psi_TESTp      =  SA.VLOS_param(Lidar,lidars['Lidar0_Spherical']['rho'],lidars['Lidar0_Spherical']['theta'],np.radians(np.linspace(0,359,200)),0,np.radians(Lidar.optics.scanner.stdv_azimuth[0][0]),0,Lidar.optics.scanner.N_MC,Hl[0],V_ref,Href,alpha,wind_direction_TEST,0,DataFrame)
      
             #%% Store data 
             
