@@ -121,15 +121,7 @@ Components:
     ADC Bandwidth: 
     # Uncertainty function
     Uncertainty function: 
-        
-# Lidar general inputs 
-  Lidar general inputs:
-    Name:  
-    Type:              # CW/Pulsed for continuous wave or pulsed lidars.
-    Yaw error:         # [deg]
-    Pitch error:       # [deg]
-    Roll error:        # [deg]
-    DataFrame: {}      # Leave empty. To be filled with ouputs by the code itself
+
 ---
 # Modules:
 Modules:
@@ -179,17 +171,17 @@ Atmospheric_inputs:
   
 ---
 
-# Plotting ------------------------------------------------------------
 Flags:
+
+  # Save data ------------------------------------------------------------
+  Save data: False 
   
-  Scanning Pattern: False
+  # Plotting ------------------------------------------------------------
   Photodetector noise: False
-  Save data: True
-  Probe Volume parameters: False
-  Optical_amplifier_noise: False
-  Line of sight Velocity Uncertainty: False
-  Horizontal Velocity Uncertainty: False
-  Wind direction Uncertainty: False
+  Scanning uncertainties: True
+  Line of sight velocity uncertainty: False
+  Wind velocity uncertainty: True
+  Wind direction uncertainty: True
 
 
 

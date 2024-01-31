@@ -122,15 +122,15 @@ class photodetector():
 
 class analog2digital_converter():
     def __init__(self,name,nbits,vref,vground,q_error,ADC_bandwidth,fs,u_fs,u_speckle,unc_func):
-                 self.ADCID = name
-                 self.nbits =nbits
-                 self.vref = vref
-                 self.vground = vground
-                 self.fs    =fs
-                 self.u_fs =u_fs
-                 self.u_speckle = u_speckle
-                 self.q_error = q_error
-                 self.BandWidth = ADC_bandwidth
+                 self.ADCID       = name
+                 self.nbits       = nbits
+                 self.vref        = vref
+                 self.vground     = vground
+                 self.fs          = fs
+                 self.u_fs        = u_fs
+                 self.u_speckle   = u_speckle
+                 self.q_error     = q_error
+                 self.BandWidth   = ADC_bandwidth
                  self.Uncertainty = unc_func
                  print('Created new ADC: {}'.format(self.ADCID))
                  
@@ -184,7 +184,7 @@ class optics():
 
 class signal_processor():
     def __init__(self,name,analog2digital_converter,unc_func): #f_analyser
-                 self.SignalProcessorModuleID = name
+                 self.SignalProcessorModuleID  = name
                  self.analog2digital_converter = analog2digital_converter
                  self.Uncertainty              = unc_func
                  print('Created new signal processor module: {}'.format(self.SignalProcessorModuleID))
@@ -199,48 +199,37 @@ class atmosphere():
                  self.Vref           = Vref
                  self.wind_direction = wind_direction
                  self.Hg             = Hg
-                 self.wind_tilt     = wind_tilt                
+                 self.wind_tilt      = wind_tilt                
                  print('Created new atmosphere: {}'.format(self.AtmosphereID))
 
 
-#%% Creating lidar general data class:
-class lidar_gral_inp():
-    def __init__(self,name,ltype,yaw_error,pitch_error,roll_error,dataframe):
-                 self.Gral_InputsID   = name
-                 self.LidarType       = ltype
-                 self.yaw_error_dep   = yaw_error   # yaw error angle when deploying the lidar device in the grounf or in the nacelle
-                 self.pitch_error_dep = pitch_error # pitch error angle when deploying the lidar device in the grounf or in the nacelle
-                 self.roll_error_dep  = roll_error  # roll error angle when deploying the lidar device in the grounf or in the nacelle
-                 self.dataframe       = dataframe   # Final dataframe
-                 print('Created new lidar general inputs: {}'.format(self.Gral_InputsID))
 
 #%% Lidar class:
 class lidar():
-    def __init__(self,name,photonics,optics,signal_processor,lidar_inputs,unc_func):
+    def __init__(self,name,photonics,optics,signal_processor,unc_func):
                  self.LidarID          = name
                  self.photonics        = photonics
                  self.optics           = optics
                  self.signal_processor = signal_processor
-                 self.lidar_inputs     = lidar_inputs
                  self.Uncertainty      = unc_func
                  print('Created new lidar device: {}'.format(self.LidarID))
 
 #%% 1) Creating the class to store coordinates
 class lidar_coor():
     def __init__(self, x,y,z,x_Lidar,y_Lidar,z_Lidar):
-        self.x_Lidar=x_Lidar
-        self.y_Lidar=y_Lidar
-        self.z_Lidar=z_Lidar
-        self.x=x
-        self.y=y
-        self.z=z
+        self.x_Lidar = x_Lidar
+        self.y_Lidar = y_Lidar
+        self.z_Lidar = z_Lidar
+        self.x       = x
+        self.y       = y
+        self.z       = z
     @classmethod
     def vector_pos(cls,x,y,z,x_Lidar,y_Lidar,z_Lidar):
-        fx=(x-x_Lidar)
-        fy=(y-y_Lidar)
-        fz=(z-z_Lidar)
+        fx = (x-x_Lidar)
+        fy = (y-y_Lidar)
+        fz = (z-z_Lidar)
         return(cls,fx,fy,fz)
     @classmethod
     def Cart2Sph (cls, x_vector_pos,y_vector_pos,z_vector_pos):
-        rho1,theta1,psi1 =SA.cart2sph(x_vector_pos,y_vector_pos,z_vector_pos)
+        rho1,theta1,psi1 = SA.cart2sph(x_vector_pos,y_vector_pos,z_vector_pos)
         return (cls,rho1,theta1,psi1)   

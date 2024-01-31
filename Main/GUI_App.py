@@ -114,8 +114,11 @@ def runQlunc():
         redirected_output = sys.stdout = StringIO()
         root.title('Qlunc - Running Qlunc...' )
         # runfile( '.\\Main\\Qlunc_Instantiate.py')
-        exec(open('.\\Qlunc_Instantiate.py').read()) 
-
+        try:
+            my_text2.insert('1.0',("Directory: {}".format(os.getcwd())))
+            exec(open('.\\Qlunc_Instantiate.py').read()) 
+        except:
+            exec(open('.\\Main\\Qlunc_Instantiate.py').read())    
         root.title('Qlunc - Qlunc finished successfully' )
     
 
