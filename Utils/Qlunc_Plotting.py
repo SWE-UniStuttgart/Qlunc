@@ -150,7 +150,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                     # pdb.set_trace()
                     plt.plot(np.degrees(Data['wind direction']),Data['Vh Unc [m/s]']['Uncertainty Vh GUM'][ind_plot],'-', color = c2,linewidth = plot_param['linewidth'],label = r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))
                     plt.plot(np.degrees(Data['wind direction']),Data['Vh Unc [m/s]']['Uncertainty Vh MCM'][ind_plot],'o' , markerfacecolor = c2,markeredgecolor = 'lime',alpha = 0.4,label = 'MCM')
-                    ax11.set_ylim([.0, .5])
+                    ax11.set_ylim([.095, .15])
      
                 # Plot correlations
                 CorrelationsGUM = [Data['Correlations']['V12_GUM'],Data['Correlations']['V13_GUM'],Data['Correlations']['V23_GUM']]
@@ -171,13 +171,22 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                     
                     r'$r_{\theta_{1},\varphi_{1}}~ =%.2f$' % (Lidar.optics.scanner.correlations[9]),
                     r'$r_{\theta_{2},\varphi_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[10]),
-                    r'$r_{\theta_{3},\varphi_{3}}~ =%.2f$' % (Lidar.optics.scanner.correlations[11])))
+                    r'$r_{\theta_{3},\varphi_{3}}~ =%.2f$' % (Lidar.optics.scanner.correlations[11]),
+                    
+                    r'$r_{\varphi_{1},\theta_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[12]),
+                    r'$r_{\varphi_{1},\theta_{3}}~ =%.2f$' % (Lidar.optics.scanner.correlations[13]),
+                    r'$r_{\varphi_{2},\theta_{1}}~ =%.2f$' % (Lidar.optics.scanner.correlations[14]),
+                    
+                    r'$r_{\varphi_{2},\theta_{3}}~ =%.2f$' % (Lidar.optics.scanner.correlations[15]),
+                    r'$r_{\varphi_{3},\theta_{1}}~ =%.2f$' % (Lidar.optics.scanner.correlations[16]),
+                    r'$r_{\varphi_{3},\theta_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[17])))
                    
                     gs_sub = gs[1].subgridspec(1, 3,wspace=0.05)
                     ax0    = fig1.add_subplot(gs_sub[0,0])
                     ax1    = fig1.add_subplot(gs_sub[0,1], sharey = ax0)
                     ax2    = fig1.add_subplot(gs_sub[0,2], sharey = ax0)
                     ax11.set_ylabel('$U_{V_{wind}}$ [m/s]',fontsize = plot_param['axes_label_fontsize']+2) 
+                    
                     for ind_plot in range(len(Data['Vh Unc [m/s]']['Uncertainty Vh MCM'])):
                         c3 = next(color3)
                         # Plot:
@@ -212,7 +221,8 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                         ax2.tick_params(axis = 'x', labelsize = plot_param['tick_labelfontsize'])
                         ax0.set_ylabel('$r_{V_{LOS}}$ [-]',fontsize=plot_param['axes_label_fontsize'])
                         ax0.yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-4)
-                        ax2.text(0.8, 0.935, textstr1, transform = ax2.transAxes, fontsize = 16,horizontalalignment = 'left',verticalalignment = 'top', bbox = props1) 
+                        ax2.text(.92, 0.80, textstr1,  fontsize = 16,horizontalalignment = 'left',verticalalignment = 'top', bbox = props1, transform=plt.gcf().transFigure) 
+                        
                     # Plot sensitivity coefficients
                     SensCoeff1 = [Data['Sens coeff Vh'][-1]['dV1'],Data['Sens coeff Vh'][-1]['dV2'],Data['Sens coeff Vh'][-1]['dV3']]
                     c5 = ['black','dimgray','lightgray']
@@ -220,7 +230,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                     for ind_plot in range(3):                 
                         ax13 = plt.subplot(gs[2,:])         
                         plt.plot(np.degrees(Data['wind direction']),SensCoeff1[ind_plot],'-',c = c5[ind_plot],linewidth=plot_param['linewidth'],label = legt[ind_plot])
-                                        
+                    # pdb.set_trace()                    
     
                 else:
                     textstr1 = '\n'.join((
@@ -256,7 +266,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 # Legends
                 ax11.legend(loc = 1, prop = {'size': plot_param['legend_fontsize']})
                 ax13.legend(loc = 1, prop = {'size': plot_param['legend_fontsize']+4.7})
-                
+                # pdb.set_trace()
                 # Axes
                 ax11.yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-4)
                 ax13.yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-4)
@@ -271,15 +281,17 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 ax13.tick_params(axis = 'y', labelsize = plot_param['tick_labelfontsize'])
                 ax13.set_xlim(0,359)                
                 ax13.grid(axis = 'both')
-                gs.update(left = 0.085,right = 0.99,top = 0.965,bottom = 0.1,wspace = 0.3,hspace = 0.24)
-                ax11.set_title(r'$Lidar_1(\theta,\varphi,\rho)=$ ['+ str(np.round(np.degrees(Data['lidars']['Lidar0_Spherical']['theta'][0]),2)) +','+str(np.round(np.degrees(Data['lidars']['Lidar0_Spherical']['psi'][0]),2))+','+str(np.round(Data['lidars']['Lidar0_Spherical']['rho'][0] ,2))  + ']' + 
-                                  r' ; $~Lidar_2(\theta,\varphi,\rho)=$ ['+ str(np.round(np.degrees(Data['lidars']['Lidar1_Spherical']['theta'][0]),2)) +','+str(np.round(np.degrees(Data['lidars']['Lidar1_Spherical']['psi'][0]),2))+','+str(np.round(Data['lidars']['Lidar1_Spherical']['rho'][0],2) )  + ']',fontsize=20)
+                gs.update(left = 0.075,top = 0.975,bottom = 0.085,wspace = 0.3,hspace = 0.24)
+                # gs.update(left = 0.085,right = 0.99,top = 0.965,bottom = 0.1,wspace = 0.3,hspace = 0.24)
+
+                # ax11.set_title(r'$Lidar_1(\theta,\varphi,\rho)=$ ['+ str(np.round(np.degrees(Data['lidars']['Lidar0_Spherical']['theta'][0]),2)) +','+str(np.round(np.degrees(Data['lidars']['Lidar0_Spherical']['psi'][0]),2))+','+str(np.round(Data['lidars']['Lidar0_Spherical']['rho'][0] ,2))  + ']' + 
+                #                   r' ; $~Lidar_2(\theta,\varphi,\rho)=$ ['+ str(np.round(np.degrees(Data['lidars']['Lidar1_Spherical']['theta'][0]),2)) +','+str(np.round(np.degrees(Data['lidars']['Lidar1_Spherical']['psi'][0]),2))+','+str(np.round(Data['lidars']['Lidar1_Spherical']['rho'][0],2) )  + ']',fontsize=20)
                 
                 plt.show()
             # Plot the vertical/horizontal plane
             # pdb.set_trace()
             elif Lidar.optics.scanner.pattern in ['vertical plane'] or Lidar.optics.scanner.pattern in ['horizontal plane']:
-                pdb.set_trace()
+                # pdb.set_trace()
                 V=[]
                 Dir=[]
                 for i in range(int((len(Data['Sens coeff Vh'])/len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'])))):
