@@ -976,6 +976,7 @@ def U_WindDir_GUM(Lidar,Atmospheric_Scenario,Correlation_coeff,wind_direction,li
     
     U_wind_dir=[]
     dWinDir_Vlos1T,dWinDir_Vlos2T,dWinDir_Vlos12T = [],[],[]
+    dWinDir_Vlos4T,dWinDir_Vlos5T,dWinDir_Vlos6T=[],[],[]
     for ind_wind_dir in range(len(wind_direction)):
       
 
@@ -1016,7 +1017,11 @@ def U_WindDir_GUM(Lidar,Atmospheric_Scenario,Correlation_coeff,wind_direction,li
             dWinDir_Vlos1T.append((dWinDir_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir])**2)
             dWinDir_Vlos2T.append((dWinDir_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir])**2)
             dWinDir_Vlos12T.append((dWinDir_Vlos3*U_Vlos_GUM['V3'][ind_wind_dir])**2)
-
+            
+            
+            dWinDir_Vlos4T.append(2*(dWinDir_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir])*(dWinDir_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir]))
+            dWinDir_Vlos5T.append(2*(dWinDir_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir])*(dWinDir_Vlos3*U_Vlos_GUM['V3'][ind_wind_dir]))
+            dWinDir_Vlos6T.append(2*(dWinDir_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir])*(dWinDir_Vlos3*U_Vlos_GUM['V3'][ind_wind_dir]))
         else:
             A =  Vlos_GUM['V1'][ind_wind_dir]*np.cos(lidars['Lidar1_Spherical']['theta'])*np.cos(lidars['Lidar1_Spherical']['psi'])-Vlos_GUM['V2'][ind_wind_dir]*np.cos(lidars['Lidar0_Spherical']['theta'])*np.cos(lidars['Lidar0_Spherical']['psi'])        
             B = -Vlos_GUM['V1'][ind_wind_dir]*np.cos(lidars['Lidar1_Spherical']['theta'])*np.sin(lidars['Lidar1_Spherical']['psi'])+Vlos_GUM['V2'][ind_wind_dir]*np.cos(lidars['Lidar0_Spherical']['theta'])*np.sin(lidars['Lidar0_Spherical']['psi'])
@@ -1043,10 +1048,12 @@ def U_WindDir_GUM(Lidar,Atmospheric_Scenario,Correlation_coeff,wind_direction,li
             dWinDir_Vlos1T.append((dWinDir_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir])**2)
             dWinDir_Vlos2T.append((dWinDir_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir])**2)
             dWinDir_Vlos12T.append((dWinDir_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir]*dWinDir_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir])*Correlation_coeff_list)
-
+            dWinDir_Vlos4T.append([0])
+            dWinDir_Vlos5T.append([0])
+            dWinDir_Vlos6T.append([0])
         # Uncertainty in wind direction:
         U_wind_dir.append(np.degrees(np.sqrt(UyWinDir))[0])
-    return (U_wind_dir,dWinDir_Vlos1T,dWinDir_Vlos2T,dWinDir_Vlos12T)
+    return (U_wind_dir,dWinDir_Vlos1T,dWinDir_Vlos2T,dWinDir_Vlos12T,dWinDir_Vlos4T,dWinDir_Vlos5T,dWinDir_Vlos6T)
 
     
   
@@ -1057,31 +1064,25 @@ def U_intrinsic(Lidar,Atmospheric_Scenario,DataFrame,Qlunc_yaml_inputs):
     lidar_wavelength = Qlunc_yaml_inputs['Components']['Laser']['Wavelength'] # wavelength of the laser source.
     fd               = 2*V_ref/lidar_wavelength  # Doppler frequency corresponding to Vref
     corr_wavelength_fd = 1
-    # pdb.set_trace()
     # Analytical solution:   
     u_intrinsic = np.round(np.sqrt((fd*DataFrame['Uncertainty ADC']['Stdv wavelength [m]']/2)**2+(Qlunc_yaml_inputs['Components']['Laser']['Wavelength']*DataFrame['Uncertainty ADC']['Stdv Doppler f_peak [Hz]']/2)**2+(fd*Qlunc_yaml_inputs['Components']['Laser']['Wavelength']*DataFrame['Uncertainty ADC']['Stdv Doppler f_peak [Hz]']*DataFrame['Uncertainty ADC']['Stdv wavelength [m]'])*corr_wavelength_fd/2) ,4)
     return u_intrinsic
 
 
 def Wind_vector3D(theta1,theta2,theta3,psi1,psi2,psi3, Vlos1,Vlos2,Vlos3):
-    # # 3D
-    # pdb.set_trace()
-    
     
     u = - (Vlos3* (np.cos(theta1)*np.sin(psi1)*np.sin(theta2) - np.cos(theta2)* np.sin(psi2)*np.sin(theta1))  +                           
            Vlos2 *(np.cos(theta3)*np.sin(psi3)*np.sin(theta1) - np.cos(theta1)*np.sin(psi1)*np.sin(theta3)) +                 
            Vlos1 *(np.cos(theta2)*np.sin(psi2)*np.sin(theta3) - np.cos(theta3)*np.sin(psi3)*np.sin(theta2)) ) /(np.cos(theta1) *np.cos(theta3)*np.sin(theta2)*np.sin(psi3-psi1)+ 
            np.cos(theta2)*np.cos(theta3)*np.sin(theta1)*np.sin(psi2-psi3)          + 
            np.cos(theta1)*np.cos(theta2)*np.sin(theta3)*np.sin(psi1-psi2))
-    
-    
+        
     v = - (Vlos1* (np.cos(psi3)*np.cos(theta3)*np.sin(theta2) - np.cos(psi2)*np.cos(theta2)*np.sin(theta3)) +                 
            Vlos2* (np.cos(psi1)*np.cos(theta1)*np.sin(theta3) - np.cos(psi3)*np.cos(theta3)*np.sin(theta1)) +                 
            Vlos3* (np.cos(psi2)*np.cos(theta2)*np.sin(theta1) - np.cos(psi1)*np.cos(theta1)*np.sin(theta2)))/(np.cos(theta1) *np.cos(theta3)*np.sin(theta2)*np.sin(psi3-psi1)+ 
            np.cos(theta2)*np.cos(theta3)*np.sin(theta1)*np.sin(psi2-psi3)          + 
            np.cos(theta1)*np.cos(theta2)*np.sin(theta3)*np.sin(psi1-psi2))
-    
-    
+        
     w =- (Vlos1 * np.cos(theta2) * np.cos(theta3) * np.sin(psi3-psi2)   +                
           Vlos2 * np.cos(theta1) * np.cos(theta3) * np.sin(psi1-psi3)   +                 
           Vlos3 * np.cos(theta1) * np.cos(theta2) * np.sin(psi2-psi1))  /(np.cos(theta1) *np.cos(theta3)*np.sin(theta2)*np.sin(psi3-psi1)+ 
@@ -1090,13 +1091,10 @@ def Wind_vector3D(theta1,theta2,theta3,psi1,psi2,psi3, Vlos1,Vlos2,Vlos3):
     return u,v,w
 
 def Wind_vector2D(theta1,theta2,psi1,psi2, Vlos1,Vlos2):
-    # # 3D
-    # pdb.set_trace()
     
     u = (- Vlos1*np.cos(theta2)*np.sin(psi2) + Vlos2*np.cos(theta1)*np.sin(psi1)) / (np.cos(theta1) *np.cos(theta2)*np.sin(psi1 - psi2))
-    v = (  Vlos1*np.cos(theta2)*np.cos(psi2) - Vlos2*np.cos(theta1)*np.cos(psi1)) / (np.cos(theta1) *np.cos(theta2)*np.sin(psi1 - psi2))
-                                                             
-    # pdb.set_trace()                        
+    
+    v = (  Vlos1*np.cos(theta2)*np.cos(psi2) - Vlos2*np.cos(theta1)*np.cos(psi1)) / (np.cos(theta1) *np.cos(theta2)*np.sin(psi1 - psi2))                                                             
     return u,v
 
 #%% 3D velocity vector

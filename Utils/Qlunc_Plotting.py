@@ -67,97 +67,149 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         
     
     if flag_plot_measuring_points_pattern:
-        
+
         # ##########################
         # Wind direction uncertainty 
         ############################
         if Qlunc_yaml_inputs['Flags']['Wind direction uncertainty']:
             # 0. Plot Uncertainty in /Omega against wind direction             
             color1   = iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))
-            fig0,ax0 = plt.subplots(2,1)
-            fig0.tight_layout()
+
             if len(Lidar.optics.scanner.origin)==3:
-                legt = [r'$\frac{\partial{\Omega}}{\partial{V_{LOS_1}}}$',r'$\frac{\partial{\Omega}}{\partial{V_{LOS_2}}}$',r'$\frac{\partial{\Omega}}{\partial{V_{LOS_{3}}}}$']
+                fig0,ax0 = plt.subplots(3,1)
+                fig0.tight_layout()
+                legt = [r'$\frac{\partial{\Omega}}{\partial{V_{LOS_1}}}$',r'$\frac{\partial{\Omega}}{\partial{V_{LOS_2}}}$',r'$\frac{\partial{\Omega}}{\partial{V_{LOS_{3}}}}$'
+                        ,r'$\frac{\partial{\Omega}}{\partial{V_{LOS_{1,2}}}}\sigma_{V_{LOS_{1,2}}}$',r'$\frac{\partial{\Omega}}{\partial{V_{LOS_{1,3}}}}\sigma_{V_{LOS_{1,3}}}$',r'$\frac{\partial{\Omega}}{\partial{V_{LOS_{2,3}}}}\sigma_{V_{LOS_{2,3}}}$']
                 ax0[1].plot(np.degrees(Data['wind direction']),Data['Sens coeff Vlos']['W1'][-1],'-',linewidth=plot_param['linewidth'], color='black',label=legt[0])
                 ax0[1].plot(np.degrees(Data['wind direction']),Data['Sens coeff Vlos']['W2'][-1],'-',linewidth=plot_param['linewidth'], color='dimgray',label=legt[1])     
                 ax0[1].plot(np.degrees(Data['wind direction']),Data['Sens coeff Vlos']['W1W2'][-1],'-',linewidth=plot_param['linewidth'], color='lightgray',label=legt[2])
+                ax0[2].plot(np.degrees(Data['wind direction']),Data['Sens coeff Vlos']['W4'][-1],'-',linewidth=plot_param['linewidth'], color='cadetblue',label=legt[3])
+                ax0[2].plot(np.degrees(Data['wind direction']),Data['Sens coeff Vlos']['W5'][-1],'-',linewidth=plot_param['linewidth'], color='darkmagenta',label=legt[4])
+                ax0[2].plot(np.degrees(Data['wind direction']),Data['Sens coeff Vlos']['W6'][-1],'-',linewidth=plot_param['linewidth'], color='tan',label=legt[5])
+                        
+            
+
+                	# Axes:
+                        
+                ax0[0].set_ylabel('$\Omega$ Uncertainty [°]',fontsize=plot_param['axes_label_fontsize'])          
+                ax0[0].tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
+                ax0[0].tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
+                ax0[0].set_xlim(0,359)
+                ax0[0].set_ylim(0.65,1)
+                ax0[0].grid(axis='both')
+    
+                ax0[1].legend(loc=1, prop={'size': plot_param['legend_fontsize']+4.7})
+                ax0[1].set_ylabel(r'$ \frac{\partial{\Omega}}{\partial{V_{LOS_{i}}}}~\sigma_{V_{LOS_{i}}}~$[°]',fontsize=plot_param['axes_label_fontsize']-2.3)
+                ax0[1].ticklabel_format(axis='y',style='sci', scilimits=(0,0))          
+                ax0[1].yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-4)
+
+                ax0[1].tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
+                ax0[1].tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
+                ax0[1].set_xlim(0,359)
+                ax0[1].grid(axis='both')
+
+                ax0[2].legend(loc=1, prop={'size': plot_param['legend_fontsize']+3})
+                ax0[2].set_ylabel('[°]',fontsize=plot_param['axes_label_fontsize']-2.3)
+                ax0[2].ticklabel_format(axis='y',style='sci', scilimits=(0,0))          
+                ax0[2].yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-4)
+                ax0[2].set_xlabel('Wind direction[°]',fontsize=plot_param['axes_label_fontsize'])
+                ax0[2].tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
+                ax0[2].tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
+                ax0[2].set_xlim(0,359)
+                ax0[2].grid(axis='both')
+                # pdb.set_trace()                
+                props0 = dict(boxstyle='round', facecolor='wheat', alpha=0.4)        
+                textstr0 = '\n'.join((
+                r'$r_{\theta_{1},\theta_{2}} ~=%.2f$' % ( Lidar.optics.scanner.correlations[3] ),
+                r'$r_{\theta_{1},\theta_{3}} ~=%.2f$' % ( Lidar.optics.scanner.correlations[4] ),
+                r'$r_{\theta_{2},\theta_{3}} ~=%.2f$' % ( Lidar.optics.scanner.correlations[5] ),
+                
+                r'$r_{\varphi_{1},\varphi_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[0] ),
+                r'$r_{\varphi_{1},\varphi_{3}}~ =%.2f$' % (Lidar.optics.scanner.correlations[1] ),
+                r'$r_{\varphi_{2},\varphi_{3}}~ =%.2f$' % (Lidar.optics.scanner.correlations[2] ),
+                
+                r'$r_{\rho_{1},\rho_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[6]),
+                r'$r_{\rho_{1},\rho_{3}}~ =%.2f$' % (Lidar.optics.scanner.correlations[7]),
+                r'$r_{\rho_{2},\rho_{3}}~ =%.2f$' % (Lidar.optics.scanner.correlations[8]),
+                
+                r'$r_{\theta_{1},\varphi_{1}}~ =%.2f$' % (Lidar.optics.scanner.correlations[9]),
+                r'$r_{\theta_{2},\varphi_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[10]),
+                r'$r_{\theta_{3},\varphi_{3}}~ =%.2f$' % (Lidar.optics.scanner.correlations[11]),
+                
+                r'$r_{\varphi_{1},\theta_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[12]),
+                r'$r_{\varphi_{1},\theta_{3}}~ =%.2f$' % (Lidar.optics.scanner.correlations[13]),
+                r'$r_{\varphi_{2},\theta_{1}}~ =%.2f$' % (Lidar.optics.scanner.correlations[14]),
+                
+                r'$r_{\varphi_{2},\theta_{3}}~ =%.2f$' % (Lidar.optics.scanner.correlations[15]),
+                r'$r_{\varphi_{3},\theta_{1}}~ =%.2f$' % (Lidar.optics.scanner.correlations[16]),
+                r'$r_{\varphi_{3},\theta_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[17])))    
+                ax0[0].text(.92, 0.80, textstr0,  fontsize = 16,horizontalalignment = 'left',verticalalignment = 'top', bbox = props0, transform=plt.gcf().transFigure) 
+                # ax0[0].update(left = 0.075,top = 0.975,bottom = 0.085,wspace = 0.3,hspace = 0.24)
+    
+                plt.subplots_adjust(left=0.075, right=0.9, bottom=0.085, top=0.975, wspace=0.3, hspace=0.24)            
+                # Titles
+                # ax0[0].set_title(r'$Lidar_1(\theta,\varphi,\rho)=$ ['+ str(np.round(np.degrees(Data['lidars']['Lidar0_Spherical']['theta'][0]),2)) +','+str(np.round(np.degrees(Data['lidars']['Lidar0_Spherical']['psi'][0]),2))+','+str(np.round(Data['lidars']['Lidar0_Spherical']['rho'][0] ,2))  + ']' + 
+                #                   r' ; $~Lidar_2(\theta,\varphi,\rho)=$ ['+ str(np.round(np.degrees(Data['lidars']['Lidar1_Spherical']['theta'][0]),2)) +','+str(np.round(np.degrees(Data['lidars']['Lidar1_Spherical']['psi'][0]),2))+','+str(np.round(Data['lidars']['Lidar1_Spherical']['rho'][0],2) )  + ']',fontsize=20)
+                # Legends
+                ax0[0].legend(loc=1, prop={'size': plot_param['legend_fontsize']})
+                ax0[1].legend(loc=1, prop={'size': plot_param['legend_fontsize']+4.7})
+                plt.show()                       
+                # pdb.set_trace()
             else:
+                fig0,ax0 = plt.subplots(2,1)
+                fig0.tight_layout()
                 legt = [r'$\frac{\partial{\Omega}}{\partial{V_{LOS_1}}}$',r'$\frac{\partial{\Omega}}{\partial{V_{LOS_2}}}$',r'$\frac{\partial{\Omega}}{\partial{V_{LOS_{12}}}}$']
                 ax0[1].plot(np.degrees(Data['wind direction']),Data['Sens coeff Vlos']['W1'][-1],'-',linewidth=plot_param['linewidth'], color='black',label=legt[0])
                 ax0[1].plot(np.degrees(Data['wind direction']),Data['Sens coeff Vlos']['W2'][-1],'-',linewidth=plot_param['linewidth'], color='dimgray',label=legt[1])     
                 ax0[1].plot(np.degrees(Data['wind direction']),Data['Sens coeff Vlos']['W1W2'][-1],'-',linewidth=plot_param['linewidth'], color='cadetblue',label=legt[2])
+                            
             
+
+                	# Axes:
+                        
+                ax0[0].set_ylabel('$\Omega$ Uncertainty [°]',fontsize=plot_param['axes_label_fontsize'])          
+                ax0[0].legend(loc=1, prop={'size': plot_param['legend_fontsize']})
+                ax0[0].tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
+                ax0[0].tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
+                ax0[0].set_xlim(0,359)
+                ax0[0].set_ylim(0.65,1)
+                ax0[0].grid(axis='both')
+    
+                ax0[1].legend(loc=1, prop={'size': plot_param['legend_fontsize']+4.7})
+                ax0[1].set_ylabel(r'$ \frac{\partial^2{\Omega}}{\partial{V_{LOS_{i,j}}}}~\sigma_{V_{LOS_{i,j}}}~$[°]',fontsize=plot_param['axes_label_fontsize']-2.3)
+                ax0[1].ticklabel_format(axis='y',style='sci', scilimits=(0,0))          
+                ax0[1].yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-4)
+                ax0[1].set_xlabel('Wind direction[°]',fontsize=plot_param['axes_label_fontsize'])
+                ax0[1].tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
+                ax0[1].tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
+                ax0[1].set_xlim(0,359)
+                ax0[1].grid(axis='both')
+                # pdb.set_trace()
+                
+                props0 = dict(boxstyle='round', facecolor='wheat', alpha=0.4)        
+                textstr0 = '\n'.join((
+                r'$r_{\theta_{1},\theta_{2}} ~=%.2f$' % ( Lidar.optics.scanner.correlations[3] ),               
+                r'$r_{\varphi_{1},\varphi_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[0] ),               
+                r'$r_{\rho_{1},\rho_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[6]),              
+                r'$r_{\theta_{1},\varphi_{1}}~ =%.2f$' % (Lidar.optics.scanner.correlations[9]),              
+                r'$r_{\varphi_{1},\theta_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[12]),
+                r'$r_{\varphi_{2},\theta_{1}}~ =%.2f$' % (Lidar.optics.scanner.correlations[14])))    
+
+                ax0[0].text(.92, 0.80, textstr0,  fontsize = 16,horizontalalignment = 'left',verticalalignment = 'top', bbox = props0, transform=plt.gcf().transFigure) 
+                # ax0[0].update(left = 0.075,top = 0.975,bottom = 0.085,wspace = 0.3,hspace = 0.24)
+    
+                     
+                # pdb.set_trace()
             for ind_plot in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction MCM'])):
                 
                 cc=next(color1)
                 ax0[0].plot(np.degrees(Data['wind direction']),Data['WinDir Unc [°]']['Uncertainty wind direction GUM'][ind_plot],'-', color=cc,label=r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))
                 ax0[0].plot(np.degrees(Data['wind direction']),Data['WinDir Unc [°]']['Uncertainty wind direction MCM'][ind_plot],'o', markerfacecolor=cc,markeredgecolor='lime',alpha=0.4,label='MCM')        
-              
-            # ax0[1].plot(np.degrees(Data['wind direction']),Data['Sens coeff Vlos']['W1W2'][-1],'-', color='cadetblue',alpha=0.7,label=legt[2])        
             
-            
-
-            	# Axes:
-                    
-            ax0[0].set_ylabel('$\Omega$ Uncertainty [°]',fontsize=plot_param['axes_label_fontsize'])          
             ax0[0].legend(loc=1, prop={'size': plot_param['legend_fontsize']})
-            ax0[0].tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
-            ax0[0].tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
-            ax0[0].set_xlim(0,359)
-            ax0[0].set_ylim(0.65,1)
-            ax0[0].grid(axis='both')
-
-            ax0[1].legend(loc=1, prop={'size': plot_param['legend_fontsize']+4.7})
-            ax0[1].set_ylabel(r'$ \frac{\partial^2{\Omega}}{\partial{V_{LOS_{i,j}}}}~\sigma_{V_{LOS_{i,j}}}~$[°]',fontsize=plot_param['axes_label_fontsize']-2.3)
-            ax0[1].ticklabel_format(axis='y',style='sci', scilimits=(0,0))          
-            ax0[1].yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-4)
-            ax0[1].set_xlabel('Wind direction[°]',fontsize=plot_param['axes_label_fontsize'])
-            ax0[1].tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
-            ax0[1].tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
-            ax0[1].set_xlim(0,359)
-            ax0[1].grid(axis='both')
-            # pdb.set_trace()
-            
-            props0 = dict(boxstyle='round', facecolor='wheat', alpha=0.4)        
-            textstr0 = '\n'.join((
-            r'$r_{\theta_{1},\theta_{2}} ~=%.2f$' % ( Lidar.optics.scanner.correlations[3] ),
-            r'$r_{\theta_{1},\theta_{3}} ~=%.2f$' % ( Lidar.optics.scanner.correlations[4] ),
-            r'$r_{\theta_{2},\theta_{3}} ~=%.2f$' % ( Lidar.optics.scanner.correlations[5] ),
-            
-            r'$r_{\varphi_{1},\varphi_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[0] ),
-            r'$r_{\varphi_{1},\varphi_{3}}~ =%.2f$' % (Lidar.optics.scanner.correlations[1] ),
-            r'$r_{\varphi_{2},\varphi_{3}}~ =%.2f$' % (Lidar.optics.scanner.correlations[2] ),
-            
-            r'$r_{\rho_{1},\rho_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[6]),
-            r'$r_{\rho_{1},\rho_{3}}~ =%.2f$' % (Lidar.optics.scanner.correlations[7]),
-            r'$r_{\rho_{2},\rho_{3}}~ =%.2f$' % (Lidar.optics.scanner.correlations[8]),
-            
-            r'$r_{\theta_{1},\varphi_{1}}~ =%.2f$' % (Lidar.optics.scanner.correlations[9]),
-            r'$r_{\theta_{2},\varphi_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[10]),
-            r'$r_{\theta_{3},\varphi_{3}}~ =%.2f$' % (Lidar.optics.scanner.correlations[11]),
-            
-            r'$r_{\varphi_{1},\theta_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[12]),
-            r'$r_{\varphi_{1},\theta_{3}}~ =%.2f$' % (Lidar.optics.scanner.correlations[13]),
-            r'$r_{\varphi_{2},\theta_{1}}~ =%.2f$' % (Lidar.optics.scanner.correlations[14]),
-            
-            r'$r_{\varphi_{2},\theta_{3}}~ =%.2f$' % (Lidar.optics.scanner.correlations[15]),
-            r'$r_{\varphi_{3},\theta_{1}}~ =%.2f$' % (Lidar.optics.scanner.correlations[16]),
-            r'$r_{\varphi_{3},\theta_{2}}~ =%.2f$' % (Lidar.optics.scanner.correlations[17])))    
-            ax0[0].text(.92, 0.80, textstr0,  fontsize = 16,horizontalalignment = 'left',verticalalignment = 'top', bbox = props0, transform=plt.gcf().transFigure) 
-            # ax0[0].update(left = 0.075,top = 0.975,bottom = 0.085,wspace = 0.3,hspace = 0.24)
-
             plt.subplots_adjust(left=0.075, right=0.9, bottom=0.085, top=0.975, wspace=0.3, hspace=0.24)            
-            # Titles
-            # ax0[0].set_title(r'$Lidar_1(\theta,\varphi,\rho)=$ ['+ str(np.round(np.degrees(Data['lidars']['Lidar0_Spherical']['theta'][0]),2)) +','+str(np.round(np.degrees(Data['lidars']['Lidar0_Spherical']['psi'][0]),2))+','+str(np.round(Data['lidars']['Lidar0_Spherical']['rho'][0] ,2))  + ']' + 
-            #                   r' ; $~Lidar_2(\theta,\varphi,\rho)=$ ['+ str(np.round(np.degrees(Data['lidars']['Lidar1_Spherical']['theta'][0]),2)) +','+str(np.round(np.degrees(Data['lidars']['Lidar1_Spherical']['psi'][0]),2))+','+str(np.round(Data['lidars']['Lidar1_Spherical']['rho'][0],2) )  + ']',fontsize=20)
-            # Legends
-            # ax0[0].legend(loc=1, prop={'size': plot_param['legend_fontsize']})
-            # ax0[1].legend(loc=1, prop={'size': plot_param['legend_fontsize']+4.7})
-            plt.show()                       
-            # pdb.set_trace()
-        
-        
-        
+            plt.show()                
+        pdb.set_trace()
         # #######################################
         # Wind velocity uncertainty (Vh or Vwind) 
         #########################################

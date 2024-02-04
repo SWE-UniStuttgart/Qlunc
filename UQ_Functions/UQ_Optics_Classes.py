@@ -60,7 +60,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
     wind_direction_TEST                                             = []
     U_Vlos                                                          = {'V1_MCM'   : [],'V2_MCM'   : [],'V3_MCM'   : [],'V1_GUM'  : [],'V2_GUM'  : [],'V3_GUM'  : []}
     Correlation_coeff                                               = {'V12_MCM'  : [],'V13_MCM'  : [],'V23_MCM'  : [],'V12_GUM' : [],'V13_GUM' : [],'V23_GUM' : []}
-    SensCoeff_Vlos                                                  = {'V1_theta' : [],'V2_theta' : [],'V3_theta' : [],'V1_psi'  : [],'V2_psi'  : [],'V3_psi'  : [],'V1_rho' : [],'V2_rho' : [],'V3_rho' : [],'W1' : [],'W2' : [],'W1W2' : []}
+    SensCoeff_Vlos                                                  = {'V1_theta' : [],'V2_theta' : [],'V3_theta' : [],'V1_psi'  : [],'V2_psi'  : [],'V3_psi'  : [],'V1_rho' : [],'V2_rho' : [],'V3_rho' : [],'W1' : [],'W2' : [],'W1W2' : [],'W4' : [],'W5' : [],'W6' : []}
 
      
     Href  = Qlunc_yaml_inputs['Components']['Scanner']['Href'],
@@ -104,7 +104,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
          
             #%% 2) Range and measuring angles are calculated based on the position of the lidars and the measuring points            
             
-            # Measurement point in cartesian coordinates
+            # Measurement point(s) in cartesian coordinates
             if Lidar.optics.scanner.pattern=='lissajous' or Lidar.optics.scanner.pattern=='horizontal plane' or Lidar.optics.scanner.pattern=='vertical plane':
                 x = np.array([x_out[meas_param]])
                 y = np.array([y_out[meas_param]])
@@ -148,7 +148,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
             U_Wind_direction_MCM.append(SA.U_WindDir_MC(Lidar,wind_direction,Mult_param,DataFrame))
             
             # 4.2) GUM
-            U_Wind_direction_GUM0,dWinDir_Vlos1,dWinDir_Vlos2,dWinDir_Vlos12 = (SA.U_WindDir_GUM(Lidar,Atmospheric_Scenario,Correlation_coeff_GUM,wind_direction,lidars,Vlos_GUM,U_Vlos_GUM,u,v,w,DataFrame))      
+            U_Wind_direction_GUM0,dWinDir_Vlos1,dWinDir_Vlos2,dWinDir_Vlos12,dWinDir_Vlos4T,dWinDir_Vlos5T,dWinDir_Vlos6T = (SA.U_WindDir_GUM(Lidar,Atmospheric_Scenario,Correlation_coeff_GUM,wind_direction,lidars,Vlos_GUM,U_Vlos_GUM,u,v,w,DataFrame))      
                         
             #%% 5) Method for uncertainty when varying theta, psi 'OR' rho   
             U_VLOS_T_MC_rho,U_VLOS_T_GUM_rho,rho_TESTr,theta_TESTr,psi_TESTr      =  SA.VLOS_param(Lidar,np.linspace(10,5000,600),lidars['Lidar0_Spherical']['theta'],lidars['Lidar0_Spherical']['psi'],0,0,Lidar.optics.scanner.stdv_focus_dist[0][0],Lidar.optics.scanner.N_MC,Hl[0],V_ref,Href,alpha,wind_direction_TEST,0,DataFrame)
@@ -171,7 +171,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
             SensCoeff_Vlos['W1'].append(dWinDir_Vlos1) 
             SensCoeff_Vlos['W2'].append(dWinDir_Vlos2)
             SensCoeff_Vlos['W1W2'].append(dWinDir_Vlos12)
-            
+            SensCoeff_Vlos['W4'].append(dWinDir_Vlos4T)
+            SensCoeff_Vlos['W5'].append(dWinDir_Vlos5T)
+            SensCoeff_Vlos['W6'].append(dWinDir_Vlos6T)            
             #Correlations
             Correlation_coeff['V12_GUM'].append(Correlation_coeff_GUM['V1'])
             Correlation_coeff['V13_GUM'].append(Correlation_coeff_GUM['V2'])
@@ -180,7 +182,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
             Correlation_coeff['V13_MCM'].append(Corr_coeff_MCM['V13'])
             Correlation_coeff['V23_MCM'].append(Corr_coeff_MCM['V23'])
 
-            # Sendditivity analysis of the input quantities
+            # Sensitivity analysis of the input quantities
             U_VLOS_T_MC_rho_T.append(U_VLOS_T_MC_rho)
             U_VLOS_T_GUM_rho_T.append(U_VLOS_T_GUM_rho[0])                       
             U_VLOS_T_MC_theta_T.append(U_VLOS_T_MC_theta)
@@ -192,15 +194,15 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
             lidars['Coord_Test']={'TESTr':np.array([rho_TESTr]),'TESTt':np.array([theta_TESTt]),'TESTp':np.array([psi_TESTp])}
   
     
-    VLOS_Unc    =  {'VLOS1 Uncertainty MC [m/s]':U_Vlos['V1_MCM'],           'VLOS1 Uncertainty GUM [m/s]':U_Vlos['V1_GUM'],
-                    'VLOS2 Uncertainty MC [m/s]':U_Vlos['V2_MCM'],           'VLOS2 Uncertainty GUM [m/s]':U_Vlos['V2_GUM'],
-                    'VLOS3 Uncertainty MC [m/s]':U_Vlos['V3_MCM'],           'VLOS3 Uncertainty GUM [m/s]':U_Vlos['V3_GUM'],
-                    'VLOS Uncertainty MC rho [m/s]':U_VLOS_T_MC_rho_T,    'VLOS Uncertainty GUM rho [m/s]':U_VLOS_T_GUM_rho_T,
-                    'VLOS Uncertainty MC psi [m/s]':U_VLOS_T_MC_psi_T,    'VLOS Uncertainty GUM psi [m/s]':U_VLOS_T_GUM_psi_T,
-                    'VLOS Uncertainty MC theta [m/s]':U_VLOS_T_MC_theta_T,'VLOS Uncertainty GUM theta [m/s]':U_VLOS_T_GUM_theta_T}
+    VLOS_Unc    =  {'VLOS1 Uncertainty MC [m/s]':      U_Vlos['V1_MCM'],      'VLOS1 Uncertainty GUM [m/s]':      U_Vlos['V1_GUM'],
+                    'VLOS2 Uncertainty MC [m/s]':      U_Vlos['V2_MCM'],      'VLOS2 Uncertainty GUM [m/s]':      U_Vlos['V2_GUM'],
+                    'VLOS3 Uncertainty MC [m/s]':      U_Vlos['V3_MCM'],      'VLOS3 Uncertainty GUM [m/s]':      U_Vlos['V3_GUM'],
+                    'VLOS Uncertainty MC rho [m/s]':   U_VLOS_T_MC_rho_T,     'VLOS Uncertainty GUM rho [m/s]':   U_VLOS_T_GUM_rho_T,
+                    'VLOS Uncertainty MC psi [m/s]':   U_VLOS_T_MC_psi_T,     'VLOS Uncertainty GUM psi [m/s]':   U_VLOS_T_GUM_psi_T,
+                    'VLOS Uncertainty MC theta [m/s]': U_VLOS_T_MC_theta_T,   'VLOS Uncertainty GUM theta [m/s]': U_VLOS_T_GUM_theta_T}
         
-    Vh_Unc      =  {'Uncertainty Vh MCM':U_Vh_MCM_T,'Uncertainty Vh GUM':U_Vh_GUM_T}   
-    WinDir_Unc  =  {'Uncertainty wind direction GUM':U_Wind_direction_GUM,'Uncertainty wind direction MCM':U_Wind_direction_MCM}
+    Vh_Unc      =  {'Uncertainty Vh MCM':             U_Vh_MCM_T,            'Uncertainty Vh GUM':             U_Vh_GUM_T}   
+    WinDir_Unc  =  {'Uncertainty wind direction GUM': U_Wind_direction_GUM,  'Uncertainty wind direction MCM': U_Wind_direction_MCM}
     
     
     Final_Output_UQ_Scanner = {'lidars'          : lidars,
@@ -216,7 +218,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
     DataFrame['Uncertainty Scanner']=Final_Output_UQ_Scanner
     
     
-    
+    # pdb.set_trace()    
     #%% 7) Plotting data
     QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,Qlunc_yaml_inputs['Flags']['Scanning uncertainties'],False,False,False,False,False,1)  
     return DataFrame
