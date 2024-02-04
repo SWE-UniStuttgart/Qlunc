@@ -157,8 +157,8 @@ for ind_npulses = 1:n_pulses
         
         
         % Relative error in the peak detection
-%         Relative_error(ind_fs,:,ind_npulses) =  100*abs((fd - f_peak(ind_fs,ind_npulses)))/fd; %#ok<SAGROW>
-%         stdv_signal (ind_fs,:,ind_npulses) = level_noise/sqrt(size(P3,1)); %#ok<SAGROW>
+        Relative_error(ind_fs,:,ind_npulses) =  100*abs((fd - fd_peak(ind_fs,ind_npulses)))/fd; %#ok<SAGROW>
+        stdv_signal (ind_fs,:,ind_npulses) = level_noise/sqrt(size(P3,1)); %#ok<SAGROW>
         % STDV_signal (ind_fs,:) = level_noise/sqrt(size(P3,1));
         RMSE(ind_fs,:,ind_npulses) =sqrt(mean((X{ind_fs}-mean_S_quant{ind_fs}).^2)); %#ok<SAGROW>
         SNQR(ind_fs,:,ind_npulses) =((6.02*n_bits-1.25)); %#ok<SAGROW>
@@ -288,7 +288,7 @@ grid on
 set(gca,'FontSize',35);
 hold off
 
-toc
+T=toc;
 
 
 %% Plot input quantities probability distributions
@@ -345,19 +345,19 @@ pd = fitdist(fd_peak(:,1),'Normal')
 
 
 % % Plotting sensitivity annalysis
-% figure,plot(n_fftpoints,Relative_error,'bo')
-% title('Relative error vs. N_MC°of samples', 'fontsize',20)
-% ylabel('Relative error [%]', 'fontsize',20)
-% xlabel('Number of fft points', 'fontsize',20)
-% grid on
-% figure,plot(n_fftpoints,T,'bo')
-% title('Computational time vs. N_MC°of samples', 'fontsize',20)
-% ylabel('time[s]', 'fontsize',20)
-% xlabel('Number of fft points', 'fontsize',20)
-% legend
-% grid on
-% set(gca,'FontSize',20);% %
-% figure,plot(fs,Relative_error,'bo')
-% title('Relative error vs. Sampling frequency', 'fontsize',20)
-% ylabel('Relative error [%]', 'fontsize',20)
-% xlabel('Sampling frequency [Hz]', 'fontsize',20)
+figure,plot(n_fftpoints,Relative_error,'bo')
+title('Relative error vs. N_MC°of samples', 'fontsize',20)
+ylabel('Relative error [%]', 'fontsize',20)
+xlabel('Number of fft points', 'fontsize',20)
+grid on
+figure,plot(n_fftpoints,T,'bo')
+title('Computational time vs. N_MC°of samples', 'fontsize',20)
+ylabel('time[s]', 'fontsize',20)
+xlabel('Number of fft points', 'fontsize',20)
+legend
+grid on
+set(gca,'FontSize',20);% %
+figure,plot(fs,Relative_error,'bo')
+title('Relative error vs. Sampling frequency', 'fontsize',20)
+ylabel('Relative error [%]', 'fontsize',20)
+xlabel('Sampling frequency [Hz]', 'fontsize',20)
