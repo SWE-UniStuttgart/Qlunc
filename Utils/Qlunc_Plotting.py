@@ -770,7 +770,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             # ##############################################
             # Plot  Vlos cross-correlation terms
             ################################################     
-            pdb.set_trace()
+            # pdb.set_trace()
             fig8,ax8 = plt.subplots(3,1)  
             fig8.tight_layout()
             color = iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))   
@@ -857,7 +857,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             ax8[0].yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-3)
             ax8[1].yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-3)    
             ax8[2].yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-3)    
-            plt.subplots_adjust(right=0.995,left = 0.055,top = 0.975,bottom = 0.085,wspace = 0.3,hspace = 0.24)
+            plt.subplots_adjust(right=0.995,left = 0.065,top = 0.975,bottom = 0.085,wspace = 0.3,hspace = 0.24)
     
     
     ###############   Plot photodetector noise   #############################       
