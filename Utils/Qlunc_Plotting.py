@@ -774,7 +774,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             fig8,ax8 = plt.subplots(3,1)  
             fig8.tight_layout()
             color = iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))   
-     
+            markers_plot =  0 + np.arange(0, 120)* 3
             # Plot with sensitivity coefficients: Data['Uncertainty contributors Vlos1']=[contribution theta, contribution varphi, contribution rho] for alpha 0, 0.1 and 0.2. For the plotting we use alpha=0.2            
             # Vlos1Vlos2
             Corr_psi1psi2     = 2*Lidar.optics.scanner.correlations[0]*np.array(Data['Sens coeff Vlos']['V1_psi'][-1])*np.array(Data['Sens coeff Vlos']['V2_psi'][-1])*np.array(np.radians(Data['STDVs'][1][0]))*np.array(np.radians(Data['STDVs'][1][1]))
@@ -798,23 +798,23 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             Corr_psi3theta2   = 2*Lidar.optics.scanner.correlations[17]*np.array(Data['Sens coeff Vlos']['V3_psi'][-1])*np.array(Data['Sens coeff Vlos']['V2_theta'][-1])*np.array(np.radians(Data['STDVs'][1][2]))*np.array(np.radians(Data['STDVs'][0][1]))
 
             # Plotting contributors:
-            ax8[0].plot(np.degrees(Data['wind direction']),Corr_psi1psi2,'-',c = 'black',    linewidth = plot_param['linewidth'],label = r'$\frac{\partial^2{V_{LOS_2}}}{\partial{\theta_2}}\sigma^2_{\theta_2}$')
-            ax8[0].plot(np.degrees(Data['wind direction']),Corr_theta1theta2  ,'-',c = 'dimgray',  linewidth = plot_param['linewidth'],label = r'$\frac{\partial^2{V_{LOS_2}}}{\partial{\varphi_2}}\sigma^2_{\varphi_2}$')
-            ax8[0].plot(np.degrees(Data['wind direction']),Corr_rho1rho2  ,'-',c = 'lightgray',linewidth = plot_param['linewidth'],label = r'$\frac{\partial^2{V_{LOS_2}}}{\partial{\rho_2}}\sigma^2_{\rho_2}$')
-            ax8[0].plot(np.degrees(Data['wind direction']),Corr_psi1theta2 ,'-',c = 'cadetblue',linewidth = plot_param['linewidth'],label = r'$\frac{\partial{V_{LOS_2}}}{\partial{\theta_2}\partial{\varphi_2}}\sigma_{\theta_2\varphi_2}$')
-            ax8[0].plot(np.degrees(Data['wind direction']),Corr_psi2theta1 ,'-',c = 'cadetblue',linewidth = plot_param['linewidth'],label = r'$\frac{\partial{V_{LOS_2}}}{\partial{\theta_2}\partial{\varphi_2}}\sigma_{\theta_2\varphi_2}$')
+            ax8[0].plot(np.degrees(Data['wind direction']),Corr_psi1psi2,'-d',c = 'black', markevery=markers_plot,   linewidth = plot_param['linewidth'],label = r'$\sigma_{\varphi_1}\sigma_{\varphi_2}$')
+            ax8[0].plot(np.degrees(Data['wind direction']),Corr_theta1theta2  ,'-s',c = 'dimgray', markevery=markers_plot, linewidth = plot_param['linewidth'],label = r'$\sigma_{\theta_1}\sigma_{\theta_2}$')
+            ax8[0].plot(np.degrees(Data['wind direction']),Corr_rho1rho2  ,'-^',c = 'lightgray',markevery=markers_plot,linewidth = plot_param['linewidth'],label = r'$\sigma_{\rho_1}\sigma_{\rho_2}$')
+            ax8[0].plot(np.degrees(Data['wind direction']),Corr_psi1theta2 ,'-X',c = 'cadetblue',markevery=markers_plot,linewidth = plot_param['linewidth'],label = r'$\sigma_{\varphi_1}\sigma_{\theta_2}$')
+            ax8[0].plot(np.degrees(Data['wind direction']),Corr_psi2theta1 ,'-o',c = 'gold',markevery=markers_plot,linewidth = plot_param['linewidth'],label = r'$\sigma_{\varphi_2}\sigma_{\theta_1}$')
 
-            ax8[1].plot(np.degrees(Data['wind direction']),Corr_psi1psi3,'-',c = 'black',    linewidth = plot_param['linewidth'],label = r'$\frac{\partial^2{V_{LOS_2}}}{\partial{\theta_2}}\sigma^2_{\theta_2}$')
-            ax8[1].plot(np.degrees(Data['wind direction']),Corr_theta1theta3  ,'-',c = 'dimgray',  linewidth = plot_param['linewidth'],label = r'$\frac{\partial^2{V_{LOS_2}}}{\partial{\varphi_2}}\sigma^2_{\varphi_2}$')
-            ax8[1].plot(np.degrees(Data['wind direction']),Corr_rho1rho3  ,'-',c = 'lightgray',linewidth = plot_param['linewidth'],label = r'$\frac{\partial^2{V_{LOS_2}}}{\partial{\rho_2}}\sigma^2_{\rho_2}$')
-            ax8[1].plot(np.degrees(Data['wind direction']),Corr_psi1theta3 ,'-',c = 'cadetblue',linewidth = plot_param['linewidth'],label = r'$\frac{\partial{V_{LOS_2}}}{\partial{\theta_2}\partial{\varphi_2}}\sigma_{\theta_2\varphi_2}$')
-            ax8[1].plot(np.degrees(Data['wind direction']),Corr_psi3theta1 ,'-',c = 'cadetblue',linewidth = plot_param['linewidth'],label = r'$\frac{\partial{V_{LOS_2}}}{\partial{\theta_2}\partial{\varphi_2}}\sigma_{\theta_2\varphi_2}$')
+            ax8[1].plot(np.degrees(Data['wind direction']),Corr_psi1psi3,'-d',c = 'black', markevery=markers_plot,   linewidth = plot_param['linewidth'],label = r'$\sigma_{\varphi_1}\sigma_{\varphi_3}$')
+            ax8[1].plot(np.degrees(Data['wind direction']),Corr_theta1theta3  ,'-s',c = 'dimgray',markevery=markers_plot,  linewidth = plot_param['linewidth'],label = r'$\sigma_{\theta_1}\sigma_{\theta_3}$')
+            ax8[1].plot(np.degrees(Data['wind direction']),Corr_rho1rho3  ,'-^',c = 'lightgray',markevery=markers_plot,linewidth = plot_param['linewidth'],label = r'$\sigma_{\rho_1}\sigma_{\rho_3}$')
+            ax8[1].plot(np.degrees(Data['wind direction']),Corr_psi1theta3 ,'-X',c = 'cadetblue',markevery=markers_plot,linewidth = plot_param['linewidth'],label = r'$\sigma_{\varphi_1}\sigma_{\theta_3}$')
+            ax8[1].plot(np.degrees(Data['wind direction']),Corr_psi3theta1 ,'-o',c = 'gold',markevery=markers_plot,linewidth = plot_param['linewidth'],label = r'$\sigma_{\varphi_3}\sigma_{\theta_1}$')
 
-            ax8[2].plot(np.degrees(Data['wind direction']),Corr_psi2psi3,'-',c = 'black',    linewidth = plot_param['linewidth'],label = r'$\frac{\partial^2{V_{LOS_2}}}{\partial{\theta_2}}\sigma^2_{\theta_2}$')
-            ax8[2].plot(np.degrees(Data['wind direction']),Corr_theta2theta3  ,'-',c = 'dimgray',  linewidth = plot_param['linewidth'],label = r'$\frac{\partial^2{V_{LOS_2}}}{\partial{\varphi_2}}\sigma^2_{\varphi_2}$')
-            ax8[2].plot(np.degrees(Data['wind direction']),Corr_rho2rho3  ,'-',c = 'lightgray',linewidth = plot_param['linewidth'],label = r'$\frac{\partial^2{V_{LOS_2}}}{\partial{\rho_2}}\sigma^2_{\rho_2}$')
-            ax8[2].plot(np.degrees(Data['wind direction']),Corr_psi2theta3 ,'-',c = 'cadetblue',linewidth = plot_param['linewidth'],label = r'$\frac{\partial{V_{LOS_2}}}{\partial{\theta_2}\partial{\varphi_2}}\sigma_{\theta_2\varphi_2}$')
-            ax8[2].plot(np.degrees(Data['wind direction']),Corr_psi3theta2 ,'-',c = 'cadetblue',linewidth = plot_param['linewidth'],label = r'$\frac{\partial{V_{LOS_2}}}{\partial{\theta_2}\partial{\varphi_2}}\sigma_{\theta_2\varphi_2}$')
+            ax8[2].plot(np.degrees(Data['wind direction']),Corr_psi2psi3,'-d',c = 'black',  markevery=markers_plot,  linewidth = plot_param['linewidth'],label = r'$\sigma_{\varphi_2}\sigma_{\varphi_3}$')
+            ax8[2].plot(np.degrees(Data['wind direction']),Corr_theta2theta3  ,'-s',c = 'dimgray',markevery=markers_plot,  linewidth = plot_param['linewidth'],label = r'$\sigma_{\theta_2}\sigma_{\theta_3}$')
+            ax8[2].plot(np.degrees(Data['wind direction']),Corr_rho2rho3  ,'-^',c = 'lightgray',markevery=markers_plot,linewidth = plot_param['linewidth'],label = r'$\sigma_{\rho_2}\sigma_{\rho_3}$')
+            ax8[2].plot(np.degrees(Data['wind direction']),Corr_psi2theta3 ,'-X',c = 'cadetblue',markevery=markers_plot,linewidth = plot_param['linewidth'],label = r'$\sigma_{\varphi_2}\sigma_{\theta_3}$')
+            ax8[2].plot(np.degrees(Data['wind direction']),Corr_psi3theta2 ,'-o',c = 'gold',markevery=markers_plot,linewidth = plot_param['linewidth'],label = r'$\sigma_{\varphi_3}\sigma_{\theta_2}$')
 
 
 
@@ -832,6 +832,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             
             ax8[0].legend(loc = 1, prop = {'size': plot_param['legend_fontsize']})
             ax8[1].legend(loc = 1, prop = {'size': plot_param['legend_fontsize']})  
+            ax8[2].legend(loc = 1, prop = {'size': plot_param['legend_fontsize']})  
             
             ax8[0].tick_params(axis = 'x', labelsize=plot_param['tick_labelfontsize'])
             ax8[1].tick_params(axis = 'x', labelsize=plot_param['tick_labelfontsize'])
