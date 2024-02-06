@@ -927,9 +927,13 @@ def U_WindDir_MC(Lidar,wind_direction,Mult_param,DataFrame):
         else:
             # W_D = (np.arctan((Vlos1[ind_wind_dir]*np.cos(Theta2[ind_wind_dir])*np.cos(Psi2[ind_wind_dir])-Vlos2[ind_wind_dir]*np.cos(Theta1[ind_wind_dir])*np.cos(Psi1[ind_wind_dir]))/(-Vlos1[ind_wind_dir]*np.cos(Theta2[ind_wind_dir])*np.sin(Psi2[ind_wind_dir])+Vlos2[ind_wind_dir]*np.cos(Theta1[ind_wind_dir])*np.sin(Psi1[ind_wind_dir]))))
             u,v = Wind_vector2D(Theta1[ind_wind_dir],Theta2[ind_wind_dir],Psi1[ind_wind_dir],Psi2[ind_wind_dir], Vlos1[ind_wind_dir],Vlos2[ind_wind_dir])
-            for i in range(len(u)):
-                
-                W_D.append (math.atan(v[i]/u[i]))
+            try:
+                for i in range(len(u)):
+                    
+                    W_D.append ( math.atan(v[i]/u[i])    )
+            except:
+                W_D.append(0)
+
         U_Wind_direction.append(np.degrees(np.std(W_D)))
     return (U_Wind_direction)
     
