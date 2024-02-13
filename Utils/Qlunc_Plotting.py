@@ -878,6 +878,148 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 ax8.ticklabel_format(axis = 'y',style = 'sci', scilimits = (0,0))            
                 ax8.yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-3)   
                 plt.subplots_adjust(right=0.995,left = 0.07,top = 0.975,bottom = 0.085,wspace = 0.3,hspace = 0.24)
+    
+    
+        ##################################################################################################
+        ######################### Plot seaborn graphs ####################################################
+        ##################################################################################################
+
+        # # Plot velocities
+        # # Create the DataFrame
+        # df_V=pd.DataFrame(
+        #                 {"V1":Data['Mult param'][0][0],
+        #                  "V2":Data['Mult param'][1][0],
+        #                  "V3":Data['Mult param'][2][0]})   
+        # df_param=pd.DataFrame(
+        #                 {r"$\theta_1$":Data['Mult param'][12][0],
+        #                  r"$\theta_2$":Data['Mult param'][12][1],
+        #                  r"$\theta_3$":Data['Mult param'][12][2],
+        #                  r"$\varphi_1$":Data['Mult param'][13][0],
+        #                  r"$\varphi_2$":Data['Mult param'][13][1],
+        #                  r"$\varphi_3$":Data['Mult param'][13][2],})
+        #                  # r"$\rho_1$":Mult_param[14][0],
+        #                  # r"$\rho_2$":Mult_param[14][1],
+        #                  # r"$\rho_3$":Mult_param[14][2]})   
+        
+        
+        # g_V = sns.PairGrid(df_V,aspect=1,layout_pad=0.2)
+        # g_V = g_V.map_diag(sns.distplot,fit=norm,kde=False)
+        # g_V = g_V.map_lower(sns.kdeplot,fill=True) 
+        # for ax in plt.gcf().axes:
+        #     l = ax.get_xlabel()
+        #     ax.set_xlabel(l, fontsize=30)    
+        #     ll = ax.get_ylabel()
+        #     ax.set_ylabel(ll, fontsize=30)     
+        #     ax.tick_params(axis='y', labelsize=20)
+        #     g_V.tick_params(axis='both',labelsize=15)    
+
+        # g_Param = sns.PairGrid(df_param, aspect=1,layout_pad=0.2,height=2.5)
+        # g_Param = g_Param.map_diag(sns.distplot,fit=norm,kde=False)
+        # g_Param = g_Param.map_lower(sns.kdeplot,fill=True)
+        # for ax in plt.gcf().axes:
+        #     l = ax.get_xlabel()
+        #     ax.set_xlabel(l, fontsize=30)    
+        #     ll = ax.get_ylabel()
+        #     ax.set_ylabel(ll, fontsize=30)     
+        #     ax.tick_params(axis='y', labelsize=20)
+        #     g_Param.tick_params(axis='both',labelsize=15)    
+
+        # ##################################################    
+    
+        # # #Plot Vlos with stdv
+        # fig, ax=plt.subplots()
+        # Vel,stdvVel=[],[]
+        # for ind in range (3):
+        #     for ind_V in range(len(Data['Mult param'][0])):
+        
+        #         Vel.append(np.mean(Data['Mult param'][ind][ind_V]))       
+        #         stdvVel.append(np.std(Data['Mult param'][ind][ind_V]))
+        
+        #     ax.plot(np.linspace(0,359,360),Vel,  'k-')
+        #     ax.fill_between(np.linspace(0,359,360),np.array(Vel)-np.array(Data['Vh Unc [m/s]' ]['Uncertainty Vh MCM'][ind]),np.array(Vel)+np.array(Data['Vh Unc [m/s]' ]['Uncertainty Vh MCM'][ind]) ,alpha=0.5, edgecolor='#CC4F1B', facecolor='#FF9848')
+        #     plt.show()   
+        #     Vel,stdvVel=[],[]
+        
+    
+        # ## Plot Vh/Vwind with stdv
+    
+        # # plt.plot(np.linspace(0,359,360),Vh_MCM_['V1_MCM'][0],  'k-')
+        # # plt.fill_between(np.linspace(0,359,360),np.array(Vh_MCM_['V1_MCM'][0])-np.array(U_Vh_MCM_T[0]),np.array(Vh_MCM_['V1_MCM'][0])+np.array(U_Vh_MCM_T[0]) ,alpha=0.5, edgecolor='#CC4F1B', facecolor='#FF9848')
+        # # plt.show()   
+    
+        
+        
+        # ## Plot uncertainties
+        # for ind_a in range(len(Data['VLOS Unc [m/s]']['VLOS1 Uncertainty GUM [m/s]'])):
+        #     # UV1,UV2,UV3=[],[],[]
+            
+        #     df_results2=pd.DataFrame(
+        #     {"UV1":Data['VLOS Unc [m/s]']['VLOS1 Uncertainty GUM [m/s]'][ind_a],
+        #       "UV2":Data['VLOS Unc [m/s]']['VLOS2 Uncertainty GUM [m/s]'][ind_a],
+        #       "UV3":Data['VLOS Unc [m/s]']['VLOS3 Uncertainty GUM [m/s]'][ind_a]})
+        #     g = sns.PairGrid(df_results2,aspect=1,layout_pad=0.2)
+        #     # g.map(plt.scatter)
+        #     # sns.pairplot(df_results2,aspect=1)
+        #     xlabels,ylabels = [],[]
+        #     plt.title(r'$\alpha$={}'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_a] ))
+        #     g.map_diag(sns.distplot,kde=False)
+        #     g.map_lower(plt.scatter) 
+
+        #     # for ax in g.axes[-1,:]:
+        #     #     xlabel = ax.xaxis.get_label_text()
+        #     #     xlabels.append(xlabel)
+        #     # for ax in g.axes[:,0]:
+        #     #     ylabel = ax.yaxis.get_label_text()
+        #     #     ylabels.append(ylabel)
+            
+        #     # for i in range(len(xlabels)):
+        #     #     for j in range(len(ylabels)):
+        #     #         g.axes[j,i].xaxis.set_label_text(xlabels[i])
+        #     #         g.axes[j,i].yaxis.set_label_text(ylabels[j])
+            
+        #     for ax in plt.gcf().axes:
+        #         l = ax.get_xlabel()
+        #         ax.set_xlabel(l, fontsize=30)    
+        #         ll = ax.get_ylabel()
+        #         ax.set_ylabel(ll, fontsize=30)     
+        #         ax.tick_params(axis='y', labelsize=20)
+        #         ax.tick_params(axis='x', labelsize=20)
+        #         g_Param.tick_params(axis='both',labelsize=15)   
+        #     plt.show()
+    
+
+
+
+        
+        # # Ellipse:
+        # plt.plot(UV1,UV3)
+        # x=(np.std(UV3)/np.std(UV1))*(np.sqrt(abs(np.array([np.std(UV1)])-np.array(UV1)**2)))
+        # plt.plot(x,UV3)
+        
+        
+        # Plot error ellipse 
+        # fig0,ax0=plt.subplots()
+        # x = UV2 #Mult_param[2][0]
+        # y = UV3 #Mult_param[1][0]
+        # cov = np.cov(x, y)
+        # lambda_, v = np.linalg.eig(cov)
+        # lambda_ = np.sqrt(lambda_)
+        # from matplotlib.patches import Ellipse
+        # ax = plt.subplot(111, aspect='equal')
+        # plt.scatter(x, y)
+        # for j in range( 4):
+        #     ell = Ellipse(xy=(np.mean(x), np.mean(y)),
+        #                   width=lambda_[0]*j*2, height=lambda_[1]*j*2,
+        #                   angle=np.rad2deg(np.arctan2(*v[:,0][::-1])),alpha=0.7, color='xkcd:wine red',linewidth=2, fill=False, zorder=2)
+        #     ell.set_facecolor('grey')
+        #     ax.add_artist(ell)
+        
+        # plt.show()   
+                        
+        
+        ##################################################
+                 
+    
     # pdb.set_trace()
     ###############   Plot photodetector noise   #############################       
     if flag_plot_photodetector_noise:
@@ -901,75 +1043,76 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         # axs1.set_title('SNR - Photodetector',fontsize=plot_param['title_fontsize'])
         axs1.grid(axis = 'both')
         axs1.text(.90,.05,plot_param['Qlunc_version'],transform = axs1.transAxes, fontsize = 14,verticalalignment = 'top',bbox = dict(boxstyle = 'round', facecolor = 'white', alpha = 0.5))
-
+    
 
 ################### PLOT COORDINATE SYSTEM DUAL LIDAR ##############################################
 
-# pdb.set_trace()
-# from matplotlib.patches import Circle,Wedge
-# import mpl_toolkits.mplot3d.art3d as art3d
-# from matplotlib.patches import * #FancyArrowPatch
-# fig = plt.figure()
-# ax = fig.add_subplot(projection='3d')
+    # # pdb.set_trace()
 
-# r = 89
-# x0 = 500 # To have the tangent at y=0
-# z0 = 119
+    # fig = plt.figure()
+    # ax = fig.add_subplot(projection='3d')
+    
+    # r = 89
+    # x0 = 500 # To have the tangent at y=0
+    # z0 = 119
+    
+    # # Theta varies only between pi/2 and 3pi/2. to have a half-circle
+    # theta = np.linspace(0., 2*np.pi, 161)
+    
+    # x = np.zeros_like(theta)+x0 # x=0
+    # y = r*np.cos(theta)  # y - y0 = r*cos(theta)
+    # z = r*np.sin(theta) + z0 # z - z0 = r*sin(theta)
+    # ax.plot(x, y, z,'k--',linewidth=2,label='Rotor area')
+    
+    
+    # # 2lidars
+    # # x1,y1,z1=[500,0],[0,-150],[119,1] 
+    # # x2,y2,z2=[500,0],[ 0,150],[119,1] 
+    
+    
+    # # 3 lidars
+    # x1,y1,z1=[500,0],[0,-0],[119,1] 
+    # x2,y2,z2=[500,829],[ 0,343],[119,1] 
+    # x3,y3,z3=[500,829],[ 0,-343],[119,1] 
+    
+    
+    # p = Rectangle((Qlunc_yaml_inputs['Components']['Scanner']['Vertical plane parameters'][1], Qlunc_yaml_inputs['Components']['Scanner']['Vertical plane parameters'][3]), Qlunc_yaml_inputs['Components']['Scanner']['Vertical plane parameters'][2]*2,Qlunc_yaml_inputs['Components']['Scanner']['Vertical plane parameters'][1]*2,alpha=0.387,label='Scanned area')
+    # ax.add_patch(p)
+    # art3d.pathpatch_2d_to_3d(p, z=Qlunc_yaml_inputs['Components']['Scanner']['Vertical plane parameters'][0], zdir="x")
+    
+    
+    
+    # # x1,y1,z1=[500,0],[0,-150],[119,1] 
+    # # x2,y2,z2=[500,0],[ 0,150],[119,1] 
+    # # p = Wedge((0, 119), 89.15,0,359,alpha=0.5,label='WT area',width=1.71, ls='--')
+    # # ax.add_patch(p)
+    # # art3d.pathpatch_2d_to_3d(p, z=500, zdir="x")
+    # ax.scatter(500,0, 119, c='r', s=50, marker='o', label=r'$P~(x,y,z)$')
+    # ax.scatter(0, -0, 1, c='b', s=50, marker='s', label=r'$Lidars$')
+    # ax.scatter(829, 343, 1, c='b', s=50, marker='s')
+    # ax.scatter(829, -343, 1, c='b', s=50, marker='s')
+    # ax.set_box_aspect((np.ptp(x1), np.ptp(y1), np.ptp(z1)))  # aspect ratio is 1:1:1 in data space
+    # ax.set_box_aspect((np.ptp(x2), np.ptp(y2), np.ptp(z2)))  # aspect ratio is 1:1:1 in data space
+    # ax.set_box_aspect((np.ptp(x3), np.ptp(y3), np.ptp(z3)))  # aspect ratio is 1:1:1 in data space
+    
+    # ax.plot(x1, y1, z1, color='magenta',linestyle='dashed')
+    # ax.plot(x2, y2, z2, color='magenta',linestyle='dashed')
+    # ax.plot(x3, y3, z3, color='magenta',linestyle='dashed')
+    
+    
+    # ax.set_xlabel('X [m]', fontsize=21,labelpad=15)
+    # ax.set_ylabel('Y [m]', fontsize=21,labelpad=15)
+    # ax.set_zlabel('Z [m]', fontsize=21,labelpad=15)
+    # ax.set_zlim([0,250])
+    # ax.set_xlim([-20,850])
+    # plt.legend(loc="best", fontsize=16.23)
+    
+    # ax.xaxis.set_tick_params(labelsize=15)
+    # ax.yaxis.set_tick_params(labelsize=15)
+    # ax.zaxis.set_tick_params(labelsize=15)
+    
 
-# # Theta varies only between pi/2 and 3pi/2. to have a half-circle
-# theta = np.linspace(0., 2*np.pi, 161)
 
-# x = np.zeros_like(theta)+x0 # x=0
-# y = r*np.cos(theta)  # y - y0 = r*cos(theta)
-# z = r*np.sin(theta) + z0 # z - z0 = r*sin(theta)
-# ax.plot(x, y, z,'k--',linewidth=2,label='Rotor area')
-
-
-# # 2lidars
-# x1,y1,z1=[500,0],[0,-150],[119,1] 
-# x2,y2,z2=[500,0],[ 0,150],[119,1] 
-
-
-# # 3 lidars
-# x1,y1,z1=[500,0],[0,-0],[119,1] 
-# x2,y2,z2=[500,829],[ 0,343],[119,1] 
-# x3,y3,z3=[500,829],[ 0,-343],[119,1] 
-
-
-# p = Rectangle((89.15, 29.85), -89.15*2,89.15*2,alpha=0.387,label='Scanned area')
-# ax.add_patch(p)
-# art3d.pathpatch_2d_to_3d(p, z=500, zdir="x")
-
-
-
-# # x1,y1,z1=[500,0],[0,-150],[119,1] 
-# # x2,y2,z2=[500,0],[ 0,150],[119,1] 
-# # p = Wedge((0, 119), 89.15,0,359,alpha=0.5,label='WT area',width=1.71, ls='--')
-# # ax.add_patch(p)
-# # art3d.pathpatch_2d_to_3d(p, z=500, zdir="x")
-# ax.scatter(500,0, 119, c='r', s=50, marker='o', label=r'$P~(x,y,z)$')
-# ax.scatter(0, -0, 1, c='b', s=50, marker='s', label=r'$Lidars$')
-# ax.scatter(829, 343, 1, c='b', s=50, marker='s')
-# ax.scatter(829, -343, 1, c='b', s=50, marker='s')
-# ax.set_box_aspect((np.ptp(x1), np.ptp(y1), np.ptp(z1)))  # aspect ratio is 1:1:1 in data space
-# ax.set_box_aspect((np.ptp(x2), np.ptp(y2), np.ptp(z2)))  # aspect ratio is 1:1:1 in data space
-# ax.set_box_aspect((np.ptp(x3), np.ptp(y3), np.ptp(z3)))  # aspect ratio is 1:1:1 in data space
-
-# ax.plot(x1, y1, z1, color='magenta',linestyle='dashed')
-# ax.plot(x2, y2, z2, color='magenta',linestyle='dashed')
-# ax.plot(x3, y3, z3, color='magenta',linestyle='dashed')
-
-
-# ax.set_xlabel('X [m]', fontsize=21,labelpad=15)
-# ax.set_ylabel('Y [m]', fontsize=21,labelpad=15)
-# ax.set_zlabel('Z [m]', fontsize=21,labelpad=15)
-# ax.set_zlim([0,250])
-# ax.set_xlim([-20,850])
-# plt.legend(loc="best", fontsize=16.23)
-
-# ax.xaxis.set_tick_params(labelsize=15)
-# ax.yaxis.set_tick_params(labelsize=15)
-# ax.zaxis.set_tick_params(labelsize=15)
 #######################################################################################################################
 # fig = plt.figure()
 # ax = fig.gca(projection='3d')
@@ -977,7 +1120,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
 
 # x1,y1,z1=[500,0],[0,-150],[119,1] 
 # x2,y2,z2=[500,0],[ 0,150],[119,1] 
-# p = patches.Rectangle((89.15, 29.84), -89.15*2,89.15*2,alpha=0.37)
+# p =plt.patches.Rectangle((89.15, 29.84), -89.15*2,89.15*2,alpha=0.37)
 # ax.add_patch(p)
 # art3d.pathpatch_2d_to_3d(p, z=500, zdir="x")
 
