@@ -75,8 +75,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 	# Axes:
                         
                 ax0[0].set_ylabel('$U_{\Omega}$ [°]',fontsize=plot_param['axes_label_fontsize'])          
-                ax0[0].tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
-                ax0[0].tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
+                ax0[0].tick_params(axis='both', labelsize=plot_param['tick_labelfontsize'])
                 ax0[0].set_xlim(0,359)
                 ax0[0].set_ylim(0,5)
                 ax0[0].grid(axis='both')
@@ -86,8 +85,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 ax0[1].ticklabel_format(axis='y',style='sci', scilimits=(0,0))          
                 ax0[1].yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-4)
 
-                ax0[1].tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
-                ax0[1].tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
+                ax0[1].tick_params(axis='both', labelsize=plot_param['tick_labelfontsize'])
                 ax0[1].set_xlim(0,359)
                 ax0[1].grid(axis='both')
 
@@ -96,8 +94,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 ax0[2].ticklabel_format(axis='y',style='sci', scilimits=(0,0))          
                 ax0[2].yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-4)
                 ax0[2].set_xlabel('Wind direction[°]',fontsize=plot_param['axes_label_fontsize'])
-                ax0[2].tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
-                ax0[2].tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
+                ax0[2].tick_params(axis='both', labelsize=plot_param['tick_labelfontsize'])
                 ax0[2].set_xlim(0,359)
                 ax0[2].grid(axis='both')
                 # pdb.set_trace()                
@@ -148,8 +145,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                         
                 ax0[0].set_ylabel('$U_{\Omega}$ [°]',fontsize=plot_param['axes_label_fontsize'])          
                 ax0[0].legend(loc=1, prop={'size': plot_param['legend_fontsize']})
-                ax0[0].tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
-                ax0[0].tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
+                ax0[0].tick_params(axis='both', labelsize=plot_param['tick_labelfontsize'])
                 ax0[0].set_xlim(0,359)
                 ax0[0].set_ylim(0.65,1)
                 ax0[0].grid(axis='both')
@@ -159,8 +155,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 ax0[1].ticklabel_format(axis='y',style='sci', scilimits=(0,0))          
                 ax0[1].yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-4)
                 ax0[1].set_xlabel('Wind direction[°]',fontsize=plot_param['axes_label_fontsize'])
-                ax0[1].tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
-                ax0[1].tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
+                ax0[1].tick_params(axis='both', labelsize=plot_param['tick_labelfontsize'])
                 ax0[1].set_xlim(0,359)
                 ax0[1].grid(axis='both')
 
@@ -226,8 +221,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                     	# Axes:
                             
                     ax0[0].set_ylabel('$U_{V_{wind}}$ [m/s]',fontsize=plot_param['axes_label_fontsize'])          
-                    ax0[0].tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
-                    ax0[0].tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
+                    ax0[0].tick_params(axis='both', labelsize=plot_param['tick_labelfontsize'])
                     ax0[0].set_xlim(0,359)
                     # ax0[0].set_ylim(0.65,1)
                     ax0[0].grid(axis='both')
@@ -238,8 +232,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                     ax0[1].ticklabel_format(axis='y',style='sci', scilimits=(0,0))          
                     ax0[1].yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-4)
 
-                    ax0[1].tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
-                    ax0[1].tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
+                    ax0[1].tick_params(axis='both', labelsize=plot_param['tick_labelfontsize'])
                     ax0[1].set_xlim(0,359)
                     ax0[1].grid(axis='both')
 
@@ -248,8 +241,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                     ax0[2].ticklabel_format(axis='y',style='sci', scilimits=(0,0))          
                     ax0[2].yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-4)
                     ax0[2].set_xlabel('Wind direction[°]',fontsize=plot_param['axes_label_fontsize'])
-                    ax0[2].tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
-                    ax0[2].tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
+                    ax0[2].tick_params(axis='both', labelsize=plot_param['tick_labelfontsize'])
                     ax0[2].set_xlim(0,359)
                     ax0[2].grid(axis='both')
                     # pdb.set_trace()                
@@ -306,8 +298,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                         ax1[ind_plot].set_ylim(-1,1)
                         ax1[ind_plot].grid(axis = 'both')
                         ax1[ind_plot].set_xlim(0,359)            
-                        ax1[ind_plot].tick_params(axis = 'x', labelsize = plot_param['tick_labelfontsize'])
-                        ax1[ind_plot].tick_params(axis = 'y', labelsize = plot_param['tick_labelfontsize'])
+                        ax1[ind_plot].tick_params(axis = 'both', labelsize = plot_param['tick_labelfontsize'])
                     ax1[2].set_xlabel('Wind direction[°]',fontsize = plot_param['axes_label_fontsize'])
                     ax1[0].set_ylabel('$r_{V_{LOS_{1,2}}}$ [-]',fontsize=plot_param['axes_label_fontsize'])
                     ax1[1].set_ylabel('$r_{V_{LOS_{1,3}}}$ [-]',fontsize=plot_param['axes_label_fontsize'])
@@ -330,8 +321,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                             
                     ax0[0].set_ylabel('$U_{V_{h}}$ [m/s]',fontsize=plot_param['axes_label_fontsize'])          
                     ax0[0].legend(loc=1, prop={'size': plot_param['legend_fontsize']})
-                    ax0[0].tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
-                    ax0[0].tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
+                    ax0[0].tick_params(axis='both', labelsize=plot_param['tick_labelfontsize'])
                     ax0[0].set_xlim(0,359)
                     # ax0[0].set_ylim(0.65,1)
                     ax0[0].grid(axis='both')
@@ -341,8 +331,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                     ax0[1].ticklabel_format(axis='y',style='sci', scilimits=(0,0))          
                     ax0[1].yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-4)
                     ax0[1].set_xlabel('Wind direction[°]',fontsize=plot_param['axes_label_fontsize'])
-                    ax0[1].tick_params(axis='x', labelsize=plot_param['tick_labelfontsize'])
-                    ax0[1].tick_params(axis='y', labelsize=plot_param['tick_labelfontsize'])
+                    ax0[1].tick_params(axis='both', labelsize=plot_param['tick_labelfontsize'])
                     ax0[1].set_xlim(0,359)
                     ax0[1].grid(axis='both')
                     
@@ -386,8 +375,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                         ax1.set_ylim(-1,1)
                         ax1.grid(axis = 'both')
                         ax1.set_xlim(0,359)            
-                        ax1.tick_params(axis = 'x', labelsize = plot_param['tick_labelfontsize'])
-                        ax1.tick_params(axis = 'y', labelsize = plot_param['tick_labelfontsize'])
+                        ax1.tick_params(axis = 'both', labelsize = plot_param['tick_labelfontsize'])
                     ax1.set_xlabel('Wind direction[°]',fontsize = plot_param['axes_label_fontsize'])
                     ax1.set_ylabel('$r_{V_{LOS_{1,2}}}$ [-]',fontsize=plot_param['axes_label_fontsize'])
                     ax1.legend(loc = 1, prop = {'size': plot_param['legend_fontsize']})
@@ -520,8 +508,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 ax2.plot(np.degrees(Data['lidars']['Coord_Test']['TESTt'][0]),Data['VLOS Unc [m/s]']['VLOS Uncertainty MC theta [m/s]'][ind_plot],'or' , markerfacecolor=cc,markeredgecolor='lime',alpha=0.3,label='MC')        
         
             ax2.legend(loc = 4, prop = {'size': plot_param['legend_fontsize']})
-            ax2.tick_params(axis = 'x', labelsize = plot_param['tick_labelfontsize'])
-            ax2.tick_params(axis = 'y', labelsize = plot_param['tick_labelfontsize'])
+            ax2.tick_params(axis = 'both', labelsize = plot_param['tick_labelfontsize'])
             ax2.set_xlim(0,90)
             ax2.set_ylim(0,0.04)
             ax2.ticklabel_format(style = 'sci', axis = 'y', scilimits = (0,0))
@@ -552,8 +539,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 ax3.plot(np.degrees(Data['lidars']['Coord_Test']['TESTp'][0]),Data['VLOS Unc [m/s]']['VLOS Uncertainty GUM psi [m/s]'][ind_plot],c = cc,label = r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))
                 ax3.plot(np.degrees(Data['lidars']['Coord_Test']['TESTp'][0]),Data['VLOS Unc [m/s]']['VLOS Uncertainty MC psi [m/s]'][ind_plot],'or' , markerfacecolor = cc,markeredgecolor = 'lime',alpha = 0.4,label = 'MC')        
             ax3.legend(loc = 1, prop={'size': plot_param['legend_fontsize']})
-            ax3.tick_params(axis = 'x', labelsize=plot_param['tick_labelfontsize'])
-            ax3.tick_params(axis = 'y', labelsize=plot_param['tick_labelfontsize'])
+            ax3.tick_params(axis = 'both', labelsize=plot_param['tick_labelfontsize'])
             ax3.set_xlim(0,359)
             ax3.set_ylim(0,0.04)
             ax3.ticklabel_format(style = 'sci', axis = 'y', scilimits = (0,0))
@@ -582,8 +568,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 ax4.plot(Data['lidars']['Coord_Test']['TESTr'][0],Data['VLOS Unc [m/s]']['VLOS Uncertainty GUM rho [m/s]'][ind_plot],c = cc,label=r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))
                 ax4.plot(Data['lidars']['Coord_Test']['TESTr'][0],Data['VLOS Unc [m/s]']['VLOS Uncertainty MC rho [m/s]'][ind_plot],'or' , markerfacecolor = cc,markeredgecolor = 'lime',alpha = 0.4,label = 'MC')      
             ax4.legend(loc = 1, prop = {'size': plot_param['legend_fontsize']})
-            ax4.tick_params(axis = 'x', labelsize = plot_param['tick_labelfontsize'])
-            ax4.tick_params(axis = 'y', labelsize = plot_param['tick_labelfontsize'])
+            ax4.tick_params(axis = 'both', labelsize = plot_param['tick_labelfontsize'])
             ax4.set_xlim(0,5000)
             ax4.set_ylim(0,0.04) 
             ax4.ticklabel_format(axis = 'y',style = 'sci', scilimits = (0,0))
@@ -641,11 +626,9 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             ax5[1].grid(axis = 'both') 
             ax5[0].legend(loc = 1, prop = {'size': plot_param['legend_fontsize']})
             ax5[1].legend(loc = 1, prop = {'size': 5+plot_param['legend_fontsize']})  
-            ax5[0].tick_params(axis = 'x', labelsize = plot_param['tick_labelfontsize'])
-            ax5[1].tick_params(axis = 'x', labelsize = plot_param['tick_labelfontsize'])
-            ax5[0].tick_params(axis = 'y', labelsize = plot_param['tick_labelfontsize'])
-            ax5[1].tick_params(axis = 'y', labelsize = plot_param['tick_labelfontsize'])
-            
+            ax5[0].tick_params(axis = 'both', labelsize = plot_param['tick_labelfontsize'])
+            ax5[1].tick_params(axis = 'both', labelsize = plot_param['tick_labelfontsize'])
+         
             props5   = dict(boxstyle = 'round', facecolor = 'wheat', alpha = 0.4)
             textstr5 = '\n'.join((
             r'$\rho ~[m]=%.1f$' % (Data['lidars']['Lidar0_Spherical']['rho'] ),
@@ -692,10 +675,9 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             ax6[1].grid(axis = 'both') 
             ax6[0].legend(loc = 1, prop = {'size': plot_param['legend_fontsize']})
             ax6[1].legend(loc = 1, prop = {'size': 5+plot_param['legend_fontsize']})  
-            ax6[0].tick_params(axis = 'x', labelsize=plot_param['tick_labelfontsize'])
-            ax6[1].tick_params(axis = 'x', labelsize=plot_param['tick_labelfontsize'])
-            ax6[0].tick_params(axis = 'y', labelsize=plot_param['tick_labelfontsize'])
-            ax6[1].tick_params(axis = 'y', labelsize=plot_param['tick_labelfontsize'])
+            ax6[0].tick_params(axis = 'both', labelsize=plot_param['tick_labelfontsize'])
+            ax6[1].tick_params(axis = 'both', labelsize=plot_param['tick_labelfontsize'])
+
             
             props5 = dict(boxstyle = 'round', facecolor = 'wheat', alpha = 0.4)
             textstr5 = '\n'.join((
@@ -744,10 +726,9 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 ax7[1].grid(axis = 'both') 
                 ax7[0].legend(loc = 1, prop = {'size': plot_param['legend_fontsize']})
                 ax7[1].legend(loc = 1, prop = {'size': 5+plot_param['legend_fontsize']})  
-                ax7[0].tick_params(axis = 'x', labelsize=plot_param['tick_labelfontsize'])
-                ax7[1].tick_params(axis = 'x', labelsize=plot_param['tick_labelfontsize'])
-                ax7[0].tick_params(axis = 'y', labelsize=plot_param['tick_labelfontsize'])
-                ax7[1].tick_params(axis = 'y', labelsize=plot_param['tick_labelfontsize'])
+                ax7[0].tick_params(axis = 'both', labelsize=plot_param['tick_labelfontsize'])
+                ax7[1].tick_params(axis = 'both', labelsize=plot_param['tick_labelfontsize'])
+
                 
                 props5 = dict(boxstyle = 'round', facecolor = 'wheat', alpha = 0.4)
                 textstr6 = '\n'.join((
@@ -829,13 +810,10 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 ax8[1].legend(loc = 1, prop = {'size': plot_param['legend_fontsize']})  
                 ax8[2].legend(loc = 1, prop = {'size': plot_param['legend_fontsize']})  
                 
-                ax8[0].tick_params(axis = 'x', labelsize=plot_param['tick_labelfontsize'])
-                ax8[1].tick_params(axis = 'x', labelsize=plot_param['tick_labelfontsize'])
-                ax8[2].tick_params(axis = 'x', labelsize=plot_param['tick_labelfontsize'])
+                ax8[0].tick_params(axis = 'both', labelsize=plot_param['tick_labelfontsize'])
+                ax8[1].tick_params(axis = 'both', labelsize=plot_param['tick_labelfontsize'])
+                ax8[2].tick_params(axis = 'both', labelsize=plot_param['tick_labelfontsize'])
                 
-                ax8[0].tick_params(axis = 'y', labelsize=plot_param['tick_labelfontsize'])
-                ax8[1].tick_params(axis = 'y', labelsize=plot_param['tick_labelfontsize'])
-                ax8[2].tick_params(axis = 'y', labelsize=plot_param['tick_labelfontsize'])
     
                 ax8[0].ticklabel_format(axis = 'y',style = 'sci', scilimits = (0,0))
                 ax8[1].ticklabel_format(axis = 'y',style = 'sci', scilimits = (0,0))
@@ -873,8 +851,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 ax8.set_xlim(0,359)
                 ax8.grid(axis = 'both')             
                 ax8.legend(loc = 1, prop = {'size': plot_param['legend_fontsize']})
-                ax8.tick_params(axis = 'x', labelsize=plot_param['tick_labelfontsize'])           
-                ax8.tick_params(axis = 'y', labelsize=plot_param['tick_labelfontsize'])
+                ax8.tick_params(axis = 'both', labelsize=plot_param['tick_labelfontsize'])           
                 ax8.ticklabel_format(axis = 'y',style = 'sci', scilimits = (0,0))            
                 ax8.yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-3)   
                 plt.subplots_adjust(right=0.995,left = 0.07,top = 0.975,bottom = 0.085,wspace = 0.3,hspace = 0.24)
@@ -883,48 +860,132 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         ##################################################################################################
         ######################### Plot seaborn graphs ####################################################
         ##################################################################################################
+                
+        # Print the histograms of Vlos distributions from MCM
+        # fig_h,ax_h=plt.subplots(1,3,sharey=True )
+        
+        # ax_h[0].tick_params(axis='both', labelsize=plot_param['axes_label_fontsize'])
+        # ax_h[1].tick_params(axis='both', labelsize=plot_param['axes_label_fontsize'])
+        # ax_h[2].tick_params(axis='both', labelsize=plot_param['axes_label_fontsize'])
 
-        # # Plot velocities
-        # # Create the DataFrame
-        # df_V=pd.DataFrame(
-        #                 {"V1":Data['Mult param'][0][0],
-        #                  "V2":Data['Mult param'][1][0],
-        #                  "V3":Data['Mult param'][2][0]})   
-        # df_param=pd.DataFrame(
-        #                 {r"$\theta_1$":Data['Mult param'][12][0],
-        #                  r"$\theta_2$":Data['Mult param'][12][1],
-        #                  r"$\theta_3$":Data['Mult param'][12][2],
-        #                  r"$\varphi_1$":Data['Mult param'][13][0],
-        #                  r"$\varphi_2$":Data['Mult param'][13][1],
-        #                  r"$\varphi_3$":Data['Mult param'][13][2],})
-        #                  # r"$\rho_1$":Mult_param[14][0],
-        #                  # r"$\rho_2$":Mult_param[14][1],
-        #                  # r"$\rho_3$":Mult_param[14][2]})   
+        # ax_h[0].set_ylabel('[-]',fontsize=plot_param['axes_label_fontsize'])          
+        # ax_h[0].set_xlabel(r'$V_1$ [m/s]',fontsize=plot_param['axes_label_fontsize'])          
+        # ax_h[1].set_xlabel(r'$V_2$ [m/s]',fontsize=plot_param['axes_label_fontsize'])          
+        # ax_h[2].set_xlabel(r'$V_3$ [m/s]',fontsize=plot_param['axes_label_fontsize'])     
+        # plt.subplots_adjust(left=.09, bottom=.1, right=.995, top=.995, wspace=.053, hspace=None)        
+        
+        # # Fitting parameters
+        # (mu0, sigma0) = norm.fit(Data['Mult param'][0][0])
+        # (mu1, sigma1) = norm.fit(Data['Mult param'][1][0])
+        # (mu2, sigma2) = norm.fit(Data['Mult param'][2][0])
+        # ax_h[0].grid(axis='both')
+        # ax_h[1].grid(axis='both')
+        # ax_h[2].grid(axis='both')
+        # # plt.grid(True)
+        # # Print histogram
+        # n0, bins0, patches0 = ax_h[0].hist(Data['Mult param'][0][0], 71, density=True,  alpha=0.594)
+        # n1, bins1, patches1 = ax_h[1].hist(Data['Mult param'][1][0], 71, density=True,  alpha=0.594)
+        # n2, bins2, patches2 = ax_h[2].hist(Data['Mult param'][2][0], 71, density=True,  alpha=0.594)
+        
+        # # Add a 'best fit' line
+        # y0 = norm.pdf (bins0, mu0, sigma0)
+        # y1 = norm.pdf (bins1, mu1, sigma1)
+        # y2 = norm.pdf (bins2, mu2, sigma2)
+        
+        # #Plot gaussian fit
+        # ax_h[0].plot(bins0, y0, 'r-', linewidth=3.1,label='Gaussian fit')
+        # ax_h[1].plot(bins1, y1, 'r-', linewidth=3.1)
+        # ax_h[2].plot(bins2, y2, 'r-', linewidth=3.1)
+
+        # ax_h[0].text(0.6, 0.95, '\n'.join(((r'$\mu~[m/s]={}$').format(np.round(mu0,2)),('$\sigma ~[m/s]={}$').format(np.round(sigma0,2)))), transform = ax_h[0].transAxes, fontsize = 17,horizontalalignment = 'left',verticalalignment = 'top', bbox = props5)
+        # ax_h[1].text(0.6, 0.95, '\n'.join(((r'$\mu~[m/s]={}$').format(np.round(mu1,2)),('$\sigma~ [m/s]={}$').format(np.round(sigma1,2)))), transform = ax_h[1].transAxes, fontsize = 17,horizontalalignment = 'left',verticalalignment = 'top', bbox = props5)
+        # ax_h[2].text(0.6, 0.95, '\n'.join(((r'$\mu~[m/s]={}$').format(np.round(mu2,2)),('$\sigma~ [m/s]={}$').format(np.round(sigma2,2)))), transform = ax_h[2].transAxes, fontsize = 17,horizontalalignment = 'left',verticalalignment = 'top', bbox = props5)
+        # # ax_h[0].legend()
+        # plt.show()
+
+        ################################################### 
+        # Plot velocities
+        # Create the DataFrame
+        
+        def corrfunc_V(x, y, **kwds):
+            cmap = ListedColormap(['white'])
+            norm = kwds['norm']
+            ax = plt.gca()
+            # ax.tick_params(bottom=False, top=False, left=False, right=False)
+            g_V.tick_params(axis='both',labelsize=25) 
+            sns.despine(ax=ax, bottom=False, top=False, left=False, right=False)
+            r, _ = pearsonr(x, y)
+            facecolor = cmap(norm(r))
+            ax.set_facecolor(facecolor)
+            lightness = (max(facecolor[:3]) + min(facecolor[:3]) ) / 2
+            ax.annotate(f"r={r:.2f}", xy=(.5, .5), xycoords=ax.transAxes,
+                        color='white' if lightness < 0.7 else 'black', size=26, ha='center', va='center')        
+
+        def corrfunc_Param(x, y, **kwds):
+            cmap = ListedColormap(['white'])
+            norm = kwds['norm']
+            ax = plt.gca()
+            # ax.tick_params(bottom=False, top=False, left=False, right=False)
+            g_Param.tick_params(axis='both',labelsize=25) 
+            sns.despine(ax=ax, bottom=False, top=False, left=False, right=False)
+            r, _ = pearsonr(x, y)
+            facecolor = cmap(norm(r))
+            ax.set_facecolor(facecolor)
+            lightness = (max(facecolor[:3]) + min(facecolor[:3]) ) / 2
+            ax.annotate(f"r={r:.2f}", xy=(.5, .5), xycoords=ax.transAxes,
+                        color='white' if lightness < 0.7 else 'black', size=26, ha='center', va='center')   
+
+
+        def hide_ticks(*args, **kwds):
+            plt.gca().tick_params(axis='both',bottom=False, top=False,right=False,left=False)        
+        
+        df_V     = pd.DataFrame(
+                                 {r"$V_1$":Data['Mult param'][0][0],
+                                  r"$V_2$":Data['Mult param'][1][0],
+                                  r"$V_3$":Data['Mult param'][2][0]})   
+        
+
+                
+        g_V = sns.PairGrid(df_V,aspect=1)
+        g_V = g_V.map_diag(sns.distplot,fit=norm,kde=False)
+        g_V = g_V.map_lower(sns.kdeplot,fill=True) 
+        for ax in plt.gcf().axes:
+            l = ax.get_xlabel()
+            ax.set_xlabel(l, fontsize=30)    
+            ll = ax.get_ylabel()
+            ax.set_ylabel(ll, fontsize=30)     
+        g_V.map_upper(corrfunc_V, cmap=ListedColormap(['white']), norm=plt.Normalize(vmin=-1, vmax=1))       
+        g_V.map_upper(hide_ticks)        
+        g_V.fig.subplots_adjust(wspace=0.06, hspace=0.06) # equal spacing in both directions
+        
+
+        df_Param = pd.DataFrame(
+                                 {r"$\theta_1$":Data['Mult param'][12][0],
+                                  r"$\theta_2$":Data['Mult param'][12][1],
+                                  r"$\theta_3$":Data['Mult param'][12][2],
+                                  r"$\varphi_1$":Data['Mult param'][13][0],
+                                  r"$\varphi_2$":Data['Mult param'][13][1],
+                                  r"$\varphi_3$":Data['Mult param'][13][2],})
+                          # r"$\rho_1$":Mult_param[14][0],
+                          # r"$\rho_2$":Mult_param[14][1],
+                          # r"$\rho_3$":Mult_param[14][2]})   
+        g_Param = sns.PairGrid(df_Param, aspect=1)
+        g_Param = g_Param.map_diag(sns.distplot,fit=norm,kde=False)
+        g_Param = g_Param.map_lower(sns.kdeplot,fill=True)
+        for ax in plt.gcf().axes:
+            l = ax.get_xlabel()
+            ax.set_xlabel(l, fontsize=30)    
+            ll = ax.get_ylabel()
+            ax.set_ylabel(ll, fontsize=30)     
+        
+        g_Param.map_upper(corrfunc_Param, cmap=ListedColormap(['white']), norm=plt.Normalize(vmin=-1, vmax=1))
+        g_Param.map_upper(hide_ticks)        
+        g_Param.fig.subplots_adjust(wspace=0.06, hspace=0.06) # equal spacing in both directions
+        plt.show()
+        pdb.set_trace()
         
         
-        # g_V = sns.PairGrid(df_V,aspect=1,layout_pad=0.2)
-        # g_V = g_V.map_diag(sns.distplot,fit=norm,kde=False)
-        # g_V = g_V.map_lower(sns.kdeplot,fill=True) 
-        # for ax in plt.gcf().axes:
-        #     l = ax.get_xlabel()
-        #     ax.set_xlabel(l, fontsize=30)    
-        #     ll = ax.get_ylabel()
-        #     ax.set_ylabel(ll, fontsize=30)     
-        #     ax.tick_params(axis='y', labelsize=20)
-        #     g_V.tick_params(axis='both',labelsize=15)    
-
-        # g_Param = sns.PairGrid(df_param, aspect=1,layout_pad=0.2,height=2.5)
-        # g_Param = g_Param.map_diag(sns.distplot,fit=norm,kde=False)
-        # g_Param = g_Param.map_lower(sns.kdeplot,fill=True)
-        # for ax in plt.gcf().axes:
-        #     l = ax.get_xlabel()
-        #     ax.set_xlabel(l, fontsize=30)    
-        #     ll = ax.get_ylabel()
-        #     ax.set_ylabel(ll, fontsize=30)     
-        #     ax.tick_params(axis='y', labelsize=20)
-        #     g_Param.tick_params(axis='both',labelsize=15)    
-
-        # ##################################################    
+        ###################################################    
     
         # # #Plot Vlos with stdv
         # fig, ax=plt.subplots()
@@ -982,25 +1043,22 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         #         ax.set_xlabel(l, fontsize=30)    
         #         ll = ax.get_ylabel()
         #         ax.set_ylabel(ll, fontsize=30)     
-        #         ax.tick_params(axis='y', labelsize=20)
-        #         ax.tick_params(axis='x', labelsize=20)
+        #         ax.tick_params(axis='both', labelsize=20)
         #         g_Param.tick_params(axis='both',labelsize=15)   
         #     plt.show()
     
 
-
-
-        
+       
         # # Ellipse:
         # plt.plot(UV1,UV3)
         # x=(np.std(UV3)/np.std(UV1))*(np.sqrt(abs(np.array([np.std(UV1)])-np.array(UV1)**2)))
         # plt.plot(x,UV3)
         
         
-        # Plot error ellipse 
+        # # Plot error ellipse 
         # fig0,ax0=plt.subplots()
-        # x = UV2 #Mult_param[2][0]
-        # y = UV3 #Mult_param[1][0]
+        # x = Data['Mult param'][0][0]
+        # y = Data['Mult param'][1][0]
         # cov = np.cov(x, y)
         # lambda_, v = np.linalg.eig(cov)
         # lambda_ = np.sqrt(lambda_)
@@ -1033,8 +1091,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         for i in Data['SNR_data_photodetector']:            
             axs1.plot(Psax,Data['SNR_data_photodetector'][i][0],color = col[i_label],label = label0[i_label], linewidth = 2.3)  
             i_label+= 1
-        axs1.tick_params(axis = 'x', labelsize = plot_param['tick_labelfontsize'])
-        axs1.tick_params(axis = 'y', labelsize = plot_param['tick_labelfontsize'])
+        axs1.tick_params(axis = 'both', labelsize = plot_param['tick_labelfontsize'])
             
         # axs1.plot(Psax,Data['Total_SNR_data'],label='Total SNR')
         axs1.set_xlabel('Input Signal optical power [W]',fontsize = plot_param['axes_label_fontsize'])
