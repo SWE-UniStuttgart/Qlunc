@@ -12,7 +12,6 @@ University of Stuttgart(c)
 import sys,os
 import pandas as pd
 import seaborn as sns
-# import inspect
 import numpy as np 
 import scipy.interpolate as itp 
 # import pandas as pd 
@@ -58,3 +57,5 @@ from io import StringIO
 from matplotlib.patches import Circle,Wedge
 import mpl_toolkits.mplot3d.art3d as art3d
 from matplotlib.patches import * #FancyArrowPatch
+from matplotlib.colors import ListedColormap
+from scipy.stats import pearsonr
