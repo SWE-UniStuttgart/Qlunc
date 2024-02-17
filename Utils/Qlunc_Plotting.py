@@ -518,7 +518,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             textstr = '\n'.join((
             r'$\rho~ [m]=%.1f$' % (Data['lidars']['Lidar0_Spherical']['rho'], ),
             r'$\varphi~ [°]=%.1f$' % (np.degrees(Data['lidars']['Lidar0_Spherical']['psi']), ),
-            r'N ={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['N_MC'], )
+            r'N ={:.1e}'.format(Decimal(Qlunc_yaml_inputs['Components']['Scanner']['N_MC']) )
             ))
             ax2.yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-3)
             plt.tight_layout()                    
@@ -548,7 +548,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             textstr3 = '\n'.join((
             r'$\rho ~[m]=%.1f$' % (Data['lidars']['Lidar0_Spherical']['rho'], ),
             r'$\theta~ [°]=%.1f$' % (np.degrees(Data['lidars']['Lidar0_Spherical']['theta']), ),
-            r'N ={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['N_MC'], )))
+            r'N ={:.1e}'.format(Decimal(Qlunc_yaml_inputs['Components']['Scanner']['N_MC']))))
             
             ax3.yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-3)
             plt.tight_layout()
@@ -578,7 +578,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             textstr4 = '\n'.join((
             r'$\theta~ [°]=%.1f$' % (np.degrees(Data['lidars']['Lidar0_Spherical']['theta']), ),
             r'$\varphi~ [°]=%.1f$' % (np.degrees(Data['lidars']['Lidar0_Spherical']['psi']), ),
-             r'N ={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['N_MC'], )))
+             r'N ={:.1e}'.format(Decimal(Qlunc_yaml_inputs['Components']['Scanner']['N_MC']))))
         
             ax4.text(0.5,0.7, textstr4, transform = ax3.transAxes, fontsize = 18, bbox = props4)
             ax4.set_xlabel('Focus distance [m]',fontsize=25)
@@ -635,7 +635,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             r'$\theta~ [°]=%.1f$' % (np.degrees(Data['lidars']['Lidar0_Spherical']['theta'])),
             r'$\varphi~ [°]=%.1f$' % (np.degrees(Data['lidars']['Lidar0_Spherical']['psi'])),
             r'$r_{\theta,\varphi}~ =%.1f$' % (Lidar.optics.scanner.correlations[9]),
-            r'N ={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['N_MC'] ),           
+            r'N ={:.1e}'.format(Decimal(Qlunc_yaml_inputs['Components']['Scanner']['N_MC'])),           
             ))           
             ax5[0].text(0.5, 0.95, textstr5, transform = ax5[0].transAxes, fontsize = 14,horizontalalignment = 'left',verticalalignment = 'top', bbox = props5)
             ax5[0].ticklabel_format(axis = 'y',style = 'sci', scilimits = (0,0))
@@ -685,7 +685,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             r'$\theta~ [°]=%.1f$' % (np.degrees(Data['lidars']['Lidar1_Spherical']['theta'] ), ),
             r'$\varphi~ [°]=%.1f$' % (np.degrees(Data['lidars']['Lidar1_Spherical']['psi'] ), ),
             r'$r_{\theta,\varphi}~ =%.1f$' % (Lidar.optics.scanner.correlations[10]),
-            r'N ={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['N_MC'], )))
+            r'N ={:.1e}'.format(Decimal(Qlunc_yaml_inputs['Components']['Scanner']['N_MC']))))
             
             ax6[0].text(0.5, 0.95, textstr5, transform = ax6[0].transAxes, fontsize = 14,horizontalalignment = 'left',verticalalignment = 'top', bbox = props5)
             ax6[0].ticklabel_format(axis = 'y',style = 'sci', scilimits = (0,0))
@@ -736,7 +736,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
                 r'$\theta~ [°]=%.1f$' % (np.degrees(Data['lidars']['Lidar2_Spherical']['theta'] ), ),
                 r'$\varphi~ [°]=%.1f$' % (np.degrees(Data['lidars']['Lidar2_Spherical']['psi'] ), ),
                 r'$r_{\theta,\varphi}~ =%.1f$' % (Lidar.optics.scanner.correlations[10]),
-                r'N ={}'.format(Qlunc_yaml_inputs['Components']['Scanner']['N_MC'], ),           
+                r'N ={:.1e}'.format(Decimal(Qlunc_yaml_inputs['Components']['Scanner']['N_MC']), ),           
                 ))           
                 ax7[0].text(0.5, 0.95, textstr6, transform = ax7[0].transAxes, fontsize = 14,horizontalalignment = 'left',verticalalignment = 'top', bbox = props5)
                 ax7[0].ticklabel_format(axis = 'y',style = 'sci', scilimits = (0,0))
@@ -906,13 +906,13 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         ################################################### 
         # Plot velocities
         # Create the DataFrame
-        
+        pdb.set_trace()
         def corrfunc_V(x, y, **kwds):
             cmap = ListedColormap(['white'])
             norm = kwds['norm']
             ax = plt.gca()
             # ax.tick_params(bottom=False, top=False, left=False, right=False)
-            g_V.tick_params(axis='both',labelsize=25) 
+            g_V.tick_params(axis='both',labelsize=20) 
             sns.despine(ax=ax, bottom=False, top=False, left=False, right=False)
             r, _ = pearsonr(x, y)
             facecolor = cmap(norm(r))
@@ -926,7 +926,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             norm = kwds['norm']
             ax = plt.gca()
             # ax.tick_params(bottom=False, top=False, left=False, right=False)
-            g_Param.tick_params(axis='both',labelsize=25) 
+            g_Param.tick_params(axis='both',labelsize=11) 
             sns.despine(ax=ax, bottom=False, top=False, left=False, right=False)
             r, _ = pearsonr(x, y)
             facecolor = cmap(norm(r))
@@ -956,7 +956,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             ax.set_ylabel(ll, fontsize=30)     
         g_V.map_upper(corrfunc_V, cmap=ListedColormap(['white']), norm=plt.Normalize(vmin=-1, vmax=1))       
         g_V.map_upper(hide_ticks)        
-        g_V.fig.subplots_adjust(wspace=0.06, hspace=0.06) # equal spacing in both directions
+        g_V.fig.subplots_adjust(top=0.98,bottom=0.086,right=.998,wspace=0.06, hspace=0.06) # equal spacing in both directions
         
 
         df_Param = pd.DataFrame(
@@ -980,9 +980,9 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         
         g_Param.map_upper(corrfunc_Param, cmap=ListedColormap(['white']), norm=plt.Normalize(vmin=-1, vmax=1))
         g_Param.map_upper(hide_ticks)        
-        g_Param.fig.subplots_adjust(wspace=0.06, hspace=0.06) # equal spacing in both directions
+        g_Param.fig.subplots_adjust(top=0.98,bottom=0.086,right=.993,left=0.445,wspace=0.06, hspace=0.06) # equal spacing in both directions
         plt.show()
-        pdb.set_trace()
+        # pdb.set_trace()
         
         
         ###################################################    
