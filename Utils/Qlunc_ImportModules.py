@@ -59,3 +59,4 @@ import mpl_toolkits.mplot3d.art3d as art3d
 from matplotlib.patches import * #FancyArrowPatch
 from matplotlib.colors import ListedColormap
 from scipy.stats import pearsonr
+from decimal import Decimal
