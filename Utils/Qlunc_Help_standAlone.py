@@ -373,45 +373,27 @@ def MultiVar (Lidar,Vlos_corrcoeff, U_Vlos,autocorr_theta,autocorr_psi,autocorr_
             u_psi2   = np.radians(Lidar.optics.scanner.stdv_azimuth[1][0])
             u_rho2   = Lidar.optics.scanner.stdv_focus_dist [1][0]
         
-        if mode=='GUM1':
-            psi1_psi2_corr        = Lidar.optics.scanner.correlations[0]
-            psi1_psi3_corr        = Lidar.optics.scanner.correlations[1]
-            psi2_psi3_corr        = Lidar.optics.scanner.correlations[2]                       
-            theta1_theta2_corr    = Lidar.optics.scanner.correlations[3]
-            theta1_theta3_corr    = Lidar.optics.scanner.correlations[4]
-            theta2_theta3_corr    = Lidar.optics.scanner.correlations[5]            
-            rho1_rho2_corr        = Lidar.optics.scanner.correlations[6]
-            rho1_rho3_corr        = Lidar.optics.scanner.correlations[7]
-            rho2_rho3_corr        = Lidar.optics.scanner.correlations[8]          
-            psi1_theta1_corr      = Lidar.optics.scanner.correlations[9]
-            psi2_theta2_corr      = Lidar.optics.scanner.correlations[10]
-            psi3_theta3_corr      = Lidar.optics.scanner.correlations[11]           
-            psi1_theta2_corr      = Lidar.optics.scanner.correlations[12]
-            psi1_theta3_corr      = Lidar.optics.scanner.correlations[13]                       
-            psi2_theta1_corr      = Lidar.optics.scanner.correlations[14]            
-            psi2_theta3_corr      = Lidar.optics.scanner.correlations[15]            
-            psi3_theta1_corr      = Lidar.optics.scanner.correlations[16]
-            psi3_theta2_corr      = Lidar.optics.scanner.correlations[17]
+        psi1_psi2_corr        = Lidar.optics.scanner.correlations[0]
+        psi1_psi3_corr        = Lidar.optics.scanner.correlations[1]
+        psi2_psi3_corr        = Lidar.optics.scanner.correlations[2]                       
+        theta1_theta2_corr    = Lidar.optics.scanner.correlations[3]
+        theta1_theta3_corr    = Lidar.optics.scanner.correlations[4]
+        theta2_theta3_corr    = Lidar.optics.scanner.correlations[5]            
+        rho1_rho2_corr        = Lidar.optics.scanner.correlations[6]
+        rho1_rho3_corr        = Lidar.optics.scanner.correlations[7]
+        rho2_rho3_corr        = Lidar.optics.scanner.correlations[8]          
+        psi1_theta1_corr      = Lidar.optics.scanner.correlations[9]
+        psi2_theta2_corr      = Lidar.optics.scanner.correlations[10]
+        psi3_theta3_corr      = Lidar.optics.scanner.correlations[11]           
+        psi1_theta2_corr      = Lidar.optics.scanner.correlations[12]
+        psi1_theta3_corr      = Lidar.optics.scanner.correlations[13]                       
+        psi2_theta1_corr      = Lidar.optics.scanner.correlations[14]            
+        psi2_theta3_corr      = Lidar.optics.scanner.correlations[15]            
+        psi3_theta1_corr      = Lidar.optics.scanner.correlations[16]
+        psi3_theta2_corr      = Lidar.optics.scanner.correlations[17]        
+
             
-        elif mode=='GUM2':
-            psi1_psi2_corr        = Lidar.optics.scanner.correlations[0]
-            psi1_psi3_corr        = Lidar.optics.scanner.correlations[1]
-            psi2_psi3_corr        = Lidar.optics.scanner.correlations[2]           
-            theta1_theta2_corr    = Lidar.optics.scanner.correlations[3]
-            theta1_theta3_corr    = Lidar.optics.scanner.correlations[4]
-            theta2_theta3_corr    = Lidar.optics.scanner.correlations[5]
-            rho1_rho2_corr        = Lidar.optics.scanner.correlations[6]
-            rho1_rho3_corr        = Lidar.optics.scanner.correlations[7]
-            rho2_rho3_corr        = Lidar.optics.scanner.correlations[8]
-            psi1_theta1_corr      = Lidar.optics.scanner.correlations[9]
-            psi2_theta2_corr      = Lidar.optics.scanner.correlations[10]
-            psi3_theta3_corr      = Lidar.optics.scanner.correlations[11]
-            psi1_theta2_corr      = Lidar.optics.scanner.correlations[12]
-            psi1_theta3_corr      = Lidar.optics.scanner.correlations[13]            
-            psi2_theta1_corr      = Lidar.optics.scanner.correlations[14]            
-            psi2_theta3_corr      = Lidar.optics.scanner.correlations[15]
-            psi3_theta1_corr      = Lidar.optics.scanner.correlations[16]
-            psi3_theta2_corr      = Lidar.optics.scanner.correlations[17]
+        if mode=='GUM2' or mode=='MC2':
 
             #Lidar1
             u_theta1 = 0
@@ -425,60 +407,6 @@ def MultiVar (Lidar,Vlos_corrcoeff, U_Vlos,autocorr_theta,autocorr_psi,autocorr_
             u_theta3 = 0
             u_psi3   = 0
             u_rho3   = 0
-
-        elif mode=='MC1':           
-            psi1_psi2_corr        = Lidar.optics.scanner.correlations[0]
-            psi1_psi3_corr        = Lidar.optics.scanner.correlations[1]
-            psi2_psi3_corr        = Lidar.optics.scanner.correlations[2]           
-            theta1_theta2_corr    = Lidar.optics.scanner.correlations[3]
-            theta1_theta3_corr    = Lidar.optics.scanner.correlations[4]
-            theta2_theta3_corr    = Lidar.optics.scanner.correlations[5]
-            rho1_rho2_corr        = Lidar.optics.scanner.correlations[6]
-            rho1_rho3_corr        = Lidar.optics.scanner.correlations[7]
-            rho2_rho3_corr        = Lidar.optics.scanner.correlations[8]
-            psi1_theta1_corr      = Lidar.optics.scanner.correlations[9]
-            psi2_theta2_corr      = Lidar.optics.scanner.correlations[10]
-            psi3_theta3_corr      = Lidar.optics.scanner.correlations[11]
-            psi1_theta2_corr      = Lidar.optics.scanner.correlations[12]
-            psi1_theta3_corr      = Lidar.optics.scanner.correlations[13]            
-            psi2_theta1_corr      = Lidar.optics.scanner.correlations[14]            
-            psi2_theta3_corr      = Lidar.optics.scanner.correlations[15]
-            psi3_theta1_corr      = Lidar.optics.scanner.correlations[16]
-            psi3_theta2_corr      = Lidar.optics.scanner.correlations[17]
-
-        elif mode=='MC2':
-            psi1_psi2_corr        = Lidar.optics.scanner.correlations[0]
-            psi1_psi3_corr        = Lidar.optics.scanner.correlations[1]
-            psi2_psi3_corr        = Lidar.optics.scanner.correlations[2]           
-            theta1_theta2_corr    = Lidar.optics.scanner.correlations[3]
-            theta1_theta3_corr    = Lidar.optics.scanner.correlations[4]
-            theta2_theta3_corr    = Lidar.optics.scanner.correlations[5]
-            rho1_rho2_corr        = Lidar.optics.scanner.correlations[6]
-            rho1_rho3_corr        = Lidar.optics.scanner.correlations[7]
-            rho2_rho3_corr        = Lidar.optics.scanner.correlations[8]
-            psi1_theta1_corr      = Lidar.optics.scanner.correlations[9]
-            psi2_theta2_corr      = Lidar.optics.scanner.correlations[10]
-            psi3_theta3_corr      = Lidar.optics.scanner.correlations[11]
-            psi1_theta2_corr      = Lidar.optics.scanner.correlations[12]
-            psi1_theta3_corr      = Lidar.optics.scanner.correlations[13]            
-            psi2_theta1_corr      = Lidar.optics.scanner.correlations[14]            
-            psi2_theta3_corr      = Lidar.optics.scanner.correlations[15]
-            psi3_theta1_corr      = Lidar.optics.scanner.correlations[16]
-            psi3_theta2_corr      = Lidar.optics.scanner.correlations[17]
-
-            #Lidar1
-            u_theta1 = 0
-            u_psi1   = 0
-            u_rho1   = 0
-            # Lidar 2 
-            u_theta2 = 0
-            u_psi2   = 0
-            u_rho2   = 0
-            # Lidar 3 
-            u_theta3 = 0
-            u_psi3   = 0
-            u_rho3   = 0
-            # pdb.set_trace()
             
         psi1_rho1_corr        = 0
         psi1_rho2_corr        = 0
@@ -818,7 +746,7 @@ def GUM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,Correlation_coeff,wind_
 
     # Vh Uncertainty
     UUy,U_Vh_GUM,CovTerms=[],[],[]
-    u0,v0,w0=[],[],[]
+    u0,v0,w0,Vh=[],[],[],[]
     Sensitivity_Coefficients={'dV1':[],'dV2':[],'dV3':[],'dV1V2':[],'dV1V3':[],'dV2V3':[]}
     
     for ind_wind_dir in range(len(wind_direction)):  
@@ -860,6 +788,7 @@ def GUM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,Correlation_coeff,wind_
             # Storing UVlos and correlations
             U_VLOS_GUM_list   = [U_Vlos_GUM['V1'][ind_wind_dir],U_Vlos_GUM['V2'][ind_wind_dir],U_Vlos_GUM['V3'][ind_wind_dir]]
             Corrcoef_GUM_list = [Correlation_coeff['V1'][ind_wind_dir],Correlation_coeff['V2'][ind_wind_dir],Correlation_coeff['V3'][ind_wind_dir]]
+            Vh.append(np.sqrt(u**2+v**2+w**2))
         else:
             num1 = np.sqrt(((Vlos_GUM['V1'][ind_wind_dir]*np.cos(lidars['Lidar1_Spherical']['theta']))**2)+((Vlos_GUM['V2'][ind_wind_dir]*np.cos(lidars['Lidar0_Spherical']['theta']))**2)-(2*Vlos_GUM['V1'][ind_wind_dir]*Vlos_GUM['V2'][ind_wind_dir]*np.cos(lidars['Lidar0_Spherical']['psi']-lidars['Lidar1_Spherical']['psi'])*np.cos(lidars['Lidar0_Spherical']['theta'])*np.cos(lidars['Lidar1_Spherical']['theta'])))
             den=np.cos(lidars['Lidar0_Spherical']['theta'])*np.cos(lidars['Lidar1_Spherical']['theta'])*np.sin(lidars['Lidar0_Spherical']['psi']-lidars['Lidar1_Spherical']['psi'])
@@ -878,7 +807,7 @@ def GUM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,Correlation_coeff,wind_
             # Storing UVlos and correlations
             U_VLOS_GUM_list   = [U_Vlos_GUM['V1'][ind_wind_dir],U_Vlos_GUM['V2'][ind_wind_dir]]
             Corrcoef_GUM_list = [Correlation_coeff['V1'][ind_wind_dir]]
-
+            Vh=np.array([0])
         Ux=MultiVar(Lidar, Corrcoef_GUM_list,U_VLOS_GUM_list   ,1   ,            1          ,1            ,     1,   'GUM2'  )
         
         Cx=Cx[:,:,0] # Cutting dimensions
@@ -890,7 +819,7 @@ def GUM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,Correlation_coeff,wind_
         # CovTerms.append(np.sqrt(UyVh[1]))
         
     
-    return(U_Vh_GUM,Sensitivity_Coefficients,u0,v0,w0)
+    return(U_Vh_GUM,Sensitivity_Coefficients,u0,v0,w0,Vh)
     
     
     
@@ -1106,6 +1035,59 @@ def Wind_vector2D(theta1,theta2,psi1,psi2, Vlos1,Vlos2):
     v = (  Vlos1*np.cos(theta2)*np.cos(psi2) - Vlos2*np.cos(theta1)*np.cos(psi1)) / (np.cos(theta1) *np.cos(theta2)*np.sin(psi1 - psi2))                                                             
     return u,v
 
+#%% Calculate the confidence intervals
+
+def CI (p, Unc_GUM, Unc_MC, mean_GUM, Mult_param,U_Vh_GUM,Vh_GUM):
+    
+    
+    # Some cases among which select Z-score accounting for the coverage probablity (prob) 
+    if p == 1: # 68.27%
+        prob = 0.68
+        Z = 1 # This value depends on the low_lim/high_lim values we chose --> extracted from the Z-score table
+    
+    elif p == 2: #90%
+        prob = 0.9
+        Z  = 1.645 # This value depends on the low_lim/high_lim values we chose --> extracted from the Z-score table
+
+    
+    elif p == 3: # 95%
+        prob = 0.95
+        Z  = 1.96 # This value depends on the low_lim/high_lim values we chose --> extracted from the Z-score table
+    
+    elif p == 4: #99%
+        prob = 0.99
+        Z  = 2.576 # This value depends on the low_lim/high_lim values we chose --> extracted from the Z-score table
+    
+    CI_L_GUM,CI_H_GUM       = [],[]    
+    CI_L_MC,CI_H_MC         = [],[]
+    CI_L_MC_Vh,CI_H_MC_Vh   = [],[]
+    # pdb.set_trace()
+    for ind_CI in range(len( Unc_GUM['V1'])):
+        # pdb.set_trace()
+        # GUM           
+        Xlow   = -Z * Unc_GUM['V1'][ind_CI] + mean_GUM['V1'][ind_CI]
+        Xhigh  =  Z * Unc_GUM['V1'][ind_CI] + mean_GUM['V1'][ind_CI]      
+
+        Xlow_Vh   = -Z * U_Vh_GUM[ind_CI] + Vh_GUM[ind_CI]
+        Xhigh_Vh  =  Z * U_Vh_GUM[ind_CI] + Vh_GUM[ind_CI] 
+
+        CI_L_GUM.append(np.round(Xlow,3))       
+        CI_H_GUM.append( np.round(Xhigh,3))       
+
+        CI_L_MC_Vh.append(np.round(Xlow_Vh,3))       
+        CI_H_MC_Vh.append( np.round(Xhigh_Vh,3))  
+            
+        # Montecarlo method
+        # VLOS
+        CI_MC = np.round(scipy.stats.norm.interval(prob, loc=np.mean(Mult_param[0][ind_CI]), scale=Unc_MC['V1'][ind_CI]),3)
+        CI_L_MC.append(np.round(CI_MC[0],3))       
+        CI_H_MC.append( np.round(CI_MC[1],3))  
+        
+        # VH
+        CI_Vh_MC = np.round(scipy.stats.norm.interval(prob, loc=np.mean(Mult_param[0][ind_CI]), scale=Unc_MC['V1'][ind_CI]),3)
+        CI_L_MC_Vh.append(np.round(CI_Vh_MC[0],3))       
+        CI_H_MC_Vh.append( np.round(CI_Vh_MC[1],3)) 
+    return CI_L_GUM,CI_H_GUM,CI_L_MC,CI_H_MC,CI_L_MC_Vh,CI_H_MC_Vh,prob
 #%% 3D velocity vector
 '''
 u1 = -((-Vlos3 *np.cos(theta2)* np.sin(psi2)* np.sin(theta1) + 
