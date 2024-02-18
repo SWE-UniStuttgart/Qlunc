@@ -13,6 +13,7 @@ import sys,os
 import pandas as pd
 import seaborn as sns
 import numpy as np 
+import scipy
 import scipy.interpolate as itp 
 # import pandas as pd 
 # import numbers
