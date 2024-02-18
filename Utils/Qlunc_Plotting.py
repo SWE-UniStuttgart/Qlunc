@@ -860,131 +860,131 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
         ##################################################################################################
         ######################### Plot seaborn graphs ####################################################
         ##################################################################################################
-                
-        # Print the histograms of Vlos distributions from MCM
-        # fig_h,ax_h=plt.subplots(1,3,sharey=True )
-        
-        # ax_h[0].tick_params(axis='both', labelsize=plot_param['axes_label_fontsize'])
-        # ax_h[1].tick_params(axis='both', labelsize=plot_param['axes_label_fontsize'])
-        # ax_h[2].tick_params(axis='both', labelsize=plot_param['axes_label_fontsize'])
-
-        # ax_h[0].set_ylabel('[-]',fontsize=plot_param['axes_label_fontsize'])          
-        # ax_h[0].set_xlabel(r'$V_1$ [m/s]',fontsize=plot_param['axes_label_fontsize'])          
-        # ax_h[1].set_xlabel(r'$V_2$ [m/s]',fontsize=plot_param['axes_label_fontsize'])          
-        # ax_h[2].set_xlabel(r'$V_3$ [m/s]',fontsize=plot_param['axes_label_fontsize'])     
-        # plt.subplots_adjust(left=.09, bottom=.1, right=.995, top=.995, wspace=.053, hspace=None)        
-        
-        # # Fitting parameters
-        # (mu0, sigma0) = norm.fit(Data['Mult param'][0][0])
-        # (mu1, sigma1) = norm.fit(Data['Mult param'][1][0])
-        # (mu2, sigma2) = norm.fit(Data['Mult param'][2][0])
-        # ax_h[0].grid(axis='both')
-        # ax_h[1].grid(axis='both')
-        # ax_h[2].grid(axis='both')
-        # # plt.grid(True)
-        # # Print histogram
-        # n0, bins0, patches0 = ax_h[0].hist(Data['Mult param'][0][0], 71, density=True,  alpha=0.594)
-        # n1, bins1, patches1 = ax_h[1].hist(Data['Mult param'][1][0], 71, density=True,  alpha=0.594)
-        # n2, bins2, patches2 = ax_h[2].hist(Data['Mult param'][2][0], 71, density=True,  alpha=0.594)
-        
-        # # Add a 'best fit' line
-        # y0 = norm.pdf (bins0, mu0, sigma0)
-        # y1 = norm.pdf (bins1, mu1, sigma1)
-        # y2 = norm.pdf (bins2, mu2, sigma2)
-        
-        # #Plot gaussian fit
-        # ax_h[0].plot(bins0, y0, 'r-', linewidth=3.1,label='Gaussian fit')
-        # ax_h[1].plot(bins1, y1, 'r-', linewidth=3.1)
-        # ax_h[2].plot(bins2, y2, 'r-', linewidth=3.1)
-
-        # ax_h[0].text(0.6, 0.95, '\n'.join(((r'$\mu~[m/s]={}$').format(np.round(mu0,2)),('$\sigma ~[m/s]={}$').format(np.round(sigma0,2)))), transform = ax_h[0].transAxes, fontsize = 17,horizontalalignment = 'left',verticalalignment = 'top', bbox = props5)
-        # ax_h[1].text(0.6, 0.95, '\n'.join(((r'$\mu~[m/s]={}$').format(np.round(mu1,2)),('$\sigma~ [m/s]={}$').format(np.round(sigma1,2)))), transform = ax_h[1].transAxes, fontsize = 17,horizontalalignment = 'left',verticalalignment = 'top', bbox = props5)
-        # ax_h[2].text(0.6, 0.95, '\n'.join(((r'$\mu~[m/s]={}$').format(np.round(mu2,2)),('$\sigma~ [m/s]={}$').format(np.round(sigma2,2)))), transform = ax_h[2].transAxes, fontsize = 17,horizontalalignment = 'left',verticalalignment = 'top', bbox = props5)
-        # # ax_h[0].legend()
-        # plt.show()
-
-        ################################################### 
-        # Plot velocities
-        # Create the DataFrame
-        pdb.set_trace()
-        def corrfunc_V(x, y, **kwds):
-            cmap = ListedColormap(['white'])
-            norm = kwds['norm']
-            ax = plt.gca()
-            # ax.tick_params(bottom=False, top=False, left=False, right=False)
-            g_V.tick_params(axis='both',labelsize=20) 
-            sns.despine(ax=ax, bottom=False, top=False, left=False, right=False)
-            r, _ = pearsonr(x, y)
-            facecolor = cmap(norm(r))
-            ax.set_facecolor(facecolor)
-            lightness = (max(facecolor[:3]) + min(facecolor[:3]) ) / 2
-            ax.annotate(f"r={r:.2f}", xy=(.5, .5), xycoords=ax.transAxes,
-                        color='white' if lightness < 0.7 else 'black', size=26, ha='center', va='center')        
-
-        def corrfunc_Param(x, y, **kwds):
-            cmap = ListedColormap(['white'])
-            norm = kwds['norm']
-            ax = plt.gca()
-            # ax.tick_params(bottom=False, top=False, left=False, right=False)
-            g_Param.tick_params(axis='both',labelsize=11) 
-            sns.despine(ax=ax, bottom=False, top=False, left=False, right=False)
-            r, _ = pearsonr(x, y)
-            facecolor = cmap(norm(r))
-            ax.set_facecolor(facecolor)
-            lightness = (max(facecolor[:3]) + min(facecolor[:3]) ) / 2
-            ax.annotate(f"r={r:.2f}", xy=(.5, .5), xycoords=ax.transAxes,
-                        color='white' if lightness < 0.7 else 'black', size=26, ha='center', va='center')   
-
-
-        def hide_ticks(*args, **kwds):
-            plt.gca().tick_params(axis='both',bottom=False, top=False,right=False,left=False)        
-        
-        df_V     = pd.DataFrame(
-                                 {r"$V_1$":Data['Mult param'][0][0],
-                                  r"$V_2$":Data['Mult param'][1][0],
-                                  r"$V_3$":Data['Mult param'][2][0]})   
-        
-
-                
-        g_V = sns.PairGrid(df_V,aspect=1)
-        g_V = g_V.map_diag(sns.distplot,fit=norm,kde=False)
-        g_V = g_V.map_lower(sns.kdeplot,fill=True) 
-        for ax in plt.gcf().axes:
-            l = ax.get_xlabel()
-            ax.set_xlabel(l, fontsize=30)    
-            ll = ax.get_ylabel()
-            ax.set_ylabel(ll, fontsize=30)     
-        g_V.map_upper(corrfunc_V, cmap=ListedColormap(['white']), norm=plt.Normalize(vmin=-1, vmax=1))       
-        g_V.map_upper(hide_ticks)        
-        g_V.fig.subplots_adjust(top=0.98,bottom=0.086,right=.998,wspace=0.06, hspace=0.06) # equal spacing in both directions
-        
-
-        df_Param = pd.DataFrame(
-                                 {r"$\theta_1$":Data['Mult param'][12][0],
-                                  r"$\theta_2$":Data['Mult param'][12][1],
-                                  r"$\theta_3$":Data['Mult param'][12][2],
-                                  r"$\varphi_1$":Data['Mult param'][13][0],
-                                  r"$\varphi_2$":Data['Mult param'][13][1],
-                                  r"$\varphi_3$":Data['Mult param'][13][2],})
-                          # r"$\rho_1$":Mult_param[14][0],
-                          # r"$\rho_2$":Mult_param[14][1],
-                          # r"$\rho_3$":Mult_param[14][2]})   
-        g_Param = sns.PairGrid(df_Param, aspect=1)
-        g_Param = g_Param.map_diag(sns.distplot,fit=norm,kde=False)
-        g_Param = g_Param.map_lower(sns.kdeplot,fill=True)
-        for ax in plt.gcf().axes:
-            l = ax.get_xlabel()
-            ax.set_xlabel(l, fontsize=30)    
-            ll = ax.get_ylabel()
-            ax.set_ylabel(ll, fontsize=30)     
-        
-        g_Param.map_upper(corrfunc_Param, cmap=ListedColormap(['white']), norm=plt.Normalize(vmin=-1, vmax=1))
-        g_Param.map_upper(hide_ticks)        
-        g_Param.fig.subplots_adjust(top=0.98,bottom=0.086,right=.993,left=0.445,wspace=0.06, hspace=0.06) # equal spacing in both directions
-        plt.show()
-        # pdb.set_trace()
-        
-        
+        if Qlunc_yaml_inputs['Flags']['PDFs']:         
+            # Print the histograms of Vlos distributions from MCM
+            # fig_h,ax_h=plt.subplots(1,3,sharey=True )
+            
+            # ax_h[0].tick_params(axis='both', labelsize=plot_param['axes_label_fontsize'])
+            # ax_h[1].tick_params(axis='both', labelsize=plot_param['axes_label_fontsize'])
+            # ax_h[2].tick_params(axis='both', labelsize=plot_param['axes_label_fontsize'])
+    
+            # ax_h[0].set_ylabel('[-]',fontsize=plot_param['axes_label_fontsize'])          
+            # ax_h[0].set_xlabel(r'$V_1$ [m/s]',fontsize=plot_param['axes_label_fontsize'])          
+            # ax_h[1].set_xlabel(r'$V_2$ [m/s]',fontsize=plot_param['axes_label_fontsize'])          
+            # ax_h[2].set_xlabel(r'$V_3$ [m/s]',fontsize=plot_param['axes_label_fontsize'])     
+            # plt.subplots_adjust(left=.09, bottom=.1, right=.995, top=.995, wspace=.053, hspace=None)        
+            
+            # # Fitting parameters
+            # (mu0, sigma0) = norm.fit(Data['Mult param'][0][0])
+            # (mu1, sigma1) = norm.fit(Data['Mult param'][1][0])
+            # (mu2, sigma2) = norm.fit(Data['Mult param'][2][0])
+            # ax_h[0].grid(axis='both')
+            # ax_h[1].grid(axis='both')
+            # ax_h[2].grid(axis='both')
+            # # plt.grid(True)
+            # # Print histogram
+            # n0, bins0, patches0 = ax_h[0].hist(Data['Mult param'][0][0], 71, density=True,  alpha=0.594)
+            # n1, bins1, patches1 = ax_h[1].hist(Data['Mult param'][1][0], 71, density=True,  alpha=0.594)
+            # n2, bins2, patches2 = ax_h[2].hist(Data['Mult param'][2][0], 71, density=True,  alpha=0.594)
+            
+            # # Add a 'best fit' line
+            # y0 = norm.pdf (bins0, mu0, sigma0)
+            # y1 = norm.pdf (bins1, mu1, sigma1)
+            # y2 = norm.pdf (bins2, mu2, sigma2)
+            
+            # #Plot gaussian fit
+            # ax_h[0].plot(bins0, y0, 'r-', linewidth=3.1,label='Gaussian fit')
+            # ax_h[1].plot(bins1, y1, 'r-', linewidth=3.1)
+            # ax_h[2].plot(bins2, y2, 'r-', linewidth=3.1)
+    
+            # ax_h[0].text(0.6, 0.95, '\n'.join(((r'$\mu~[m/s]={}$').format(np.round(mu0,2)),('$\sigma ~[m/s]={}$').format(np.round(sigma0,2)))), transform = ax_h[0].transAxes, fontsize = 17,horizontalalignment = 'left',verticalalignment = 'top', bbox = props5)
+            # ax_h[1].text(0.6, 0.95, '\n'.join(((r'$\mu~[m/s]={}$').format(np.round(mu1,2)),('$\sigma~ [m/s]={}$').format(np.round(sigma1,2)))), transform = ax_h[1].transAxes, fontsize = 17,horizontalalignment = 'left',verticalalignment = 'top', bbox = props5)
+            # ax_h[2].text(0.6, 0.95, '\n'.join(((r'$\mu~[m/s]={}$').format(np.round(mu2,2)),('$\sigma~ [m/s]={}$').format(np.round(sigma2,2)))), transform = ax_h[2].transAxes, fontsize = 17,horizontalalignment = 'left',verticalalignment = 'top', bbox = props5)
+            # # ax_h[0].legend()
+            # plt.show()
+    
+            ################################################### 
+            # Plot velocities
+            # Create the DataFrame
+            pdb.set_trace()
+            def corrfunc_V(x, y, **kwds):
+                cmap = ListedColormap(['white'])
+                norm = kwds['norm']
+                ax = plt.gca()
+                # ax.tick_params(bottom=False, top=False, left=False, right=False)
+                g_V.tick_params(axis='both',labelsize=20) 
+                sns.despine(ax=ax, bottom=False, top=False, left=False, right=False)
+                r, _ = pearsonr(x, y)
+                facecolor = cmap(norm(r))
+                ax.set_facecolor(facecolor)
+                lightness = (max(facecolor[:3]) + min(facecolor[:3]) ) / 2
+                ax.annotate(f"r={r:.2f}", xy=(.5, .5), xycoords=ax.transAxes,
+                            color='white' if lightness < 0.7 else 'black', size=26, ha='center', va='center')        
+    
+            def corrfunc_Param(x, y, **kwds):
+                cmap = ListedColormap(['white'])
+                norm = kwds['norm']
+                ax = plt.gca()
+                # ax.tick_params(bottom=False, top=False, left=False, right=False)
+                g_Param.tick_params(axis='both',labelsize=11) 
+                sns.despine(ax=ax, bottom=False, top=False, left=False, right=False)
+                r, _ = pearsonr(x, y)
+                facecolor = cmap(norm(r))
+                ax.set_facecolor(facecolor)
+                lightness = (max(facecolor[:3]) + min(facecolor[:3]) ) / 2
+                ax.annotate(f"r={r:.2f}", xy=(.5, .5), xycoords=ax.transAxes,
+                            color='white' if lightness < 0.7 else 'black', size=26, ha='center', va='center')   
+    
+    
+            def hide_ticks(*args, **kwds):
+                plt.gca().tick_params(axis='both',bottom=False, top=False,right=False,left=False)        
+            
+            df_V     = pd.DataFrame(
+                                     {r"$V_1$":Data['Mult param'][0][0],
+                                      r"$V_2$":Data['Mult param'][1][0],
+                                      r"$V_3$":Data['Mult param'][2][0]})   
+            
+    
+                    
+            g_V = sns.PairGrid(df_V,aspect=1)
+            g_V = g_V.map_diag(sns.distplot,fit=norm,kde=False)
+            g_V = g_V.map_lower(sns.kdeplot,fill=True) 
+            for ax in plt.gcf().axes:
+                l = ax.get_xlabel()
+                ax.set_xlabel(l, fontsize=30)    
+                ll = ax.get_ylabel()
+                ax.set_ylabel(ll, fontsize=30)     
+            g_V.map_upper(corrfunc_V, cmap=ListedColormap(['white']), norm=plt.Normalize(vmin=-1, vmax=1))       
+            g_V.map_upper(hide_ticks)        
+            g_V.fig.subplots_adjust(top=0.98,bottom=0.086,right=.998,wspace=0.06, hspace=0.06) # equal spacing in both directions
+            
+    
+            df_Param = pd.DataFrame(
+                                     {r"$\theta_1$":Data['Mult param'][12][0],
+                                      r"$\theta_2$":Data['Mult param'][12][1],
+                                      r"$\theta_3$":Data['Mult param'][12][2],
+                                      r"$\varphi_1$":Data['Mult param'][13][0],
+                                      r"$\varphi_2$":Data['Mult param'][13][1],
+                                      r"$\varphi_3$":Data['Mult param'][13][2],})
+                              # r"$\rho_1$":Mult_param[14][0],
+                              # r"$\rho_2$":Mult_param[14][1],
+                              # r"$\rho_3$":Mult_param[14][2]})   
+            g_Param = sns.PairGrid(df_Param, aspect=1)
+            g_Param = g_Param.map_diag(sns.distplot,fit=norm,kde=False)
+            g_Param = g_Param.map_lower(sns.kdeplot,fill=True)
+            for ax in plt.gcf().axes:
+                l = ax.get_xlabel()
+                ax.set_xlabel(l, fontsize=30)    
+                ll = ax.get_ylabel()
+                ax.set_ylabel(ll, fontsize=30)     
+            
+            g_Param.map_upper(corrfunc_Param, cmap=ListedColormap(['white']), norm=plt.Normalize(vmin=-1, vmax=1))
+            g_Param.map_upper(hide_ticks)        
+            g_Param.fig.subplots_adjust(top=0.98,bottom=0.086,right=.993,left=0.445,wspace=0.06, hspace=0.06) # equal spacing in both directions
+            plt.show()
+            # pdb.set_trace()
+            
+            
         ###################################################    
     
         # # #Plot Vlos with stdv
