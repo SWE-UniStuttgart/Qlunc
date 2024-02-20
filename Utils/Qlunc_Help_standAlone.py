@@ -531,12 +531,13 @@ Second, we use the statics of Vlos, mean and stdv, jointly with the correlation 
 '''
 
 def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,alpha,lidars,DataFrame):
-    Vh,U_Vh_MCM                                           = [],[]
+    Vh,Vh2,U_Vh_MCM                                       = [],[],[]
     Vlos1_MC_cr2_s,Vlos2_MC_cr2_s,Vlos3_MC_cr2_s          = [],[],[]
     Theta1_cr2_s,Theta2_cr2_s,Theta3_cr2_s,Psi1_cr2_s,Psi2_cr2_s,Psi3_cr2_s,Rho1_cr2_s,Rho2_cr2_s,Rho3_cr2_s=[],[],[],[],[],[],[],[],[]    
     u0,v0,w0 = [],[],[]
     U_Vlos_MCM = {"V1":[],"V2":[],"V3":[]}
     Vlos_corr_MCM={"V12":[],"V13":[],"V23":[]}
+    Vh_T = [] 
     Vlos_corr0 = np.zeros(len(Lidar.optics.scanner.origin))
     for ind_wind_dir in range(len(wind_direction)):  
         
@@ -558,23 +559,24 @@ def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,alpha,li
         # Covariance matrix    
         Vlos_corrCoef_MCM=[Vlos_corr['V1'],Vlos_corr['V2'],Vlos_corr['V3']]
         cov_MAT_Vh = MultiVar(Lidar, Vlos_corrCoef_MCM     ,  U_Vlos ,          1   ,         1     ,         1 ,            1 ,        'MC2' )
-           
+        # cov_MAT_Vh2 = MultiVar(Lidar, Vlos_corrCoef_MCM     ,  U_Vlos ,          1   ,         1     ,         1 ,            1 ,        'MC1' )
+         
         
         if len(Lidar.optics.scanner.origin)==3: # Triple solution         
             Theta1_cr2,Theta2_cr2,Theta3_cr2,Psi1_cr2,Psi2_cr2,Psi3_cr2,Rho1_cr2,Rho2_cr2,Rho3_cr2,Vlos1_MC_cr2,Vlos2_MC_cr2,Vlos3_MC_cr2= multivariate_normal.rvs(np.ndarray.tolist(np.concatenate([lidars['Lidar0_Spherical']['theta'] , lidars['Lidar1_Spherical']['theta'] , lidars['Lidar2_Spherical']['theta'], lidars['Lidar0_Spherical']['psi'] , lidars['Lidar1_Spherical']['psi'] , lidars['Lidar2_Spherical']['psi'], lidars['Lidar0_Spherical']['rho'] , lidars['Lidar1_Spherical']['rho'] , lidars['Lidar2_Spherical']['rho'],np.array([np.mean(Vlos_MCM[0])]) , np.array([np.mean(Vlos_MCM[1])]),np.array([np.mean(Vlos_MCM[2])])],axis=0)) , cov_MAT_Vh , Lidar.optics.scanner.N_MC).T
-            
-            u,v,w = Wind_vector3D(Theta1_cr2,Theta2_cr2,Theta3_cr2,Psi1_cr2,Psi2_cr2,Psi3_cr2,Vlos1_MC_cr2,Vlos2_MC_cr2,Vlos3_MC_cr2)             
+            u,v,w = Wind_vector3D(lidars['Lidar0_Spherical']['theta'],lidars['Lidar1_Spherical']['theta'],lidars['Lidar2_Spherical']['theta'],lidars['Lidar0_Spherical']['psi'],lidars['Lidar1_Spherical']['psi'],lidars['Lidar2_Spherical']['psi'],Vlos1_MC_cr2,Vlos2_MC_cr2,Vlos3_MC_cr2)       
+                        
             u0.append(np.mean(u))
-            v0.append(np.mean(v))           
-            w0.append(np.mean(w))
-                
+            v0.append(np.mean(v)  )         
+            w0.append(np.mean(w)  )          
             Vh.append(np.sqrt(u**2 + v**2 + w**2))
             U_Vh_MCM.append(np.std(Vh[ind_wind_dir]))
+            Vh_T.append(np.sqrt(u0[ind_wind_dir]**2 + v0[ind_wind_dir]**2 + w0[ind_wind_dir]**2))
             
-             #Storing data
+            # #Storing data
             Vlos_cr_s = [Vlos1_MC_cr2_s.append(Vlos1_MC_cr2),
-                         Vlos2_MC_cr2_s.append(Vlos2_MC_cr2),
-                         Vlos3_MC_cr2_s.append(Vlos3_MC_cr2)]
+                          Vlos2_MC_cr2_s.append(Vlos2_MC_cr2),
+                          Vlos3_MC_cr2_s.append(Vlos3_MC_cr2)]
             
             Theta_cr_s = [Theta1_cr2_s.append(Theta1_cr2) ,     
                           Theta2_cr2_s.append(Theta2_cr2),
@@ -593,7 +595,7 @@ def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,alpha,li
             
             #Storing data
             Vlos_cr_s = [Vlos1_MC_cr2_s.append(Vlos1_MC_cr2),
-                         Vlos2_MC_cr2_s.append(Vlos2_MC_cr2)]
+                          Vlos2_MC_cr2_s.append(Vlos2_MC_cr2)]
            
             Theta_cr_s = [Theta1_cr2_s.append(Theta1_cr2),
                           Theta2_cr2_s.append(Theta2_cr2)]
@@ -611,14 +613,19 @@ def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,alpha,li
             # U_Vh_MCM.append(np.std(Vh[ind_wind_dir]))
             
             
-            u,v=Wind_vector2D(Theta1_cr2,Theta2_cr2,Psi1_cr2,Psi2_cr2, Vlos1_MC_cr2,Vlos2_MC_cr2)
+            u,v = Wind_vector2D(Theta1_cr2,Theta2_cr2,Psi1_cr2,Psi2_cr2, Vlos1_MC_cr2,Vlos2_MC_cr2)
+            u0.append(np.mean(u))
+            v0.append(np.mean(v)  )         
+            
+            
             Vh.append(np.sqrt(u**2+v**2))       
             U_Vh_MCM.append(np.std(Vh[ind_wind_dir]))
+            Vh_T.append(np.sqrt(u0[ind_wind_dir]**2 + v0[ind_wind_dir]**2))
             
-
+    # pdb.set_trace()
     # Store the multivariate distributions
     Mult_param          =  [Vlos1_MC_cr2_s,Vlos2_MC_cr2_s,Vlos3_MC_cr2_s,Theta1_cr2_s,Theta2_cr2_s,Theta3_cr2_s,Psi1_cr2_s,Psi2_cr2_s,Psi3_cr2_s,Rho1_cr2_s,Rho2_cr2_s,Rho3_cr2_s,Theta_cr,Psi_cr,Rho_cr]
-    return Vlos_corr_MCM,U_Vlos_MCM , Mult_param  , U_Vh_MCM,Vh
+    return Vlos_corr_MCM,U_Vlos_MCM , Mult_param  , U_Vh_MCM,Vh,Vh_T
 
 
 #%% ##########################################
@@ -789,6 +796,7 @@ def GUM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,Correlation_coeff,wind_
             U_VLOS_GUM_list   = [U_Vlos_GUM['V1'][ind_wind_dir],U_Vlos_GUM['V2'][ind_wind_dir],U_Vlos_GUM['V3'][ind_wind_dir]]
             Corrcoef_GUM_list = [Correlation_coeff['V1'][ind_wind_dir],Correlation_coeff['V2'][ind_wind_dir],Correlation_coeff['V3'][ind_wind_dir]]
             Vh.append(np.sqrt(u**2+v**2+w**2))
+            # pdb.set_trace()
         else:
             num1 = np.sqrt(((Vlos_GUM['V1'][ind_wind_dir]*np.cos(lidars['Lidar1_Spherical']['theta']))**2)+((Vlos_GUM['V2'][ind_wind_dir]*np.cos(lidars['Lidar0_Spherical']['theta']))**2)-(2*Vlos_GUM['V1'][ind_wind_dir]*Vlos_GUM['V2'][ind_wind_dir]*np.cos(lidars['Lidar0_Spherical']['psi']-lidars['Lidar1_Spherical']['psi'])*np.cos(lidars['Lidar0_Spherical']['theta'])*np.cos(lidars['Lidar1_Spherical']['theta'])))
             den=np.cos(lidars['Lidar0_Spherical']['theta'])*np.cos(lidars['Lidar1_Spherical']['theta'])*np.sin(lidars['Lidar0_Spherical']['psi']-lidars['Lidar1_Spherical']['psi'])
@@ -815,10 +823,10 @@ def GUM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,Correlation_coeff,wind_
         UyVh = np.array(Cx).dot(Ux).dot(np.transpose(Cx))
         UUy.append(UyVh)
         U_Vh_GUM.append(np.sqrt(UyVh[0]))        
-        # pdb.set_trace()
+        
         # CovTerms.append(np.sqrt(UyVh[1]))
         
-    
+    # pdb.set_trace()
     return(U_Vh_GUM,Sensitivity_Coefficients,u0,v0,w0,Vh)
     
     
@@ -851,6 +859,7 @@ def U_WindDir_MC(Lidar,wind_direction,Mult_param,DataFrame):
     for ind_wind_dir in range(len(wind_direction)):
         W_D = []
         if len(Lidar.optics.scanner.origin)==3:
+            # pdb.set_trace()
             u,v,w = Wind_vector3D(Theta1[ind_wind_dir],Theta2[ind_wind_dir],Theta3[ind_wind_dir],Psi1[ind_wind_dir],Psi2[ind_wind_dir],Psi3[ind_wind_dir], Vlos1[ind_wind_dir],Vlos2[ind_wind_dir],Vlos3[ind_wind_dir])
             try:
                 for i in range(len(u)):
@@ -1037,7 +1046,7 @@ def Wind_vector2D(theta1,theta2,psi1,psi2, Vlos1,Vlos2):
 
 #%% Calculate the confidence intervals
 
-def CI (p, Unc_GUM, Unc_MC, mean_GUM, Mult_param,U_Vh_GUM,Vh_GUM):
+def CI (p, Unc_GUM, Unc_MC, mean_GUM, Mult_param,U_Vh_GUM,U_Vh_MCM_T,Vh_):
     
     
     # Some cases among which select Z-score accounting for the coverage probablity (prob) 
@@ -1057,37 +1066,41 @@ def CI (p, Unc_GUM, Unc_MC, mean_GUM, Mult_param,U_Vh_GUM,Vh_GUM):
     elif p == 4: #99%
         prob = 0.99
         Z  = 2.576 # This value depends on the low_lim/high_lim values we chose --> extracted from the Z-score table
+    # pdb.set_trace()
     
     CI_L_GUM,CI_H_GUM       = [],[]    
     CI_L_MC,CI_H_MC         = [],[]
     CI_L_MC_Vh,CI_H_MC_Vh   = [],[]
-    # pdb.set_trace()
+    CI_L_GUM_Vh,CI_H_GUM_Vh = [],[]
     for ind_CI in range(len( Unc_GUM['V1'])):
-        # pdb.set_trace()
-        # GUM           
+
+        # GUM ###############################                
+        # VLOS
         Xlow   = -Z * Unc_GUM['V1'][ind_CI] + mean_GUM['V1'][ind_CI]
-        Xhigh  =  Z * Unc_GUM['V1'][ind_CI] + mean_GUM['V1'][ind_CI]      
-
-        Xlow_Vh   = -Z * U_Vh_GUM[ind_CI] + Vh_GUM[ind_CI]
-        Xhigh_Vh  =  Z * U_Vh_GUM[ind_CI] + Vh_GUM[ind_CI] 
-
+        Xhigh  =  Z * Unc_GUM['V1'][ind_CI] + mean_GUM['V1'][ind_CI] 
         CI_L_GUM.append(np.round(Xlow,3))       
         CI_H_GUM.append( np.round(Xhigh,3))       
-
-        CI_L_MC_Vh.append(np.round(Xlow_Vh,3))       
-        CI_H_MC_Vh.append( np.round(Xhigh_Vh,3))  
+        
+        #Vh
+        Xlow_Vh   = -Z * U_Vh_GUM[0][ind_CI] + Vh_['V1_GUM'][0][ind_CI]
+        Xhigh_Vh  =  Z * U_Vh_GUM[0][ind_CI] + Vh_['V1_GUM'][0][ind_CI] 
+        CI_L_GUM_Vh.append(np.round(Xlow_Vh,3))       
+        CI_H_GUM_Vh.append( np.round(Xhigh_Vh,3))  
             
-        # Montecarlo method
+        # Montecarlo method #################
         # VLOS
         CI_MC = np.round(scipy.stats.norm.interval(prob, loc=np.mean(Mult_param[0][ind_CI]), scale=Unc_MC['V1'][ind_CI]),3)
         CI_L_MC.append(np.round(CI_MC[0],3))       
         CI_H_MC.append( np.round(CI_MC[1],3))  
-        
-        # VH
-        CI_Vh_MC = np.round(scipy.stats.norm.interval(prob, loc=np.mean(Mult_param[0][ind_CI]), scale=Unc_MC['V1'][ind_CI]),3)
+        # pdb.set_trace()
+        # Vh
+        CI_Vh_MC = np.round(scipy.stats.norm.interval(prob, loc=np.mean(Vh_['V1_MCM_mean'][0][ind_CI]), scale=U_Vh_MCM_T[0][ind_CI]),3)
+        # CI_Vh_MC = np.round(scipy.stats.norm.interval(prob, loc=10, scale=U_Vh_MCM_T[0][ind_CI]),3)
+
         CI_L_MC_Vh.append(np.round(CI_Vh_MC[0],3))       
         CI_H_MC_Vh.append( np.round(CI_Vh_MC[1],3)) 
-    return CI_L_GUM,CI_H_GUM,CI_L_MC,CI_H_MC,CI_L_MC_Vh,CI_H_MC_Vh,prob
+    # pdb.set_trace()
+    return CI_L_GUM,CI_H_GUM,CI_L_MC,CI_H_MC,CI_L_GUM_Vh,CI_H_GUM_Vh,CI_L_MC_Vh,CI_H_MC_Vh,prob
 #%% 3D velocity vector
 '''
 u1 = -((-Vlos3 *np.cos(theta2)* np.sin(psi2)* np.sin(theta1) + 
