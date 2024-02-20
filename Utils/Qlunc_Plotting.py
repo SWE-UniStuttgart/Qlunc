@@ -211,7 +211,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
 
                     
     
-                    for ind_plot in range(len(Data['Vh Unc [m/s]']['Uncertainty Vh MCM'])):
+                    for ind_plot in range(len(Lidar.optics.scanner.origin)):
                         c2=next(color1)
                         # pdb.set_trace()
                         ax0[0].plot(np.degrees(Data['wind direction']),Data['Vh Unc [m/s]']['Uncertainty Vh GUM'][ind_plot],'-', color = c2,linewidth = plot_param['linewidth'],label = r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))
@@ -983,7 +983,97 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
             g_Param.fig.subplots_adjust(top=0.98,bottom=0.086,right=.993,left=0.445,wspace=0.06, hspace=0.06) # equal spacing in both directions
             plt.show()
             # pdb.set_trace()
+        
+        
+        #%% CI plotting
+        if Qlunc_yaml_inputs['Flags']['Coverage interval']:                                 
+             pdb.set_trace()
+             ## VLOS ###########################################################################
+             Vlos          = [l.tolist()[0] for l in Data['Vlos_GUM']['V1']]
+             CI_VLOS_L_GUM = [l.tolist()[0] for l in Data['CI'][0]]
+             CI_VLOS_H_GUM = [l.tolist()[0] for l in Data['CI'][1]]
             
+             CI_VLOS_L_MCM = [l.tolist()[0] for l in Data['CI'][2]]
+             CI_VLOS_H_MCM = [l.tolist()[0] for l in Data['CI'][3]]
+            
+            
+             # Limits of the CI for GUM and MCM
+             y1_GUM = [Vlos[inf0]-CI_VLOS_L_GUM[inf0] for inf0 in range(len(Vlos))]
+             y2_GUM = [Vlos[inf0]-CI_VLOS_H_GUM[inf0] for inf0 in range(len(Vlos))]
+             y1_MCM = [Vlos[inf0]-CI_VLOS_L_MCM[inf0] for inf0 in range(len(Vlos))]
+             y2_MCM = [Vlos[inf0]-CI_VLOS_H_MCM[inf0] for inf0 in range(len(Vlos))]    
+            
+             #Percentage of MCM data within the calculated CI
+             percentage_VLOS=[]
+             for ind_per in range(len(Data['Mult param'][0])):
+                 percentage_VLOS.append( 100 * len([i for i in Data['Mult param'][0][ind_per] if i > CI_VLOS_L_GUM[ind_per] and i < CI_VLOS_H_GUM[ind_per]]) / len(Data['Mult param'][0][0]) )
+             CI_final = np.round(np.mean(percentage_VLOS),2)
+            
+            
+             #Plot results
+             fig, ax = plt.subplots()
+             ax.plot(np.degrees(Data['wind direction']), Data['Vlos_GUM']['V1'], '-',color='goldenrod',zorder = 12,linewidth = 2.45,label = r'$V_{LOS}$ GUM')
+             ax.plot(np.degrees(Data['wind direction']), Data['Mult param'][0], 'o',color = 'cornflowerblue',markersize = 3.7,markeredgecolor = 'royalblue',zorder=0)    
+             ax.plot(np.degrees(Data['wind direction']), np.array(Vlos) - np.array(y1_MCM),'--',color = 'dimgray',linewidth = 2.7,zorder = 12,label = 'CI MCM')  
+             ax.plot(np.degrees(Data['wind direction']), np.array(Vlos) - np.array(y2_MCM), '--',color = 'dimgray',linewidth = 2.7,zorder = 12)      
+             ax.fill_between(np.degrees(Data['wind direction']), np.array(Vlos)-np.array(y1_GUM), np.array(Vlos)-np.array(y2_GUM), alpha = 0.83,color = 'darkgrey',zorder = 11,label = 'CI - {}%'.format(CI_final))
+             ax.grid('both')
+             plt.legend(loc=3, prop = {'size': plot_param['legend_fontsize']})
+            
+             ax.set_xlabel('Wind Direction [°]',fontsize = plot_param['axes_label_fontsize'])
+             ax.set_ylabel('[m/s]',fontsize = plot_param['axes_label_fontsize'])
+             ax.set_xlim(0,359)               
+             ax.tick_params(axis = 'both', labelsize = plot_param['tick_labelfontsize'])           
+             # ax.ticklabel_format(axis = 'y',style = 'sci', scilimits = (0,0))            
+             # ax.yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-3)   
+             plt.subplots_adjust(right = 0.995,left = 0.07,top = 0.975,bottom = 0.085,wspace = 0.3,hspace = 0.24)            
+             
+             
+             
+             ## V wind ###########################################################################    
+             Vh=[l.tolist()[0] for l in Data['Vh']['V1_GUM'][0]]
+            
+             # GUM
+             CI_Vh_L_GUM = [l.tolist()[0] for l in Data['CI'][4]]
+             CI_Vh_H_GUM = [l.tolist()[0] for l in Data['CI'][5]]    
+             y1_Vh_GUM   = [Vh[inf0]-CI_Vh_L_GUM[inf0] for inf0 in range(len(Vh))]
+             y2_Vh_GUM   = [Vh[inf0]-CI_Vh_H_GUM[inf0] for inf0 in range(len(Vh))]
+            
+             # MCM
+             CI_Vh_L_MCM = [l.tolist() for l in Data['CI'][6]]
+             CI_Vh_H_MCM = [l.tolist() for l in Data['CI'][7]]
+            
+             y1_MCM = [Vh[inf0] - CI_Vh_L_MCM[inf0] for inf0 in range(len(Vh))]
+             y2_MCM = [Vh[inf0] - CI_Vh_H_MCM[inf0] for inf0 in range(len(Vh))]    
+            
+             #Percentage of MCM data within the calculated CI
+             percentage_Vh = []
+             for ind_per in range(len(Data['Vh']['V1_MCM'][0])):
+                 percentage_Vh.append( 100 * len([i for i in Data['Vh']['V1_MCM'][0][ind_per] if i > CI_Vh_L_GUM[ind_per] and i < CI_Vh_H_GUM[ind_per]]) / len(Data['Vh']['V1_MCM'][0][0]))
+             CI_final_Vh = np.round(np.mean(percentage_Vh),2)
+            
+             
+             #Plot results
+             fig, ax = plt.subplots()
+             ax.plot(np.degrees(Data['wind direction']), Data['Vh']['V1_GUM'][0], '-',color = 'goldenrod',zorder = 12,linewidth = 2.85,label = r'$V_{LOS}$ GUM')
+             ax.plot(np.degrees(Data['wind direction']), Data['Vh']['V1_MCM'][0], 'o',color = 'cornflowerblue',markersize = 3.7,markeredgecolor = 'royalblue',zorder=0)  
+             ax.plot(np.degrees(Data['wind direction']), Data['Vh']['V1_MCM_mean'][0],'o',color = 'cornflowerblue',markersize = 8,markeredgecolor = 'indigo',zorder = 11)
+             ax.plot(np.degrees(Data['wind direction']), np.array(Vh) - np.array(y1_MCM),'--',color = 'dimgray',linewidth = 2.7,zorder = 12,label = 'CI MCM')  
+             ax.plot(np.degrees(Data['wind direction']), np.array(Vh) - np.array(y2_MCM),'--',color = 'dimgray',linewidth = 2.7,zorder = 12)  
+            
+             ax.fill_between(np.degrees(Data['wind direction']), np.array(Vh) - np.array(y1_Vh_GUM), np.array(Vh) - np.array(y2_Vh_GUM), alpha = 0.83,color = 'darkgrey',zorder = 10,label = 'CI - {}%'.format(CI_final_Vh))
+             ax.grid('both')
+             ax.set_xlabel('Wind Direction [°]',fontsize = plot_param['axes_label_fontsize'])
+             ax.set_ylabel('[m/s]',fontsize = plot_param['axes_label_fontsize'])
+             ax.set_xlim(0,359)               
+             ax.tick_params(axis = 'both', labelsize = plot_param['tick_labelfontsize'])           
+             # ax.ticklabel_format(axis = 'y',style = 'sci', scilimits = (0,0))            
+             # ax.yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-3)   
+             plt.subplots_adjust(right = 0.995,left = 0.07,top = 0.975,bottom = 0.085,wspace = 0.3,hspace = 0.24)            
+            
+             plt.legend(loc = 3, prop = {'size': plot_param['legend_fontsize']})
+                        
+             # pdb.set_trace()
             
         ###################################################    
     
