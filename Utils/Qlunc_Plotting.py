@@ -1129,7 +1129,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
              # plot MCM validation boundaries and tolerance ###################################################    
              ######################################################################################################    
 
-             
+             # Vh
              fig,axtol = plt.subplots()
              axtol.axhline(y=Data['Tolerance'][0], color='red', linestyle='--',linewidth=4,label=r"$\delta$")
              axtol.plot(np.degrees(Data['wind direction']),Data['Tolerance'][1],'-',color = 'darkorange',linewidth=3,label=r"$d_{low}=\vert V_h-u_{V_h} - y_{low}\vert$")
@@ -1146,6 +1146,26 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_measuring_points_pattern,fla
              plt.subplots_adjust(right = 0.995,left = 0.05,top = 0.965,bottom = 0.11,wspace = 0.3,hspace = 0.24)            
             
              plt.legend(loc = (0.72,0.7), prop = {'size': plot_param['legend_fontsize']})             
+
+             # Wind dir
+             fig,axtol_dir = plt.subplots()
+             axtol_dir.axhline(y=Data['Tolerance'][0], color='red', linestyle='--',linewidth=4,label=r"$\delta$")
+             axtol_dir.plot(np.degrees(Data['wind direction']),Data['Tolerance'][3],'-',color = 'darkorange',linewidth=3,label=r"$d_{low}=\vert \Omega-u_{\Omega} - y_{low}\vert$")
+             axtol_dir.plot(np.degrees(Data['wind direction']),Data['Tolerance'][4],'-',color = 'darkcyan',linewidth=3,label=r"$d_{high}=\vert \Omega+u_{\Omega}- y_{high}\vert$")
+             
+    
+             axtol_dir.grid('both')
+             axtol_dir.set_xlabel('Wind Direction [°]',fontsize = plot_param['axes_label_fontsize'])
+             axtol_dir.set_ylabel('[°]',fontsize = plot_param['axes_label_fontsize'])
+             axtol_dir.set_xlim(0,359)               
+             axtol_dir.tick_params(axis = 'both', labelsize = plot_param['tick_labelfontsize'])           
+             axtol_dir.ticklabel_format(axis = 'y',style = 'sci', scilimits = (0,0))            
+             axtol_dir.yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize']-3)   
+             plt.subplots_adjust(right = 0.995,left = 0.05,top = 0.965,bottom = 0.11,wspace = 0.3,hspace = 0.24)            
+            
+             plt.legend(loc = (0.72,0.7), prop = {'size': plot_param['legend_fontsize']})             
+
+
         ###################################################    
     
         # # #Plot Vlos with stdv
