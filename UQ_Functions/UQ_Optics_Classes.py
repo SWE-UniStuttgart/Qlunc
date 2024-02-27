@@ -205,7 +205,18 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
   
     #%% CI calculations
     k = Qlunc_yaml_inputs['Components']['Scanner']['k']
-    CI_VLOS_L_GUM, CI_VLOS_H_GUM, CI_VLOS_L_MC, CI_VLOS_H_MC, CI_Vh_L_GUM, CI_Vh_H_GUM,CI_Vh_L_MC, CI_Vh_H_MC,prob = SA.CI(k,U_Vlos_GUM,U_Vlos_MCM,Vlos_GUM,Mult_param, U_Vh_GUM_T, U_Vh_MCM_T, Vh_)
+    wl_alpha=3
+    
+    CI_VLOS_L_GUM, CI_VLOS_H_GUM, CI_VLOS_L_MC, CI_VLOS_H_MC, CI_Vh_L_GUM, CI_Vh_H_GUM,CI_Vh_L_MC, CI_Vh_H_MC,prob = SA.CI(wl_alpha,k,U_Vlos_GUM,U_Vlos_MCM,Vlos_GUM,Mult_param, U_Vh_GUM_T, U_Vh_MCM_T, Vh_)
+    # pdb.set_trace()
+    
+    # MCM validation
+    
+    #Tolerance and lower/upper limits calculated as in JCGM 101:2008 Section 8
+    delta = .5*1e-2    
+    dlow_Vh  = [ abs(Vh_['V{}_GUM'.format(wl_alpha)][0][ilow]  - U_Vh_GUM_T[wl_alpha-1][ilow]  - CI_Vh_L_MC[ilow])  for ilow  in range( len( Vh_['V1_GUM'][0] ) ) ]
+    dhigh_Vh = [ abs(Vh_['V{}_GUM'.format(wl_alpha)][0][ihigh] + U_Vh_GUM_T[wl_alpha-1][ihigh] - CI_Vh_H_MC[ihigh]) for ihigh in range( len( Vh_['V1_GUM'][0] ) ) ]    
+    
     
     #%% Store Data
     VLOS_Unc    =  {'VLOS1 Uncertainty MC [m/s]':      U_Vlos['V1_MCM'],      'VLOS1 Uncertainty GUM [m/s]':      U_Vlos['V1_GUM'],
@@ -231,10 +242,11 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
                                'Mult param'      : Mult_param,
                                'Vlos_GUM'        : Vlos_GUM,
                                'Vh'              : Vh_,                               
-                               'CI'              :[CI_VLOS_L_GUM, CI_VLOS_H_GUM, CI_VLOS_L_MC, CI_VLOS_H_MC, CI_Vh_L_GUM, CI_Vh_H_GUM,CI_Vh_L_MC, CI_Vh_H_MC,prob]}
+                               'CI'              :[CI_VLOS_L_GUM, CI_VLOS_H_GUM, CI_VLOS_L_MC, CI_VLOS_H_MC, CI_Vh_L_GUM, CI_Vh_H_GUM,CI_Vh_L_MC, CI_Vh_H_MC,prob],
+                               'Tolerance'       : [delta, dlow_Vh, dhigh_Vh,wl_alpha]}
     # Lidar.lidar_inputs.dataframe['Scanner'] = {'Focus distance':Final_Output_UQ_Scanner['lidars'][0],'Elevation angle':Final_Output_UQ_Scanner['Elevation angle'][0],'Azimuth':Final_Output_UQ_Scanner['Azimuth'][0]}
     DataFrame['Uncertainty Scanner']=Final_Output_UQ_Scanner    
-    
+    # pdb.set_trace()
    
     #%% 7) Plotting data
     QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,Qlunc_yaml_inputs['Flags']['Scanning uncertainties'],False,False,False,False,False,1)  
