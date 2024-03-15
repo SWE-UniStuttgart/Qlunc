@@ -1014,6 +1014,7 @@ def U_intrinsic(Lidar,Atmospheric_Scenario,DataFrame,Qlunc_yaml_inputs):
     corr_wavelength_fd = 1
     # Analytical solution:   
     u_intrinsic = np.round(np.sqrt((fd*DataFrame['Uncertainty ADC']['Stdv wavelength [m]']/2)**2+(Qlunc_yaml_inputs['Components']['Laser']['Wavelength']*DataFrame['Uncertainty ADC']['Stdv Doppler f_peak [Hz]']/2)**2+(fd*Qlunc_yaml_inputs['Components']['Laser']['Wavelength']*DataFrame['Uncertainty ADC']['Stdv Doppler f_peak [Hz]']*DataFrame['Uncertainty ADC']['Stdv wavelength [m]'])*corr_wavelength_fd/2) ,4)
+    pdb.set_trace()
     return u_intrinsic
 
 
@@ -1047,7 +1048,7 @@ def Wind_vector2D(theta1,theta2,psi1,psi2, Vlos1,Vlos2):
 
 #%% Calculate the confidence intervals
 
-def CI (wl,k, Unc_GUM, Unc_MC, mean_GUM, Mult_param,U_Vh_GUM,U_Vh_MCM_T,Vh_,U_WindDir_GUM,WindDirection,U_WindDir_MCM):
+def CI (wl,k, Unc_GUM, Unc_MC, mean_GUM, Mult_param,U_Vh_GUM,U_Vh_MCM_T,Vh_,U_WindDir_GUM,U_WindDir_MCM,WindDirection):
     
     
     # Some cases among which select Z-score accounting for the coverage probablity (prob) 
