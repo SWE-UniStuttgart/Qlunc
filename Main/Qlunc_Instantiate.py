@@ -232,6 +232,54 @@ else:
                                       Hg             = Qlunc_yaml_inputs['Atmospheric_inputs']['Height ground'])
 
 #%% Run Qlunc for different values of tilt angle
+########################################################################
+def get_points(radius, center, number_of_points):
+    radians_between_each_point = 2*np.pi/number_of_points
+    list_of_points = []
+    for p in range(0, number_of_points):
+        list_of_points.append( (center[0]+radius*np.cos(p*radians_between_each_point),center[1]+radius*np.sin(p*radians_between_each_point)) )
+    return list_of_points
+
+rho = 500
+elevation_angle = np.radians( 13.65)
+center = [rho*np.cos(elevation_angle),0]
+A=get_points(rho*np.cos(elevation_angle),center, 12)
+
+x = [A[ii][0] for ii in range(len(A))]
+y = [A[ii][1] for ii in range(len(A))]
+
+x1 = [A[ii][0] for ii in range(1,6)]
+y1 = [A[ii][1] for ii in range(1,6)]
+
+
+x2 = [A[ii][0] for ii in range(7,12)]
+x2 = x2[::-1]
+y2 = [A[ii][1] for ii in range(7,12)]
+y2 = y2[::-1]
+
+
+z=np.zeros(len(x))
+
+Lidar2_pos=list(zip(x1,y1,z))
+Lidar3_pos=list(zip(x2,y2,z))
+Lidar1_pos=list(zip(z,z,z))
+
+# plt.plot(x,y,'ob')
+# plt.gca().set_aspect('equal')
+
+# plt.plot(x1[0],y1[0],'k^')
+# plt.plot(x1[-1],y1[-1],'k^')
+
+
+# plt.plot(x2[0],y2[0],'ro')
+# plt.plot(x2[-1],y2[-1],'ro')
+
+############################################################################################
+# for i_position in range(len(Lidar2_pos)):
+#     Lidar.optics.scanner.origin = [Lidar1_pos[i_position],Lidar2_pos[i_position],Lidar3_pos[i_position]]
+#     # pdb.set_trace()
+#     Atmospheric_Scenario.wind_tilt = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind tilt']
+#     Atmospheric_Scenario.Vref      = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref']
 for i_tilt in np.linspace(Atmospheric_Scenario.wind_tilt[0],Atmospheric_Scenario.wind_tilt[1],Atmospheric_Scenario.wind_tilt[2]):
     for i_Vref in np.linspace(Atmospheric_Scenario.Vref[0],Atmospheric_Scenario.Vref[1],Atmospheric_Scenario.Vref[2]):
         # pdb.set_trace()
