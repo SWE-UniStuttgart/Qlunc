@@ -68,7 +68,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
     V_ref  = Atmospheric_Scenario.Vref
     alpha = Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']    
     Hg    = Qlunc_yaml_inputs['Atmospheric_inputs']['Height ground']
-    Hl    = [Qlunc_yaml_inputs['Components']['Scanner']['Origin'][0][2],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][1][2]]    
+    Hl    = [Lidar.optics.scanner.origin[0][2],Lidar.optics.scanner.origin[1][2]]    
     N_MC  = Lidar.optics.scanner.N_MC
     
     
@@ -117,13 +117,13 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
             # Store lidar positionning   
             lidars={}       
             # pdb.set_trace()
-            for n_lidars in range(len(Qlunc_yaml_inputs['Components']['Scanner']['Origin'])):
-                lidars['Lidar{}_Rectangular'.format(n_lidars)] = {'LidarPosX': Qlunc_yaml_inputs['Components']['Scanner']['Origin'][n_lidars][0],
-                                                                 'LidarPosY' : Qlunc_yaml_inputs['Components']['Scanner']['Origin'][n_lidars][1],
-                                                                 'LidarPosZ' : Qlunc_yaml_inputs['Components']['Scanner']['Origin'][n_lidars][2],
-                                                                 'x'         : (lidar_coor.vector_pos(x,y,z,x_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][n_lidars][0],y_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][n_lidars][1],z_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][n_lidars][2])[1]),
-                                                                 'y'         : (lidar_coor.vector_pos(x,y,z,x_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][n_lidars][0],y_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][n_lidars][1],z_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][n_lidars][2])[2]),
-                                                                 'z'         : (lidar_coor.vector_pos(x,y,z,x_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][n_lidars][0],y_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][n_lidars][1],z_Lidar=Qlunc_yaml_inputs['Components']['Scanner']['Origin'][n_lidars][2])[3])}
+            for n_lidars in range(len(Lidar.optics.scanner.origin)):
+                lidars['Lidar{}_Rectangular'.format(n_lidars)] = {'LidarPosX': Lidar.optics.scanner.origin[n_lidars][0],
+                                                                 'LidarPosY' : Lidar.optics.scanner.origin[n_lidars][1],
+                                                                 'LidarPosZ' : Lidar.optics.scanner.origin[n_lidars][2],
+                                                                 'x'         : (lidar_coor.vector_pos(x,y,z,x_Lidar=Lidar.optics.scanner.origin[n_lidars][0],y_Lidar=Lidar.optics.scanner.origin[n_lidars][1],z_Lidar=Lidar.optics.scanner.origin[n_lidars][2])[1]),
+                                                                 'y'         : (lidar_coor.vector_pos(x,y,z,x_Lidar=Lidar.optics.scanner.origin[n_lidars][0],y_Lidar=Lidar.optics.scanner.origin[n_lidars][1],z_Lidar=Lidar.optics.scanner.origin[n_lidars][2])[2]),
+                                                                 'z'         : (lidar_coor.vector_pos(x,y,z,x_Lidar=Lidar.optics.scanner.origin[n_lidars][0],y_Lidar=Lidar.optics.scanner.origin[n_lidars][1],z_Lidar=Lidar.optics.scanner.origin[n_lidars][2])[3])}
                 
                 lidars['Lidar{}_Spherical'.format(n_lidars)]   = {'rho'      : np.round((lidar_coor.Cart2Sph(lidars['Lidar{}_Rectangular'.format(n_lidars)]['x'],lidars['Lidar{}_Rectangular'.format(n_lidars)]['y'],lidars['Lidar{}_Rectangular'.format(n_lidars)]['z']))[1],10),
                                                                   'theta'    : np.round((lidar_coor.Cart2Sph(lidars['Lidar{}_Rectangular'.format(n_lidars)]['x'],lidars['Lidar{}_Rectangular'.format(n_lidars)]['y'],lidars['Lidar{}_Rectangular'.format(n_lidars)]['z']))[2]%np.radians(360),10),
@@ -214,9 +214,11 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
             # Add test coordinates to lidars dict
             lidars['Coord_Test']={'TESTr':np.array([rho_TESTr]),'TESTt':np.array([theta_TESTt]),'TESTp':np.array([psi_TESTp])}
     # pdb.set_trace()
+    
+    
     #%% CI calculations
     k = Qlunc_yaml_inputs['Components']['Scanner']['k']
-    wl_alpha=3
+    wl_alpha=1
     
     CI_VLOS_L_GUM, CI_VLOS_H_GUM, CI_VLOS_L_MC, CI_VLOS_H_MC, CI_Vh_L_GUM, CI_Vh_H_GUM,CI_Vh_L_MC, CI_Vh_H_MC,CI_L_GUM_WindDir,CI_H_GUM_WindDir,CI_L_MC_WindDir,CI_H_MC_WindDir,prob = SA.CI(wl_alpha,k,U_Vlos_GUM,U_Vlos_MCM,Vlos_GUM,Mult_param, U_Vh_GUM_T, U_Vh_MCM_T, Vh_,U_Wind_direction_GUM,WindDirection_,U_Wind_direction_MCM)
     
@@ -224,14 +226,16 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
     # MCM validation
     
     #Tolerance and lower/upper limits calculated as in JCGM 101:2008 Section 8
-    delta = .5*1e-2    
-    dlow_Vh  = [ abs(Vh_['V{}_GUM'.format(wl_alpha)][0][ilow]  - U_Vh_GUM_T[wl_alpha-1][ilow]  - CI_Vh_L_MC[ilow])  for ilow  in range( len( Vh_['V1_GUM'][0] ) ) ]
-    dhigh_Vh = [ abs(Vh_['V{}_GUM'.format(wl_alpha)][0][ihigh] + U_Vh_GUM_T[wl_alpha-1][ihigh] - CI_Vh_H_MC[ihigh]) for ihigh in range( len( Vh_['V1_GUM'][0] ) ) ]    
+    delta_V = .5*1e-2
+    delta_D = .5*1e-1    
+    
+    dlow_Vh       = [ abs(Vh_['V{}_GUM'.format(wl_alpha)][0][ilow]  - U_Vh_GUM_T[wl_alpha-1][ilow]  - CI_Vh_L_MC[ilow])  for ilow  in range( len( Vh_['V1_GUM'][0] ) ) ]
+    dhigh_Vh      = [ abs(Vh_['V{}_GUM'.format(wl_alpha)][0][ihigh] + U_Vh_GUM_T[wl_alpha-1][ihigh] - CI_Vh_H_MC[ihigh]) for ihigh in range( len( Vh_['V1_GUM'][0] ) ) ]    
 
-    dlow_WindDir = [ abs(WindDirection_['V{}_GUM'.format(wl_alpha)][0][ilow]  - U_Wind_direction_GUM[wl_alpha-1][ilow]  - CI_L_MC_WindDir[ilow])  for ilow  in range( len( WindDirection_['V1_GUM'][0] ) ) ]
-    dhigh_WindDir = [ abs(WindDirection_['V{}_GUM'.format(wl_alpha)][0][ihigh] + U_Wind_direction_GUM[wl_alpha-1][ihigh] - CI_H_MC_WindDir[ihigh]) for ihigh in range( len( WindDirection_['V1_GUM'][0] ) ) ]    
+    dlow_WindDir  = [ abs(WindDirection_['V{}_GUM'.format(wl_alpha)][0][ilow2]  - U_Wind_direction_GUM[wl_alpha-1][ilow2]  - CI_L_MC_WindDir[ilow2])  for ilow2  in range( len( WindDirection_['V1_GUM'][0] ) ) ]
+    dhigh_WindDir = [ abs(WindDirection_['V{}_GUM'.format(wl_alpha)][0][ihigh2] + U_Wind_direction_GUM[wl_alpha-1][ihigh2] - CI_H_MC_WindDir[ihigh2]) for ihigh2 in range( len( WindDirection_['V1_GUM'][0] ) ) ]    
       
-    pdb.set_trace()
+    # pdb.set_trace()
     #%% Store Data
     VLOS_Unc    =  {'VLOS1 Uncertainty MC [m/s]':      U_Vlos['V1_MCM'],      'VLOS1 Uncertainty GUM [m/s]':      U_Vlos['V1_GUM'],
                     'VLOS2 Uncertainty MC [m/s]':      U_Vlos['V2_MCM'],      'VLOS2 Uncertainty GUM [m/s]':      U_Vlos['V2_GUM'],
@@ -258,10 +262,10 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
                                'Vh'              : Vh_,  
                                'Wind direction'  :WindDirection_,                           
                                'CI'              :[CI_VLOS_L_GUM, CI_VLOS_H_GUM, CI_VLOS_L_MC, CI_VLOS_H_MC, CI_Vh_L_GUM, CI_Vh_H_GUM,CI_Vh_L_MC, CI_Vh_H_MC,CI_L_GUM_WindDir,CI_H_GUM_WindDir,CI_L_MC_WindDir,CI_H_MC_WindDir,prob],
-                               'Tolerance'       : [delta, dlow_Vh, dhigh_Vh,dlow_WindDir,dhigh_WindDir,wl_alpha]}
+                               'Tolerance'       : [delta_V,delta_D, dlow_Vh, dhigh_Vh,dlow_WindDir,dhigh_WindDir,wl_alpha]}
     # Lidar.lidar_inputs.dataframe['Scanner'] = {'Focus distance':Final_Output_UQ_Scanner['lidars'][0],'Elevation angle':Final_Output_UQ_Scanner['Elevation angle'][0],'Azimuth':Final_Output_UQ_Scanner['Azimuth'][0]}
     DataFrame['Uncertainty Scanner']=Final_Output_UQ_Scanner    
-    # pdb.set_trace()
+    pdb.set_trace()
    
     #%% 7) Plotting data
     QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,Qlunc_yaml_inputs['Flags']['Scanning uncertainties'],False,False,False,False,False,1)  
