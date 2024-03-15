@@ -517,7 +517,7 @@ def Vlos_correlations(Lidar,Vlos_corr,Atmospheric_Scenario,wind_direction, ind_w
 ##############################################
 #%%
 '''
-This function performs an estimation of the uncertainty in Vlos and u and v wind velocity components based on the Montecarlo method. 
+This function performs an estimation of the uncertainty in Vlos and u, v and w wind velocity components based on the Montecarlo method. 
 
 First it calculates the uncertainty of Vlos assigning multivariated normally distributed probability density functions
     to the input quantities rho(range), theta(aperture angle) and psi(azimuth). The covariance matrix includes the correlations between 
@@ -641,7 +641,7 @@ def GUM_Vlos_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,alpha,l
     Corrcoef_Vlos=[]
     
     # Tilt angle:
-    beta=np.radians(Atmospheric_Scenario.wind_tilt)
+    beta = np.radians(Atmospheric_Scenario.wind_tilt)
     
     for ind_wind_dir in range(len(wind_direction)):  
         
@@ -871,7 +871,7 @@ def U_WindDir_MC(Lidar,wind_direction,Mult_param,DataFrame):
                     W_D.append ( math.atan2(v[i],u[i])    )
             except:
                 W_D.append(0)
-        WindDirection.append(np.degrees(np.mean(W_D)))
+        WindDirection.append(np.degrees(W_D))
         
         WindDirect_mean.append( math.atan2(np.mean(v),np.mean(u)) )
 
@@ -1052,7 +1052,7 @@ def CI (wl,k, Unc_GUM, Unc_MC, mean_GUM, Mult_param,U_Vh_GUM,U_Vh_MCM_T,Vh_,U_Wi
     
     # Some cases among which select Z-score accounting for the coverage probablity (prob) 
     if k == 1: # 68.27%
-        prob = 0.68
+        prob = 0.6827
         Z = 1 # This value depends on the low_lim/high_lim values we chose --> extracted from the Z-score table
     
     elif k == 2: #90%
@@ -1074,6 +1074,7 @@ def CI (wl,k, Unc_GUM, Unc_MC, mean_GUM, Mult_param,U_Vh_GUM,U_Vh_MCM_T,Vh_,U_Wi
     CI_L_GUM_Vh,CI_H_GUM_Vh = [],[]
     CI_L_MC_WindDir,CI_H_MC_WindDir=[],[]
     CI_L_GUM_WindDir,CI_H_GUM_WindDir =[],[]
+    
     for ind_CI in range(len( Unc_GUM['V{}'.format(wl)])):
 
         ##################################################
@@ -1083,42 +1084,47 @@ def CI (wl,k, Unc_GUM, Unc_MC, mean_GUM, Mult_param,U_Vh_GUM,U_Vh_MCM_T,Vh_,U_Wi
         # VLOS############################################
         Xlow   = -Z * Unc_GUM['V{}'.format(wl)][ind_CI] + mean_GUM['V{}'.format(wl)][ind_CI]
         Xhigh  =  Z * Unc_GUM['V{}'.format(wl)][ind_CI] + mean_GUM['V{}'.format(wl)][ind_CI] 
-        CI_L_GUM.append(np.round(Xlow,3))       
-        CI_H_GUM.append( np.round(Xhigh,3))       
+        CI_L_GUM.append((Xlow))       
+        CI_H_GUM.append( (Xhigh))       
+        # pdb.set_trace()
         
         #Vh############################################
         Xlow_Vh   = -Z * U_Vh_GUM[wl-1][ind_CI] + Vh_['V{}_GUM'.format(wl)][0][ind_CI]
         Xhigh_Vh  =  Z * U_Vh_GUM[wl-1][ind_CI] + Vh_['V{}_GUM'.format(wl)][0][ind_CI] 
-        CI_L_GUM_Vh.append(np.round(Xlow_Vh,3))       
-        CI_H_GUM_Vh.append( np.round(Xhigh_Vh,3))  
-        
+        CI_L_GUM_Vh.append((Xlow_Vh))       
+        CI_H_GUM_Vh.append( (Xhigh_Vh))  
+
         # pdb.set_trace()
+        
         # Wind direction############################################
         Xlow_WindDir   = -Z * U_WindDir_GUM[wl-1][ind_CI] + WindDirection['V{}_GUM'.format(wl)][0][ind_CI]
         Xhigh_WindDir  =  Z * U_WindDir_GUM[wl-1][ind_CI] + WindDirection['V{}_GUM'.format(wl)][0][ind_CI] 
-        CI_L_GUM_WindDir.append(np.round(Xlow_WindDir,3))       
-        CI_H_GUM_WindDir.append( np.round(Xhigh_WindDir,3))          
+        CI_L_GUM_WindDir.append((Xlow_WindDir))       
+        CI_H_GUM_WindDir.append((Xhigh_WindDir))          
         
         ##################################################
         # Montecarlo method ##############################
         ##################################################
         
         # VLOS############################################
-        CI_MC = np.round(scipy.stats.norm.interval(prob, loc=np.mean(Mult_param[wl-1][ind_CI]), scale=Unc_MC['V{}'.format(wl)][ind_CI]),3)
-        CI_L_MC.append(np.round(CI_MC[0],3))       
-        CI_H_MC.append( np.round(CI_MC[1],3))  
+        CI_MC = (scipy.stats.norm.interval(prob, loc=np.mean(Mult_param[wl-1][ind_CI]), scale=Unc_MC['V{}'.format(wl)][ind_CI]))
+        CI_L_MC.append((CI_MC[0]))       
+        CI_H_MC.append( (CI_MC[1]))  
         # pdb.set_trace()
         
         
         # Vh############################################
-        CI_Vh_MC = np.round(scipy.stats.norm.interval(prob, loc=np.mean(Vh_['V{}_MCM_mean'.format(wl)][0][ind_CI]), scale=U_Vh_MCM_T[wl-1][ind_CI]),3)
-        CI_L_MC_Vh.append(np.round(CI_Vh_MC[0],3))       
-        CI_H_MC_Vh.append( np.round(CI_Vh_MC[1],3)) 
+        CI_Vh_MC = (scipy.stats.norm.interval(prob, loc=np.mean(Vh_['V{}_MCM_mean'.format(wl)][0][ind_CI]), scale=U_Vh_MCM_T[wl-1][ind_CI]))
+        CI_L_MC_Vh.append((CI_Vh_MC[0]))       
+        CI_H_MC_Vh.append((CI_Vh_MC[1])) 
         
+        # Another method to calculate the coverage interval:
+        # CI_L = np.quantile(Vh_['V{}_MCM'.format(wl)][0][ind_CI],(1-prob)/2)
+        # CI_H = np.quantile(Vh_['V{}_MCM'.format(wl)][0][ind_CI],(prob+(1-prob)/2))        
         # Wind direction############################################
-        CI_WindDir_MC = np.round(scipy.stats.norm.interval(prob, loc=np.mean(WindDirection['V{}_MCM_mean'.format(wl)][0][ind_CI]), scale=U_WindDir_MCM[wl-1][ind_CI]),3)
-        CI_L_MC_WindDir.append(np.round(CI_WindDir_MC[0],3))       
-        CI_H_MC_WindDir.append( np.round(CI_WindDir_MC[1],3)) 
+        CI_WindDir_MC = (scipy.stats.norm.interval(prob, loc=np.mean(WindDirection['V{}_MCM_mean'.format(wl)][0][ind_CI]), scale=U_WindDir_MCM[wl-1][ind_CI]))
+        CI_L_MC_WindDir.append((CI_WindDir_MC[0]))       
+        CI_H_MC_WindDir.append( (CI_WindDir_MC[1])) 
         
         
     # pdb.set_trace()
