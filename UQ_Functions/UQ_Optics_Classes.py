@@ -51,7 +51,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
     
     """
     
-    U_Vh_GUM_T,U_Vh_MCM_T,U_Wind_direction_MCM,U_Wind_direction_GUM         = [],[],[],[]
+    U_Vh_GUM_T,U_Vh_MCM_mean,U_Wind_direction_MCM,U_Wind_direction_GUM         = [],[],[],[]
     U_VLOS_T_MC_rho_T,U_VLOS_T_GUM_rho_T                                    = [],[]
     U_VLOS_T_MC_theta_T,U_VLOS_T_GUM_theta_T                                = [],[]
     U_VLOS_T_MC_psi_T,U_VLOS_T_GUM_psi_T                                    = [],[]
@@ -137,7 +137,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
             #%% 3) Wind velocity uncertainy estimation
  
             # 3.1) Vlos and Vh Uncertainties - MCM method
-            Correlation_coeff_MCM, U_Vlos_MCM, Mult_param, U_Vh_MCM,Vh_MCM,Vh_MCM_T = SA.MCM_Vh_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,alpha,lidars,DataFrame)        
+            Correlation_coeff_MCM, U_Vlos_MCM, Mult_param, U_Vh_MCM,Vh_MCM,Vh_MCM_mean = SA.MCM_Vh_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,alpha,lidars,DataFrame)        
   
             # 3.2) Vlos and Vh Uncertainties - GUM method
             Correlation_coeff_GUM, U_Vlos_GUM, Vlos_GUM, SensitivityCoeff_VLOS_GUM = SA.GUM_Vlos_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,alpha,lidars,DataFrame)
@@ -173,8 +173,8 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
             # Store Vh
             Vh_['V{}_MCM'.format(ind_alpha+1)].append(Vh_MCM)
             Vh_['V{}_GUM'.format(ind_alpha+1)].append(Vh_GUM)
-            Vh_['V{}_MCM_mean'.format(ind_alpha+1)].append(Vh_MCM_T)
-            U_Vh_MCM_T.append(U_Vh_MCM)
+            Vh_['V{}_MCM_mean'.format(ind_alpha+1)].append(Vh_MCM_mean)
+            U_Vh_MCM_mean.append(U_Vh_MCM)
             U_Vh_GUM_T.append(U_Vh_GUM) 
 
             
@@ -213,14 +213,14 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
 
             # Add test coordinates to lidars dict
             lidars['Coord_Test']={'TESTr':np.array([rho_TESTr]),'TESTt':np.array([theta_TESTt]),'TESTp':np.array([psi_TESTp])}
-        pdb.set_trace()
+        # pdb.set_trace()
     
     
     #%% CI calculations
     k = Qlunc_yaml_inputs['Components']['Scanner']['k']
     wl_alpha=1
     
-    CI_VLOS_L_GUM, CI_VLOS_H_GUM, CI_VLOS_L_MC, CI_VLOS_H_MC, CI_Vh_L_GUM, CI_Vh_H_GUM,CI_Vh_L_MC, CI_Vh_H_MC,CI_L_GUM_WindDir,CI_H_GUM_WindDir,CI_L_MC_WindDir,CI_H_MC_WindDir,prob = SA.CI(wl_alpha,k,U_Vlos_GUM,U_Vlos_MCM,Vlos_GUM,Mult_param, U_Vh_GUM_T, U_Vh_MCM_T, Vh_,U_Wind_direction_GUM,U_Wind_direction_MCM,WindDirection_)
+    CI_VLOS_L_GUM, CI_VLOS_H_GUM, CI_VLOS_L_MC, CI_VLOS_H_MC, CI_Vh_L_GUM, CI_Vh_H_GUM,CI_Vh_L_MC, CI_Vh_H_MC,CI_L_GUM_WindDir,CI_H_GUM_WindDir,CI_L_MC_WindDir,CI_H_MC_WindDir,prob = SA.CI(wl_alpha,k,U_Vlos_GUM,U_Vlos_MCM,Vlos_GUM,Mult_param, U_Vh_GUM_T, U_Vh_MCM_mean, Vh_,U_Wind_direction_GUM,U_Wind_direction_MCM,WindDirection_)
     
     
     # MCM validation
@@ -235,7 +235,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
     dlow_WindDir  = [ abs(WindDirection_['V{}_GUM'.format(wl_alpha)][0][ilow2]  - U_Wind_direction_GUM[wl_alpha-1][ilow2]  - CI_L_MC_WindDir[ilow2])  for ilow2  in range( len( WindDirection_['V1_GUM'][0] ) ) ]
     dhigh_WindDir = [ abs(WindDirection_['V{}_GUM'.format(wl_alpha)][0][ihigh2] + U_Wind_direction_GUM[wl_alpha-1][ihigh2] - CI_H_MC_WindDir[ihigh2]) for ihigh2 in range( len( WindDirection_['V1_GUM'][0] ) ) ]    
       
-    # pdb.set_trace()
+    pdb.set_trace()
     #%% Store Data
     VLOS_Unc    =  {'VLOS1 Uncertainty MC [m/s]':      U_Vlos['V1_MCM'],      'VLOS1 Uncertainty GUM [m/s]':      U_Vlos['V1_GUM'],
                     'VLOS2 Uncertainty MC [m/s]':      U_Vlos['V2_MCM'],      'VLOS2 Uncertainty GUM [m/s]':      U_Vlos['V2_GUM'],
@@ -244,7 +244,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
                     'VLOS Uncertainty MC psi [m/s]':   U_VLOS_T_MC_psi_T,     'VLOS Uncertainty GUM psi [m/s]':   U_VLOS_T_GUM_psi_T,
                     'VLOS Uncertainty MC theta [m/s]': U_VLOS_T_MC_theta_T,   'VLOS Uncertainty GUM theta [m/s]': U_VLOS_T_GUM_theta_T}
         
-    Vh_Unc      =  {'Uncertainty Vh MCM':             U_Vh_MCM_T,            'Uncertainty Vh GUM':             U_Vh_GUM_T}   
+    Vh_Unc      =  {'Uncertainty Vh MCM':             U_Vh_MCM_mean,            'Uncertainty Vh GUM':             U_Vh_GUM_T}   
     WinDir_Unc  =  {'Uncertainty wind direction GUM': U_Wind_direction_GUM,  'Uncertainty wind direction MCM': U_Wind_direction_MCM}
     
     
