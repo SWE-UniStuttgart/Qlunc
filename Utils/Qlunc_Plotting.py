@@ -326,7 +326,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
                 fig0,ax0 = plt.subplots(2,1)
                 fig0.tight_layout()
                 legt = [r'$\frac{\partial{V_{wind}}}{\partial{V_{LOS_1}}}$',r'$\frac{\partial{V_{wind}}}{\partial{V_{LOS_2}}}$',r'$\frac{\partial{V_{wind}}}{\partial{V_{LOS_{12}}}}$']
-                SensCoeff1=[Data['Sens coeff Vh'][-1]['dV1'],Data['Sens coeff Vh'][-1]['dV2'],Data['Sens coeff Vh'][-1]['dV1V2']]
+                SensCoeff1=[Data['Sens coeff Vh'][0]['dV1'],Data['Sens coeff Vh'][0]['dV2'],Data['Sens coeff Vh'][0]['dV1V2']]
                 for ind_plot in range(3):                 
                     ax0[1].plot(np.degrees(Data['wind direction']),SensCoeff1[ind_plot],'-',c = c5[ind_plot],linewidth = plot_param['linewidth'],label = legt[ind_plot])
                     
@@ -386,13 +386,13 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
 
                     # Axes:
                     ax1.set_ylim(-1,1)
-                    ax1.grid(axis = 'both')
+                    
                     ax1.set_xlim(0,359)            
                     ax1.tick_params(axis = 'both', labelsize = plot_param['tick_labelfontsize'])
                 ax1.set_xlabel('Wind direction[°]',fontsize = plot_param['axes_label_fontsize'])
                 ax1.set_ylabel('$r_{V_{LOS_{1,2}}}$ [-]',fontsize=plot_param['axes_label_fontsize'])
                 ax1.legend(loc = 1, prop = {'size': plot_param['legend_fontsize']})
-
+                ax1.grid(axis = 'both')
                 plt.subplots_adjust(left=0.085, right=0.995, bottom=0.085, top=0.975, wspace=0.3, hspace=0.24)                            
 
         # #######################################
@@ -619,10 +619,10 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
         
         # Plot with sensitivity coefficients:               
         
-        Cont_Theta1         = (np.array(Data['Sens coeff Vlos']['V1_theta'][-1]*np.array(np.radians(Data['STDVs'][0][0]))))**2
-        Cont_Psi1           = (np.array(Data['Sens coeff Vlos']['V1_psi'][-1]*np.array(np.radians(Data['STDVs'][1][0]))))**2
-        Cont_Rho1           = (np.array(Data['Sens coeff Vlos']['V1_rho'][-1]*np.array(Data['STDVs'][2][0])))**2     
-        Cont_Corr1          = 2*Lidar.optics.scanner.correlations[9]*np.array(Data['Sens coeff Vlos']['V1_theta'][-1])*np.array(Data['Sens coeff Vlos']['V1_psi'][-1])*np.array(np.radians(Data['STDVs'][0][0]))*np.array(np.radians(Data['STDVs'][1][0]))
+        Cont_Theta1         = (np.array(Data['Sens coeff Vlos']['V1_theta'][0]*np.array(np.radians(Data['STDVs'][0][0]))))**2
+        Cont_Psi1           = (np.array(Data['Sens coeff Vlos']['V1_psi'][0]*np.array(np.radians(Data['STDVs'][1][0]))))**2
+        Cont_Rho1           = (np.array(Data['Sens coeff Vlos']['V1_rho'][0]*np.array(Data['STDVs'][2][0])))**2     
+        Cont_Corr1          = 2*Lidar.optics.scanner.correlations[9]*np.array(Data['Sens coeff Vlos']['V1_theta'][0])*np.array(Data['Sens coeff Vlos']['V1_psi'][0])*np.array(np.radians(Data['STDVs'][0][0]))*np.array(np.radians(Data['STDVs'][1][0]))
 
         ax5[1].plot(np.degrees(Data['wind direction']),Cont_Theta1,'-',c = 'black',    linewidth = plot_param['linewidth'],label = r'$\frac{\partial^2{V_{LOS_1}}}{\partial{\theta_1}}\sigma^2_{\theta_1}$')
         ax5[1].plot(np.degrees(Data['wind direction']),Cont_Psi1 ,'-', c = 'dimgray',  linewidth = plot_param['linewidth'],label = r'$\frac{\partial^2{V_{LOS_1}}}{\partial{\varphi_1}}\sigma^2_{\varphi_1}$')
@@ -668,10 +668,10 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
             ax6[0].plot(np.degrees(Data['wind direction']),Data['VLOS Unc [m/s]']['VLOS2 Uncertainty MC [m/s]'][ind_plot],'o', markerfacecolor = cc,markeredgecolor = 'lime',alpha = 0.4,label = 'Montecarlo')
                     
         # Plot with sensitivity coefficients:           
-        Cont_Theta2         = (np.array(Data['Sens coeff Vlos']['V2_theta'][-1]*np.array(np.radians(Data['STDVs'][0][1]))))**2
-        Cont_Psi2           = (np.array(Data['Sens coeff Vlos']['V2_psi'][-1]*np.array(np.radians(Data['STDVs'][1][1]))))**2
-        Cont_Rho2           = (np.array(Data['Sens coeff Vlos']['V2_rho'][-1]*np.array(Data['STDVs'][2][1])))**2     
-        Cont_Corr2          = 2*Lidar.optics.scanner.correlations[10]*np.array(Data['Sens coeff Vlos']['V2_theta'][-1])*np.array(Data['Sens coeff Vlos']['V2_psi'][-1])*np.array(np.radians(Data['STDVs'][1][1]))*np.array(np.radians(Data['STDVs'][0][1]))
+        Cont_Theta2         = (np.array(Data['Sens coeff Vlos']['V2_theta'][0]*np.array(np.radians(Data['STDVs'][0][1]))))**2
+        Cont_Psi2           = (np.array(Data['Sens coeff Vlos']['V2_psi'][0]*np.array(np.radians(Data['STDVs'][1][1]))))**2
+        Cont_Rho2           = (np.array(Data['Sens coeff Vlos']['V2_rho'][0]*np.array(Data['STDVs'][2][1])))**2     
+        Cont_Corr2          = 2*Lidar.optics.scanner.correlations[10]*np.array(Data['Sens coeff Vlos']['V2_theta'][0])*np.array(Data['Sens coeff Vlos']['V2_psi'][0])*np.array(np.radians(Data['STDVs'][1][1]))*np.array(np.radians(Data['STDVs'][0][1]))
 
         # Plotting contributors:
         ax6[1].plot(np.degrees(Data['wind direction']),Cont_Theta2,'-',c = 'black',    linewidth = plot_param['linewidth'],label = r'$\frac{\partial^2{V_{LOS_2}}}{\partial{\theta_2}}\sigma^2_{\theta_2}$')
@@ -719,10 +719,10 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
                 ax7[0].plot(np.degrees(Data['wind direction']),Data['VLOS Unc [m/s]']['VLOS3 Uncertainty MC [m/s]'][ind_plot],'o', markerfacecolor = cc,markeredgecolor = 'lime',alpha = 0.4,label = 'Montecarlo')
                         
             # Plot with sensitivity coefficients:             
-            Cont_Theta3         = (np.array(Data['Sens coeff Vlos']['V3_theta'][-1]*np.array(np.radians(Data['STDVs'][0][2]))))**2
-            Cont_Psi3           = (np.array(Data['Sens coeff Vlos']['V3_psi'][-1]*np.array(np.radians(Data['STDVs'][1][2]))))**2
-            Cont_Rho3           = (np.array(Data['Sens coeff Vlos']['V3_rho'][-1]*np.array(Data['STDVs'][2][2])))**2     
-            Cont_Corr3          = 2*Lidar.optics.scanner.correlations[11]*np.array(Data['Sens coeff Vlos']['V3_theta'][-1])*np.array(Data['Sens coeff Vlos']['V3_psi'][-1])*np.array(np.radians(Data['STDVs'][1][2]))*np.array(np.radians(Data['STDVs'][0][2]))
+            Cont_Theta3         = (np.array(Data['Sens coeff Vlos']['V3_theta'][0]*np.array(np.radians(Data['STDVs'][0][2]))))**2
+            Cont_Psi3           = (np.array(Data['Sens coeff Vlos']['V3_psi'][0]*np.array(np.radians(Data['STDVs'][1][2]))))**2
+            Cont_Rho3           = (np.array(Data['Sens coeff Vlos']['V3_rho'][0]*np.array(Data['STDVs'][2][2])))**2     
+            Cont_Corr3          = 2*Lidar.optics.scanner.correlations[11]*np.array(Data['Sens coeff Vlos']['V3_theta'][0])*np.array(Data['Sens coeff Vlos']['V3_psi'][0])*np.array(np.radians(Data['STDVs'][1][2]))*np.array(np.radians(Data['STDVs'][0][2]))
 
             # Plotting contributors:
             ax7[1].plot(np.degrees(Data['wind direction']),Cont_Theta3,'-',c = 'black',    linewidth = plot_param['linewidth'],label = r'$\frac{\partial^2{V_{LOS_3}}}{\partial{\theta_3}}\sigma^2_{\theta_3}$')
@@ -768,25 +768,25 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
 
             # Plot with sensitivity coefficients:                                             
             # Vlos1Vlos2
-            Corr_psi1psi2     = 2*Lidar.optics.scanner.correlations[0]*np.array(Data['Sens coeff Vlos']['V1_psi'][-1])*np.array(Data['Sens coeff Vlos']['V2_psi'][-1])*np.array(np.radians(Data['STDVs'][1][0]))*np.array(np.radians(Data['STDVs'][1][1]))
-            Corr_theta1theta2 = 2*Lidar.optics.scanner.correlations[3]*np.array(Data['Sens coeff Vlos']['V1_theta'][-1])*np.array(Data['Sens coeff Vlos']['V2_theta'][-1])*np.array(np.radians(Data['STDVs'][0][0]))*np.array(np.radians(Data['STDVs'][0][1]))
-            Corr_rho1rho2     = 2*Lidar.optics.scanner.correlations[6]*np.array(Data['Sens coeff Vlos']['V1_rho'][-1])*np.array(Data['Sens coeff Vlos']['V2_rho'][-1])*np.array(Data['STDVs'][2][0])*np.array(Data['STDVs'][2][1])
-            Corr_psi1theta2   = 2*Lidar.optics.scanner.correlations[12]*np.array(Data['Sens coeff Vlos']['V1_psi'][-1])*np.array(Data['Sens coeff Vlos']['V2_theta'][-1])*np.array(np.radians(Data['STDVs'][1][0]))*np.array(np.radians(Data['STDVs'][0][1]))
-            Corr_psi2theta1   = 2*Lidar.optics.scanner.correlations[14]*np.array(Data['Sens coeff Vlos']['V2_psi'][-1])*np.array(Data['Sens coeff Vlos']['V1_theta'][-1])*np.array(np.radians(Data['STDVs'][1][1]))*np.array(np.radians(Data['STDVs'][0][0]))
+            Corr_psi1psi2     = 2*Lidar.optics.scanner.correlations[0]*np.array(Data['Sens coeff Vlos']['V1_psi'][0])*np.array(Data['Sens coeff Vlos']['V2_psi'][0])*np.array(np.radians(Data['STDVs'][1][0]))*np.array(np.radians(Data['STDVs'][1][1]))
+            Corr_theta1theta2 = 2*Lidar.optics.scanner.correlations[3]*np.array(Data['Sens coeff Vlos']['V1_theta'][0])*np.array(Data['Sens coeff Vlos']['V2_theta'][0])*np.array(np.radians(Data['STDVs'][0][0]))*np.array(np.radians(Data['STDVs'][0][1]))
+            Corr_rho1rho2     = 2*Lidar.optics.scanner.correlations[6]*np.array(Data['Sens coeff Vlos']['V1_rho'][0])*np.array(Data['Sens coeff Vlos']['V2_rho'][0])*np.array(Data['STDVs'][2][0])*np.array(Data['STDVs'][2][1])
+            Corr_psi1theta2   = 2*Lidar.optics.scanner.correlations[12]*np.array(Data['Sens coeff Vlos']['V1_psi'][0])*np.array(Data['Sens coeff Vlos']['V2_theta'][0])*np.array(np.radians(Data['STDVs'][1][0]))*np.array(np.radians(Data['STDVs'][0][1]))
+            Corr_psi2theta1   = 2*Lidar.optics.scanner.correlations[14]*np.array(Data['Sens coeff Vlos']['V2_psi'][0])*np.array(Data['Sens coeff Vlos']['V1_theta'][0])*np.array(np.radians(Data['STDVs'][1][1]))*np.array(np.radians(Data['STDVs'][0][0]))
 
             # Vlos1Vlos3
-            Corr_psi1psi3     = 2*Lidar.optics.scanner.correlations[1]*np.array(Data['Sens coeff Vlos']['V1_psi'][-1])*np.array(Data['Sens coeff Vlos']['V3_psi'][-1])*np.array(np.radians(Data['STDVs'][1][0]))*np.array(np.radians(Data['STDVs'][1][2]))
-            Corr_theta1theta3 = 2*Lidar.optics.scanner.correlations[4]*np.array(Data['Sens coeff Vlos']['V1_theta'][-1])*np.array(Data['Sens coeff Vlos']['V3_theta'][-1])*np.array(np.radians(Data['STDVs'][0][0]))*np.array(np.radians(Data['STDVs'][0][2]))
-            Corr_rho1rho3     = 2*Lidar.optics.scanner.correlations[7]*np.array(Data['Sens coeff Vlos']['V1_rho'][-1])*np.array(Data['Sens coeff Vlos']['V3_rho'][-1])*np.array(Data['STDVs'][2][0])*np.array(Data['STDVs'][2][2])
-            Corr_psi1theta3   = 2*Lidar.optics.scanner.correlations[13]*np.array(Data['Sens coeff Vlos']['V1_psi'][-1])*np.array(Data['Sens coeff Vlos']['V3_theta'][-1])*np.array(np.radians(Data['STDVs'][1][0]))*np.array(np.radians(Data['STDVs'][0][2]))
-            Corr_psi3theta1   = 2*Lidar.optics.scanner.correlations[16]*np.array(Data['Sens coeff Vlos']['V3_psi'][-1])*np.array(Data['Sens coeff Vlos']['V1_theta'][-1])*np.array(np.radians(Data['STDVs'][1][2]))*np.array(np.radians(Data['STDVs'][0][0]))
+            Corr_psi1psi3     = 2*Lidar.optics.scanner.correlations[1]*np.array(Data['Sens coeff Vlos']['V1_psi'][0])*np.array(Data['Sens coeff Vlos']['V3_psi'][0])*np.array(np.radians(Data['STDVs'][1][0]))*np.array(np.radians(Data['STDVs'][1][2]))
+            Corr_theta1theta3 = 2*Lidar.optics.scanner.correlations[4]*np.array(Data['Sens coeff Vlos']['V1_theta'][0])*np.array(Data['Sens coeff Vlos']['V3_theta'][0])*np.array(np.radians(Data['STDVs'][0][0]))*np.array(np.radians(Data['STDVs'][0][2]))
+            Corr_rho1rho3     = 2*Lidar.optics.scanner.correlations[7]*np.array(Data['Sens coeff Vlos']['V1_rho'][0])*np.array(Data['Sens coeff Vlos']['V3_rho'][0])*np.array(Data['STDVs'][2][0])*np.array(Data['STDVs'][2][2])
+            Corr_psi1theta3   = 2*Lidar.optics.scanner.correlations[13]*np.array(Data['Sens coeff Vlos']['V1_psi'][0])*np.array(Data['Sens coeff Vlos']['V3_theta'][0])*np.array(np.radians(Data['STDVs'][1][0]))*np.array(np.radians(Data['STDVs'][0][2]))
+            Corr_psi3theta1   = 2*Lidar.optics.scanner.correlations[16]*np.array(Data['Sens coeff Vlos']['V3_psi'][0])*np.array(Data['Sens coeff Vlos']['V1_theta'][0])*np.array(np.radians(Data['STDVs'][1][2]))*np.array(np.radians(Data['STDVs'][0][0]))
 
             # Vlos1Vlos3
-            Corr_psi2psi3     = 2*Lidar.optics.scanner.correlations[2]*np.array(Data['Sens coeff Vlos']['V2_psi'][-1])*np.array(Data['Sens coeff Vlos']['V3_psi'][-1])*np.array(np.radians(Data['STDVs'][1][1]))*np.array(np.radians(Data['STDVs'][1][2]))
-            Corr_theta2theta3 = 2*Lidar.optics.scanner.correlations[5]*np.array(Data['Sens coeff Vlos']['V2_theta'][-1])*np.array(Data['Sens coeff Vlos']['V3_theta'][-1])*np.array(np.radians(Data['STDVs'][0][1]))*np.array(np.radians(Data['STDVs'][0][2]))
-            Corr_rho2rho3     = 2*Lidar.optics.scanner.correlations[8]*np.array(Data['Sens coeff Vlos']['V2_rho'][-1])*np.array(Data['Sens coeff Vlos']['V3_rho'][-1])*np.array(Data['STDVs'][2][1])*np.array(Data['STDVs'][2][2])
-            Corr_psi2theta3   = 2*Lidar.optics.scanner.correlations[15]*np.array(Data['Sens coeff Vlos']['V2_psi'][-1])*np.array(Data['Sens coeff Vlos']['V3_theta'][-1])*np.array(np.radians(Data['STDVs'][1][1]))*np.array(np.radians(Data['STDVs'][0][2]))
-            Corr_psi3theta2   = 2*Lidar.optics.scanner.correlations[17]*np.array(Data['Sens coeff Vlos']['V3_psi'][-1])*np.array(Data['Sens coeff Vlos']['V2_theta'][-1])*np.array(np.radians(Data['STDVs'][1][2]))*np.array(np.radians(Data['STDVs'][0][1]))
+            Corr_psi2psi3     = 2*Lidar.optics.scanner.correlations[2]*np.array(Data['Sens coeff Vlos']['V2_psi'][0])*np.array(Data['Sens coeff Vlos']['V3_psi'][0])*np.array(np.radians(Data['STDVs'][1][1]))*np.array(np.radians(Data['STDVs'][1][2]))
+            Corr_theta2theta3 = 2*Lidar.optics.scanner.correlations[5]*np.array(Data['Sens coeff Vlos']['V2_theta'][0])*np.array(Data['Sens coeff Vlos']['V3_theta'][0])*np.array(np.radians(Data['STDVs'][0][1]))*np.array(np.radians(Data['STDVs'][0][2]))
+            Corr_rho2rho3     = 2*Lidar.optics.scanner.correlations[8]*np.array(Data['Sens coeff Vlos']['V2_rho'][0])*np.array(Data['Sens coeff Vlos']['V3_rho'][0])*np.array(Data['STDVs'][2][1])*np.array(Data['STDVs'][2][2])
+            Corr_psi2theta3   = 2*Lidar.optics.scanner.correlations[15]*np.array(Data['Sens coeff Vlos']['V2_psi'][0])*np.array(Data['Sens coeff Vlos']['V3_theta'][0])*np.array(np.radians(Data['STDVs'][1][1]))*np.array(np.radians(Data['STDVs'][0][2]))
+            Corr_psi3theta2   = 2*Lidar.optics.scanner.correlations[17]*np.array(Data['Sens coeff Vlos']['V3_psi'][0])*np.array(Data['Sens coeff Vlos']['V2_theta'][0])*np.array(np.radians(Data['STDVs'][1][2]))*np.array(np.radians(Data['STDVs'][0][1]))
 
             # Plotting contributors:
             ax8[0].plot(np.degrees(Data['wind direction']),Corr_psi1psi2,'-d',markersize=8,c = 'black', markevery=markers_plot,   linewidth = 3,label = r'$\sigma_{\varphi_i\varphi_j}$')
@@ -849,11 +849,11 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
             markers_plot =  0 + np.arange(0, 120)* 3
 
             # Vlos1Vlos2
-            Corr_psi1psi2     = 2*Lidar.optics.scanner.correlations[0]*np.array(Data['Sens coeff Vlos']['V1_psi'][-1])*np.array(Data['Sens coeff Vlos']['V2_psi'][-1])*np.array(np.radians(Data['STDVs'][1][0]))*np.array(np.radians(Data['STDVs'][1][1]))
-            Corr_theta1theta2 = 2*Lidar.optics.scanner.correlations[3]*np.array(Data['Sens coeff Vlos']['V1_theta'][-1])*np.array(Data['Sens coeff Vlos']['V2_theta'][-1])*np.array(np.radians(Data['STDVs'][0][0]))*np.array(np.radians(Data['STDVs'][0][1]))
-            Corr_rho1rho2     = 2*Lidar.optics.scanner.correlations[6]*np.array(Data['Sens coeff Vlos']['V1_rho'][-1])*np.array(Data['Sens coeff Vlos']['V2_rho'][-1])*np.array(Data['STDVs'][2][0])*np.array(Data['STDVs'][2][1])
-            Corr_psi1theta2   = 2*Lidar.optics.scanner.correlations[12]*np.array(Data['Sens coeff Vlos']['V1_psi'][-1])*np.array(Data['Sens coeff Vlos']['V2_theta'][-1])*np.array(np.radians(Data['STDVs'][1][0]))*np.array(np.radians(Data['STDVs'][0][1]))
-            Corr_psi2theta1   = 2*Lidar.optics.scanner.correlations[14]*np.array(Data['Sens coeff Vlos']['V2_psi'][-1])*np.array(Data['Sens coeff Vlos']['V1_theta'][-1])*np.array(np.radians(Data['STDVs'][1][1]))*np.array(np.radians(Data['STDVs'][0][0]))
+            Corr_psi1psi2     = 2*Lidar.optics.scanner.correlations[0]*np.array(Data['Sens coeff Vlos']['V1_psi'][0])*np.array(Data['Sens coeff Vlos']['V2_psi'][0])*np.array(np.radians(Data['STDVs'][1][0]))*np.array(np.radians(Data['STDVs'][1][1]))
+            Corr_theta1theta2 = 2*Lidar.optics.scanner.correlations[3]*np.array(Data['Sens coeff Vlos']['V1_theta'][0])*np.array(Data['Sens coeff Vlos']['V2_theta'][0])*np.array(np.radians(Data['STDVs'][0][0]))*np.array(np.radians(Data['STDVs'][0][1]))
+            Corr_rho1rho2     = 2*Lidar.optics.scanner.correlations[6]*np.array(Data['Sens coeff Vlos']['V1_rho'][0])*np.array(Data['Sens coeff Vlos']['V2_rho'][0])*np.array(Data['STDVs'][2][0])*np.array(Data['STDVs'][2][1])
+            Corr_psi1theta2   = 2*Lidar.optics.scanner.correlations[12]*np.array(Data['Sens coeff Vlos']['V1_psi'][0])*np.array(Data['Sens coeff Vlos']['V2_theta'][0])*np.array(np.radians(Data['STDVs'][1][0]))*np.array(np.radians(Data['STDVs'][0][1]))
+            Corr_psi2theta1   = 2*Lidar.optics.scanner.correlations[14]*np.array(Data['Sens coeff Vlos']['V2_psi'][0])*np.array(Data['Sens coeff Vlos']['V1_theta'][0])*np.array(np.radians(Data['STDVs'][1][1]))*np.array(np.radians(Data['STDVs'][0][0]))
 
             # Plotting contributors:
             ax8.plot(np.degrees(Data['wind direction']),Corr_psi1psi2,'-d',c = 'black', markevery=markers_plot,   linewidth = plot_param['linewidth'],label = r'$\sigma_{\varphi_1}\sigma_{\varphi_2}$')
