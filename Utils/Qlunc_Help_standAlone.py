@@ -878,10 +878,10 @@ def U_WindDir_MC(Lidar,wind_direction,Mult_param,DataFrame):
                 W_D.append(0)
         WindDirection.append(np.degrees(W_D))
         
-        WindDirect_mean.append( math.atan2(np.mean(v),np.mean(u)) )
+        WindDirect_mean.append( np.degrees(math.atan2(np.mean(v),np.mean(u))) )
 
         U_Wind_direction.append(np.degrees(np.std(W_D)))
-    pdb.set_trace()
+    # pdb.set_trace()
     return U_Wind_direction,WindDirection,WindDirect_mean
     
 #%% U wind direction GUM
@@ -896,7 +896,7 @@ def U_WindDir_GUM(Lidar,Atmospheric_Scenario,Correlation_coeff,wind_direction,li
         Dictionary containing lidar info
     
     * Atmospheric data
-    
+
     * Correlation_coeff
         Vlos1 and Vlos2 correlation coefficients
     
@@ -965,15 +965,15 @@ def U_WindDir_GUM(Lidar,Atmospheric_Scenario,Correlation_coeff,wind_direction,li
             UyWinDir = np.array(Cx).dot(Ux).dot(np.transpose(Cx))
         
             # Data storage:
-            dWinDir_Vlos1T.append((dWinDir_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir])**2)
-            dWinDir_Vlos2T.append((dWinDir_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir])**2)
-            dWinDir_Vlos3T.append((dWinDir_Vlos3*U_Vlos_GUM['V3'][ind_wind_dir])**2)
+            dWinDir_Vlos1T.append(np.degrees(dWinDir_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir])**2)
+            dWinDir_Vlos2T.append(np.degrees(dWinDir_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir])**2)
+            dWinDir_Vlos3T.append(np.degrees(dWinDir_Vlos3*U_Vlos_GUM['V3'][ind_wind_dir])**2)
             
             
-            dWinDir_Vlos12T.append(2*(dWinDir_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir])*(dWinDir_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir])*Correlation_coeff['V1'][ind_wind_dir])
-            dWinDir_Vlos13T.append(2*(dWinDir_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir])*(dWinDir_Vlos3*U_Vlos_GUM['V3'][ind_wind_dir])*Correlation_coeff['V2'][ind_wind_dir])
-            dWinDir_Vlos23T.append(2*(dWinDir_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir])*(dWinDir_Vlos3*U_Vlos_GUM['V3'][ind_wind_dir])*Correlation_coeff['V3'][ind_wind_dir])
-            W_D.append( math.atan2( v[ind_wind_dir] , u[ind_wind_dir] ) )
+            dWinDir_Vlos12T.append(np.degrees(2*(dWinDir_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir])*(dWinDir_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir])*Correlation_coeff['V1'][ind_wind_dir]))
+            dWinDir_Vlos13T.append(np.degrees(2*(dWinDir_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir])*(dWinDir_Vlos3*U_Vlos_GUM['V3'][ind_wind_dir])*Correlation_coeff['V2'][ind_wind_dir]))
+            dWinDir_Vlos23T.append(np.degrees(2*(dWinDir_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir])*(dWinDir_Vlos3*U_Vlos_GUM['V3'][ind_wind_dir])*Correlation_coeff['V3'][ind_wind_dir]))
+            W_D.append( np.degrees(math.atan2( v[ind_wind_dir] , u[ind_wind_dir] ) ))
         else:
             A =  Vlos_GUM['V1'][ind_wind_dir]*np.cos(lidars['Lidar1_Spherical']['theta'])*np.cos(lidars['Lidar1_Spherical']['psi'])-Vlos_GUM['V2'][ind_wind_dir]*np.cos(lidars['Lidar0_Spherical']['theta'])*np.cos(lidars['Lidar0_Spherical']['psi'])        
             B = -Vlos_GUM['V1'][ind_wind_dir]*np.cos(lidars['Lidar1_Spherical']['theta'])*np.sin(lidars['Lidar1_Spherical']['psi'])+Vlos_GUM['V2'][ind_wind_dir]*np.cos(lidars['Lidar0_Spherical']['theta'])*np.sin(lidars['Lidar0_Spherical']['psi'])
@@ -997,13 +997,13 @@ def U_WindDir_GUM(Lidar,Atmospheric_Scenario,Correlation_coeff,wind_direction,li
             UyWinDir = np.array(Cx).dot(Ux).dot(np.transpose(Cx))
 
             # Data storage:
-            dWinDir_Vlos1T.append((dWinDir_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir])**2)
-            dWinDir_Vlos2T.append((dWinDir_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir])**2)
-            dWinDir_Vlos3T.append((dWinDir_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir]*dWinDir_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir])*Correlation_coeff_list)
+            dWinDir_Vlos1T.append(np.degrees(dWinDir_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir])**2)
+            dWinDir_Vlos2T.append(np.degrees(dWinDir_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir])**2)
+            dWinDir_Vlos3T.append(np.degrees(dWinDir_Vlos1*U_Vlos_GUM['V1'][ind_wind_dir]*dWinDir_Vlos2*U_Vlos_GUM['V2'][ind_wind_dir])*Correlation_coeff_list)
             dWinDir_Vlos12T.append([0])
             dWinDir_Vlos13T.append([0])
             dWinDir_Vlos23T.append([0])
-            W_D.append( math.atan2( v[ind_wind_dir] , u[ind_wind_dir] ) )    
+            W_D.append( np.degrees(math.atan2( v[ind_wind_dir] , u[ind_wind_dir] )) )    
         # Uncertainty in wind direction:
         U_wind_dir.append(np.degrees(np.sqrt(UyWinDir))[0])
     # pdb.set_trace()        
@@ -1082,6 +1082,8 @@ def CI (wl,k, Unc_GUM, Unc_MC, mean_GUM, Mult_param,U_Vh_GUM,U_Vh_MCM_T,Vh_,U_Wi
     CI_L_MC_WindDir,CI_H_MC_WindDir=[],[]
     CI_L_GUM_WindDir,CI_H_GUM_WindDir =[],[]
     
+    
+    
     for ind_CI in range(len( Unc_GUM['V{}'.format(wl)])):
 
         ##################################################
@@ -1122,24 +1124,41 @@ def CI (wl,k, Unc_GUM, Unc_MC, mean_GUM, Mult_param,U_Vh_GUM,U_Vh_MCM_T,Vh_,U_Wi
         
         
         # Vh############################################
-        CI_Vh_MC = (scipy.stats.norm.interval(prob, loc=np.mean(Vh_['V{}_MCM_mean'.format(wl)][0][ind_CI]), scale=U_Vh_MCM_T[wl-1][ind_CI]))
+        CI_Vh_MC = (scipy.stats.norm.interval(prob, loc=(Vh_['V{}_MCM_mean'.format(wl)][0][ind_CI]), scale=U_Vh_MCM_T[wl-1][ind_CI]))
         CI_L_MC_Vh.append((CI_Vh_MC[0]))       
         CI_H_MC_Vh.append((CI_Vh_MC[1])) 
         
         # Another method to calculate the coverage interval:
         # CI_L = np.quantile(Vh_['V{}_MCM'.format(wl)][0][ind_CI],(1-prob)/2)
         # CI_H = np.quantile(Vh_['V{}_MCM'.format(wl)][0][ind_CI],(prob+(1-prob)/2))        
+        
+        
         # Wind direction############################################
-        CI_WindDir_MC = (scipy.stats.norm.interval(prob, loc=np.mean(WindDirection['V{}_MCM_mean'.format(wl)][0][ind_CI]), scale=U_WindDir_MCM[wl-1][ind_CI]))
+        CI_WindDir_MC = (scipy.stats.norm.interval(prob, loc=(WindDirection['V{}_MCM_mean'.format(wl)][0][ind_CI]), scale=U_WindDir_MCM[wl-1][ind_CI]))
         CI_L_MC_WindDir.append((CI_WindDir_MC[0]))       
         CI_H_MC_WindDir.append( (CI_WindDir_MC[1])) 
+        # Another method to calculate the coverage interval:
+        # CI_L.appen(np.quantile(WindDirection['V{}_MCM'.format(wl)][0][ind_CI],(1-prob)/2))
+        # CI_H.appen(np.quantile(WindDirection['V{}_MCM'.format(wl)][0][ind_CI],(prob+(1-prob)/2))   )      
         
-        
-    # pdb.set_trace()
+        # pdb.set_trace()
     return CI_L_GUM,CI_H_GUM,CI_L_MC,CI_H_MC,CI_L_GUM_Vh,CI_H_GUM_Vh,CI_L_MC_Vh,CI_H_MC_Vh,CI_L_GUM_WindDir,CI_H_GUM_WindDir,CI_L_MC_WindDir,CI_H_MC_WindDir,prob
 
 
+def condM(Lidar, lidars):
+    # pdb.set_trace()
+    if len(Lidar.optics.scanner.origin)==3:
 
+        Mat=np.array([[np.cos(lidars['Lidar0_Spherical']['theta'])*np.cos(lidars['Lidar0_Spherical']['psi']),np.cos(lidars['Lidar0_Spherical']['theta'])*np.sin(lidars['Lidar0_Spherical']['psi']),np.sin(lidars['Lidar0_Spherical']['theta'])],
+                      [np.cos(lidars['Lidar1_Spherical']['theta'])*np.cos(lidars['Lidar1_Spherical']['psi']),np.cos(lidars['Lidar1_Spherical']['theta'])*np.sin(lidars['Lidar1_Spherical']['psi']),np.sin(lidars['Lidar1_Spherical']['theta'])],
+                      [np.cos(lidars['Lidar2_Spherical']['theta'])*np.cos(lidars['Lidar2_Spherical']['psi']),np.cos(lidars['Lidar2_Spherical']['theta'])*np.sin(lidars['Lidar2_Spherical']['psi']),np.sin(lidars['Lidar2_Spherical']['theta'])]]).T
+    else:
+        
+        Mat=np.array([[np.cos(lidars['Lidar0_Spherical']['theta'])*np.cos(lidars['Lidar0_Spherical']['psi']),np.cos(lidars['Lidar0_Spherical']['theta'])*np.sin(lidars['Lidar0_Spherical']['psi'])],
+                      [np.cos(lidars['Lidar1_Spherical']['theta'])*np.cos(lidars['Lidar1_Spherical']['psi']),np.cos(lidars['Lidar1_Spherical']['theta'])*np.sin(lidars['Lidar1_Spherical']['psi'])]]).T
+ 
+    M = np.linalg.norm(Mat)*np.linalg.norm(np.linalg.inv(Mat))  
+    return M
 #%% 3D velocity vector
 '''
 u1 = -((-Vlos3 *np.cos(theta2)* np.sin(psi2)* np.sin(theta1) + 
