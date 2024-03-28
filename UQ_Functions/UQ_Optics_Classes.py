@@ -51,13 +51,14 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
     
     """
     
-    U_Vh_GUM_T,U_Vh_MCM_mean,U_Wind_direction_MCM,U_Wind_direction_GUM         = [],[],[],[]
+    U_Vh_GUM_T,U_Vh_MCM_mean,U_Wind_direction_MCM,U_Wind_direction_GUM      = [],[],[],[]
     U_VLOS_T_MC_rho_T,U_VLOS_T_GUM_rho_T                                    = [],[]
     U_VLOS_T_MC_theta_T,U_VLOS_T_GUM_theta_T                                = [],[]
     U_VLOS_T_MC_psi_T,U_VLOS_T_GUM_psi_T                                    = [],[]
     Scan_unc                                                                = []
     SensCoeffVh                                                             = []
     wind_direction_TEST                                                     = []
+    M                                                                       = [] # Conditional number
     U_Vlos                                                                  = {'V1_MCM'   : [],'V2_MCM'   : [],'V3_MCM'   : [],'V1_GUM'  : [],'V2_GUM'  : [],'V3_GUM'  : []}
     Vh_                                                                     = {'V1_MCM'   : [],'V2_MCM'   : [],'V3_MCM'   : [],'V1_GUM'  : [],'V2_GUM'  : [],'V3_GUM'  : [],'V1_MCM_mean'  : [],'V2_MCM_mean'  : [],'V3_MCM_mean'  : []}
     Correlation_coeff                                                       = {'V12_MCM'  : [],'V13_MCM'  : [],'V23_MCM'  : [],'V12_GUM' : [],'V13_GUM' : [],'V23_GUM' : []}
@@ -157,7 +158,12 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
             U_VLOS_T_MC_psi,U_VLOS_T_GUM_psi,rho_TESTp,theta_TESTp,psi_TESTp      =  SA.VLOS_param(Lidar,lidars['Lidar0_Spherical']['rho'],lidars['Lidar0_Spherical']['theta'],np.radians(np.linspace(0,359,200)),0,np.radians(Lidar.optics.scanner.stdv_azimuth[0][0]),0,Lidar.optics.scanner.N_MC,Hl[0],V_ref,Href,alpha,wind_direction_TEST,0,DataFrame)
             # pdb.set_trace()
             
-
+            #%% Conditional M number
+            
+            M.append(SA.condM(Lidar,lidars))
+            
+            
+            # pdb.set_trace()
             #%% Store data 
             
             # Wind velocity wind direction and sensitivity coefficients
@@ -232,10 +238,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
     dlow_Vh       = [ abs(Vh_['V{}_GUM'.format(wl_alpha)][0][ilow]  - U_Vh_GUM_T[wl_alpha-1][ilow]  - CI_Vh_L_MC[ilow])  for ilow  in range( len( Vh_['V1_GUM'][0] ) ) ]
     dhigh_Vh      = [ abs(Vh_['V{}_GUM'.format(wl_alpha)][0][ihigh] + U_Vh_GUM_T[wl_alpha-1][ihigh] - CI_Vh_H_MC[ihigh]) for ihigh in range( len( Vh_['V1_GUM'][0] ) ) ]    
 
-    dlow_WindDir  = [ abs(WindDirection_['V{}_GUM'.format(wl_alpha)][0][ilow2]  - U_Wind_direction_GUM[wl_alpha-1][ilow2]  - CI_L_MC_WindDir[ilow2])  for ilow2  in range( len( WindDirection_['V1_GUM'][0] ) ) ]
-    dhigh_WindDir = [ abs(WindDirection_['V{}_GUM'.format(wl_alpha)][0][ihigh2] + U_Wind_direction_GUM[wl_alpha-1][ihigh2] - CI_H_MC_WindDir[ihigh2]) for ihigh2 in range( len( WindDirection_['V1_GUM'][0] ) ) ]    
-      
-    pdb.set_trace()
+    dlow_WindDir  = [ abs((WindDirection_['V{}_GUM'.format(wl_alpha)][0][ilow2])  - U_Wind_direction_GUM[wl_alpha-1][ilow2]  - CI_L_MC_WindDir[ilow2])  for ilow2  in range( len( WindDirection_['V1_GUM'][0] ) ) ]
+    dhigh_WindDir = [ abs((WindDirection_['V{}_GUM'.format(wl_alpha)][0][ihigh2]) + U_Wind_direction_GUM[wl_alpha-1][ihigh2] - CI_H_MC_WindDir[ihigh2]) for ihigh2 in range( len( WindDirection_['V1_GUM'][0] ) ) ]    
+
     #%% Store Data
     VLOS_Unc    =  {'VLOS1 Uncertainty MC [m/s]':      U_Vlos['V1_MCM'],      'VLOS1 Uncertainty GUM [m/s]':      U_Vlos['V1_GUM'],
                     'VLOS2 Uncertainty MC [m/s]':      U_Vlos['V2_MCM'],      'VLOS2 Uncertainty GUM [m/s]':      U_Vlos['V2_GUM'],
@@ -260,9 +265,10 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
                                'Mult param'      : Mult_param,
                                'Vlos_GUM'        : Vlos_GUM,
                                'Vh'              : Vh_,  
-                               'Wind direction'  :WindDirection_,                           
-                               'CI'              :[CI_VLOS_L_GUM, CI_VLOS_H_GUM, CI_VLOS_L_MC, CI_VLOS_H_MC, CI_Vh_L_GUM, CI_Vh_H_GUM,CI_Vh_L_MC, CI_Vh_H_MC,CI_L_GUM_WindDir,CI_H_GUM_WindDir,CI_L_MC_WindDir,CI_H_MC_WindDir,prob],
-                               'Tolerance'       : [delta_V,delta_D, dlow_Vh, dhigh_Vh,dlow_WindDir,dhigh_WindDir,wl_alpha]}
+                               'Wind direction'  : WindDirection_,                           
+                               'CI'              : [CI_VLOS_L_GUM, CI_VLOS_H_GUM, CI_VLOS_L_MC, CI_VLOS_H_MC, CI_Vh_L_GUM, CI_Vh_H_GUM,CI_Vh_L_MC, CI_Vh_H_MC,CI_L_GUM_WindDir,CI_H_GUM_WindDir,CI_L_MC_WindDir,CI_H_MC_WindDir,prob],
+                               'Tolerance'       : [delta_V,delta_D, dlow_Vh, dhigh_Vh,dlow_WindDir,dhigh_WindDir,wl_alpha],
+                               'Conditional M'   : M}
     # Lidar.lidar_inputs.dataframe['Scanner'] = {'Focus distance':Final_Output_UQ_Scanner['lidars'][0],'Elevation angle':Final_Output_UQ_Scanner['Elevation angle'][0],'Azimuth':Final_Output_UQ_Scanner['Azimuth'][0]}
     DataFrame['Uncertainty Scanner']=Final_Output_UQ_Scanner    
     # pdb.set_trace()
