@@ -26,7 +26,7 @@
 
 %%
 clear all %#ok<CLALL>
-close all
+% close all
 clc
 format shortEng
 %% Inputs
@@ -34,7 +34,7 @@ format shortEng
 % distance         = 2000;
 % PRF              = physconst('LightSpeed')/(2*distance);
 n_bits           = 8;      % N_MC° bits ADC
-V_ref            = 10;      % Reference voltaje ADC
+V_ref            = 10;      % Reference wind velocity
 lidar_wavelength = 1550e-9; % wavelength of the laser source.
 fs_av            = 100e6;    % sampling frequency
 L                = 2^n_bits;    %length of the signal.
@@ -42,12 +42,12 @@ n_fftpoints      = L;       % n° of points for each block (fft points).
 fd               = 2*V_ref/lidar_wavelength;  % Doppler frequency corresponding to Vref
 level_noise      = 5e-11; % Hardware noise added before signal downmixing
 n_pulses         = 1;   % n pulses for averaging the spectra
-N_MC             = 1e3; % n° MC samples to calculate the uncertainty due to bias in sampling frequency and wavelength
+N_MC             = 1e6; % n° MC samples to calculate the uncertainty due to bias in sampling frequency and wavelength
 Dp               = L*2.9e8*.5/fs_av;
 %% Uncertainty in the signal processing.
 
 %%% Uncertainty in the sampling frequency %%%
-per         = 2e-6;
+per         = 2e-2;
 % bias_fs_av  = (per/100)*fs_av; % +/-
 std_fs_av   = (per)*fs_av;%/sqrt(3); % 2e-6*fs_av; % 
 
@@ -89,9 +89,8 @@ for ind_npulses = 1:n_pulses
         noise      = level_noise*randn(size(t{ind_fs}));
         
         S{ind_fs}         = noise+(7.4*sin(2*pi*fd.*t{ind_fs}) - 0.1*sin(2*pi*1.9*abs(randn(1,1))*fd*t{ind_fs}) + 1.1*sin(2*pi*3*abs(randn(1,1))*fd*t{ind_fs})+...
-                      0.24*sin(2*pi*6*abs(randn(1,1))*fd.*t{ind_fs}) + 0.7*sin(2*pi*2*abs(randn(1,1))*fd*t{ind_fs}) - 0.4*sin(2*pi*abs(randn(1,1))*fd*t{ind_fs})); % Adding up Signal contributors
-%         S{ind_fs}         = noise+sin(2*pi*fd.*t{ind_fs});
-%         S{ind_fs}  = awgn(S0, 5); %#ok<SAGROW>
+                            0.24*sin(2*pi*6*abs(randn(1,1))*fd.*t{ind_fs}) + 0.7*sin(2*pi*2*abs(randn(1,1))*fd*t{ind_fs}) - 0.4*sin(2*pi*abs(randn(1,1))*fd*t{ind_fs})); % Adding up Signal contributors
+
         
         
         % Spectrum function from matlab:
@@ -226,25 +225,25 @@ RE_v            = (stdv_v_An./v_An)*100;
 %% PLOTS
 
 %%%%%%%% Plotting signals + digitised signal + error: %%%%%%%%%%%%%%%%%%%%
-% markersize=[{'k-*'},{'b-*'},{'r-*'},{'g-*'},{'c-*'},{'m-*'},{'y-*'}];
-% markersize_2=[{'k--x'},{'b--x'},{'r--x'},{'g--x'},{'c--x'},{'m--x'},{'y--x'}];
-% markersize_3=[{'m-.'},{'b-.'},{'r-.'},{'g-.'},{'c-.'},{'m-.'},{'y-.'}];
-% figure,hold on
-% for in_sig=1:length(fs)
-%    
-%     plot(t{in_sig}(1,:)  ,X{in_sig}(1,:),markersize{in_sig},'Linewidth',1.2,'displayname','Original signal')
-%     plot(t{in_sig},mean_S_quant{in_sig},markersize_2{in_sig},'Linewidth',1.9,'displayname','Quantised signal' );
-%     plot(t{in_sig},X{in_sig}(1,:)-mean_S_quant{in_sig},markersize_3{in_sig},'Linewidth',1.9,'displayname',['Error(RMSE [-] = ',num2str(RMSE(in_sig)),')']);
-%     %     plot(t{i} ,X{i}(1,:)  ,markersize{i})
-%     %     plot(t{i},S_quant0{i},markersize_2{i},'Linewidth',1.4);
-% end
-% xlabel('time [s]')
-% ylabel('[-]')
-% title(['Signal quantisation -',' n°bits = ', num2str(n_bits), ' - fs [Hz] = ',num2str(fs(in_sig),'%.2s') ])
-% hold off
-% legend show
-% grid on
-% set(gca,'FontSize',35);
+markersize=[{'k-*'},{'b-*'},{'r-*'},{'g-*'},{'c-*'},{'m-*'},{'y-*'}];
+markersize_2=[{'k--x'},{'b--x'},{'r--x'},{'g--x'},{'c--x'},{'m--x'},{'y--x'}];
+markersize_3=[{'m-.'},{'b-.'},{'r-.'},{'g-.'},{'c-.'},{'m-.'},{'y-.'}];
+figure,hold on
+for in_sig=1:1 %length(fs)
+    
+    plot(t{in_sig}(1,:)  ,X{in_sig}(1,:),markersize{in_sig},'Linewidth',1.2,'displayname','Original signal')
+    plot(t{in_sig},mean_S_quant{in_sig},markersize_2{in_sig},'Linewidth',2.3,'displayname','Quantised signal' );
+    plot(t{in_sig},X{in_sig}(1,:)-mean_S_quant{in_sig},markersize_3{in_sig},'Linewidth',1.9,'displayname',['Error(RMSE [-] = ',num2str(RMSE(in_sig)),')']);
+    %     plot(t{i} ,X{i}(1,:)  ,markersize{i})
+    %     plot(t{i},S_quant0{i},markersize_2{i},'Linewidth',1.4);
+end
+xlabel('time [s]')
+ylabel('[-]')
+title(['Signal quantisation -',' n°bits = ', num2str(n_bits), ' - fs [Hz] = ',num2str(fs(in_sig),'%.2s') ])
+hold off
+legend show
+grid on
+set(gca,'FontSize',35);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%% fft signals %%%%%%%%%%%%%%
@@ -266,7 +265,7 @@ ylabel('PSD [dB]');
 
 
 Y_text_in_plot=pow2db(max(mean_S_original)); % Takes the height of the last peak. Just a convention, to plot properly
-str={['# fft                  =  ', num2str(n_fftpoints)],...
+str={['# fft                  =  ', num2str(n_fftpoints/2)],...
     ['# pulses           =  ', num2str(n_pulses)],...
     ['# MC samples =  ', num2str(N_MC)],...
     ['u_{est} [ms^{-1}]     =  ', num2str(stdv_T_v_MC,'%.1s') ],...
@@ -292,6 +291,10 @@ T=toc;
 
 
 %% Plot input quantities probability distributions
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% f_s distribution
 figure,
 histogram(fs,500,'displayname','Probability distribution f_s')
 leg=legend;
@@ -301,6 +304,7 @@ grid on
 set(gca,'FontSize',35);
 hold off
 
+% noise distribution
 figure,
 histogram(noise,'displayname','Probability distribution noise')
 leg=legend;
@@ -309,6 +313,8 @@ legend show
 grid on
 set(gca,'FontSize',35);
 hold off
+
+% Peak f_d distribution
 
 figure,
 histfit(fd_peak(:,1))
@@ -321,20 +327,50 @@ pd = fitdist(fd_peak(:,1),'Normal')
 % grid on
 % set(gca,'FontSize',35);
 % hold off
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%%%%% Plot calculated spectrum %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+figure, hold on
+for in_fft=2 %1:length(fs)
 
+    plot(fr{in_fft},pxx{in_fft},'*')
+
+end
+legend show
+grid on
+xlabel('Frequency (Hz)')
+ylabel('Power Spectrum (dB)')
+title('Default Frequency Resolution')
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%% Plot matlab spectrum %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% figure, hold on
-% for in_fft=1:length(fs)
-%
-%     plot(fr{in_fft},pow2db(pxx{in_fft}))
-%
-% end
-% legend show
-% grid on
-% xlabel('Frequency (Hz)')
-% ylabel('Power Spectrum (dB)')
-% title('Default Frequency Resolution')
+
+
+
+% In DB
+figure, hold on
+for in_fft=1:length(fs)
+
+    plot(fr{in_fft},pow2db(pxx{in_fft}))
+
+end
+legend show
+grid on
+xlabel('Frequency (Hz)')
+ylabel('Power Spectrum (dB)')
+title('Default Frequency Resolution')
+
+% In Watts
+figure, hold on
+for in_fft=2 %1:length(fs)
+
+    plot(fr{in_fft},pxx{in_fft})
+
+end
+legend show
+grid on
+xlabel('Frequency (Hz)')
+ylabel('Power Spectrum (dB)')
+title('Default Frequency Resolution')
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
