@@ -10,8 +10,10 @@ University of Stuttgart(c)
 #%% Modules to import: 
 #%% Modules to import: 
 import sys,os
-# import inspect
+import pandas as pd
+import seaborn as sns
 import numpy as np 
+import scipy
 import scipy.interpolate as itp 
 # import pandas as pd 
 # import numbers
@@ -35,7 +37,7 @@ from termcolor import colored, cprint
 # import random
 import matplotlib
 import scipy as sc
-# from scipy.stats import norm
+from scipy.stats import norm
 from matplotlib.pyplot import cm
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from scipy.stats import multivariate_normal
@@ -53,3 +55,9 @@ from tkinter.filedialog import askopenfilename
 from tkinter.filedialog import asksaveasfilename
 import customtkinter as CTk
 from io import StringIO
+from matplotlib.patches import Circle,Wedge
+import mpl_toolkits.mplot3d.art3d as art3d
+from matplotlib.patches import * #FancyArrowPatch
+from matplotlib.colors import ListedColormap
+from scipy.stats import pearsonr
+from decimal import Decimal

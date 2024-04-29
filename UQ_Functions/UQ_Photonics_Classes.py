@@ -114,8 +114,12 @@ def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame)
     # Lidar.lidar_inputs.dataframe['Dark current noise']=10*np.log10(UQ_Photodetector.Dark_current_noise)
     # Lidar.lidar_inputs.dataframe['TIA noise']=10*np.log10(UQ_Photodetector.TIA_noise)
     DataFrame['Uncertainty Photodetector']=Final_Output_UQ_Photo
+    
+    
     # Plotting:
-    QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Photo,False,Qlunc_yaml_inputs['Flags']['Photodetector noise'],False,False,False,False,False)
+    QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Photo,Qlunc_yaml_inputs['Flags']['Photodetector noise'],False,False,False,False,False)
+    
+    
     return DataFrame
 
 
