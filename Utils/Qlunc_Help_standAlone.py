@@ -1016,7 +1016,8 @@ def U_WindDir_GUM(Lidar,Atmospheric_Scenario,Correlation_coeff,wind_direction,li
 def U_intrinsic(Lidar,Atmospheric_Scenario,DataFrame,Qlunc_yaml_inputs):   
     V_ref            = Atmospheric_Scenario.Vref      # Reference velocity
     lidar_wavelength = Qlunc_yaml_inputs['Components']['Laser']['Wavelength'] # wavelength of the laser source.
-    fd               = 2*V_ref/lidar_wavelength  # Doppler frequency corresponding to Vref
+    pdb.set_trace()
+    fd               = [2*i_V/lidar_wavelength for i_V in V_ref] # Doppler frequency corresponding to Vref
     corr_wavelength_fd = 1
     # Analytical solution:   
     u_intrinsic = np.round(np.sqrt((fd*DataFrame['Uncertainty ADC']['Stdv wavelength [m]']/2)**2+(Qlunc_yaml_inputs['Components']['Laser']['Wavelength']*DataFrame['Uncertainty ADC']['Stdv Doppler f_peak [Hz]']/2)**2+(fd*Qlunc_yaml_inputs['Components']['Laser']['Wavelength']*DataFrame['Uncertainty ADC']['Stdv Doppler f_peak [Hz]']*DataFrame['Uncertainty ADC']['Stdv wavelength [m]'])*corr_wavelength_fd/2) ,4)

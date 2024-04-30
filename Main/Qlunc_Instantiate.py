@@ -219,7 +219,8 @@ if Atmospheric_TimeSeries:
                                       Vref           = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref'],
                                       wind_direction = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind direction'],
                                       wind_tilt      = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind tilt'],
-                                      Hg             = Qlunc_yaml_inputs['Atmospheric_inputs']['Height ground'])
+                                      Hg             = Qlunc_yaml_inputs['Atmospheric_inputs']['Height ground'],
+                                      date =None)
 
 else:    
 
@@ -229,7 +230,8 @@ else:
                                       Vref           = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref'],
                                       wind_direction = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind direction'],
                                       wind_tilt      = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind tilt'],
-                                      Hg             = Qlunc_yaml_inputs['Atmospheric_inputs']['Height ground'])
+                                      Hg             = Qlunc_yaml_inputs['Atmospheric_inputs']['Height ground'],
+                                      date=None)
 
 #%% Run Qlunc for different values of tilt angle
 ########################################################################
@@ -273,6 +275,88 @@ Lidar1_pos=list(zip(z,z,z))
 
 # plt.plot(x2[0],y2[0],'ro')
 # plt.plot(x2[-1],y2[-1],'ro')
+#%% Get external data:
+def getdata(Sel_data_vel,Sel_data_vel_LMN_140,Sel_data_vel_LMN_ref,Sel_data_wind_dir,Data_availability,availab,Timestamp,datei,datef,vellow,velhigh,Temperature):
+    import pandas as pd
+    from datetime import date,datetime, timedelta
+    from windrose import WindroseAxes
+    import matplotlib.cm as cm
+    
+    #read WSL7 and LMN_stat
+    
+    WSL7        = pd.read_csv('C:/SWE_LOCAL/Thesis/Field_data/WSL7_421_10min.csv', sep=None, header=[0,1])
+    LMN_stat    = pd.read_csv('C:/SWE_LOCAL/Thesis/Field_data/LMN_Stat_alldata.csv', sep=None, header=[0,1])
+    
+    WSL7.columns     = WSL7.columns.map('_'.join)
+    LMN_stat.columns = LMN_stat.columns.map('_'.join)
+    
+    # Columns want to get
+    # Sel_data_vel='Spd_106m_Mean_m/s'
+    # Sel_data_vel_LMN_140='wsp_140m_LMN_Mean_m/s'
+    # Sel_data_vel_LMN_ref='wsp_106m_LMN_Mean_m/s'
+    # Sel_data_wind_dir='Sdir_103m_LMN_Mean_deg'
+    
+    
+    
+    #filter and Find the index of the filtered data
+    
+    Index2 = WSL7[Sel_data_vel].index[(WSL7[Data_availability]>=availab) & (WSL7[Sel_data_vel]> vellow) & (WSL7[Sel_data_vel]<velhigh)].tolist()
+    Index3 = WSL7[Timestamp].index[(WSL7[Timestamp]> datei) & (WSL7[Timestamp]<datef)].tolist()
+    
+    ResIndex=list(set(Index2) & set(Index3))
+    
+    
+    #Gete the indexed parameters
+    velocity_lidar = WSL7[Sel_data_vel][ResIndex]
+    velocity_mast_140  = LMN_stat[Sel_data_vel_LMN_140][ResIndex]
+    velocity_mast_ref = LMN_stat[Sel_data_vel_LMN_ref][ResIndex]
+    
+    temperature    = LMN_stat[Temperature][ResIndex]
+    wind_direction = LMN_stat[Sel_data_wind_dir][ResIndex]
+    date_i           = LMN_stat['Timestamp_datetime'][ResIndex]
+    alpha           =  np.log(velocity_mast_ref/velocity_mast_140)/np.log(106/140)
+    
+    #%% Convert to date format (Y/month/day/hour/minute)
+    
+    date=[]
+    
+    for vi in ResIndex:
+        date.append(datetime(year=int(str(date_i[vi])[0:4]), month=int(str(date_i[vi])[4:6]), day=int(str(date_i[vi])[6:8]), hour=int(str(date_i[vi])[8:10]), minute=int(str(date_i[vi])[10:12])))
+    
+                
+    #%%Print WSL7
+    
+    
+    # fig,ax=plt.subplots()
+    # ax.plot(date,alpha)
+    # plt.title(r'$\alpha$ exponent')
+    
+    fig,ax=plt.subplots(3,1,sharex=True)
+    ax[0].plot(date,alpha,".")
+    ax[1].plot(date,wind_direction,".")
+    
+    ax[2].plot(date,velocity_mast_ref,label="mast")
+    
+    ax[2].plot(date,velocity_lidar,label="lidar")
+    
+    ax[0].title.set_text(Sel_data_vel)
+    ax[2].set_xlabel('Date (YYYY-mm-dd-h-min)',fontsize=25)
+    ax[0].set_ylabel(r'$\alpha$ exponent [-]',fontsize=20)
+    ax[1].set_ylabel('wind direction [°]',fontsize=20)
+    ax[2].set_ylabel('wind velocity [m/s]',fontsize=20)
+    plt.legend()
+    
+    ax = WindroseAxes.from_ax()
+    ax.bar(wind_direction, velocity_lidar, normed=True, opening=.9, edgecolor='white')
+    ax.set_legend()
+    plt.title(Sel_data_wind_dir)
+    return(date,wind_direction,velocity_lidar,velocity_mast_140,velocity_mast_ref,alpha)
+
+date,wind_direction_ref,velocity_lidar,velocity_mast_140,velocity_mast_ref,alpha_ref=getdata('Spd_106m_Mean_m/s','wsp_140m_LMN_Mean_m/s','wsp_106m_LMN_Mean_m/s','Sdir_103m_LMN_Mean_deg','Available_106m_Mean_avail%',90,'Timestamp_datetime',202205090000,202205150000,4,16,'Tabs_103m_LMN_Mean_degC')    
+Atmospheric_Scenario.wind_direction = wind_direction_ref.tolist()
+Atmospheric_Scenario.Vref = velocity_mast_ref.tolist()
+Atmospheric_Scenario.PL_exp = alpha_ref.tolist()
+Atmospheric_Scenario.date = date
 
 ############################################################################################
 # for i_position in range(len(Lidar2_pos)):
@@ -281,8 +365,8 @@ Lidar1_pos=list(zip(z,z,z))
 #     Atmospheric_Scenario.wind_tilt = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind tilt']
 #     Atmospheric_Scenario.Vref      = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref']
 for i_tilt in np.linspace(Atmospheric_Scenario.wind_tilt[0],Atmospheric_Scenario.wind_tilt[1],Atmospheric_Scenario.wind_tilt[2]):
-    for i_Vref in np.linspace(Atmospheric_Scenario.Vref[0],Atmospheric_Scenario.Vref[1],Atmospheric_Scenario.Vref[2]):
+    # for i_Vref in np.linspace(Atmospheric_Scenario.Vref[0],Atmospheric_Scenario.Vref[1],Atmospheric_Scenario.Vref[2]):
         # pdb.set_trace()
-        Atmospheric_Scenario.wind_tilt = i_tilt
-        Atmospheric_Scenario.Vref = i_Vref
-        QluncData = Lidar.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+        # Atmospheric_Scenario.wind_tilt = i_tilt
+        # Atmospheric_Scenario.Vref = i_Vref
+    QluncData = Lidar.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
