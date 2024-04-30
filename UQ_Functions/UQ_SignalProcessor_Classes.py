@@ -45,7 +45,7 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
     n_fftpoints          = L #2**8      # n° of points for each block (fft points).
     fd                   = [2 * i_V / lidar_wavelength for i_V in V_ref]  # Doppler frequency corresponding to Vref
     n_pulses             = 1        #   % n pulses for averaging the spectra
-    N_MC                 = 1000 # n° MC samples to calculate the uncertainty due to bias in sampling frequency and wavelength
+    N_MC                 = 100 # n° MC samples to calculate the uncertainty due to bias in sampling frequency and wavelength
 
     #%% Uncertainty due to hardware noise, signal processing and speckle interference:
     
@@ -54,7 +54,7 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
         level_noise_hardware = np.array([0])
     else: 
         level_noise_hardware = 10**(DataFrame['Uncertainty Photodetector']['Total noise photodetector [dB]']/10) # Hardware noise added before signal downmixing
-    hardware_noise       = np.random.normal(0 , level_noise_hardware , n_fftpoints)
+    hardware_noise       = np.random.normal(0 , level_noise_hardware , N_MC)
 
     
     # Bias in the sampling frequency 
@@ -73,7 +73,7 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
 
 
     
-    
+    # pdb.set_trace()
     #%% MC method  to calculate the impact of the uncertainty sources above
     Stdv_fpeak,Stdv_vlos,mean_vlos=[],[],[]
     for i_fd in range(len(fd)):
@@ -81,8 +81,8 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
         # Speckle multiplicative noise    
         lower             = fd[i_fd]-Lidar.signal_processor.analog2digital_converter.u_speckle*fd[i_fd]
         upper             = fd[i_fd]+Lidar.signal_processor.analog2digital_converter.u_speckle*fd[i_fd]    
-        fd_speckle_noise  = np.random.uniform( lower, upper, N_MC)
-        # fd_speckle_noise  =  np.random.normal(fd , fd*Lidar.signal_processor.analog2digital_converter.u_speckle/np.sqrt(3) , N_MC)  #; % Noisy wavelength vector
+        # fd_speckle_noise  = np.random.uniform( lower, upper, N_MC)
+        fd_speckle_noise  =  np.random.normal(fd[i_fd] , fd[i_fd]*Lidar.signal_processor.analog2digital_converter.u_speckle/np.sqrt(3) , N_MC)  #; % Noisy wavelength vector
         
         for ind_pulse in range(N_MC):
             t = np.array(range(0,n_fftpoints)) * Ts[ind_pulse]
@@ -90,7 +90,7 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
             # pdb.set_trace()
             # Signal + Noise:
             #Create signal and add hardware noise and speckle noise:
-            S1 = hardware_noise + (np.sin(2*np.pi*fd_speckle_noise[ind_pulse]*t))#-.1*np.sin(2*np.pi*abs(np.random.normal(0,1.9))*fd_speckle_noise[ind_pulse]*t) + .2*np.sin(2*np.pi*abs(np.random.normal(0,3))*fd_speckle_noise[ind_pulse]*t)+\
+            S1 = hardware_noise[ind_pulse] + (np.sin(2*np.pi*fd_speckle_noise[ind_pulse]*t))#-.1*np.sin(2*np.pi*abs(np.random.normal(0,1.9))*fd_speckle_noise[ind_pulse]*t) + .2*np.sin(2*np.pi*abs(np.random.normal(0,3))*fd_speckle_noise[ind_pulse]*t)+\
                                     #.2*np.sin(2*np.pi*abs(np.random.normal(0,6))*fd_speckle_noise[ind_pulse]*t) + .3*np.sin(2*np.pi*abs(np.random.normal(0,1))*fd_speckle_noise[ind_pulse]*t) #; % Adding up Signal contributors
             # pdb.set_trace()
             S = S1 / S1.max()
@@ -132,7 +132,8 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
         mean_vlos.append(np.mean(vlos_MC))
         # pdb.set_trace()
         # Store data
-        DataFrame['Uncertainty ADC'] = {'Stdv Doppler f_peak [Hz]':np.array(Stdv_fpeak)*np.linspace(1,1,len(Atmospheric_Scenario.temperature)),'Stdv wavelength [m]':stdv_wavelength,'Stdv Vlos [m/s]':Stdv_vlos}
+        DataFrame['Uncertainty ADC'] = {'Stdv Doppler f_peak [Hz]':np.array(Stdv_fpeak)*np.linspace(1,1,len(Atmospheric_Scenario.temperature_dev)),'Stdv wavelength [m]':stdv_wavelength,'Stdv Vlos [m/s]':Stdv_vlos}
+    # pdb.set_trace()
     return DataFrame
 
 #%% Sum of uncertainties in `signal processor` module: 
@@ -169,7 +170,7 @@ def sum_unc_signal_processor(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,D
     else:
         # pdb.set_trace()
         ADC_Uncertainty=None
-        DataFrame['Uncertainty ADC'] = {'Stdv Doppler f_peak [Hz]':np.array(0)*np.linspace(1,1,len(Atmospheric_Scenario.temperature)),'Stdv wavelength [m]':0,'Stdv Vlos [m/s]':0}
+        DataFrame['Uncertainty ADC'] = {'Stdv Doppler f_peak [Hz]':np.array(0)*np.linspace(1,1,len(Atmospheric_Scenario.temperature_dev)),'Stdv wavelength [m]':0,'Stdv Vlos [m/s]':0}
         print (colored('You didn´t include an ADC in the lidar. The ADC uncertainty contribution is zero in the lidar hardware uncertainty estimations','cyan', attrs=['bold']))       
     
     # Store data

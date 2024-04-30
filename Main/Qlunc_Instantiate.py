@@ -201,37 +201,72 @@ Lidar = lidar(name             = Qlunc_yaml_inputs['Lidar']['Name'],            
 
 
 #%% Creating atmospheric scenarios: ############################################
-Atmospheric_TimeSeries = Qlunc_yaml_inputs['Atmospheric_inputs']['TimeSeries'] # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere (T, H, rain and fog) 
-                                                                           # If so we obtain a time series describing the noise implemented in the measurement.
+Atmospheric_TimeSeries = Qlunc_yaml_inputs['Atmospheric_inputs']['TimeSeries'] # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere  
 if Atmospheric_TimeSeries:
+
     Atmos_TS_FILE           = './metadata/AtmosphericData/'+Qlunc_yaml_inputs['Atmospheric_inputs']['Atmos_TS_FILE']
-    AtmosphericScenarios_TS = pd.read_csv(Atmos_TS_FILE,delimiter=';',decimal=',')
-    Atmospheric_inputs = {
-                          'temperature' : list(AtmosphericScenarios_TS.loc[:,'T']),    # [K]
-                          'humidity'    : list(AtmosphericScenarios_TS.loc[:,'H']),    # [%]
-                          'rain'        : list(AtmosphericScenarios_TS.loc[:,'rain']),
-                          'fog'         : list(AtmosphericScenarios_TS.loc[:,'fog']),
-                          'time'        : list(AtmosphericScenarios_TS.loc[:,'t'])     #for rain and fog intensity intervals might be introduced [none,low, medium high]
-                          } 
-    Atmospheric_Scenario = atmosphere(name           = Qlunc_yaml_inputs['Atmospheric_inputs']['Name'],
-                                      temperature    = Atmospheric_inputs['temperature'],
-                                      PL_exp         = Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'],
-                                      Vref           = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref'],
-                                      wind_direction = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind direction'],
-                                      wind_tilt      = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind tilt'],
-                                      Hg             = Qlunc_yaml_inputs['Atmospheric_inputs']['Height ground'],
-                                      date =None)
+    
+    date,wind_direction_ref,velocity_lidar,velocity_mast_ref2,velocity_mast_ref,alpha_ref,temperature_meas = SA.getdata('Spd_106m_Mean_m/s','wsp_140m_LMN_Mean_m/s','wsp_106m_LMN_Mean_m/s','Sdir_103m_LMN_Mean_deg','Available_106m_Mean_avail%',90,'Timestamp_datetime',202204200000,202204240000,4,16,'Tabs_103m_LMN_Mean_degC')    
+    pdb.set_trace()
+
+    
+    
+    # WSL70        = pd.read_csv('C:/SWE_LOCAL/Thesis/Field_data/WSL7_421_10min.csv', sep=None, header=[0,1])
+    # LMN_stat0    = pd.read_csv('C:/SWE_LOCAL/Thesis/Field_data/LMN_Stat_alldata.csv', sep=None, header=[0,1])
+    # WSL70.columns     = WSL70.columns.map('_'.join)
+    # LMN_stat0.columns = LMN_stat0.columns.map('_'.join) 
+    # AtmosphericScenarios_TS = pd.read_csv(Atmos_TS_FILE,delimiter=';',decimal=',')
+    
+    
+    # Atmospheric_inputs = {
+    #                       'temperature' : list(AtmosphericScenarios_TS.loc[:,'T']),    # [K]
+    #                       'humidity'    : list(AtmosphericScenarios_TS.loc[:,'H']),    # [%]
+    #                       'rain'        : list(AtmosphericScenarios_TS.loc[:,'rain']),
+    #                       'fog'         : list(AtmosphericScenarios_TS.loc[:,'fog']),
+    #                       'time'        : list(AtmosphericScenarios_TS.loc[:,'t'])     #for rain and fog intensity intervals might be introduced [none,low, medium high]
+    #                       } 
+    # Atmospheric_inputs = {
+    #                       'Temperature_meas':     list(LMN_stat0.loc[:,'Tabs_103m_LMN_Mean']),
+    #                       'WindDir_ref':          list(LMN_stat0.loc[:,'Sdir_103m_LMN_Mean']),    # [K]
+    #                       'Lidar_Availability':   list(WSL70.loc[:,'Available_106m_Mean']),    # [%]
+    #                       'V_ref':                list(LMN_stat0.loc[:,'wsp_106m_LMN_Mean']),
+    #                       'V_ref2':               list(LMN_stat0.loc[:,'wsp_140m_LMN_Mean']),
+    #                       'time':                 list(LMN_stat0.loc[:,'Timestamp'])     #for rain and fog intensity intervals might be introduced [none,low, medium high]
+    #                       } 
+
+    Atmospheric_Scenario = atmosphere(name              = Qlunc_yaml_inputs['Atmospheric_inputs']['Name'],
+                                      temperature_dev   = Qlunc_yaml_inputs['Atmospheric_inputs']['Temperature'],
+                                      temperature_meas  = temperature_meas,                                      
+                                      wind_direction    = wind_direction_ref,
+                                      availability      = 90,
+                                      Vref              = velocity_mast_ref,
+                                      Vref2             = velocity_mast_ref2,
+                                      date              = date, 
+                                                    
+                                      PL_exp            = alpha_ref,
+                                      wind_tilt         = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind tilt'],
+                                      Hg                = Qlunc_yaml_inputs['Atmospheric_inputs']['Height ground']
+                                      )
 
 else:    
 
-    Atmospheric_Scenario = atmosphere(name           = Qlunc_yaml_inputs['Atmospheric_inputs']['Name'],
-                                      temperature    = Qlunc_yaml_inputs['Atmospheric_inputs']['Temperature'],
-                                      PL_exp         = Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'],
-                                      Vref           = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref'],
-                                      wind_direction = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind direction'],
-                                      wind_tilt      = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind tilt'],
-                                      Hg             = Qlunc_yaml_inputs['Atmospheric_inputs']['Height ground'],
-                                      date=None)
+    Atmospheric_Scenario = atmosphere(name             = Qlunc_yaml_inputs['Atmospheric_inputs']['Name'],
+                                      temperature_dev  = Qlunc_yaml_inputs['Atmospheric_inputs']['Temperature'],
+                                      temperature_meas = None,
+                                      
+                                      wind_direction   = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind direction'],
+                                      availability     = None,
+
+                                      Vref             = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref']*np.ones(len(np.linspace(Qlunc_yaml_inputs['Atmospheric_inputs']['Wind direction'][0],Qlunc_yaml_inputs['Atmospheric_inputs']['Wind direction'][1],Qlunc_yaml_inputs['Atmospheric_inputs']['Wind direction'][2])))
+,
+                                      Vref2            = None,
+                                      date             = None,
+                                      PL_exp           = Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']*np.ones(len(np.linspace(Qlunc_yaml_inputs['Atmospheric_inputs']['Wind direction'][0],Qlunc_yaml_inputs['Atmospheric_inputs']['Wind direction'][1],Qlunc_yaml_inputs['Atmospheric_inputs']['Wind direction'][2]))),
+                                      wind_tilt        = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind tilt'],
+                                      Hg               = Qlunc_yaml_inputs['Atmospheric_inputs']['Height ground'],
+                                      )
+
+# pdb.set_trace()
 
 #%% Run Qlunc for different values of tilt angle
 ########################################################################
@@ -276,88 +311,109 @@ Lidar1_pos=list(zip(z,z,z))
 # plt.plot(x2[0],y2[0],'ro')
 # plt.plot(x2[-1],y2[-1],'ro')
 #%% Get external data:
-def getdata(Sel_data_vel,Sel_data_vel_LMN_140,Sel_data_vel_LMN_ref,Sel_data_wind_dir,Data_availability,availab,Timestamp,datei,datef,vellow,velhigh,Temperature):
-    import pandas as pd
-    from datetime import date,datetime, timedelta
-    from windrose import WindroseAxes
-    import matplotlib.cm as cm
+# def getdata(Sel_data_vel,Sel_data_vel_LMN,Sel_data_vel_LMN_ref,Sel_data_wind_dir,Data_availability,availab,Timestamp,datei,datef,vellow,velhigh,Temperature):
+
+#     import matplotlib.cm as cm
     
-    #read WSL7 and LMN_stat
+#     #read WSL7 and LMN_stat
     
-    WSL7        = pd.read_csv('C:/SWE_LOCAL/Thesis/Field_data/WSL7_421_10min.csv', sep=None, header=[0,1])
-    LMN_stat    = pd.read_csv('C:/SWE_LOCAL/Thesis/Field_data/LMN_Stat_alldata.csv', sep=None, header=[0,1])
+#     WSL70        = pd.read_csv('C:/SWE_LOCAL/Thesis/Field_data/WSL7_421_10min.csv', sep=None, header=[0,1])
+#     LMN_stat0    = pd.read_csv('C:/SWE_LOCAL/Thesis/Field_data/LMN_Stat_alldata.csv', sep=None, header=[0,1])
     
-    WSL7.columns     = WSL7.columns.map('_'.join)
-    LMN_stat.columns = LMN_stat.columns.map('_'.join)
+#     # WSL70.columns     = WSL70.columns.map('_'.join)
+#     # LMN_stat0.columns = LMN_stat0.columns.map('_'.join) 
     
-    # Columns want to get
-    # Sel_data_vel='Spd_106m_Mean_m/s'
-    # Sel_data_vel_LMN_140='wsp_140m_LMN_Mean_m/s'
-    # Sel_data_vel_LMN_ref='wsp_106m_LMN_Mean_m/s'
-    # Sel_data_wind_dir='Sdir_103m_LMN_Mean_deg'
+#     date_matches=WSL70[Timestamp][WSL70[Timestamp].isin(LMN_stat0[Timestamp])].tolist()
     
-    
-    
-    #filter and Find the index of the filtered data
-    
-    Index2 = WSL7[Sel_data_vel].index[(WSL7[Data_availability]>=availab) & (WSL7[Sel_data_vel]> vellow) & (WSL7[Sel_data_vel]<velhigh)].tolist()
-    Index3 = WSL7[Timestamp].index[(WSL7[Timestamp]> datei) & (WSL7[Timestamp]<datef)].tolist()
-    
-    ResIndex=list(set(Index2) & set(Index3))
+#     WSL7     = WSL70[WSL70[Timestamp].isin(date_matches)]  
+#     LMN_stat = LMN_stat0[LMN_stat0[Timestamp].isin(date_matches) ]   
+#     # pdb.set_trace()
+  
+#     New=pd.DataFrame()
+#     New[Timestamp]    = WSL7[Timestamp]
+#     New[Data_availability]    = WSL7[Data_availability]
+#     New[Sel_data_vel]    = WSL7[Sel_data_vel]
     
     
-    #Gete the indexed parameters
-    velocity_lidar = WSL7[Sel_data_vel][ResIndex]
-    velocity_mast_140  = LMN_stat[Sel_data_vel_LMN_140][ResIndex]
-    velocity_mast_ref = LMN_stat[Sel_data_vel_LMN_ref][ResIndex]
     
-    temperature    = LMN_stat[Temperature][ResIndex]
-    wind_direction = LMN_stat[Sel_data_wind_dir][ResIndex]
-    date_i           = LMN_stat['Timestamp_datetime'][ResIndex]
-    alpha           =  np.log(velocity_mast_ref/velocity_mast_140)/np.log(106/140)
     
-    #%% Convert to date format (Y/month/day/hour/minute)
+#     New[Sel_data_vel_LMN] = LMN_stat[Sel_data_vel_LMN]    
+#     New[Sel_data_vel_LMN_ref] = LMN_stat[Sel_data_vel_LMN_ref]    
+#     New[Sel_data_wind_dir] = LMN_stat[Sel_data_wind_dir]    
+#     New[Temperature] = LMN_stat[Temperature]    
     
-    date=[]
+                    
     
-    for vi in ResIndex:
-        date.append(datetime(year=int(str(date_i[vi])[0:4]), month=int(str(date_i[vi])[4:6]), day=int(str(date_i[vi])[6:8]), hour=int(str(date_i[vi])[8:10]), minute=int(str(date_i[vi])[10:12])))
+    
+#     # Columns want to get
+#     # Sel_data_vel='Spd_106m_Mean_m/s'
+#     # Sel_data_vel_LMN_140='wsp_140m_LMN_Mean_m/s'
+#     # Sel_data_vel_LMN_ref='wsp_106m_LMN_Mean_m/s'
+#     # Sel_data_wind_dir='Sdir_103m_LMN_Mean_deg'
+    
+    
+    
+#     #filter and Find the index of the filtered data
+    
+#     Index2 = New[Sel_data_vel].index[(New[Data_availability]>=availab) & (New[Sel_data_vel]> vellow) & (New[Sel_data_vel]<velhigh)].tolist()
+#     Index3 = New[Timestamp].index[(New[Timestamp]> datei) & (New[Timestamp]<datef)].tolist()
+    
+#     ResIndex=list(set(Index2) & set(Index3))
+    
+    
+#     #Gete the indexed parameters
+#     velocity_lidar = New[Sel_data_vel][ResIndex]
+#     velocity_mast_ref2  = New[Sel_data_vel_LMN][ResIndex]
+#     velocity_mast_ref = New[Sel_data_vel_LMN_ref][ResIndex]
+    
+#     temperature    = New[Temperature][ResIndex]
+#     wind_direction = New[Sel_data_wind_dir][ResIndex]
+#     date_i           = New[Timestamp][ResIndex]
+#     alpha           =  np.log(velocity_mast_ref2/velocity_mast_ref)/np.log(140/106)
+    
+#     #%% Convert to date format (Y/month/day/hour/minute)
+    
+#     date=[]
+    
+#     for vi in ResIndex:
+#         date.append(datetime(year=int(str(date_i[vi])[0:4]), month=int(str(date_i[vi])[4:6]), day=int(str(date_i[vi])[6:8]), hour=int(str(date_i[vi])[8:10]), minute=int(str(date_i[vi])[10:12])))
     
                 
-    #%%Print WSL7
+#     #%%Print New
     
     
-    # fig,ax=plt.subplots()
-    # ax.plot(date,alpha)
-    # plt.title(r'$\alpha$ exponent')
+#     # fig,ax=plt.subplots()
+#     # ax.plot(date,alpha)
+#     # plt.title(r'$\alpha$ exponent')
     
-    fig,ax=plt.subplots(3,1,sharex=True)
-    ax[0].plot(date,alpha,".")
-    ax[1].plot(date,wind_direction,".")
+#     fig,ax=plt.subplots(3,1,sharex=True)
+#     ax[0].plot(date,alpha,".")
+#     ax[1].plot(date,wind_direction,".")
     
-    ax[2].plot(date,velocity_mast_ref,label="mast")
+#     ax[2].plot(date,velocity_mast_ref,label="mast")
     
-    ax[2].plot(date,velocity_lidar,label="lidar")
+#     ax[2].plot(date,velocity_lidar,label="lidar")
     
-    ax[0].title.set_text(Sel_data_vel)
-    ax[2].set_xlabel('Date (YYYY-mm-dd-h-min)',fontsize=25)
-    ax[0].set_ylabel(r'$\alpha$ exponent [-]',fontsize=20)
-    ax[1].set_ylabel('wind direction [°]',fontsize=20)
-    ax[2].set_ylabel('wind velocity [m/s]',fontsize=20)
-    plt.legend()
+#     ax[0].title.set_text(Sel_data_vel)
+#     ax[2].set_xlabel('Date (YYYY-mm-dd-h-min)',fontsize=25)
+#     ax[0].set_ylabel(r'$\alpha$ exponent [-]',fontsize=20)
+#     ax[1].set_ylabel('wind direction [°]',fontsize=20)
+#     ax[2].set_ylabel('wind velocity [m/s]',fontsize=20)
+#     plt.legend()
     
-    ax = WindroseAxes.from_ax()
-    ax.bar(wind_direction, velocity_lidar, normed=True, opening=.9, edgecolor='white')
-    ax.set_legend()
-    plt.title(Sel_data_wind_dir)
-    return(date,wind_direction,velocity_lidar,velocity_mast_140,velocity_mast_ref,alpha)
+#     ax = WindroseAxes.from_ax()
+#     ax.bar(wind_direction, velocity_lidar, normed=True, opening=.9, edgecolor='white')
+#     ax.set_legend()
+#     plt.title(Sel_data_wind_dir)
+#     return(date,wind_direction.tolist(),velocity_lidar.tolist(),velocity_mast_ref2.tolist(),velocity_mast_ref.tolist(),alpha.tolist())
+# date,wind_direction_ref,velocity_lidar,velocity_mast_ref2,velocity_mast_ref,alpha_ref=getdata('Spd_106m_Mean_m/s','wsp_140m_LMN_Mean_m/s','wsp_106m_LMN_Mean_m/s','Sdir_103m_LMN_Mean_deg','Available_106m_Mean_avail%',90,'Timestamp_datetime',202204200000,202204240000,4,16,'Tabs_103m_LMN_Mean_degC')    
 
-date,wind_direction_ref,velocity_lidar,velocity_mast_140,velocity_mast_ref,alpha_ref=getdata('Spd_106m_Mean_m/s','wsp_140m_LMN_Mean_m/s','wsp_106m_LMN_Mean_m/s','Sdir_103m_LMN_Mean_deg','Available_106m_Mean_avail%',90,'Timestamp_datetime',202205090000,202205110000,4,16,'Tabs_103m_LMN_Mean_degC')    
-Atmospheric_Scenario.wind_direction = wind_direction_ref.tolist()
-Atmospheric_Scenario.Vref = velocity_mast_ref.tolist()
-Atmospheric_Scenario.PL_exp = alpha_ref.tolist()
-Atmospheric_Scenario.date = date
-
+# Atmospheric_Scenario.date, Atmospheric_Scenario.wind_direction ,velocity_lidar,velocity_mast_ref2,Atmospheric_Scenario.Vref,alpha_ref=getdata('Spd_106m_Mean_m/s','wsp_140m_LMN_Mean_m/s','wsp_106m_LMN_Mean_m/s','Sdir_103m_LMN_Mean_deg','Available_106m_Mean_avail%',90,'Timestamp_datetime',202204201200,202204230000,4,16,'Tabs_103m_LMN_Mean_degC')    
+# Atmospheric_Scenario.wind_direction = wind_direction_ref.tolist()
+# Atmospheric_Scenario.Vref = velocity_mast_ref.tolist()
+# Atmospheric_Scenario.PL_exp = alpha_ref.tolist()
+# Atmospheric_Scenario.date = date
+# pdb.set_trace()
 ############################################################################################
 # for i_position in range(len(Lidar2_pos)):
 #     Lidar.optics.scanner.origin = [Lidar1_pos[i_position],Lidar2_pos[i_position],Lidar3_pos[i_position]]

@@ -67,6 +67,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
      
     Href  = Qlunc_yaml_inputs['Components']['Scanner']['Href'],
     V_ref  = Atmospheric_Scenario.Vref
+    # pdb.set_trace()
     alpha = Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']    
     Hg    = Qlunc_yaml_inputs['Atmospheric_inputs']['Height ground']
     Hl    = [Lidar.optics.scanner.origin[0][2],Lidar.optics.scanner.origin[1][2]]    
@@ -145,7 +146,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
             # 3.2) Vlos and Vh Uncertainties - GUM method
             Correlation_coeff_GUM, U_Vlos_GUM, Vlos_GUM, SensitivityCoeff_VLOS_GUM = SA.GUM_Vlos_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,alpha,lidars,DataFrame)
             U_Vh_GUM, Sensitivity_Coefficients_Vh,u,v,w,Vh_GUM                     = SA.GUM_Vh_lidar_uncertainty(Lidar,Atmospheric_Scenario,Correlation_coeff_GUM,wind_direction,lidars,Vlos_GUM,U_Vlos_GUM,DataFrame)
-            pdb.set_trace()
+            # pdb.set_trace()
             #%% 4) Wind direction uncertainty estimation
             
             # 4.1) MCM
@@ -165,17 +166,17 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
             M.append(SA.condM(Lidar,lidars))
             
             
-            # pdb.set_trace()
+        pdb.set_trace()
             #%% Store data 
             
             # Wind velocity wind direction and sensitivity coefficients
-            for i in range(len(Lidar.optics.scanner.origin)):
-                U_Vlos['V{}_MCM'.format(i+1)].append(np.concatenate(U_Vlos_MCM['V{}'.format(i+1)],axis=0))
-                U_Vlos['V{}_GUM'.format(i+1)].append(np.concatenate(U_Vlos_GUM['V{}'.format(i+1)],axis=0))
-                
-                SensCoeff_Vlos['V{}_theta'.format(i+1)].append(SensitivityCoeff_VLOS_GUM['V{}_theta'.format(i+1)])
-                SensCoeff_Vlos['V{}_psi'.format(i+1)].append(SensitivityCoeff_VLOS_GUM['V{}_psi'.format(i+1)])
-                SensCoeff_Vlos['V{}_rho'.format(i+1)].append(SensitivityCoeff_VLOS_GUM['V{}_rho'.format(i+1)])
+        for i in range(len(Lidar.optics.scanner.origin)):
+            U_Vlos['V{}_MCM'.format(i+1)].append(np.concatenate(U_Vlos_MCM['V{}'.format(i+1)]))
+            U_Vlos['V{}_GUM'.format(i+1)].append(np.concatenate(U_Vlos_GUM['V{}'.format(i+1)]))
+            
+            SensCoeff_Vlos['V{}_theta'.format(i+1)].append(SensitivityCoeff_VLOS_GUM['V{}_theta'.format(i+1)])
+            SensCoeff_Vlos['V{}_psi'.format(i+1)].append(SensitivityCoeff_VLOS_GUM['V{}_psi'.format(i+1)])
+            SensCoeff_Vlos['V{}_rho'.format(i+1)].append(SensitivityCoeff_VLOS_GUM['V{}_rho'.format(i+1)])
             
             
             # Store Vh
