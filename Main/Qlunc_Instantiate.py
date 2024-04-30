@@ -352,7 +352,7 @@ def getdata(Sel_data_vel,Sel_data_vel_LMN_140,Sel_data_vel_LMN_ref,Sel_data_wind
     plt.title(Sel_data_wind_dir)
     return(date,wind_direction,velocity_lidar,velocity_mast_140,velocity_mast_ref,alpha)
 
-date,wind_direction_ref,velocity_lidar,velocity_mast_140,velocity_mast_ref,alpha_ref=getdata('Spd_106m_Mean_m/s','wsp_140m_LMN_Mean_m/s','wsp_106m_LMN_Mean_m/s','Sdir_103m_LMN_Mean_deg','Available_106m_Mean_avail%',90,'Timestamp_datetime',202205090000,202205150000,4,16,'Tabs_103m_LMN_Mean_degC')    
+date,wind_direction_ref,velocity_lidar,velocity_mast_140,velocity_mast_ref,alpha_ref=getdata('Spd_106m_Mean_m/s','wsp_140m_LMN_Mean_m/s','wsp_106m_LMN_Mean_m/s','Sdir_103m_LMN_Mean_deg','Available_106m_Mean_avail%',90,'Timestamp_datetime',202205090000,202205110000,4,16,'Tabs_103m_LMN_Mean_degC')    
 Atmospheric_Scenario.wind_direction = wind_direction_ref.tolist()
 Atmospheric_Scenario.Vref = velocity_mast_ref.tolist()
 Atmospheric_Scenario.PL_exp = alpha_ref.tolist()

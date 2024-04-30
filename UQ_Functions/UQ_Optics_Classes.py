@@ -94,13 +94,15 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
     
     else: # One point for all wind directions stated in YAML file
         L=len(Lidar.optics.scanner.focus_dist)
-        wind_direction = np.radians(np.linspace(Atmospheric_Scenario.wind_direction[0],Atmospheric_Scenario.wind_direction[1],Atmospheric_Scenario.wind_direction[2]))
+        # wind_direction = np.radians(np.linspace(Atmospheric_Scenario.wind_direction[0],Atmospheric_Scenario.wind_direction[1],Atmospheric_Scenario.wind_direction[2]))
+        wind_direction = np.radians(Atmospheric_Scenario.wind_direction)
+
         x_out,y_out,z_out = 0,0,0
     
-
+    # pdb.set_trace()
     # Loop for the points in the pattern and the alpha exponents    
     for ind_alpha in range(len(alpha)):
-        alpha = Atmospheric_Scenario.PL_exp[ind_alpha]    
+        alpha = Atmospheric_Scenario.PL_exp   
         for meas_param in range(L):
             # LOVE U MAMA!!        
          
@@ -139,11 +141,11 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
  
             # 3.1) Vlos and Vh Uncertainties - MCM method
             Correlation_coeff_MCM, U_Vlos_MCM, Mult_param, U_Vh_MCM,Vh_MCM,Vh_MCM_mean = SA.MCM_Vh_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,alpha,lidars,DataFrame)        
-  
+            
             # 3.2) Vlos and Vh Uncertainties - GUM method
             Correlation_coeff_GUM, U_Vlos_GUM, Vlos_GUM, SensitivityCoeff_VLOS_GUM = SA.GUM_Vlos_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,alpha,lidars,DataFrame)
             U_Vh_GUM, Sensitivity_Coefficients_Vh,u,v,w,Vh_GUM                     = SA.GUM_Vh_lidar_uncertainty(Lidar,Atmospheric_Scenario,Correlation_coeff_GUM,wind_direction,lidars,Vlos_GUM,U_Vlos_GUM,DataFrame)
-            
+            pdb.set_trace()
             #%% 4) Wind direction uncertainty estimation
             
             # 4.1) MCM
