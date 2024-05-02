@@ -12,7 +12,7 @@ University of Stuttgart(c)
 from Utils.Qlunc_ImportModules import *
 
 #%% Plotting:
-def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_plot_wind_direction_unc,flag_plot_wind_velocity_unc,flag_plot_LOS_unc,flag_plot_PDFs,flag_plot_CIs):
+def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_plot_wind_direction_unc,flag_plot_wind_velocity_unc,flag_plot_LOS_unc,flag_plot_PDFs,flag_plot_CIs):
     """.
     
     Plotting. Location: .Utils/Qlunc_plotting.py       
@@ -56,8 +56,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
                 'Qlunc_version'       : 'Qlunc Version - 1.0'
                 }
         
-    
-    # if flag_plot_measuring_points_pattern:
+
 
     # ##########################
     # Wind direction uncertainty 
@@ -563,9 +562,32 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
             ax01.xaxis.set_tick_params(labelsize = plot_param['tick_labelfontsize']+14)
             ax01.yaxis.set_tick_params(labelsize = plot_param['tick_labelfontsize']+14)
             plt.show()
+        # ##########################
+        # Time series 
+        ############################    
+        
+        if Qlunc_yaml_inputs['Atmospheric_inputs']['TimeSeries']:
+            Vh_p  = [np.concatenate( Data['Vh']['V1_GUM'][0], axis=0 ) for i in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction GUM']))]
+
+            fig9,ax9 = plt.subplots(4,1,sharex=True)
+            ax9[0].plot(Atmospheric_Scenario.date,Atmospheric_Scenario.PL_exp[0],'.',label=r'$\alpha$')
+            ax9[0].legend()
+            ax9[1].plot(Atmospheric_Scenario.date,Atmospheric_Scenario.wind_direction,label='vane')
+            ax9[1].plot(Atmospheric_Scenario.date,Data['Wind direction']['V1_GUM'][0],label='lidar')
+            ax9[1].fill_between(Atmospheric_Scenario.date,Data['Wind direction']['V1_GUM'][0]-2*UWindDir_GUM[0],Data['Wind direction']['V1_GUM'][0]+2*UWindDir_GUM[0],color='k', alpha=0.8,label='uncertainty')    
+
+            ax9[1].legend()
+            ax9[2].plot(Atmospheric_Scenario.date,UVh_GUM[0],'.',label='Vh Uncertainty GUM')
+            ax9[2].plot(Atmospheric_Scenario.date,UVh_MCM[0],'.',label='Vh Uncertainty MCM')
+            ax9[2].legend()
+            ax9[3].plot(Atmospheric_Scenario.date,Atmospheric_Scenario.Vref,label='cup')
+            ax9[3].plot(Atmospheric_Scenario.date,Data['Vh']['V1_GUM'][0],label='lidar')
             
+            ax9[3].fill_between(Atmospheric_Scenario.date,[Vh_p-2*UVh_GUM[0]][0][0],[Vh_p+2*UVh_GUM[0]][0][0],color='k', alpha=0.8,label='uncertainty')    
             # pdb.set_trace()
-           
+            ax9[3].legend()
+            pdb.set_trace()
+
             ############################################################           
             ## Plots the 3D figure
             # fig = plt.figure()

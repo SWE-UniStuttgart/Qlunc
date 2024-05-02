@@ -116,7 +116,7 @@ def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame)
     
     
     # Plotting:
-    QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Photo,Qlunc_yaml_inputs['Flags']['Photodetector noise'],False,False,False,False,False)
+    QPlot.plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Final_Output_UQ_Photo,Qlunc_yaml_inputs['Flags']['Photodetector noise'],False,False,False,False,False)
     
     
     return DataFrame

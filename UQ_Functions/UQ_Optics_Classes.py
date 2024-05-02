@@ -180,7 +180,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
                 SensCoeff_Vlos['V{}_rho'.format(i+1)].append(SensitivityCoeff_VLOS_GUM['V{}_rho'.format(i+1)])
                 
             # pdb.set_trace()
-            # Store Vh
+            # Store Vh for each alpha value when TimeSeries is false
             Vh_['V{}_MCM'.format(ind_alpha+1)].append(Vh_MCM)
             Vh_['V{}_GUM'.format(ind_alpha+1)].append(Vh_GUM)
             Vh_['V{}_MCM_mean'.format(ind_alpha+1)].append(Vh_MCM_mean)
@@ -274,10 +274,9 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
                                'Conditional M'   : M}
     # Lidar.lidar_inputs.dataframe['Scanner'] = {'Focus distance':Final_Output_UQ_Scanner['lidars'][0],'Elevation angle':Final_Output_UQ_Scanner['Elevation angle'][0],'Azimuth':Final_Output_UQ_Scanner['Azimuth'][0]}
     DataFrame['Uncertainty Scanner']=Final_Output_UQ_Scanner    
-    # pdb.set_trace()
    
     #%% 7) Plotting data
-    QPlot.plotting(Lidar,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,False,Qlunc_yaml_inputs['Flags']['Wind direction uncertainty'],Qlunc_yaml_inputs['Flags']['Wind velocity uncertainty'],Qlunc_yaml_inputs['Flags']['Line of sight velocity uncertainty'],Qlunc_yaml_inputs['Flags']['PDFs'],Qlunc_yaml_inputs['Flags']['Coverage interval'])  
+    QPlot.plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,False,Qlunc_yaml_inputs['Flags']['Wind direction uncertainty'],Qlunc_yaml_inputs['Flags']['Wind velocity uncertainty'],Qlunc_yaml_inputs['Flags']['Line of sight velocity uncertainty'],Qlunc_yaml_inputs['Flags']['PDFs'],Qlunc_yaml_inputs['Flags']['Coverage interval'])  
     
     return DataFrame
 
