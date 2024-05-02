@@ -63,6 +63,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
     # Wind direction uncertainty 
     ############################
     if flag_plot_wind_direction_unc:
+        pdb.set_trace()
         # 0. Plot Uncertainty in /Omega against wind direction             
         color1   = iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))
 
@@ -196,7 +197,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
         plt.subplots_adjust(left=0.075, right=0.995, bottom=0.085, top=0.975, wspace=0.3, hspace=0.15)            
         plt.show()                
 
-
+    # sdf_MCM[sort_in.argsort()]
     # #######################################
     # Wind velocity uncertainty (Vh or Vwind) 
     #########################################

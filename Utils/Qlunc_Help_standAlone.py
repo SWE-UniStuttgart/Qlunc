@@ -491,7 +491,7 @@ def Vlos_correlations(Lidar,Vlos_corr,Atmospheric_Scenario,wind_direction, ind_w
     for i in range(len(Lidar.optics.scanner.origin)):
         H_cr= (Rho_cr[i] * np.sin(Theta_cr[i]) + Lidar.optics.scanner.origin[i][2]) / Lidar.optics.scanner.Href
         ### VLOS calculations ############################  
-        # pdb.set_trace()
+        
         Vlos_cr.append (Atmospheric_Scenario.Vref[ind_wind_dir] * (H_cr**alpha[ind_wind_dir]) * np.cos(Theta_cr[i]) * (np.cos(Psi_cr[i] - wind_direction[ind_wind_dir]) + (np.tan(beta)*np.tan(Theta_cr[i]))))
         
         ### Uncertainty VLOS calculations ############################  
@@ -506,6 +506,7 @@ def Vlos_correlations(Lidar,Vlos_corr,Atmospheric_Scenario,wind_direction, ind_w
     except:
         for i_combi in range(len(Corr_combi)):
             Correlations_Vlos['V{}'.format(i_combi+1)].append(0)
+    # pdb.set_trace()
     return (Correlations_Vlos, Vlos_cr, U_Vlos_MCM,Theta_cr ,Psi_cr,Rho_cr )
     
 #%% ##########################################
@@ -612,7 +613,7 @@ def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,alpha,li
             U_Vh_MCM.append(np.std(Vh[ind_wind_dir]))
             Vh_MCM_mean.append(np.sqrt(np.mean(u)**2 + np.mean(v)**2))
             
-    # pdb.set_trace()
+
     # Store the multivariate distributions
     Mult_param          =  [Vlos1_MC_cr2_s,Vlos2_MC_cr2_s,Vlos3_MC_cr2_s,Theta1_cr2_s,Theta2_cr2_s,Theta3_cr2_s,Psi1_cr2_s,Psi2_cr2_s,Psi3_cr2_s,Rho1_cr2_s,Rho2_cr2_s,Rho3_cr2_s,Theta_cr,Psi_cr,Rho_cr]
     return Vlos_corr_MCM,U_Vlos_MCM , Mult_param  , U_Vh_MCM,Vh,Vh_MCM_mean
@@ -1018,6 +1019,7 @@ def U_intrinsic(Lidar,Atmospheric_Scenario,DataFrame,Qlunc_yaml_inputs):
     corr_wavelength_fd = 1
     
     # Analytical solution:   
+    
     u_intrinsic = [np.round(np.sqrt((fd[ind_esp]*DataFrame['Uncertainty ADC']['Stdv wavelength [m]']/2)**2+(Qlunc_yaml_inputs['Components']['Laser']['Wavelength']*DataFrame['Uncertainty ADC']['Stdv Doppler f_peak [Hz]'][ind_esp]/2)**2+(fd[ind_esp]*Qlunc_yaml_inputs['Components']['Laser']['Wavelength']*DataFrame['Uncertainty ADC']['Stdv Doppler f_peak [Hz]'][ind_esp]*DataFrame['Uncertainty ADC']['Stdv wavelength [m]'])*corr_wavelength_fd/2) ,4) for ind_esp in range( len(fd))]
     return u_intrinsic
 

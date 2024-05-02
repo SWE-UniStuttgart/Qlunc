@@ -54,12 +54,12 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     #%% Signal processor
     if Lidar.signal_processor != None:   
-        try:
-            DataFrame = Lidar.signal_processor.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame)
+        # try:
+        DataFrame = Lidar.signal_processor.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame)
             
-        except:
-            SignalProcessor_Uncertainty = None
-            print(colored('Error in  signal processor module calculations!','cyan', attrs=['bold']))
+        # except:
+            # SignalProcessor_Uncertainty = None
+            # print(colored('Error in  signal processor module calculations!','cyan', attrs=['bold']))
     else:
         
         DataFrame['Uncertainty ADC'] = {'Stdv Doppler f_peak [Hz]':np.array(0)*np.linspace(1,1,len(Atmospheric_Scenario.temperature)),'Stdv wavelength [m]':0,'Stdv Vlos [m/s]':0}
@@ -67,7 +67,7 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
 
     #%% Intrinsic lidar uncertainty:
     DataFrame['Intrinsic Uncertainty [m/s]'] = SA.U_intrinsic(Lidar,Atmospheric_Scenario,DataFrame,Qlunc_yaml_inputs)
-    
+    # pdb.set_trace()
     #%% Optics
     if Lidar.optics != None:
         DataFrame = Lidar.optics.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame)     
