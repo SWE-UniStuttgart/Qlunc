@@ -63,9 +63,37 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
     # Wind direction uncertainty 
     ############################
     if flag_plot_wind_direction_unc:
-        pdb.set_trace()
+        # pdb.set_trace()
         # 0. Plot Uncertainty in /Omega against wind direction             
         color1   = iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))
+        
+        
+        #Sort the elements of wind direction (necessary when working with TimeSeries)
+        
+        # Sort wind direction and get the sorting indexes
+        windDirection_sortI =  np.argsort(Data['wind direction']) 
+        WindDir             =  np.sort(Data['wind direction'])        
+        
+        # Sort Uncertainty vectors with the indexes WindDirection_sortI
+        U_WindDir_p   = [np.concatenate( Data['WinDir Unc [°]']['Uncertainty wind direction GUM'][i], axis=0 ) for i in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction GUM']))] # Transforming format        
+        UWindDir_GUM  = [U_WindDir_p[i][windDirection_sortI.argsort()] for i in range(len(U_WindDir_p))]
+        UWindDir_MCM  = [np.array(Data['WinDir Unc [°]']['Uncertainty wind direction MCM'][i])[windDirection_sortI.argsort()] for i in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction MCM'])) ]
+        
+        Sens_coeff_Vlos_W1=[np.concatenate( Data['Sens coeff Vlos']['W1'][i], axis=0 ) for i in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction GUM']))]
+        Sens_coeff_Vlos_W2=[np.concatenate( Data['Sens coeff Vlos']['W2'][i], axis=0 ) for i in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction GUM']))]
+        Sens_coeff_Vlos_W12=[np.concatenate( Data['Sens coeff Vlos']['W1W2'][i], axis=0 ) for i in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction GUM']))]
+        Sens_coeff_Vlos_W4=[np.concatenate( Data['Sens coeff Vlos']['W4'][i], axis=0 ) for i in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction GUM']))]
+        Sens_coeff_Vlos_W5=[np.concatenate( Data['Sens coeff Vlos']['W5'][i], axis=0 ) for i in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction GUM']))]
+        Sens_coeff_Vlos_W6=[np.concatenate( Data['Sens coeff Vlos']['W6'][i], axis=0 ) for i in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction GUM']))]
+
+        Sens_coeff_Vlos_W1  = [Sens_coeff_Vlos_W1[i][windDirection_sortI.argsort()] for i in range(len(U_WindDir_p))]
+        Sens_coeff_Vlos_W2  = [Sens_coeff_Vlos_W2[i][windDirection_sortI.argsort()] for i in range(len(U_WindDir_p))]
+        Sens_coeff_Vlos_W12  = [Sens_coeff_Vlos_W12[i][windDirection_sortI.argsort()] for i in range(len(U_WindDir_p))]
+        Sens_coeff_Vlos_W4  = [Sens_coeff_Vlos_W4[i][windDirection_sortI.argsort()] for i in range(len(U_WindDir_p))]
+        Sens_coeff_Vlos_W5  = [Sens_coeff_Vlos_W5[i][windDirection_sortI.argsort()] for i in range(len(U_WindDir_p))]
+        Sens_coeff_Vlos_W6  = [Sens_coeff_Vlos_W6[i][windDirection_sortI.argsort()] for i in range(len(U_WindDir_p))]
+
+
 
         if len(Lidar.optics.scanner.origin)==3:
             fig0,ax0 = plt.subplots(3,1)
@@ -75,12 +103,12 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
             
             legt = [r'$SC-\sigma^2_{1}$',r'$SC-\sigma^2_{2}$',r'$SC-\sigma^2_{3}$',r'$SC-\sigma_{12}$',r'$SC-\sigma_{13}$',r'$SC-\sigma_{23}$',]
             
-            ax0[1].plot(np.degrees(Data['wind direction']),Data['Sens coeff Vlos']['W1'][0],'-',marker='^',markevery=3,linewidth=plot_param['linewidth'], color='darkgrey',label=legt[0])
-            ax0[1].plot(np.degrees(Data['wind direction']),Data['Sens coeff Vlos']['W2'][0],'-',marker='o',markevery=3,linewidth=plot_param['linewidth'], color='dimgray',label=legt[1])     
-            ax0[1].plot(np.degrees(Data['wind direction']),Data['Sens coeff Vlos']['W1W2'][0],'-',marker='X',markevery=3,linewidth=plot_param['linewidth'], color='black',label=legt[2])
-            ax0[2].plot(np.degrees(Data['wind direction']),Data['Sens coeff Vlos']['W4'][0],'-',marker='^',markevery=3,linewidth=plot_param['linewidth'], color='darkgrey',label=legt[3])
-            ax0[2].plot(np.degrees(Data['wind direction']),Data['Sens coeff Vlos']['W5'][0],'-',marker='o',markevery=3,linewidth=plot_param['linewidth'], color='dimgray',label=legt[4])
-            ax0[2].plot(np.degrees(Data['wind direction']),Data['Sens coeff Vlos']['W6'][0],'-',marker='X',markevery=3,linewidth=plot_param['linewidth'], color='black',label=legt[5])
+            ax0[1].plot(np.degrees(WindDir),Sens_coeff_Vlos_W1[0],'-',marker='^',markevery=3,linewidth=plot_param['linewidth'], color='darkgrey',label=legt[0])
+            ax0[1].plot(np.degrees(WindDir),Sens_coeff_Vlos_W2[0],'-',marker='o',markevery=3,linewidth=plot_param['linewidth'], color='dimgray',label=legt[1])     
+            ax0[1].plot(np.degrees(WindDir),Sens_coeff_Vlos_W12[0],'-',marker='X',markevery=3,linewidth=plot_param['linewidth'], color='black',label=legt[2])
+            ax0[2].plot(np.degrees(WindDir),Sens_coeff_Vlos_W4[0],'-',marker='^',markevery=3,linewidth=plot_param['linewidth'], color='darkgrey',label=legt[3])
+            ax0[2].plot(np.degrees(WindDir),Sens_coeff_Vlos_W5[0],'-',marker='o',markevery=3,linewidth=plot_param['linewidth'], color='dimgray',label=legt[4])
+            ax0[2].plot(np.degrees(WindDir),Sens_coeff_Vlos_W6[0],'-',marker='X',markevery=3,linewidth=plot_param['linewidth'], color='black',label=legt[5])
                     
             
 
@@ -88,7 +116,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
                     
             ax0[0].set_ylabel('[°]',fontsize=plot_param['axes_label_fontsize'])          
             ax0[0].tick_params(axis='both', labelsize=plot_param['tick_labelfontsize'])
-            ax0[0].set_xlim(0,359)
+            ax0[0].set_xlim(np.degrees(WindDir.min()),np.degrees(WindDir.max()))
             ax0[0].set_ylim(0,5)
             ax0[0].grid(axis='both')
             ax0[0].tick_params(axis='x',label1On=False)
@@ -99,7 +127,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
             ax0[1].ticklabel_format(axis='y',style='sci', scilimits=(0,0))          
             ax0[1].yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize_scy'])
             ax0[1].tick_params(axis='both', labelsize=plot_param['tick_labelfontsize'])
-            ax0[1].set_xlim(0,359)
+            ax0[1].set_xlim(np.degrees(WindDir.min()),np.degrees(WindDir.max()))
             ax0[1].grid(axis='both')
             ax0[1].tick_params(axis='x',label1On=False)
 
@@ -109,7 +137,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
             ax0[2].yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize_scy'])
             ax0[2].set_xlabel('Wind direction[°]',fontsize=plot_param['axes_label_fontsize'])
             ax0[2].tick_params(axis='both', labelsize=plot_param['tick_labelfontsize'])
-            ax0[2].set_xlim(0,359)
+            ax0[2].set_xlim(np.degrees(WindDir.min()),np.degrees(WindDir.max()))
             ax0[2].grid(axis='both')
 
             props0 = dict(boxstyle='round', facecolor='wheat', alpha=0.4)        
@@ -149,9 +177,9 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
             fig0,ax0 = plt.subplots(2,1)
             fig0.tight_layout()
             legt = [r'$\frac{\partial{\Omega}}{\partial{V_{LOS_1}}}$',r'$\frac{\partial{\Omega}}{\partial{V_{LOS_2}}}$',r'$\frac{\partial{\Omega}}{\partial{V_{LOS_{12}}}}$']
-            ax0[1].plot(np.degrees(Data['wind direction']),Data['Sens coeff Vlos']['W1'][0],'-',marker='^',markevery=3,linewidth=plot_param['linewidth'], color='black',label=legt[0])
-            ax0[1].plot(np.degrees(Data['wind direction']),Data['Sens coeff Vlos']['W2'][0],'-',marker='^',markevery=3,linewidth=plot_param['linewidth'], color='dimgray',label=legt[1])     
-            ax0[1].plot(np.degrees(Data['wind direction']),Data['Sens coeff Vlos']['W1W2'][0],'-',marker='^',markevery=3,linewidth=plot_param['linewidth'], color='cadetblue',label=legt[2])
+            ax0[1].plot(np.degrees(WindDir),Sens_coeff_Vlos_W1[0],'-',marker='^',markevery=3,linewidth=plot_param['linewidth'], color='black',label=legt[0])
+            ax0[1].plot(np.degrees(WindDir),Sens_coeff_Vlos_W2[0],'-',marker='^',markevery=3,linewidth=plot_param['linewidth'], color='dimgray',label=legt[1])     
+            ax0[1].plot(np.degrees(WindDir),Sens_coeff_Vlos_W12[0],'-',marker='^',markevery=3,linewidth=plot_param['linewidth'], color='cadetblue',label=legt[2])
                         
         
 
@@ -160,7 +188,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
             ax0[0].set_ylabel('[°]',fontsize=plot_param['axes_label_fontsize'])          
             ax0[0].legend(loc=1, prop={'size': plot_param['legend_fontsize']})
             ax0[0].tick_params(axis='both', labelsize=plot_param['tick_labelfontsize'])
-            ax0[0].set_xlim(0,359)
+            ax0[0].set_xlim(np.degrees(WindDir.min()),np.degrees(WindDir.max()))
             ax0[0].set_ylim(0.65,1)
             ax0[0].grid(axis='both')
             ax0[0].tick_params(axis='x',label1On=False)
@@ -171,7 +199,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
             ax0[1].yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize_scy'])
             ax0[1].set_xlabel('Wind direction[°]',fontsize=plot_param['axes_label_fontsize'])
             ax0[1].tick_params(axis='both', labelsize=plot_param['tick_labelfontsize'])
-            ax0[1].set_xlim(0,359)
+            ax0[1].set_xlim(np.degrees(WindDir.min()),np.degrees(WindDir.max()))
             ax0[1].grid(axis='both')
 
             
@@ -185,19 +213,8 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
             r'$r_{\varphi_{2},\theta_{1}}~ =%.2f$' % (Lidar.optics.scanner.correlations[14])))    
 
             ax0[0].text(.92, 0.80, textstr0,  fontsize = 16,horizontalalignment = 'left',verticalalignment = 'top', bbox = props0, transform=plt.gcf().transFigure) 
-        pdb.set_trace()
         
         
-        #Sort the elements of wind direction (necessary when working with TimeSeries)
-        
-        # Sort wind direction and get the sorting indexes
-        windDirection_sortI =  np.argsort(Data['wind direction']) 
-        WindDir             =  np.sort(Data['wind direction'])        
-        
-        # Sort Uncertainty vectors with the indexes WindDirection_sortI
-        U_WindDir_p   = [np.concatenate( Data['WinDir Unc [°]']['Uncertainty wind direction GUM'][i], axis=0 ) for i in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction GUM']))] # Transforming format        
-        UWindDir_GUM  = [U_WindDir_p[i][windDirection_sortI.argsort()] for i in range(len(U_WindDir_p))]
-        UWindDir_MCM  = [np.array(Data['WinDir Unc [°]']['Uncertainty wind direction MCM'][i])[windDirection_sortI.argsort()] for i in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction MCM'])) ]
         
         for ind_plot in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction MCM'])):
             
@@ -215,19 +232,58 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
     # Wind velocity uncertainty (Vh or Vwind) 
     #########################################
     if flag_plot_wind_velocity_unc:
-    
+        #Sort the elements of wind direction (necessary when working with TimeSeries)
+        
+        # Sort wind direction and get the sorting indexes
+        windDirection_sortI =  np.argsort(Data['wind direction']) 
+        WindDir             =  np.sort(Data['wind direction'])        
+        
+        # Sort Uncertainty vectors with the indexes WindDirection_sortI
+        U_Vh_p   = [np.concatenate( Data['Vh Unc [m/s]']['Uncertainty Vh GUM'][i], axis=0 ) for i in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction GUM']))] # Transforming format        
+        UVh_GUM  = [U_Vh_p[i][windDirection_sortI.argsort()] for i in range(len(U_Vh_p))]
+        UVh_MCM  = [np.array(Data['Vh Unc [m/s]']['Uncertainty Vh MCM'][i])[windDirection_sortI.argsort()] for i in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction MCM'])) ]
+        CorrelationsV12_GUM=[np.array(Data['Correlations']['V12_GUM'][i])[windDirection_sortI.argsort()] for i in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction MCM'])) ]
+        CorrelationsV12_MCM=[np.array(Data['Correlations']['V12_MCM'][i])[windDirection_sortI.argsort()] for i in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction MCM'])) ]
+        
+             
+        Sens_coeff_Vlos_V1  = [np.concatenate( Data['Sens coeff Vh'][i]['dV1'], axis=0 ) for i in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction GUM']))]
+        Sens_coeff_Vlos_V2  = [np.concatenate( Data['Sens coeff Vh'][i]['dV2'], axis=0 ) for i in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction GUM']))]
+        Sens_coeff_Vlos_V12 = [np.concatenate( Data['Sens coeff Vh'][i]['dV1V2'], axis=0 ) for i in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction GUM']))]
+
+
+        Sens_coeff_Vlos_V1   = [Sens_coeff_Vlos_V1[i][windDirection_sortI.argsort()] for i in range(len(U_Vh_p))]
+        Sens_coeff_Vlos_V2   = [Sens_coeff_Vlos_V2[i][windDirection_sortI.argsort()] for i in range(len(U_Vh_p))]
+        Sens_coeff_Vlos_V12  = [Sens_coeff_Vlos_V12[i][windDirection_sortI.argsort()] for i in range(len(U_Vh_p))]
+
+
+
+
+
         if Lidar.optics.scanner.pattern in ['None']:               
             
             # If triple solution
             if len(Lidar.optics.scanner.origin)==3:
+                Sens_coeff_Vlos_V13 = [np.concatenate( Data['Sens coeff Vh'][i]['dV1V3'], axis=0 ) for i in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction GUM']))]
+                Sens_coeff_Vlos_V23 = [np.concatenate( Data['Sens coeff Vh'][i]['dV2V3'], axis=0 ) for i in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction GUM']))]
+                Sens_coeff_Vlos_V3  = [np.concatenate( Data['Sens coeff Vh'][i]['dV3'], axis=0 ) for i in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction GUM']))]
+                
+                Sens_coeff_Vlos_V13  = [Sens_coeff_Vlos_V13[i][windDirection_sortI.argsort()] for i in range(len(U_Vh_p))]
+                Sens_coeff_Vlos_V23  = [Sens_coeff_Vlos_V23[i][windDirection_sortI.argsort()] for i in range(len(U_Vh_p))]
+                Sens_coeff_Vlos_V3   = [Sens_coeff_Vlos_V3[i][windDirection_sortI.argsort()] for i in range(len(U_Vh_p))]
+                CorrelationsV13_GUM=[np.array(Data['Correlations']['V13_GUM'][i])[windDirection_sortI.argsort()] for i in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction MCM'])) ]
+                CorrelationsV23_GUM=[np.array(Data['Correlations']['V23_GUM'][i])[windDirection_sortI.argsort()] for i in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction MCM'])) ]
+
+                CorrelationsV13_MCM=[np.array(Data['Correlations']['V13_MCM'][i])[windDirection_sortI.argsort()] for i in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction MCM'])) ]
+                CorrelationsV23_MCM=[np.array(Data['Correlations']['V23_MCM'][i])[windDirection_sortI.argsort()] for i in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction MCM'])) ]
+           
                 #Create subplots
                 color1   = iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))
                 fig0,ax0 = plt.subplots(3,1)
                 fig0.tight_layout()
                 
                 #Plot sensitivity coefficients
-                SensCoeff1 = [Data['Sens coeff Vh'][0]['dV1'],Data['Sens coeff Vh'][0]['dV2'],Data['Sens coeff Vh'][0]['dV3']]
-                SensCoeff2 = [Data['Sens coeff Vh'][0]['dV1V2'],Data['Sens coeff Vh'][0]['dV1V3'],Data['Sens coeff Vh'][0]['dV2V3']]
+                SensCoeff1 = [Sens_coeff_Vlos_V1,Sens_coeff_Vlos_V2,Sens_coeff_Vlos_V3]
+                SensCoeff2 = [Sens_coeff_Vlos_V12,Sens_coeff_Vlos_V13,Sens_coeff_Vlos_V23]
                 c5 = ['darkgrey','dimgray','black']
                 # legt1 = [r'$\frac{\partial^2{V_{wind}}}{\partial{V_{LOS_1}}}\sigma^2_{V_{LOS_{1}}}$',r'$\frac{\partial^2{V_{wind}}}{\partial{V_{LOS_2}}}\sigma^2_{V_{LOS_{2}}}$',r'$\frac{\partial^2{V_{wind}}}{\partial{V_{LOS_{3}}}}\sigma^2_{V_{LOS_{3}}}$']
                 # legt2 = [r'$\frac{\partial{V_{wind}}}{\partial{V_{LOS_{1,2}}}}\sigma_{V_{LOS_{1,2}}}$',r'$\frac{\partial{V_{wind}}}{\partial{V_{LOS_{1,3}}}}\sigma_{V_{LOS_{1,3}}}$',r'$\frac{\partial{V_{wind}}}{\partial{V_{LOS_{2,3}}}}\sigma_{V_{LOS_{2,3}}}$']
@@ -235,24 +291,24 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
                 legt2 = [r'$SC-\sigma_{12}$',r'$SC-\sigma_{13}$',r'$SC-\sigma_{23}$']
                 markers = ['^','o','X']
                 for ind_plot in range(len(SensCoeff1)):                                                 
-                    ax0[1].plot(np.degrees(Data['wind direction']),SensCoeff1[ind_plot],'-',marker=markers[ind_plot],markevery=3,c = c5[ind_plot],linewidth=plot_param['linewidth'],label = legt1[ind_plot])
+                    ax0[1].plot(np.degrees(WindDir),SensCoeff1[ind_plot][0],'-',marker=markers[ind_plot],markevery=3,c = c5[ind_plot],linewidth=plot_param['linewidth'],label = legt1[ind_plot])
                 for ind_plot in range(len(SensCoeff2)):                                                 
-                    ax0[2].plot(np.degrees(Data['wind direction']),SensCoeff2[ind_plot],'-',marker=markers[ind_plot],markevery=3,c = c5[ind_plot],linewidth=plot_param['linewidth'],label = legt2[ind_plot])                                    
+                    ax0[2].plot(np.degrees(WindDir),SensCoeff2[ind_plot][0],'-',marker=markers[ind_plot],markevery=3,c = c5[ind_plot],linewidth=plot_param['linewidth'],label = legt2[ind_plot])                                    
 
                 
                 # pdb.set_trace()
-                for ind_plot in range(len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'])):
+                for ind_plot in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction MCM'])):
                     c2=next(color1)
                     # pdb.set_trace()
-                    ax0[0].plot(np.degrees(Data['wind direction']),Data['Vh Unc [m/s]']['Uncertainty Vh GUM'][ind_plot],'-', color = c2,linewidth = plot_param['linewidth'],label = r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))
-                    ax0[0].plot(np.degrees(Data['wind direction']),Data['Vh Unc [m/s]']['Uncertainty Vh MCM'][ind_plot],'o' , markerfacecolor = c2,markeredgecolor = 'lime',alpha = 0.4,label = 'MCM')
+                    ax0[0].plot(np.degrees(WindDir),UVh_GUM[ind_plot],'-', color = c2,linewidth = plot_param['linewidth'],label = r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))
+                    ax0[0].plot(np.degrees(WindDir),UVh_MCM[ind_plot],'o' , markerfacecolor = c2,markeredgecolor = 'lime',alpha = 0.4,label = 'MCM')
                     # ax11.set_ylim([.095, .15])
 
                 	# Axes:
                         
                 ax0[0].set_ylabel('[m/s]',fontsize=plot_param['axes_label_fontsize'])          
                 ax0[0].tick_params(axis='both', labelsize=plot_param['tick_labelfontsize'])
-                ax0[0].set_xlim(0,359)
+                ax0[0].set_xlim(np.degrees(WindDir.min()),np.degrees(WindDir.max()))
                 # ax0[0].set_ylim(0.65,1)
                 ax0[0].grid(axis='both')
                 ax0[0].legend(loc=1, prop={'size': plot_param['legend_fontsize']-5})
@@ -264,7 +320,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
                 ax0[1].yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize_scy'])
 
                 ax0[1].tick_params(axis='both', labelsize=plot_param['tick_labelfontsize'])
-                ax0[1].set_xlim(0,359)
+                ax0[1].set_xlim(np.degrees(WindDir.min()),np.degrees(WindDir.max()))
                 ax0[1].grid(axis='both')
                 ax0[1].tick_params(axis='x',label1On=False)
 
@@ -274,7 +330,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
                 ax0[2].yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize_scy'])
                 ax0[2].set_xlabel('Wind direction[°]',fontsize=plot_param['axes_label_fontsize'])
                 ax0[2].tick_params(axis='both', labelsize=plot_param['tick_labelfontsize'])
-                ax0[2].set_xlim(0,359)
+                ax0[2].set_xlim(np.degrees(WindDir.min()),np.degrees(WindDir.max()))
                 ax0[2].grid(axis='both')
                 # pdb.set_trace()                
                 props0 = dict(boxstyle='round', facecolor='wheat', alpha=0.4)        
@@ -313,24 +369,36 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
                 
                 # Plot correlations
                 fig1,ax1 = plt.subplots(3,1)
-                CorrelationsGUM = [Data['Correlations']['V12_GUM'],Data['Correlations']['V13_GUM'],Data['Correlations']['V23_GUM']]
-                CorrelationsMCM = [Data['Correlations']['V12_MCM'],Data['Correlations']['V13_MCM'],Data['Correlations']['V23_MCM']]                
+                CorrelationsGUM = [CorrelationsV12_GUM,CorrelationsV13_GUM,CorrelationsV23_GUM]
+                CorrelationsMCM = [CorrelationsV12_MCM,CorrelationsV13_MCM,CorrelationsV23_MCM]                
                 color3 = iter(cm.rainbow(np.linspace(0,1,len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))))
                 # pdb.set_trace()
                 for ind_plot in range(len(Data['Vh Unc [m/s]']['Uncertainty Vh MCM'])):
                     c3 = next(color3)
                     # Plot:
-                    ax1[0].plot(np.degrees(Data['wind direction']),CorrelationsGUM[0][ind_plot],'-',c = c3,linewidth = plot_param['linewidth'],label = r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))                      
-                    ax1[0].plot(np.degrees(Data['wind direction']),CorrelationsMCM[0][ind_plot],'o', markerfacecolor = c3,markeredgecolor='lime',alpha=0.4,label='MCM')                    
-                    ax1[1].plot(np.degrees(Data['wind direction']),CorrelationsGUM[1][ind_plot],'-',c = c3,linewidth = plot_param['linewidth'],label = r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))                      
-                    ax1[1].plot(np.degrees(Data['wind direction']),CorrelationsMCM[1][ind_plot],'o', markerfacecolor = c3,markeredgecolor='lime',alpha=0.4,label='MCM')
-                    ax1[2].plot(np.degrees(Data['wind direction']),CorrelationsGUM[2][ind_plot],'-',c = c3,linewidth = plot_param['linewidth'],label = r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))                      
-                    ax1[2].plot(np.degrees(Data['wind direction']),CorrelationsMCM[2][ind_plot],'o', markerfacecolor = c3,markeredgecolor='lime',alpha=0.4,label='MCM')
-                    # Axes:
-                    ax1[ind_plot].set_ylim(-1,1)
-                    ax1[ind_plot].grid(axis = 'both')
-                    ax1[ind_plot].set_xlim(0,359)            
-                    ax1[ind_plot].tick_params(axis = 'both', labelsize = plot_param['tick_labelfontsize'])
+                    ax1[0].plot(np.degrees(WindDir),CorrelationsGUM[0][ind_plot],'-',c = c3,linewidth = plot_param['linewidth'],label = r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))                      
+                    ax1[0].plot(np.degrees(WindDir),CorrelationsMCM[0][ind_plot],'o', markerfacecolor = c3,markeredgecolor='lime',alpha=0.4,label='MCM')                    
+                    ax1[1].plot(np.degrees(WindDir),CorrelationsGUM[1][ind_plot],'-',c = c3,linewidth = plot_param['linewidth'],label = r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))                      
+                    ax1[1].plot(np.degrees(WindDir),CorrelationsMCM[1][ind_plot],'o', markerfacecolor = c3,markeredgecolor='lime',alpha=0.4,label='MCM')
+                    ax1[2].plot(np.degrees(WindDir),CorrelationsGUM[2][ind_plot],'-',c = c3,linewidth = plot_param['linewidth'],label = r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))                      
+                    ax1[2].plot(np.degrees(WindDir),CorrelationsMCM[2][ind_plot],'o', markerfacecolor = c3,markeredgecolor='lime',alpha=0.4,label='MCM')
+                
+                
+                # Axes:
+                ax1[0].set_ylim(-1,1)
+                ax1[0].grid(axis = 'both')
+                ax1[0].set_xlim(np.degrees(WindDir.min()),np.degrees(WindDir.max()))            
+                ax1[0].tick_params(axis = 'both', labelsize = plot_param['tick_labelfontsize'])
+                ax1[1].set_ylim(-1,1)
+                ax1[1].grid(axis = 'both')
+                ax1[1].set_xlim(np.degrees(WindDir.min()),np.degrees(WindDir.max()))            
+                ax1[1].tick_params(axis = 'both', labelsize = plot_param['tick_labelfontsize'])
+                ax1[2].set_ylim(-1,1)
+                ax1[2].grid(axis = 'both')
+                ax1[2].set_xlim(np.degrees(WindDir.min()),np.degrees(WindDir.max()))            
+                ax1[2].tick_params(axis = 'both', labelsize = plot_param['tick_labelfontsize'])
+
+
                 ax1[2].set_xlabel('Wind direction[°]',fontsize = plot_param['axes_label_fontsize'])
                 ax1[0].set_ylabel('$r_{V_{LOS_{1,2}}}$ [-]',fontsize=plot_param['axes_label_fontsize'])
                 ax1[1].set_ylabel('$r_{V_{LOS_{1,3}}}$ [-]',fontsize=plot_param['axes_label_fontsize'])
@@ -339,24 +407,24 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
                 ax1[0].legend(loc = 1, prop = {'size': plot_param['legend_fontsize']-5})
                 ax1[0].tick_params(axis='x',label1On=False)
                 ax1[1].tick_params(axis='x',label1On=False)
-
-            
+                # pdb.set_trace()
             # else dual solution
             else:
                 c5=['black','dimgray','cadetblue']
                 fig0,ax0 = plt.subplots(2,1)
                 fig0.tight_layout()
                 legt = [r'$\frac{\partial{V_{wind}}}{\partial{V_{LOS_1}}}$',r'$\frac{\partial{V_{wind}}}{\partial{V_{LOS_2}}}$',r'$\frac{\partial{V_{wind}}}{\partial{V_{LOS_{12}}}}$']
-                SensCoeff1=[Data['Sens coeff Vh'][0]['dV1'],Data['Sens coeff Vh'][0]['dV2'],Data['Sens coeff Vh'][0]['dV1V2']]
+                SensCoeff1=[Sens_coeff_Vlos_V1,Sens_coeff_Vlos_V2,Sens_coeff_Vlos_V12]
+
                 for ind_plot in range(3):                 
-                    ax0[1].plot(np.degrees(Data['wind direction']),SensCoeff1[ind_plot],'-',c = c5[ind_plot],linewidth = plot_param['linewidth'],label = legt[ind_plot])
+                    ax0[1].plot(np.degrees(WindDir),SensCoeff1[ind_plot][0],'-',c = c5[ind_plot],linewidth = plot_param['linewidth'],label = legt[ind_plot])
                     
                 	# Axes:
                         
                 ax0[0].set_ylabel('[m/s]',fontsize=plot_param['axes_label_fontsize'])          
                 ax0[0].legend(loc=1, prop={'size': plot_param['legend_fontsize']})
                 ax0[0].tick_params(axis='both', labelsize=plot_param['tick_labelfontsize'])
-                ax0[0].set_xlim(0,359)
+                ax0[0].set_xlim(np.degrees(WindDir.min()),np.degrees(WindDir.max()))
                 # ax0[0].set_ylim(0.65,1)
                 ax0[0].grid(axis='both')
     
@@ -366,7 +434,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
                 ax0[1].yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize_scy'])
                 ax0[1].set_xlabel('Wind direction[°]',fontsize=plot_param['axes_label_fontsize'])
                 ax0[1].tick_params(axis='both', labelsize=plot_param['tick_labelfontsize'])
-                ax0[1].set_xlim(0,359)
+                ax0[1].set_xlim(np.degrees(WindDir.min()),np.degrees(WindDir.max()))
                 ax0[1].grid(axis='both')
                 
                 props0 = dict(boxstyle='round', facecolor='wheat', alpha=0.4)        
@@ -385,8 +453,8 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
                 for ind_plot in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction MCM'])):
                     
                     c2=next(color2)
-                    ax0[0].plot(np.degrees(Data['wind direction']),Data['Vh Unc [m/s]']['Uncertainty Vh GUM'][ind_plot],'-', color = c2,linewidth = plot_param['linewidth'],label = r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))
-                    ax0[0].plot(np.degrees(Data['wind direction']),Data['Vh Unc [m/s]']['Uncertainty Vh MCM'][ind_plot],'o' , markerfacecolor = c2,markeredgecolor = 'lime',alpha = 0.4,label = 'MCM')
+                    ax0[0].plot(np.degrees(WindDir),UWindDir_GUM[ind_plot],'-', color = c2,linewidth = plot_param['linewidth'],label = r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))
+                    ax0[0].plot(np.degrees(WindDir),UWindDir_MCM[ind_plot],'o' , markerfacecolor = c2,markeredgecolor = 'lime',alpha = 0.4,label = 'MCM')
                 # Legend
                 ax0[0].legend(loc=1, prop={'size': plot_param['legend_fontsize']})
                 plt.subplots_adjust(left=0.075, right=0.995, bottom=0.085, top=0.975, wspace=0.3, hspace=0.115)            
@@ -402,20 +470,20 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
                 for ind_plot in range(len(Data['Vh Unc [m/s]']['Uncertainty Vh MCM'])):
                     c3 = next(color3)
                     # Plot:
-                    ax1.plot(np.degrees(Data['wind direction']),Data['Correlations']['V12_GUM'][ind_plot],'-',c = c3,linewidth = plot_param['linewidth'],label = r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))                      
-                    ax1.plot(np.degrees(Data['wind direction']),Data['Correlations']['V12_MCM'][ind_plot],'o', markerfacecolor = c3,markeredgecolor='lime',alpha=0.4,label='MCM')                    
+                    ax1.plot(np.degrees(WindDir),CorrelationsV12_GUM[ind_plot],'-',c = c3,linewidth = plot_param['linewidth'],label = r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))                      
+                    ax1.plot(np.degrees(WindDir),CorrelationsV12_MCM[ind_plot],'o', markerfacecolor = c3,markeredgecolor='lime',alpha=0.4,label='MCM')                    
 
                     # Axes:
                     ax1.set_ylim(-1,1)
                     
-                    ax1.set_xlim(0,359)            
+                    ax1.set_xlim(np.degrees(WindDir.min()),np.degrees(WindDir.max()))            
                     ax1.tick_params(axis = 'both', labelsize = plot_param['tick_labelfontsize'])
                 ax1.set_xlabel('Wind direction[°]',fontsize = plot_param['axes_label_fontsize'])
                 ax1.set_ylabel('$r_{V_{LOS_{1,2}}}$ [-]',fontsize=plot_param['axes_label_fontsize'])
                 ax1.legend(loc = 1, prop = {'size': plot_param['legend_fontsize']})
                 ax1.grid(axis = 'both')
                 plt.subplots_adjust(left=0.085, right=0.995, bottom=0.085, top=0.975, wspace=0.3, hspace=0.24)                            
-
+                
         # #######################################
         # Plot the vertical/horizontal plane 
         #########################################
@@ -438,8 +506,8 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
             col ='coolwarm' 
             cmaps = matplotlib.cm.get_cmap(col)  # viridis is the default colormap for imshow
             # #Horizontal plane
-            cmap0 = matplotlib.cm.ScalarMappable(norm = mcolors.Normalize(vmin = 0.1, vmax = .84),cmap = plt.get_cmap(col))
-            cmap1 = matplotlib.cm.ScalarMappable(norm = mcolors.Normalize(vmin = 0.55, vmax = 5),cmap = plt.get_cmap(col))
+            cmap0 = matplotlib.cm.ScalarMappable(norm = mcolors.Normalize(vmin = 0.1, vmax = .55),cmap = plt.get_cmap(col))
+            cmap1 = matplotlib.cm.ScalarMappable(norm = mcolors.Normalize(vmin = 0.9, vmax = 4),cmap = plt.get_cmap(col))
             #Vertical plane
             # cmap0 = matplotlib.cm.ScalarMappable(norm = mcolors.Normalize(vmin = 0.12, vmax = .14),cmap = plt.get_cmap(col))
             # cmap1 = matplotlib.cm.ScalarMappable(norm = mcolors.Normalize(vmin = 0.64, vmax = .91),cmap = plt.get_cmap(col))    
@@ -467,8 +535,8 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
                     ax01.plot(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_len][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_len][1],'sk', ms=8, mec='white', mew=1.5)
             
             # #Horizontal plane
-            ax01.contourf(XX,YY, DirD,50,cmap = cmaps,vmin = .55, vmax = 5)
-            ax00.contourf(XX,YY, VV,50,cmap = cmaps,vmin = .1, vmax = .84)
+            ax01.contourf(XX,YY, DirD,50,cmap = cmaps,vmin =.9, vmax = 4)
+            ax00.contourf(XX,YY, VV,50,cmap = cmaps,vmin = 0.1, vmax = .55)
             #Vertical plane
             # ax01.contourf(XX,YY, DirD,50,cmap = cmaps,vmin = .64, vmax = .91)
             # ax00.contourf(XX,YY, VV,50,cmap = cmaps,vmin = .12, vmax = .14) 
@@ -476,7 +544,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
             cmap0.set_array([]) 
             cmap1.set_array([]) 
             colorbar0 = fig00.colorbar(cmap0, ax = ax00) 
-            colorbar1 = fig00.colorbar(cmap1, ax = ax01)                        
+            colorbar1 = fig01.colorbar(cmap1, ax = ax01)                        
             colorbar0.set_label(label = 'Uncertainty [m/s]', size = plot_param['tick_labelfontsize']+15, labelpad = 15)
             colorbar0.ax.tick_params(labelsize = 25)
             colorbar1.set_label(label = 'Uncertainty [°]', size = plot_param['tick_labelfontsize']+15, labelpad = 15)
@@ -496,7 +564,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
             ax01.yaxis.set_tick_params(labelsize = plot_param['tick_labelfontsize']+14)
             plt.show()
             
-            pdb.set_trace()
+            # pdb.set_trace()
            
             ############################################################           
             ## Plots the 3D figure
@@ -644,7 +712,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
         Cont_Psi1           = (np.array(Data['Sens coeff Vlos']['V1_psi'][0]*np.array(np.radians(Data['STDVs'][1][0]))))**2
         Cont_Rho1           = (np.array(Data['Sens coeff Vlos']['V1_rho'][0]*np.array(Data['STDVs'][2][0])))**2     
         Cont_Corr1          = 2*Lidar.optics.scanner.correlations[9]*np.array(Data['Sens coeff Vlos']['V1_theta'][0])*np.array(Data['Sens coeff Vlos']['V1_psi'][0])*np.array(np.radians(Data['STDVs'][0][0]))*np.array(np.radians(Data['STDVs'][1][0]))
-
+        # pdb.set_trace()
         ax5[1].plot(np.degrees(Data['wind direction']),Cont_Theta1,'-',c = 'black',    linewidth = plot_param['linewidth'],label = r'$\frac{\partial^2{V_{LOS_1}}}{\partial{\theta_1}}\sigma^2_{\theta_1}$')
         ax5[1].plot(np.degrees(Data['wind direction']),Cont_Psi1 ,'-', c = 'dimgray',  linewidth = plot_param['linewidth'],label = r'$\frac{\partial^2{V_{LOS_1}}}{\partial{\varphi_1}}\sigma^2_{\varphi_1}$')
         ax5[1].plot(np.degrees(Data['wind direction']),Cont_Rho1,'-',  c = 'darkgrey',linewidth = plot_param['linewidth'],label = r'$\frac{\partial^2{V_{LOS_1}}}{\partial{\rho_1}}\sigma^2_{\rho_1}$')
@@ -808,7 +876,8 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
             Corr_rho2rho3     = 2*Lidar.optics.scanner.correlations[8]*np.array(Data['Sens coeff Vlos']['V2_rho'][0])*np.array(Data['Sens coeff Vlos']['V3_rho'][0])*np.array(Data['STDVs'][2][1])*np.array(Data['STDVs'][2][2])
             Corr_psi2theta3   = 2*Lidar.optics.scanner.correlations[15]*np.array(Data['Sens coeff Vlos']['V2_psi'][0])*np.array(Data['Sens coeff Vlos']['V3_theta'][0])*np.array(np.radians(Data['STDVs'][1][1]))*np.array(np.radians(Data['STDVs'][0][2]))
             Corr_psi3theta2   = 2*Lidar.optics.scanner.correlations[17]*np.array(Data['Sens coeff Vlos']['V3_psi'][0])*np.array(Data['Sens coeff Vlos']['V2_theta'][0])*np.array(np.radians(Data['STDVs'][1][2]))*np.array(np.radians(Data['STDVs'][0][1]))
-            pdb.set_trace()
+            # pdb.set_trace()
+            
             # Plotting contributors:
             ax8[0].plot(np.degrees(Data['wind direction']),Corr_psi1psi2,'-d',markersize=8,c = 'black', markevery=markers_plot,   linewidth = 3,label = r'$\sigma_{\varphi_i\varphi_j}$')
             ax8[0].plot(np.degrees(Data['wind direction']),Corr_theta1theta2  ,'-s',markersize=8,c = 'dimgray', markevery=markers_plot, linewidth = 3,label = r'$\sigma_{\theta_i\theta_j}$')
@@ -1097,7 +1166,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
          #####################################################################################
          ## V wind ###########################################################################    
          #####################################################################################
-         pdb.set_trace()
+         # pdb.set_trace()
          Vh=[l.tolist()[0] for l in Data['Vh']['V{}_GUM'.format(Data['Tolerance'][-1])][0]]
          # GUM
          CI_Vh_L_GUM = [l.tolist()[0] for l in Data['CI'][4]]
@@ -1191,27 +1260,6 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
          plt.plot(np.degrees(Data['wind direction'][0:179]), np.degrees(np.array(WindDirection[0:179]) - np.array(y2_WD_MCM[0:179])),'o',color = 'powderblue',markersize = 8,zorder = 1)  
          
 
-
-         # neg1 = [- i for i in (Data['Wind direction']['V{}_GUM'.format(Data['Tolerance'][-1])][0][181:359])]
-         # neg2 = [- i for i in (Data['Wind direction']['V{}_MCM_mean'.format(Data['Tolerance'][-1])][0][181:359])]
-         # neg3 = [- i for i in ((np.array(WindDirection[181:359]) - np.array(y2_WD_GUM[181:359])))]
-         # neg4 = [- i for i in ((np.array(WindDirection[181:359]) - np.array(y1_WD_GUM[181:359])))]
-         # neg5 = [- i for i in ((np.array(WindDirection[181:359]) - np.array(y1_WD_MCM[181:359])))]
-         # neg6 = [- i for i in ((np.array(WindDirection[181:359]) - np.array(y2_WD_MCM[181:359])))]
-          
-         
-         # ax.plot(np.degrees(Data['wind direction'][181:359]),(neg1), '-',color = 'darkred',zorder = 2,linewidth = 3)
-         # # # ax.plot(np.degrees(Data['wind direction']), Data['WindDirection']['V1_MCM'][0], 'o',color = 'cornflowerblue',markersize = 3.7,markeredgecolor = 'royalblue',zorder=0)  
-         # ax.plot(np.degrees(Data['wind direction'][181:359]), (neg2) ,'o',color = 'lightcoral',markersize = 8,zorder = 1)
-         
-         
-         # plt.plot(np.degrees(Data['wind direction'][181:359]), np.degrees(neg3),'-',color = 'darkcyan',linewidth = 3,zorder = 2)  
-         # plt.plot(np.degrees(Data['wind direction'][181:359]), np.degrees(neg4),'-',color = 'darkcyan',linewidth = 3,zorder = 2)  
-         
-         # plt.plot(np.degrees(Data['wind direction'][181:359]), np.degrees(neg5),'o',color = 'powderblue',markersize = 8,zorder = 1)  
-         # plt.plot(np.degrees(Data['wind direction'][181:359]), np.degrees(neg6),'o',color = 'powderblue',markersize = 8,zorder = 1)  
-    
-        
          ax.grid('both')
          ax.set_xlabel('Wind Direction [°]',fontsize = plot_param['axes_label_fontsize'])
          ax.set_ylabel('[°]',fontsize = plot_param['axes_label_fontsize'])
@@ -1375,8 +1423,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
     ##################################################
              
 
-    # pdb.set_trace()
-    ###############   Plot photodetector noise   #############################       
+    #%%###############   Plot photodetector noise   #############################       
     if flag_plot_photodetector_noise:
         # Quantifying uncertainty from photodetector and interval domain for the plot Psax is define in the photodetector class properties)
         Psax = (Lidar.photonics.photodetector.Power_interval)
@@ -1399,7 +1446,7 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
         axs1.text(.90,.05,plot_param['Qlunc_version'],transform = axs1.transAxes, fontsize = 14,verticalalignment = 'top',bbox = dict(boxstyle = 'round', facecolor = 'white', alpha = 0.5))
     
 
-################### PLOT COORDINATE SYSTEM DUAL LIDAR ##############################################
+#%%################### PLOT COORDINATE SYSTEM DUAL LIDAR ##############################################
 
     # pdb.set_trace()
 

@@ -82,16 +82,16 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
     if Lidar.optics.scanner.pattern=='lissajous':
         x_out,y_out,z_out = SP.lissajous_pattern(Lidar,Lidar.optics.scanner.lissajous_param[0],Lidar.optics.scanner.lissajous_param[1],Lidar.optics.scanner.lissajous_param[2],Lidar.optics.scanner.lissajous_param[3],Lidar.optics.scanner.lissajous_param[4])
         L                 = len(x_out)
-        wind_direction    = np.radians(np.linspace(Atmospheric_Scenario.wind_direction[0],Atmospheric_Scenario.wind_direction[1],1))
+        wind_direction    = np.radians(np.linspace(Atmospheric_Scenario.wind_direction[0],Atmospheric_Scenario.wind_direction[1],1)) # The 1 is referring to the first wind direction in the wind_direction vector form QluncYaml file
     
     elif Lidar.optics.scanner.pattern=='vertical plane':  
         x_out,y_out,z_out = SP.Verticalplane_pattern(Lidar)
         L                 = len(x_out)
-        wind_direction = np.radians(np.linspace(Atmospheric_Scenario.wind_direction[0],Atmospheric_Scenario.wind_direction[1],1))        
+        wind_direction = np.radians(np.linspace(Atmospheric_Scenario.wind_direction[0],Atmospheric_Scenario.wind_direction[1],1)) # The 1 is referring to the first wind direction in the wind_direction vector form QluncYaml file       
     elif Lidar.optics.scanner.pattern=='horizontal plane':        
         x_out,y_out,z_out = SP.Horizontalplane_pattern(Lidar)
         L                 = len(z_out)
-        wind_direction    = np.radians(np.linspace(Atmospheric_Scenario.wind_direction[0],Atmospheric_Scenario.wind_direction[1],1))        
+        wind_direction    = np.radians(np.linspace(Atmospheric_Scenario.wind_direction[0],Atmospheric_Scenario.wind_direction[1],1))    # The 1 is referring to the first wind direction in the wind_direction vector form QluncYaml file    
     
     else: # One point for all wind directions stated in YAML file
         L=len(Lidar.optics.scanner.focus_dist)
@@ -175,11 +175,11 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
                 U_Vlos['V{}_MCM'.format(i+1)].append(U_Vlos_MCM['V{}'.format(i+1)])
                 U_Vlos['V{}_GUM'.format(i+1)].append(U_Vlos_GUM['V{}'.format(i+1)])
                 
-                SensCoeff_Vlos['V{}_theta'.format(i+1)].append(SensitivityCoeff_VLOS_GUM['V{}_theta'.format(i+1)][0])
-                SensCoeff_Vlos['V{}_psi'.format(i+1)].append(SensitivityCoeff_VLOS_GUM['V{}_psi'.format(i+1)][0])
-                SensCoeff_Vlos['V{}_rho'.format(i+1)].append(SensitivityCoeff_VLOS_GUM['V{}_rho'.format(i+1)][0])
+                SensCoeff_Vlos['V{}_theta'.format(i+1)].append(SensitivityCoeff_VLOS_GUM['V{}_theta'.format(i+1)])
+                SensCoeff_Vlos['V{}_psi'.format(i+1)].append(SensitivityCoeff_VLOS_GUM['V{}_psi'.format(i+1)])
+                SensCoeff_Vlos['V{}_rho'.format(i+1)].append(SensitivityCoeff_VLOS_GUM['V{}_rho'.format(i+1)])
                 
-            
+            # pdb.set_trace()
             # Store Vh
             Vh_['V{}_MCM'.format(ind_alpha+1)].append(Vh_MCM)
             Vh_['V{}_GUM'.format(ind_alpha+1)].append(Vh_GUM)

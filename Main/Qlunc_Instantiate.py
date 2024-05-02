@@ -207,32 +207,7 @@ if  Qlunc_yaml_inputs['Atmospheric_inputs']['TimeSeries']:
     # Atmos_TS_FILE           = './metadata/AtmosphericData/'+Qlunc_yaml_inputs['Atmospheric_inputs']['Atmos_TS_FILE']
     
     date,wind_direction_ref,velocity_lidar,velocity_mast_ref2,velocity_mast_ref,alpha_ref,temperature_meas = SA.getdata('Spd_106m_Mean_m/s','wsp_140m_LMN_Mean_m/s','wsp_106m_LMN_Mean_m/s','Sdir_103m_LMN_Mean_deg','Available_106m_Mean_avail%',90,'Timestamp_datetime',202204200000,202204240000,4,16,'Tabs_103m_LMN_Mean_degC')    
-    # pdb.set_trace()
-
-    
-    
-    # WSL70        = pd.read_csv('C:/SWE_LOCAL/Thesis/Field_data/WSL7_421_10min.csv', sep=None, header=[0,1])
-    # LMN_stat0    = pd.read_csv('C:/SWE_LOCAL/Thesis/Field_data/LMN_Stat_alldata.csv', sep=None, header=[0,1])
-    # WSL70.columns     = WSL70.columns.map('_'.join)
-    # LMN_stat0.columns = LMN_stat0.columns.map('_'.join) 
-    # AtmosphericScenarios_TS = pd.read_csv(Atmos_TS_FILE,delimiter=';',decimal=',')
-    
-    
-    # Atmospheric_inputs = {
-    #                       'temperature' : list(AtmosphericScenarios_TS.loc[:,'T']),    # [K]
-    #                       'humidity'    : list(AtmosphericScenarios_TS.loc[:,'H']),    # [%]
-    #                       'rain'        : list(AtmosphericScenarios_TS.loc[:,'rain']),
-    #                       'fog'         : list(AtmosphericScenarios_TS.loc[:,'fog']),
-    #                       'time'        : list(AtmosphericScenarios_TS.loc[:,'t'])     #for rain and fog intensity intervals might be introduced [none,low, medium high]
-    #                       } 
-    # Atmospheric_inputs = {
-    #                       'Temperature_meas':     list(LMN_stat0.loc[:,'Tabs_103m_LMN_Mean']),
-    #                       'WindDir_ref':          list(LMN_stat0.loc[:,'Sdir_103m_LMN_Mean']),    # [K]
-    #                       'Lidar_Availability':   list(WSL70.loc[:,'Available_106m_Mean']),    # [%]
-    #                       'V_ref':                list(LMN_stat0.loc[:,'wsp_106m_LMN_Mean']),
-    #                       'V_ref2':               list(LMN_stat0.loc[:,'wsp_140m_LMN_Mean']),
-    #                       'time':                 list(LMN_stat0.loc[:,'Timestamp'])     #for rain and fog intensity intervals might be introduced [none,low, medium high]
-    #                       } 
+   
 
     Atmospheric_Scenario = atmosphere(name              = Qlunc_yaml_inputs['Atmospheric_inputs']['Name'],
                                       temperature_dev   = Qlunc_yaml_inputs['Atmospheric_inputs']['Temperature'],
@@ -268,36 +243,36 @@ else:
 
 #%% Run Qlunc for different values of tilt angle
 ########################################################################
-def get_points(radius, center, number_of_points):
-    radians_between_each_point = 2*np.pi/number_of_points
-    list_of_points = []
-    for p in range(0, number_of_points):
-        list_of_points.append( (center[0]+radius*np.cos(p*radians_between_each_point),center[1]+radius*np.sin(p*radians_between_each_point)) )
-    return list_of_points
+# def get_points(radius, center, number_of_points):
+#     radians_between_each_point = 2*np.pi/number_of_points
+#     list_of_points = []
+#     for p in range(0, number_of_points):
+#         list_of_points.append( (center[0]+radius*np.cos(p*radians_between_each_point),center[1]+radius*np.sin(p*radians_between_each_point)) )
+#     return list_of_points
 
-rho = 500
-elevation_angle = np.radians( 13.65)
-center = [rho*np.cos(elevation_angle),0]
-A=get_points(rho*np.cos(elevation_angle),center, 12)
+# rho = 500
+# elevation_angle = np.radians( 13.65)
+# center = [rho*np.cos(elevation_angle),0]
+# A=get_points(rho*np.cos(elevation_angle),center, 12)
 
-x = [A[ii][0] for ii in range(len(A))]
-y = [A[ii][1] for ii in range(len(A))]
+# x = [A[ii][0] for ii in range(len(A))]
+# y = [A[ii][1] for ii in range(len(A))]
 
-x1 = [A[ii][0] for ii in range(1,6)]
-y1 = [A[ii][1] for ii in range(1,6)]
-
-
-x2 = [A[ii][0] for ii in range(7,12)]
-x2 = x2[::-1]
-y2 = [A[ii][1] for ii in range(7,12)]
-y2 = y2[::-1]
+# x1 = [A[ii][0] for ii in range(1,6)]
+# y1 = [A[ii][1] for ii in range(1,6)]
 
 
-z=np.zeros(len(x))
+# x2 = [A[ii][0] for ii in range(7,12)]
+# x2 = x2[::-1]
+# y2 = [A[ii][1] for ii in range(7,12)]
+# y2 = y2[::-1]
 
-Lidar2_pos=list(zip(x1,y1,z))
-Lidar3_pos=list(zip(x2,y2,z))
-Lidar1_pos=list(zip(z,z,z))
+
+# z=np.zeros(len(x))
+
+# Lidar2_pos=list(zip(x1,y1,z))
+# Lidar3_pos=list(zip(x2,y2,z))
+# Lidar1_pos=list(zip(z,z,z))
 
 # plt.plot(x,y,'ob')
 # plt.gca().set_aspect('equal')
@@ -309,15 +284,16 @@ Lidar1_pos=list(zip(z,z,z))
 # plt.plot(x2[0],y2[0],'ro')
 # plt.plot(x2[-1],y2[-1],'ro')
 
-############################################################################################
+#%% Run Qlunc   ############################################################################################
+QluncData = Lidar.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+
 # for i_position in range(len(Lidar2_pos)):
 #     Lidar.optics.scanner.origin = [Lidar1_pos[i_position],Lidar2_pos[i_position],Lidar3_pos[i_position]]
 #     # pdb.set_trace()
 #     Atmospheric_Scenario.wind_tilt = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind tilt']
 #     Atmospheric_Scenario.Vref      = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref']
-for i_tilt in np.linspace(Atmospheric_Scenario.wind_tilt[0],Atmospheric_Scenario.wind_tilt[1],Atmospheric_Scenario.wind_tilt[2]):
-    # for i_Vref in np.linspace(Atmospheric_Scenario.Vref[0],Atmospheric_Scenario.Vref[1],Atmospheric_Scenario.Vref[2]):
-        # pdb.set_trace()
-        # Atmospheric_Scenario.wind_tilt = i_tilt
-        # Atmospheric_Scenario.Vref = i_Vref
-    QluncData = Lidar.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+# for i_tilt in np.linspace(Atmospheric_Scenario.wind_tilt[0],Atmospheric_Scenario.wind_tilt[1],Atmospheric_Scenario.wind_tilt[2]):
+#     for i_Vref in np.linspace(Atmospheric_Scenario.Vref[0],Atmospheric_Scenario.Vref[1],Atmospheric_Scenario.Vref[2]):
+#         Atmospheric_Scenario.wind_tilt = i_tilt
+#         Atmospheric_Scenario.Vref = i_Vref
+#         QluncData = Lidar.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
