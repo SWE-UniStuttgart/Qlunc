@@ -185,12 +185,25 @@ def plotting(Lidar,Qlunc_yaml_inputs,Data,flag_plot_photodetector_noise, flag_pl
             r'$r_{\varphi_{2},\theta_{1}}~ =%.2f$' % (Lidar.optics.scanner.correlations[14])))    
 
             ax0[0].text(.92, 0.80, textstr0,  fontsize = 16,horizontalalignment = 'left',verticalalignment = 'top', bbox = props0, transform=plt.gcf().transFigure) 
-                    
+        pdb.set_trace()
+        
+        
+        #Sort the elements of wind direction (necessary when working with TimeSeries)
+        
+        # Sort wind direction and get the sorting indexes
+        windDirection_sortI =  np.argsort(Data['wind direction']) 
+        WindDir             =  np.sort(Data['wind direction'])        
+        
+        # Sort Uncertainty vectors with the indexes WindDirection_sortI
+        U_WindDir_p   = [np.concatenate( Data['WinDir Unc [°]']['Uncertainty wind direction GUM'][i], axis=0 ) for i in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction GUM']))] # Transforming format        
+        UWindDir_GUM  = [U_WindDir_p[i][windDirection_sortI.argsort()] for i in range(len(U_WindDir_p))]
+        UWindDir_MCM  = [np.array(Data['WinDir Unc [°]']['Uncertainty wind direction MCM'][i])[windDirection_sortI.argsort()] for i in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction MCM'])) ]
+        
         for ind_plot in range(len(Data['WinDir Unc [°]']['Uncertainty wind direction MCM'])):
             
             cc=next(color1)
-            ax0[0].plot(np.degrees(Data['wind direction']),Data['WinDir Unc [°]']['Uncertainty wind direction GUM'][ind_plot],'-', color=cc,label=r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))
-            ax0[0].plot(np.degrees(Data['wind direction']),Data['WinDir Unc [°]']['Uncertainty wind direction MCM'][ind_plot],'o', markerfacecolor=cc,markeredgecolor='lime',alpha=0.4,label='MCM')        
+            ax0[0].plot(np.degrees(WindDir),UWindDir_GUM[ind_plot],'-', color=cc,label=r'GUM ($\alpha$={})'.format(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][ind_plot] ))
+            ax0[0].plot(np.degrees(WindDir),UWindDir_MCM[ind_plot],'o', markerfacecolor=cc,markeredgecolor='lime',alpha=0.4,label='MCM')        
         
         # Legend
         ax0[0].legend(loc=1, prop={'size': plot_param['legend_fontsize']-5})
