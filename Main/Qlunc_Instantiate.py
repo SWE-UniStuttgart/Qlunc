@@ -206,7 +206,7 @@ if  Qlunc_yaml_inputs['Atmospheric_inputs']['TimeSeries']:
 
     # Atmos_TS_FILE           = './metadata/AtmosphericData/'+Qlunc_yaml_inputs['Atmospheric_inputs']['Atmos_TS_FILE']
     
-    date,wind_direction_ref,velocity_lidar,velocity_mast_ref2,velocity_mast_ref,alpha_ref,temperature_meas = SA.getdata('Spd_106m_Mean_m/s','wsp_140m_LMN_Mean_m/s','wsp_106m_LMN_Mean_m/s','Sdir_103m_LMN_Mean_deg','Available_106m_Mean_avail%',90,'Timestamp_datetime',202204200000,202204240000,4,16,'Tabs_103m_LMN_Mean_degC')    
+    date,wind_direction_ref,velocity_lidar,velocity_mast_ref2,velocity_mast_ref,alpha_ref,temperature_meas = SA.getdata('Spd_106m_Mean_m/s','wsp_140m_LMN_Mean_m/s','wsp_106m_LMN_Mean_m/s','Sdir_103m_LMN_Mean_deg','Available_106m_Mean_avail%',90,'Timestamp_datetime',202204201200,202204241200,4,16,'Tabs_103m_LMN_Mean_degC')    
    
 
     Atmospheric_Scenario = atmosphere(name              = Qlunc_yaml_inputs['Atmospheric_inputs']['Name'],
