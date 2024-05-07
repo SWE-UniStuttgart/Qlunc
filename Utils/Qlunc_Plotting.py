@@ -1556,7 +1556,7 @@ ax.plot(x, y, z,'k--',linewidth=3,label='Rotor area')
 from Utils import Qlunc_Help_standAlone as SA
 x1,y1,z1=[500,0],[0,0],[119,1] 
 
-x1,y1,z1=SA.cart2sph(x0,y0,z0)
+# x1,y1,z1=SA.cart2sph(x0,y0,z0)
 
 
 p = Wedge((0, 119), 89.15,0,360,alpha=0.9,label='Rotor diameter',width=3, ls='--')
