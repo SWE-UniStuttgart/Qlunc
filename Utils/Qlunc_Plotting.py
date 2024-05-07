@@ -1472,104 +1472,181 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
 
     # pdb.set_trace()
 
-    # fig = plt.figure()
-    # ax = fig.add_subplot(projection='3d')
+    fig = plt.figure()
+    ax = fig.add_subplot(projection='3d')
     
-    # r = 89
-    # x0 = 500 # To have the tangent at y=0
-    # z0 = 119
+    r = 89
+    x0 = 500 # To have the tangent at y=0
+    z0 = 119
     
-    # # Theta varies only between pi/2 and 3pi/2. to have a half-circle
-    # theta = np.linspace(0., 2*np.pi, 161)
+    # Theta varies only between pi/2 and 3pi/2. to have a half-circle
+    theta = np.linspace(0., 2*np.pi, 161)
     
-    # x = np.zeros_like(theta)+x0 # x=0
-    # y = r*np.cos(theta)  # y - y0 = r*cos(theta)
-    # z = r*np.sin(theta) + z0 # z - z0 = r*sin(theta)
-    # ax.plot(x, y, z,'k--',linewidth=2,label='Rotor area')
-    
-    
-    # # # 2lidars
-    # # # x1,y1,z1=[500,0],[0,-150],[119,1] 
-    # # # x2,y2,z2=[500,0],[ 0,150],[119,1] 
+    x = np.zeros_like(theta)+x0 # x=0
+    y = r*np.cos(theta)  # y - y0 = r*cos(theta)
+    z = r*np.sin(theta) + z0 # z - z0 = r*sin(theta)
+    ax.plot(x, y, z,'k--',linewidth=2,label='Rotor area')
     
     
-    # # # 3 lidars
-    # x1,y1,z1=[500,0],[0,-0],[119,1] 
-    # x2,y2,z2=[500,728.46],[ 0,420.58],[119,1] 
-    # x3,y3,z3=[500,728.46],[ 0,-420.58],[119,1] 
-    
-    
-    # # p = Rectangle((Qlunc_yaml_inputs['Components']['Scanner']['Vertical plane parameters'][1], Qlunc_yaml_inputs['Components']['Scanner']['Vertical plane parameters'][3]), Qlunc_yaml_inputs['Components']['Scanner']['Vertical plane parameters'][2]*2,Qlunc_yaml_inputs['Components']['Scanner']['Vertical plane parameters'][1]*2,alpha=0.387,label='Scanned area')
-    # # ax.add_patch(p)
-    # # art3d.pathpatch_2d_to_3d(p, z=Qlunc_yaml_inputs['Components']['Scanner']['Vertical plane parameters'][0], zdir="x")
-    
-    
-    
+    # # 2lidars
     # # x1,y1,z1=[500,0],[0,-150],[119,1] 
     # # x2,y2,z2=[500,0],[ 0,150],[119,1] 
-    # # p = Wedge((0, 119), 89.15,0,359,alpha=0.5,label='WT area',width=1.71, ls='--')
-    # # ax.add_patch(p)
-    # # art3d.pathpatch_2d_to_3d(p, z=500, zdir="x")
-    # ax.scatter(500,0, 119, c='r', s=50, marker='o', label=r'$P~(x,y,z)$')
-    # ax.scatter(0, -0, 1, c='b', s=50, marker='s', label=r'$Lidars$')
-    # ax.scatter(728.46, 420.58, 1, c='b', s=50, marker='s')
-    # ax.scatter(728.46, -420.58, 1, c='b', s=50, marker='s')
-    # ax.set_box_aspect((np.ptp(x1), np.ptp(y1), np.ptp(z1)))  # aspect ratio is 1:1:1 in data space
-    # ax.set_box_aspect((np.ptp(x2), np.ptp(y2), np.ptp(z2)))  # aspect ratio is 1:1:1 in data space
-    # ax.set_box_aspect((np.ptp(x3), np.ptp(y3), np.ptp(z3)))  # aspect ratio is 1:1:1 in data space
-    
-    # ax.plot(x1, y1, z1, color='magenta',linestyle='dashed')
-    # ax.plot(x2, y2, z2, color='magenta',linestyle='dashed')
-    # ax.plot(x3, y3, z3, color='magenta',linestyle='dashed')
     
     
-    # ax.set_xlabel('X [m]', fontsize=21,labelpad=15)
-    # ax.set_ylabel('Y [m]', fontsize=21,labelpad=15)
-    # ax.set_zlabel('Z [m]', fontsize=21,labelpad=15)
-    # ax.set_zlim([0,250])
-    # ax.set_xlim([-20,850])
-    # plt.legend(loc="best", fontsize=16.23)
+    # # 3 lidars
+    x1,y1,z1=[500,0],[0,-0],[119,1] 
+    x2,y2,z2=[500,728.46],[ 0,420.58],[119,1] 
+    x3,y3,z3=[500,728.46],[ 0,-420.58],[119,1] 
     
-    # ax.xaxis.set_tick_params(labelsize=15)
-    # ax.yaxis.set_tick_params(labelsize=15)
-    # ax.zaxis.set_tick_params(labelsize=15)
+    
+    # p = Rectangle((Qlunc_yaml_inputs['Components']['Scanner']['Vertical plane parameters'][1], Qlunc_yaml_inputs['Components']['Scanner']['Vertical plane parameters'][3]), Qlunc_yaml_inputs['Components']['Scanner']['Vertical plane parameters'][2]*2,Qlunc_yaml_inputs['Components']['Scanner']['Vertical plane parameters'][1]*2,alpha=0.387,label='Scanned area')
+    # ax.add_patch(p)
+    # art3d.pathpatch_2d_to_3d(p, z=Qlunc_yaml_inputs['Components']['Scanner']['Vertical plane parameters'][0], zdir="x")
+    
+    
+    
+    # x1,y1,z1=[500,0],[0,-150],[119,1] 
+    # x2,y2,z2=[500,0],[ 0,150],[119,1] 
+    # p = Wedge((0, 119), 89.15,0,359,alpha=0.5,label='WT area',width=1.71, ls='--')
+    # ax.add_patch(p)
+    # art3d.pathpatch_2d_to_3d(p, z=500, zdir="x")
+    ax.scatter(500,0, 119, c='r', s=50, marker='o', label=r'$P~(x,y,z)$')
+    ax.scatter(0, -0, 1, c='b', s=50, marker='s', label=r'$Lidars$')
+    ax.scatter(728.46, 420.58, 1, c='b', s=50, marker='s')
+    ax.scatter(728.46, -420.58, 1, c='b', s=50, marker='s')
+    ax.set_box_aspect((np.ptp(x1), np.ptp(x1), np.ptp(x1)))  # aspect ratio is 1:1:1 in data space
+    ax.set_box_aspect((np.ptp(x2), np.ptp(y2), np.ptp(z2)))  # aspect ratio is 1:1:1 in data space
+    ax.set_box_aspect((np.ptp(x3), np.ptp(y3), np.ptp(z3)))  # aspect ratio is 1:1:1 in data space
+    
+    ax.plot(x1, y1, z1, color='magenta',linestyle='dashed')
+    ax.plot(x2, y2, z2, color='magenta',linestyle='dashed')
+    ax.plot(x3, y3, z3, color='magenta',linestyle='dashed')
+    
+    
+    ax.set_xlabel('X [m]', fontsize=21,labelpad=15)
+    ax.set_ylabel('Y [m]', fontsize=21,labelpad=15)
+    ax.set_zlabel('Z [m]', fontsize=21,labelpad=15)
+    ax.set_zlim([0,250])
+    ax.set_xlim([-20,850])
+    plt.legend(loc="best", fontsize=16.23)
+    
+    ax.xaxis.set_tick_params(labelsize=15)
+    ax.yaxis.set_tick_params(labelsize=15)
+    ax.zaxis.set_tick_params(labelsize=15)
     
 
 
-#######################################################################################################################
-# fig = plt.figure()
-# ax = fig.gca(projection='3d')
+##################### Single system #################################################################################################
+fig = plt.figure()
+ax = fig.add_subplot(projection='3d')
+   
+
+r = 89
+x0 = 500 # To have the tangent at y=0
+z0 = 119
+
+# Theta varies only between pi/2 and 3pi/2. to have a half-circle
+theta = np.linspace(0., 2*np.pi, 161)
+
+x = np.zeros_like(theta)+x0 # x=0
+y = r*np.cos(theta)  # y - y0 = r*cos(theta)
+z = r*np.sin(theta) + z0 # z - z0 = r*sin(theta)
+ax.plot(x, y, z,'k--',linewidth=3,label='Rotor area')
+
+from Utils import Qlunc_Help_standAlone as SA
+x1,y1,z1=[500,0],[0,0],[119,1] 
+
+x1,y1,z1=SA.cart2sph(x0,y0,z0)
 
 
-# x1,y1,z1=[500,0],[0,-150],[119,1] 
-# x2,y2,z2=[500,0],[ 0,150],[119,1] 
-# p =plt.patches.Rectangle((89.15, 29.84), -89.15*2,89.15*2,alpha=0.37)
-# ax.add_patch(p)
-# art3d.pathpatch_2d_to_3d(p, z=500, zdir="x")
+p = Wedge((0, 119), 89.15,0,360,alpha=0.9,label='Rotor diameter',width=3, ls='--')
+ax.add_patch(p)
+art3d.pathpatch_2d_to_3d(p, z=500, zdir="x")
+ax.scatter(500,0, 119, c='r', s=50, marker='o', label=r'$P~(x,y,z)$')
+ax.scatter(0, 0, 1, c='b', s=50, marker='s', label=r'$Lidar_1~and~Lidar_2$')
+
+ax.plot(x1, y1, z1, color='g',linestyle='dashed')
+
+ax.set_xlabel('X [m]', fontsize=40,labelpad=25)
+ax.set_ylabel('Y [m]', fontsize=40,labelpad=25)
+ax.set_zlabel('Z [m]', fontsize=40,labelpad=30)
+ax.set_zlim([0,250])
+ax.set_xlim([0,550])
+plt.legend(loc="best", fontsize=16.23)
+
+ax.xaxis.set_tick_params(labelsize=25,pad=5)
+ax.yaxis.set_tick_params(labelsize=25,pad=5)
+ax.zaxis.set_tick_params(labelsize=25,pad=15)
 
 
 
-# x1,y1,z1=[500,0],[0,-150],[119,1] 
-# x2,y2,z2=[500,0],[ 0,150],[119,1] 
+
+
+#%% Print the three cases 
+fig = plt.figure(figsize=plt.figaspect(0.19))
+ax0 = fig.add_subplot(1,3,1,projection='3d')
+ax1 = fig.add_subplot(1,3,2,projection='3d')
+ax2 = fig.add_subplot(1,3,3,projection='3d')
+
+
+from Utils import Qlunc_Help_standAlone as SA
+# x1,y1,z1=[500,0],[0,0],[119,1] 
+x0,y0,z0=np.linspace(499.8,499.8,40),np.radians(np.linspace(0,90,40)),np.radians(np.linspace(0,0,40))
+x0,y0,z0=SA.sph2cart(x0,y0,z0)
+
+x1,y1,z1=np.linspace(499.8,499.8,40),np.radians(np.linspace(13.6,13.6,40)),np.radians(np.linspace(0,359,40))
+x1,y1,z1=SA.sph2cart(x1,y1,z1)
+
+x2,y2,z2=np.linspace(10,5000,30),np.radians(np.linspace(13.6,13.6,30)),np.radians(np.linspace(0,0,30))
+x2,y2,z2=SA.sph2cart(x2,y2,z2)
+
+
+
+
 # p = Wedge((0, 119), 89.15,0,360,alpha=0.9,label='Rotor diameter',width=3, ls='--')
 # ax.add_patch(p)
 # art3d.pathpatch_2d_to_3d(p, z=500, zdir="x")
 # ax.scatter(500,0, 119, c='r', s=50, marker='o', label=r'$P~(x,y,z)$')
-# ax.scatter(0, -150, 1, c='b', s=50, marker='s', label=r'$Lidar_1~and~Lidar_2$')
-# ax.scatter(0, 150, 1, c='b', s=50, marker='s')
+ax0.scatter(0, 0, 1, c='b', s=50, marker='s', label='Lidar')
+ax1.scatter(0, 0, 1, c='b', s=50, marker='s', label='Lidar')
+ax2.scatter(0, 0, 1, c='b', s=50, marker='s', label='Lidar')
 
-# ax.arrow
-# ax.plot(x1, y1, z1, color='g',linestyle='dashed')
-# ax.plot(x2, y2, z2, color='g',linestyle='dashed')
+ax0.scatter(x0, y0 ,z0, color='r',linestyle='solid', label='scan')
+plt.legend(loc="lower center", fontsize=16.23)
+ax1.scatter(x1, y1, z1, color='r',linestyle='solid', label='scan')
+ax2.scatter(x2, y2, z2, color='r',linestyle='solid', label='scan')
 
-# ax.set_xlabel('X [m]', fontsize=21,labelpad=15)
-# ax.set_ylabel('Y [m]', fontsize=21,labelpad=15)
-# ax.set_zlabel('Z [m]', fontsize=21,labelpad=15)
-# ax.set_zlim([0,250])
-# ax.set_xlim([0,550])
+
+ax0.set_xlabel('X [m]', fontsize=30,labelpad=15)
+ax0.set_ylabel('Y [m]', fontsize=30,labelpad=25)
+ax0.set_zlabel('Z [m]', fontsize=30,labelpad=15)
+ax0.set_zlim([0,550])
+ax0.set_xlim([0,550])
+plt.legend(loc='lower center', fontsize=25)
+
+ax0.xaxis.set_tick_params(labelsize=20)
+ax0.yaxis.set_tick_params(labelsize=20)
+ax0.zaxis.set_tick_params(labelsize=20)
+
+ax1.set_xlabel('X [m]', fontsize=30,labelpad=15)
+ax1.set_ylabel('Y [m]', fontsize=30,labelpad=28)
+ax1.set_zlabel('Z [m]', fontsize=30,labelpad=15)
+ax1.set_zlim([0,150])
+ax1.set_xlim([-550,550])
 # plt.legend(loc="best", fontsize=16.23)
 
-# ax.xaxis.set_tick_params(labelsize=15)
-# ax.yaxis.set_tick_params(labelsize=15)
-# ax.zaxis.set_tick_params(labelsize=15)
+ax1.xaxis.set_tick_params(labelsize=20)
+ax1.yaxis.set_tick_params(labelsize=20,pad=10)
+ax1.zaxis.set_tick_params(labelsize=20)
 
+
+ax2.set_xlabel('X [m]', fontsize=30,labelpad=30)
+ax2.set_ylabel('Y [m]', fontsize=30,labelpad=25)
+ax2.set_zlabel('Z [m]', fontsize=30,labelpad=25)
+ax2.set_zlim([0,1250])
+ax2.set_xlim([0,5500])
+# plt.legend(loc="best", fontsize=16.23)
+
+ax2.xaxis.set_tick_params(labelsize=20)
+ax2.yaxis.set_tick_params(labelsize=20)
+ax2.zaxis.set_tick_params(labelsize=20,pad=10)
