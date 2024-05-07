@@ -42,7 +42,7 @@ n_fftpoints      = L;       % n° of points for each block (fft points).
 fd               = 2*V_ref/lidar_wavelength;  % Doppler frequency corresponding to Vref
 level_noise      = 5e-11; % Hardware noise added before signal downmixing
 n_pulses         = 1;   % n pulses for averaging the spectra
-N_MC             = 1e6; % n° MC samples to calculate the uncertainty due to bias in sampling frequency and wavelength
+N_MC             = 1e4; % n° MC samples to calculate the uncertainty due to bias in sampling frequency and wavelength
 Dp               = L*2.9e8*.5/fs_av;
 %% Uncertainty in the signal processing.
 
@@ -88,8 +88,8 @@ for ind_npulses = 1:n_pulses
         % Signal + Hardware noise:
         noise      = level_noise*randn(size(t{ind_fs}));
         
-        S{ind_fs}         = noise+(7.4*sin(2*pi*fd.*t{ind_fs}) - 0.1*sin(2*pi*1.9*abs(randn(1,1))*fd*t{ind_fs}) + 1.1*sin(2*pi*3*abs(randn(1,1))*fd*t{ind_fs})+...
-                            0.24*sin(2*pi*6*abs(randn(1,1))*fd.*t{ind_fs}) + 0.7*sin(2*pi*2*abs(randn(1,1))*fd*t{ind_fs}) - 0.4*sin(2*pi*abs(randn(1,1))*fd*t{ind_fs})); % Adding up Signal contributors
+        S{ind_fs}         = noise+(7.4e-10*sin(2*pi*fd.*t{ind_fs}) - 0.1e-10*sin(2*pi*1.9*abs(randn(1,1))*fd*t{ind_fs}) + 1.1e-10*sin(2*pi*3*abs(randn(1,1))*fd*t{ind_fs})+...
+                            0.24e-10*sin(2*pi*6*abs(randn(1,1))*fd.*t{ind_fs}) + 0.7e-10*sin(2*pi*2*abs(randn(1,1))*fd*t{ind_fs}) - 0.4e-10*sin(2*pi*abs(randn(1,1))*fd*t{ind_fs})); % Adding up Signal contributors
 
         
         
@@ -331,7 +331,7 @@ pd = fitdist(fd_peak(:,1),'Normal')
 
 %%%%% Plot calculated spectrum %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 figure, hold on
-for in_fft=2 %1:length(fs)
+for in_fft=1:2
 
     plot(fr{in_fft},pxx{in_fft},'*')
 
@@ -339,7 +339,7 @@ end
 legend show
 grid on
 xlabel('Frequency (Hz)')
-ylabel('Power Spectrum (dB)')
+ylabel('Power Spectrum (w)')
 title('Default Frequency Resolution')
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%% Plot matlab spectrum %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -348,7 +348,7 @@ title('Default Frequency Resolution')
 
 % In DB
 figure, hold on
-for in_fft=1:length(fs)
+for in_fft=1:2
 
     plot(fr{in_fft},pow2db(pxx{in_fft}))
 
@@ -360,17 +360,17 @@ ylabel('Power Spectrum (dB)')
 title('Default Frequency Resolution')
 
 % In Watts
-figure, hold on
-for in_fft=2 %1:length(fs)
-
-    plot(fr{in_fft},pxx{in_fft})
-
-end
-legend show
-grid on
-xlabel('Frequency (Hz)')
-ylabel('Power Spectrum (dB)')
-title('Default Frequency Resolution')
+% figure, hold on
+% for in_fft=2 %1:length(fs)
+% 
+%     plot(fr{in_fft},pxx{in_fft})
+% 
+% end
+% legend show
+% grid on
+% xlabel('Frequency (Hz)')
+% ylabel('Power Spectrum (w)')
+% title('Default Frequency Resolution')
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
