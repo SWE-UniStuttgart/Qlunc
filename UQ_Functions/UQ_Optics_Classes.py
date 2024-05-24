@@ -63,7 +63,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
     Vh_                                                                     = {'V1_MCM'   : [],'V2_MCM'   : [],'V3_MCM'   : [],'V1_GUM'  : [],'V2_GUM'  : [],'V3_GUM'  : [],'V1_MCM_mean'  : [],'V2_MCM_mean'  : [],'V3_MCM_mean'  : []}
     Correlation_coeff                                                       = {'V12_MCM'  : [],'V13_MCM'  : [],'V23_MCM'  : [],'V12_GUM' : [],'V13_GUM' : [],'V23_GUM' : []}
     SensCoeff_Vlos                                                          = {'V1_theta' : [],'V2_theta' : [],'V3_theta' : [],'V1_psi'  : [],'V2_psi'  : [],'V3_psi'  : [],'V1_rho' : [],'V2_rho' : [],'V3_rho' : [],'W1' : [],'W2' : [],'W1W2' : [],'W4' : [],'W5' : [],'W6' : []}
-    WindDirection_                                                           = {'V1_MCM'   : [],'V2_MCM'   : [],'V3_MCM'   : [],'V1_GUM'  : [],'V2_GUM'  : [],'V3_GUM':[],'V1_MCM_mean'  : [],'V2_MCM_mean'  : [],'V3_MCM_mean'  : []}
+    WindDirection_                                                          = {'V1_MCM'   : [],'V2_MCM'   : [],'V3_MCM'   : [],'V1_GUM'  : [],'V2_GUM'  : [],'V3_GUM':[],'V1_MCM_mean'  : [],'V2_MCM_mean'  : [],'V3_MCM_mean'  : []}
      
     Href  = Qlunc_yaml_inputs['Components']['Scanner']['Href'],
     V_ref  = Atmospheric_Scenario.Vref
@@ -274,7 +274,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
                                'Conditional M'   : M}
     # Lidar.lidar_inputs.dataframe['Scanner'] = {'Focus distance':Final_Output_UQ_Scanner['lidars'][0],'Elevation angle':Final_Output_UQ_Scanner['Elevation angle'][0],'Azimuth':Final_Output_UQ_Scanner['Azimuth'][0]}
     DataFrame['Uncertainty Scanner']=Final_Output_UQ_Scanner    
-   
+    # pdb.set_trace()
     #%% 7) Plotting data
     QPlot.plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,False,Qlunc_yaml_inputs['Flags']['Wind direction uncertainty'],Qlunc_yaml_inputs['Flags']['Wind velocity uncertainty'],Qlunc_yaml_inputs['Flags']['Line of sight velocity uncertainty'],Qlunc_yaml_inputs['Flags']['PDFs'],Qlunc_yaml_inputs['Flags']['Coverage interval'])  
     
