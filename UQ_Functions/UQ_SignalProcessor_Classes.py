@@ -45,7 +45,7 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
     n_fftpoints          = L #2**8      # n° of points for each block (fft points).
     fd                   = [2 * i_V / lidar_wavelength for i_V in V_ref]  # Doppler frequency corresponding to Vref
     n_pulses             = 1        #   % n pulses for averaging the spectra
-    N_MC                 = 500 # n° MC samples to calculate the uncertainty due to bias in sampling frequency and wavelength
+    N_MC                 = 5000 # n° MC samples to calculate the uncertainty due to bias in sampling frequency and wavelength
 
     #%% Uncertainty due to hardware noise, signal processing and speckle interference:
     
