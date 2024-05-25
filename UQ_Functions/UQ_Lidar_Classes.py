@@ -77,16 +77,17 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     #%% Save data
     if Qlunc_yaml_inputs['Flags']['Save data']:
+        # pdb.set_trace()
         #Define the name based on the measuring configuration parameters
         filename = "Q_output_P"+"["+ str(Lidar.optics.scanner.cone_angle[0]) + "," + str(Lidar.optics.scanner.azimuth[0])+ "," +str(Lidar.optics.scanner.focus_dist[0])   + "]"
         for ind_loop in range (len( Lidar.optics.scanner.origin)):
             filename += ('_L{}_'.format(ind_loop+1)+str(Lidar.optics.scanner.origin[ind_loop]))
-        filename=filename+'_tilt{}'.format(np.round(Atmospheric_Scenario.wind_tilt,2))+'_Vref{}'.format(np.round(Atmospheric_Scenario.Vref,2))    
+        filename=filename+'_tilt{}'.format(np.round(Atmospheric_Scenario.wind_tilt,2))+'_Vref{}'.format(int(Atmospheric_Scenario.Vref[0]))    
         # Define the path where to store the data
         path = ".\\Qlunc_Output\\"+filename + ".pkl"
         # Store the dictionary 
         if os.path.isfile(path):
-            print(colored('The lidar output file already exists.', 'red',attrs=['bold']))
+            print(colored('Numerical data already exists and has not been replaced. Figures saved. ', 'red',attrs=['bold']))
             
         else:
                     
