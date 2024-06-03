@@ -767,7 +767,7 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
         plt.subplots_adjust(right=0.99,left = 0.075,top = 0.97,bottom = 0.075,wspace = 0.3,hspace = 0.37)    
 
         plt.show() 
-        pdb.set_trace()
+        # pdb.set_trace()
         if  Qlunc_yaml_inputs['Flags']['Save data']:
             pickle.dump(fig_All, open("C:/SWE_LOCAL/Thesis/Figures/Results/Velocity/Vlos/".format(len(Lidar.optics.scanner.origin))+"U_Panel.pickle", "wb"))
             # pickle.dump(fig_psi, open("C:/SWE_LOCAL/Thesis/Figures/Results/Velocity/Vlos/".format(len(Lidar.optics.scanner.origin))+"U_Psi.pickle", "wb"))
