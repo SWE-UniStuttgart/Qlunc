@@ -54,10 +54,11 @@ std_fs_av   = (per)*fs_av;%/sqrt(3); % 2e-6*fs_av; %
 % Distribution for fs
 
 % Normal distribution
-% fs          = [fs_av;std_fs_av.*randn(N_MC,1) + fs_av];
+fs          = [fs_av;normrnd(fs_av,std_fs_av,N_MC,1)];
+% fs          = [fs_av;std_fs_av.*randn(N_MC,1)];
 
 %Uniform distribution
-fs          = [fs_av;unifrnd(fs_av-std_fs_av,fs_av+std_fs_av,1,N_MC)'];
+%fs          = [fs_av;unifrnd(fs_av-std_fs_av,fs_av+std_fs_av,1,N_MC)'];
 
 Ts          = 1./fs;
 
@@ -73,7 +74,8 @@ stdv_wavelength  = 1e-9/sqrt(3); % m
 wavelength_noise = lidar_wavelength+stdv_wavelength*randn(N_MC+1,1); % Noisy wavelength vector
 % e_perc_wavelength = 100*wavelength_noise/lidar_wavelength;
 
-
+% Signal + Hardware noise:
+noise      = level_noise*randn(N_MC+1,1);
 
 %% Loop to calculate the frequency spectra for each fs
 
@@ -85,10 +87,10 @@ for ind_npulses = 1:n_pulses
         t{ind_fs} = (0:n_fftpoints-1)*Ts(ind_fs); %#ok<SAGROW> %time vector
         f{ind_fs}  = linspace(0,fs(ind_fs)/2,floor(length(t{ind_fs}))/2+1); %#ok<SAGROW> % floor()"/2+1" is added to match the length of the double-sided spectrum (P1)
         
-        % Signal + Hardware noise:
-        noise      = level_noise*randn(size(t{ind_fs}));
+%         % Signal + Hardware noise:
+%         noise      = level_noise*randn(size(t{ind_fs}));
         
-        S{ind_fs}         = noise+(7.4e-10*sin(2*pi*fd.*t{ind_fs}) - 0.1e-10*sin(2*pi*1.9*abs(randn(1,1))*fd*t{ind_fs}) + 1.1e-10*sin(2*pi*3*abs(randn(1,1))*fd*t{ind_fs})+...
+        S{ind_fs}         = noise(ind_fs)+(7.4e-10*sin(2*pi*fd.*t{ind_fs}) - 0.1e-10*sin(2*pi*1.9*abs(randn(1,1))*fd*t{ind_fs}) + 1.1e-10*sin(2*pi*3*abs(randn(1,1))*fd*t{ind_fs})+...
                             0.24e-10*sin(2*pi*6*abs(randn(1,1))*fd.*t{ind_fs}) + 0.7e-10*sin(2*pi*2*abs(randn(1,1))*fd*t{ind_fs}) - 0.4e-10*sin(2*pi*abs(randn(1,1))*fd*t{ind_fs})); % Adding up Signal contributors
 
         
@@ -317,8 +319,8 @@ hold off
 % Peak f_d distribution
 
 figure,
-histfit(fd_peak(:,1))
-pd = fitdist(fd_peak(:,1),'Normal')
+histfit(fd_peak(2:end,1))
+pd = fitdist(fd_peak(2:end,1),'Normal')
 % figure,
 % histogram(noise,'displayname','Probability distribution noise')
 % leg=legend;
