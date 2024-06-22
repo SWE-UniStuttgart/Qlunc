@@ -484,9 +484,11 @@ def Vlos_correlations(Lidar,Vlos_corr,Atmospheric_Scenario,wind_direction, ind_w
         Theta_cr = [Theta1_cr , Theta2_cr ] 
         Psi_cr   = [Psi1_cr , Psi2_cr  ]
         Rho_cr   = [Rho1_cr , Rho2_cr]
-    
+    # pdb.set_trace()
     Vlos_cr,U_Vlos_MCM=[],[]    
-    beta=np.radians(np.linspace(Atmospheric_Scenario.wind_tilt[0],Atmospheric_Scenario.wind_tilt[1],Atmospheric_Scenario.wind_tilt[2]))
+    # beta=np.radians(np.linspace(Atmospheric_Scenario.wind_tilt[0],Atmospheric_Scenario.wind_tilt[1],Atmospheric_Scenario.wind_tilt[2]))
+    beta=np.radians(Atmospheric_Scenario.wind_tilt)
+    # pdb.set_trace()
     for i in range(len(Lidar.optics.scanner.origin)):
         H_cr= (Rho_cr[i] * np.sin(Theta_cr[i]) + Lidar.optics.scanner.origin[i][2]) / Lidar.optics.scanner.Href
         ### VLOS calculations ############################  
@@ -614,7 +616,7 @@ def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,alpha,li
             U_Vh_MCM.append(np.std(Vh[ind_wind_dir]))
             Vh_MCM_mean.append(np.sqrt(np.mean(u)**2 + np.mean(v)**2))
             
-
+            pdb.set_trace()
     # Store the multivariate distributions
     Mult_param          =  [Vlos1_MC_cr2_s,Vlos2_MC_cr2_s,Vlos3_MC_cr2_s,Theta1_cr2_s,Theta2_cr2_s,Theta3_cr2_s,Psi1_cr2_s,Psi2_cr2_s,Psi3_cr2_s,Rho1_cr2_s,Rho2_cr2_s,Rho3_cr2_s,Theta_cr,Psi_cr,Rho_cr]
     return Vlos_corr_MCM,U_Vlos_MCM , Mult_param  , U_Vh_MCM,Vh,Vh_MCM_mean
@@ -639,8 +641,10 @@ def GUM_Vlos_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,alpha,l
     Corrcoef_Vlos=[]
     
     # Tilt angle:
-    beta=np.radians(np.linspace(Atmospheric_Scenario.wind_tilt[0],Atmospheric_Scenario.wind_tilt[1],Atmospheric_Scenario.wind_tilt[2]))
-    
+    # beta=np.radians(np.linspace(Atmospheric_Scenario.wind_tilt[0],Atmospheric_Scenario.wind_tilt[1],Atmospheric_Scenario.wind_tilt[2]))
+    # pdb.set_trace()
+    beta=np.radians(Atmospheric_Scenario.wind_tilt)
+
     for ind_wind_dir in range(len(wind_direction)):  
         
         # VLOS
