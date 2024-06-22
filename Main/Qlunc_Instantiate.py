@@ -285,15 +285,15 @@ else:
 # plt.plot(x2[-1],y2[-1],'ro')
 
 #%% Run Qlunc   ############################################################################################
-QluncData = Lidar.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+# QluncData = Lidar.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
 
 # for i_position in range(len(Lidar2_pos)):
 #     Lidar.optics.scanner.origin = [Lidar1_pos[i_position],Lidar2_pos[i_position],Lidar3_pos[i_position]]
 #     # pdb.set_trace()
 #     Atmospheric_Scenario.wind_tilt = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind tilt']
 #     Atmospheric_Scenario.Vref      = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref']
-# for i_tilt in np.linspace(Atmospheric_Scenario.wind_tilt[0],Atmospheric_Scenario.wind_tilt[1],Atmospheric_Scenario.wind_tilt[2]):
-#     for i_Vref in np.linspace(Atmospheric_Scenario.Vref[0],Atmospheric_Scenario.Vref[1],Atmospheric_Scenario.Vref[2]):
-#         Atmospheric_Scenario.wind_tilt = i_tilt
-#         Atmospheric_Scenario.Vref = i_Vref
-#         QluncData = Lidar.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+for i_tilt in np.linspace(Atmospheric_Scenario.wind_tilt[0],Atmospheric_Scenario.wind_tilt[1],Atmospheric_Scenario.wind_tilt[2]):
+    # for i_Vref in np.linspace(Atmospheric_Scenario.Vref[0],Atmospheric_Scenario.Vref[1],Atmospheric_Scenario.Vref[2]):
+        Atmospheric_Scenario.wind_tilt = i_tilt
+        # Atmospheric_Scenario.Vref = i_Vref
+        QluncData = Lidar.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
