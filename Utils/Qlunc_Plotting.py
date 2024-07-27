@@ -32,7 +32,7 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
     pickle.dump(fig, open("C:/Users/fcosta/Desktop/test_fig.pickle", "wb"))
 
     # load figure from file
-    fig = pickle.load(open("C:/SWE_LOCAL/Thesis/Figures/Results/Velocity/3D/Unc/Corr_WindVelocity_3D_All05.pickle", "rb"))
+    fig = pickle.load(open("C:/SWE_LOCAL/Thesis/Figures/Results/Velocity/Vlos/U_Panel2.pickle", "rb"))
     """
     # Ploting general parameters:
     plot_param={'axes_label_fontsize' : 40,
@@ -296,9 +296,9 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
                 
                 markers = ['^','o','X']
                 for ind_plot in range(len(SensCoeff1)):                                                 
-                    ax0[1].plot(np.degrees(WindDir),SensCoeff1[ind_plot][0],'-',marker=markers[ind_plot],markevery=3,c = c5[ind_plot],linewidth=plot_param['linewidth'],label = legt1[ind_plot])
+                    ax0[1].plot(np.degrees(WindDir),SensCoeff1[ind_plot][-1],'-',marker=markers[ind_plot],markevery=3,c = c5[ind_plot],linewidth=plot_param['linewidth'],label = legt1[ind_plot])
                 for ind_plot in range(len(SensCoeff2)):                                                 
-                    ax0[2].plot(np.degrees(WindDir),SensCoeff2[ind_plot][0],'-',marker=markers[ind_plot],markevery=3,c = c5[ind_plot],linewidth=plot_param['linewidth'],label = legt2[ind_plot])                                    
+                    ax0[2].plot(np.degrees(WindDir),SensCoeff2[ind_plot][-1],'-',marker=markers[ind_plot],markevery=3,c = c5[ind_plot],linewidth=plot_param['linewidth'],label = legt2[ind_plot])                                    
 
                 
                 # Plot uncertainty
@@ -513,87 +513,110 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
         
         # pdb.set_trace()
         elif Lidar.optics.scanner.pattern in ['vertical plane'] or Lidar.optics.scanner.pattern in ['horizontal plane']:
+            pdb.set_trace()
             V=[]
             Dir=[]
             for i in range(int((len(Data['Sens coeff Vh'])/len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'])))):
                 V.append(Data['Vh Unc [m/s]']['Uncertainty Vh GUM'][i][0])
                 Dir.append(Data['WinDir Unc [°]']['Uncertainty wind direction GUM'][i][0])         
-            
+                if np.isnan(V[i]):
+                    V[i]=np.array([0])
+                elif np.isnan(Dir[i]):
+                    Dir[i]=np.array([0])
+        
             # Reshape V and avoid nans and infinit values
             VV=np.reshape(V,[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
             DirD=np.reshape(Dir,[int(np.sqrt(len(Dir))),int(np.sqrt(len(Dir)))])
 
-            # VV[VV>5]=10
+            # VV[VV>10]= np.nan
             # DirD[DirD>10]=10
+            
+
+            lim_vel_max = 10
+            lim_vel_min = 0.07
+            lim_dir_max = 4
+            lim_dir_min = 1
 
             # Horizontal wind velocity
             col ='coolwarm' 
             cmaps = matplotlib.cm.get_cmap(col)  # viridis is the default colormap for imshow
             # #Horizontal plane
-            cmap0 = matplotlib.cm.ScalarMappable(norm = mcolors.Normalize(vmin = 0.1, vmax = .55),cmap = plt.get_cmap(col))
-            cmap1 = matplotlib.cm.ScalarMappable(norm = mcolors.Normalize(vmin = 0.9, vmax = 4),cmap = plt.get_cmap(col))
+            cmap0 = matplotlib.cm.ScalarMappable(norm = mcolors.Normalize(vmin = lim_vel_min, vmax = lim_vel_max),cmap = plt.get_cmap(col)) # Velocity
+            # cmap1 = matplotlib.cm.ScalarMappable(norm = mcolors.Normalize(vmin =lim_dir_min, vmax = lim_dir_max),cmap = plt.get_cmap(col))# wind direction
             #Vertical plane
             # cmap0 = matplotlib.cm.ScalarMappable(norm = mcolors.Normalize(vmin = 0.12, vmax = .14),cmap = plt.get_cmap(col))
             # cmap1 = matplotlib.cm.ScalarMappable(norm = mcolors.Normalize(vmin = 0.64, vmax = .91),cmap = plt.get_cmap(col))    
-            
+            palette = plt.cm.get_cmap("gray").copy()
+            palette.set_over('yellow', 1.0)
+            palette.set_under('blue', 1.0)
             fig3,ax00 = plt.subplots()
-            fig4,ax01 = plt.subplots()
+            # fig4,ax01 = plt.subplots()
             if  Lidar.optics.scanner.pattern in ['vertical plane']:
                 XX = np.reshape(Data['lidars']['Coord_Out'][1],[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
                 YY = np.reshape(Data['lidars']['Coord_Out'][2],[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
                 ax00.set_xlabel('Y [m]', fontsize = plot_param['tick_labelfontsize']+15, labelpad = 10)
                 ax00.set_ylabel('Z [m]', fontsize = plot_param['tick_labelfontsize']+15, labelpad = 10)
-                ax01.set_xlabel('Y [m]', fontsize = plot_param['tick_labelfontsize']+15, labelpad = 10)
-                ax01.set_ylabel('Z [m]', fontsize = plot_param['tick_labelfontsize']+15, labelpad = 10)
+                # ax01.set_xlabel('Y [m]', fontsize = plot_param['tick_labelfontsize']+15, labelpad = 10)
+                # ax01.set_ylabel('Z [m]', fontsize = plot_param['tick_labelfontsize']+15, labelpad = 10)
                                 
                 sting='Vertical'
 
             elif  Lidar.optics.scanner.pattern in ['horizontal plane']:
                 XX=np.reshape(Data['lidars']['Coord_Out'][0],[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
                 YY=np.reshape(Data['lidars']['Coord_Out'][1],[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
-                ax00.set_xlabel('X [m]', fontsize = plot_param['tick_labelfontsize']+15, labelpad = 10)
-                ax00.set_ylabel('Y [m]', fontsize = plot_param['tick_labelfontsize']+15, labelpad = 10)
-                ax01.set_xlabel('X [m]', fontsize = plot_param['tick_labelfontsize']+15, labelpad = 10)
-                ax01.set_ylabel('Y [m]', fontsize = plot_param['tick_labelfontsize']+15, labelpad = 10)
+                ax00.set_xlabel('X [m]', fontsize = plot_param['tick_labelfontsize']+20, labelpad = 10)
+                ax00.set_ylabel('Y [m]', fontsize = plot_param['tick_labelfontsize']+20, labelpad = 10)
+                # ax01.set_xlabel('X [m]', fontsize = plot_param['tick_labelfontsize']+20, labelpad = 10)
+                # ax01.set_ylabel('Y [m]', fontsize = plot_param['tick_labelfontsize']+20, labelpad = 10)
                 sting='Horizontal'
                 
                 
                 for ind_len in range(len(Lidar.optics.scanner.origin)):
                     ax00.plot(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_len][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_len][1],'sk', ms=8, mec='white', mew=1.5,label='Lidar')
-                    ax01.plot(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_len][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_len][1],'sk', ms=8, mec='white', mew=1.5)
-            
+                    # ax01.plot(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_len][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_len][1],'sk', ms=8, mec='white', mew=1.5)
+                
             # #Horizontal plane
-            ax01.contourf(XX,YY, DirD,50,cmap = cmaps,vmin =.9, vmax = 4)
-            ax00.contourf(XX,YY, VV,50,cmap = cmaps,vmin = 0.1, vmax = .55)
+            # ax01.contourf(XX,YY, DirD,7,cmap = cmaps,vmin =lim_dir_min, vmax = lim_dir_max)
+            # plt.subplots_adjust(left=0.085, right=1, bottom=0.14, top=0.985, wspace=0.3, hspace=0.24)      
+            ax00.contourf(XX,YY, VV,700,cmap = cmaps,vmin = lim_vel_min, vmax = lim_vel_max)
+            plt.subplots_adjust(left=0.085, right=1, bottom=0.14, top=0.985, wspace=0.3, hspace=0.24)      
             #Vertical plane
             # ax01.contourf(XX,YY, DirD,50,cmap = cmaps,vmin = .64, vmax = .91)
             # ax00.contourf(XX,YY, VV,50,cmap = cmaps,vmin = .12, vmax = .14) 
             cmap0.set_array([]) 
-            cmap1.set_array([]) 
+            # cmap1.set_array([]) 
             colorbar0 = fig3.colorbar(cmap0, ax = ax00) 
-            colorbar1 = fig4.colorbar(cmap1, ax = ax01)                        
-            colorbar0.set_label(label = r'$u_V$ [m/s]', size = plot_param['tick_labelfontsize']+20, labelpad = 15)
+            # colorbar1 = fig4.colorbar(cmap1, ax = ax01)                        
+            colorbar0.set_label(label = r'$u_{V_{wind}}$ [m/s]', size = plot_param['tick_labelfontsize']+12 , labelpad = 7)
             colorbar0.ax.tick_params(labelsize = 25)
-            colorbar1.set_label(label = r'$u_\Omega$ [°]', size = plot_param['tick_labelfontsize']+20, labelpad = 15)
-            colorbar1.ax.tick_params(labelsize = 25)
+            # colorbar1.set_label(label = r'$u_\Omega$ [°]', size = plot_param['tick_labelfontsize']+12, labelpad = 7)
+            # colorbar1.ax.tick_params(labelsize = 25) 
 
             ax00.set_aspect('equal')
             ax00.ticklabel_format(useOffset=False)
-            ax01.set_aspect('equal')
-            ax01.ticklabel_format(useOffset=False)
+            # ax01.set_aspect('equal')
+            # ax01.ticklabel_format(useOffset=False)
             ax00.locator_params(axis='x', nbins=5)
             ax00.locator_params(axis='y', nbins=5)
-            ax01.locator_params(axis='x', nbins=5)
-            ax01.locator_params(axis='y', nbins=5)                
-            ax00.xaxis.set_tick_params(labelsize = plot_param['tick_labelfontsize'])
-            ax00.yaxis.set_tick_params(labelsize = plot_param['tick_labelfontsize'])
-            ax01.xaxis.set_tick_params(labelsize = plot_param['tick_labelfontsize'])
-            ax01.yaxis.set_tick_params(labelsize = plot_param['tick_labelfontsize'])
+            # ax01.locator_params(axis='x', nbins=5)
+            # ax01.locator_params(axis='y', nbins=5)                
+            ax00.xaxis.set_tick_params(labelsize = plot_param['tick_labelfontsize']+10)
+            ax00.yaxis.set_tick_params(labelsize = plot_param['tick_labelfontsize']+10)
+            # ax01.xaxis.set_tick_params(labelsize = plot_param['tick_labelfontsize']+10)
+            # ax01.yaxis.set_tick_params(labelsize = plot_param['tick_labelfontsize']+10)
+
             plt.show()
-            pdb.set_trace()
+            
+            # Save vectorised image (.svg)
+            plt.savefig("C:/SWE_LOCAL/Thesis/Figures/Results/Velocity/{}D/Horizontal_Plane/".format(len(Lidar.optics.scanner.origin))+sting+"_U_WindVelocity_{}D.svg".format(len(Lidar.optics.scanner.origin)))
+            
+            # Save vectorised image (.png)            
+            plt.savefig("C:/SWE_LOCAL/Thesis/Figures/Results/Velocity/{}D/Horizontal_Plane/".format(len(Lidar.optics.scanner.origin))+sting+"_U_WindVelocity_{}D.png".format(len(Lidar.optics.scanner.origin)))
+            
+            
             if  Qlunc_yaml_inputs['Flags']['Save data']:
                 pickle.dump(fig3, open("C:/SWE_LOCAL/Thesis/Figures/Results/Velocity/{}D/".format(len(Lidar.optics.scanner.origin))+sting+"_U_WindVelocity_{}D.pickle".format(len(Lidar.optics.scanner.origin)), "wb"))
-                pickle.dump(fig4, open("C:/SWE_LOCAL/Thesis/Figures/Results/Direction/{}D/".format(len(Lidar.optics.scanner.origin))+sting+"_U_WindDirection_{}D.pickle".format(len(Lidar.optics.scanner.origin)), "wb"))
+                # pickle.dump(fig4, open("C:/SWE_LOCAL/Thesis/Figures/Results/Direction/{}D/".format(len(Lidar.optics.scanner.origin))+sting+"_U_WindDirection_{}D.pickle".format(len(Lidar.optics.scanner.origin)), "wb"))
     
        
    
