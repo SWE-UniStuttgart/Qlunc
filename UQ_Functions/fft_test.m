@@ -37,7 +37,7 @@ n_bits           = 8;      % N_MC° bits ADC
 V_ref            = 10;      % Reference wind velocity
 lidar_wavelength = 1550e-9; % wavelength of the laser source.
 fs_av            = 100e6;    % sampling frequency
-L                = 2^n_bits;    %length of the signal.
+L                = 2.5e-3;    %length of the signal.
 n_fftpoints      = L;       % n° of points for each block (fft points).
 fd               = 2*V_ref/lidar_wavelength;  % Doppler frequency corresponding to Vref
 level_noise      = 5e-11; % Hardware noise added before signal downmixing
@@ -109,8 +109,8 @@ for ind_npulses = 1:n_pulses
         ENOB = n_bits; %(SINAD-1.76)/6.02;
         vres= (2/(2^ENOB));
         % find upper and lower limits
-        low_lim= sort(-vres:-vres: -1, 'ascend');
-        upp_lim=(vres:vres:1);
+        low_lim = sort(-vres:-vres: -1, 'ascend');
+        upp_lim =(vres:vres:1);
         v=[low_lim,0,upp_lim]; % vector of ADC quantized values
         
         [counts,mm,ibin]   = histcounts(X{ind_fs},v); % calculates the indexes of the bins X values belong to
@@ -141,7 +141,9 @@ for ind_npulses = 1:n_pulses
         S_fft_quant = (1/(fs(ind_fs)*N)) .* abs(S_fft).^2; % scale
         S_fft_quant = 2*S_fft_quant(2:end-1); % scale and cut the 0 and Nyquist frequencies
         S_fft_quant = S_fft_quant/(sum(abs(freq{ind_fs}(1).*S_fft_quant))*1e3); % scale and cut the 0 and Nyquist frequencies
-        S_fft_quant_mean(ind_fs,:) =  S_fft_quant/(sum(abs(freq{ind_fs}(1).*S_fft_quant))*1e3);
+        
+        
+        S_fft_quant_mean(ind_fs,:) =  S_fft_quant/(sum(abs(freq{ind_fs}(1).*S_fft_quant))*1e3); %#ok<SAGROW>
         
         % Peak detection from the spectra
         [ii_mean,ii1_mean]            = max(S_fft_quant); % Assume maximum as a peak detection method
