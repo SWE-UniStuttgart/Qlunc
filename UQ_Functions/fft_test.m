@@ -42,8 +42,8 @@ n_fftpoints      = L;       % n° of points for each block (fft points).
 fd               = 2*V_ref/lidar_wavelength;  % Doppler frequency corresponding to Vref
 level_noise      = 5e-11; % Hardware noise added before signal downmixing
 n_pulses         = 1;   % n pulses for averaging the spectra
-N_MC             = 1e4; % n° MC samples to calculate the uncertainty due to bias in sampling frequency and wavelength
-
+N_MC             = 1e3; % n° MC samples to calculate the uncertainty due to bias in sampling frequency and wavelength
+Vin              = 1; % ADC Voltage input  range (\pm 1)
 %% Uncertainty in the signal processing.
 
 %%% Uncertainty in the sampling frequency %%%
@@ -84,7 +84,7 @@ for ind_npulses = 1:n_pulses
         freq{ind_fs}=f0(2:end-1); %#ok<SAGROW>
 %         % Signal + Hardware noise:
 %         noise      = level_noise*randn(size(t{ind_fs}));
-        d=[3,3.5,4,4.5,5,5.5];
+        d=[-2.5,-3,-3.5,-4,-4.5,-5,-5.5];
  
         for i=1:400
             
@@ -93,7 +93,7 @@ for ind_npulses = 1:n_pulses
             Sn(i,:) = abs(randn(1,1))*10^di*sin(2*pi*abs(randn(1,1))*20.5*fd*t{ind_fs});
         end
         SnS = sum(Sn);
-        S{ind_fs}         = noise(ind_fs)+(1.8e6*sin(2*pi*fd.*t{ind_fs}) )+SnS; %#ok<SAGROW> % Adding up Signal contributors
+        S{ind_fs}         = noise(ind_fs)+(1.8e-2*sin(2*pi*fd.*t{ind_fs}) )+SnS; %#ok<SAGROW> % Adding up Signal contributors
 
         
         % Spectrum function from matlab:
@@ -107,7 +107,7 @@ for ind_npulses = 1:n_pulses
         % ADC:
         % Quantisation of the signal
         ENOB = n_bits; %(SINAD-1.76)/6.02;
-        vres= (2/(2^ENOB));
+        vres= (Vin/(2^ENOB));
         % find upper and lower limits
         low_lim = sort(-vres:-vres: -1, 'ascend');
         upp_lim =(vres:vres:1);
@@ -247,11 +247,11 @@ for in_sig=1:1 %length(fs)
     
     plot(t{in_sig}(1,:)  ,X{in_sig}(1,:),markersize{in_sig},'Linewidth',1.2,'displayname','Original signal')
     plot(t{in_sig},mean_S_quant{in_sig},markersize_2{in_sig},'Linewidth',2.3,'displayname','Quantised signal' );
-    plot(t{in_sig},X{in_sig}(1,:)-mean_S_quant{in_sig},markersize_3{in_sig},'Linewidth',1.9,'displayname',['Error (','$$\overline{RMSE}=2.3\times10^{-3})$$', newline, '$$\sigma_{RMSE}=6.2\times10^{-5}$$']);
+    plot(t{in_sig},X{in_sig}(1,:)-mean_S_quant{in_sig},markersize_3{in_sig},'Linewidth',1.9,'displayname',['Error', newline, '$$\sigma_{RMSE}=6.2\times10^{-5}$$']);
     %     plot(t{i} ,X{i}(1,:)  ,markersize{i})
     %     plot(t{i},S_quant0{i},markersize_2{i},'Linewidth',1.4);
 end
-ano=annotation('textbox',[0.5, 0.2, 0.1, 0.1],'String', ['\overline{RMSE}=2.3\times10^{-3}', newline, '\sigma_{RMSE}=6.2\times10^{-5}'],'fontsize',25);
+ano=annotation('textbox',[0.5, 0.2, 0.1, 0.1],'String', ['\overline{RMSE} = ' num2str(RMSE(2),'%.1s') , newline, '\sigma_{RMSE}= '  num2str(RMSE(2))],'fontsize',25);
 xlabel('time [s]')
 ylabel('[-]')
 title(['Signal quantisation -',' n°bits = ', num2str(n_bits), ' - fs [Hz] = ',num2str(fs(in_sig),'%.2s') ])
