@@ -77,7 +77,6 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     #%% Save data
     if Qlunc_yaml_inputs['Flags']['Save data']:
-        # pdb.set_trace()
         #Define the name based on the measuring configuration parameters
         filename = "Q_output_P"+"["+ str(Lidar.optics.scanner.cone_angle[0]) + "," + str(Lidar.optics.scanner.azimuth[0])+ "," +str(Lidar.optics.scanner.focus_dist[0])   + "]"
         for ind_loop in range (len( Lidar.optics.scanner.origin)):
