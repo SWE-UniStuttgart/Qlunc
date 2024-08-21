@@ -218,7 +218,7 @@ class lidar():
                  self.Uncertainty      = unc_func
                  print('Created new lidar device: {}'.format(self.LidarID))
 
-#%% 1) Creating the class to store coordinates
+#%% Creating the class to store coordinates
 class lidar_coor():
     def __init__(self, x,y,z,x_Lidar,y_Lidar,z_Lidar):
         self.x_Lidar = x_Lidar
