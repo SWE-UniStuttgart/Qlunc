@@ -201,68 +201,78 @@ Lidar = lidar(name             = Qlunc_yaml_inputs['Lidar']['Name'],            
 
 
 #%% Creating atmospheric scenarios: ############################################
-Atmospheric_TimeSeries = Qlunc_yaml_inputs['Atmospheric_inputs']['TimeSeries'] # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere (T, H, rain and fog) 
-                                                                           # If so we obtain a time series describing the noise implemented in the measurement.
-if Atmospheric_TimeSeries:
-    Atmos_TS_FILE           = './metadata/AtmosphericData/'+Qlunc_yaml_inputs['Atmospheric_inputs']['Atmos_TS_FILE']
-    AtmosphericScenarios_TS = pd.read_csv(Atmos_TS_FILE,delimiter=';',decimal=',')
-    Atmospheric_inputs = {
-                          'temperature' : list(AtmosphericScenarios_TS.loc[:,'T']),    # [K]
-                          'humidity'    : list(AtmosphericScenarios_TS.loc[:,'H']),    # [%]
-                          'rain'        : list(AtmosphericScenarios_TS.loc[:,'rain']),
-                          'fog'         : list(AtmosphericScenarios_TS.loc[:,'fog']),
-                          'time'        : list(AtmosphericScenarios_TS.loc[:,'t'])     #for rain and fog intensity intervals might be introduced [none,low, medium high]
-                          } 
-    Atmospheric_Scenario = atmosphere(name           = Qlunc_yaml_inputs['Atmospheric_inputs']['Name'],
-                                      temperature    = Atmospheric_inputs['temperature'],
-                                      PL_exp         = Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'],
-                                      Vref           = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref'],
-                                      wind_direction = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind direction'],
-                                      wind_tilt      = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind tilt'],
-                                      Hg             = Qlunc_yaml_inputs['Atmospheric_inputs']['Height ground'])
+# Atmospheric_TimeSeries = Qlunc_yaml_inputs['Atmospheric_inputs']['TimeSeries'] # This defines whether we are using a time series (True) or single values (False) to describe the atmosphere  
+if  Qlunc_yaml_inputs['Atmospheric_inputs']['TimeSeries']:
+
+    # Atmos_TS_FILE           = './metadata/AtmosphericData/'+Qlunc_yaml_inputs['Atmospheric_inputs']['Atmos_TS_FILE']
+    
+    date,wind_direction_ref,velocity_lidar,velocity_mast_ref2,velocity_mast_ref,alpha_ref,temperature_meas = SA.getdata('Spd_106m_Mean_m/s','wsp_140m_LMN_Mean_m/s','wsp_106m_LMN_Mean_m/s','Sdir_103m_LMN_Mean_deg','Available_106m_Mean_avail%',90,'Timestamp_datetime',202204201200,202204241200,4,16,'Tabs_103m_LMN_Mean_degC')    
+   
+
+    Atmospheric_Scenario = atmosphere(name              = Qlunc_yaml_inputs['Atmospheric_inputs']['Name'],
+                                      temperature_dev   = Qlunc_yaml_inputs['Atmospheric_inputs']['Temperature'],
+                                      temperature_meas  = temperature_meas,                                      
+                                      wind_direction    = wind_direction_ref,
+                                      availability      = 90,
+                                      Vref              = velocity_mast_ref,
+                                      Vref2             = velocity_mast_ref2,
+                                      date              = date, 
+                                                    
+                                      PL_exp            = [alpha_ref],
+                                      wind_tilt         = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind tilt'],
+                                      Hg                = Qlunc_yaml_inputs['Atmospheric_inputs']['Height ground']
+                                      )
 
 else:    
+    # pdb.set_trace()
+    Atmospheric_Scenario = atmosphere(name             = Qlunc_yaml_inputs['Atmospheric_inputs']['Name'],
+                                      temperature_dev  = Qlunc_yaml_inputs['Atmospheric_inputs']['Temperature'],
+                                      temperature_meas = None,
+                                      
+                                      wind_direction   = (np.linspace(Qlunc_yaml_inputs['Atmospheric_inputs']['Wind direction'][0],Qlunc_yaml_inputs['Atmospheric_inputs']['Wind direction'][1],Qlunc_yaml_inputs['Atmospheric_inputs']['Wind direction'][2])),
+                                      availability     = None,
 
-    Atmospheric_Scenario = atmosphere(name           = Qlunc_yaml_inputs['Atmospheric_inputs']['Name'],
-                                      temperature    = Qlunc_yaml_inputs['Atmospheric_inputs']['Temperature'],
-                                      PL_exp         = Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'],
-                                      Vref           = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref'],
-                                      wind_direction = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind direction'],
-                                      wind_tilt      = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind tilt'],
-                                      Hg             = Qlunc_yaml_inputs['Atmospheric_inputs']['Height ground'])
+                                      Vref             = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref']*np.ones(len(np.linspace(Qlunc_yaml_inputs['Atmospheric_inputs']['Wind direction'][0],Qlunc_yaml_inputs['Atmospheric_inputs']['Wind direction'][1],Qlunc_yaml_inputs['Atmospheric_inputs']['Wind direction'][2]))),
+                                      Vref2            = None,
+                                      date             = None,
+                                      PL_exp           = [Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'][i]*np.ones(len(np.linspace(Qlunc_yaml_inputs['Atmospheric_inputs']['Wind direction'][0],Qlunc_yaml_inputs['Atmospheric_inputs']['Wind direction'][1],Qlunc_yaml_inputs['Atmospheric_inputs']['Wind direction'][2]))) for i in range(len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent']))],
+                                      wind_tilt        = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind tilt'],
+                                      Hg               = Qlunc_yaml_inputs['Atmospheric_inputs']['Height ground'],
+                                      )
+# pdb.set_trace()
 
 #%% Run Qlunc for different values of tilt angle
 ########################################################################
-def get_points(radius, center, number_of_points):
-    radians_between_each_point = 2*np.pi/number_of_points
-    list_of_points = []
-    for p in range(0, number_of_points):
-        list_of_points.append( (center[0]+radius*np.cos(p*radians_between_each_point),center[1]+radius*np.sin(p*radians_between_each_point)) )
-    return list_of_points
+# def get_points(radius, center, number_of_points):
+#     radians_between_each_point = 2*np.pi/number_of_points
+#     list_of_points = []
+#     for p in range(0, number_of_points):
+#         list_of_points.append( (center[0]+radius*np.cos(p*radians_between_each_point),center[1]+radius*np.sin(p*radians_between_each_point)) )
+#     return list_of_points
 
-rho = 500
-elevation_angle = np.radians( 13.65)
-center = [rho*np.cos(elevation_angle),0]
-A=get_points(rho*np.cos(elevation_angle),center, 12)
+# rho = 500
+# elevation_angle = np.radians( 13.65)
+# center = [rho*np.cos(elevation_angle),0]
+# A=get_points(rho*np.cos(elevation_angle),center, 12)
 
-x = [A[ii][0] for ii in range(len(A))]
-y = [A[ii][1] for ii in range(len(A))]
+# x = [A[ii][0] for ii in range(len(A))]
+# y = [A[ii][1] for ii in range(len(A))]
 
-x1 = [A[ii][0] for ii in range(1,6)]
-y1 = [A[ii][1] for ii in range(1,6)]
-
-
-x2 = [A[ii][0] for ii in range(7,12)]
-x2 = x2[::-1]
-y2 = [A[ii][1] for ii in range(7,12)]
-y2 = y2[::-1]
+# x1 = [A[ii][0] for ii in range(1,6)]
+# y1 = [A[ii][1] for ii in range(1,6)]
 
 
-z=np.zeros(len(x))
+# x2 = [A[ii][0] for ii in range(7,12)]
+# x2 = x2[::-1]
+# y2 = [A[ii][1] for ii in range(7,12)]
+# y2 = y2[::-1]
 
-Lidar2_pos=list(zip(x1,y1,z))
-Lidar3_pos=list(zip(x2,y2,z))
-Lidar1_pos=list(zip(z,z,z))
+
+# z=np.zeros(len(x))
+
+# Lidar2_pos=list(zip(x1,y1,z))
+# Lidar3_pos=list(zip(x2,y2,z))
+# Lidar1_pos=list(zip(z,z,z))
 
 # plt.plot(x,y,'ob')
 # plt.gca().set_aspect('equal')
@@ -274,15 +284,16 @@ Lidar1_pos=list(zip(z,z,z))
 # plt.plot(x2[0],y2[0],'ro')
 # plt.plot(x2[-1],y2[-1],'ro')
 
-############################################################################################
+#%% Run Qlunc   ############################################################################################
+# QluncData = Lidar.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)
+
 # for i_position in range(len(Lidar2_pos)):
 #     Lidar.optics.scanner.origin = [Lidar1_pos[i_position],Lidar2_pos[i_position],Lidar3_pos[i_position]]
 #     # pdb.set_trace()
 #     Atmospheric_Scenario.wind_tilt = Qlunc_yaml_inputs['Atmospheric_inputs']['Wind tilt']
 #     Atmospheric_Scenario.Vref      = Qlunc_yaml_inputs['Atmospheric_inputs']['Vref']
 for i_tilt in np.linspace(Atmospheric_Scenario.wind_tilt[0],Atmospheric_Scenario.wind_tilt[1],Atmospheric_Scenario.wind_tilt[2]):
-    for i_Vref in np.linspace(Atmospheric_Scenario.Vref[0],Atmospheric_Scenario.Vref[1],Atmospheric_Scenario.Vref[2]):
-        # pdb.set_trace()
+    # for i_Vref in np.linspace(Atmospheric_Scenario.Vref[0],Atmospheric_Scenario.Vref[1],Atmospheric_Scenario.Vref[2]):
         Atmospheric_Scenario.wind_tilt = i_tilt
-        Atmospheric_Scenario.Vref = i_Vref
+        # Atmospheric_Scenario.Vref = i_Vref
         QluncData = Lidar.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs)

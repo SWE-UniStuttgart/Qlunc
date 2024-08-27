@@ -54,21 +54,20 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
     
     #%% Signal processor
     if Lidar.signal_processor != None:   
-        try:
-            DataFrame = Lidar.signal_processor.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame)
+        # try:
+        DataFrame = Lidar.signal_processor.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame)
             
-        except:
-            SignalProcessor_Uncertainty = None
-            print(colored('Error in  signal processor module calculations!','cyan', attrs=['bold']))
+        # except:
+            # SignalProcessor_Uncertainty = None
+            # print(colored('Error in  signal processor module calculations!','cyan', attrs=['bold']))
     else:
-        pdb.set_trace()
+        
         DataFrame['Uncertainty ADC'] = {'Stdv Doppler f_peak [Hz]':np.array(0)*np.linspace(1,1,len(Atmospheric_Scenario.temperature)),'Stdv wavelength [m]':0,'Stdv Vlos [m/s]':0}
         print(colored('You didn´t include a signal processor module in the lidar.','cyan', attrs=['bold']))        
 
     #%% Intrinsic lidar uncertainty:
-    # pdb.set_trace()
     DataFrame['Intrinsic Uncertainty [m/s]'] = SA.U_intrinsic(Lidar,Atmospheric_Scenario,DataFrame,Qlunc_yaml_inputs)
-    
+    # pdb.set_trace()
     #%% Optics
     if Lidar.optics != None:
         DataFrame = Lidar.optics.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame)     
@@ -82,12 +81,12 @@ def sum_unc_lidar(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs):
         filename = "Q_output_P"+"["+ str(Lidar.optics.scanner.cone_angle[0]) + "," + str(Lidar.optics.scanner.azimuth[0])+ "," +str(Lidar.optics.scanner.focus_dist[0])   + "]"
         for ind_loop in range (len( Lidar.optics.scanner.origin)):
             filename += ('_L{}_'.format(ind_loop+1)+str(Lidar.optics.scanner.origin[ind_loop]))
-        filename=filename+'_tilt{}'.format(np.round(Atmospheric_Scenario.wind_tilt,2))+'_Vref{}'.format(np.round(Atmospheric_Scenario.Vref,2))    
+        filename=filename+'_tilt{}'.format(np.round(Atmospheric_Scenario.wind_tilt,2))+'_Vref{}'.format(int(Atmospheric_Scenario.Vref[0]))    
         # Define the path where to store the data
         path = ".\\Qlunc_Output\\"+filename + ".pkl"
         # Store the dictionary 
         if os.path.isfile(path):
-            print(colored('The lidar output file already exists.', 'red',attrs=['bold']))
+            print(colored('Numerical data already exists and has not been replaced. Figures saved. ', 'red',attrs=['bold']))
             
         else:
                     

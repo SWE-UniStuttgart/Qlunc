@@ -192,14 +192,18 @@ class signal_processor():
 
 #%% Atmosphere object:
 class atmosphere():
-    def __init__(self,name,temperature,Hg,PL_exp,wind_direction, wind_tilt, Vref):
+    def __init__(self,name,temperature_dev,temperature_meas,Hg,PL_exp,availability,wind_direction, wind_tilt, Vref,Vref2,date):
                  self.AtmosphereID   = name
-                 self.temperature    = temperature
+                 self.temperature_meas    = temperature_meas
+                 self.temperature_dev    = temperature_dev
                  self.PL_exp         = PL_exp
                  self.Vref           = Vref
+                 self.Vref2           = Vref2
+                 self.availability    = availability
                  self.wind_direction = wind_direction
                  self.Hg             = Hg
-                 self.wind_tilt      = wind_tilt                
+                 self.wind_tilt      = wind_tilt         
+                 self.date          = date
                  print('Created new atmosphere: {}'.format(self.AtmosphereID))
 
 
@@ -214,7 +218,7 @@ class lidar():
                  self.Uncertainty      = unc_func
                  print('Created new lidar device: {}'.format(self.LidarID))
 
-#%% 1) Creating the class to store coordinates
+#%% Creating the class to store coordinates
 class lidar_coor():
     def __init__(self, x,y,z,x_Lidar,y_Lidar,z_Lidar):
         self.x_Lidar = x_Lidar
