@@ -528,26 +528,29 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
             VV=np.reshape(V,[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
             DirD=np.reshape(Dir,[int(np.sqrt(len(Dir))),int(np.sqrt(len(Dir)))])
 
-            VV[VV>10]= np.nan
-            DirD[DirD>10]=np.nan
+            # VV[VV>30]= np.nan
+            # DirD[DirD>10]=np.nan
             
-            print(np.min(DirD))
-            print(np.max(DirD))
-            lim_vel_max = 10
-            lim_vel_min = 0.07
-            lim_dir_max = 1.92
-            lim_dir_min = 1.1
+            print(np.min(VV))
+            print(np.max(VV))
+            lim_vel_max =0.7 # np.max(VV) 
+            lim_vel_min = 0.05 #np.min(VV)
+            lim_dir_max = 3.2
+            lim_dir_min = 0.4
             
             # Horizontal wind velocity
             col ='coolwarm' 
             cmaps = matplotlib.cm.get_cmap(col)  # viridis is the default colormap for imshow
+            cmaps.set_bad('k',0.8)
+            VV = np.ma.array ( VV, mask=np.isnan(VV))
+
             # #Horizontal plane
             # cmap0 = matplotlib.cm.ScalarMappable(norm = mcolors.Normalize(vmin = lim_vel_min, vmax = lim_vel_max),cmap = plt.get_cmap(col)) # Velocity
             # cmap1 = matplotlib.cm.ScalarMappable(norm = mcolors.Normalize(vmin =lim_dir_min, vmax = lim_dir_max),cmap = plt.get_cmap(col))# wind direction
             #Vertical plane
             # cmap0 = matplotlib.cm.ScalarMappable(norm = mcolors.Normalize(vmin = 0.12, vmax = .14),cmap = plt.get_cmap(col))
             # cmap1 = matplotlib.cm.ScalarMappable(norm = mcolors.Normalize(vmin = 0.64, vmax = .91),cmap = plt.get_cmap(col))    
-            cmap0 = matplotlib.cm.ScalarMappable(norm = mcolors.Normalize(vmin = 0.12, vmax = .14),cmap = plt.get_cmap(col))
+            cmap0 = matplotlib.cm.ScalarMappable(norm = mcolors.Normalize(vmin = lim_vel_min, vmax = lim_vel_max),cmap = plt.get_cmap(col))
             cmap1 = matplotlib.cm.ScalarMappable(norm = mcolors.Normalize(vmin = lim_dir_min, vmax = lim_dir_max),cmap = plt.get_cmap(col))  
             palette = plt.cm.get_cmap("gray").copy()
             palette.set_over('yellow', 1.0)
@@ -576,12 +579,15 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
                 
                 for ind_len in range(len(Lidar.optics.scanner.origin)):
                     ax00.plot(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_len][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_len][1],'sk', ms=8, mec='white', mew=1.5,label='Lidar')
-                    # ax01.plot(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_len][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_len][1],'sk', ms=8, mec='white', mew=1.5)
+                    ax01.plot(Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_len][0],Qlunc_yaml_inputs['Components']['Scanner']['Origin'][ind_len][1],'sk', ms=8, mec='white', mew=1.5)
+            
                 
+            
             # #Horizontal plane
-            ax01.contourf(XX,YY, DirD,700,cmap = cmaps,vmin =lim_dir_min, vmax = lim_dir_max)
-            plt.subplots_adjust(left=0.085, right=1, bottom=0.14, top=0.985, wspace=0.3, hspace=0.24)      
-            ax00.contourf(XX,YY, VV,700,cmap = cmaps,vmin = lim_vel_min, vmax = lim_vel_max)
+            ax01.contourf(XX,YY, DirD,50,cmap = cmaps,vmin =lim_dir_min, vmax = lim_dir_max)
+            plt.subplots_adjust(left=0.085, right=1, bottom=0.14, top=0.98, wspace=0.3, hspace=0.24)      
+            
+            ax00.contourf(XX,YY, VV,25,interpolation="nearest",cmap = cmaps,vmin = lim_vel_min, vmax = lim_vel_max)
             plt.subplots_adjust(left=0.085, right=1, bottom=0.145, top=0.985, wspace=0.3, hspace=0.24)      
             
             
@@ -612,17 +618,21 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
 
             plt.show()
             
-            # Save vectorised image (.svg)
-            plt.savefig("C:/SWE_LOCAL/Thesis/Figures/Results/Velocity/{}D/Horizontal_Plane/".format(len(Lidar.optics.scanner.origin))+sting+"_U_WindVelocity_{}D.svg".format(len(Lidar.optics.scanner.origin)))
-            
-            # Save vectorised image (.png)            
-            plt.savefig("C:/SWE_LOCAL/Thesis/Figures/Results/Velocity/{}D/Horizontal_Plane/".format(len(Lidar.optics.scanner.origin))+sting+"_U_WindVelocity_{}D.png".format(len(Lidar.optics.scanner.origin)))
-            
+
             
             if  Qlunc_yaml_inputs['Flags']['Save data']:
+                #Save .pickle figure 
                 pickle.dump(fig3, open("C:/SWE_LOCAL/Thesis/Figures/Results/Velocity/{}D/".format(len(Lidar.optics.scanner.origin))+sting+"_U_WindVelocity_{}D.pickle".format(len(Lidar.optics.scanner.origin)), "wb"))
-                # pickle.dump(fig4, open("C:/SWE_LOCAL/Thesis/Figures/Results/Direction/{}D/".format(len(Lidar.optics.scanner.origin))+sting+"_U_WindDirection_{}D.pickle".format(len(Lidar.optics.scanner.origin)), "wb"))
-    
+                pickle.dump(fig4, open("C:/SWE_LOCAL/Thesis/Figures/Results/Direction/{}D/".format(len(Lidar.optics.scanner.origin))+sting+"_U_WindDirection_{}D.pickle".format(len(Lidar.optics.scanner.origin)), "wb"))
+                
+                # # Save vectorised image (.svg)
+                # plt.savefig("C:/SWE_LOCAL/Thesis/Figures/Results/Direction/{}D/Horizontal/".format(len(Lidar.optics.scanner.origin))+sting+"_U_WindDirection_{}D.svg".format(len(Lidar.optics.scanner.origin)))
+                # plt.savefig("C:/SWE_LOCAL/Thesis/Figures/Results/Velocity/{}D/Horizontal/".format(len(Lidar.optics.scanner.origin))+sting+"_U_WindVelocity_{}D.svg".format(len(Lidar.optics.scanner.origin)))
+
+                # # Save vectorised image (.png)      
+                # plt.savefig("C:/SWE_LOCAL/Thesis/Figures/Results/Direction/{}D/Horizontal/".format(len(Lidar.optics.scanner.origin))+sting+"_U_WindDirection_{}D.png".format(len(Lidar.optics.scanner.origin)))
+                # plt.savefig("C:/SWE_LOCAL/Thesis/Figures/Results/Velocity/{}D/Horizontal/".format(len(Lidar.optics.scanner.origin))+sting+"_U_WindVelocity_{}D.png".format(len(Lidar.optics.scanner.origin)))
+                
        
    
         # ##########################
