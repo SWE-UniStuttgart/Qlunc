@@ -1017,7 +1017,6 @@ def U_WindDir_GUM(Lidar,Atmospheric_Scenario,Correlation_coeff,wind_direction,li
             W_D.append( np.degrees(math.atan2( v[ind_wind_dir] , u[ind_wind_dir] )) )    
         # Uncertainty in wind direction:
         U_wind_dir.append(np.degrees(np.sqrt(UyWinDir))[0])
-    # pdb.set_trace()
     return (U_wind_dir,dWinDir_Vlos1T,dWinDir_Vlos2T,dWinDir_Vlos3T,dWinDir_Vlos12T,dWinDir_Vlos13T,dWinDir_Vlos23T,W_D)
 
     
