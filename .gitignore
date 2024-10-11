@@ -15,6 +15,7 @@ metadata/rayleigh_distance.txt
 # Ignore specific folders:
 Sphinx4Qlunc/
 UnderDevelopment/
+Figures/
 
 
 
