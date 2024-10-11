@@ -125,7 +125,7 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
             ax0[0].tick_params(axis='x',label1On=False)
 
 
-            ax0[1].set_ylabel(r'$T_{\Omega}$ [°]',fontsize=plot_param['axes_label_fontsize'])
+            ax0[1].set_ylabel(r'$T_{\Omega}$ [deg.$^2$]',fontsize=plot_param['axes_label_fontsize'])
             ax0[1].ticklabel_format(axis='y',style='sci', scilimits=(0,0))          
             ax0[1].yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize_scy'])
             ax0[1].tick_params(axis='both', labelsize=plot_param['tick_labelfontsize'])
@@ -134,7 +134,7 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
             ax0[1].tick_params(axis='x',label1On=False)
             ax0[1].set_ylim(-2e-4,3e-3)
             
-            ax0[2].set_ylabel(r'$T_{\Omega}$ [°]',fontsize=plot_param['axes_label_fontsize'])
+            ax0[2].set_ylabel(r'$T_{\Omega}$ [deg.$^2$]',fontsize=plot_param['axes_label_fontsize'])
             ax0[2].ticklabel_format(axis='y',style='sci', scilimits=(0,0))          
             ax0[2].yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize_scy'])
             ax0[2].set_xlabel('Wind direction[°]',fontsize=plot_param['axes_label_fontsize'])
@@ -199,7 +199,7 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
             ax0[0].tick_params(axis='x',label1On=False)
 
             ax0[1].legend(loc=1, prop={'size': plot_param['legend_fontsize']+5})
-            ax0[1].set_ylabel(r'$T_{\Omega}$ [°]',fontsize=plot_param['axes_label_fontsize'])
+            ax0[1].set_ylabel(r'$T_{\Omega}$ [deg.$^2$]',fontsize=plot_param['axes_label_fontsize'])
             ax0[1].ticklabel_format(axis='y',style='sci', scilimits=(0,0))          
             ax0[1].yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize_scy'])
             ax0[1].set_xlabel('Wind direction[°]',fontsize=plot_param['axes_label_fontsize'])
@@ -321,9 +321,9 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
                 ax0[0].tick_params(axis='x',label1On=False)
                 ax0[0].set_ylim(0.064,0.094)
                 
-                
+                pdb.set_trace()
                 ax0[1].legend(loc=1, prop={'size': plot_param['legend_fontsize']+5})
-                ax0[1].set_ylabel(r'$T_{V_{wind}}$ [m/s]',fontsize=30)
+                ax0[1].set_ylabel(r'$T_{V_{wind}}$ [m$^2$/s$^2$]',fontsize=30)
                 ax0[1].ticklabel_format(axis='y',style='sci', scilimits=(0,0))          
                 ax0[1].yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize_scy'])
 
@@ -333,7 +333,7 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
                 ax0[1].tick_params(axis='x',label1On=False)
 
                 ax0[2].legend(loc=1, prop={'size': plot_param['legend_fontsize']+5})
-                ax0[2].set_ylabel(r'$T_{V_{wind}}$ [m/s]',fontsize=30)
+                ax0[2].set_ylabel(r'$T_{V_{wind}}$ [m$^2$/s$^2$]',fontsize=30)
                 ax0[2].ticklabel_format(axis='y',style='sci', scilimits=(0,0))          
                 ax0[2].yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize_scy'])
                 ax0[2].set_xlabel('Wind direction[°]',fontsize=plot_param['axes_label_fontsize'])
@@ -443,7 +443,7 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
                 ax0[0].grid(axis='both')
     
                 ax0[1].legend(loc=1, prop={'size': plot_param['legend_fontsize']+5})
-                ax0[1].set_ylabel(r'$T_{V_h}$ [m/s]',fontsize=plot_param['axes_label_fontsize']-2.3)
+                ax0[1].set_ylabel(r'$T_{V_h}$ [m$^2$/s$^2$]',fontsize=plot_param['axes_label_fontsize']-2.3)
                 ax0[1].ticklabel_format(axis='y',style='sci', scilimits=(0,0))          
                 ax0[1].yaxis.get_offset_text().set_fontsize(plot_param['tick_labelfontsize_scy'])
                 ax0[1].set_xlabel('Wind direction[°]',fontsize=plot_param['axes_label_fontsize'])
@@ -513,7 +513,7 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
         
         
         elif Lidar.optics.scanner.pattern in ['vertical plane'] or Lidar.optics.scanner.pattern in ['horizontal plane']:
-            pdb.set_trace()
+            
             V=[]
             Dir=[]
             for i in range(int((len(Data['Sens coeff Vh'])/len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'])))):
@@ -523,20 +523,20 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
                     V[i]=np.array([0])
                 elif np.isnan(Dir[i]):
                     Dir[i]=np.array([0])
-        
+            # V=V_lowcorr
             # Reshape V and avoid nans and infinit values
             VV=np.reshape(V,[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
             DirD=np.reshape(Dir,[int(np.sqrt(len(Dir))),int(np.sqrt(len(Dir)))])
 
-            # VV[VV>30]= np.nan
-            # DirD[DirD>10]=np.nan
+            VV[VV>2]= np.nan
+            DirD[DirD>10]=np.nan
             
             print(np.min(VV))
             print(np.max(VV))
-            lim_vel_max =0.7 # np.max(VV) 
-            lim_vel_min = 0.05 #np.min(VV)
-            lim_dir_max = 3.2
-            lim_dir_min = 0.4
+            lim_vel_max =0.101 # np.max(VV) 
+            lim_vel_min = 0.054 #np.min(VV)
+            lim_dir_max = 3.3
+            lim_dir_min = .45
             
             # Horizontal wind velocity
             col ='coolwarm' 
@@ -584,7 +584,7 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
                 
             
             # #Horizontal plane
-            ax01.contourf(XX,YY, DirD,50,cmap = cmaps,vmin =lim_dir_min, vmax = lim_dir_max)
+            # ax01.contourf(XX,YY, DirD,50,cmap = cmaps,vmin =lim_dir_min, vmax = lim_dir_max)
             plt.subplots_adjust(left=0.085, right=1, bottom=0.14, top=0.98, wspace=0.3, hspace=0.24)      
             
             ax00.contourf(XX,YY, VV,25,interpolation="nearest",cmap = cmaps,vmin = lim_vel_min, vmax = lim_vel_max)
@@ -617,8 +617,7 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
             ax01.yaxis.set_tick_params(labelsize = plot_param['tick_labelfontsize']+10)
 
             plt.show()
-            
-
+            pdb.set_trace()
             
             if  Qlunc_yaml_inputs['Flags']['Save data']:
                 #Save .pickle figure 
@@ -848,7 +847,7 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
         ax5[1].plot(np.degrees(Data['wind direction']),Cont_Corr1 ,'-',marker='X',markevery=3,c = 'cadetblue',linewidth = plot_param['linewidth'],label = r'$T_{V_{LOS},\theta_1\varphi_1}$')
         ax5[1].set_xlabel('Wind Direction [°]',fontsize = plot_param['axes_label_fontsize'])
         ax5[0].set_ylabel('$u_{V_{LOS_1}}$ [m/s]',fontsize = plot_param['axes_label_fontsize'])
-        ax5[1].set_ylabel(r'$T_{V_{LOS}}$ [m/s]',fontsize = plot_param['axes_label_fontsize'])
+        ax5[1].set_ylabel(r'$T_{V_{LOS}}$ [m$^2$/s$^2$]',fontsize = plot_param['axes_label_fontsize'])
         ax5[0].set_xlim(0,359)
         ax5[1].set_xlim(0,359)            
         
@@ -899,7 +898,7 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
 
         ax6[1].set_xlabel('Wind Direction [°]',fontsize = plot_param['axes_label_fontsize'])
         ax6[0].set_ylabel('$u_{V_{LOS_2}}$ [m/s]',fontsize = plot_param['axes_label_fontsize'])
-        ax6[1].set_ylabel(r'$T_{V_{LOS}}$ [m/s]',fontsize = plot_param['axes_label_fontsize'])
+        ax6[1].set_ylabel(r'$T_{V_{LOS}}$ [m$^2$/s$^2$]',fontsize = plot_param['axes_label_fontsize'])
         ax6[0].set_xlim(0,359)
         ax6[1].set_xlim(0,359)
         ax6[0].grid(axis = 'both') 
@@ -960,7 +959,7 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
 
             ax7[1].set_xlabel('Wind Direction [°]',fontsize = plot_param['axes_label_fontsize'])
             ax7[0].set_ylabel('$u_{V_{LOS_3}}$ [m/s]',fontsize = plot_param['axes_label_fontsize'])
-            ax7[1].set_ylabel(r'$T_{V_{LOS}}$ [m/s]',fontsize = plot_param['axes_label_fontsize']+.5)
+            ax7[1].set_ylabel(r'$T_{V_{LOS}}$ [m$^2$/s$^2$]',fontsize = plot_param['axes_label_fontsize']+.5)
             ax7[0].set_xlim(0,359)
             ax7[1].set_xlim(0,359)
             ax7[0].grid(axis = 'both') 
@@ -1045,9 +1044,9 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
             ax8[2].plot(np.degrees(Data['wind direction']),Corr_Mean23 ,'-',markersize=8,c = 'firebrick',markevery=markers_plot,linewidth = plot_param['linewidth']+7,label = r'$\Sigma^2$',alpha=0.7)
 
             ax8[2].set_xlabel('Wind Direction [°]',fontsize = 30)
-            ax8[0].set_ylabel(r'$T_{V_{LOS,12}}$ [m/s]',fontsize = 30)
-            ax8[1].set_ylabel(r'$T_{V_{LOS,13}}$ [m/s]',fontsize = 30)
-            ax8[2].set_ylabel(r'$T_{V_{LOS,23}}$ [m/s]',fontsize = 30)
+            ax8[0].set_ylabel(r'$T_{V_{LOS,12}}$ [m$^2$/s$^2$]',fontsize = 30)
+            ax8[1].set_ylabel(r'$T_{V_{LOS,13}}$ [m$^2$/s$^2$]',fontsize = 30)
+            ax8[2].set_ylabel(r'$T_{V_{LOS,23}}$ [m$^2$/s$^2$]',fontsize = 30)
             
             ax8[0].set_xlim(0,359)
             ax8[1].set_xlim(0,359)
@@ -1110,7 +1109,7 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
             ax8.plot(np.degrees(Data['wind direction']),Corr_Mean,'-',c = 'firebrick', markevery=markers_plot,   linewidth = plot_param['linewidth']+7,label = r'$\Sigma^2$',alpha=0.6)
 
             ax8.set_xlabel('Wind Direction [°]',fontsize = plot_param['axes_label_fontsize'])
-            ax8.set_ylabel('$T_{V_{LOS}}$ [m/s]',fontsize = plot_param['axes_label_fontsize'])
+            ax8.set_ylabel('$T_{V_{LOS}}$ [m$^2$/s$^2$]',fontsize = plot_param['axes_label_fontsize'])
             ax8.set_xlim(0,359)
             ax8.grid(axis = 'both')             
             ax8.legend(loc = 1, prop = {'size': plot_param['legend_fontsize']})
