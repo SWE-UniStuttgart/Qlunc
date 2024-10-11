@@ -268,7 +268,8 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
                                'Tolerance'       : [delta_V,delta_D, dlow_Vh, dhigh_Vh,dlow_WindDir,dhigh_WindDir,wl_alpha],
                                'Conditional M'   : M}
     # Lidar.lidar_inputs.dataframe['Scanner'] = {'Focus distance':Final_Output_UQ_Scanner['lidars'][0],'Elevation angle':Final_Output_UQ_Scanner['Elevation angle'][0],'Azimuth':Final_Output_UQ_Scanner['Azimuth'][0]}
-    DataFrame['Uncertainty Scanner']=Final_Output_UQ_Scanner    
+    DataFrame['Uncertainty Scanner']=Final_Output_UQ_Scanner 
+    # pdb.set_trace()
     #%% 7) Plotting data
     QPlot.plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Final_Output_UQ_Scanner,False,Qlunc_yaml_inputs['Flags']['Wind direction uncertainty'],Qlunc_yaml_inputs['Flags']['Wind velocity uncertainty'],Qlunc_yaml_inputs['Flags']['Line of sight velocity uncertainty'],Qlunc_yaml_inputs['Flags']['PDFs'],Qlunc_yaml_inputs['Flags']['Coverage interval'])  
     
