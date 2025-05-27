@@ -40,10 +40,10 @@ fs_av            = 100e6;    % sampling frequency
 L                = 2^n_bits;    %length of the signal.
 n_fftpoints      = L;       % n° of points for each block (fft points).
 fd               = 2*V_ref/lidar_wavelength;  % Doppler frequency corresponding to Vref
-level_noise      = 5e-11; % Hardware noise added before signal downmixing
+level_noise      = 6e-11; % Hardware noise added before signal downmixing
 n_pulses         = 1;   % n pulses for averaging the spectra
-N_MC             = 1e3; % n° MC samples to calculate the uncertainty due to bias in sampling frequency and wavelength
-Vin              = 1; % ADC Voltage input  range (\pm 1)
+N_MC             = 1e4; % n° MC samples to calculate the uncertainty due to bias in sampling frequency and wavelength
+Vin              = 2; % ADC Voltage input  range (\pm 1)
 %% Uncertainty in the signal processing.
 
 %%% Uncertainty in the sampling frequency %%%
@@ -54,11 +54,11 @@ std_fs_av   = (per)*fs_av;%/sqrt(3); % 2e-6*fs_av; %
 % Distribution for fs
 
 % Normal distribution
-fs          = [fs_av;normrnd(fs_av,std_fs_av,N_MC,1)];
+% fs          = [fs_av;normrnd(fs_av,std_fs_av,N_MC,1)];
 % fs          = [fs_av;std_fs_av.*randn(N_MC,1)];
 
 %Uniform distribution
-%fs          = [fs_av;unifrnd(fs_av-std_fs_av,fs_av+std_fs_av,1,N_MC)'];
+fs          = [fs_av;unifrnd(fs_av-std_fs_av,fs_av+std_fs_av,1,N_MC)'];
 
 Ts          = 1./fs;
 
@@ -235,6 +235,9 @@ RE_v            = (stdv_v_An./v_An)*100;
 % Area under the curve. The normalisation constant is hard-coded (see calculations of "S_fft_quant_mean" above). freq(2) is the resolution of the spectrum:
 P = sum(abs(S_fft_quant_mean(1,:).*freq{1}(1)));
 
+
+
+
 %% PLOTS
 
 %%%%%%%% Plotting signals + digitised signal + error: %%%%%%%%%%%%%%%%%%%%
@@ -319,7 +322,10 @@ hold off
 
 
 
-%% Plot input quantities probability distributions
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Plot input quantities probability distributions
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -347,7 +353,7 @@ hold off
 
 figure,
 histfit(fd_peak(2:end,1))
-pd = fitdist(fd_peak(2:end,1),'Normal') %#ok<NOPTS>
+histogram(fd_peak(2:end,1),500) %#ok<NOPTS>
 % figure,
 % histogram(noise,'displayname','Probability distribution noise')
 % leg=legend;
@@ -361,19 +367,19 @@ pd = fitdist(fd_peak(2:end,1),'Normal') %#ok<NOPTS>
 %%%%% Plot calculated spectrum %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-figure, hold on
-
-for in_fft=1:100
-
-    plot(fr{in_fft},(pxx{in_fft}),'*')
-end
-    plot(mean_fr,(meanT),'-k','Linewidth',3.5)
-
-legend show
-grid on
-xlabel('Frequency (Hz)')
-ylabel('Power Spectrum (w)')
-title('Matlab PSD')
+% figure, hold on
+% 
+% for in_fft=1:100
+% 
+%     plot(fr{in_fft},(pxx{in_fft}),'*')
+% end
+%     plot(mean_fr,(meanT),'-k','Linewidth',3.5)
+% 
+% legend show
+% grid on
+% xlabel('Frequency (Hz)')
+% ylabel('Power Spectrum (w)')
+% title('Matlab PSD')
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%% Plot matlab spectrum %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
