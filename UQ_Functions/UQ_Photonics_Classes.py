@@ -87,7 +87,12 @@ def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame)
                                                  (4*cts.k*Atmospheric_Scenario.temperature_dev[0]*Lidar.photonics.photodetector.BandWidth/Lidar.photonics.photodetector.Load_Resistor)+ \
                                                  (2*cts.e*R*Lidar.photonics.photodetector.BandWidth*(P_int))))*(P_int)**2]
         UQ_Photodetector.Total_SNR   = [10*np.log10(UQ_Photodetector.SNR_total_w)][0]
-        SNR_data={'SNR_Shot':UQ_Photodetector.SNR_shot,'SNR_Thermal':UQ_Photodetector.SNR_thermal,'SNR_Dark_Current':UQ_Photodetector.SNR_DarkCurrent,'Total_SNR':UQ_Photodetector.Total_SNR}
+        
+        SNR_data={'SNR_Shot':UQ_Photodetector.SNR_shot,
+                  'SNR_Thermal':UQ_Photodetector.SNR_thermal,
+                  'SNR_Dark_Current':UQ_Photodetector.SNR_DarkCurrent,
+                  'Total_SNR':UQ_Photodetector.Total_SNR}
+        
         print(colored('There is NO TIA component in the photodetector','cyan', attrs=['bold']))
     else:       
         # Photodetector TIA noise:
@@ -99,12 +104,23 @@ def UQ_Photodetector(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame)
                                                  (4*cts.k*Atmospheric_Scenario.temperature_dev[0]*Lidar.photonics.photodetector.BandWidth/Lidar.photonics.photodetector.Load_Resistor)+ \
                                                  (2*cts.e*R*Lidar.photonics.photodetector.BandWidth*P_int))]
         UQ_Photodetector.Total_SNR   = [10*np.log10(UQ_Photodetector.SNR_total_w)][0]
-        SNR_data={'SNR_Shot':UQ_Photodetector.SNR_shot,'SNR_Thermal':UQ_Photodetector.SNR_thermal,'SNR_Dark_Current':UQ_Photodetector.SNR_DarkCurrent,'SNR_TIA':UQ_Photodetector.SNR_TIA,'Total_SNR':UQ_Photodetector.Total_SNR}
+        
+        SNR_data={'SNR_Shot':UQ_Photodetector.SNR_shot,
+                  'SNR_Thermal':UQ_Photodetector.SNR_thermal,
+                  'SNR_Dark_Current':UQ_Photodetector.SNR_DarkCurrent,
+                  'SNR_TIA':UQ_Photodetector.SNR_TIA,
+                  'Total_SNR':UQ_Photodetector.Total_SNR}
+        
         UQ_Photodetector.UQ_Photo  = [ np.array([10*np.log10(np.sum([UQ_Photodetector.Thermal_noise,UQ_Photodetector.Shot_noise,UQ_Photodetector.Dark_current_noise,UQ_Photodetector.TIA_noise]))])]
         print(colored('There is a TIA component in the photodetector','cyan', attrs=['bold']))
 
     UQ_Photodetector.UQ_Photo_total=list(SA.flatten(UQ_Photodetector.UQ_Photo))
-    Final_Output_UQ_Photo={'Total Uncertainty Photodetector':UQ_Photodetector.UQ_Photo_total,'SNR_data_photodetector':SNR_data, 'Thermal noise':10*np.log10(UQ_Photodetector.Thermal_noise),'Shot noise':10*np.log10(UQ_Photodetector.Shot_noise), 'Dark current noise':10*np.log10(UQ_Photodetector.Dark_current_noise), 'TIA noise':10*np.log10(UQ_Photodetector.TIA_noise)}      
+    Final_Output_UQ_Photo={'Total Uncertainty Photodetector':UQ_Photodetector.UQ_Photo_total,
+                           'SNR_data_photodetector':SNR_data, 
+                           'Thermal noise':10*np.log10(UQ_Photodetector.Thermal_noise),
+                           'Shot noise':10*np.log10(UQ_Photodetector.Shot_noise), 
+                           'Dark current noise':10*np.log10(UQ_Photodetector.Dark_current_noise), 
+                           'TIA noise':10*np.log10(UQ_Photodetector.TIA_noise)}      
     
     # Add to data frame
     # Lidar.lidar_inputs.dataframe['Photodetector']=Final_Output_UQ_Photo['Uncertainty_Photodetector'][0]
@@ -148,10 +164,6 @@ def sum_unc_photonics(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame
         
         print(colored('You didnt include a photodetector in the lidar. The photodetector uncertainty contribution is zero in the lidar hardware uncertainty estimations','cyan', attrs=['bold']))
 
-    # Uncertainty_Photonics_Module                     = SA.unc_comb(List_Unc_photonics)
-    Final_Output_UQ_Photonics                        = {'Noise Photodetector':SA.unc_comb(List_Unc_photonics)}
-    
-    # pdb.set_trace()
-    DataFrame['Uncertainty Photodetector']['Total noise photodetector [dB]'] = np.array(Final_Output_UQ_Photonics['Noise Photodetector'])
-    # pdb.set_trace()
+
+
     return DataFrame
