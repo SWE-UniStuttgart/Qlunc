@@ -229,11 +229,11 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
         
         # Legend
         ax0[0].legend( loc=1,bbox_to_anchor=(1.001, 1.01),prop = {'size': plot_param['legend_fontsize']-4.3})
-
+        pdb.set_trace()
         plt.subplots_adjust(left=0.09, right=0.995, bottom=0.11, top=0.995, wspace=0.3, hspace=0.11)            
         plt.show()                
         if  Qlunc_yaml_inputs['Flags']['Save data']:
-            pickle.dump(fig0, open("C:/SWE_LOCAL/Thesis/Figures/Results/Direction/{}D/Unc/".format(len(Lidar.optics.scanner.origin))+"U_WindDirection_{}D.pickle".format(len(Lidar.optics.scanner.origin)), "wb"))                
+            pickle.dump(fig0, open(Qlunc_yaml_inputs['Main directory']+"/Figures/{}D/Unc/".format(len(Lidar.optics.scanner.origin))+"U_WindDirection_{}D.pickle".format(len(Lidar.optics.scanner.origin)), "wb"))                
             
 
     # #######################################
@@ -419,8 +419,8 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
                 
                 
                 if  Qlunc_yaml_inputs['Flags']['Save data']:
-                    pickle.dump(fig1, open("C:/SWE_LOCAL/Thesis/Figures/Results/Velocity/{}D/Unc/".format(len(Lidar.optics.scanner.origin))+"U_WindVelocity_{}D.pickle".format(len(Lidar.optics.scanner.origin)), "wb"))                
-                    pickle.dump(fig2, open("C:/SWE_LOCAL/Thesis/Figures/Results/Velocity/{}D/Unc/".format(len(Lidar.optics.scanner.origin))+"Corr_WindVelocity_{}D.pickle".format(len(Lidar.optics.scanner.origin)), "wb"))
+                    pickle.dump(fig1, open("C:/SWE_LOCAL/Qlunc/Figures/{}D/Unc/".format(len(Lidar.optics.scanner.origin))+"U_WindVelocity_{}D.pickle".format(len(Lidar.optics.scanner.origin)), "wb"))                
+                    pickle.dump(fig2, open("C:/SWE_LOCAL/Qlunc/Figures/{}D/Unc/".format(len(Lidar.optics.scanner.origin))+"Corr_WindVelocity_{}D.pickle".format(len(Lidar.optics.scanner.origin)), "wb"))
 
             # else dual solution
             else:
@@ -621,7 +621,7 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
             
             if  Qlunc_yaml_inputs['Flags']['Save data']:
                 pickle.dump(fig3, open("C:/SWE_LOCAL/Thesis/Figures/Results/Velocity/{}D/".format(len(Lidar.optics.scanner.origin))+sting+"_U_WindVelocity_{}D.pickle".format(len(Lidar.optics.scanner.origin)), "wb"))
-                # pickle.dump(fig4, open("C:/SWE_LOCAL/Thesis/Figures/Results/Direction/{}D/".format(len(Lidar.optics.scanner.origin))+sting+"_U_WindDirection_{}D.pickle".format(len(Lidar.optics.scanner.origin)), "wb"))
+                # pickle.dump(fig4, open("C:/SWE_LOCAL/Qlunc/Figures/{}D/".format(len(Lidar.optics.scanner.origin))+sting+"_U_WindDirection_{}D.pickle".format(len(Lidar.optics.scanner.origin)), "wb"))
     
        
    
@@ -1429,8 +1429,8 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
          plt.legend(loc =4, prop = {'size': plot_param['legend_fontsize']})
 
          if  Qlunc_yaml_inputs['Flags']['Save data']:    
-             pickle.dump(fig_CI_V, open("C:/SWE_LOCAL/Thesis/Figures/Results/Velocity/{}D/CI/".format(len(Lidar.optics.scanner.origin))+"CI_V_{}D.pickle".format(len(Lidar.optics.scanner.origin)), "wb"))
-             pickle.dump(fig_CI_Dir, open("C:/SWE_LOCAL/Thesis/Figures/Results/Direction/{}D/CI/".format(len(Lidar.optics.scanner.origin))+"CI_Dir_{}D.pickle".format(len(Lidar.optics.scanner.origin)), "wb"))
+             pickle.dump(fig_CI_V, open("C:/SWE_LOCAL/Qlunc/Figures/{}D/CI/".format(len(Lidar.optics.scanner.origin))+"CI_V_{}D.pickle".format(len(Lidar.optics.scanner.origin)), "wb"))
+             pickle.dump(fig_CI_Dir, open("C:/SWE_LOCAL/Qlunc/Figures/{}D/CI/".format(len(Lidar.optics.scanner.origin))+"CI_Dir_{}D.pickle".format(len(Lidar.optics.scanner.origin)), "wb"))
 
         
          ######################################################################################################    
@@ -1475,8 +1475,8 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
         
          # plt.legend(loc = (0.77,0.55), prop = {'size': plot_param['legend_fontsize']+20})             
          if  Qlunc_yaml_inputs['Flags']['Save data']:    
-             pickle.dump(fig_tol_V, open("C:/SWE_LOCAL/Thesis/Figures/Results/Velocity/{}D/Tol/".format(len(Lidar.optics.scanner.origin))+"Tol_V_{}D.pickle".format(len(Lidar.optics.scanner.origin)), "wb"))
-             pickle.dump(fig_tol_Dir, open("C:/SWE_LOCAL/Thesis/Figures/Results/Direction/{}D/Tol/".format(len(Lidar.optics.scanner.origin))+"Tol_Dir_{}D.pickle".format(len(Lidar.optics.scanner.origin)), "wb"))
+             pickle.dump(fig_tol_V, open("C:/SWE_LOCAL/Qlunc/Figures/{}D/Tol/".format(len(Lidar.optics.scanner.origin))+"Tol_V_{}D.pickle".format(len(Lidar.optics.scanner.origin)), "wb"))
+             pickle.dump(fig_tol_Dir, open("C:/SWE_LOCAL/Qlunc/Figures/{}D/Tol/".format(len(Lidar.optics.scanner.origin))+"Tol_Dir_{}D.pickle".format(len(Lidar.optics.scanner.origin)), "wb"))
          ###################################################    
 
     # # #Plot Vlos with stdv
