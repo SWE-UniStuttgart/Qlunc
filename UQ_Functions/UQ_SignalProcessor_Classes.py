@@ -50,10 +50,11 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
     #%% Uncertainty due to hardware noise, signal processing and speckle interference:
     
     # Hardware noise (thermal noise + shot noise + dark current noise + TIA noise):
-    if DataFrame['Uncertainty Photodetector']['Total noise photodetector [dB]']==0:
+    if DataFrame['Uncertainty Photodetector']['Total Uncertainty Photodetector']==0:
         level_noise_hardware = np.array([0])
     else: 
-        level_noise_hardware = 10**(DataFrame['Uncertainty Photodetector']['Total noise photodetector [dB]']/10) # Hardware noise added before signal downmixing
+        pdb.set_trace()
+        level_noise_hardware = 10**(DataFrame['Uncertainty Photodetector']['Total Uncertainty Photodetector'][0]/10) # Hardware noise added before signal downmixing
     hardware_noise       = np.random.normal(0 , level_noise_hardware , N_MC)
 
     
@@ -169,16 +170,19 @@ def sum_unc_signal_processor(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,D
     """
     if Lidar.signal_processor.analog2digital_converter != None:
         # try:               
-            # pdb.set_trace()
+        pdb.set_trace()
         DataFrame = Lidar.signal_processor.analog2digital_converter.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame)
         # except:
         #     ADC_Uncertainty=None
         #     print(colored('Error in ADC uncertainty calculations!','cyan', attrs=['bold']))
     else:
-        # pdb.set_trace()
+        pdb.set_trace()
         ADC_Uncertainty=None
-        DataFrame['Uncertainty ADC'] = {'Stdv Doppler f_peak [Hz]':np.array(0)*np.linspace(1,1,len(Atmospheric_Scenario.temperature_dev)),'Stdv wavelength [m]':0,'Stdv Vlos [m/s]':0}
-        print (colored('You didn´t include an ADC in the lidar. The ADC uncertainty contribution is zero in the lidar hardware uncertainty estimations','cyan', attrs=['bold']))       
+        DataFrame['Uncertainty ADC'] = {'Stdv Doppler f_peak [Hz]':np.array(0)*np.linspace(1,1,len(Atmospheric_Scenario.wind_direction)),
+                                        'Stdv wavelength [m]':np.array(0)*np.linspace(1,1,len(Atmospheric_Scenario.wind_direction)),
+                                        'Stdv Vlos [m/s]':np.array(0)*np.linspace(1,1,len(Atmospheric_Scenario.wind_direction))}
+        
+        print (colored('You didn´t include an ADC in the lidar. The ADC uncertainty contribution is zero. ','cyan', attrs=['bold']))       
     
     # Store data
     return DataFrame
