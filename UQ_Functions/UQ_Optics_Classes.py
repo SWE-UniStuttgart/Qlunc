@@ -220,7 +220,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
             # Add test coordinates to lidars dict
             lidars['Coord_Test']={'TESTr':np.array([rho_TESTr]),'TESTt':np.array([theta_TESTt]),'TESTp':np.array([psi_TESTp])}
     
-
+    pdb.set_trace()
     #%% CI calculations
     k = Qlunc_yaml_inputs['Components']['Scanner']['k']
     wl_alpha=1
