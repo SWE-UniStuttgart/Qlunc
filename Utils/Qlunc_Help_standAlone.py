@@ -181,7 +181,7 @@ def VLOS_param (Lidar,rho,theta,psi,u_theta1,u_psi1,u_rho1,N_MC,Hl,V_ref,Href,al
     #####################################
     #####################################
     # HARD CODED  Important HARD CODED  Need solution!!!
-    wind_direction_TEST = np.radians([0])
+    # wind_direction_TEST = np.radians([0])
     # wind_tilt_TEST      = np.radians([0])
     ######################################
     #######################################
