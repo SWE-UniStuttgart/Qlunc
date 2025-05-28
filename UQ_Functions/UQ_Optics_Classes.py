@@ -154,7 +154,6 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
 
             # 3.2) Vlos and Vh Uncertainties - GUM method
             Correlation_coeff_GUM, U_Vlos_GUM, Vlos_GUM, SensitivityCoeff_VLOS_GUM = SA.GUM_Vlos_lidar_uncertainty(Lidar,Atmospheric_Scenario,wind_direction,alpha,lidars_coord,DataFrame)
-            pdb.set_trace()
             U_Vh_GUM, Sensitivity_Coefficients_Vh,u,v,w,Vh_GUM                     = SA.GUM_Vh_lidar_uncertainty(Lidar,Atmospheric_Scenario,Correlation_coeff_GUM,wind_direction,lidars_coord,Vlos_GUM,U_Vlos_GUM,DataFrame)
 
             #%% 4) Wind direction uncertainty estimation
@@ -232,7 +231,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
             # Add test coordinates to lidars dict
             lidars_coord['Coord_Test']={'TESTr':np.array([rho_TESTr]),'TESTt':np.array([theta_TESTt]),'TESTp':np.array([psi_TESTp])}
     
-    pdb.set_trace()
+    # pdb.set_trace()
     #%% CI calculations
     k = Qlunc_yaml_inputs['Components']['Scanner']['k']
     wl_alpha=1
