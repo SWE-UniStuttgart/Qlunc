@@ -53,7 +53,7 @@ def UQ_ADC(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
     if DataFrame['Uncertainty Photodetector']['Total Uncertainty Photodetector']==0:
         level_noise_hardware = np.array([0])
     else: 
-        pdb.set_trace()
+        # pdb.set_trace()
         level_noise_hardware = 10**(DataFrame['Uncertainty Photodetector']['Total Uncertainty Photodetector'][0]/10) # Hardware noise added before signal downmixing
     hardware_noise       = np.random.normal(0 , level_noise_hardware , N_MC)
 
@@ -170,7 +170,7 @@ def sum_unc_signal_processor(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,D
     """
     if Lidar.signal_processor.analog2digital_converter != None:
         # try:               
-        pdb.set_trace()
+        # pdb.set_trace()
         DataFrame = Lidar.signal_processor.analog2digital_converter.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame)
         # except:
         #     ADC_Uncertainty=None
