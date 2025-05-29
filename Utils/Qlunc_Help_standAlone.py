@@ -181,7 +181,7 @@ def VLOS_param (Lidar,rho,theta,psi,u_theta1,u_psi1,u_rho1,N_MC,Hl,V_ref,Href,al
     #####################################
     #####################################
     # HARD CODED  Important HARD CODED  Need solution!!!
-    wind_direction_TEST = np.radians([0])
+    # wind_direction_TEST = np.radians([0])
     # wind_tilt_TEST      = np.radians([0])
     ######################################
     #######################################
@@ -450,6 +450,7 @@ def MultiVar (Lidar,Vlos_corrcoeff, U_Vlos,autocorr_theta,autocorr_psi,autocorr_
                 cov_MAT.append(list([n.item() for n in i]))
         
         else: 
+            # pdb.set_trace()
             cov_MAT0=[[np.array([u_theta1**2*autocorr_theta]),                  np.array([u_theta2*u_theta1*theta1_theta2_corr]),    np.array([u_psi1*u_theta1*psi1_theta1_corr]) ,     np.array([u_psi2*u_theta1*psi2_theta1_corr]),   np.array([u_rho1*u_theta1*theta1_rho1_corr]),  np.array([u_rho2*u_theta1*theta1_rho2_corr])   ,    u_theta1*U_Vlos[0]*0,                            u_theta1*U_Vlos[1]*0                     ],
                      [np.array([u_theta1*u_theta2*theta1_theta2_corr]),        np.array([u_theta2**2*autocorr_theta]),            np.array([u_psi1*u_theta2*psi1_theta2_corr]),      np.array([u_psi2*u_theta2*psi2_theta2_corr]) ,  np.array([u_rho1*u_theta2*theta2_rho1_corr]),  np.array([u_rho2*u_theta2*theta2_rho2_corr])  ,     u_theta2*U_Vlos[0]*0                                ,u_theta2*U_Vlos[1]*0               ],
                      [np.array([u_theta1*u_psi1*psi1_theta1_corr])  ,     np.array([u_theta2*u_psi1*psi1_theta2_corr]),             np.array([u_psi1**2*autocorr_psi]),                 np.array([u_psi2*u_psi1*psi1_psi2_corr]),       np.array([u_rho1*u_psi1*psi1_rho1_corr]),      np.array([u_rho2*u_psi1*psi1_rho2_corr])       ,    u_psi1*U_Vlos[0]*0                               ,u_psi1*U_Vlos[1]*0                    ],
@@ -489,8 +490,8 @@ def Vlos_correlations(Lidar,Vlos_corr,Atmospheric_Scenario,wind_direction, ind_w
     beta=np.radians(Atmospheric_Scenario.wind_tilt)
     for i in range(len(Lidar.optics.scanner.origin)):
         H_cr= (Rho_cr[i] * np.sin(Theta_cr[i]) + Lidar.optics.scanner.origin[i][2]) / Lidar.optics.scanner.Href
+        
         ### VLOS calculations ############################  
-
         Vlos_cr.append (Atmospheric_Scenario.Vref[ind_wind_dir] * (H_cr**alpha[ind_wind_dir]) * np.cos(Theta_cr[i]) * (np.cos(Psi_cr[i] - wind_direction[ind_wind_dir]) + (np.tan(beta)*np.tan(Theta_cr[i]))))
         
         ### Uncertainty VLOS calculations ############################  
@@ -541,7 +542,7 @@ def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,alpha,li
         
         ######## Vlos multivariate distribution #####################
         # Multivariate distributions and correlation between the Vlos': 
-        
+        # pdb.set_trace()
         Vlos_corr,Vlos_MCM,U_Vlos,Theta_cr,Psi_cr,Rho_cr  =  Vlos_correlations(Lidar,Vlos_corr0,Atmospheric_Scenario,wind_direction, ind_wind_dir,alpha,lidars,DataFrame)
         
         
@@ -584,7 +585,8 @@ def MCM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,wind_direction,alpha,li
                         Rho2_cr2_s.append(Rho2_cr2),
                         Rho3_cr2_s.append(Rho3_cr2)]
         else:
-            # # Multivariate distributions:       
+            # # Multivariate distributions: 
+            # pdb.set_trace()
             Theta1_cr2,Theta2_cr2,Psi1_cr2,Psi2_cr2,Rho1_cr2,Rho2_cr2,Vlos1_MC_cr2,Vlos2_MC_cr2= multivariate_normal.rvs((np.concatenate([lidars['Lidar0_Spherical']['theta'] , lidars['Lidar1_Spherical']['theta'] , lidars['Lidar0_Spherical']['psi'] , lidars['Lidar1_Spherical']['psi'] ,  lidars['Lidar0_Spherical']['rho'] , lidars['Lidar1_Spherical']['rho'] , np.array([np.mean(Vlos_MCM[0])]) , np.array([np.mean(Vlos_MCM[1])])],axis=0)), cov_MAT_Vh , Lidar.optics.scanner.N_MC).T
             
             #Storing data
@@ -824,7 +826,7 @@ def GUM_Vh_lidar_uncertainty (Lidar,Atmospheric_Scenario,Correlation_coeff,wind_
     
     
 #%% Wind direction uncertainties
-def U_WindDir_MC(Lidar,wind_direction,Mult_param,DataFrame):
+def U_WindDir_MC(Lidar,wind_direction,Mult_param,DataFrame,lidars):
     """.
     
     Calculates wind direction. Location: Qlunc_Help_standAlone.py

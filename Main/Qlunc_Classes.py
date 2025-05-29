@@ -219,7 +219,7 @@ class lidar():
                  print('Created new lidar device: {}'.format(self.LidarID))
 
 #%% Creating the class to store coordinates
-class lidar_coor():
+class meas_coor():
     def __init__(self, x,y,z,x_Lidar,y_Lidar,z_Lidar):
         self.x_Lidar = x_Lidar
         self.y_Lidar = y_Lidar

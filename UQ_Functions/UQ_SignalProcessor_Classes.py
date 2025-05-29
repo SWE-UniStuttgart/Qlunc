@@ -170,13 +170,13 @@ def sum_unc_signal_processor(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,D
     """
     if Lidar.signal_processor.analog2digital_converter != None:
         # try:               
-        pdb.set_trace()
+        # pdb.set_trace()
         DataFrame = Lidar.signal_processor.analog2digital_converter.Uncertainty(Lidar,Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame)
         # except:
         #     ADC_Uncertainty=None
         #     print(colored('Error in ADC uncertainty calculations!','cyan', attrs=['bold']))
     else:
-        pdb.set_trace()
+        # pdb.set_trace()
         ADC_Uncertainty=None
         DataFrame['Uncertainty ADC'] = {'Stdv Doppler f_peak [Hz]':np.array(0)*np.linspace(1,1,len(Atmospheric_Scenario.wind_direction)),
                                         'Stdv wavelength [m]':np.array(0)*np.linspace(1,1,len(Atmospheric_Scenario.wind_direction)),
