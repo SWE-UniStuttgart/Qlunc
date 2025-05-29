@@ -515,6 +515,7 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
         elif Lidar.optics.scanner.pattern in ['vertical plane'] or Lidar.optics.scanner.pattern in ['horizontal plane']:
             
             V,VLOS=[],[]
+
             Dir=[]
             for i in range(int((len(Data['Sens coeff Vh'])/len(Qlunc_yaml_inputs['Atmospheric_inputs']['Power law exponent'])))):
                 V.append(Data['Vh Unc [m/s]']['Uncertainty Vh GUM'][i][0])
