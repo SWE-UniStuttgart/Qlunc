@@ -1088,12 +1088,12 @@ def CI (wl,k, Unc_GUM, Unc_MC, mean_GUM, Mult_param,U_Vh_GUM,U_Vh_MCM_T,Vh_,U_Wi
         prob = 0.99
         Z  = 2.576 # This value depends on the low_lim/high_lim values we chose --> extracted from the Z-score table
     
-    CI_L_GUM,CI_H_GUM       = [],[]    
-    CI_L_MC,CI_H_MC         = [],[]
-    CI_L_MC_Vh,CI_H_MC_Vh   = [],[]
-    CI_L_GUM_Vh,CI_H_GUM_Vh = [],[]
-    CI_L_MC_WindDir,CI_H_MC_WindDir=[],[]
-    CI_L_GUM_WindDir,CI_H_GUM_WindDir =[],[]
+    CI_L_GUM,CI_H_GUM                 = [],[]    
+    CI_L_MC,CI_H_MC                   = [],[]
+    CI_L_MC_Vh,CI_H_MC_Vh             = [],[]
+    CI_L_GUM_Vh,CI_H_GUM_Vh           = [],[]
+    CI_L_MC_WindDir,CI_H_MC_WindDir   = [],[]
+    CI_L_GUM_WindDir,CI_H_GUM_WindDir = [],[]
     
     
     for ind_CI in range(len( Unc_GUM['V{}'.format(wl)])):
