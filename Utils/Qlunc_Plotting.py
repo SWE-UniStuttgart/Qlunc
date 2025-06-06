@@ -1156,7 +1156,7 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
     ######################### Plot seaborn graphs ####################################################
     ##################################################################################################
     if flag_plot_PDFs:         
- 
+        pdb.set_trace()
         ################################################### 
         # Plot velocities
         # Create the DataFrame
@@ -1213,12 +1213,14 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
             plt.gca().tick_params(axis='both',bottom=False, top=False,right=False,left=False)        
         
         # Data frame velocities
+        # df_V     = pd.DataFrame(
+        #                          {r"$V_1$":Data['Mult param'][0][0],
+        #                           r"$V_2$":Data['Mult param'][1][0],
+        #                           r"$V_3$":Data['Mult param'][2][0]})   
+        
         df_V     = pd.DataFrame(
                                  {r"$V_1$":Data['Mult param'][0][0],
-                                  r"$V_2$":Data['Mult param'][1][0],
-                                  r"$V_3$":Data['Mult param'][2][0]})   
-        
-
+                                  r"$V_2$":Data['Mult param'][1][0]})
                 
         g_V = sns.PairGrid(df_V,aspect=1)
         g_V = g_V.map_diag(sns.distplot,fit=norm,kde=False)
@@ -1235,16 +1237,25 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
         g_V.fig.subplots_adjust(top=0.985,bottom=0.086,right=.998,left=0.450,wspace=0.06, hspace=0.06) # equal spacing in both directions
         
         # DAtaframe angles
-        df_Param = pd.DataFrame(
-                                 {r"$\theta_1$":Data['Mult param'][12][0],
-                                  r"$\theta_2$":Data['Mult param'][12][1],
-                                  r"$\theta_3$":Data['Mult param'][12][2],
-                                  r"$\varphi_1$":Data['Mult param'][13][0],
-                                  r"$\varphi_2$":Data['Mult param'][13][1],
-                                  r"$\varphi_3$":Data['Mult param'][13][2],})
+        # df_Param = pd.DataFrame(
+        #                          {r"$\theta_1$":Data['Mult param'][12][0],
+        #                           r"$\theta_2$":Data['Mult param'][12][1],
+        #                           r"$\theta_3$":Data['Mult param'][12][2],
+        #                           r"$\varphi_1$":Data['Mult param'][13][0],
+        #                           r"$\varphi_2$":Data['Mult param'][13][1],
+        #                           r"$\varphi_3$":Data['Mult param'][13][2],})
                           # r"$\rho_1$":Mult_param[14][0],
                           # r"$\rho_2$":Mult_param[14][1],
                           # r"$\rho_3$":Mult_param[14][2]})   
+        df_Param = pd.DataFrame(
+                                 {r"$\theta_1$":Data['Mult param'][12][0],
+                                  r"$\theta_2$":Data['Mult param'][12][1],
+
+                                  r"$\varphi_1$":Data['Mult param'][13][0],
+                                  r"$\varphi_2$":Data['Mult param'][13][1],})
+
+
+
         g_Param = sns.PairGrid(df_Param, aspect=1)
         g_Param = g_Param.map_diag(sns.distplot,fit=norm,kde=False)
         g_Param = g_Param.map_lower(sns.kdeplot,fill=True)
@@ -1274,12 +1285,14 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
         for ind_a in range(len(Data['VLOS Unc [m/s]']['VLOS1 Uncertainty GUM [m/s]'])):
             # UV1,UV2,UV3=[],[],[]
             
-            # Uncertainties data frame
+            # # Uncertainties data frame
+            # df_Unc=pd.DataFrame(
+            #                     {"UV1":Data['VLOS Unc [m/s]']['VLOS1 Uncertainty GUM [m/s]'][ind_a],
+            #                      "UV2":Data['VLOS Unc [m/s]']['VLOS2 Uncertainty GUM [m/s]'][ind_a],
+            #                      "UV3":Data['VLOS Unc [m/s]']['VLOS3 Uncertainty GUM [m/s]'][ind_a]})
             df_Unc=pd.DataFrame(
                                 {"UV1":Data['VLOS Unc [m/s]']['VLOS1 Uncertainty GUM [m/s]'][ind_a],
-                                 "UV2":Data['VLOS Unc [m/s]']['VLOS2 Uncertainty GUM [m/s]'][ind_a],
-                                 "UV3":Data['VLOS Unc [m/s]']['VLOS3 Uncertainty GUM [m/s]'][ind_a]})
-           
+                                 "UV2":Data['VLOS Unc [m/s]']['VLOS2 Uncertainty GUM [m/s]'][ind_a]})           
             
             g_Unc = sns.PairGrid(df_Unc, aspect=1)
             g_Unc = g_Unc.map_diag(sns.distplot)
