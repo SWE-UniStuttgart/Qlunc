@@ -178,13 +178,7 @@ def rmse(f,ff):
 #%% Vlos parameters individual analysis 
 
 def VLOS_param (Lidar,rho,theta,psi,u_theta1,u_psi1,u_rho1,N_MC,Hl,V_ref,Href,alpha,wind_direction_TEST,ind_wind_dir,DataFrame):
-    #####################################
-    #####################################
-    # HARD CODED  Important HARD CODED  Need solution!!!
-    # wind_direction_TEST = np.radians([0])
-    # wind_tilt_TEST      = np.radians([0])
-    ######################################
-    #######################################
+
    
     #If want to vary range    
     if len (rho) !=1:
