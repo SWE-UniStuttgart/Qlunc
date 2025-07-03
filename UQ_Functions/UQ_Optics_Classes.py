@@ -56,6 +56,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
     U_VLOS_T_MC_rho_T,U_VLOS_T_GUM_rho_T                                    = [],[]
     U_VLOS_T_MC_theta_T,U_VLOS_T_GUM_theta_T                                = [],[]
     U_VLOS_T_MC_psi_T,U_VLOS_T_GUM_psi_T                                    = [],[]
+    uV_theta,uV_psi,uV_rho =[],[],[]
     Scan_unc                                                                = []
     SensCoeffVh                                                             = []
     wind_direction_TEST                                                     = np.radians([0])
@@ -77,13 +78,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
     
     
     
-    #%% Implement error in deployment of the tripod as a rotation over yaw, pitch and roll 
-    #   (NOT IMPLEMENTED BECAUSE IT IS ASSUMED BEING AN ERROR ALREADY CONSIDERED IN FOCUS, AZIMUTH AND ELEVATION STDVS)
-    
-    # stdv_yaw    = np.array(np.radians(Lidar.lidar_inputs.yaw_error_dep))
-    # stdv_pitch  = np.array(np.radians(Lidar.lidar_inputs.pitch_error_dep))
-    # stdv_roll   = np.array(np.radians(Lidar.lidar_inputs.roll_error_dep))
-    
+ 
     
     #%% 1) Adding error in the lidar positioning. The error is sampled from a rectangular distribution
         
@@ -92,7 +87,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
         ypos_scanner_error.append(Lidar.optics.scanner.origin[n_lidars][1]+np.random.uniform(low=-Lidar.optics.scanner.stdv_location[n_lidars][1], high=Lidar.optics.scanner.stdv_location[n_lidars][1], size=1))
         zpos_scanner_error.append(Lidar.optics.scanner.origin[n_lidars][2]+np.random.uniform(low=-Lidar.optics.scanner.stdv_location[n_lidars][2], high=Lidar.optics.scanner.stdv_location[n_lidars][2], size=1))
               
-    #%%            
+    #%% 2) Measuring pattern:          
               
     if Lidar.optics.scanner.pattern=='lissajous':
         x_out,y_out,z_out = SP.lissajous_pattern(Lidar,Lidar.optics.scanner.lissajous_param[0],Lidar.optics.scanner.lissajous_param[1],Lidar.optics.scanner.lissajous_param[2],Lidar.optics.scanner.lissajous_param[3],Lidar.optics.scanner.lissajous_param[4])
@@ -115,7 +110,8 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
         # wind_direction  = np.radians(np.linspace(Atmospheric_Scenario.wind_direction[0],Atmospheric_Scenario.wind_direction[1],Atmospheric_Scenario.wind_direction[2]))
 
     
-    # 2) Loop for the points in the pattern and the alpha exponents    
+    #%% 3) Loop for the points in the pattern and the alpha exponents:
+        
     for ind_alpha in range(len(alpha0)):
         if  Qlunc_yaml_inputs['Atmospheric_inputs']['TimeSeries']:
             alpha = alpha0[0]
@@ -125,7 +121,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
         for meas_param in range(L):
             # LOVE U MAMA!!        
          
-            #%% Range and measuring angles are calculated based on the position of the lidars and the measuring points            
+            # Range and measuring angles are calculated based on the position of the lidars and the measuring points            
             
             # Measurement point(s) in cartesian coordinates
             if Lidar.optics.scanner.pattern=='lissajous' or Lidar.optics.scanner.pattern=='horizontal plane' or Lidar.optics.scanner.pattern=='vertical plane':
@@ -154,11 +150,57 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
             
             # Add coordinates to lidars dict to calculate uncertainties using a pattern instead of a single point
             meas_coord['Coord_Out'] = np.array([x_out,y_out,z_out])
+            
+            
+            
+            
+            
+
+            #%% 5) Method for uncertainty when varying theta, psi 'AND' rho and create contours: 
             # pdb.set_trace()
             
+            N_c     = 300
+            rho_c   = np.linspace(50,550,N_c)
+            theta_c = np.radians(np.linspace(5,70,N_c))
+            psi_c   = np.radians(np.linspace(0,180,N_c)) 
             
-        
-                       
+            U_VLOS_Contour_GUM_theta=(SA.VLOS_contour(Lidar,
+                                                          rho_c,
+                                                          np.radians(np.linspace(13.77,13.77,1)),
+                                                          psi_c,
+                                                          np.radians(0),
+                                                          np.radians(Lidar.optics.scanner.stdv_azimuth[0][0]),
+                                                          Lidar.optics.scanner.stdv_focus_dist[0][0],
+                                                          Lidar.optics.scanner.N_MC,Hl[0],
+                                                          V_ref,Href,alpha,wind_direction_TEST,0,DataFrame))
+            
+            
+            U_VLOS_Contour_GUM_psi=(SA.VLOS_contour(Lidar,
+                                                        rho_c,
+                                                        theta_c,                     
+                                                        np.radians(np.linspace(0,0,1)),
+                                                        np.radians(Lidar.optics.scanner.stdv_cone_angle[0][0]),
+                                                        np.radians(0),
+                                                        Lidar.optics.scanner.stdv_focus_dist[0][0],
+                                                        Lidar.optics.scanner.N_MC,Hl[0],
+                                                        V_ref,Href,alpha,wind_direction_TEST,0,DataFrame))
+                    
+            
+            U_VLOS_Contour_GUM_rho=(SA.VLOS_contour(Lidar,
+                                                        np.linspace(522,522,1),
+                                                        theta_c,
+                                                        psi_c,
+                                                        np.radians(Lidar.optics.scanner.stdv_cone_angle[0][0]),
+                                                        np.radians(Lidar.optics.scanner.stdv_azimuth[0][0]),
+                                                        0,
+                                                        Lidar.optics.scanner.N_MC,Hl[0],
+                                                        V_ref,Href,alpha,wind_direction_TEST,0,DataFrame))                                                   
+                   
+            uV_theta.append(np.reshape(U_VLOS_Contour_GUM_theta[0],[N_c,N_c]))
+            uV_psi.append(np.reshape(U_VLOS_Contour_GUM_psi[0],[N_c,N_c]).T)
+            uV_rho.append(np.reshape(U_VLOS_Contour_GUM_rho[0],[N_c,N_c]))
+
+
             #%% 3) Wind velocity uncertainy estimation
  
             # 3.1) Vlos and Vh Uncertainties - MCM method
@@ -181,10 +223,7 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
             U_VLOS_T_MC_theta,U_VLOS_T_GUM_theta,rho_TESTt,theta_TESTt,psi_TESTt  =  SA.VLOS_param(Lidar,meas_coord['Lidar0_Spherical']['rho'],np.radians(np.linspace(0,90,200)),meas_coord['Lidar0_Spherical']['psi'],np.radians(Lidar.optics.scanner.stdv_cone_angle[0][0]),0,0,Lidar.optics.scanner.N_MC,Hl[0],V_ref,Href,alpha,wind_direction_TEST,0,DataFrame)    
             U_VLOS_T_MC_psi,U_VLOS_T_GUM_psi,rho_TESTp,theta_TESTp,psi_TESTp      =  SA.VLOS_param(Lidar,meas_coord['Lidar0_Spherical']['rho'],meas_coord['Lidar0_Spherical']['theta'],np.radians(np.linspace(0,359,200)),0,np.radians(Lidar.optics.scanner.stdv_azimuth[0][0]),0,Lidar.optics.scanner.N_MC,Hl[0],V_ref,Href,alpha,wind_direction_TEST,0,DataFrame)
             
-            
-
-            
-            
+         
             #%% Conditional M number
             
             M.append(SA.condM(Lidar,meas_coord))
@@ -289,7 +328,8 @@ def UQ_Scanner(Lidar, Atmospheric_Scenario,cts,Qlunc_yaml_inputs,DataFrame):
                                'Wind direction'  : WindDirection_,                           
                                'CI'              : [CI_VLOS_L_GUM, CI_VLOS_H_GUM, CI_VLOS_L_MC, CI_VLOS_H_MC, CI_Vh_L_GUM, CI_Vh_H_GUM,CI_Vh_L_MC, CI_Vh_H_MC,CI_L_GUM_WindDir,CI_H_GUM_WindDir,CI_L_MC_WindDir,CI_H_MC_WindDir,prob],
                                'Tolerance'       : [delta_V,delta_D, dlow_Vh, dhigh_Vh,dlow_WindDir,dhigh_WindDir,wl_alpha],
-                               'Conditional M'   : M}
+                               'Conditional M'   : M,
+                               'uV_contour'      :[uV_theta,uV_psi,uV_rho,theta_c,psi_c,rho_c]}
     # Lidar.lidar_inputs.dataframe['Scanner'] = {'Focus distance':Final_Output_UQ_Scanner['meas_coord'][0],'Elevation angle':Final_Output_UQ_Scanner['Elevation angle'][0],'Azimuth':Final_Output_UQ_Scanner['Azimuth'][0]}
     DataFrame['Uncertainty Scanner']=Final_Output_UQ_Scanner 
     # pdb.set_trace()
