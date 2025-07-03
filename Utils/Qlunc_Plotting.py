@@ -229,7 +229,7 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
         
         # Legend
         ax0[0].legend( loc=1,bbox_to_anchor=(1.001, 1.01),prop = {'size': plot_param['legend_fontsize']-4.3})
-        pdb.set_trace()
+        # pdb.set_trace()
         plt.subplots_adjust(left=0.09, right=0.995, bottom=0.11, top=0.995, wspace=0.3, hspace=0.11)            
         plt.show()                
         if  Qlunc_yaml_inputs['Flags']['Save data']:
@@ -534,22 +534,28 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
             VVLOS=np.reshape(VLOS,[int(np.sqrt(len(VLOS))),int(np.sqrt(len(VLOS)))])
 
             DirD=np.reshape(Dir,[int(np.sqrt(len(Dir))),int(np.sqrt(len(Dir)))])
-            pdb.set_trace()
-            VV[VV>2]= np.nan
+            
+            VV[VV>1]= np.nan
             VVLOS[VVLOS>10]= np.nan
             DirD[DirD>10]=np.nan
             
-            print(np.min(VV))
-            print(np.max(VV))
-            print(np.min(VVLOS))
-            print(np.max(VVLOS))
+            print(np.nanmin(VV))
+            print(np.nanmax(VV))
+            print(np.nanmin(VVLOS))
+            print(np.nanmax(VVLOS))
+            print(np.nanmin(Dir))
+            print(np.nanmax(Dir))
+                  
+                  
+            lim_vel_max_VV    = np.nanmax(VV) 
+            lim_vel_min_VV    = np.nanmin(VV)
+            lim_vel_max_VVLOS = np.nanmax(VVLOS) 
+            lim_vel_min_VVLOS = np.nanmin(VVLOS)            
+            lim_dir_min       = np.nanmin(Dir)
+            lim_dir_max       = np.nanmax(Dir)           
             
-            lim_vel_max_VV    = np.max(VV) 
-            lim_vel_min_VV    = np.min(VV)
-            lim_vel_max_VVLOS = np.max(VVLOS) 
-            lim_vel_min_VVLOS = np.min(VVLOS)            
-            lim_dir_min       = .45
-            lim_dir_max       = 3.3            
+
+            
             # Horizontal wind velocity
             col ='coolwarm' 
             cmaps = matplotlib.cm.get_cmap(col)  
@@ -585,8 +591,8 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
                 YY=np.reshape(Data['lidars']['Coord_Out'][1],[int(np.sqrt(len(V))),int(np.sqrt(len(V)))])
                 ax00.set_xlabel('X [m]', fontsize = plot_param['tick_labelfontsize']+20, labelpad = 10)
                 ax00.set_ylabel('Y [m]', fontsize = plot_param['tick_labelfontsize']+20, labelpad = 10)
-                ax001.set_xlabel('Y [m]', fontsize = plot_param['tick_labelfontsize']+20, labelpad = 10)
-                ax001.set_ylabel('Z [m]', fontsize = plot_param['tick_labelfontsize']+20, labelpad = 10)
+                ax001.set_xlabel('X [m]', fontsize = plot_param['tick_labelfontsize']+20, labelpad = 10)
+                ax001.set_ylabel('Y [m]', fontsize = plot_param['tick_labelfontsize']+20, labelpad = 10)
                 ax01.set_xlabel('X [m]', fontsize = plot_param['tick_labelfontsize']+20, labelpad = 10)
                 ax01.set_ylabel('Y [m]', fontsize = plot_param['tick_labelfontsize']+20, labelpad = 10)
                 sting='Horizontal'
@@ -600,9 +606,9 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
                 
             # Appearance:
             # plt.subplots_adjust(left=0.085, right=1, bottom=0.14, top=0.98, wspace=0.3, hspace=0.24)                  
-            ax00.contourf(XX,YY, VV,25,interpolation="nearest",cmap = cmaps,vmin = lim_vel_min_VV, vmax = lim_vel_max_VV)            
-            ax001.contourf(XX,YY, VVLOS,25,interpolation="nearest",cmap = cmaps,vmin = lim_vel_min_VVLOS, vmax = lim_vel_max_VVLOS)
-            ax01.contourf(XX,YY, DirD,25,cmap = cmaps,vmin = lim_dir_min, vmax = lim_dir_max)
+            ax00.contourf(XX,YY, VV,250,cmap = cmaps,vmin = lim_vel_min_VV, vmax = lim_vel_max_VV)            
+            ax001.contourf(XX,YY, VVLOS,50,cmap = cmaps,vmin = lim_vel_min_VVLOS, vmax = lim_vel_max_VVLOS)
+            ax01.contourf(XX,YY, DirD,90,cmap = cmaps,vmin = lim_dir_min, vmax = lim_dir_max)
             
             cmap0.set_array([]) 
             cmap0_1.set_array([]) 
@@ -611,7 +617,7 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
             colorbar0_1 = fig3_1.colorbar(cmap0_1, ax = ax001) 
             colorbar1 = fig4.colorbar(cmap1, ax = ax01)                        
             
-            colorbar0.set_label(label = r'$u_{V_{wind}}$ [m/s]', size = plot_param['tick_labelfontsize']+12 , labelpad = 7)
+            colorbar0.set_label(label = r'$u_{V_{h}}$ [m/s]', size = plot_param['tick_labelfontsize']+12 , labelpad = 7)
             colorbar0.ax.tick_params(labelsize = 25)
             colorbar0_1.set_label(label = r'$u_{V_{LOS}}$ [m/s]', size = plot_param['tick_labelfontsize']+12 , labelpad = 7)
             colorbar0_1.ax.tick_params(labelsize = 25)
@@ -1369,7 +1375,7 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
         
          y1_Vh_MCM = [Vh[inf0] - CI_Vh_L_MCM[inf0] for inf0 in range(len(Vh))]
          y2_Vh_MCM = [Vh[inf0] - CI_Vh_H_MCM[inf0] for inf0 in range(len(Vh))]    
-        
+         pdb.set_trace()
          #Percentage of MCM data within the calculated CI
          percentage_Vh = []
          for ind_per in range(len(Data['Vh']['V{}_MCM'.format(Data['Tolerance'][-1])][0])):
