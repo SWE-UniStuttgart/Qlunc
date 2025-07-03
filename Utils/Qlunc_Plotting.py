@@ -839,7 +839,49 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
         plt.subplots_adjust(right=0.99,left = 0.075,top = 0.97,bottom = 0.075,wspace = 0.3,hspace = 0.37)    
 
         plt.show() 
+        
+        for i_uV in range(len(Data['uV_contour'][0])):
+            
+            fig0,ax0 = plt.subplots(1,3)
+            plt.set_cmap("coolwarm") 
+            cont1=ax0[0].contourf(np.degrees(Data['uV_contour'][4]),Data['uV_contour'][5],Data['uV_contour'][0][i_uV],50, interpolation="nearest")    
+            cont2=ax0[1].contourf(np.degrees(Data['uV_contour'][3]),Data['uV_contour'][5],Data['uV_contour'][1][i_uV],50, interpolation="nearest")    
+            cont3=ax0[2].contourf(np.degrees(Data['uV_contour'][4]),np.degrees(Data['uV_contour'][3]),Data['uV_contour'][2][i_uV],50, interpolation="nearest")    
+            
+            
+            colorbar0=fig0.colorbar(cont1)
+            colorbar1=fig0.colorbar(cont2)
+            colorbar2=fig0.colorbar(cont3)
+            colorbar0.set_label(label = r'$u_{V_{LOS}}$ [m/s]', size = 20 , labelpad = 7)
+            colorbar1.set_label(label = r'$u_{V_{LOS}}$ [m/s]', size = 20 , labelpad = 7)
+            colorbar2.set_label(label = r'$u_{V_{LOS}}$ [m/s]', size = 20 , labelpad = 7)
 
+            colorbar0.ax.tick_params(labelsize = 15)
+            colorbar1.ax.tick_params(labelsize = 15)
+            colorbar2.ax.tick_params(labelsize = 15)
+            ax0[0].xaxis.set_tick_params(labelsize = 15)
+            ax0[0].yaxis.set_tick_params(labelsize = 15)
+            ax0[1].xaxis.set_tick_params(labelsize = 15)
+            ax0[1].yaxis.set_tick_params(labelsize = 15)
+            ax0[2].xaxis.set_tick_params(labelsize = 15)
+            ax0[2].yaxis.set_tick_params(labelsize = 15)
+
+            ax0[0].set_xlabel(r'$\varphi$ [°]', fontsize = 20, labelpad = 10)
+            ax0[0].set_ylabel(r'$\rho$ [m]', fontsize = 20, labelpad = 10)
+            ax0[1].set_xlabel(r'$\theta$ [°]', fontsize = 20, labelpad = 10)
+            ax0[1].set_ylabel(r'$\rho$ [m]', fontsize = 20, labelpad = 10)
+            ax0[2].set_xlabel(r'$\varphi$ [°]', fontsize = 20, labelpad = 10)
+            ax0[2].set_ylabel(r'$\theta$ [°]', fontsize = 20, labelpad = 10)
+            plt.subplots_adjust(left=0.07, right=0.94, bottom=0.08, top=0.985, wspace=0.5, hspace=0.2)         
+            
+                        
+            # Print the box with the correlation coefficients
+            # gg=13
+            # props0 = dict(boxstyle='round', facecolor='wheat', alpha=0.4)        
+            # textstr0 = '\n'.join(( r'$\rho ~=%.2f$' % (gg)))    
+
+            # ax0[0].text(.25, 0.80, textstr0,  fontsize = 16,horizontalalignment = 'left',verticalalignment = 'top', bbox = props0, transform=plt.gcf().transFigure)             
+        pdb.set_trace()
         if  Qlunc_yaml_inputs['Flags']['Save data']:
             pickle.dump(fig_All, open("C:/SWE_LOCAL/Thesis/Figures/Results/Velocity/Vlos/".format(len(Lidar.optics.scanner.origin))+"U_Panel2.pickle", "wb"))
             # pickle.dump(fig_psi, open("C:/SWE_LOCAL/Thesis/Figures/Results/Velocity/Vlos/".format(len(Lidar.optics.scanner.origin))+"U_Psi.pickle", "wb"))
