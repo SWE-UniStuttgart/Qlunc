@@ -225,6 +225,48 @@ def VLOS_param (Lidar,rho,theta,psi,u_theta1,u_psi1,u_rho1,N_MC,Hl,V_ref,Href,al
     U_VLOS_T_GUM=(U_VLOS_GUM (Lidar,theta_TEST,psi_TEST,rho_TEST,u_theta1,u_psi1,u_rho1,Hl,V_ref,Href,alpha,wind_direction_TEST,0,DataFrame)) # For an heterogeneous flow (shear))  
     return (U_VLOS_T,U_VLOS_T_GUM,rho_TEST,theta_TEST,psi_TEST)        
 
+#%% Vlos parameters contour analyses. Two varying inputs and one fixed
+
+def VLOS_contour (Lidar,rho,theta,psi,u_theta,u_psi,u_rho,N_MC,Hl,V_ref,Href,alpha,wind_direction_TEST,ind_wind_dir,DataFrame):
+
+   
+    #If want to vary range    
+    if len(rho)==1:
+
+        # pdb.set_trace()
+        psi2, theta2 = np.meshgrid(psi,theta)
+        psi_out      = np.ravel(psi2)
+        theta_out    = np.ravel(theta2)
+        rho_out      = np.linspace(rho,rho,len(psi_out)) 
+        # GUM method
+        U_VLOS_T_GUM = (U_VLOS_GUM (Lidar,theta_out,psi_out,rho_out,u_theta,u_psi,u_rho,Hl,V_ref,Href,alpha,wind_direction_TEST,0,DataFrame)) # For an heterogeneous flow (shear))  
+        # pdb.set_trace()
+    
+    elif len(theta)==1:
+
+        # pdb.set_trace()
+        psi2, rho2 = np.meshgrid(psi,rho)
+        psi_out    = np.ravel(psi2)
+        rho_out    = np.ravel(rho2)
+        theta_out  = np.linspace(theta,theta,len(psi_out)) 
+        # GUM method
+        U_VLOS_T_GUM = (U_VLOS_GUM (Lidar,theta_out,psi_out,rho_out,u_theta,u_psi,u_rho,Hl,V_ref,Href,alpha,wind_direction_TEST,0,DataFrame)) # For an heterogeneous flow (shear))  
+        # pdb.set_trace()
+    
+    elif len(psi)==1:
+    
+        # pdb.set_trace()
+        rho2, theta2 = np.meshgrid(rho,theta)
+        rho_out      = np.ravel(rho2)
+        theta_out    = np.ravel(theta2)
+        psi_out      = np.linspace(psi,psi,len(theta_out))     
+        # GUM method
+        U_VLOS_T_GUM = (U_VLOS_GUM (Lidar,theta_out,psi_out,rho_out,u_theta,u_psi,u_rho,Hl,V_ref,Href,alpha,wind_direction_TEST,0,DataFrame)) # For an heterogeneous flow (shear))  
+    
+    
+    
+    return U_VLOS_T_GUM    
+
 
 
 def U_VLOS_MC(Lidar,cov_MAT,theta,psi,rho,Hl,Href,alpha,wind_direction,V_ref,ind_wind_dir,U_VLOS1,DataFrame):
@@ -300,10 +342,12 @@ def U_VLOS_GUM (Lidar,theta1,psi1,rho1,u_theta1,u_psi1,u_rho1,Hl,V_ref,Href,alph
     * Estimated uncertainty in the line of sight wind speed [np.array]
      
     """
+    # pdb.set_trace()
     U_Vlos1_GUM=[]
     for i in range(len(rho1)):
+        
         H_t1 = ((rho1[i] * np.sin(theta1[i])+Hl) / Href)
-
+        
         # Partial derivatives Vlosi with respect theta, psi and rho    
         dVlos1dtheta1   =     V_ref[ind_wind_dir] * (H_t1**alpha[ind_wind_dir]) * (alpha[ind_wind_dir] * ((rho1[i] * (np.cos(theta1[i]))**2) / (rho1[i] * np.sin(theta1[i])+Hl)) - np.sin(theta1[i])) * np.cos(psi1[i] - wind_direction[ind_wind_dir])
         dVlos1dpsi1     =   - V_ref[ind_wind_dir] * (H_t1**alpha[ind_wind_dir]) * (np.cos(theta1[i]) * np.sin(psi1[i] - wind_direction[ind_wind_dir]))
@@ -327,7 +371,7 @@ def U_VLOS_GUM (Lidar,theta1,psi1,rho1,u_theta1,u_psi1,u_rho1,Hl,V_ref,Href,alph
         
         # Uncertainty of Vlosi. Here we account for rho, theta and psi uncertainties and their correlations.
         U_Vlos1_GUM.append((np.sqrt(Uy[0][0])))
-
+    # pdb.set_trace()
     return([U_Vlos1_GUM,Cont_Theta,Cont_Psi,Cont_Rho])
 
 
