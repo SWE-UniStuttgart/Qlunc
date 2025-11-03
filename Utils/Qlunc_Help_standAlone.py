@@ -227,45 +227,42 @@ def VLOS_param (Lidar,rho,theta,psi,u_theta1,u_psi1,u_rho1,N_MC,Hl,V_ref,Href,al
 
 #%% Vlos parameters contour analyses. Two varying inputs and one fixed
 
-def VLOS_contour (Lidar,rho,theta,psi,u_theta,u_psi,u_rho,N_MC,Hl,V_ref,Href,alpha,wind_direction_TEST,ind_wind_dir,DataFrame):
+def VLOS_contour (Lidar,Atmospheric_Scenario,rho,theta,psi,u_theta,u_psi,u_rho,N_MC,Hl,V_ref,Href,alpha,wind_direction_TEST,ind_wind_dir,DataFrame,Qlunc_yaml_inputs):
 
-   
+    U_Int=U_intrinsic(Lidar,Atmospheric_Scenario,DataFrame,Qlunc_yaml_inputs)[0]
     #If want to vary range    
     if len(rho)==1:
-
+        
         # pdb.set_trace()
         psi2, theta2 = np.meshgrid(psi,theta)
         psi_out      = np.ravel(psi2)
         theta_out    = np.ravel(theta2)
         rho_out      = np.linspace(rho,rho,len(psi_out)) 
         # GUM method
-        U_VLOS_T_GUM = (U_VLOS_GUM (Lidar,theta_out,psi_out,rho_out,u_theta,u_psi,u_rho,Hl,V_ref,Href,alpha,wind_direction_TEST,0,DataFrame)) # For an heterogeneous flow (shear))  
-        # pdb.set_trace()
+        
+        U_VLOS_cont_GUM = U_VLOS_GUM (Lidar,theta_out,psi_out,rho_out,u_theta,u_psi,u_rho,Hl,V_ref,Href,alpha,wind_direction_TEST,0,DataFrame)
+        U_VLOS_cont_GUM[0] = [np.sqrt(a**2 + U_Int**2) for a in U_VLOS_cont_GUM[0]]
+        # U_VLOS_cont_GUM = U_VLOS_GUM (Lidar,theta_out,psi_out,rho_out,u_theta,u_psi,u_rho,Hl,V_ref,Href,alpha,wind_direction_TEST,0,DataFrame)+ U_intrinsic(Lidar,Atmospheric_Scenario,DataFrame,Qlunc_yaml_inputs) # For an heterogeneous flow (shear))  
     
     elif len(theta)==1:
-
         # pdb.set_trace()
         psi2, rho2 = np.meshgrid(psi,rho)
         psi_out    = np.ravel(psi2)
         rho_out    = np.ravel(rho2)
         theta_out  = np.linspace(theta,theta,len(psi_out)) 
         # GUM method
-        U_VLOS_T_GUM = (U_VLOS_GUM (Lidar,theta_out,psi_out,rho_out,u_theta,u_psi,u_rho,Hl,V_ref,Href,alpha,wind_direction_TEST,0,DataFrame)) # For an heterogeneous flow (shear))  
-        # pdb.set_trace()
-    
+        U_VLOS_cont_GUM = (U_VLOS_GUM (Lidar,theta_out,psi_out,rho_out,u_theta,u_psi,u_rho,Hl,V_ref,Href,alpha,wind_direction_TEST,0,DataFrame)) # For an heterogeneous flow (shear))  
+        U_VLOS_cont_GUM[0] = [np.sqrt(a**2 + U_Int**2) for a in U_VLOS_cont_GUM[0]]    
     elif len(psi)==1:
-    
         # pdb.set_trace()
         rho2, theta2 = np.meshgrid(rho,theta)
         rho_out      = np.ravel(rho2)
         theta_out    = np.ravel(theta2)
         psi_out      = np.linspace(psi,psi,len(theta_out))     
         # GUM method
-        U_VLOS_T_GUM = (U_VLOS_GUM (Lidar,theta_out,psi_out,rho_out,u_theta,u_psi,u_rho,Hl,V_ref,Href,alpha,wind_direction_TEST,0,DataFrame)) # For an heterogeneous flow (shear))  
-    
-    
-    
-    return U_VLOS_T_GUM    
+        U_VLOS_cont_GUM = (U_VLOS_GUM (Lidar,theta_out,psi_out,rho_out,u_theta,u_psi,u_rho,Hl,V_ref,Href,alpha,wind_direction_TEST,0,DataFrame)) # For an heterogeneous flow (shear))  
+        U_VLOS_cont_GUM[0] = [np.sqrt(a**2 + U_Int**2) for a in U_VLOS_cont_GUM[0]]       
+    return U_VLOS_cont_GUM    
 
 
 

@@ -535,9 +535,9 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
 
             DirD=np.reshape(Dir,[int(np.sqrt(len(Dir))),int(np.sqrt(len(Dir)))])
             
-            VV[VV>1]= np.nan
-            VVLOS[VVLOS>10]= np.nan
-            DirD[DirD>10]=np.nan
+            # VV[VV>10]= np.nan
+            # VVLOS[VVLOS>25]= np.nan
+            # DirD[DirD>10]=np.nan
             
             print(np.nanmin(VV))
             print(np.nanmax(VV))
@@ -551,10 +551,15 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
             lim_vel_min_VV    = np.nanmin(VV)
             lim_vel_max_VVLOS = np.nanmax(VVLOS) 
             lim_vel_min_VVLOS = np.nanmin(VVLOS)            
-            lim_dir_min       = np.nanmin(Dir)
-            lim_dir_max       = np.nanmax(Dir)           
+            lim_dir_min       = np.nanmin(DirD)
+            lim_dir_max       = np.nanmax(DirD)           
             
-
+            # lim_vel_max_VV    = 13.94 
+            # lim_vel_min_VV    = 0.0024
+            # lim_vel_max_VVLOS = np.nanmax(VVLOS) 
+            # lim_vel_min_VVLOS = np.nanmin(VVLOS)            
+            # lim_dir_min       = 0.078
+            # lim_dir_max       = 2.68    
             
             # Horizontal wind velocity
             col ='coolwarm' 
@@ -606,8 +611,8 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
                 
             # Appearance:
             # plt.subplots_adjust(left=0.085, right=1, bottom=0.14, top=0.98, wspace=0.3, hspace=0.24)                  
-            ax00.contourf(XX,YY, VV,250,cmap = cmaps,vmin = lim_vel_min_VV, vmax = lim_vel_max_VV)            
-            ax001.contourf(XX,YY, VVLOS,50,cmap = cmaps,vmin = lim_vel_min_VVLOS, vmax = lim_vel_max_VVLOS)
+            ax00.contourf(XX,YY, VV,350,cmap = cmaps,vmin = lim_vel_min_VV, vmax = lim_vel_max_VV)            
+            ax001.contourf(XX,YY, VVLOS,150,cmap = cmaps,vmin = lim_vel_min_VVLOS, vmax = lim_vel_max_VVLOS)
             ax01.contourf(XX,YY, DirD,90,cmap = cmaps,vmin = lim_dir_min, vmax = lim_dir_max)
             
             cmap0.set_array([]) 
@@ -840,57 +845,72 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
 
         plt.show() 
         
+        
+        #%% Plot contours for rho Vs psi, rho Vs theta and theta Vs psi (VASPAS)
+        
         for i_uV in range(len(Data['uV_contour'][0])):
             
+            pdb.set_trace()
+            
+            
+            # lim_vel_min_VV=0.1971000009421448
+            # lim_vel_max_VV=0.212611739798764
+            
+            lim_vel_min_VV=np.min(np.minimum.reduce([Data['uV_contour'][0],Data['uV_contour'][1],Data['uV_contour'][2]]))
+            lim_vel_max_VV=np.max(np.maximum.reduce([Data['uV_contour'][0],Data['uV_contour'][1],Data['uV_contour'][2]]))
+            col ='coolwarm' 
+
+            cmap0 = matplotlib.cm.ScalarMappable(norm = mcolors.Normalize(vmin = lim_vel_min_VV, vmax = lim_vel_max_VV),cmap = plt.get_cmap(col))
+            cmaps = matplotlib.cm.get_cmap(col)
+            
+
+
+
+                
             fig0,ax0 = plt.subplots(1,3)
-            plt.set_cmap("coolwarm") 
-            cont1=ax0[0].contourf(np.degrees(Data['uV_contour'][4]),Data['uV_contour'][5],Data['uV_contour'][0][i_uV],50, interpolation="nearest")    
-            cont2=ax0[1].contourf(np.degrees(Data['uV_contour'][3]),Data['uV_contour'][5],Data['uV_contour'][1][i_uV],50, interpolation="nearest")    
-            cont3=ax0[2].contourf(np.degrees(Data['uV_contour'][4]),np.degrees(Data['uV_contour'][3]),Data['uV_contour'][2][i_uV],50, interpolation="nearest")    
+            # plt.set_cmap("coolwarm") 
+            cont1=ax0[0].contourf(np.degrees(Data['uV_contour'][4]),Data['uV_contour'][5],Data['uV_contour'][0][i_uV],100,cmap = cmaps,vmin = lim_vel_min_VV, vmax = lim_vel_max_VV)    
+            cont2=ax0[1].contourf(np.degrees(Data['uV_contour'][3]),Data['uV_contour'][5],Data['uV_contour'][1][i_uV],100,cmap = cmaps,vmin = lim_vel_min_VV, vmax = lim_vel_max_VV)    
+            cont3=ax0[2].contourf(np.degrees(Data['uV_contour'][4]),np.degrees(Data['uV_contour'][3]),Data['uV_contour'][2][i_uV],100,cmap = cmaps,vmin = lim_vel_min_VV, vmax = lim_vel_max_VV)    
             
+            # colorbar0=fig0.colorbar(cont1)
+            # colorbar1=fig0.colorbar(cont2)
+            # colorbar2=fig0.colorbar(cont3)
+            # colorbar0.set_label(label = r'$u_{V_{LOS}}$ [m/s]', size = 20 , labelpad = 7)
+            # colorbar1.set_label(label = r'$u_{V_{LOS}}$ [m/s]', size = 20 , labelpad = 7)
+            # colorbar2.set_label(label = r'$u_{V_{LOS}}$ [m/s]', size = 20 , labelpad = 7)
+            cmap0.set_array([]) 
+            fig0.subplots_adjust(wspace=0.6)
+
+            # colorbar1.ax.tick_params(labelsize = 15)
+            # colorbar2.ax.tick_params(labelsize = 15)
+            ax0[0].xaxis.set_tick_params(labelsize = plot_param['tick_labelfontsize'])
+            ax0[0].yaxis.set_tick_params(labelsize = plot_param['tick_labelfontsize'])
+            ax0[1].xaxis.set_tick_params(labelsize = plot_param['tick_labelfontsize'])
+            ax0[1].yaxis.set_tick_params(labelsize = plot_param['tick_labelfontsize'])
+            ax0[2].xaxis.set_tick_params(labelsize = plot_param['tick_labelfontsize'])
+            ax0[2].yaxis.set_tick_params(labelsize = plot_param['tick_labelfontsize'])
+
+            ax0[0].set_xlabel(r'$\varphi$ [°]', fontsize =plot_param['axes_label_fontsize'])
+            ax0[0].set_ylabel(r'$\rho$ [m]', fontsize = plot_param['axes_label_fontsize'])
+            ax0[1].set_xlabel(r'$\theta$ [°]', fontsize = plot_param['axes_label_fontsize'])
+            ax0[1].set_ylabel(r'$\rho$ [m]', fontsize = plot_param['axes_label_fontsize'])
+            ax0[2].set_xlabel(r'$\varphi$ [°]', fontsize = plot_param['axes_label_fontsize'])
+            ax0[2].set_ylabel(r'$\theta$ [°]', fontsize = plot_param['axes_label_fontsize'])
+            plt.subplots_adjust(left=0.08, right=0.95,bottom=0.12, top=0.975, wspace=0.5, hspace=0.2)         
+            colorbar2 = fig0.colorbar(cmap0, ax = ax0) 
             
-            colorbar0=fig0.colorbar(cont1)
-            colorbar1=fig0.colorbar(cont2)
-            colorbar2=fig0.colorbar(cont3)
-            colorbar0.set_label(label = r'$u_{V_{LOS}}$ [m/s]', size = 20 , labelpad = 7)
-            colorbar1.set_label(label = r'$u_{V_{LOS}}$ [m/s]', size = 20 , labelpad = 7)
-            colorbar2.set_label(label = r'$u_{V_{LOS}}$ [m/s]', size = 20 , labelpad = 7)
+            colorbar2.ax.tick_params(labelsize = plot_param['tick_labelfontsize'])
+ 
+            colorbar2.set_label(label = r'$u_{V_{LOS}}$ [m/s]', size = plot_param['tick_labelfontsize']+12,labelpad=9)
 
-            colorbar0.ax.tick_params(labelsize = 15)
-            colorbar1.ax.tick_params(labelsize = 15)
-            colorbar2.ax.tick_params(labelsize = 15)
-            ax0[0].xaxis.set_tick_params(labelsize = 15)
-            ax0[0].yaxis.set_tick_params(labelsize = 15)
-            ax0[1].xaxis.set_tick_params(labelsize = 15)
-            ax0[1].yaxis.set_tick_params(labelsize = 15)
-            ax0[2].xaxis.set_tick_params(labelsize = 15)
-            ax0[2].yaxis.set_tick_params(labelsize = 15)
 
-            ax0[0].set_xlabel(r'$\varphi$ [°]', fontsize = 20, labelpad = 10)
-            ax0[0].set_ylabel(r'$\rho$ [m]', fontsize = 20, labelpad = 10)
-            ax0[1].set_xlabel(r'$\theta$ [°]', fontsize = 20, labelpad = 10)
-            ax0[1].set_ylabel(r'$\rho$ [m]', fontsize = 20, labelpad = 10)
-            ax0[2].set_xlabel(r'$\varphi$ [°]', fontsize = 20, labelpad = 10)
-            ax0[2].set_ylabel(r'$\theta$ [°]', fontsize = 20, labelpad = 10)
-            plt.subplots_adjust(left=0.07, right=0.94, bottom=0.08, top=0.985, wspace=0.5, hspace=0.2)         
-            
-                        
-            # Print the box with the correlation coefficients
-            # gg=13
-            # props0 = dict(boxstyle='round', facecolor='wheat', alpha=0.4)        
-            # textstr0 = '\n'.join(( r'$\rho ~=%.2f$' % (gg)))    
-
-            # ax0[0].text(.25, 0.80, textstr0,  fontsize = 16,horizontalalignment = 'left',verticalalignment = 'top', bbox = props0, transform=plt.gcf().transFigure)             
-        pdb.set_trace()
         if  Qlunc_yaml_inputs['Flags']['Save data']:
             pickle.dump(fig_All, open("C:/SWE_LOCAL/Thesis/Figures/Results/Velocity/Vlos/".format(len(Lidar.optics.scanner.origin))+"U_Panel2.pickle", "wb"))
             # pickle.dump(fig_psi, open("C:/SWE_LOCAL/Thesis/Figures/Results/Velocity/Vlos/".format(len(Lidar.optics.scanner.origin))+"U_Psi.pickle", "wb"))
             # pickle.dump(fig_rho, open("C:/SWE_LOCAL/Thesis/Figures/Results/Velocity/Vlos/".format(len(Lidar.optics.scanner.origin))+"U_Rho.pickle", "wb"))
 
 
-
-
-        
    
         #%%
         ##############################################
@@ -1261,12 +1281,15 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
             plt.gca().tick_params(axis='both',bottom=False, top=False,right=False,left=False)        
         
         # Data frame velocities
+        # df_V     = pd.DataFrame(
+        #                          {r"$V_1$":Data['Mult param'][0][0],
+        #                           r"$V_2$":Data['Mult param'][1][0],
+        #                           r"$V_3$":Data['Mult param'][2][0]})   
+        
         df_V     = pd.DataFrame(
                                  {r"$V_1$":Data['Mult param'][0][0],
-                                  r"$V_2$":Data['Mult param'][1][0],
-                                  r"$V_3$":Data['Mult param'][2][0]})   
-        
-
+                                  r"$V_2$":Data['Mult param'][1][0]})   
+    
                 
         g_V = sns.PairGrid(df_V,aspect=1)
         g_V = g_V.map_diag(sns.distplot,fit=norm,kde=False)
@@ -1417,7 +1440,7 @@ def plotting(Lidar,Atmospheric_Scenario,Qlunc_yaml_inputs,Data,flag_plot_photode
         
          y1_Vh_MCM = [Vh[inf0] - CI_Vh_L_MCM[inf0] for inf0 in range(len(Vh))]
          y2_Vh_MCM = [Vh[inf0] - CI_Vh_H_MCM[inf0] for inf0 in range(len(Vh))]    
-         pdb.set_trace()
+         # pdb.set_trace()
          #Percentage of MCM data within the calculated CI
          percentage_Vh = []
          for ind_per in range(len(Data['Vh']['V{}_MCM'.format(Data['Tolerance'][-1])][0])):
